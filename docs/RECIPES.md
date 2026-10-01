@@ -14,7 +14,7 @@ linearity, kind and arity mistakes, and `P.build()` still lints the emitted net.
 
 ```python
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, ".")  # run from the repo root
 from genome.lib.glue import Program, NUM, DEPTH, LIST, TRIE, TUP, EDGE, WEDGE, INF
 from genome.lib import recipes as R
 
