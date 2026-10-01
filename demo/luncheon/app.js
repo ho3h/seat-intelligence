@@ -149,12 +149,19 @@
 
   // ---------- drawing
   function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  // the posted chart's chair icon: a light D-shaped seat, a backrest line and two small arm tabs on the table side, mirrored per side
   function chair(x, side, y, hi, detail) {
-    ctx.fillStyle = hi ? INK : "#fff"; ctx.strokeStyle = INK;
-    if (!detail) { ctx.lineWidth = 2.2; ctx.fillRect(x - 10, y - 12, 20, 24); ctx.strokeRect(x - 10, y - 12, 20, 24); return; }
-    ctx.lineWidth = 1.5; rr(x - 11, y - 13, 22, 26, 3); ctx.fill(); ctx.stroke(); ctx.strokeRect(x - 6, y - 8, 12, 16);
-    ctx.lineWidth = 3.2; ctx.beginPath(); var bx = x + side * 10; ctx.moveTo(bx, y - 12); ctx.lineTo(bx, y + 12); ctx.stroke();
+    ctx.strokeStyle = INK;
+    if (!detail) { ctx.fillStyle = hi ? INK : "#fff"; ctx.lineWidth = 1.6; ctx.fillRect(x - 8, y - 10, 16, 20); ctx.strokeRect(x - 8, y - 10, 16, 20); return; }
+    ctx.save(); ctx.translate(x, y); ctx.scale(side, 1);
+    ctx.lineWidth = 1.15; ctx.fillStyle = hi ? INK : "#fff";
+    ctx.beginPath(); ctx.moveTo(-6, -10); ctx.lineTo(2, -10); ctx.arcTo(9, -10, 9, -3, 6); ctx.lineTo(9, 3); ctx.arcTo(9, 10, 2, 10, 6); ctx.lineTo(-6, 10); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-2.5, -8); ctx.lineTo(-2.5, 8); ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.fillRect(-9.5, -12, 5, 4); ctx.strokeRect(-9.5, -12, 5, 4); ctx.fillRect(-9.5, 8, 5, 4); ctx.strokeRect(-9.5, 8, 5, 4);
+    ctx.restore();
   }
+
+
   var hatch = null;
   function hatchPattern() {
     if (hatch) return hatch;
@@ -593,7 +600,7 @@
       "<li><b>Mistakes were in the planning, not the details.</b> So we built checked building blocks and let the AI choose and combine them.</li>" +
       "<li><b>That made a tiny AI work.</b> Writing whole programs, a small AI got about 1 in 7 tasks right. Choosing from checked building blocks, it got nearly all right when the wording was familiar, and 4 to 8 in 10 when it wasn’t.</li></ul>" +
       "<h2>What runs on this page</h2><p>The seating program runs live in your browser. It is a JavaScript copy of our checked program, tested to give identical answers on 400 random cases and every recorded example.</p><p>The tiny AI does not run in your browser. Its readings of these sentences were recorded on a laptop beforehand. The chatbot’s answers are its real answers from our test. The name words are new: avoid is now one of the checked building blocks, and pair is handled before the blocks run.</p>";
-  function aboutHTML() { return ABOUT + '<h2>The code</h2><p>Everything is open: the tiny model, the seating program, the test sets, and every experiment that worked or didn\u2019t, with the write-ups. <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">github.com/ho3h/seat-intelligence</a></p></div>'; }
+  function aboutHTML() { return ABOUT + '<h2>The code</h2><p>Everything is open: the tiny model, the seating program, the test sets, and every experiment that worked or didn\u2019t, with the write-ups. <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">github.com/ho3h/seat-intelligence</a></p><p class="fine">Made by Theo Hopkinson: <a href="https://github.com/ho3h" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.linkedin.com/in/theohopkinson/" target="_blank" rel="noopener">LinkedIn</a>, <a href="https://x.com/theohopkinson" target="_blank" rel="noopener">X</a>.</p></div>'; }
   // ---------- loop
   var liveT = 0;
   function frameLoop(now) {

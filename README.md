@@ -1,6 +1,6 @@
 # Seat Intelligence
 
-**Play it:** [seat-intelligence.com](https://seat-intelligence.com). I trained a tiny model to stop AI leaders from causing the apocalypse. It does this by fixing the seating chart.
+**Play it:** [seat-intelligence.com](https://seat-intelligence.com). **The model:** [hopski/seat-intelligence-1.7b](https://huggingface.co/hopski/seat-intelligence-1.7b) on Hugging Face. I trained a tiny model to stop AI leaders from causing the apocalypse. It does this by fixing the seating chart.
 
 
 Write a seating rule in English. A tiny local model turns it into a few words of a program you can check, run, and explain.

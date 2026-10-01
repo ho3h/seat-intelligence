@@ -1,4 +1,7 @@
-# adapters/ (not in this repo)
+# Adapters
+
+The adapter the demo uses is on Hugging Face: **[hopski/seat-intelligence-1.7b](https://huggingface.co/hopski/seat-intelligence-1.7b)** (MLX LoRA for mlx-community/Qwen3-1.7B-4bit, 35 MB, with a model card and a usage example).
+
 
 The LoRA adapters are about 1 GB in total, so they are not committed. They will be published separately on a model hub;
 the link goes here once they are up. Until then, ask the repo owner.
