@@ -1,0 +1,23 @@
+{
+ "written": "2026-10-01, by the HERO-7 author before the tiny AI read these sentences; intended programs for the page's play-mode riddles",
+ "items": [
+  {
+   "id": "r_reunion",
+   "sentence": "Put Greg Brockman, Dario Amodei and Tom Brown in one section, seat David Sacks with Chamath Palihapitiya, and keep Elon Musk away from Mark Zuckerberg.",
+   "intended_program": "pair Greg_Brockman Dario_Amodei\npair Greg_Brockman Tom_Brown\npair David_Sacks Chamath_Palihapitiya\navoid Elon_Musk Mark_Zuckerberg",
+   "intended_canonical": "avoid Elon_Musk Mark_Zuckerberg\npair Chamath_Palihapitiya David_Sacks\npair Dario_Amodei Greg_Brockman\npair Greg_Brockman Tom_Brown"
+  },
+  {
+   "id": "r_complicated",
+   "sentence": "Keep Microsoft and OpenAI together and Google away from both, never put two government officials in one section, and keep Elon Musk away from Jeff Bezos.",
+   "intended_program": "limit government 1\navoid Elon_Musk Jeff_Bezos\npair Microsoft OpenAI\navoid Google Microsoft\navoid Google OpenAI",
+   "intended_canonical": "limit government 1\navoid Elon_Musk Jeff_Bezos\navoid Google Microsoft\navoid Google OpenAI\npair Microsoft OpenAI"
+  },
+  {
+   "id": "r_whole",
+   "sentence": "Colleagues together and no two government officials in one section. Keep Elon Musk away from OpenAI, Mark Zuckerberg and Jeff Bezos. Put Greg Brockman, Dario Amodei and Tom Brown together, seat David Sacks with Chamath Palihapitiya, keep Microsoft with OpenAI, and keep Google away from both.",
+   "intended_program": "together company\nlimit government 1\navoid Elon_Musk OpenAI\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk Jeff_Bezos\npair Greg_Brockman Dario_Amodei\npair Greg_Brockman Tom_Brown\npair David_Sacks Chamath_Palihapitiya\npair Microsoft OpenAI\navoid Google Microsoft\navoid Google OpenAI",
+   "intended_canonical": "together company\nlimit government 1\navoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI\navoid Google Microsoft\navoid Google OpenAI\npair Chamath_Palihapitiya David_Sacks\npair Dario_Amodei Greg_Brockman\npair Greg_Brockman Tom_Brown\npair Microsoft OpenAI"
+  }
+ ]
+}

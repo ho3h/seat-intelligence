@@ -1,7 +1,7 @@
 """Re-record the HERO-6 page sentences (runs/hero6/page_intended.json, intended programs written in HERO-6) with a HERO-7
 configuration: greedy program (timed, one warm-up excluded), 20 samples at T=0.7, and (if vote) the 5-sample vote.
 Fields as runs/hero6/page_outputs.json plus `config`.
-  python -m genome.hero7.page7 <model> <adapter> <mode plain|cons> <vote 0|1> [out]"""
+  python -m genome.hero7.page7 <model> <adapter> <mode plain|cons> <vote 0|1> [out] [items json]"""
 import json, sys, time, collections
 import os as _os
 _REPO = _os.path.abspath(_os.path.join(_os.path.dirname(__file__), "../.."))  # repo root (release copy; was an absolute path)
@@ -12,11 +12,12 @@ from genome.hero7.sample7 import run
 from genome.hero7.score7 import vote
 
 
-def main(model_id, adapter, mode="cons", use_vote="0", out=_REPO + "/runs/hero7/page_outputs.json"):
+def main(model_id, adapter, mode="cons", use_vote="0", out=_REPO + "/runs/hero7/page_outputs.json",
+         items_path=_REPO + "/runs/hero6/page_intended.json"):
     from mlx_lm import load
     model, tok = load(model_id, adapter_path=adapter)
     G = L.load_real()[0]
-    items = json.load(open(_REPO + "/runs/hero6/page_intended.json"))["items"]
+    items = json.load(open(items_path))["items"]
     run(model, tok, ["Sections of 3."], G, 1, 0.0, 1.0, mode)          # warm-up
     from genome.hero1.gen_train import prompt
     rows = []

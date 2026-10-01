@@ -26,9 +26,10 @@ data["chat"] = {"sentence": "No two government officials in one section.", "prog
                 "show": answers[3], "showGovMax": max(sum(gov[i] for i in s) for s in answers[3]["secs"]), "answers": [a["secs"] for a in answers], "govMin": min(a["govOver"] for a in answers), "govMax": max(a["govOver"] for a in answers)}
 h6 = json.load(open(f"{D}/runs/hero7/page_outputs_r7_1p7b.json"))   # HERO-7 tiny AI (adapters/hero7_r7_1p7b_b16), plain decoding
 h6 = h6 if isinstance(h6, list) else h6.get("outputs", h6.get("rows", list(h6.values())))
+h6 = h6 + json.load(open(f"{D}/runs/hero7/page_outputs_riddles.json"))["outputs"]   # the play-mode riddles, read by the same model
 # timelines: the HERO-7 tiny AI's 500 readings (5 each) of the 100 fresh set-7 rules, judged STRICT (runs/hero7/readings_set7_r7_1p7b.json)
 _r7 = json.load(open(f"{D}/runs/hero7/readings_set7_r7_1p7b.json"))
-data["readings"] = {"texts": _r7["texts"], "passed": _r7["passed"]}
+data["readings"] = {"texts": _r7["texts"], "passed": _r7["passed"], "programs": _r7["programs"], "gold": _r7["gold"]}   # each timeline is seated by its own reading
 data["h6"] = [{"sentence": r["sentence"], "program": r["greedy_program"], "intended": r["intended_program"], "ok": r["matches_intended"],
                "distinct": r.get("distinct_programs_T07"), "secs": r.get("secs")} for r in h6]
 t = open(f"{D}/demo/luncheon/template.html").read()
