@@ -119,11 +119,11 @@ var Seating = (function () {
     return seq;
   }
 
-  function refSections(cap, rl, elems) {
+  function refSections(cap, rl, elems, breaks) {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; });
     var sec = 0, size = 0, out = [];
-    elems.forEach(function (e) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap;
+    elems.forEach(function (e, idx) {
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       if (!ok) { if (size > 0) sec++; size = 0; S.forEach(function (r) { r[3] = r[4] = 0; }); }
@@ -136,11 +136,11 @@ var Seating = (function () {
   // `avoid A B` (Python reference: genome/hero6/lang6.py; verified tag-mask net: genome/hero6/sectioner6.py): A and B name a guest or a company, spaces as _.
   function key(x) { return x === null || x === undefined ? "" : String(x).replace(/[\s,]+/g, "_"); }
   function isWho(g, who) { return key(g.name) === who || key(g.org) === who; }
-  function avoidSections(cap, rl, seq, guests, avoids) {
+  function avoidSections(cap, rl, seq, guests, avoids, breaks) {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; }), A = avoids.map(function () { return [false, false]; });
     var sec = 0, size = 0, out = [];
     seq.forEach(function (e, idx) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap;
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       var mem = e.s > 0 ? seq.slice(idx, idx + e.s).map(function (x) { return guests[x.i]; }) : [guests[e.i]];
@@ -156,11 +156,28 @@ var Seating = (function () {
     return out;
   }
 
+  // page layout only (not in the Python reference): `breaks` are seat positions where the table itself ends a section
+  // (the hosts' chairs, the foot of the table). Units are moved forward just enough that none straddles a break;
+  // null if no such order exists. Without `breaks`, seat() is exactly the reference.
+  function fitRuns(seq, breaks) {
+    var units = [], out = [], pos = 0, b = 0;
+    for (var i = 0; i < seq.length; i += seq[i].s) units.push(seq.slice(i, i + seq[i].s));
+    while (units.length) {
+      while (b < breaks.length && breaks[b] <= pos) b++;
+      var room = b < breaks.length ? breaks[b] - pos : Infinity, j = 0;
+      while (j < units.length && units[j].length > room) j++;
+      if (j === units.length) return null;
+      var u = units.splice(j, 1)[0]; out = out.concat(u); pos += u.length;
+    }
+    return out;
+  }
+
   // -> {seq: guest indices in seating order, assign: section per guest}
-  function seat(guests, p) {
+  function seat(guests, p, breaks) {
     var seq = prep(guests, p);
-    var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), seq, guests, p.avoids)
-      : refSections(p.cap, rules(p), seq.map(function (e) { return { c: e.c, s: e.s }; }));
+    if (breaks) { var fit = fitRuns(seq, breaks); if (fit) seq = fit; else breaks = null; }
+    var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), seq, guests, p.avoids, breaks)
+      : refSections(p.cap, rules(p), seq.map(function (e) { return { c: e.c, s: e.s }; }), breaks);
     var assign = new Array(guests.length);
     seq.forEach(function (e, k) { assign[e.i] = secs[k]; });
     return { seq: seq.map(function (e) { return e.i; }), assign: assign };

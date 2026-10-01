@@ -8,16 +8,16 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Seat Intelligence (SI)">
 <meta property="og:title" content="Seat Intelligence (SI)">
-<meta property="og:description" content="Seat the real White House AI lunch before p(doom) hits 1. A tiny model can. Can you?">
+<meta property="og:description" content="Seat the real White House AI lunch before p(doom) boils over. I trained a tiny model that gets it right nine times in ten. Can you beat it?">
 <meta property="og:url" content="https://seat-intelligence.com/">
-<meta property="og:image" content="https://seat-intelligence.com/og.png?v=4">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content="https://seat-intelligence.com/og.png?v=5">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
 <meta property="og:image:alt" content="The White House AI lunch seating chart as posted, except Mark Zuckerberg now sits next to Elon Musk. Their names are in red, and p(doom) reads 1.10">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Seat Intelligence (SI)">
-<meta name="twitter:description" content="Seat the real White House AI lunch before p(doom) hits 1. A tiny model can. Can you?">
-<meta name="twitter:image" content="https://seat-intelligence.com/og.png?v=4">
+<meta name="twitter:description" content="Seat the real White House AI lunch before p(doom) boils over. I trained a tiny model that gets it right nine times in ten. Can you beat it?">
+<meta name="twitter:image" content="https://seat-intelligence.com/og.png?v=5">
 <meta name="twitter:image:alt" content="The White House AI lunch seating chart as posted, except Mark Zuckerberg now sits next to Elon Musk. Their names are in red, and p(doom) reads 1.10">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2710%27 fill=%27%23fbfbf9%27/%3E%3Ctext x=%2732%27 y=%2742%27 text-anchor=%27middle%27 font-family=%27Georgia,serif%27 font-weight=%27700%27 font-size=%2734%27 fill=%27%23151515%27%3ESI%3C/text%3E%3Crect x=%2716%27 y=%2749%27 width=%2732%27 height=%274%27 fill=%27%23a8322a%27/%3E%3C/svg%3E">
 <meta name="color-scheme" content="light">
@@ -243,6 +243,7 @@
   @keyframes wobble { from { transform:rotate(calc(-1 * var(--amp, 1deg))); } to { transform:rotate(var(--amp, 1deg)); } }
   @keyframes charge { to { background-position:14.14px 0; } }
   @media (prefers-reduced-motion: reduce) { .hud.boil, .hud.boil.up, .capclock.boil b, .hud .fizz i, .hud.boil .pbar i { animation:none; } }
+  .sw { display:inline-block; width:22px; height:11px; vertical-align:-1px; margin:0 6px 0 0; }
 </style>
 </head>
 <body>
@@ -379,11 +380,11 @@ var Seating = (function () {
     return seq;
   }
 
-  function refSections(cap, rl, elems) {
+  function refSections(cap, rl, elems, breaks) {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; });
     var sec = 0, size = 0, out = [];
-    elems.forEach(function (e) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap;
+    elems.forEach(function (e, idx) {
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       if (!ok) { if (size > 0) sec++; size = 0; S.forEach(function (r) { r[3] = r[4] = 0; }); }
@@ -396,11 +397,11 @@ var Seating = (function () {
   // `avoid A B` (Python reference: genome/hero6/lang6.py; verified tag-mask net: genome/hero6/sectioner6.py): A and B name a guest or a company, spaces as _.
   function key(x) { return x === null || x === undefined ? "" : String(x).replace(/[\s,]+/g, "_"); }
   function isWho(g, who) { return key(g.name) === who || key(g.org) === who; }
-  function avoidSections(cap, rl, seq, guests, avoids) {
+  function avoidSections(cap, rl, seq, guests, avoids, breaks) {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; }), A = avoids.map(function () { return [false, false]; });
     var sec = 0, size = 0, out = [];
     seq.forEach(function (e, idx) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap;
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       var mem = e.s > 0 ? seq.slice(idx, idx + e.s).map(function (x) { return guests[x.i]; }) : [guests[e.i]];
@@ -416,11 +417,28 @@ var Seating = (function () {
     return out;
   }
 
+  // page layout only (not in the Python reference): `breaks` are seat positions where the table itself ends a section
+  // (the hosts' chairs, the foot of the table). Units are moved forward just enough that none straddles a break;
+  // null if no such order exists. Without `breaks`, seat() is exactly the reference.
+  function fitRuns(seq, breaks) {
+    var units = [], out = [], pos = 0, b = 0;
+    for (var i = 0; i < seq.length; i += seq[i].s) units.push(seq.slice(i, i + seq[i].s));
+    while (units.length) {
+      while (b < breaks.length && breaks[b] <= pos) b++;
+      var room = b < breaks.length ? breaks[b] - pos : Infinity, j = 0;
+      while (j < units.length && units[j].length > room) j++;
+      if (j === units.length) return null;
+      var u = units.splice(j, 1)[0]; out = out.concat(u); pos += u.length;
+    }
+    return out;
+  }
+
   // -> {seq: guest indices in seating order, assign: section per guest}
-  function seat(guests, p) {
+  function seat(guests, p, breaks) {
     var seq = prep(guests, p);
-    var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), seq, guests, p.avoids)
-      : refSections(p.cap, rules(p), seq.map(function (e) { return { c: e.c, s: e.s }; }));
+    if (breaks) { var fit = fitRuns(seq, breaks); if (fit) seq = fit; else breaks = null; }
+    var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), seq, guests, p.avoids, breaks)
+      : refSections(p.cap, rules(p), seq.map(function (e) { return { c: e.c, s: e.s }; }), breaks);
     var assign = new Array(guests.length);
     seq.forEach(function (e, k) { assign[e.i] = secs[k]; });
     return { seq: seq.map(function (e) { return e.i; }), assign: assign };
@@ -522,8 +540,12 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
   real.forEach(function (g, i) { if (i !== potusGi && i !== vpotusGi) { POS[i] = GUESTS.length; GUESTS.push(i); } });
   var ENG = GUESTS.map(function (i) { return realEng[i]; });
   function isHostSeat(k) { return k in HOSTSEAT; }
+  // the Vice President, the foot of the table and the President end a section: free-seat positions 8, 16 and 24
+  var BREAKS = [8, 16, 24];
   function seatRule(p) {
-    var r = S.seat(ENG, p), seat = new Array(N), groups = new Array(N), n = 0;
+    var r = S.seat(ENG, p, BREAKS), bad = S.violations(ENG, p, r.assign).v.total;
+    if (bad > 0) { var r0 = S.seat(ENG, p); if (S.violations(ENG, p, r0.assign).v.total < bad) r = r0; }   // never let the layout cost a rule
+    var seat = new Array(N), groups = new Array(N), n = 0;
     r.seq.forEach(function (j) { var k = FREE[n++]; seat[k] = GUESTS[j]; groups[k] = r.assign[j]; });
     Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = null; });
     return { seat: seat, groups: groups };
@@ -685,9 +707,9 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
     var nearest = function (a, B) { var best = B[0]; B.forEach(function (b) { if (Math.abs(yOf(b) - yOf(a)) < Math.abs(yOf(best) - yOf(a))) best = b; }); return best; };
     Object.keys(bySec).forEach(function (sc) {
       var m = bySec[sc].slice().sort(function (a, b) { return kOf[a] - kOf[b]; });
-      judge.limits.forEach(function (l) { var hit = m.filter(function (gi) { return l[0].indexOf(real[gi].cat) >= 0; }); if (hit.length > l[1]) for (var i = 1; i < hit.length; i++) out.push({ a: hit[i - 1], b: hit[i], kind: "same", g: "s" + sc }); });
-      judge.aparts.forEach(function (ap) { var A = m.filter(function (g) { return real[g].cat === ap[0]; }), B = m.filter(function (g) { return real[g].cat === ap[1]; }); if (B.length) A.forEach(function (a) { out.push({ a: a, b: nearest(a, B), kind: "same", g: "s" + sc }); }); });
-      (judge.avoids || []).forEach(function (av) { m.forEach(function (a) { if (!S.isWho(real[a], av[0])) return; m.forEach(function (b) { if (a !== b && S.isWho(real[b], av[1])) out.push({ a: a, b: b, kind: "same", g: "s" + sc }); }); }); });
+      judge.limits.forEach(function (l, li) { var hit = m.filter(function (gi) { return l[0].indexOf(real[gi].cat) >= 0; }); if (hit.length > l[1]) for (var i = 1; i < hit.length; i++) out.push({ a: hit[i - 1], b: hit[i], kind: "same", g: "s" + sc + "L" + li }); });
+      judge.aparts.forEach(function (ap, ai) { var A = m.filter(function (g) { return real[g].cat === ap[0]; }), B = m.filter(function (g) { return real[g].cat === ap[1]; }); if (B.length) A.forEach(function (a) { out.push({ a: a, b: nearest(a, B), kind: "same", g: "s" + sc + "A" + ai }); }); });
+      (judge.avoids || []).forEach(function (av, vi) { m.forEach(function (a) { if (!S.isWho(real[a], av[0])) return; m.forEach(function (b) { if (a !== b && S.isWho(real[b], av[1])) out.push({ a: a, b: b, kind: "same", g: "s" + sc + "V" + vi }); }); }); });
     });
     var placed = Object.keys(kOf).map(Number);
     (judge.pairs || []).forEach(function (pr, pi) { placed.forEach(function (a) { if (!S.isWho(real[a], pr[0])) return; placed.forEach(function (b) { if (a !== b && S.isWho(real[b], pr[1]) && arr.sec[kOf[a]] !== arr.sec[kOf[b]]) out.push({ a: a, b: b, kind: "split", g: "p" + pi }); }); }); });
@@ -703,7 +725,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
     });
     out.kOf = kOf; return out;
   }
-  // one red comb per clash: a line in the margin with a tick at each person involved (dashed when they should be together but aren't)
+  // one red comb per broken rule per section: a line in the margin with a tick at each person involved (dashed when they should be together but aren't)
   function drawClashes(list) {
     if (!list || !list.length) return;
     var groups = {}, order = [];
@@ -725,15 +747,17 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
     });
     ctx.setLineDash([]);
   }
-  function mark(mk, x, y) {
-    ctx.fillStyle = mk[1]; ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.2832); ctx.fill();
-    ctx.fillStyle = "#fff"; ctx.font = "600 11px " + TEXT; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(mk[0], x, y + 0.5);
+  // guests a rule is about get a highlighter stroke behind their name, one colour per group, like a marked-up printout
+  var HL = { G: "#f3e3a6", R: "#f2cdc8", P: "#cfe0f0", C: "#d6e8c9", A: "#e3d7f1", T: "#d6e8c9" };
+  function highlight(mk, x0, y, w) {
+    ctx.fillStyle = HL[mk[0]] || "#ecebe6"; ctx.beginPath();
+    ctx.moveTo(x0, y - 7); ctx.lineTo(x0 + w, y - 8); ctx.lineTo(x0 + w + 1, y + 8); ctx.lineTo(x0 + 1, y + 8.5); ctx.closePath(); ctx.fill();
   }
   function nameAt(label, x, y, side, mk, color) {
     ctx.font = "italic 13.5px " + FONT; ctx.fillStyle = color || INK; ctx.textBaseline = "middle"; ctx.textAlign = side < 0 ? "right" : "left";
     var tw = ctx.measureText(label).width; if (tw > 222) { ctx.font = "italic " + (13.5 * 222 / tw).toFixed(2) + "px " + FONT; tw = 222; }
+    if (mk) { highlight(mk, side < 0 ? x - tw - 3 : x - 3, y, tw + 6); ctx.fillStyle = color || INK; }
     ctx.fillText(label, x, y);
-    if (mk) { mark(mk, side < 0 ? x - tw - 13 : x + tw + 13, y); }
   }
   function header() {
     ctx.fillStyle = MUTE; ctx.font = "italic 15px " + FONT; ctx.textAlign = "left"; ctx.textBaseline = "middle";
@@ -799,8 +823,9 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
       ctx.save(); ctx.shadowColor = "rgba(0,0,0,.28)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4; ctx.fillStyle = "#fff";
       rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.fill(); ctx.restore();
       ctx.strokeStyle = BLUE; ctx.lineWidth = 2; rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.stroke();
-      ctx.font = "italic 16px " + FONT; ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lab, drag.wx + 8, drag.wy);
-      var mk = z && z.marks[drag.gi]; if (mk) mark(mk, drag.wx - tw / 2 + 16, drag.wy);
+      ctx.font = "italic 16px " + FONT; var mk = z && z.marks[drag.gi], lw = ctx.measureText(lab).width; if (mk) highlight(mk, drag.wx - lw / 2 - 3, drag.wy, lw + 6);
+      ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lab, drag.wx, drag.wy);
+
     }
   }
 
@@ -992,7 +1017,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function stash() { if (overEl) overEl.hidden = true; if (st.puzzle) st.saved = st.puzzle; st.puzzle = null; st.chat = null; st.rule = null; st.marks = null; }
   function setRule(prog, judge) { st.rule = { exec: S.parse(prog), judge: S.parse(judge || prog) }; }
-  function dot(c, l) { return '<span class="dot" style="background:' + c + '">' + l + "</span>"; }
+  function dot(c, l) { return '<span class="sw" style="background:' + HL[l] + '"></span>'; }
   function keyLine(z) {
     var has = {}; Object.keys(z.marks).forEach(function (i) { has[z.marks[i][0]] = z.marks[i]; });
     var parts = [];
@@ -1192,7 +1217,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
 
   requestAnimationFrame(frameLoop);
   window.__luncheon = { st: st, sea: sea, cam: cam, story: story, play: play, swap: swapSeats, letAI: letAI, wave: wave, stepWave: stepWave,
-    render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE };
+    render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE, seatRule: seatRule, S: S, ENG: ENG, DATA: DATA, LEVELS: LEVELS };
 })();
 
 </script>

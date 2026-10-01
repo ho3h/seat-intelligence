@@ -43,8 +43,12 @@
   real.forEach(function (g, i) { if (i !== potusGi && i !== vpotusGi) { POS[i] = GUESTS.length; GUESTS.push(i); } });
   var ENG = GUESTS.map(function (i) { return realEng[i]; });
   function isHostSeat(k) { return k in HOSTSEAT; }
+  // the Vice President, the foot of the table and the President end a section: free-seat positions 8, 16 and 24
+  var BREAKS = [8, 16, 24];
   function seatRule(p) {
-    var r = S.seat(ENG, p), seat = new Array(N), groups = new Array(N), n = 0;
+    var r = S.seat(ENG, p, BREAKS), bad = S.violations(ENG, p, r.assign).v.total;
+    if (bad > 0) { var r0 = S.seat(ENG, p); if (S.violations(ENG, p, r0.assign).v.total < bad) r = r0; }   // never let the layout cost a rule
+    var seat = new Array(N), groups = new Array(N), n = 0;
     r.seq.forEach(function (j) { var k = FREE[n++]; seat[k] = GUESTS[j]; groups[k] = r.assign[j]; });
     Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = null; });
     return { seat: seat, groups: groups };
@@ -206,9 +210,9 @@
     var nearest = function (a, B) { var best = B[0]; B.forEach(function (b) { if (Math.abs(yOf(b) - yOf(a)) < Math.abs(yOf(best) - yOf(a))) best = b; }); return best; };
     Object.keys(bySec).forEach(function (sc) {
       var m = bySec[sc].slice().sort(function (a, b) { return kOf[a] - kOf[b]; });
-      judge.limits.forEach(function (l) { var hit = m.filter(function (gi) { return l[0].indexOf(real[gi].cat) >= 0; }); if (hit.length > l[1]) for (var i = 1; i < hit.length; i++) out.push({ a: hit[i - 1], b: hit[i], kind: "same", g: "s" + sc }); });
-      judge.aparts.forEach(function (ap) { var A = m.filter(function (g) { return real[g].cat === ap[0]; }), B = m.filter(function (g) { return real[g].cat === ap[1]; }); if (B.length) A.forEach(function (a) { out.push({ a: a, b: nearest(a, B), kind: "same", g: "s" + sc }); }); });
-      (judge.avoids || []).forEach(function (av) { m.forEach(function (a) { if (!S.isWho(real[a], av[0])) return; m.forEach(function (b) { if (a !== b && S.isWho(real[b], av[1])) out.push({ a: a, b: b, kind: "same", g: "s" + sc }); }); }); });
+      judge.limits.forEach(function (l, li) { var hit = m.filter(function (gi) { return l[0].indexOf(real[gi].cat) >= 0; }); if (hit.length > l[1]) for (var i = 1; i < hit.length; i++) out.push({ a: hit[i - 1], b: hit[i], kind: "same", g: "s" + sc + "L" + li }); });
+      judge.aparts.forEach(function (ap, ai) { var A = m.filter(function (g) { return real[g].cat === ap[0]; }), B = m.filter(function (g) { return real[g].cat === ap[1]; }); if (B.length) A.forEach(function (a) { out.push({ a: a, b: nearest(a, B), kind: "same", g: "s" + sc + "A" + ai }); }); });
+      (judge.avoids || []).forEach(function (av, vi) { m.forEach(function (a) { if (!S.isWho(real[a], av[0])) return; m.forEach(function (b) { if (a !== b && S.isWho(real[b], av[1])) out.push({ a: a, b: b, kind: "same", g: "s" + sc + "V" + vi }); }); }); });
     });
     var placed = Object.keys(kOf).map(Number);
     (judge.pairs || []).forEach(function (pr, pi) { placed.forEach(function (a) { if (!S.isWho(real[a], pr[0])) return; placed.forEach(function (b) { if (a !== b && S.isWho(real[b], pr[1]) && arr.sec[kOf[a]] !== arr.sec[kOf[b]]) out.push({ a: a, b: b, kind: "split", g: "p" + pi }); }); }); });
@@ -224,7 +228,7 @@
     });
     out.kOf = kOf; return out;
   }
-  // one red comb per clash: a line in the margin with a tick at each person involved (dashed when they should be together but aren't)
+  // one red comb per broken rule per section: a line in the margin with a tick at each person involved (dashed when they should be together but aren't)
   function drawClashes(list) {
     if (!list || !list.length) return;
     var groups = {}, order = [];
@@ -246,15 +250,17 @@
     });
     ctx.setLineDash([]);
   }
-  function mark(mk, x, y) {
-    ctx.fillStyle = mk[1]; ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.2832); ctx.fill();
-    ctx.fillStyle = "#fff"; ctx.font = "600 11px " + TEXT; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(mk[0], x, y + 0.5);
+  // guests a rule is about get a highlighter stroke behind their name, one colour per group, like a marked-up printout
+  var HL = { G: "#f3e3a6", R: "#f2cdc8", P: "#cfe0f0", C: "#d6e8c9", A: "#e3d7f1", T: "#d6e8c9" };
+  function highlight(mk, x0, y, w) {
+    ctx.fillStyle = HL[mk[0]] || "#ecebe6"; ctx.beginPath();
+    ctx.moveTo(x0, y - 7); ctx.lineTo(x0 + w, y - 8); ctx.lineTo(x0 + w + 1, y + 8); ctx.lineTo(x0 + 1, y + 8.5); ctx.closePath(); ctx.fill();
   }
   function nameAt(label, x, y, side, mk, color) {
     ctx.font = "italic 13.5px " + FONT; ctx.fillStyle = color || INK; ctx.textBaseline = "middle"; ctx.textAlign = side < 0 ? "right" : "left";
     var tw = ctx.measureText(label).width; if (tw > 222) { ctx.font = "italic " + (13.5 * 222 / tw).toFixed(2) + "px " + FONT; tw = 222; }
+    if (mk) { highlight(mk, side < 0 ? x - tw - 3 : x - 3, y, tw + 6); ctx.fillStyle = color || INK; }
     ctx.fillText(label, x, y);
-    if (mk) { mark(mk, side < 0 ? x - tw - 13 : x + tw + 13, y); }
   }
   function header() {
     ctx.fillStyle = MUTE; ctx.font = "italic 15px " + FONT; ctx.textAlign = "left"; ctx.textBaseline = "middle";
@@ -320,8 +326,9 @@
       ctx.save(); ctx.shadowColor = "rgba(0,0,0,.28)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4; ctx.fillStyle = "#fff";
       rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.fill(); ctx.restore();
       ctx.strokeStyle = BLUE; ctx.lineWidth = 2; rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.stroke();
-      ctx.font = "italic 16px " + FONT; ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lab, drag.wx + 8, drag.wy);
-      var mk = z && z.marks[drag.gi]; if (mk) mark(mk, drag.wx - tw / 2 + 16, drag.wy);
+      ctx.font = "italic 16px " + FONT; var mk = z && z.marks[drag.gi], lw = ctx.measureText(lab).width; if (mk) highlight(mk, drag.wx - lw / 2 - 3, drag.wy, lw + 6);
+      ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lab, drag.wx, drag.wy);
+
     }
   }
 
@@ -513,7 +520,7 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function stash() { if (overEl) overEl.hidden = true; if (st.puzzle) st.saved = st.puzzle; st.puzzle = null; st.chat = null; st.rule = null; st.marks = null; }
   function setRule(prog, judge) { st.rule = { exec: S.parse(prog), judge: S.parse(judge || prog) }; }
-  function dot(c, l) { return '<span class="dot" style="background:' + c + '">' + l + "</span>"; }
+  function dot(c, l) { return '<span class="sw" style="background:' + HL[l] + '"></span>'; }
   function keyLine(z) {
     var has = {}; Object.keys(z.marks).forEach(function (i) { has[z.marks[i][0]] = z.marks[i]; });
     var parts = [];
@@ -713,5 +720,5 @@
 
   requestAnimationFrame(frameLoop);
   window.__luncheon = { st: st, sea: sea, cam: cam, story: story, play: play, swap: swapSeats, letAI: letAI, wave: wave, stepWave: stepWave,
-    render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE };
+    render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE, seatRule: seatRule, S: S, ENG: ENG, DATA: DATA, LEVELS: LEVELS };
 })();
