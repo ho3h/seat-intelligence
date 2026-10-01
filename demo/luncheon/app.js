@@ -323,14 +323,15 @@
       if (drag && drag.active && drag.gi === gi) continue;
       var p = cur[gi];
       if (p.side === 0) { ctx.font = "italic 15px " + FONT; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = MUTE; ctx.fillText(real[gi].label + " — no seat", p.x, p.y); continue; }
-      nameAt(real[gi].label, p.x, p.y, p.side, marks && marks[gi], red[gi] && !(marks && marks[gi]) ? RED : null);
+      var mk = marks && marks[gi]; if (z && !red[gi]) mk = null;   // in the game a highlight means "in a clash", so seating someone well clears it
+      nameAt(real[gi].label, p.x, p.y, p.side, mk, red[gi] && !mk ? RED : null);
     }
     if (drag && drag.active) {
       var lab = real[drag.gi].label; ctx.font = "italic 16px " + FONT; var tw = ctx.measureText(lab).width + 40;
       ctx.save(); ctx.shadowColor = "rgba(0,0,0,.28)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4; ctx.fillStyle = "#fff";
       rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.fill(); ctx.restore();
       ctx.strokeStyle = BLUE; ctx.lineWidth = 2; rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.stroke();
-      ctx.font = "italic 16px " + FONT; var mk = z && z.marks[drag.gi], lw = ctx.measureText(lab).width; if (mk) highlight(mk, drag.wx - lw / 2 - 3, drag.wy, lw + 6, lab);
+      ctx.font = "italic 16px " + FONT; var mk = z && red[drag.gi] && z.marks[drag.gi], lw = ctx.measureText(lab).width; if (mk) highlight(mk, drag.wx - lw / 2 - 3, drag.wy, lw + 6, lab);
       ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lab, drag.wx, drag.wy);
 
     }
