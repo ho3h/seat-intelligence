@@ -23,4 +23,4 @@ Place each adapter directory here under the name below; the scripts look for `ad
 You do not need any adapter to run the verifier, the corpus checks, or the demo page: the page replays sentences the model read
 beforehand and runs only the seating program in the browser. To retrain instead of downloading, regenerate the training data
 (`genome/hero1/gen_train.py`, `genome/hero6/gen_train6.py`, `genome/hero7/gen_train7.py`) and run `genome/hero7/train7.sh` (or the earlier
-`genome/hero1/train.sh`) with an MLX-capable Python in `PY`. The demo's adapter is also on Hugging Face as `hopski/seat-intelligence-1.7b`.
+`genome/hero1/train.sh`) with an MLX-capable Python in `PY`.
