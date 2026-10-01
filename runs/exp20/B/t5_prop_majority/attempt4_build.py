@@ -1,6 +1,6 @@
 """Build script for t5_prop_majority (condition B): majority merge of one property."""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, LIST, TRIE, TUP, INF
 from genome.lib import recipes as R
 

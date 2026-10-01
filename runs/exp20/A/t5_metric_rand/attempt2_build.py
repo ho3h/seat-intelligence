@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build t5_metric_rand: count Rand agreement pairs."""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, TRIE, LIST, TUP, INF
 
 D = os.path.dirname(os.path.abspath(__file__))

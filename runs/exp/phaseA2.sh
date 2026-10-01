@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Phase A (continued, larger batches, max 900 new tokens as in the original local_eval). Waits for the native iid run already in flight.
-cd /Users/tedsandtads/Genome
-PY=/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python
+cd <home>/Genome
+PY=<home>/Documents/GitHub/orbweaver/.venv/bin/python
 S() { $PY -m genome.exp.sample "$@" 2>&1 | grep --line-buffered -v -i warn; }
 Q() { (python3 -m genome.exp.score "$1" > "${1%.json}.metrics.txt" 2>&1 &) }
 while [ ! -f runs/exp/A_native_v1_iid.json ]; do sleep 5; done; Q runs/exp/A_native_v1_iid.json

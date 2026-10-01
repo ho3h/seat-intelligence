@@ -1,6 +1,6 @@
 """Build t3_sp_count: count shortest paths from s to t."""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, TRIE, ADJ, EDGE, INF
 
 def build_t3_sp_count():

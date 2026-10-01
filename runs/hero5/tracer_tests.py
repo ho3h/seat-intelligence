@@ -1,7 +1,7 @@
 """Unit tests of the tracer's provenance semantics on hand-written nets (facts are the defs named fact_k).
 usage: python3 runs/hero5/tracer_tests.py   (asserts; prints PASS)"""
 import sys, os, subprocess, re
-sys.path.insert(0, '/Users/tedsandtads/Genome')
+sys.path.insert(0, '<home>/Genome')
 from genome.hero5.core import TRACER, _tmp
 from genome.executor import ENV
 

@@ -2,7 +2,7 @@
 t5_decide_drop_known: Final - reverse with correct arity.
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, LIST, TUP, EDGE, WEDGE, INF
 from genome.lib import recipes as R
 

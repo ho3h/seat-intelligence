@@ -1,6 +1,6 @@
 #!/bin/zsh
 # CPU: score each expected sample file once it exists (one scorer at a time = at most 3 verifier processes)
-cd /Users/tedsandtads/Genome
+cd <home>/Genome
 TAGS=(1p7b 0p6b 0p6b_lr5e5 4b_lr5e5 1p7b_lr5e5 1p7b_aug_lr5e5 zs4bi)
 while true; do
   left=0

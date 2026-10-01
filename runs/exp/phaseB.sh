@@ -1,8 +1,8 @@
 #!/bin/zsh
 # Phase B: one round of expert iteration. Resume from v1 on (own verified pool samples + equal replay of original rows),
 # one pass; control = resume from v1 on original rows only, same iters. Evaluate on the fair iid test (n=8; control n=8).
-cd /Users/tedsandtads/Genome
-PY=/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python
+cd <home>/Genome
+PY=<home>/Documents/GitHub/orbweaver/.venv/bin/python
 M=mlx-community/Qwen3-4B-Instruct-2507-4bit
 T() { $PY -m mlx_lm lora --model $M --train --batch-size 4 --num-layers 16 --learning-rate 1e-4 --mask-prompt --max-seq-length 2048 \
       --steps-per-eval 50 --save-every 1000 --seed 0 "$@" 2>&1 | grep --line-buffered -E "Val loss|Train loss|Saved final" ; }

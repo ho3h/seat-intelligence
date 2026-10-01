@@ -4,7 +4,7 @@ Import:
 
 ```python
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, GlueError, NUM, DEPTH, ANY, LIST, TRIE, TUP, HOLE, EDGE, WEDGE, ADJ, INF
 ```
 

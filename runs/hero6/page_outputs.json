@@ -1,0 +1,248 @@
+{
+ "model": "mlx-community/Qwen3-1.7B-4bit",
+ "adapter": "adapters/hero6_1p7b",
+ "note": "greedy timing = one request on a shared machine, warm-up excluded; matches_intended = same seating as the intended program on the real 34 and the two synthetic lists (genome/hero6/judge6.py)",
+ "outputs": [
+  {
+   "id": "a",
+   "sentence": "No two government officials in one section, and keep Elon Musk away from OpenAI and from Mark Zuckerberg.",
+   "greedy_program": "limit government 1\navoid Elon_Musk OpenAI\navoid Elon_Musk Mark_Zuckerberg",
+   "canonical": "limit government 1\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "limit government 1\navoid Elon_Musk OpenAI\navoid Elon_Musk Mark_Zuckerberg",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "limit government 1\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI": 20
+   },
+   "secs": 0.413,
+   "tokens_in": 71,
+   "tokens_out": 20
+  },
+  {
+   "id": "b",
+   "sentence": "Keep Elon Musk away from Jeff Bezos, Mark Zuckerberg and OpenAI.",
+   "greedy_program": "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI",
+   "canonical": "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk OpenAI": 20
+   },
+   "secs": 0.477,
+   "tokens_in": 65,
+   "tokens_out": 24
+  },
+  {
+   "id": "c",
+   "sentence": "Seat David Sacks and Chamath Palihapitiya in the same section.",
+   "greedy_program": "pair David_Sacks Chamath_Palihapitiya",
+   "canonical": "pair Chamath_Palihapitiya David_Sacks",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "pair David_Sacks Chamath_Palihapitiya",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "pair Chamath_Palihapitiya David_Sacks": 20
+   },
+   "secs": 0.312,
+   "tokens_in": 67,
+   "tokens_out": 12
+  },
+  {
+   "id": "d",
+   "sentence": "Put Greg Brockman, Dario Amodei and Tom Brown in the same section.",
+   "greedy_program": "pair Greg_Brockman Dario_Amodei\npair Greg_Brockman Tom_Brown",
+   "canonical": "pair Dario_Amodei Greg_Brockman\npair Greg_Brockman Tom_Brown",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "pair Greg_Brockman Dario_Amodei\npair Greg_Brockman Tom_Brown",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "pair Dario_Amodei Greg_Brockman\npair Greg_Brockman Tom_Brown": 20
+   },
+   "secs": 0.425,
+   "tokens_in": 68,
+   "tokens_out": 19
+  },
+  {
+   "id": "e",
+   "sentence": "Keep Microsoft and OpenAI together, and keep Google away from both.",
+   "greedy_program": "pair Microsoft OpenAI\navoid Google Microsoft\navoid Google OpenAI",
+   "canonical": "avoid Google Microsoft\navoid Google OpenAI\npair Microsoft OpenAI",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "pair Microsoft OpenAI\navoid Google Microsoft\navoid Google OpenAI",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "avoid Google Microsoft\navoid Google OpenAI\npair Microsoft OpenAI": 20
+   },
+   "secs": 0.336,
+   "tokens_in": 64,
+   "tokens_out": 13
+  },
+  {
+   "id": "f",
+   "sentence": "Sections of four, colleagues together, and Elon Musk nowhere near Mark Zuckerberg.",
+   "greedy_program": "size 4\navoid Elon_Musk Mark_Zuckerberg",
+   "canonical": "size 4\navoid Elon_Musk Mark_Zuckerberg",
+   "matches_intended": false,
+   "matches_intended_strict": false,
+   "canonical_equals_intended": false,
+   "intended_program": "size 4\ntogether company\navoid Elon_Musk Mark_Zuckerberg",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 0,
+   "T07_program_counts": {
+    "size 4\navoid Elon_Musk Mark_Zuckerberg": 20
+   },
+   "secs": 0.316,
+   "tokens_in": 65,
+   "tokens_out": 12
+  },
+  {
+   "id": "g_show1",
+   "sentence": "Keep colleagues together, sections of at most four, and never put two government officials in the same section.",
+   "greedy_program": "size 4\ntogether company\nlimit government 1",
+   "canonical": "size 4\ntogether company\nlimit government 1",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "size 4\ntogether company\nlimit government 1",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "size 4\ntogether company\nlimit government 1": 20
+   },
+   "secs": 0.32,
+   "tokens_in": 71,
+   "tokens_out": 12
+  },
+  {
+   "id": "g_show2",
+   "sentence": "AI labs and big tech go in separate sections, chip makers get seated first, and no section bigger than five.",
+   "greedy_program": "size 5\napart ai_lab big_tech\norder chips",
+   "canonical": "size 5\napart ai_lab big_tech\norder chips",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "size 5\napart ai_lab big_tech\norder chips",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "size 5\napart ai_lab big_tech\norder chips": 20
+   },
+   "secs": 0.343,
+   "tokens_in": 73,
+   "tokens_out": 14
+  },
+  {
+   "id": "g_show3",
+   "sentence": "Seat all the investors together, keep sections to three guests, and keep the AI labs away from the chip makers.",
+   "greedy_program": "size 3\ntogether investor\napart ai_lab chips",
+   "canonical": "size 3\ntogether investor\napart ai_lab chips",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "size 3\ntogether investor\napart ai_lab chips",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "size 3\ntogether investor\napart ai_lab chips": 20
+   },
+   "secs": 0.324,
+   "tokens_in": 73,
+   "tokens_out": 13
+  },
+  {
+   "id": "g_show4",
+   "sentence": "At most two government officials per section, software and security firms together, colleagues together, and investors first.",
+   "greedy_program": "limit software_security investor 2\nlimit software_security government 2",
+   "canonical": "limit software_security investor 2\nlimit software_security government 2",
+   "matches_intended": false,
+   "matches_intended_strict": false,
+   "canonical_equals_intended": false,
+   "intended_program": "together company\ntogether software_security\nlimit government 2\norder investor",
+   "distinct_programs_T07": 2,
+   "T07_samples_matching_intended": 0,
+   "T07_program_counts": {
+    "limit software_security investor 2\nlimit software_security government 2": 19,
+    "limit software_security 2\nlimit software_security investor 2": 1
+   },
+   "secs": 0.327,
+   "tokens_in": 71,
+   "tokens_out": 13
+  },
+  {
+   "id": "g_show5",
+   "sentence": "Pairs only, please. Big tech before AI labs, and never two investors in one section.",
+   "greedy_program": "limit big_tech investor 1\nlimit big_tech investor 1\norder big_tech ai_lab",
+   "canonical": "limit big_tech investor 1\nlimit big_tech investor 1\norder big_tech ai_lab",
+   "matches_intended": false,
+   "matches_intended_strict": false,
+   "canonical_equals_intended": false,
+   "intended_program": "size 2\nlimit investor 1\norder big_tech ai_lab",
+   "distinct_programs_T07": 7,
+   "T07_samples_matching_intended": 0,
+   "T07_program_counts": {
+    "limit big_tech investor 1\nlimit investor 1\norder big_tech ai_lab": 5,
+    "limit big_tech investor 1\norder big_tech ai_lab": 4,
+    "UNPARSABLE: pair big_tech\nlimit investor 1\norder big_tech ai_lab": 4,
+    "limit big_tech investor 1\nlimit big_tech investor 1\norder big_tech ai_lab": 3,
+    "limit investor 1\norder big_tech ai_lab\npair ai_lab big_tech": 2,
+    "limit investor 1\norder big_tech\npair ai_lab big_tech": 1,
+    "limit big_tech investor 1\norder big_tech\npair ai_lab big_tech": 1
+   },
+   "secs": 0.457,
+   "tokens_in": 69,
+   "tokens_out": 22
+  },
+  {
+   "id": "g_gov1",
+   "sentence": "No two government officials in one section.",
+   "greedy_program": "limit government 1",
+   "canonical": "limit government 1",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "limit government 1",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "limit government 1": 20
+   },
+   "secs": 0.201,
+   "tokens_in": 58,
+   "tokens_out": 4
+  },
+  {
+   "id": "g_easy",
+   "sentence": "AI labs and big tech apart. Sections of 5.",
+   "greedy_program": "size 5\napart ai_lab big_tech",
+   "canonical": "size 5\napart ai_lab big_tech",
+   "matches_intended": true,
+   "matches_intended_strict": true,
+   "canonical_equals_intended": true,
+   "intended_program": "size 5\napart ai_lab big_tech",
+   "distinct_programs_T07": 1,
+   "T07_samples_matching_intended": 20,
+   "T07_program_counts": {
+    "size 5\napart ai_lab big_tech": 20
+   },
+   "secs": 0.309,
+   "tokens_in": 62,
+   "tokens_out": 11
+  }
+ ]
+}

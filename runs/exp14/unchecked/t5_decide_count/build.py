@@ -1,8 +1,8 @@
 """Build t5_decide_count: count list triples with score >= tau."""
 import sys, os
 D = os.path.dirname(os.path.abspath(__file__))
-# Add /Users/tedsandtads/Genome to path
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+# Add <home>/Genome to path
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.graphprims import Book
 
 def decide_count():

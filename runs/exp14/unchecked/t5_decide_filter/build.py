@@ -2,8 +2,8 @@
 """Build the HVM2 net for t5_decide_filter."""
 import sys, os
 D = os.path.dirname(os.path.abspath(__file__))
-# /Users/tedsandtads/Genome/runs/exp14/unchecked/t5_decide_filter
-# -> /Users/tedsandtads/Genome
+# <home>/Genome/runs/exp14/unchecked/t5_decide_filter
+# -> <home>/Genome
 genome_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(D))))
 sys.path.insert(0, genome_root)
 from genome.lib import graphprims as G

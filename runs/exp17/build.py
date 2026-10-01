@@ -1,7 +1,7 @@
 """Assemble runs/exp17/<prog>.bend from runs/exp17/src/<prog>.src: lines `#include <name>` are replaced by
 runs/exp17/lib/<name>.bend (each library fragment included once). Usage: build.py prog [out_path]"""
 import sys, os, re
-D = "/Users/tedsandtads/Genome/runs/exp17"
+D = "<home>/Genome/runs/exp17"
 def build(prog, out=None):
     seen = set(); lines = []
     def emit(path):

@@ -2,7 +2,7 @@
 t5_decide_drop_known: Minimal version - just return cands
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program
 
 P = Program()

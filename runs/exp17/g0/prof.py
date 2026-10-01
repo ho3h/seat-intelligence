@@ -1,12 +1,12 @@
 """Per-case depth profile on the big cases: python3 prof.py prog [path] [seed]"""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome.verify import build_cases
 from genome import bend_io as B
 from genome.executor import run_net
 prog = sys.argv[1]
-path = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else f"/Users/tedsandtads/Genome/runs/exp17/{prog}.bend"
+path = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else f"<home>/Genome/runs/exp17/{prog}.bend"
 seed = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 p = load_all()[prog]
 book, err = B.compile_bend(B.bend_source(p, open(path).read()))

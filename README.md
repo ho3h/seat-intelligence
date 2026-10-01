@@ -16,9 +16,9 @@ and their kill rules is [`docs/SWINGS.md`](docs/SWINGS.md); gate status is [`gat
 ## The demo: who sits next to whom at the White House AI lunch
 
 `demo/luncheon/index.html` is a single static page built around the 34-seat chart that was posted for a White House AI luncheon
-(transcribed by hand into `data/hero/luncheon.json`). Five seating rules in English were read by a fine-tuned Qwen3-1.7B (LoRA)
-beforehand. Each became a short program in six "stage words" (`size`, `together`, `limit`, `apart`, `order`, plus the newer
-`avoid`/`pair`). The page then seats the real chart, and an unbounded grid of synthetic rooms, with a JavaScript port of the
+(transcribed by hand into `data/hero/luncheon.json`). Its seating rules in English were read beforehand by a fine-tuned
+Qwen3-1.7B (LoRA; the HERO-6 adapter, `runs/hero6/page_outputs.json`). Each became a short program in "stage words" (`size`,
+`together`, `limit`, `apart`, `order`, plus `avoid`/`pair` for named guests and companies). The page then seats the real chart, and an unbounded grid of synthetic rooms, with a JavaScript port of the
 checked seating function. It also shows what an untuned small chatbot does with the same rule.
 
 ```sh
@@ -28,12 +28,20 @@ python3 demo/luncheon/build.py                           # rebuild index.html fr
 ```
 
 Read the fine print before quoting it:
-- **The page does not run a model.** The five model readings were recorded ahead of time. The browser runs only the seating program.
+- **The page does not run a model.** The model's readings were recorded ahead of time. The browser runs only the seating program.
 - It is a game. The rules are the host's rules. Nothing on the page claims the guests hold these views, feuds or seats.
 - "Verified" covers the net, not the model's reading. A misread sentence still produces a valid arrangement, just for the wrong
   rule (about 1% on our test set, 9% on an independently written one). That is why the page always shows the parsed program.
 - Seating 100,000 guests works and is exact, but depth is linear: the next-fit seating stage is sequential. It shows exactness and
   cost. It does not show parallelism.
+
+### HERO-6 note (2026-09-30): rules that name guests
+
+HERO-6 retrained the 1.7B model to read rules that name guests or companies (`avoid X Y`, `pair X Y`). Verdict: **partial pass**.
+On the new, independently written named-guest set it scores 89.2% pass@1 (85.0% under the strict judge; the bar was 85%). But it
+regressed on HERO-1's set 1 from 98.6% to 93.1%, beyond the 3-point limit the kill rule allowed. The new words collide with old
+wording ("pairs only, please" now loses its `size 2`). `avoid` now runs inside the verified net (seeds 0-2 pass). Details in
+[`docs/HERO-6.md`](docs/HERO-6.md). Agent-reported, not yet re-run by the lead.
 
 ## Results that held up
 
@@ -123,12 +131,12 @@ experiment pre-registered a kill rule before looking at results. That discipline
   (400/400 random cases plus the five recorded arrangements).
 - **Agent-reported only:** HERO-1 to HERO-5, swings 20-27 unless noted, the 87-program Bend swarm's own verification logs, and
   swing 21. These numbers come from the agents' reports and result files and have not yet been independently re-run.
-- **HERO-6** (the model learns rules that name guests: `avoid`, `pair`) was still in progress when this copy was made. Its doc has the
-  frozen protocol only.
+- **HERO-6** (named guests: `avoid`, `pair`): agent-reported, see the note above. The demo's JS port, now with `pair`, passes
+  `test_seating.js` in this copy.
 - Re-checked while preparing this copy: corpus check 200/200, the G0 `t1_max` net passes, the demo sectioner net passes seed 0
   (101/101), and `test_seating.js` passes. This used freshly built runtimes from `scripts/setup_physics.sh`.
-- Run records under `runs/` are kept as they were written, including absolute paths from the original machine. Code under
-  `genome/` and `demo/` was changed only to use repo-relative paths.
+- Run records under `runs/` are kept as they were written, except that the original home directory in absolute paths is replaced
+  by `<home>`. Code under `genome/` and `demo/` was changed only to use repo-relative paths.
 
 ### Data
 

@@ -1,0 +1,1615 @@
+{
+ "result": {
+  "source": "<home>/Genome/runs/hero6/samples/test6_greedy.json",
+  "overall": {
+   "policies": 72,
+   "samples": 72,
+   "passed": 64,
+   "pass1": 0.8889,
+   "ci": [
+    0.8056,
+    0.9583
+   ],
+   "text_match": 0.8472,
+   "parsed": 0.9722
+  },
+  "invented": {
+   "policies": 12,
+   "samples": 12,
+   "passed": 11,
+   "pass1": 0.9167,
+   "ci": [
+    0.75,
+    1.0
+   ],
+   "text_match": 0.9167,
+   "parsed": 0.9167
+  },
+  "real_only": {
+   "policies": 60,
+   "samples": 60,
+   "passed": 53,
+   "pass1": 0.8833,
+   "ci": [
+    0.8,
+    0.95
+   ],
+   "text_match": 0.8333,
+   "parsed": 0.9833
+  },
+  "avoid_only": {
+   "policies": 32,
+   "samples": 32,
+   "passed": 29,
+   "pass1": 0.9062,
+   "ci": [
+    0.7812,
+    1.0
+   ],
+   "text_match": 0.8438,
+   "parsed": 0.9688
+  },
+  "pair_only": {
+   "policies": 27,
+   "samples": 27,
+   "passed": 23,
+   "pass1": 0.8519,
+   "ci": [
+    0.7037,
+    0.963
+   ],
+   "text_match": 0.8519,
+   "parsed": 1.0
+  },
+  "both": {
+   "policies": 13,
+   "samples": 13,
+   "passed": 12,
+   "pass1": 0.9231,
+   "ci": [
+    0.7692,
+    1.0
+   ],
+   "text_match": 0.8462,
+   "parsed": 0.9231
+  },
+  "with_old_words": {
+   "policies": 30,
+   "samples": 30,
+   "passed": 25,
+   "pass1": 0.8333,
+   "ci": [
+    0.7,
+    0.9667
+   ],
+   "text_match": 0.8,
+   "parsed": 0.9333
+  },
+  "named_only": {
+   "policies": 42,
+   "samples": 42,
+   "passed": 39,
+   "pass1": 0.9286,
+   "ci": [
+    0.8333,
+    1.0
+   ],
+   "text_match": 0.881,
+   "parsed": 1.0
+  },
+  "policy_pass": {
+   "n01": "1/1",
+   "n02": "1/1",
+   "n03": "1/1",
+   "n04": "1/1",
+   "n05": "1/1",
+   "n06": "1/1",
+   "n07": "1/1",
+   "n08": "1/1",
+   "n09": "1/1",
+   "n10": "1/1",
+   "n11": "1/1",
+   "n12": "1/1",
+   "n13": "1/1",
+   "n14": "1/1",
+   "n15": "1/1",
+   "n16": "0/1",
+   "n17": "0/1",
+   "n18": "1/1",
+   "n19": "1/1",
+   "n20": "0/1",
+   "n21": "1/1",
+   "n22": "1/1",
+   "n23": "1/1",
+   "n24": "1/1",
+   "n25": "1/1",
+   "n26": "1/1",
+   "n27": "1/1",
+   "n28": "1/1",
+   "n29": "1/1",
+   "n30": "1/1",
+   "n31": "1/1",
+   "n32": "1/1",
+   "n33": "1/1",
+   "n34": "1/1",
+   "n35": "1/1",
+   "n36": "1/1",
+   "n37": "1/1",
+   "n38": "1/1",
+   "n39": "1/1",
+   "n40": "1/1",
+   "n41": "1/1",
+   "n42": "1/1",
+   "n43": "1/1",
+   "n44": "1/1",
+   "n45": "1/1",
+   "n46": "1/1",
+   "n47": "0/1",
+   "n48": "1/1",
+   "n49": "1/1",
+   "n50": "1/1",
+   "n51": "1/1",
+   "n52": "1/1",
+   "n53": "1/1",
+   "n54": "1/1",
+   "n55": "1/1",
+   "n56": "1/1",
+   "n57": "1/1",
+   "n58": "0/1",
+   "n59": "1/1",
+   "n60": "0/1",
+   "n61": "1/1",
+   "n62": "1/1",
+   "n63": "1/1",
+   "n64": "1/1",
+   "n65": "1/1",
+   "n66": "1/1",
+   "n67": "1/1",
+   "n68": "0/1",
+   "n69": "1/1",
+   "n70": "1/1",
+   "n71": "1/1",
+   "n72": "0/1"
+  }
+ },
+ "per": {
+  "n01": {
+   "voice": "terse",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Elon_Musk Mark_Zuckerberg",
+   "text": "Keep Musk away from Zuckerberg.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Elon_Musk Mark_Zuckerberg",
+     "why": "",
+     "text": "avoid Elon_Musk Mark_Zuckerberg"
+    }
+   ]
+  },
+  "n02": {
+   "voice": "formal",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Jeff_Bezos Satya_Nadella",
+   "text": "Please ensure that Jeff Bezos and Satya Nadella are not seated in the same section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Jeff_Bezos Satya_Nadella",
+     "why": "",
+     "text": "avoid Jeff_Bezos Satya_Nadella"
+    }
+   ]
+  },
+  "n03": {
+   "voice": "question",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Jensen_Huang Lisa_Su",
+   "text": "can you make sure Huang and Lisa Su end up in the same section?",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Jensen_Huang Lisa_Su",
+     "why": "",
+     "text": "pair Jensen_Huang Lisa_Su"
+    }
+   ]
+  },
+  "n04": {
+   "voice": "negative-first",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid OpenAI Anthropic",
+   "text": "Don't let anyone from OpenAI sit with the Anthropic folks.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Anthropic OpenAI",
+     "why": "",
+     "text": "avoid OpenAI Anthropic"
+    }
+   ]
+  },
+  "n05": {
+   "voice": "fan-out list",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Sundar_Pichai\navoid Elon_Musk Satya_Nadella",
+   "text": "Musk needs to be in a different section from Bezos, Pichai and Nadella.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Satya_Nadella\navoid Elon_Musk Sundar_Pichai",
+     "why": "",
+     "text": "avoid Elon_Musk Jeff_Bezos\navoid Elon_Musk Sundar_Pichai\navoid Elon_Musk Satya_Nadella"
+    }
+   ]
+  },
+  "n06": {
+   "voice": "terse mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "size 4\nlimit investor 1\navoid Jensen_Huang Lisa_Su",
+   "text": "Tables of four please. At most one investor per table, and split up Huang and Su.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": false,
+     "canon": "size 4\nlimit investor 1\navoid Jensen_Huang Su_Su",
+     "why": "",
+     "text": "size 4\nlimit investor 1\navoid Jensen_Huang Su_Su"
+    }
+   ]
+  },
+  "n07": {
+   "voice": "chatty",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Greg_Brockman Satya_Nadella",
+   "text": "Oh and put Brockman with Nadella, same section, thanks!",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Greg_Brockman Satya_Nadella",
+     "why": "",
+     "text": "pair Greg_Brockman Satya_Nadella"
+    }
+   ]
+  },
+  "n08": {
+   "voice": "imperative",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Alex_Karp Shyam_Sankar\npair Alex_Karp Nikesh_Arora",
+   "text": "Seat Karp, Sankar and Arora together.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Alex_Karp Nikesh_Arora\npair Alex_Karp Shyam_Sankar",
+     "why": "",
+     "text": "pair Alex_Karp Shyam_Sankar\npair Alex_Karp Nikesh_Arora"
+    }
+   ]
+  },
+  "n09": {
+   "voice": "company-person",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Palantir Secretary_Lutnick",
+   "text": "Put the Palantir team in the same section as Secretary Lutnick.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Palantir Secretary_Lutnick",
+     "why": "",
+     "text": "pair Palantir Secretary_Lutnick"
+    }
+   ]
+  },
+  "n10": {
+   "voice": "terse company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Microsoft OpenAI",
+   "text": "Microsoft and OpenAI should sit together.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Microsoft OpenAI",
+     "why": "",
+     "text": "pair Microsoft OpenAI"
+    }
+   ]
+  },
+  "n11": {
+   "voice": "bullets",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 5\norder government\navoid Jeff_Bezos Elon_Musk",
+   "text": "- max 5 per section\n- government seated first\n- keep Bezos and Musk apart",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 5\norder government\navoid Elon_Musk Jeff_Bezos",
+     "why": "",
+     "text": "size 5\norder government\navoid Jeff_Bezos Elon_Musk"
+    }
+   ]
+  },
+  "n12": {
+   "voice": "invented person-company",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Priya_Raghunathan Kestrel_Semiconductor",
+   "text": "Keep Priya Raghunathan away from anyone at Kestrel Semiconductor.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Kestrel_Semiconductor Priya_Raghunathan",
+     "why": "",
+     "text": "avoid Priya_Raghunathan Kestrel_Semiconductor"
+    }
+   ]
+  },
+  "n13": {
+   "voice": "rambling",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 4\ntogether chips\navoid Google Mark_Zuckerberg\npair Satya_Nadella Jeff_Bezos",
+   "text": "Okay so for the lunch I'm thinking groups of four at most, the chip people all together in one block, and whatever you do don't put the Google guy in the same section as Zuckerberg. Oh, and make sure Nadella ends up with Bezos.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 4\ntogether chips\navoid Google Mark_Zuckerberg\npair Jeff_Bezos Satya_Nadella",
+     "why": "",
+     "text": "size 4\ntogether chips\navoid Google Mark_Zuckerberg\npair Satya_Nadella Jeff_Bezos"
+    }
+   ]
+  },
+  "n14": {
+   "voice": "shorthand",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Sundar_Pichai Satya_Nadella",
+   "text": "Pichai / Nadella: different sections.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Satya_Nadella Sundar_Pichai",
+     "why": "",
+     "text": "avoid Sundar_Pichai Satya_Nadella"
+    }
+   ]
+  },
+  "n15": {
+   "voice": "formal",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Dario_Amodei Nvidia",
+   "text": "The host requests that Dario Amodei be seated with the Nvidia delegation.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Dario_Amodei Nvidia",
+     "why": "",
+     "text": "pair Dario_Amodei Nvidia"
+    }
+   ]
+  },
+  "n16": {
+   "voice": "question mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "size 5\navoid Elon_Musk David_Sacks\navoid Elon_Musk Brad_Gerstner\navoid Elon_Musk Chamath_Palihapitiya",
+   "text": "Sections of five. Could you also keep Sacks, Gerstner and Palihapitiya from sharing a section with Musk?",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "canon": "size 5\npair Brad_Gerstner David_Sacks\npair Brad_Gerstner Elon_Musk\npair Chamath_Palihapitiya David_Sacks\npair David_Sacks Elon_Musk",
+     "why": "differs on real34,synA,synB",
+     "text": "size 5\npair David_Sacks Brad_Gerstner\npair David_Sacks Chamath_Palihapitiya\npair Elon_Musk David_Sacks\npair Elon_Musk Brad_Gerstner"
+    }
+   ]
+  },
+  "n17": {
+   "voice": "terse",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "pair Shyam_Sankar Brandon_Rahbar_Daniels",
+   "text": "Seat Sankar with Daniels.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "canon": "pair Bill_Daniels Shyam_Sankar",
+     "why": "differs on real34,synA,synB",
+     "text": "pair Shyam_Sankar Bill_Daniels"
+    }
+   ]
+  },
+  "n18": {
+   "voice": "plain mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "apart government ai_lab\navoid Dario_Amodei Greg_Brockman",
+   "text": "No government people in the same section as AI labs. Also Amodei and Brockman apart.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "apart ai_lab government\navoid Dario_Amodei Greg_Brockman",
+     "why": "",
+     "text": "apart ai_lab government\navoid Dario_Amodei Greg_Brockman"
+    }
+   ]
+  },
+  "n19": {
+   "voice": "terse company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Meta Google",
+   "text": "Meta and Google: separate sections.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Google Meta",
+     "why": "",
+     "text": "avoid Meta Google"
+    }
+   ]
+  },
+  "n20": {
+   "voice": "chatty list",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "pair Lisa_Su Hock_Tan\npair Lisa_Su Sanjay_Mehrotra\npair Lisa_Su Jensen_Huang",
+   "text": "I want Su, Tan, Mehrotra and Huang all in one section.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "canon": "pair Jensen_Huang Su\npair Sanjay_Mehrotra Su\npair Satya_Nadella Su",
+     "why": "differs on real34,synA,synB",
+     "text": "pair Su Satya_Nadella\npair Su Sanjay_Mehrotra\npair Su Jensen_Huang"
+    }
+   ]
+  },
+  "n21": {
+   "voice": "pair-then-avoid",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Secretary_Scott_Bessent Secretary_Lutnick\navoid Alex_Karp Secretary_Scott_Bessent\navoid Alex_Karp Secretary_Lutnick",
+   "text": "Put Bessent with Lutnick, but keep both of them away from Karp.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Alex_Karp Secretary_Lutnick\navoid Alex_Karp Secretary_Scott_Bessent\npair Secretary_Lutnick Secretary_Scott_Bessent",
+     "why": "",
+     "text": "pair Secretary_Scott_Bessent Secretary_Lutnick\navoid Alex_Karp Secretary_Scott_Bessent\navoid Alex_Karp Secretary_Lutnick"
+    }
+   ]
+  },
+  "n22": {
+   "voice": "invented mixed",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 5\npair Kestrel_Semiconductor Veridian_Labs\navoid Svetlana_Petrova Diego_Alvarado",
+   "text": "Groups of five. Kestrel Semiconductor and Veridian Labs should be seated together, and Svetlana Petrova should not be with Diego Alvarado.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 5\navoid Diego_Alvarado Svetlana_Petrova\npair Kestrel_Semiconductor Veridian_Labs",
+     "why": "",
+     "text": "size 5\npair Kestrel_Semiconductor Veridian_Labs\navoid Svetlana_Petrova Diego_Alvarado"
+    }
+   ]
+  },
+  "n23": {
+   "voice": "lowercase chatty",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Mark_Zuckerberg Elon_Musk\navoid Mark_Zuckerberg Jeff_Bezos",
+   "text": "pls don't put zuckerberg in the same section as musk or bezos",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Elon_Musk Mark_Zuckerberg\navoid Jeff_Bezos Mark_Zuckerberg",
+     "why": "",
+     "text": "avoid Mark_Zuckerberg Elon_Musk\navoid Mark_Zuckerberg Jeff_Bezos"
+    }
+   ]
+  },
+  "n24": {
+   "voice": "company alias",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Elon_Musk Amazon",
+   "text": "Whoever's coming from Tesla should be kept away from the Amazon table.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Amazon Elon_Musk",
+     "why": "",
+     "text": "avoid Elon_Musk Amazon"
+    }
+   ]
+  },
+  "n25": {
+   "voice": "mixed company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "together company\norder government big_tech\npair Nvidia Microsoft",
+   "text": "Keep companies together, order is government then big tech, and pair Nvidia with Microsoft.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "together company\norder government big_tech\npair Microsoft Nvidia",
+     "why": "",
+     "text": "together company\norder government big_tech\npair Nvidia Microsoft"
+    }
+   ]
+  },
+  "n26": {
+   "voice": "formal fan-out",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Speaker_Johnson Chairman_Andrew_Ferguson\navoid Speaker_Johnson Director_Clayton",
+   "text": "Kindly arrange for Speaker Johnson to be seated apart from Chairman Ferguson and Director Clayton.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Chairman_Andrew_Ferguson Speaker_Johnson\navoid Director_Clayton Speaker_Johnson",
+     "why": "",
+     "text": "avoid Speaker_Johnson Chairman_Andrew_Ferguson\navoid Speaker_Johnson Director_Clayton"
+    }
+   ]
+  },
+  "n27": {
+   "voice": "question",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Michael_Kratsios Jared_Isaacman",
+   "text": "Is it possible to put Kratsios with Isaacman?",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Jared_Isaacman Michael_Kratsios",
+     "why": "",
+     "text": "pair Michael_Kratsios Jared_Isaacman"
+    }
+   ]
+  },
+  "n28": {
+   "voice": "chatty mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 3\nlimit chips 1\npair Susie_Wiles Will_Scharf",
+   "text": "max 3 a section, no more than one chips person per section, and I'd like Wiles and Scharf together",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 3\nlimit chips 1\npair Susie_Wiles Will_Scharf",
+     "why": "",
+     "text": "size 3\nlimit chips 1\npair Susie_Wiles Will_Scharf"
+    }
+   ]
+  },
+  "n29": {
+   "voice": "invented fan-out",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Mei_Lin_Zhou Oluwaseun_Adeyemi\navoid Mei_Lin_Zhou Arjun_Mehta\navoid Mei_Lin_Zhou Chloe_Beaumont",
+   "text": "Mei Lin Zhou should not share a section with Oluwaseun Adeyemi, Arjun Mehta or Chloe Beaumont.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Arjun_Mehta Mei_Lin_Zhou\navoid Chloe_Beaumont Mei_Lin_Zhou\navoid Mei_Lin_Zhou Oluwaseun_Adeyemi",
+     "why": "",
+     "text": "avoid Mei_Lin_Zhou Oluwaseun_Adeyemi\navoid Mei_Lin_Zhou Arjun_Mehta\navoid Mei_Lin_Zhou Chloe_Beaumont"
+    }
+   ]
+  },
+  "n30": {
+   "voice": "terse company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Broadcom AMD",
+   "text": "Keep Broadcom and AMD in different sections.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid AMD Broadcom",
+     "why": "",
+     "text": "avoid Broadcom AMD"
+    }
+   ]
+  },
+  "n31": {
+   "voice": "company pair-and-avoid",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Nvidia Micron\navoid Broadcom Nvidia\navoid Broadcom Micron",
+   "text": "Seat Nvidia alongside Micron, and neither of them should be with Broadcom.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Broadcom Micron\navoid Broadcom Nvidia\npair Micron Nvidia",
+     "why": "",
+     "text": "pair Nvidia Micron\navoid Nvidia Broadcom\navoid Micron Broadcom"
+    }
+   ]
+  },
+  "n32": {
+   "voice": "conversational mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 4\norder investor government\navoid Chamath_Palihapitiya David_Sacks",
+   "text": "For this one I'd like sections of no more than four, with the investors seated first and then government. Keep Chamath out of Sacks' section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 4\norder investor government\navoid Chamath_Palihapitiya David_Sacks",
+     "why": "",
+     "text": "size 4\norder investor government\navoid Chamath_Palihapitiya David_Sacks"
+    }
+   ]
+  },
+  "n33": {
+   "voice": "shorthand",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Brad_Gerstner Scott_Kupor",
+   "text": "Gerstner + Kupor, same section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Brad_Gerstner Scott_Kupor",
+     "why": "",
+     "text": "pair Brad_Gerstner Scott_Kupor"
+    }
+   ]
+  },
+  "n34": {
+   "voice": "invented mixed company",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "together government\navoid Halcyon_Capital Tidewater_Partners",
+   "text": "Seat all government guests together. Halcyon Capital must not share a section with Tidewater Partners.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "together government\navoid Halcyon_Capital Tidewater_Partners",
+     "why": "",
+     "text": "together government\navoid Halcyon_Capital Tidewater_Partners"
+    }
+   ]
+  },
+  "n35": {
+   "voice": "negative-first",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Sundar_Pichai Meta",
+   "text": "Don't put Pichai with anyone from Meta.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Meta Sundar_Pichai",
+     "why": "",
+     "text": "avoid Sundar_Pichai Meta"
+    }
+   ]
+  },
+  "n36": {
+   "voice": "full names group",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Dario_Amodei Tom_Brown\npair Dario_Amodei Satya_Nadella",
+   "text": "I'd like Dario Amodei, Tom Brown and Satya Nadella all in one section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Dario_Amodei Satya_Nadella\npair Dario_Amodei Tom_Brown",
+     "why": "",
+     "text": "pair Dario_Amodei Tom_Brown\npair Dario_Amodei Satya_Nadella"
+    }
+   ]
+  },
+  "n37": {
+   "voice": "mixed title",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "limit government 1\npair VPOTUS Jensen_Huang",
+   "text": "No two government officials per section, and pair the Vice President with Jensen Huang.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "limit government 1\npair Jensen_Huang VPOTUS",
+     "why": "",
+     "text": "limit government 1\npair VPOTUS Jensen_Huang"
+    }
+   ]
+  },
+  "n38": {
+   "voice": "bullets",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Jeff_Bezos Jared_Isaacman\navoid Elon_Musk Jared_Isaacman",
+   "text": "\u2022 Bezos with Isaacman\n\u2022 Musk away from Isaacman",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Elon_Musk Jared_Isaacman\npair Jared_Isaacman Jeff_Bezos",
+     "why": "",
+     "text": "pair Jeff_Bezos Jared_Isaacman\navoid Elon_Musk Jared_Isaacman"
+    }
+   ]
+  },
+  "n39": {
+   "voice": "company alias",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Elon_Musk NASA",
+   "text": "SpaceX and NASA in the same section please.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Elon_Musk NASA",
+     "why": "",
+     "text": "pair Elon_Musk NASA"
+    }
+   ]
+  },
+  "n40": {
+   "voice": "formal mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "together company\navoid Microsoft Google",
+   "text": "Each company is to be kept together, and the Microsoft and Google delegations are to be seated in separate sections.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "together company\navoid Google Microsoft",
+     "why": "",
+     "text": "together company\navoid Microsoft Google"
+    }
+   ]
+  },
+  "n41": {
+   "voice": "invented chatty",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Liam_Donnelly Mei_Lin_Zhou\navoid Rafaela_Mendes Liam_Donnelly\navoid Rafaela_Mendes Mei_Lin_Zhou",
+   "text": "ok so Liam Donnelly and Mei Lin Zhou together, but keep them both away from Rafaela Mendes",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Liam_Donnelly Rafaela_Mendes\navoid Mei_Lin_Zhou Rafaela_Mendes\npair Liam_Donnelly Mei_Lin_Zhou",
+     "why": "",
+     "text": "pair Liam_Donnelly Mei_Lin_Zhou\navoid Rafaela_Mendes Liam_Donnelly\navoid Rafaela_Mendes Mei_Lin_Zhou"
+    }
+   ]
+  },
+  "n42": {
+   "voice": "plain mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "apart ai_lab chips\navoid Alex_Karp Bill_McDermott",
+   "text": "Keep AI labs apart from chips, and Karp shouldn't sit with McDermott.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "apart ai_lab chips\navoid Alex_Karp Bill_McDermott",
+     "why": "",
+     "text": "apart ai_lab chips\navoid Alex_Karp Bill_McDermott"
+    }
+   ]
+  },
+  "n43": {
+   "voice": "question fan-out",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "avoid Nikesh_Arora Shyam_Sankar\navoid Nikesh_Arora Brandon_Rahbar_Daniels\navoid Nikesh_Arora Bill_McDermott",
+   "text": "can Arora be kept out of any section with Sankar, Daniels or McDermott?",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": false,
+     "canon": "avoid Bill_Daniels Nikesh_Arora\navoid Bill_McDermott Nikesh_Arora\navoid Nikesh_Arora Shyam_Sankar",
+     "why": "",
+     "text": "avoid Nikesh_Arora Shyam_Sankar\navoid Nikesh_Arora Bill_Daniels\navoid Nikesh_Arora Bill_McDermott"
+    }
+   ]
+  },
+  "n44": {
+   "voice": "terse company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Palantir Exiger",
+   "text": "Palantir with Exiger.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Exiger Palantir",
+     "why": "",
+     "text": "pair Palantir Exiger"
+    }
+   ]
+  },
+  "n45": {
+   "voice": "plain mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "limit big_tech 2\navoid Mark_Zuckerberg Sundar_Pichai",
+   "text": "At most two big tech per section. Zuckerberg and Pichai should not be together.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "limit big_tech 2\navoid Mark_Zuckerberg Sundar_Pichai",
+     "why": "",
+     "text": "limit big_tech 2\navoid Mark_Zuckerberg Sundar_Pichai"
+    }
+   ]
+  },
+  "n46": {
+   "voice": "invented plus real",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Kenji_Watanabe Jensen_Huang\navoid Farah_Haddad Lisa_Su",
+   "text": "Please seat Kenji Watanabe with Jensen Huang, and keep Farah Haddad away from Lisa Su.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Farah_Haddad Lisa_Su\npair Jensen_Huang Kenji_Watanabe",
+     "why": "",
+     "text": "pair Kenji_Watanabe Jensen_Huang\navoid Farah_Haddad Lisa_Su"
+    }
+   ]
+  },
+  "n47": {
+   "voice": "rambling mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 0,
+   "gold": "together company\norder software_security\navoid Elon_Musk Mark_Zuckerberg\navoid Elon_Musk Jeff_Bezos",
+   "text": "Here's what I want: tables of six are fine, keep each company together, security folks go first, and oh, Musk and Zuckerberg in different sections, Musk and Bezos too.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": false,
+     "text_match": false,
+     "why": "parse: unknown word: order security",
+     "text": "together company\norder security\navoid Elon_Musk Mark_Zuckerberg\npair Elon_Musk Jeff_Bezos"
+    }
+   ]
+  },
+  "n48": {
+   "voice": "formal honorific",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Chamath_Palihapitiya Brad_Gerstner",
+   "text": "Mr. Palihapitiya is to be seated with Mr. Gerstner.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Brad_Gerstner Chamath_Palihapitiya",
+     "why": "",
+     "text": "pair Chamath_Palihapitiya Brad_Gerstner"
+    }
+   ]
+  },
+  "n49": {
+   "voice": "terse",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Richard_Walters Sean_Cairncross",
+   "text": "Walters and Cairncross in separate sections.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Richard_Walters Sean_Cairncross",
+     "why": "",
+     "text": "avoid Richard_Walters Sean_Cairncross"
+    }
+   ]
+  },
+  "n50": {
+   "voice": "clipped mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "order chips ai_lab big_tech\npair Jensen_Huang Dario_Amodei",
+   "text": "Order: chips, AI labs, big tech. Put Huang with Amodei.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "order chips ai_lab big_tech\npair Dario_Amodei Jensen_Huang",
+     "why": "",
+     "text": "order chips ai_lab big_tech\npair Jensen_Huang Dario_Amodei"
+    }
+   ]
+  },
+  "n51": {
+   "voice": "invented mixed company",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 3\norder investor\navoid Northwind_Cloud Lumen_Robotics",
+   "text": "Sections of three. Northwind Cloud must not share a section with Lumen Robotics, and investors go first.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 3\norder investor\navoid Lumen_Robotics Northwind_Cloud",
+     "why": "",
+     "text": "size 3\norder investor\navoid Northwind_Cloud Lumen_Robotics"
+    }
+   ]
+  },
+  "n52": {
+   "voice": "negative-first",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Scott_Kupor Michael_Kratsios",
+   "text": "Don't split up Kupor and Kratsios.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Michael_Kratsios Scott_Kupor",
+     "why": "",
+     "text": "pair Scott_Kupor Michael_Kratsios"
+    }
+   ]
+  },
+  "n53": {
+   "voice": "mixed company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "apart chips investor\npair Google Amazon",
+   "text": "Keep chips apart from investors. Separately, the Google guy and the Amazon guy should be in the same section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "apart chips investor\npair Amazon Google",
+     "why": "",
+     "text": "apart chips investor\npair Google Amazon"
+    }
+   ]
+  },
+  "n54": {
+   "voice": "invented fan-out mixed",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 4\navoid Adaeze_Okonkwo Chamath_Palihapitiya\navoid Adaeze_Okonkwo David_Sacks\navoid Adaeze_Okonkwo Brad_Gerstner",
+   "text": "Limit each section to four people. Keep Adaeze Okonkwo away from Chamath Palihapitiya, David Sacks and Brad Gerstner.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 4\navoid Adaeze_Okonkwo Brad_Gerstner\navoid Adaeze_Okonkwo Chamath_Palihapitiya\navoid Adaeze_Okonkwo David_Sacks",
+     "why": "",
+     "text": "size 4\navoid Adaeze_Okonkwo Chamath_Palihapitiya\navoid Adaeze_Okonkwo David_Sacks\navoid Adaeze_Okonkwo Brad_Gerstner"
+    }
+   ]
+  },
+  "n55": {
+   "voice": "question company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Nvidia OpenAI",
+   "text": "Could Nvidia and OpenAI share a section?",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Nvidia OpenAI",
+     "why": "",
+     "text": "pair Nvidia OpenAI"
+    }
+   ]
+  },
+  "n56": {
+   "voice": "titles mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "order government\navoid POTUS VPOTUS",
+   "text": "Seat government first, and keep the President and the Vice President in different sections.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "order government\navoid POTUS VPOTUS",
+     "why": "",
+     "text": "order government\navoid POTUS VPOTUS"
+    }
+   ]
+  },
+  "n57": {
+   "voice": "clipped mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 5\napart government big_tech\npair Secretary_Lutnick Susie_Wiles",
+   "text": "Five per section max. Government and big tech never mixed. Pair Lutnick with Wiles.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 5\napart big_tech government\npair Secretary_Lutnick Susie_Wiles",
+     "why": "",
+     "text": "size 5\napart big_tech government\npair Secretary_Lutnick Susie_Wiles"
+    }
+   ]
+  },
+  "n58": {
+   "voice": "shorthand list",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "avoid Elon_Musk Satya_Nadella\navoid Jeff_Bezos Sundar_Pichai\navoid Mark_Zuckerberg Jensen_Huang",
+   "text": "Separate: Musk/Nadella, Bezos/Pichai, Zuckerberg/Huang.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "canon": "avoid Elon_Musk Satya_Nadella\npair Jeff_Bezos Sundar_Pichai\npair Jensen_Huang Mark_Zuckerberg",
+     "why": "differs on real34,synA,synB",
+     "text": "avoid Elon_Musk Satya_Nadella\npair Jeff_Bezos Sundar_Pichai\npair Mark_Zuckerberg Jensen_Huang"
+    }
+   ]
+  },
+  "n59": {
+   "voice": "invented group",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Priya_Raghunathan Tomasz_Wielgosz\npair Priya_Raghunathan Chloe_Beaumont\npair Priya_Raghunathan Oluwaseun_Adeyemi",
+   "text": "Put Priya Raghunathan, Tomasz Wielgosz, Chloe Beaumont and Oluwaseun Adeyemi in one section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "pair Chloe_Beaumont Priya_Raghunathan\npair Oluwaseun_Adeyemi Priya_Raghunathan\npair Priya_Raghunathan Tomasz_Wielgosz",
+     "why": "",
+     "text": "pair Priya_Raghunathan Tomasz_Wielgosz\npair Priya_Raghunathan Chloe_Beaumont\npair Priya_Raghunathan Oluwaseun_Adeyemi"
+    }
+   ]
+  },
+  "n60": {
+   "voice": "clipped mixed company",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "together company\nsize 4\npair Service_Now Palo_Alto_Networks",
+   "text": "Together company, sections of four, and put ServiceNow with Palo Alto Networks.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "canon": "size 4\npair Palo_Alto_Networks Service_Now",
+     "why": "differs on real34,synA,synB",
+     "text": "size 4\npair Service_Now Palo_Alto_Networks"
+    }
+   ]
+  },
+  "n61": {
+   "voice": "chatty",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Microsoft Greg_Brockman",
+   "text": "hey can you keep Microsoft away from Brockman",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Greg_Brockman Microsoft",
+     "why": "",
+     "text": "avoid Microsoft Greg_Brockman"
+    }
+   ]
+  },
+  "n62": {
+   "voice": "plain mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "limit government 1\nlimit investor 1\npair David_Sacks Jensen_Huang\navoid David_Sacks Secretary_Scott_Bessent",
+   "text": "At most one government official per section and at most one investor per section. Seat Sacks with Huang, but not with Bessent.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "limit investor 1\nlimit government 1\navoid David_Sacks Secretary_Scott_Bessent\npair David_Sacks Jensen_Huang",
+     "why": "",
+     "text": "limit investor 1\nlimit government 1\npair David_Sacks Jensen_Huang\navoid David_Sacks Secretary_Scott_Bessent"
+    }
+   ]
+  },
+  "n63": {
+   "voice": "invented plus real mixed",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "order government\npair Ingrid_Solberg Secretary_Scott_Bessent\navoid Hamid_Karimi Chamath_Palihapitiya",
+   "text": "Government first. Ingrid Solberg should sit with Secretary Bessent, and Hamid Karimi should not be in Chamath Palihapitiya's section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "order government\navoid Chamath_Palihapitiya Hamid_Karimi\npair Ingrid_Solberg Secretary_Scott_Bessent",
+     "why": "",
+     "text": "order government\npair Ingrid_Solberg Secretary_Scott_Bessent\navoid Hamid_Karimi Chamath_Palihapitiya"
+    }
+   ]
+  },
+  "n64": {
+   "voice": "formal company fan-out",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 4\navoid Anthropic OpenAI\navoid Anthropic Google\navoid Anthropic Meta",
+   "text": "At most four per section. Anthropic's attendees should be seated away from OpenAI, Google and Meta.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 4\navoid Anthropic Google\navoid Anthropic Meta\navoid Anthropic OpenAI",
+     "why": "",
+     "text": "size 4\navoid Anthropic OpenAI\navoid Anthropic Google\navoid Anthropic Meta"
+    }
+   ]
+  },
+  "n65": {
+   "voice": "plain mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "together ai_lab\npair Elon_Musk Dario_Amodei",
+   "text": "Keep all the AI lab people together, and seat Musk with Amodei.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "together ai_lab\npair Dario_Amodei Elon_Musk",
+     "why": "",
+     "text": "together ai_lab\npair Elon_Musk Dario_Amodei"
+    }
+   ]
+  },
+  "n66": {
+   "voice": "terse abbreviations",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "pair Jensen_Huang Satya_Nadella\navoid Lisa_Su Jensen_Huang",
+   "text": "Huang w/ Nadella. Su not w/ Huang.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": false,
+     "canon": "avoid Jensen_Huang Sun_Su\npair Jensen_Huang Satya_Nadella",
+     "why": "",
+     "text": "pair Jensen_Huang Satya_Nadella\navoid Sun_Su Jensen_Huang"
+    }
+   ]
+  },
+  "n67": {
+   "voice": "terse mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 2\npair Richard_Walters Will_Scharf",
+   "text": "Tables of two. Put Walters with Scharf.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 2\npair Richard_Walters Will_Scharf",
+     "why": "",
+     "text": "size 2\npair Richard_Walters Will_Scharf"
+    }
+   ]
+  },
+  "n68": {
+   "voice": "semicolon mixed",
+   "invented": false,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 1,
+   "gold": "apart investor government\npair Hock_Tan Sanjay_Mehrotra",
+   "text": "Keep investors and government apart; Tan and Mehrotra in one section.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "canon": "apart investor government\npair Sanjay_Mehrotra Tan",
+     "why": "differs on real34,synA",
+     "text": "apart investor government\npair Tan Sanjay_Mehrotra"
+    }
+   ]
+  },
+  "n69": {
+   "voice": "invented rambling companies",
+   "invented": true,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "pair Veridian_Labs Halcyon_Capital\npair Bastion_Cyber Northwind_Cloud\navoid Veridian_Labs Bastion_Cyber",
+   "text": "Right, so Veridian Labs sits with Halcyon Capital, Bastion Cyber goes with Northwind Cloud, and I don't want Veridian Labs and Bastion Cyber in the same section.",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Bastion_Cyber Veridian_Labs\npair Bastion_Cyber Northwind_Cloud\npair Halcyon_Capital Veridian_Labs",
+     "why": "",
+     "text": "pair Veridian_Labs Halcyon_Capital\npair Bastion_Cyber Northwind_Cloud\navoid Veridian_Labs Bastion_Cyber"
+    }
+   ]
+  },
+  "n70": {
+   "voice": "numbered list",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "size 4\norder chips\navoid Micron AMD\npair Michael_Kratsios Director_Clayton",
+   "text": "1. four per section\n2. chips before everyone else\n3. Micron and AMD apart\n4. Kratsios with Clayton",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "size 4\norder chips\navoid AMD Micron\npair Director_Clayton Michael_Kratsios",
+     "why": "",
+     "text": "size 4\norder chips\navoid Micron AMD\npair Michael_Kratsios Director_Clayton"
+    }
+   ]
+  },
+  "n71": {
+   "voice": "question company",
+   "invented": false,
+   "n": 1,
+   "passed": 1,
+   "text_match": 1,
+   "parsed": 1,
+   "gold": "avoid Mark_Zuckerberg Google\navoid Mark_Zuckerberg Microsoft",
+   "text": "Would you keep Zuckerberg away from the Google and Microsoft people?",
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "canon": "avoid Google Mark_Zuckerberg\navoid Mark_Zuckerberg Microsoft",
+     "why": "",
+     "text": "avoid Mark_Zuckerberg Google\navoid Mark_Zuckerberg Microsoft"
+    }
+   ]
+  },
+  "n72": {
+   "voice": "invented plus real mixed",
+   "invented": true,
+   "n": 1,
+   "passed": 0,
+   "text_match": 0,
+   "parsed": 0,
+   "gold": "size 4\norder software_security\navoid Liam_Donnelly Alex_Karp\navoid Liam_Donnelly Nikesh_Arora\npair Kenji_Watanabe Farah_Haddad",
+   "text": "Groups of four, security first. Keep Liam Donnelly away from Alex Karp and Nikesh Arora, and pair Kenji Watanabe with Farah Haddad.",
+   "samples": [
+    {
+     "passed": false,
+     "parsed": false,
+     "text_match": false,
+     "why": "parse: unknown word: order security",
+     "text": "size 4\norder security\navoid Liam_Donnelly Alex_Karp\navoid Liam_Donnelly Nikesh_Arora\npair Kenji_Watanabe Farah_Haddad"
+    }
+   ]
+  }
+ }
+}

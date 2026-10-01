@@ -1,11 +1,11 @@
 """Run verify_b1 on runs/exp17/<prog>.bend (or a given path); print status + metrics; save result json on pass.
 usage: python runs/exp17/v.py <prog> [path] [seeds e.g. 0,1]"""
 import sys, json, os, time
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome.verify import verify_b1
 prog = sys.argv[1]
-D = "/Users/tedsandtads/Genome/runs/exp17"
+D = "<home>/Genome/runs/exp17"
 path = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else f"{D}/{prog}.bend"
 seeds = [int(s) for s in (sys.argv[3] if len(sys.argv) > 3 else "0").split(",")]
 p = load_all()[prog]

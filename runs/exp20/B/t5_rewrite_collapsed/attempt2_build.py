@@ -4,7 +4,7 @@ Input: clustering c (list of canonical IDs) and edges (list of pairs).
 Output: number of edges that disappear as self-loops or duplicates.
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, EDGE, TUP, INF, LIST
 from genome.lib import recipes as R
 

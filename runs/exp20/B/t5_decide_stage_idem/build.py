@@ -12,7 +12,7 @@ Key packing: (target << 3) | verb fits in 24 bits for verb in 0-5 and target in 
 This packing puts target in the high bits, making depth depend mainly on target max value.
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, LIST, TRIE, EDGE, WEDGE, HOLE, INF
 
 P = Program()

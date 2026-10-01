@@ -1,5 +1,5 @@
 import sys
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome import bend_io as B
 p = load_all()[sys.argv[1]]

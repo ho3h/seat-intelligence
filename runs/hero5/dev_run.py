@@ -1,5 +1,5 @@
 import json,sys,time
-sys.path.insert(0,'/Users/tedsandtads/Genome')
+sys.path.insert(0,'<home>/Genome')
 from genome.hero5.run_eval import *
 o=json.load(open('runs/hero5/dev_set.json'))
 ids=[int(x) for x in sys.argv[1:]]

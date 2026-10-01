@@ -1,6 +1,6 @@
 #!/bin/zsh
 # GPU chain 2 (one MLX job at a time). 0.6B and 4B diverged at lr 2e-4 (loss spikes at iter 25-50): rerun at 5e-5.
-cd /Users/tedsandtads/Genome
+cd <home>/Genome
 genome/exp15/train.sh 0p6b_lr5e5 mlx-community/Qwen3-0.6B-4bit 600 5e-5 > runs/exp15/train_0p6b_lr5e5.log 2>&1
 genome/exp15/eval.sh 0p6b_lr5e5 mlx-community/Qwen3-0.6B-4bit > runs/exp15/eval_0p6b_lr5e5.log 2>&1
 until [ -f runs/exp15/data_aug/train.jsonl ]; do sleep 10; done

@@ -1,6 +1,6 @@
 """Collect results for group 3: copy g3/out/<prog>.bend -> runs/exp17/<prog>.bend and write results_group3.json."""
 import json, glob, os, shutil
-R = "/Users/tedsandtads/Genome"
+R = "<home>/Genome"
 G = f"{R}/runs/exp17/g3"
 progs = open(f"{R}/data/fair_bend_group3.txt").read().split()
 notes = json.load(open(f"{G}/notes.json")) if os.path.exists(f"{G}/notes.json") else {}

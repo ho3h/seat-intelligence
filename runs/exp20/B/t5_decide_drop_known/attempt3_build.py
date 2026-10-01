@@ -3,7 +3,7 @@ t5_decide_drop_known: Filter candidates by removing pairs that exist in known li
 Condition B: Stream-based with peek for trie queries.
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, LIST, TRIE, EDGE, WEDGE, INF
 
 P = Program()

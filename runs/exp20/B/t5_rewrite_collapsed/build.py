@@ -1,6 +1,6 @@
 """t5_rewrite_collapsed: count edges collapsed by clustering rewrite."""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, EDGE, TUP, INF, LIST
 from genome.lib import recipes as R
 

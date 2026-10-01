@@ -1,6 +1,6 @@
 """Depth/itrs of a Bend file on a python-literal input: probe_in.py prog path 'expr' """
 import sys
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome import bend_io as B
 from genome.executor import run_net

@@ -1,6 +1,6 @@
 """Build t5_rewrite_weighted: weighted edge rewrite net using glue API."""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, TRIE, LIST, WEDGE, MCQ
 
 P = Program()

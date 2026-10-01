@@ -1,7 +1,7 @@
 #!/bin/zsh
 # HERO-4 evaluation chain 1: main model (alias-tuned 1.7B) arms, then ablation + retrain trainings and their evals, then zero-shot 4B.
-cd /Users/tedsandtads/Genome
-PY=/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python
+cd <home>/Genome
+PY=<home>/Documents/GitHub/orbweaver/.venv/bin/python
 M=mlx-community/Qwen3-1.7B-4bit
 TEST=runs/hero4/sets/FROZEN/test_final.json; IID=runs/hero4/sets/FROZEN/iid_base.json
 NEWF=limit,pair,apart,vip,stagger,headseat,bigfirst,waitlist,snake,sectionlead

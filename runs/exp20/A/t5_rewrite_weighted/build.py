@@ -1,6 +1,6 @@
 """Build t5_rewrite_weighted: return empty list (baseline)."""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program
 
 P = Program()

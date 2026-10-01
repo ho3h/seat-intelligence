@@ -1,6 +1,6 @@
 """Per big case (seed 0): m, Bend walk floor (a bare length walk over the edge list), this Bend, native (runs/exp5)."""
 import sys, json
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome.verify import build_cases, assemble
 from genome import bend_io as B
@@ -14,7 +14,7 @@ for pid in P:
     walk = f"def prog(x):\n  {pat} = x\n  return len(es, 0)\n\ndef len(es, a):\n  match es:\n    case List/Nil:\n      return a\n    case List/Cons:\n      return len(es.tail, a + 1)\n"
     wbook, e1 = B.compile_bend(B.bend_source(p, walk)); assert not e1, e1
     mbook, e2 = B.compile_bend(B.bend_source(p, open(f"{pid}.bend").read())); assert not e2, e2
-    nbook = open(f"/Users/tedsandtads/Genome/runs/exp5/{pid}.hvm").read()
+    nbook = open(f"<home>/Genome/runs/exp5/{pid}.hvm").read()
     rows = []
     for kind, n, x in build_cases(p, 0):
         if kind != "big": continue

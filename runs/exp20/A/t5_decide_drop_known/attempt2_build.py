@@ -7,7 +7,7 @@ Algorithm:
 """
 
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, LIST, TRIE, EDGE, WEDGE, HOLE
 
 P = Program()

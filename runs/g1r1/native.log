@@ -20,10 +20,10 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
   File "<frozen runpy>", line 203, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 169, in <module>
+  File "<home>/Genome/genome/author_api.py", line 169, in <module>
     if __name__ == "__main__": main(sys.argv[1:])
                                ~~~~^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 164, in main
+  File "<home>/Genome/genome/author_api.py", line 164, in main
     list(ex.map(lambda pid: run_program(a.arm, pid, a.seed, a.model, key, b, a.out, a.thinking,
     ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                                         provider=a.provider, reasoning=a.reasoning), ids))
@@ -43,20 +43,20 @@ Traceback (most recent call last):
     result = ctx.run(self.task)
   File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 73, in run
     return fn(*args, **kwargs)
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 164, in <lambda>
+  File "<home>/Genome/genome/author_api.py", line 164, in <lambda>
     list(ex.map(lambda pid: run_program(a.arm, pid, a.seed, a.model, key, b, a.out, a.thinking,
                             ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                                         provider=a.provider, reasoning=a.reasoning), ids))
                                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 120, in run_program
+  File "<home>/Genome/genome/author_api.py", line 120, in run_program
     net, res = submit(k + 1 + free, "attempt")
                ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 108, in submit
+  File "<home>/Genome/genome/author_api.py", line 108, in submit
     r = chat(provider, model, messages, key, thinking, reasoning)
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 91, in chat
+  File "<home>/Genome/genome/author_api.py", line 91, in chat
     if provider == "openrouter": return call_openrouter(model, messages, key, reasoning=reasoning)
                                         ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Genome/genome/author_api.py", line 52, in call_openrouter
+  File "<home>/Genome/genome/author_api.py", line 52, in call_openrouter
     with urllib.request.urlopen(req, timeout=900) as r: d = json.load(r)
                                                             ~~~~~~~~~^^^
   File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 298, in load

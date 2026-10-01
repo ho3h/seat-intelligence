@@ -25,6 +25,10 @@ data["chat"] = {"sentence": "No two government officials in one section.", "prog
                 "broke": sum(a["govOver"] + a["capOver"] > 0 for a in answers), "dup": sum(bool(a["dup"]) for a in answers),
                 "miss": sum(bool(a["miss"]) for a in answers), "distinct": scored["distinct_answers"],
                 "show": answers[3], "showGovMax": max(sum(gov[i] for i in s) for s in answers[3]["secs"]), "answers": [a["secs"] for a in answers], "govMin": min(a["govOver"] for a in answers), "govMax": max(a["govOver"] for a in answers)}
+h6 = json.load(open(f"{D}/runs/hero6/page_outputs.json"))
+h6 = h6 if isinstance(h6, list) else h6.get("outputs", h6.get("rows", list(h6.values())))
+data["h6"] = [{"sentence": r["sentence"], "program": r["greedy_program"], "intended": r["intended_program"], "ok": r["matches_intended"],
+               "distinct": r.get("distinct_programs_T07"), "secs": r.get("secs")} for r in h6]
 t = open(f"{D}/demo/luncheon/template.html").read()
 t = t.replace("/*SEATING*/", open(f"{D}/demo/luncheon/seating.js").read())
 t = t.replace("/*DATA*/", json.dumps(data, ensure_ascii=False))

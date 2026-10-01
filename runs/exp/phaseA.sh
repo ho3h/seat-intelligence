@@ -1,7 +1,7 @@
 #!/bin/zsh
 # Phase A: baselines on the fair iid test (n=8) + expert-iteration pool sampling (n=4). One GPU job at a time; scoring overlaps.
-cd /Users/tedsandtads/Genome
-PY=/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python
+cd <home>/Genome
+PY=<home>/Documents/GitHub/orbweaver/.venv/bin/python
 S() { $PY -m genome.exp.sample "$@" 2>&1 | grep -v -i warn; }
 Q() { (python3 -m genome.exp.score "$1" > "${1%.json}.metrics.txt" 2>&1 &) }
 S --arm native --adapter adapters/native_v1 --set data/tasksets/iid_test.json --n 8 --out runs/exp/A_native_v1_iid.json; Q runs/exp/A_native_v1_iid.json

@@ -2,8 +2,8 @@
 # Replaces phaseA2 (tail) + phaseB after a time re-plan: GPU jobs strictly sequential, CPU scoring overlapped.
 # 1 score native pool (bg) || Bend pool sampling n=2   2 native EI train + eval (n=4)   3 Bend EI train + eval (n=4)
 # 4 native control (same iters, original data) + eval (n=4). Base-primer Bend calibration run dropped for time.
-cd /Users/tedsandtads/Genome
-PY=/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python
+cd <home>/Genome
+PY=<home>/Documents/GitHub/orbweaver/.venv/bin/python
 M=mlx-community/Qwen3-4B-Instruct-2507-4bit
 T() { $PY -m mlx_lm lora --model $M --train --batch-size 4 --num-layers 16 --learning-rate 1e-4 --mask-prompt --max-seq-length 2048 \
       --steps-per-eval 50 --save-every 1000 --seed 0 "$@" 2>&1 | grep --line-buffered -E "Val loss|Train loss|Saved final" ; }

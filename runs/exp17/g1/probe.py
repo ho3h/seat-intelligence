@@ -1,6 +1,6 @@
 """Depth/itrs of a Bend source on the big cases of a program (no correctness check). usage: probe.py prog file [seed]"""
 import sys, json, statistics
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome.verify import build_cases
 from genome import bend_io as B

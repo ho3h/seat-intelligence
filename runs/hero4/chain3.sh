@@ -1,7 +1,7 @@
 #!/bin/zsh
 # round 2 + replicate evaluation on the fresh frozen sets (FROZEN2): test v2 (new families) and base test v2
-cd /Users/tedsandtads/Genome
-PY=/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python
+cd <home>/Genome
+PY=<home>/Documents/GitHub/orbweaver/.venv/bin/python
 M=mlx-community/Qwen3-1.7B-4bit; A=adapters/hero4_main
 F2=runs/hero4/sets/FROZEN2; E2=runs/hero4/entries_v2_FROZEN.json
 S(){ $PY -m genome.hero4.sample --model $M --adapter $A --n 4 --batch 16 "$@"; }

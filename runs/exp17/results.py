@@ -1,13 +1,13 @@
 """Collect runs/exp17/<prog>.seed{0,1}.json into runs/exp17/results_group2.json (depth/itrs = seed-0 medians)."""
 import json, glob, os
-D = "/Users/tedsandtads/Genome/runs/exp17"
+D = "<home>/Genome/runs/exp17"
 NOTES = json.load(open(f"{D}/notes.json"))
-progs = open("/Users/tedsandtads/Genome/data/fair_bend_group2.txt").read().split()
-rec = json.load(open("/Users/tedsandtads/Genome/runs/g1_recount.json"))
+progs = open("<home>/Genome/data/fair_bend_group2.txt").read().split()
+rec = json.load(open("<home>/Genome/runs/g1_recount.json"))
 out = {}
 for p in progs:
     prev = []
-    for f in glob.glob(f"/Users/tedsandtads/Genome/runs/g1*/b1/seed0/{p}/state.json"):
+    for f in glob.glob(f"<home>/Genome/runs/g1*/b1/seed0/{p}/state.json"):
         b = json.load(open(f)).get("best")
         if b and b.get("depth_median_big"): prev.append((b["depth_median_big"], b["itrs_median_big"]))
     prev = min(prev) if prev else None

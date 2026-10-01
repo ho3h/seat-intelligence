@@ -1,9 +1,9 @@
 """Build net for t3_cc_label: output minimum vertex id in each connected component"""
 import sys, os
 D = os.path.dirname(os.path.abspath(__file__))
-# D = /Users/tedsandtads/Genome/runs/exp14/unchecked/t3_cc_label
-# Need to add /Users/tedsandtads/Genome to path
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+# D = <home>/Genome/runs/exp14/unchecked/t3_cc_label
+# Need to add <home>/Genome to path
+sys.path.insert(0, "<home>/Genome")
 from genome.lib import graphprims as G
 from genome.lib.graphprims import Book
 

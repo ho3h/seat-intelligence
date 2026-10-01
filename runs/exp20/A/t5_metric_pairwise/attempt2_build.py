@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build.py for t5_metric_pairwise"""
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, LIST, TUP
 
 P = Program()

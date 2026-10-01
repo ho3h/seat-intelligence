@@ -54,7 +54,7 @@ list | xargs -0 ls -l 2>/dev/null | awk '{print $5"\t"$NF}' | sort -rn | head -1
 echo
 echo "== 5. Machine-specific absolute paths (informational)"
 n=$(list | xargs -0 grep -Il "/Users/" 2>/dev/null | wc -l | tr -d ' ')
-echo "$n files mention /Users/ (run records keep the original paths; code under genome/ and demo/ is repo-relative)"
+echo "$n files mention /Users/ (should be only docs that quote paths; run records use <home>, code is repo-relative)"
 list | xargs -0 grep -Il "/Users/" 2>/dev/null | grep -E '^(genome|demo|scripts)/' | head -10
 
 echo

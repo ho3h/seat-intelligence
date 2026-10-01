@@ -1,10 +1,10 @@
 """group0 runner: verify_b1 on runs/exp17/<prog>.bend (or given path) for seeds; print status + metrics.
 Saves runs/exp17/<prog>.seed<k>.json when the path is the canonical one and it passes."""
 import sys, json, os, time
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome.verify import verify_b1
-D = "/Users/tedsandtads/Genome/runs/exp17"
+D = "<home>/Genome/runs/exp17"
 prog = sys.argv[1]
 path = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] else f"{D}/{prog}.bend"
 path = os.path.abspath(path)

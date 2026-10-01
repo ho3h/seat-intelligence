@@ -6,13 +6,13 @@
 Traceback (most recent call last):
   File "<frozen runpy>", line 203, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "/Users/tedsandtads/Genome/genome/exp21/run.py", line 108, in <module>
+  File "<home>/Genome/genome/exp21/run.py", line 108, in <module>
     **run(mode, N, book, full=(var == "full")))
       ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Genome/genome/exp21/run.py", line 79, in run
+  File "<home>/Genome/genome/exp21/run.py", line 79, in run
     out, err, wall, rss = _timed(["arch", "-arm64", exe, buf], timeout)
                           ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Genome/genome/exp16/run.py", line 139, in _timed
+  File "<home>/Genome/genome/exp16/run.py", line 139, in _timed
     p = subprocess.run(["/bin/bash", "-c", sh], capture_output=True, text=True, timeout=timeout, env=ENV)
   File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 557, in run
     stdout, stderr = process.communicate(input, timeout=timeout)
@@ -27,7 +27,7 @@ Traceback (most recent call last):
     raise TimeoutExpired(
     ...<2 lines>...
             stderr=b''.join(stderr_seq) if stderr_seq else None)
-subprocess.TimeoutExpired: Command '['/bin/bash', '-c', 'ulimit -s hard; exec /usr/bin/time -l arch -arm64 /Users/tedsandtads/Genome/runs/exp16/hvmc_arm64_t3 /Users/tedsandtads/Genome/scratch/exp21_native_100000_89301.hvm.bin']' timed out after 7200 seconds
+subprocess.TimeoutExpired: Command '['/bin/bash', '-c', 'ulimit -s hard; exec /usr/bin/time -l arch -arm64 <home>/Genome/runs/exp16/hvmc_arm64_t3 <home>/Genome/scratch/exp21_native_100000_89301.hvm.bin']' timed out after 7200 seconds
 {"arm": "native", "net": "full", "tpc_l2": 3, "mode": "native", "N": 100000, "n": 100000, "m_edges": 84603, "accepted": 71139, "mnl": 13464, "gold": 27, "conflicts_ref": 27, "py_uf_secs": 0.038, "lp_rounds": 17, "max_deg": 33, "skipped_ref": 15, "L": 17, "HE": 17, "HM": 14, "book_bytes": 2797258, "buf_bytes": 3691804, "serialise_secs": 6.7, "itrs": 843820561, "rt_secs": 6.23, "wall": 6.33, "max_rss_mb": 4413.8, "depth": null, "width": null, "correct": true}
 {"arm": "bend", "var": "full", "k": 4, "rev": "0e7e1f66", "tpc_l2": 3, "mode": "native", "N": 100000, "n": 100000, "m_edges": 84603, "accepted": 71139, "mnl": 13464, "conflicts_ref": 27, "lp_rounds": 17, "max_deg": 33, "skipped_ref": 15, "L": 17, "HE": 17, "HM": 14, "book_bytes": 2794904, "buf_bytes": 3704716, "serialise_secs": 7.2, "itrs": 837239495, "rt_secs": 2.32, "wall": 2.41, "max_rss_mb": 5769.7, "depth": null, "width": null, "correct": true}
 {"arm": "native", "net": "fan", "tpc_l2": 3, "mode": "native", "N": 32000, "n": 32000, "m_edges": 41770, "accepted": 30702, "mnl": 11068, "gold": 27, "conflicts_ref": 27, "py_uf_secs": 0.016, "lp_rounds": 8, "max_deg": 33, "L": 15, "HE": 16, "HM": 14, "book_bytes": 1498479, "buf_bytes": 2061212, "serialise_secs": 3.9, "itrs": 167177150, "rt_secs": 0.54, "wall": 0.6, "max_rss_mb": 2170.8, "depth": null, "width": null, "correct": true}

@@ -1,11 +1,11 @@
 """Run the delta-debugging SEARCH itself through the verified executor (not the reference) and compare with the stored answers."""
 import sys, json, time
-sys.path.insert(0, '/Users/tedsandtads/Genome')
+sys.path.insert(0, '<home>/Genome')
 from concurrent.futures import ProcessPoolExecutor
 from genome.hero5.run_eval import *
-o = json.load(open('/Users/tedsandtads/Genome/runs/hero5/eval_set.json'))
+o = json.load(open('<home>/Genome/runs/hero5/eval_set.json'))
 rows = {}
-for l in open('/Users/tedsandtads/Genome/runs/hero5/results_all.jsonl'):
+for l in open('<home>/Genome/runs/hero5/results_all.jsonl'):
     r = json.loads(l); rows[(r['id'], r['method'])] = r
 
 def one(did):

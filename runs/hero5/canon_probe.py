@@ -1,9 +1,9 @@
 """Side probe: does a different net (label-propagation cluster canon, runs/exp10) give informative provenance?"""
 import sys, random, json, os, time
-sys.path.insert(0, '/Users/tedsandtads/Genome')
+sys.path.insert(0, '<home>/Genome')
 from genome.hero5.core import *
 from genome.hero5 import core
-NET = '/Users/tedsandtads/Genome/runs/exp10/t5_cluster_canon.hvm'
+NET = '<home>/Genome/runs/exp10/t5_cluster_canon.hvm'
 book = open(NET).read()
 
 def mk(n, comps, seed):

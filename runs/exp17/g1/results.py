@@ -1,7 +1,7 @@
 """Collect group-1 results into runs/exp17/results_group1.json from g1/<prog>.seed{0,1}.json."""
 import json, os
-D = "/Users/tedsandtads/Genome/runs/exp17"
-G = "/Users/tedsandtads/Genome"
+D = "<home>/Genome/runs/exp17"
+G = "<home>/Genome"
 progs = open(f"{G}/data/fair_bend_group1.txt").read().split()
 nat = json.load(open(f"{G}/runs/g1_recount.json"))
 notes = json.load(open(f"{D}/g1/notes.json"))

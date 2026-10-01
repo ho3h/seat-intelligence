@@ -1,10 +1,10 @@
 Traceback (most recent call last):
   File "<frozen runpy>", line 203, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "/Users/tedsandtads/Genome/genome/hero4/score.py", line 106, in <module>
+  File "<home>/Genome/genome/hero4/score.py", line 106, in <module>
     for p in sys.argv[1:]: print(score_file(p))
                                  ~~~~~~~~~~^^^
-  File "/Users/tedsandtads/Genome/genome/hero4/score.py", line 71, in score_file
+  File "<home>/Genome/genome/hero4/score.py", line 71, in score_file
     d = json.load(open(path)); cache = _load(); tasks = {t["id"]: t for t in d["tasks"]}; t0 = time.time()
                   ~~~~^^^^^^
 FileNotFoundError: [Errno 2] No such file or directory: 'runs/hero4/samples/bdev_r2a3_all.json'

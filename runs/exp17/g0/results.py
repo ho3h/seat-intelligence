@@ -1,9 +1,9 @@
 """Collect runs/exp17/results_group0.json from the per-seed verifier JSONs (written by g0/vb0.py)."""
 import json, glob, os, math
-D = "/Users/tedsandtads/Genome/runs/exp17"
-progs = open("/Users/tedsandtads/Genome/data/fair_bend_group0.txt").read().split()
+D = "<home>/Genome/runs/exp17"
+progs = open("<home>/Genome/data/fair_bend_group0.txt").read().split()
 notes = json.load(open(f"{D}/g0/notes.json")) if os.path.exists(f"{D}/g0/notes.json") else {}
-nat = json.load(open("/Users/tedsandtads/Genome/runs/g1_recount.json"))
+nat = json.load(open("<home>/Genome/runs/g1_recount.json"))
 out, ratios = {}, []
 for p in progs:
     rec = {}
@@ -16,7 +16,7 @@ for p in progs:
     s1 = f"{D}/{p}.seed1.json"
     rec["depth_seed1"] = json.load(open(s1))["metrics"]["depth_median_big"] if os.path.exists(s1) else None
     prev = None
-    st = f"/Users/tedsandtads/Genome/runs/g1/b1/seed0/{p}/state.json"
+    st = f"<home>/Genome/runs/g1/b1/seed0/{p}/state.json"
     if os.path.exists(st):
         b = json.load(open(st)).get("best") or {}
         prev = b.get("depth_median_big"); rec["previous_bend_itrs"] = b.get("itrs_median_big")

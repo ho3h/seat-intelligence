@@ -4,7 +4,7 @@ Input: (tau, cands) where tau is a threshold 0..1000 and cands is a list of (u, 
 Output: list of triples with score >= tau, sorted by descending score, then ascending u, then ascending v.
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, WEDGE
 from genome.lib import recipes as R
 

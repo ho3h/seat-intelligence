@@ -2,18 +2,18 @@
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "/Users/tedsandtads/Genome/genome/exp15/sample.py", line 45, in <module>
+  File "<home>/Genome/genome/exp15/sample.py", line 45, in <module>
     if __name__ == "__main__": main()
                                ^^^^^^
-  File "/Users/tedsandtads/Genome/genome/exp15/sample.py", line 27, in main
+  File "<home>/Genome/genome/exp15/sample.py", line 27, in main
     model, tok = load(a.model, adapter_path=a.adapter) if a.adapter else load(a.model)
                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/lib/python3.11/site-packages/mlx_lm/utils.py", line 493, in load
+  File "<home>/Documents/GitHub/orbweaver/.venv/lib/python3.11/site-packages/mlx_lm/utils.py", line 493, in load
     model = load_adapters(model, adapter_path)
             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/lib/python3.11/site-packages/mlx_lm/utils.py", line 426, in load_adapters
+  File "<home>/Documents/GitHub/orbweaver/.venv/lib/python3.11/site-packages/mlx_lm/utils.py", line 426, in load_adapters
     return _load_adapters(model, adapter_path)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/tedsandtads/Documents/GitHub/orbweaver/.venv/lib/python3.11/site-packages/mlx_lm/tuner/utils.py", line 126, in load_adapters
+  File "<home>/Documents/GitHub/orbweaver/.venv/lib/python3.11/site-packages/mlx_lm/tuner/utils.py", line 126, in load_adapters
     raise FileNotFoundError(f"The adapter path does not exist: {adapter_path}")
 FileNotFoundError: The adapter path does not exist: adapters/exp15_1p7b_aug

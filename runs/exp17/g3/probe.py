@@ -1,7 +1,7 @@
 """Per-big-case depth/itrs of a Bend file at seed 0 (no correctness check beyond small digest-less run).
 usage: probe.py prog path [seed]"""
 import sys, json
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome import bend_io as B
 from genome.verify import build_cases

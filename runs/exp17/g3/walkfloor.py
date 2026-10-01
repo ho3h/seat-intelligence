@@ -1,6 +1,6 @@
 """Depth of a bare Bend walk over every list in the input (parallel), per big case at seed 0: the list-walk floor."""
 import sys, json
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.corpus import load_all
 from genome import bend_io as B
 from genome.verify import build_cases
@@ -8,7 +8,7 @@ from genome.executor import run_net
 from genome.types import List, Tup
 A = load_all()
 out = {}
-for prog in open("/Users/tedsandtads/Genome/data/fair_bend_group3.txt").read().split():
+for prog in open("<home>/Genome/data/fair_bend_group3.txt").read().split():
     p = A[prog]; t = p.inp
     if isinstance(t, Tup):
         names = [f"x{i}" for i in range(len(t.elems))]
@@ -26,4 +26,4 @@ for prog in open("/Users/tedsandtads/Genome/data/fair_bend_group3.txt").read().s
     med = sorted(ds)[len(ds) // 2]
     out[prog] = {"walk_depths": ds, "walk_median": med}
     print(prog, med, ds)
-json.dump(out, open("/Users/tedsandtads/Genome/runs/exp17/g3/walkfloor.json", "w"), indent=1)
+json.dump(out, open("<home>/Genome/runs/exp17/g3/walkfloor.json", "w"), indent=1)

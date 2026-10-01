@@ -5,7 +5,7 @@ Input: (c, mnl) where c is a clustering (list of canonical ids) and mnl is a lis
 Output: list of violated pairs (where c[a] == c[b]) sorted ascending lexicographically
 """
 import sys, os
-sys.path.insert(0, "/Users/tedsandtads/Genome")
+sys.path.insert(0, "<home>/Genome")
 from genome.lib.glue import Program, NUM, DEPTH, LIST, EDGE, TRIE, INF, HOLE, MCQ
 from genome.lib import recipes as R
 
