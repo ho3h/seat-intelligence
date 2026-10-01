@@ -1,0 +1,49 @@
+{
+ "sources": {
+  "hero6": {
+   "kept": 9102,
+   "6gram_test": 1886,
+   "dup": 11,
+   "exact_test": 1
+  },
+  "replay": {
+   "kept": 3288,
+   "6gram_test": 618,
+   "dup": 93,
+   "exact_test": 1
+  },
+  "terse": {
+   "kept": 1704,
+   "dup": 96
+  },
+  "cover": {
+   "kept": 1599,
+   "6gram_test": 201
+  },
+  "para": {
+   "kept": 519,
+   "6gram_test": 204,
+   "dup": 12
+  }
+ },
+ "para": {
+  "raw": 1600,
+  "kept": 735,
+  "dropped": {
+   "empty/long": 392,
+   "number lost": 145,
+   "truncated": 264,
+   "name lost": 64
+  }
+ },
+ "filter": "drop if normalized text equals a test text (sets 1,2,6,7) or shares a word 6-gram with one",
+ "n_train": 15912,
+ "n_valid": 300,
+ "train_by_source": {
+  "para": 506,
+  "hero6": 8948,
+  "terse": 1676,
+  "replay": 3222,
+  "cover": 1560
+ }
+}

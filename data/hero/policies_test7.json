@@ -1,0 +1,962 @@
+{
+ "note": "HERO-7 fresh final test set. Request texts and extra_guests: a separate subagent that saw only the guest list (names, companies, categories) and the plain meaning of the seven words (no repo access). Gold programs: written by the HERO-7 author from the texts before any HERO-7 training. Frozen; see docs/HERO-7.md section 1.",
+ "author_note": "Independent test set 7: 100 hand-written seating requests (50 name guests/companies, 8 of those name invented guests; 50 category-only), written without access to the repo.",
+ "extra_guests": [
+  {
+   "name": "Odalys Ferreira-Quint",
+   "org": "Halvard Robotics",
+   "category": "ai_lab"
+  },
+  {
+   "name": "Teodor Vasquez-Lind",
+   "org": "Quillfeather Capital",
+   "category": "investor"
+  },
+  {
+   "name": "Priyanka Oduya",
+   "org": "Micron",
+   "category": "chips"
+  },
+  {
+   "name": "Ingrid Achterberg",
+   "org": "Corvane Semiconductor",
+   "category": "chips"
+  },
+  {
+   "name": "Bashir Lindqvist",
+   "org": "Palantir",
+   "category": "software_security"
+  },
+  {
+   "name": "Malcolm Ebrahimi-Stone",
+   "org": "Office of Science and Technology Policy",
+   "category": "government"
+  },
+  {
+   "name": "Celestine Mbatha-Ruiz",
+   "org": "Trellis Ventures",
+   "category": "investor"
+  },
+  {
+   "name": "Rafferty Okonkwo",
+   "org": "Brightwater Systems",
+   "category": "software_security"
+  },
+  {
+   "name": "Yusra Delacroix-Hahn",
+   "org": "Google",
+   "category": "big_tech"
+  },
+  {
+   "name": "Emeric Tsvetkov",
+   "org": "Anthropic",
+   "category": "ai_lab"
+  }
+ ],
+ "policies": [
+  {
+   "id": "t001",
+   "voice": "terse",
+   "text": "Su and Tan apart.",
+   "gold": "avoid Hock_Tan Lisa_Su",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Su/Tan"
+  },
+  {
+   "id": "t002",
+   "voice": "terse",
+   "text": "Max 3 per section.",
+   "gold": "size 3",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 3"
+  },
+  {
+   "id": "t003",
+   "voice": "clipped",
+   "text": "Cap 4. Karp w/ Sankar.",
+   "gold": "size 4\npair Alex_Karp Shyam_Sankar",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "size 4; pair Karp/Sankar"
+  },
+  {
+   "id": "t004",
+   "voice": "clipped",
+   "text": "Four a section. Gov first.",
+   "gold": "size 4\norder government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 4; order government"
+  },
+  {
+   "id": "t005",
+   "voice": "chatty",
+   "text": "Hi! So, small thing but it matters - Kupor and Gerstner go way back and would love to catch up, so please put them in the same section. Otherwise just keep each section to five people max, thanks so much.",
+   "gold": "size 5\npair Brad_Gerstner Scott_Kupor",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "size 5; pair Kupor/Gerstner"
+  },
+  {
+   "id": "t006",
+   "voice": "list",
+   "text": "- AI labs together\n- chip makers apart from AI labs",
+   "gold": "together ai_lab\napart ai_lab chips",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together ai_lab; apart ai_lab/chips"
+  },
+  {
+   "id": "t007",
+   "voice": "negative",
+   "text": "Don't let Mehrotra end up in a section with anyone from Nvidia.",
+   "gold": "avoid Nvidia Sanjay_Mehrotra",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Mehrotra/Nvidia"
+  },
+  {
+   "id": "t008",
+   "voice": "formal",
+   "text": "No section shall seat more than one government official.",
+   "gold": "limit government 1",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit government 1"
+  },
+  {
+   "id": "t009",
+   "voice": "formal",
+   "text": "Please ensure that Mr. Cairncross and Mr. Daniels are seated within the same section, and that no section exceeds three guests.",
+   "gold": "size 3\npair Brandon_Rahbar_Daniels Sean_Cairncross",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "size 3; pair Cairncross/Daniels"
+  },
+  {
+   "id": "t010",
+   "voice": "chatty",
+   "text": "hey, for Thursday's lunch could we keep the investors and the big tech folks from mixing? like no investor in a section with a big tech person. and sections of five please",
+   "gold": "size 5\napart big_tech investor",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart investor/big_tech; size 5"
+  },
+  {
+   "id": "t011",
+   "voice": "chatty",
+   "text": "Late addition for you: Odalys Ferreira-Quint from Halvard Robotics (it's an AI lab) is joining us after all. Please seat her with Brockman, and keep sections to five.",
+   "gold": "size 5\npair Greg_Brockman Odalys_Ferreira-Quint",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "size 5; pair Ferreira-Quint/Brockman"
+  },
+  {
+   "id": "t012",
+   "voice": "question",
+   "text": "Can we seat government first, then the White House staff, then investors?",
+   "gold": "order government unlabelled investor",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "order government, unlabelled, investor"
+  },
+  {
+   "id": "t013",
+   "voice": "list",
+   "text": "- Brockman away from Musk\n- Amodei away from Brockman\n- no more than 4 a section",
+   "gold": "size 4\navoid Elon_Musk Greg_Brockman\navoid Dario_Amodei Greg_Brockman",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Brockman/Musk; avoid Amodei/Brockman; size 4"
+  },
+  {
+   "id": "t014",
+   "voice": "negative",
+   "text": "Don't put more than two chip people in the same section.",
+   "gold": "limit chips 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit chips 2"
+  },
+  {
+   "id": "t015",
+   "voice": "question",
+   "text": "Could you seat the Speaker alongside Secretary Bessent, and keep chip makers and AI labs from sharing a section?",
+   "gold": "apart ai_lab chips\npair Secretary_Scott_Bessent Speaker_Johnson",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Speaker Johnson/Bessent; apart chips/ai_lab"
+  },
+  {
+   "id": "t016",
+   "voice": "terse",
+   "text": "Same-company guests together.",
+   "gold": "together company",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together (same company)"
+  },
+  {
+   "id": "t017",
+   "voice": "other",
+   "text": "Walters should never cross paths with Kratsios at this lunch.",
+   "gold": "avoid Michael_Kratsios Richard_Walters",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Walters/Kratsios"
+  },
+  {
+   "id": "t018",
+   "voice": "clipped",
+   "text": "Cap 2. Software/security apart from gov.",
+   "gold": "size 2\napart software_security government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 2; apart software_security/government"
+  },
+  {
+   "id": "t019",
+   "voice": "terse",
+   "text": "Anthropic + Palantir: separate sections.",
+   "gold": "avoid Anthropic Palantir",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Anthropic/Palantir"
+  },
+  {
+   "id": "t020",
+   "voice": "other",
+   "text": "Big tech and AI labs should not mingle within a section.",
+   "gold": "apart ai_lab big_tech",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart big_tech/ai_lab"
+  },
+  {
+   "id": "t021",
+   "voice": "chatty",
+   "text": "ok so the Broadcom and AMD people - honestly better if they're not in the same section. also can government people go first, then big tech?",
+   "gold": "order government big_tech\navoid AMD Broadcom",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Broadcom/AMD; order government, big_tech"
+  },
+  {
+   "id": "t022",
+   "voice": "list",
+   "text": "- sections of 4\n- investors all together\n- order: investors, then big tech",
+   "gold": "size 4\ntogether investor\norder investor big_tech",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 4; together investor; order investor, big_tech"
+  },
+  {
+   "id": "t023",
+   "voice": "terse",
+   "text": "Add Teodor Vasquez-Lind (Quillfeather Capital, investor). Keep him away from Gerstner.",
+   "gold": "avoid Brad_Gerstner Teodor_Vasquez-Lind",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "avoid Vasquez-Lind/Gerstner"
+  },
+  {
+   "id": "t024",
+   "voice": "formal",
+   "text": "Guests from AI laboratories and guests from semiconductor companies are not to be seated in the same section.",
+   "gold": "apart ai_lab chips",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart ai_lab/chips"
+  },
+  {
+   "id": "t025",
+   "voice": "other",
+   "text": "The Vice President and the Speaker should share a section.",
+   "gold": "pair Speaker_Johnson VPOTUS",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair VPOTUS/Speaker Johnson"
+  },
+  {
+   "id": "t026",
+   "voice": "chatty",
+   "text": "So the government contingent is big this year - please don't stack them, no more than two of them in any section. Also let's keep colleagues from the same company together.",
+   "gold": "together company\nlimit government 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit government 2; together (same company)"
+  },
+  {
+   "id": "t027",
+   "voice": "clipped",
+   "text": "Pair Nadella/Pichai. Max 2 gov per section.",
+   "gold": "limit government 2\npair Satya_Nadella Sundar_Pichai",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Nadella/Pichai; limit government 2"
+  },
+  {
+   "id": "t028",
+   "voice": "question",
+   "text": "Could we limit each section to at most one investor?",
+   "gold": "limit investor 1",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit investor 1"
+  },
+  {
+   "id": "t029",
+   "voice": "formal",
+   "text": "Mr. Isaacman is to be seated with Mr. Musk.",
+   "gold": "pair Elon_Musk Jared_Isaacman",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Isaacman/Musk"
+  },
+  {
+   "id": "t030",
+   "voice": "terse",
+   "text": "Investors first.",
+   "gold": "order investor",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "order investor"
+  },
+  {
+   "id": "t031",
+   "voice": "negative",
+   "text": "Under no circumstances should Zuckerberg and Musk be placed in the same section. Also, no section larger than four.",
+   "gold": "size 4\navoid Elon_Musk Mark_Zuckerberg",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Zuckerberg/Musk; size 4"
+  },
+  {
+   "id": "t032",
+   "voice": "negative",
+   "text": "No section should have more than three people, and no AI lab people with government people.",
+   "gold": "size 3\napart ai_lab government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 3; apart ai_lab/government"
+  },
+  {
+   "id": "t033",
+   "voice": "question",
+   "text": "Can Chamath sit with Sacks? Also, keep investors and government in separate sections.",
+   "gold": "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Chamath/Sacks; apart investor/government"
+  },
+  {
+   "id": "t034",
+   "voice": "clipped",
+   "text": "Chips together. Max 5.",
+   "gold": "size 5\ntogether chips",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together chips; size 5"
+  },
+  {
+   "id": "t035",
+   "voice": "formal",
+   "text": "Ms. Priyanka Oduya of Micron has been added to the guest list. She is to be seated in the same section as Mr. Mehrotra.",
+   "gold": "pair Priyanka_Oduya Sanjay_Mehrotra",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "pair Oduya/Mehrotra"
+  },
+  {
+   "id": "t036",
+   "voice": "other",
+   "text": "Seat the White House advisers first, and after them the government officials.",
+   "gold": "order unlabelled government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "order unlabelled, government"
+  },
+  {
+   "id": "t037",
+   "voice": "list",
+   "text": "* Wiles + Scharf same section\n* Ferguson not with anyone from Meta\n* cap 5",
+   "gold": "size 5\navoid Chairman_Andrew_Ferguson Meta\npair Susie_Wiles Will_Scharf",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Wiles/Scharf; avoid Ferguson/Meta; size 5"
+  },
+  {
+   "id": "t038",
+   "voice": "list",
+   "text": "- no more than 1 AI lab per section\n- no more than 1 chip maker per section",
+   "gold": "limit ai_lab 1\nlimit chips 1",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit ai_lab 1; limit chips 1"
+  },
+  {
+   "id": "t039",
+   "voice": "terse",
+   "text": "Huang with Su, same section.",
+   "gold": "pair Jensen_Huang Lisa_Su",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Huang/Su"
+  },
+  {
+   "id": "t040",
+   "voice": "formal",
+   "text": "At most two guests combined from the investor and big tech categories may be seated in any single section.",
+   "gold": "limit big_tech investor 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit investor+big_tech 2"
+  },
+  {
+   "id": "t041",
+   "voice": "other",
+   "text": "Make sure McDermott and Arora end up sharing a section.",
+   "gold": "pair Bill_McDermott Nikesh_Arora",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair McDermott/Arora"
+  },
+  {
+   "id": "t042",
+   "voice": "chatty",
+   "text": "I really just want smallish sections for this one - like, five people tops. And the software and security folks should all be in the same section.",
+   "gold": "size 5\ntogether software_security",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 5; together software_security"
+  },
+  {
+   "id": "t043",
+   "voice": "chatty",
+   "text": "Quick favor - Lutnick has asked not to be in the same section as Bezos, long story. Also please put all the investors together in one section.",
+   "gold": "together investor\navoid Jeff_Bezos Secretary_Lutnick",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Lutnick/Bezos; together investor"
+  },
+  {
+   "id": "t044",
+   "voice": "question",
+   "text": "Would you keep government officials and investors in separate sections, and seat chip makers first?",
+   "gold": "apart investor government\norder chips",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart government/investor; order chips"
+  },
+  {
+   "id": "t045",
+   "voice": "clipped",
+   "text": "Daniels not w/ Karp. Size 3.",
+   "gold": "size 3\navoid Alex_Karp Brandon_Rahbar_Daniels",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Daniels/Karp; size 3"
+  },
+  {
+   "id": "t046",
+   "voice": "terse",
+   "text": "Two per section.",
+   "gold": "size 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 2"
+  },
+  {
+   "id": "t047",
+   "voice": "list",
+   "text": "- new guest: Ingrid Achterberg, Corvane Semiconductor\n- Achterberg not with Huang\n- Achterberg not with Su\n- max 2 chip makers per section",
+   "gold": "limit chips 2\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "avoid Achterberg/Huang; avoid Achterberg/Su; limit chips 2"
+  },
+  {
+   "id": "t048",
+   "voice": "negative",
+   "text": "Don't mix big tech with chip makers.",
+   "gold": "apart big_tech chips",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart big_tech/chips"
+  },
+  {
+   "id": "t049",
+   "voice": "formal",
+   "text": "Everyone from Anthropic should be kept apart from everyone from OpenAI.",
+   "gold": "avoid Anthropic OpenAI",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Anthropic/OpenAI"
+  },
+  {
+   "id": "t050",
+   "voice": "clipped",
+   "text": "Gov max 1/section. AI labs max 1/section. Cap 4.",
+   "gold": "size 4\nlimit government 1\nlimit ai_lab 1",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit government 1; limit ai_lab 1; size 4"
+  },
+  {
+   "id": "t051",
+   "voice": "formal",
+   "text": "The President shall be seated in the same section as Director Clayton; government officials are to be seated first.",
+   "gold": "order government\npair Director_Clayton POTUS",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair POTUS/Clayton; order government"
+  },
+  {
+   "id": "t052",
+   "voice": "other",
+   "text": "White House staff ought to be seated as one group.",
+   "gold": "together unlabelled",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together unlabelled"
+  },
+  {
+   "id": "t053",
+   "voice": "question",
+   "text": "Would you mind keeping Tom Brown and Greg Brockman in different sections?",
+   "gold": "avoid Greg_Brockman Tom_Brown",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Tom Brown/Brockman"
+  },
+  {
+   "id": "t054",
+   "voice": "list",
+   "text": "1) six per section\n2) order: government, big tech, AI labs\n3) investors apart from AI labs",
+   "gold": "size 6\norder government big_tech ai_lab\napart ai_lab investor",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 6; order government, big_tech, ai_lab; apart investor/ai_lab",
+   "gold_note": "'six per section' = the default size; the canonical program has no size line"
+  },
+  {
+   "id": "t055",
+   "voice": "negative",
+   "text": "Don't put Gerstner and Chamath in the same section, and don't put more than two investors anywhere.",
+   "gold": "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Gerstner/Chamath; limit investor 2"
+  },
+  {
+   "id": "t056",
+   "voice": "formal",
+   "text": "Colleagues employed by the same company are to be seated in a common section, and no section shall exceed four guests.",
+   "gold": "size 4\ntogether company",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together (same company); size 4"
+  },
+  {
+   "id": "t057",
+   "voice": "terse",
+   "text": "Kratsios w/ Pichai.",
+   "gold": "pair Michael_Kratsios Sundar_Pichai",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Kratsios/Pichai"
+  },
+  {
+   "id": "t058",
+   "voice": "chatty",
+   "text": "ugh, last time the investors cornered all the chip CEOs. so this time: no investor sitting in a section with a chip maker, ok? and keep it to four a section.",
+   "gold": "size 4\napart chips investor",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart investor/chips; size 4"
+  },
+  {
+   "id": "t059",
+   "voice": "question",
+   "text": "Could you put Bashir Lindqvist (newly added, Palantir) in the same section as Karp, and keep Malcolm Ebrahimi-Stone from the Office of Science and Technology Policy apart from Kratsios?",
+   "gold": "pair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "pair Lindqvist/Karp; avoid Ebrahimi-Stone/Kratsios"
+  },
+  {
+   "id": "t060",
+   "voice": "question",
+   "text": "Could you make sure there are no more than two government or White House people combined in any section?",
+   "gold": "limit government unlabelled 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit government+unlabelled 2"
+  },
+  {
+   "id": "t061",
+   "voice": "chatty",
+   "text": "Right, so for the lunch - Dario and Jensen have a lot to talk about, please pair them up. Beyond that I'd like sections of four, and big tech seated first, then chips.",
+   "gold": "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Amodei/Huang; size 4; order big_tech, chips"
+  },
+  {
+   "id": "t062",
+   "voice": "terse",
+   "text": "Big tech together.",
+   "gold": "together big_tech",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together big_tech"
+  },
+  {
+   "id": "t063",
+   "voice": "list",
+   "text": "1. Sundar and Satya apart\n2. Lisa and Hock apart\n3. investors together",
+   "gold": "together investor\navoid Satya_Nadella Sundar_Pichai\navoid Hock_Tan Lisa_Su",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Pichai/Nadella; avoid Su/Tan; together investor"
+  },
+  {
+   "id": "t064",
+   "voice": "negative",
+   "text": "Never more than one investor per section, and never more than one big tech guest either.",
+   "gold": "limit investor 1\nlimit big_tech 1",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit investor 1; limit big_tech 1"
+  },
+  {
+   "id": "t065",
+   "voice": "other",
+   "text": "Chairman Ferguson and Mr. Pichai: keep them separated.",
+   "gold": "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Ferguson/Pichai"
+  },
+  {
+   "id": "t066",
+   "voice": "clipped",
+   "text": "Order: AI, chips, big tech. Cap 5.",
+   "gold": "size 5\norder ai_lab chips big_tech",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "order ai_lab, chips, big_tech; size 5"
+  },
+  {
+   "id": "t067",
+   "voice": "clipped",
+   "text": "Palantir duo: same section. Exiger: not with them.",
+   "gold": "pair Alex_Karp Shyam_Sankar\navoid Alex_Karp Exiger\navoid Exiger Shyam_Sankar",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Karp/Sankar (together Palantir); avoid Exiger/Palantir",
+   "gold_note": "ambiguous: 'Palantir duo' read as the two Palantir guests on the original chart (Karp, Sankar), 'them' = those two; the test-7 guest list also has a third Palantir guest (Bashir Lindqvist)"
+  },
+  {
+   "id": "t068",
+   "voice": "other",
+   "text": "Let the AI labs share one section between them.",
+   "gold": "together ai_lab",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together ai_lab"
+  },
+  {
+   "id": "t069",
+   "voice": "question",
+   "text": "Can you keep the VP out of whatever section Musk is in?",
+   "gold": "avoid Elon_Musk VPOTUS",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid VPOTUS/Musk"
+  },
+  {
+   "id": "t070",
+   "voice": "list",
+   "text": "- gov and White House staff apart\n- max 3 per section",
+   "gold": "size 3\napart government unlabelled",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart government/unlabelled; size 3"
+  },
+  {
+   "id": "t071",
+   "voice": "negative",
+   "text": "Don't let Celestine Mbatha-Ruiz (Trellis Ventures) share a section with Sacks or with Chamath.",
+   "gold": "avoid Celestine_Mbatha-Ruiz David_Sacks\navoid Celestine_Mbatha-Ruiz Chamath_Palihapitiya",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "avoid Mbatha-Ruiz/Sacks; avoid Mbatha-Ruiz/Chamath"
+  },
+  {
+   "id": "t072",
+   "voice": "formal",
+   "text": "Software and security executives shall not share a section with representatives of the artificial intelligence laboratories.",
+   "gold": "apart ai_lab software_security",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart software_security/ai_lab"
+  },
+  {
+   "id": "t073",
+   "voice": "formal",
+   "text": "Secretary Lutnick and Secretary Bessent are to share a section. No section may contain more than one big tech guest.",
+   "gold": "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Lutnick/Bessent; limit big_tech 1"
+  },
+  {
+   "id": "t074",
+   "voice": "chatty",
+   "text": "Hmm ok so I've gone back and forth on this. Let's do sections of six, with the chip makers all together. Seat the chip makers first - actually, chip makers first and then the investors right after them.",
+   "gold": "size 6\ntogether chips\norder chips investor",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 6; together chips; order chips, investor",
+   "gold_note": "'sections of six' = the default size"
+  },
+  {
+   "id": "t075",
+   "voice": "terse",
+   "text": "Seat Tan with Mehrotra.",
+   "gold": "pair Hock_Tan Sanjay_Mehrotra",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Tan/Mehrotra"
+  },
+  {
+   "id": "t076",
+   "voice": "question",
+   "text": "Can we cap it at two AI lab or chip people combined per section?",
+   "gold": "limit ai_lab chips 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit ai_lab+chips 2"
+  },
+  {
+   "id": "t077",
+   "voice": "negative",
+   "text": "Never seat Kupor with anyone from Craft Ventures.",
+   "gold": "avoid Craft_Ventures Scott_Kupor",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Kupor/Craft Ventures"
+  },
+  {
+   "id": "t078",
+   "voice": "clipped",
+   "text": "Gov apart from big tech. Cap 3.",
+   "gold": "size 3\napart government big_tech",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart government/big_tech; size 3"
+  },
+  {
+   "id": "t079",
+   "voice": "chatty",
+   "text": "honestly the only thing I care about is that Wiles and Cairncross aren't stuck in the same section, and that nobody's in a section bigger than five. that's it!",
+   "gold": "size 5\navoid Sean_Cairncross Susie_Wiles",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Wiles/Cairncross; size 5"
+  },
+  {
+   "id": "t080",
+   "voice": "negative",
+   "text": "Please don't put any investors in the same section as government officials, and don't let any section go over five.",
+   "gold": "size 5\napart investor government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart investor/government; size 5"
+  },
+  {
+   "id": "t081",
+   "voice": "other",
+   "text": "Scharf belongs in Sankar's section.",
+   "gold": "pair Shyam_Sankar Will_Scharf",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Scharf/Sankar"
+  },
+  {
+   "id": "t082",
+   "voice": "other",
+   "text": "Seating order should run investors, software and security, then government.",
+   "gold": "order investor software_security government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "order investor, software_security, government"
+  },
+  {
+   "id": "t083",
+   "voice": "clipped",
+   "text": "+Rafferty Okonkwo (Brightwater Systems, software/security). Okonkwo w/ Arora. Cap 4.",
+   "gold": "size 4\npair Nikesh_Arora Rafferty_Okonkwo",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "pair Okonkwo/Arora; size 4"
+  },
+  {
+   "id": "t084",
+   "voice": "list",
+   "text": "- 3 per section\n- at most 1 government official per section\n- AI labs apart from big tech",
+   "gold": "size 3\nlimit government 1\napart ai_lab big_tech",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 3; limit government 1; apart ai_lab/big_tech"
+  },
+  {
+   "id": "t085",
+   "voice": "list",
+   "text": "- Microsoft with Nvidia\n- Google away from Meta\n- 3 per section max",
+   "gold": "size 3\navoid Google Meta\npair Microsoft Nvidia",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Microsoft/Nvidia; avoid Google/Meta; size 3"
+  },
+  {
+   "id": "t086",
+   "voice": "formal",
+   "text": "Representatives of chip-making firms shall be seated apart from software and security executives; furthermore, guests sharing a company must be seated together.",
+   "gold": "together company\napart chips software_security",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart chips/software_security; together (same company)"
+  },
+  {
+   "id": "t087",
+   "voice": "question",
+   "text": "Could Isaacman and Kratsios share a section, with government seated first and investors second?",
+   "gold": "order government investor\npair Jared_Isaacman Michael_Kratsios",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Isaacman/Kratsios; order government, investor"
+  },
+  {
+   "id": "t088",
+   "voice": "chatty",
+   "text": "honestly we don't need anything fancy. just keep the big tech crowd all in one section and make sure there's never more than two AI lab folks in a section.",
+   "gold": "together big_tech\nlimit ai_lab 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together big_tech; limit ai_lab 2"
+  },
+  {
+   "id": "t089",
+   "voice": "terse",
+   "text": "Arora apart from Daniels.",
+   "gold": "avoid Brandon_Rahbar_Daniels Nikesh_Arora",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid Arora/Daniels"
+  },
+  {
+   "id": "t090",
+   "voice": "question",
+   "text": "Could you do four per section, with the government officials seated first?",
+   "gold": "size 4\norder government",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 4; order government"
+  },
+  {
+   "id": "t091",
+   "voice": "formal",
+   "text": "Ms. Su is to be seated in the same section as Mr. Nadella. Chip makers shall not exceed two per section.",
+   "gold": "limit chips 2\npair Lisa_Su Satya_Nadella",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Su/Nadella; limit chips 2"
+  },
+  {
+   "id": "t092",
+   "voice": "terse",
+   "text": "Software & security together. Cap 6.",
+   "gold": "together software_security",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "together software_security; size 6",
+   "gold_note": "'Cap 6' = the default size"
+  },
+  {
+   "id": "t093",
+   "voice": "clipped",
+   "text": "Walters/Huang same sec. Software & security together.",
+   "gold": "together software_security\npair Jensen_Huang Richard_Walters",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "pair Walters/Huang; together software_security"
+  },
+  {
+   "id": "t094",
+   "voice": "clipped",
+   "text": "Investors max 2, chips max 2 per sec.",
+   "gold": "limit investor 2\nlimit chips 2",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit investor 2; limit chips 2"
+  },
+  {
+   "id": "t095",
+   "voice": "chatty",
+   "text": "two more guests confirmed: Yusra Delacroix-Hahn from Google and Emeric Tsvetkov from Anthropic. Yusra should sit with Pichai, and Emeric shouldn't be in the same section as anyone from OpenAI.",
+   "gold": "avoid Emeric_Tsvetkov OpenAI\npair Sundar_Pichai Yusra_Delacroix-Hahn",
+   "invented": true,
+   "names_guests": true,
+   "author_meaning": "pair Delacroix-Hahn/Pichai; avoid Tsvetkov/OpenAI"
+  },
+  {
+   "id": "t096",
+   "voice": "negative",
+   "text": "Nobody from an AI lab should be seated with any of the White House staff.",
+   "gold": "apart ai_lab unlabelled",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "apart ai_lab/unlabelled"
+  },
+  {
+   "id": "t097",
+   "voice": "negative",
+   "text": "The President should not be in the same section as Zuckerberg.",
+   "gold": "avoid Mark_Zuckerberg POTUS",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid POTUS/Zuckerberg"
+  },
+  {
+   "id": "t098",
+   "voice": "other",
+   "text": "Keep it intimate: no more than two to a section, and run the seating order government, AI labs, chips.",
+   "gold": "size 2\norder government ai_lab chips",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "size 2; order government, ai_lab, chips"
+  },
+  {
+   "id": "t099",
+   "voice": "chatty",
+   "text": "So McDermott and Bezos had a bit of a falling out, please split them up. And can you keep each section to four, with no more than one government official in any of them?",
+   "gold": "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+   "invented": false,
+   "names_guests": true,
+   "author_meaning": "avoid McDermott/Bezos; size 4; limit government 1"
+  },
+  {
+   "id": "t100",
+   "voice": "formal",
+   "text": "No section shall contain more than three guests drawn from the government and investor categories combined.",
+   "gold": "limit government investor 3",
+   "invented": false,
+   "names_guests": false,
+   "author_meaning": "limit government+investor 3"
+  }
+ ]
+}

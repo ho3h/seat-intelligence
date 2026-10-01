@@ -1,0 +1,1837 @@
+{
+ "result": {
+  "set": "7",
+  "source": "<home>/Genome/runs/hero7/samples/R6_1p7b/plain_set7_t07.json",
+  "policies": 100,
+  "samples": 500,
+  "passed": 405,
+  "strict": 392,
+  "pass1": 0.81,
+  "pass1_strict": 0.784,
+  "vote_pass": 82,
+  "vote_strict": 79,
+  "named": {
+   "policies": 50,
+   "strict": 185,
+   "samples": 250,
+   "pass1_strict": 0.74,
+   "vote_strict": 38
+  },
+  "category_only": {
+   "policies": 50,
+   "strict": 207,
+   "samples": 250,
+   "pass1_strict": 0.828,
+   "vote_strict": 41
+  },
+  "invented": {
+   "policies": 8,
+   "strict": 25,
+   "samples": 40,
+   "pass1_strict": 0.625,
+   "vote_strict": 6
+  }
+ },
+ "per": {
+  "t001": {
+   "n": 5,
+   "passed": 2,
+   "strict": 0,
+   "vote_text": "avoid Susie_Su Tan_Huang",
+   "vote_size": 2,
+   "vote_pass": true,
+   "vote_strict": false,
+   "samples": [
+    "avoid Susie_Su Tan_Huang",
+    "avoid Su Tseng Tan",
+    "avoid Su Su Tan",
+    "avoid Susie_Su Tan_Huang",
+    "avoid Su Su Tan"
+   ],
+   "gold": "avoid Hock_Tan Lisa_Su",
+   "text": "Su and Tan apart."
+  },
+  "t002": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 3",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3",
+    "size 3",
+    "size 3",
+    "size 3",
+    "size 3"
+   ],
+   "gold": "size 3",
+   "text": "Max 3 per section."
+  },
+  "t003": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "pair Alex_Karp Shyam_Sankar",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "pair Alex_Karp Shyam_Sankar",
+    "pair Alex_Karp Shyam_Sankar",
+    "pair Alex_Karp Shyam_Sankar",
+    "pair Alex_Karp Shyam_Sankar",
+    "pair Alex_Karp Shyam_Sankar"
+   ],
+   "gold": "size 4\npair Alex_Karp Shyam_Sankar",
+   "text": "Cap 4. Karp w/ Sankar."
+  },
+  "t004": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\norder government",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\norder government",
+    "size 4\norder government",
+    "size 4\norder government",
+    "size 4\norder government",
+    "size 4\norder government"
+   ],
+   "gold": "size 4\norder government",
+   "text": "Four a section. Gov first."
+  },
+  "t005": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\npair Brad_Gerstner Scott_Kupor",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\npair Scott_Kupor Brad_Gerstner",
+    "size 5\npair Scott_Kupor Brad_Gerstner",
+    "size 5\npair Scott_Kupor Brad_Gerstner",
+    "size 5\npair Scott_Kupor Brad_Gerstner",
+    "size 5\npair Scott_Kupor Brad_Gerstner"
+   ],
+   "gold": "size 5\npair Brad_Gerstner Scott_Kupor",
+   "text": "Hi! So, small thing but it matters - Kupor and Gerstner go way back and would love to catch up, so please put them in the same section. Otherwise just keep each section to five people max, thanks so much."
+  },
+  "t006": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together ai_lab\napart ai_lab chips",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together ai_lab\napart ai_lab chips",
+    "together ai_lab\napart ai_lab chips",
+    "together ai_lab\napart ai_lab chips",
+    "together ai_lab\napart ai_lab chips",
+    "together ai_lab\napart ai_lab chips"
+   ],
+   "gold": "together ai_lab\napart ai_lab chips",
+   "text": "- AI labs together\n- chip makers apart from AI labs"
+  },
+  "t007": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Nvidia Sanjay_Mehrotra",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Sanjay_Mehrotra Nvidia",
+    "avoid Sanjay_Mehrotra Nvidia",
+    "avoid Sanjay_Mehrotra Nvidia",
+    "avoid Sanjay_Mehrotra Nvidia",
+    "avoid Sanjay_Mehrotra Nvidia"
+   ],
+   "gold": "avoid Nvidia Sanjay_Mehrotra",
+   "text": "Don't let Mehrotra end up in a section with anyone from Nvidia."
+  },
+  "t008": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit government 1",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit government 1",
+    "limit government 1",
+    "limit government 1",
+    "limit government 1",
+    "limit government 1"
+   ],
+   "gold": "limit government 1",
+   "text": "No section shall seat more than one government official."
+  },
+  "t009": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "size 3\npair Richard_Daniels Sean_Cairncross",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "size 3\npair Sean_Cairncross Richard_Daniels",
+    "size 3\npair Sean_Cairncross Scott_Daniels",
+    "size 3\npair Sean_Cairncross Richard_Daniels",
+    "size 3\npair Sean_Cairncross Bill_Daniels",
+    "size 3\npair Sean_Cairncross Bill_Daniels"
+   ],
+   "gold": "size 3\npair Brandon_Rahbar_Daniels Sean_Cairncross",
+   "text": "Please ensure that Mr. Cairncross and Mr. Daniels are seated within the same section, and that no section exceeds three guests."
+  },
+  "t010": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\napart big_tech investor",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\napart big_tech investor",
+    "size 5\napart big_tech investor",
+    "size 5\napart big_tech investor",
+    "size 5\napart big_tech investor",
+    "size 5\napart big_tech investor"
+   ],
+   "gold": "size 5\napart big_tech investor",
+   "text": "hey, for Thursday's lunch could we keep the investors and the big tech folks from mixing? like no investor in a section with a big tech person. and sections of five please"
+  },
+  "t011": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\npair Greg_Brockman Odalys_Ferreira-Quint\npair Halvard_Robotics Odalys_Ferreira-Quint",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\npair Odalys_Ferreira-Quint Halvard_Robotics\npair Odalys_Ferreira-Quint Greg_Brockman",
+    "size 5\npair Odalys_Ferreira-Quint Halvard_Robotics\npair Odalys_Ferreira-Quint Greg_Brockman",
+    "size 5\npair Odalys_Ferreira-Quint Halvard_Robotics\npair Odalys_Ferreira-Quint Greg_Brockman",
+    "size 5\npair Odalys_Ferreira-Quint Halvard_Robotics\npair Odalys_Ferreira-Quint Greg_Brockman",
+    "size 5\npair Odalys_Ferreira-Quint Halvard_Robotics\npair Odalys_Ferreira-Quint Greg_Brockman"
+   ],
+   "gold": "size 5\npair Greg_Brockman Odalys_Ferreira-Quint",
+   "text": "Late addition for you: Odalys Ferreira-Quint from Halvard Robotics (it's an AI lab) is joining us after all. Please seat her with Brockman, and keep sections to five."
+  },
+  "t012": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "order government WhiteHouse investor",
+   "vote_size": 0,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "order government WhiteHouse investor",
+    "order government POTUS investor",
+    "order government investor POTUS",
+    "order government POTUS investor",
+    "order government investor POTUS"
+   ],
+   "gold": "order government unlabelled investor",
+   "text": "Can we seat government first, then the White House staff, then investors?"
+  },
+  "t013": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\navoid Dario_Amodei Greg_Brockman\navoid Elon_Musk Greg_Brockman",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\navoid Greg_Brockman Elon_Musk\navoid Dario_Amodei Greg_Brockman",
+    "size 4\navoid Greg_Brockman Elon_Musk\navoid Dario_Amodei Greg_Brockman",
+    "size 4\navoid Greg_Brockman Elon_Musk\navoid Dario_Amodei Greg_Brockman",
+    "size 4\navoid Greg_Brockman Elon_Musk\navoid Dario_Amodei Greg_Brockman",
+    "size 4\navoid Greg_Brockman Elon_Musk\navoid Dario_Amodei Greg_Brockman"
+   ],
+   "gold": "size 4\navoid Elon_Musk Greg_Brockman\navoid Dario_Amodei Greg_Brockman",
+   "text": "- Brockman away from Musk\n- Amodei away from Brockman\n- no more than 4 a section"
+  },
+  "t014": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit chips 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit chips 2",
+    "limit chips 2",
+    "limit chips 2",
+    "limit chips 2",
+    "limit chips 2"
+   ],
+   "gold": "limit chips 2",
+   "text": "Don't put more than two chip people in the same section."
+  },
+  "t015": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart ai_lab chips\npair Secretary_Scott_Bessent Speaker_Johnson",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart ai_lab chips\npair Speaker_Johnson Secretary_Scott_Bessent",
+    "apart ai_lab chips\npair Speaker_Johnson Secretary_Scott_Bessent",
+    "apart ai_lab chips\npair Speaker_Johnson Secretary_Scott_Bessent",
+    "apart ai_lab chips\npair Speaker_Johnson Secretary_Scott_Bessent",
+    "apart ai_lab chips\npair Speaker_Johnson Secretary_Scott_Bessent"
+   ],
+   "gold": "apart ai_lab chips\npair Secretary_Scott_Bessent Speaker_Johnson",
+   "text": "Could you seat the Speaker alongside Secretary Bessent, and keep chip makers and AI labs from sharing a section?"
+  },
+  "t016": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together company",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company",
+    "together company",
+    "together company",
+    "together company",
+    "together company"
+   ],
+   "gold": "together company",
+   "text": "Same-company guests together."
+  },
+  "t017": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Michael_Kratsios Richard_Walters",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Richard_Walters Michael_Kratsios",
+    "avoid Richard_Walters Michael_Kratsios",
+    "avoid Richard_Walters Michael_Kratsios",
+    "avoid Richard_Walters Michael_Kratsios",
+    "avoid Richard_Walters Michael_Kratsios"
+   ],
+   "gold": "avoid Michael_Kratsios Richard_Walters",
+   "text": "Walters should never cross paths with Kratsios at this lunch."
+  },
+  "t018": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "limit software_security government 2",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "limit software_security government 2",
+    "limit software_security government 2",
+    "limit software_security government 2",
+    "limit software_security government 2",
+    "limit software_security government 2"
+   ],
+   "gold": "size 2\napart software_security government",
+   "text": "Cap 2. Software/security apart from gov."
+  },
+  "t019": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Anthropic Palantir",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Anthropic Palantir",
+    "avoid Anthropic Palantir",
+    "avoid Anthropic Palantir",
+    "avoid Anthropic Palantir",
+    "avoid Anthropic Palantir"
+   ],
+   "gold": "avoid Anthropic Palantir",
+   "text": "Anthropic + Palantir: separate sections."
+  },
+  "t020": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart ai_lab big_tech",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart ai_lab big_tech",
+    "apart ai_lab big_tech",
+    "apart ai_lab big_tech",
+    "apart ai_lab big_tech",
+    "apart ai_lab big_tech"
+   ],
+   "gold": "apart ai_lab big_tech",
+   "text": "Big tech and AI labs should not mingle within a section."
+  },
+  "t021": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "order government big_tech\navoid AMD Broadcom",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order government big_tech\navoid Broadcom AMD",
+    "order government big_tech\navoid Broadcom AMD",
+    "order government big_tech\navoid Broadcom AMD",
+    "order government big_tech\navoid Broadcom AMD",
+    "order government big_tech\navoid Broadcom AMD"
+   ],
+   "gold": "order government big_tech\navoid AMD Broadcom",
+   "text": "ok so the Broadcom and AMD people - honestly better if they're not in the same section. also can government people go first, then big tech?"
+  },
+  "t022": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\ntogether investor\norder investor big_tech",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether investor\norder investor big_tech",
+    "size 4\ntogether investor\norder investor big_tech",
+    "size 4\ntogether investor\norder investor big_tech",
+    "size 4\ntogether investor\norder investor big_tech",
+    "size 4\ntogether investor\norder investor big_tech"
+   ],
+   "gold": "size 4\ntogether investor\norder investor big_tech",
+   "text": "- sections of 4\n- investors all together\n- order: investors, then big tech"
+  },
+  "t023": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Brad_Gerstner Teodor_Vasquez-Lind\npair Quillfeather_Capital Teodor_Vasquez-Lind",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair Teodor_Vasquez-Lind Quillfeather_Capital\navoid Teodor_Vasquez-Lind Brad_Gerstner",
+    "pair Teodor_Vasquez-Lind Quillfeather_Capital\navoid Teodor_Vasquez-Lind Brad_Gerstner",
+    "pair Teodor_Vasquez-Lind Quillfeather_Capital\navoid Teodor_Vasquez-Lind Brad_Gerstner",
+    "pair Teodor_Vasquez-Lind Quillfeather_Capital\navoid Teodor_Vasquez-Lind Brad_Gerstner",
+    "pair Teodor_Vasquez-Lind Quillfeather_Capital\navoid Teodor_Vasquez-Lind Brad_Gerstner"
+   ],
+   "gold": "avoid Brad_Gerstner Teodor_Vasquez-Lind",
+   "text": "Add Teodor Vasquez-Lind (Quillfeather Capital, investor). Keep him away from Gerstner."
+  },
+  "t024": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart ai_lab chips",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart ai_lab chips",
+    "apart ai_lab chips",
+    "apart ai_lab chips",
+    "apart ai_lab chips",
+    "apart ai_lab chips"
+   ],
+   "gold": "apart ai_lab chips",
+   "text": "Guests from AI laboratories and guests from semiconductor companies are not to be seated in the same section."
+  },
+  "t025": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "pair Speaker_Johnson VPOTUS",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair VPOTUS Speaker_Johnson",
+    "pair VPOTUS Speaker_Johnson",
+    "pair VPOTUS Speaker_Johnson",
+    "pair VPOTUS Speaker_Johnson",
+    "pair VPOTUS Speaker_Johnson"
+   ],
+   "gold": "pair Speaker_Johnson VPOTUS",
+   "text": "The Vice President and the Speaker should share a section."
+  },
+  "t026": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together company\nlimit government 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\nlimit government 2",
+    "together company\nlimit government 2",
+    "together company\nlimit government 2",
+    "together company\nlimit government 2",
+    "together company\nlimit government 2"
+   ],
+   "gold": "together company\nlimit government 2",
+   "text": "So the government contingent is big this year - please don't stack them, no more than two of them in any section. Also let's keep colleagues from the same company together."
+  },
+  "t027": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit government 2\npair Satya_Nadella Sundar_Pichai",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit government 2\npair Satya_Nadella Sundar_Pichai",
+    "limit government 2\npair Satya_Nadella Sundar_Pichai",
+    "limit government 2\npair Satya_Nadella Sundar_Pichai",
+    "pair Satya_Nadella Sundar_Pichai\nlimit government 2",
+    "pair Satya_Nadella Sundar_Pichai\nlimit government 2"
+   ],
+   "gold": "limit government 2\npair Satya_Nadella Sundar_Pichai",
+   "text": "Pair Nadella/Pichai. Max 2 gov per section."
+  },
+  "t028": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit investor 1",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit investor 1",
+    "limit investor 1",
+    "limit investor 1",
+    "limit investor 1",
+    "limit investor 1"
+   ],
+   "gold": "limit investor 1",
+   "text": "Could we limit each section to at most one investor?"
+  },
+  "t029": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "pair Elon_Musk Jared_Isaacman",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair Jared_Isaacman Elon_Musk",
+    "pair Jared_Isaacman Elon_Musk",
+    "pair Jared_Isaacman Elon_Musk",
+    "pair Jared_Isaacman Elon_Musk",
+    "pair Jared_Isaacman Elon_Musk"
+   ],
+   "gold": "pair Elon_Musk Jared_Isaacman",
+   "text": "Mr. Isaacman is to be seated with Mr. Musk."
+  },
+  "t030": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "order investor",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order investor",
+    "order investor",
+    "order investor",
+    "order investor",
+    "order investor"
+   ],
+   "gold": "order investor",
+   "text": "Investors first."
+  },
+  "t031": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\navoid Elon_Musk Mark_Zuckerberg",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\navoid Mark_Zuckerberg Elon_Musk",
+    "size 4\navoid Mark_Zuckerberg Elon_Musk",
+    "size 4\navoid Mark_Zuckerberg Elon_Musk",
+    "size 4\navoid Mark_Zuckerberg Elon_Musk",
+    "size 4\navoid Mark_Zuckerberg Elon_Musk"
+   ],
+   "gold": "size 4\navoid Elon_Musk Mark_Zuckerberg",
+   "text": "Under no circumstances should Zuckerberg and Musk be placed in the same section. Also, no section larger than four."
+  },
+  "t032": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 3\napart ai_lab government",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\napart ai_lab government",
+    "size 3\napart ai_lab government",
+    "size 3\napart ai_lab government",
+    "size 3\napart ai_lab government",
+    "size 3\napart ai_lab government"
+   ],
+   "gold": "size 3\napart ai_lab government",
+   "text": "No section should have more than three people, and no AI lab people with government people."
+  },
+  "t033": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+    "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+    "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+    "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+    "apart investor government\npair Chamath_Palihapitiya David_Sacks"
+   ],
+   "gold": "apart investor government\npair Chamath_Palihapitiya David_Sacks",
+   "text": "Can Chamath sit with Sacks? Also, keep investors and government in separate sections."
+  },
+  "t034": {
+   "n": 5,
+   "passed": 2,
+   "strict": 2,
+   "vote_text": "size 5",
+   "vote_size": 2,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "size 5",
+    "size 5\ntogether chips",
+    "size 5\ntogether chips",
+    "size 5",
+    "size 5\npair chips"
+   ],
+   "gold": "size 5\ntogether chips",
+   "text": "Chips together. Max 5."
+  },
+  "t035": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "pair Micron Ms_Priyanka_Oduya\npair Ms_Priyanka_Oduya Sanjay_Mehrotra",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair Ms_Priyanka_Oduya Micron\npair Ms_Priyanka_Oduya Sanjay_Mehrotra",
+    "pair Ms_Priyanka_Oduya Micron\npair Ms_Priyanka_Oduya Sanjay_Mehrotra",
+    "pair Ms_Priyanka_Oduya Micron\npair Ms_Priyanka_Oduya Sanjay_Mehrotra",
+    "pair Ms_Priyanka_Oduya Micron\npair Ms_Priyanka_Oduya Sanjay_Mehrotra",
+    "pair Ms_Priyanka_Oduya Micron\npair Ms_Priyanka_Oduya Sanjay_Mehrotra"
+   ],
+   "gold": "pair Priyanka_Oduya Sanjay_Mehrotra",
+   "text": "Ms. Priyanka Oduya of Micron has been added to the guest list. She is to be seated in the same section as Mr. Mehrotra."
+  },
+  "t036": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "order government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government",
+   "vote_size": 0,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "order government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government\norder government",
+    "order government\norder palestine\norder white_house",
+    "order government\norder administration\npair White_House",
+    "order government\norder White_President",
+    "order government\norder government\norder POTUS"
+   ],
+   "gold": "order unlabelled government",
+   "text": "Seat the White House advisers first, and after them the government officials."
+  },
+  "t037": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\navoid Chairman_Andrew_Ferguson Meta\npair Susie_Wiles Will_Scharf",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\npair Susie_Wiles Will_Scharf\navoid Chairman_Andrew_Ferguson Meta",
+    "size 5\npair Susie_Wiles Will_Scharf\navoid Chairman_Andrew_Ferguson Meta",
+    "size 5\npair Susie_Wiles Will_Scharf\navoid Chairman_Andrew_Ferguson Meta",
+    "size 5\npair Susie_Wiles Will_Scharf\navoid Chairman_Andrew_Ferguson Meta",
+    "size 5\npair Susie_Wiles Will_Scharf\navoid Chairman_Andrew_Ferguson Meta"
+   ],
+   "gold": "size 5\navoid Chairman_Andrew_Ferguson Meta\npair Susie_Wiles Will_Scharf",
+   "text": "* Wiles + Scharf same section\n* Ferguson not with anyone from Meta\n* cap 5"
+  },
+  "t038": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit ai_lab 1\nlimit chips 1",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab 1\nlimit chips 1",
+    "limit ai_lab 1\nlimit chips 1",
+    "limit ai_lab 1\nlimit chips 1",
+    "limit ai_lab 1\nlimit chips 1",
+    "limit ai_lab 1\nlimit chips 1"
+   ],
+   "gold": "limit ai_lab 1\nlimit chips 1",
+   "text": "- no more than 1 AI lab per section\n- no more than 1 chip maker per section"
+  },
+  "t039": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "pair Jensen_Huang Su_Su",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "pair Jensen_Huang Su_Su",
+    "pair Jensen_Huang Su_Su",
+    "pair Jensen_Huang Su_Su",
+    "pair Jensen_Huang Su_Su",
+    "pair Jensen_Huang Su_Su"
+   ],
+   "gold": "pair Jensen_Huang Lisa_Su",
+   "text": "Huang with Su, same section."
+  },
+  "t040": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit big_tech investor 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit big_tech investor 2",
+    "limit big_tech investor 2",
+    "limit big_tech investor 2",
+    "limit big_tech investor 2",
+    "limit big_tech investor 2"
+   ],
+   "gold": "limit big_tech investor 2",
+   "text": "At most two guests combined from the investor and big tech categories may be seated in any single section."
+  },
+  "t041": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "pair Bill_McDermott Nikesh_Arora",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair Bill_McDermott Nikesh_Arora",
+    "pair Bill_McDermott Nikesh_Arora",
+    "pair Bill_McDermott Nikesh_Arora",
+    "pair Bill_McDermott Nikesh_Arora",
+    "pair Bill_McDermott Nikesh_Arora"
+   ],
+   "gold": "pair Bill_McDermott Nikesh_Arora",
+   "text": "Make sure McDermott and Arora end up sharing a section."
+  },
+  "t042": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\ntogether software_security",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\ntogether software_security",
+    "size 5\ntogether software_security",
+    "size 5\ntogether software_security",
+    "size 5\ntogether software_security",
+    "size 5\ntogether software_security"
+   ],
+   "gold": "size 5\ntogether software_security",
+   "text": "I really just want smallish sections for this one - like, five people tops. And the software and security folks should all be in the same section."
+  },
+  "t043": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together investor\navoid Jeff_Bezos Secretary_Lutnick",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together investor\navoid Secretary_Lutnick Jeff_Bezos",
+    "together investor\navoid Secretary_Lutnick Jeff_Bezos",
+    "together investor\navoid Secretary_Lutnick Jeff_Bezos",
+    "together investor\navoid Secretary_Lutnick Jeff_Bezos",
+    "together investor\navoid Secretary_Lutnick Jeff_Bezos"
+   ],
+   "gold": "together investor\navoid Jeff_Bezos Secretary_Lutnick",
+   "text": "Quick favor - Lutnick has asked not to be in the same section as Bezos, long story. Also please put all the investors together in one section."
+  },
+  "t044": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart investor government\norder chips",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart investor government\norder chips",
+    "apart investor government\norder chips",
+    "apart investor government\norder chips",
+    "apart investor government\norder chips",
+    "apart investor government\norder chips"
+   ],
+   "gold": "apart investor government\norder chips",
+   "text": "Would you keep government officials and investors in separate sections, and seat chip makers first?"
+  },
+  "t045": {
+   "n": 5,
+   "passed": 5,
+   "strict": 0,
+   "vote_text": "size 3\navoid Alex_Karp Daniella_Scott",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": false,
+   "samples": [
+    "size 3\navoid Daniella_Scott Alex_Karp",
+    "size 3\navoid Director_Daniels Alex_Karp",
+    "size 3\navoid Richard_Daniels Alex_Karp",
+    "size 3\navoid Brandon_Daniels Alex_Karp",
+    "size 3\navoid Dani_Scott Alex_Karp"
+   ],
+   "gold": "size 3\navoid Alex_Karp Brandon_Rahbar_Daniels",
+   "text": "Daniels not w/ Karp. Size 3."
+  },
+  "t046": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 2",
+    "size 2",
+    "size 2",
+    "size 2",
+    "size 2"
+   ],
+   "gold": "size 2",
+   "text": "Two per section."
+  },
+  "t047": {
+   "n": 5,
+   "passed": 5,
+   "strict": 4,
+   "vote_text": "limit chips 2\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su\npair Corvane_Semiconductor Ingrid_Achterberg",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit chips 2\npair Ingrid_Achterberg Corvane_Semiconductor\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Susie_Su",
+    "limit chips 2\npair Ingrid_Achterberg Corvane_Semiconductor\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su",
+    "limit chips 2\npair Ingrid_Achterberg Corvane_Semiconductor\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su",
+    "limit chips 2\npair Ingrid_Achterberg Corvane_Semiconductor\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su",
+    "limit chips 2\npair Ingrid_Achterberg Corvane_Semiconductor\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su"
+   ],
+   "gold": "limit chips 2\navoid Ingrid_Achterberg Jensen_Huang\navoid Ingrid_Achterberg Lisa_Su",
+   "text": "- new guest: Ingrid Achterberg, Corvane Semiconductor\n- Achterberg not with Huang\n- Achterberg not with Su\n- max 2 chip makers per section"
+  },
+  "t048": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart big_tech chips",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart big_tech chips",
+    "apart big_tech chips",
+    "apart big_tech chips",
+    "apart big_tech chips",
+    "apart big_tech chips"
+   ],
+   "gold": "apart big_tech chips",
+   "text": "Don't mix big tech with chip makers."
+  },
+  "t049": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Anthropic OpenAI",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Anthropic OpenAI",
+    "avoid Anthropic OpenAI",
+    "avoid Anthropic OpenAI",
+    "avoid Anthropic OpenAI",
+    "avoid Anthropic OpenAI"
+   ],
+   "gold": "avoid Anthropic OpenAI",
+   "text": "Everyone from Anthropic should be kept apart from everyone from OpenAI."
+  },
+  "t050": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\nlimit ai_lab 1\nlimit government 1",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\nlimit ai_lab 1\nlimit government 1",
+    "size 4\nlimit ai_lab 1\nlimit government 1",
+    "size 4\nlimit ai_lab 1\nlimit government 1",
+    "size 4\nlimit ai_lab 1\nlimit government 1",
+    "size 4\nlimit ai_lab 1\nlimit government 1"
+   ],
+   "gold": "size 4\nlimit government 1\nlimit ai_lab 1",
+   "text": "Gov max 1/section. AI labs max 1/section. Cap 4."
+  },
+  "t051": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "order government\npair Director_Clayton POTUS",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order government\npair POTUS Director_Clayton",
+    "pair POTUS Director_Clayton\norder government",
+    "order government\npair POTUS Director_Clayton",
+    "order government\npair POTUS Director_Clayton",
+    "order government\npair POTUS Director_Clayton"
+   ],
+   "gold": "order government\npair Director_Clayton POTUS",
+   "text": "The President shall be seated in the same section as Director Clayton; government officials are to be seated first."
+  },
+  "t052": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "together government",
+   "vote_size": 3,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "together government",
+    "together president\tadmin",
+    "together government\n!pair POTUS",
+    "together government",
+    "together government"
+   ],
+   "gold": "together unlabelled",
+   "text": "White House staff ought to be seated as one group."
+  },
+  "t053": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Greg_Brockman Tom_Brown",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Tom_Brown Greg_Brockman",
+    "avoid Tom_Brown Greg_Brockman",
+    "avoid Tom_Brown Greg_Brockman",
+    "avoid Tom_Brown Greg_Brockman",
+    "avoid Tom_Brown Greg_Brockman"
+   ],
+   "gold": "avoid Greg_Brockman Tom_Brown",
+   "text": "Would you mind keeping Tom Brown and Greg Brockman in different sections?"
+  },
+  "t054": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart ai_lab investor\norder government big_tech ai_lab",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order government big_tech ai_lab\napart ai_lab investor",
+    "order government big_tech ai_lab\napart ai_lab investor",
+    "order government big_tech ai_lab\napart ai_lab investor",
+    "order government big_tech ai_lab\napart ai_lab investor",
+    "order government big_tech ai_lab\napart ai_lab investor"
+   ],
+   "gold": "size 6\norder government big_tech ai_lab\napart ai_lab investor",
+   "text": "1) six per section\n2) order: government, big tech, AI labs\n3) investors apart from AI labs"
+  },
+  "t055": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+    "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+    "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+    "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+    "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya"
+   ],
+   "gold": "limit investor 2\navoid Brad_Gerstner Chamath_Palihapitiya",
+   "text": "Don't put Gerstner and Chamath in the same section, and don't put more than two investors anywhere."
+  },
+  "t056": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\ntogether company",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether company",
+    "size 4\ntogether company",
+    "size 4\ntogether company",
+    "size 4\ntogether company",
+    "size 4\ntogether company"
+   ],
+   "gold": "size 4\ntogether company",
+   "text": "Colleagues employed by the same company are to be seated in a common section, and no section shall exceed four guests."
+  },
+  "t057": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "pair Michael_Kratsios Sundar_Pichai",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair Michael_Kratsios Sundar_Pichai",
+    "pair Michael_Kratsios Sundar_Pichai",
+    "pair Michael_Kratsios Sundar_Pichai",
+    "pair Michael_Kratsios Sundar_Pichai",
+    "pair Michael_Kratsios Sundar_Pichai"
+   ],
+   "gold": "pair Michael_Kratsios Sundar_Pichai",
+   "text": "Kratsios w/ Pichai."
+  },
+  "t058": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\napart chips investor",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\napart chips investor",
+    "size 4\napart chips investor",
+    "size 4\napart chips investor",
+    "size 4\napart chips investor",
+    "size 4\napart chips investor"
+   ],
+   "gold": "size 4\napart chips investor",
+   "text": "ugh, last time the investors cornered all the chip CEOs. so this time: no investor sitting in a section with a chip maker, ok? and keep it to four a section."
+  },
+  "t059": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "avoid Malcolm_Ebrahimi-Stone Michael_Kratsios\navoid Malcolm_Ebrahimi-Stone Office_of_Science_Tech\npair Alex_Karp Bashir_Lindqvist\npair Bashir_Lindqvist Palantir",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "pair Bashir_Lindqvist Palantir\npair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Office_of_Science_and_Tech\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios",
+    "pair Bashir_Lindqvist Palantir\npair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Office_Science\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios",
+    "pair Bashir_Lindqvist Palantir\npair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Office_of_Science_Tech\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios",
+    "pair Bashir_Lindqvist Palantir\npair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Office_of_Science_Tech\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios",
+    "pair Bashir_Lindqvist Palantir\npair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Office_of_Science_Tech\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios"
+   ],
+   "gold": "pair Alex_Karp Bashir_Lindqvist\navoid Malcolm_Ebrahimi-Stone Michael_Kratsios",
+   "text": "Could you put Bashir Lindqvist (newly added, Palantir) in the same section as Karp, and keep Malcolm Ebrahimi-Stone from the Office of Science and Technology Policy apart from Kratsios?"
+  },
+  "t060": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "limit government 2",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "limit government 2",
+    "limit government 2",
+    "limit government 2",
+    "limit government 2",
+    "limit government 2"
+   ],
+   "gold": "limit government unlabelled 2",
+   "text": "Could you make sure there are no more than two government or White House people combined in any section?"
+  },
+  "t061": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+    "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+    "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+    "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+    "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang"
+   ],
+   "gold": "size 4\norder big_tech chips\npair Dario_Amodei Jensen_Huang",
+   "text": "Right, so for the lunch - Dario and Jensen have a lot to talk about, please pair them up. Beyond that I'd like sections of four, and big tech seated first, then chips."
+  },
+  "t062": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together big_tech",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together big_tech",
+    "together big_tech",
+    "together big_tech",
+    "together big_tech",
+    "together big_tech"
+   ],
+   "gold": "together big_tech",
+   "text": "Big tech together."
+  },
+  "t063": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "together investor\navoid Brad_Hock Lisa_Senhart\navoid Satya_Nadella Sundar_Pichai",
+   "vote_size": 4,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "together investor\navoid Sundar_Pichai Satya_Nadella\navoid Lisa_Senetwork Hock_Huang",
+    "together investor\navoid Sundar_Pichai Satya_Nadella\navoid Lisa_Surowiak Bill_Hock",
+    "together investor\navoid Sundar_Pichai Satya_Nadella\navoid Lisa_Sen | Hock",
+    "together investor\navoid Sundar_Pichai Satya_Nadella\navoid Lisa_Senhart Brad_Hock",
+    "together investor\navoid Sundar_Pichai Satya_Nadella\navoid Lisa_Senhart Brad_Hock"
+   ],
+   "gold": "together investor\navoid Satya_Nadella Sundar_Pichai\navoid Hock_Tan Lisa_Su",
+   "text": "1. Sundar and Satya apart\n2. Lisa and Hock apart\n3. investors together"
+  },
+  "t064": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit big_tech 1\nlimit investor 1",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit big_tech 1\nlimit investor 1",
+    "limit big_tech 1\nlimit investor 1",
+    "limit big_tech 1\nlimit investor 1",
+    "limit big_tech 1\nlimit investor 1",
+    "limit big_tech 1\nlimit investor 1"
+   ],
+   "gold": "limit investor 1\nlimit big_tech 1",
+   "text": "Never more than one investor per section, and never more than one big tech guest either."
+  },
+  "t065": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+    "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+    "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+    "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+    "avoid Chairman_Andrew_Ferguson Sundar_Pichai"
+   ],
+   "gold": "avoid Chairman_Andrew_Ferguson Sundar_Pichai",
+   "text": "Chairman Ferguson and Mr. Pichai: keep them separated."
+  },
+  "t066": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\norder ai_lab chips big_tech",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\norder ai_lab chips big_tech",
+    "size 5\norder ai_lab chips big_tech",
+    "size 5\norder ai_lab chips big_tech",
+    "size 5\norder ai_lab chips big_tech",
+    "size 5\norder ai_lab chips big_tech"
+   ],
+   "gold": "size 5\norder ai_lab chips big_tech",
+   "text": "Order: AI, chips, big tech. Cap 5."
+  },
+  "t067": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "avoid Exiger Palantir\npair Exiger Palantir",
+   "vote_size": 4,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "pair Palantir Exiger\navoid Exiger Palantir",
+    "pair Palantir Exiger\navoid Palantir Exiger",
+    "pair Palantir Exiger\navoid Exiger Palantir",
+    "pair Palantir Exiger\navoid Exiger Palantir",
+    "pair Palantir\navoid Exiger Palantir"
+   ],
+   "gold": "pair Alex_Karp Shyam_Sankar\navoid Alex_Karp Exiger\navoid Exiger Shyam_Sankar",
+   "text": "Palantir duo: same section. Exiger: not with them."
+  },
+  "t068": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together ai_lab",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together ai_lab",
+    "together ai_lab",
+    "together ai_lab",
+    "together ai_lab",
+    "together ai_lab"
+   ],
+   "gold": "together ai_lab",
+   "text": "Let the AI labs share one section between them."
+  },
+  "t069": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Elon_Musk VPOTUS",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Elon_Musk VPOTUS",
+    "avoid Elon_Musk VPOTUS",
+    "avoid Elon_Musk VPOTUS",
+    "avoid Elon_Musk VPOTUS",
+    "avoid Elon_Musk VPOTUS"
+   ],
+   "gold": "avoid Elon_Musk VPOTUS",
+   "text": "Can you keep the VP out of whatever section Musk is in?"
+  },
+  "t070": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "size 3\napart government white_house",
+   "vote_size": 0,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "size 3\napart government white_house",
+    "size 3\napart government white_house",
+    "size 3\napart government government",
+    "size 3\napart government white_house",
+    "size 3\napart government president"
+   ],
+   "gold": "size 3\napart government unlabelled",
+   "text": "- gov and White House staff apart\n- max 3 per section"
+  },
+  "t071": {
+   "n": 5,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "avoid Celestine_Mbatha-Ruiz Chamath_Palihapitiya\navoid Celestine_Mbatha-Ruiz David_Sacks\navoid Celestine_Mbatha-Ruiz Treallis_Ventures",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Celestine_Mbatha-Ruiz Treallis_Ventures\navoid Celestine_Mbatha-Ruiz David_Sacks\navoid Celestine_Mbatha-Ruiz Chamath_Palihapitiya",
+    "avoid Celestine_Mbatha-Ruiz Treallis_Ventures David_Sacks\navoid Celestine_Mbatha-Ruiz Treallis_Ventures Chamath_Palihapitiya",
+    "avoid Celestine_Mbatha-Ruiz Treallis_Ventures David_Sacks\navoid Celestine_Mbatha-Ruiz Treallis_Ventures Chamath_Palihapitiya",
+    "avoid Celestine_Mbatha-Ruiz Treallis_Ventures David_Sacks\navoid Celestine_Mbatha-Ruiz Chamath_Palihapitiya",
+    "avoid Celestine_Mbatha-Ruiz Treallis_Ventures David_Sacks\navoid Celestine_Mbatha-Ruiz Treallis_Ventures Chamath_Palihapitiya"
+   ],
+   "gold": "avoid Celestine_Mbatha-Ruiz David_Sacks\navoid Celestine_Mbatha-Ruiz Chamath_Palihapitiya",
+   "text": "Don't let Celestine Mbatha-Ruiz (Trellis Ventures) share a section with Sacks or with Chamath."
+  },
+  "t072": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "apart ai_lab software_security",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart ai_lab software_security",
+    "apart ai_lab software_security",
+    "apart ai_lab software_security",
+    "apart ai_lab software_security",
+    "apart ai_lab software_security"
+   ],
+   "gold": "apart ai_lab software_security",
+   "text": "Software and security executives shall not share a section with representatives of the artificial intelligence laboratories."
+  },
+  "t073": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+    "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+    "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+    "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+    "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent"
+   ],
+   "gold": "limit big_tech 1\npair Secretary_Lutnick Secretary_Scott_Bessent",
+   "text": "Secretary Lutnick and Secretary Bessent are to share a section. No section may contain more than one big tech guest."
+  },
+  "t074": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together chips\norder chips investor",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together chips\norder chips investor",
+    "together chips\norder chips investor",
+    "together chips\norder chips investor",
+    "together chips\norder chips investor",
+    "together chips\norder chips investor"
+   ],
+   "gold": "size 6\ntogether chips\norder chips investor",
+   "text": "Hmm ok so I've gone back and forth on this. Let's do sections of six, with the chip makers all together. Seat the chip makers first - actually, chip makers first and then the investors right after them."
+  },
+  "t075": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "pair Sanjay_Mehrotra Tan",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "pair Tan Sanjay_Mehrotra",
+    "pair Tan Sanjay_Mehrotra",
+    "pair Tan Sanjay_Mehrotra",
+    "pair Tan Sanjay_Mehrotra",
+    "pair Tan Sanjay_Mehrotra"
+   ],
+   "gold": "pair Hock_Tan Sanjay_Mehrotra",
+   "text": "Seat Tan with Mehrotra."
+  },
+  "t076": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit ai_lab chips 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab chips 2",
+    "limit ai_lab chips 2",
+    "limit ai_lab chips 2",
+    "limit ai_lab chips 2",
+    "limit ai_lab chips 2"
+   ],
+   "gold": "limit ai_lab chips 2",
+   "text": "Can we cap it at two AI lab or chip people combined per section?"
+  },
+  "t077": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Craft_Ventures Scott_Kupor",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid Scott_Kupor Craft_Ventures",
+    "avoid Scott_Kupor Craft_Ventures",
+    "avoid Scott_Kupor Craft_Ventures",
+    "avoid Scott_Kupor Craft_Ventures",
+    "avoid Scott_Kupor Craft_Ventures"
+   ],
+   "gold": "avoid Craft_Ventures Scott_Kupor",
+   "text": "Never seat Kupor with anyone from Craft Ventures."
+  },
+  "t078": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "limit big_tech 3\napart big_tech government",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "limit big_tech 3\napart big_tech government",
+    "limit big_tech 3\napart big_tech government",
+    "limit big_tech 3\napart big_tech government",
+    "limit big_tech 2\napart big_tech government",
+    "limit big_tech 3\napart big_tech government"
+   ],
+   "gold": "size 3\napart government big_tech",
+   "text": "Gov apart from big tech. Cap 3."
+  },
+  "t079": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\navoid Sean_Cairncross Susie_Wiles",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\navoid Susie_Wiles Sean_Cairncross",
+    "size 5\navoid Susie_Wiles Sean_Cairncross",
+    "size 5\navoid Susie_Wiles Sean_Cairncross",
+    "size 5\navoid Susie_Wiles Sean_Cairncross",
+    "size 5\navoid Susie_Wiles Sean_Cairncross"
+   ],
+   "gold": "size 5\navoid Sean_Cairncross Susie_Wiles",
+   "text": "honestly the only thing I care about is that Wiles and Cairncross aren't stuck in the same section, and that nobody's in a section bigger than five. that's it!"
+  },
+  "t080": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 5\napart investor government",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\napart investor government",
+    "size 5\napart investor government",
+    "size 5\napart investor government",
+    "size 5\napart investor government",
+    "size 5\napart investor government"
+   ],
+   "gold": "size 5\napart investor government",
+   "text": "Please don't put any investors in the same section as government officials, and don't let any section go over five."
+  },
+  "t081": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "pair Shyam_Sankar Will_Scharf",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "pair Will_Scharf Shyam_Sankar",
+    "pair Will_Scharf Shyam_Sankar",
+    "pair Will_Scharf Shyam_Sankar",
+    "pair Will_Scharf Shyam_Sankar",
+    "pair Will_Scharf Shyam_Sankar"
+   ],
+   "gold": "pair Shyam_Sankar Will_Scharf",
+   "text": "Scharf belongs in Sankar's section."
+  },
+  "t082": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "order investor software_security government",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order investor software_security government",
+    "order investor software_security government",
+    "order investor software_security government",
+    "order investor software_security government",
+    "order investor software_security government"
+   ],
+   "gold": "order investor software_security government",
+   "text": "Seating order should run investors, software and security, then government."
+  },
+  "t083": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\npair Brightwater_Systems Rafferty_Okonkwo\npair Nikesh_Arora Rafferty_Okonkwo\npair Rafferty_Okonkwo software_security",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\npair Rafferty_Okonkwo Brightwater_Systems\npair Rafferty_Okonkwo software_security\npair Rafferty_Okonkwo Nikesh_Arora",
+    "size 4\npair Rafferty_Okonkwo Brightwater_Systems\npair Rafferty_Okonkwo software_security\npair Rafferty_Okonkwo Nikesh_Arora",
+    "size 4\npair Rafferty_Okonkwo Brightwater_Systems\npair Rafferty_Okonkwo software_security\npair Rafferty_Okonkwo Nikesh_Arora",
+    "size 4\npair Rafferty_Okonkwo Brightwater_Systems\npair Rafferty_Okonkwo software_security\npair Rafferty_Okonkwo Nikesh_Arora",
+    "size 4\npair Rafferty_Okonkwo Brightwater_Systems\npair Rafferty_Okonkwo software_security\npair Rafferty_Okonkwo Nikesh_Arora"
+   ],
+   "gold": "size 4\npair Nikesh_Arora Rafferty_Okonkwo",
+   "text": "+Rafferty Okonkwo (Brightwater Systems, software/security). Okonkwo w/ Arora. Cap 4."
+  },
+  "t084": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 3\nlimit government 1\napart ai_lab big_tech",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\nlimit government 1\napart ai_lab big_tech",
+    "size 3\nlimit government 1\napart ai_lab big_tech",
+    "size 3\nlimit government 1\napart ai_lab big_tech",
+    "size 3\nlimit government 1\napart ai_lab big_tech",
+    "size 3\nlimit government 1\napart ai_lab big_tech"
+   ],
+   "gold": "size 3\nlimit government 1\napart ai_lab big_tech",
+   "text": "- 3 per section\n- at most 1 government official per section\n- AI labs apart from big tech"
+  },
+  "t085": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 3\navoid Google Meta\npair Microsoft Nvidia",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\npair Microsoft Nvidia\navoid Google Meta",
+    "size 3\npair Microsoft Nvidia\navoid Google Meta",
+    "size 3\npair Microsoft Nvidia\navoid Google Meta",
+    "size 3\npair Microsoft Nvidia\navoid Google Meta",
+    "size 3\npair Microsoft Nvidia\navoid Google Meta"
+   ],
+   "gold": "size 3\navoid Google Meta\npair Microsoft Nvidia",
+   "text": "- Microsoft with Nvidia\n- Google away from Meta\n- 3 per section max"
+  },
+  "t086": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together company\napart chips software_security",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\napart chips software_security",
+    "together company\napart chips software_security",
+    "together company\napart chips software_security",
+    "together company\napart chips software_security",
+    "together company\napart chips software_security"
+   ],
+   "gold": "together company\napart chips software_security",
+   "text": "Representatives of chip-making firms shall be seated apart from software and security executives; furthermore, guests sharing a company must be seated together."
+  },
+  "t087": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "order government investor\npair Jared_Isaacman Michael_Kratsios",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order government investor\npair Jared_Isaacman Michael_Kratsios",
+    "order government investor\npair Jared_Isaacman Michael_Kratsios",
+    "order government investor\npair Jared_Isaacman Michael_Kratsios",
+    "order government investor\npair Jared_Isaacman Michael_Kratsios",
+    "order government investor\npair Jared_Isaacman Michael_Kratsios"
+   ],
+   "gold": "order government investor\npair Jared_Isaacman Michael_Kratsios",
+   "text": "Could Isaacman and Kratsios share a section, with government seated first and investors second?"
+  },
+  "t088": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together big_tech\nlimit ai_lab 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together big_tech\nlimit ai_lab 2",
+    "together big_tech\nlimit ai_lab 2",
+    "together big_tech\nlimit ai_lab 2",
+    "together big_tech\nlimit ai_lab 2",
+    "together big_tech\nlimit ai_lab 2"
+   ],
+   "gold": "together big_tech\nlimit ai_lab 2",
+   "text": "honestly we don't need anything fancy. just keep the big tech crowd all in one section and make sure there's never more than two AI lab folks in a section."
+  },
+  "t089": {
+   "n": 5,
+   "passed": 5,
+   "strict": 0,
+   "vote_text": "avoid Bill_Daniels Nikesh_Arora",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": false,
+   "samples": [
+    "avoid Nikesh_Arora Bill_Daniels",
+    "avoid Nikesh_Arora Bill_Daniels",
+    "avoid Nikesh_Arora Bill_Daniels",
+    "avoid Nikesh_Arora Bill_Daniels",
+    "avoid Nikesh_Arora Bill_Daniels"
+   ],
+   "gold": "avoid Brandon_Rahbar_Daniels Nikesh_Arora",
+   "text": "Arora apart from Daniels."
+  },
+  "t090": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\norder government",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\norder government",
+    "size 4\norder government",
+    "size 4\norder government",
+    "size 4\norder government",
+    "size 4\norder government"
+   ],
+   "gold": "size 4\norder government",
+   "text": "Could you do four per section, with the government officials seated first?"
+  },
+  "t091": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit chips 2\npair Lisa_Su Satya_Nadella",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit chips 2\npair Lisa_Su Satya_Nadella",
+    "limit chips 2\npair Lisa_Su Satya_Nadella",
+    "limit chips 2\npair Lisa_Su Satya_Nadella",
+    "limit chips 2\npair Lisa_Su Satya_Nadella",
+    "limit chips 2\npair Lisa_Su Satya_Nadella"
+   ],
+   "gold": "limit chips 2\npair Lisa_Su Satya_Nadella",
+   "text": "Ms. Su is to be seated in the same section as Mr. Nadella. Chip makers shall not exceed two per section."
+  },
+  "t092": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "together software_security",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together software_security",
+    "together software_security",
+    "together software_security",
+    "together software_security",
+    "together software_security"
+   ],
+   "gold": "together software_security",
+   "text": "Software & security together. Cap 6."
+  },
+  "t093": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "pair Jensen_Huang Richard_Walters\npair Richard_Walters Software_security",
+   "vote_size": 3,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "pair Richard_Walters Jensen_Huang\npair Software_security Richard_Walters",
+    "pair Richard_Walters Jensen_Huang\nsoftware_security",
+    "pair Richard_Walters Jensen_Huang\npair Software_security Richard_Walters",
+    "pair Richard_Walters Jensen_Huang\nsoftware_security\n!",
+    "pair Richard_Walters Jensen_Huang\npair Software_security Richard_Walters\npair Software_security Jensen_Huang"
+   ],
+   "gold": "together software_security\npair Jensen_Huang Richard_Walters",
+   "text": "Walters/Huang same sec. Software & security together."
+  },
+  "t094": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit chips 2\nlimit investor 2",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit chips 2\nlimit investor 2",
+    "limit chips 2\nlimit investor 2",
+    "limit chips 2\nlimit investor 2",
+    "limit chips 2\nlimit investor 2",
+    "limit chips 2\nlimit investor 2"
+   ],
+   "gold": "limit investor 2\nlimit chips 2",
+   "text": "Investors max 2, chips max 2 per sec."
+  },
+  "t095": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "avoid Emeric_Tsvetkov OpenAI\npair Emeric_Tsvetkov Yusra_Delacroix-Hahn\npair Google Yusra_Delacroix-Hahn\npair Sundar_Pichai Yusra_Delacroix-Hahn",
+   "vote_size": 3,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "size 2\npair Yusra_Delacroix-Hahn Google\npair Yusra_Delacroix-Hahn Emeric_Tsvetkov\npair Yusra_Delacroix-Hahn Sundar_Pichai\navoid Emeric_Tsvetkov OpenAI",
+    "size 2\npair Yusra_Delacroix-Hahn Google\npair Yusra_Delacroix-Hahn Emeric_Tsvetkov\npair Yusra_Delacroix-Hahn Sundar_Pichai\navoid Emeric_Tsvetkov OpenAI",
+    "pair Yusra_Delacroix-Hahn Google\npair Yusra_Delacroix-Hahn Emeric_Tsvetkov\npair Yusra_Delacroix-Hahn Sundar_Pichai\navoid Emeric_Tsvetkov OpenAI",
+    "pair Yusra_Delacroix-Hahn Google\npair Yusra_Delacroix-Hahn Emeric_Tsvetkov\npair Yusra_Delacroix-Hahn Sundar_Pichai\navoid Emeric_Tsvetkov OpenAI",
+    "pair Yusra_Delacroix-Hahn Google\npair Yusra_Delacroix-Hahn Emeric_Tsvetkov\npair Yusra_Delacroix-Hahn Sundar_Pichai\navoid Emeric_Tsvetkov OpenAI"
+   ],
+   "gold": "avoid Emeric_Tsvetkov OpenAI\npair Sundar_Pichai Yusra_Delacroix-Hahn",
+   "text": "two more guests confirmed: Yusra Delacroix-Hahn from Google and Emeric Tsvetkov from Anthropic. Yusra should sit with Pichai, and Emeric shouldn't be in the same section as anyone from OpenAI."
+  },
+  "t096": {
+   "n": 5,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "apart ai_lab government",
+   "vote_size": 5,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "apart ai_lab government",
+    "apart ai_lab government",
+    "apart ai_lab government",
+    "apart ai_lab government",
+    "apart ai_lab government"
+   ],
+   "gold": "apart ai_lab unlabelled",
+   "text": "Nobody from an AI lab should be seated with any of the White House staff."
+  },
+  "t097": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "avoid Mark_Zuckerberg POTUS",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "avoid POTUS Mark_Zuckerberg",
+    "avoid POTUS Mark_Zuckerberg",
+    "avoid POTUS Mark_Zuckerberg",
+    "avoid POTUS Mark_Zuckerberg",
+    "avoid POTUS Mark_Zuckerberg"
+   ],
+   "gold": "avoid Mark_Zuckerberg POTUS",
+   "text": "The President should not be in the same section as Zuckerberg."
+  },
+  "t098": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 2\norder government ai_lab chips",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 2\norder government ai_lab chips",
+    "size 2\norder government ai_lab chips",
+    "size 2\norder government ai_lab chips",
+    "size 2\norder government ai_lab chips",
+    "size 2\norder government ai_lab chips"
+   ],
+   "gold": "size 2\norder government ai_lab chips",
+   "text": "Keep it intimate: no more than two to a section, and run the seating order government, AI labs, chips."
+  },
+  "t099": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+    "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+    "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+    "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+    "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos"
+   ],
+   "gold": "size 4\nlimit government 1\navoid Bill_McDermott Jeff_Bezos",
+   "text": "So McDermott and Bezos had a bit of a falling out, please split them up. And can you keep each section to four, with no more than one government official in any of them?"
+  },
+  "t100": {
+   "n": 5,
+   "passed": 5,
+   "strict": 5,
+   "vote_text": "limit investor government 3",
+   "vote_size": 5,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit investor government 3",
+    "limit investor government 3",
+    "limit investor government 3",
+    "limit investor government 3",
+    "limit investor government 3"
+   ],
+   "gold": "limit government investor 3",
+   "text": "No section shall contain more than three guests drawn from the government and investor categories combined."
+  }
+ }
+}

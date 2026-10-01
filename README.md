@@ -20,7 +20,7 @@ and their kill rules is [`docs/SWINGS.md`](docs/SWINGS.md); gate status is [`gat
 
 `demo/luncheon/index.html` is a single static page built around the 34-seat chart that was posted for a White House AI luncheon
 (transcribed by hand into `data/hero/luncheon.json`). Its seating rules in English were read beforehand by a fine-tuned
-Qwen3-1.7B (LoRA; the HERO-6 adapter, `runs/hero6/page_outputs.json`). Each became a short program in "stage words" (`size`,
+Qwen3-1.7B (LoRA; the HERO-7 adapter, `runs/hero7/page_outputs_r7_1p7b.json`; write-up `docs/HERO-7.md`). Each became a short program in "stage words" (`size`,
 `together`, `limit`, `apart`, `order`, plus `avoid`/`pair` for named guests and companies). The page then seats the real chart, and an unbounded grid of synthetic rooms, with a JavaScript port of the
 checked seating function. It also shows what an untuned small chatbot does with the same rule.
 

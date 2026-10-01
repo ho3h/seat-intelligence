@@ -11,7 +11,9 @@ Place each adapter directory here under the name below; the scripts look for `ad
 
 | Name | Base model | What it is | Used by |
 |---|---|---|---|
-| `hero6_1p7b` | `mlx-community/Qwen3-1.7B-4bit` | **The adapter the demo uses** (HERO-6): English seating rule, including named guests and companies (`avoid`, `pair`), -> stage-word program | `genome/hero6/*`, the recorded page sentences in `runs/hero6/page_outputs.json` |
+| `hero7_r7_1p7b_b16` | `mlx-community/Qwen3-1.7B-4bit` | **The adapter the demo uses** (HERO-7, Hugging Face v2): English seating rule, including named guests and companies, -> stage-word program; 89/100 on the fresh test set | `genome/hero7/*`, the recorded page sentences in `runs/hero7/page_outputs_r7_1p7b.json` |
+| `hero7_r7_4b_b16` | `mlx-community/Qwen3-4B-4bit` | HERO-7 4B comparison (within about a point of the 1.7B) | `genome/hero7/eval7.py` |
+| `hero6_1p7b` | `mlx-community/Qwen3-1.7B-4bit` | Previous demo adapter (HERO-6, Hugging Face v1): first version with named guests (`avoid`, `pair`) | `genome/hero6/*`, `runs/hero6/page_outputs.json` |
 | `hero1_1p7b` | `mlx-community/Qwen3-1.7B-4bit` | HERO-1 model (six stage words, no names); produced the original five showcase readings | `genome/hero1/*`, `runs/hero1/showcase.json` |
 | `hero4_main`, `hero4_const`, `hero4_retrain` | `mlx-community/Qwen3-1.7B-4bit` | HERO-4 vocabulary-growth runs | `genome/hero4/*` |
 | `exp15_*` | `mlx-community/Qwen3-{0.6B,1.7B,4B}-4bit` | Stage-level factorization (swing 21) | `genome/exp15/*` |
@@ -20,4 +22,5 @@ Place each adapter directory here under the name below; the scripts look for `ad
 
 You do not need any adapter to run the verifier, the corpus checks, or the demo page: the page replays sentences the model read
 beforehand and runs only the seating program in the browser. To retrain instead of downloading, regenerate the training data
-(`genome/hero1/gen_train.py`, `genome/hero6/gen_train6.py`) and run `genome/hero1/train.sh` with an MLX-capable Python in `PY`.
+(`genome/hero1/gen_train.py`, `genome/hero6/gen_train6.py`, `genome/hero7/gen_train7.py`) and run `genome/hero7/train7.sh` (or the earlier
+`genome/hero1/train.sh`) with an MLX-capable Python in `PY`. The demo's adapter is also on Hugging Face as `hopski/seat-intelligence-1.7b`.

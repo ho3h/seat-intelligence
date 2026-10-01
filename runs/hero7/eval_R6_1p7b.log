@@ -1,0 +1,47 @@
+
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]
+Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 66109.87it/s]
+R6_1p7b plain/7/t07 pass1=0.81 strict=0.784 vote=79/100 83s
+R6_1p7b plain/7/greedy pass1=0.81 strict=0.79 vote=79/100 20s
+R6_1p7b plain/1/t07 pass1=0.9278 strict=0.9278 vote=67/72 47s
+R6_1p7b plain/1/greedy pass1=0.9306 strict=0.9306 vote=67/72 11s
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "<home>/Genome/genome/hero7/eval7.py", line 34, in <module>
+    if __name__ == "__main__": main(*sys.argv[1:])
+                               ^^^^^^^^^^^^^^^^^^^
+  File "<home>/Genome/genome/hero7/eval7.py", line 28, in main
+    r = score(s, path); r["seconds"] = round(secs, 1); r["full_scans"] = scans
+        ^^^^^^^^^^^^^^
+  File "<home>/Genome/genome/hero7/score7.py", line 52, in score
+    g = pols[pid]["gold"]; js = [J(t, g) for t in texts]
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<home>/Genome/genome/hero7/score7.py", line 52, in <listcomp>
+    g = pols[pid]["gold"]; js = [J(t, g) for t in texts]
+                                 ^^^^^^^
+  File "<home>/Genome/genome/hero7/score7.py", line 22, in j
+    r = judge(t, g); return r["passed"], r["passed"]
+        ^^^^^^^^^^^
+  File "<home>/Genome/genome/hero1/pipeline.py", line 62, in judge
+    gold = to_text(parse(gold_text))
+                   ^^^^^^^^^^^^^^^^
+  File "<home>/Genome/genome/hero1/lang.py", line 87, in parse
+    lines = [l.strip() for l in text.strip().splitlines()]
+                                ^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'strip'
+
+Fetching 9 files:   0%|          | 0/9 [00:00<?, ?it/s]
+Fetching 9 files: 100%|██████████| 9/9 [00:00<00:00, 58074.98it/s]
+R6_1p7b plain/2/t07 pass1=0.875 strict=0.875 vote=63/72 99s
+R6_1p7b plain/2/greedy pass1=0.875 strict=0.875 vote=63/72 29s
+R6_1p7b plain/6/t07 pass1=0.8944 strict=0.8583 vote=63/72 164s
+R6_1p7b plain/6/greedy pass1=0.8889 strict=0.8472 vote=61/72 42s
+R6_1p7b cons/7/t07 pass1=0.824 strict=0.806 vote=81/100 839s
+R6_1p7b cons/7/greedy pass1=0.83 strict=0.82 vote=82/100 189s
+R6_1p7b cons/1/t07 pass1=0.9417 strict=0.9417 vote=68/72 283s
+R6_1p7b cons/1/greedy pass1=0.9444 strict=0.9444 vote=68/72 70s
+R6_1p7b cons/2/t07 pass1=0.8889 strict=0.8889 vote=64/72 355s
+R6_1p7b cons/2/greedy pass1=0.8889 strict=0.8889 vote=64/72 75s
+R6_1p7b cons/6/t07 pass1=0.9056 strict=0.8861 vote=64/72 1151s
+R6_1p7b cons/6/greedy pass1=0.9028 strict=0.875 vote=63/72 222s

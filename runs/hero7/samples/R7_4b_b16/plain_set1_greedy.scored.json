@@ -1,0 +1,1024 @@
+{
+ "result": {
+  "set": "1",
+  "source": "<home>/Genome/runs/hero7/samples/R7_4b_b16/plain_set1_greedy.json",
+  "policies": 72,
+  "samples": 72,
+  "passed": 69,
+  "strict": 69,
+  "pass1": 0.9583,
+  "pass1_strict": 0.9583,
+  "vote_pass": 69,
+  "vote_strict": 69
+ },
+ "per": {
+  "ter01": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\ntogether company",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether company"
+   ],
+   "gold": "size 4\ntogether company",
+   "text": "Colleagues together. Max 4 per section."
+  },
+  "ter02": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit government 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit government 1"
+   ],
+   "gold": "limit government 1",
+   "text": "No two government officials in one section."
+  },
+  "ter03": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 5\napart ai_lab big_tech",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\napart ai_lab big_tech"
+   ],
+   "gold": "size 5\napart ai_lab big_tech",
+   "text": "AI labs and big tech apart. Sections of 5."
+  },
+  "ter04": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\norder investor ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\norder investor ai_lab"
+   ],
+   "gold": "together company\norder investor ai_lab",
+   "text": "Investors first, then AI labs. Same company together."
+  },
+  "ter05": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 2\napart chips software_security",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 2\napart chips software_security"
+   ],
+   "gold": "size 2\napart chips software_security",
+   "text": "Pairs only. Chips and software apart."
+  },
+  "ter06": {
+   "n": 1,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "limit investor 2\nlimit investor 4",
+   "vote_size": 1,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "limit investor 2\nlimit investor 4"
+   ],
+   "gold": "size 4\nlimit investor 2",
+   "text": "Max two investors per section; four per section overall."
+  },
+  "ter07": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together ai_lab"
+   ],
+   "gold": "together ai_lab",
+   "text": "Keep all AI labs together."
+  },
+  "ter08": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\norder government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\norder government"
+   ],
+   "gold": "size 3\norder government",
+   "text": "Cap 3. Government officials first."
+  },
+  "ter09": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\nlimit big_tech chips 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\nlimit big_tech chips 1"
+   ],
+   "gold": "together company\nlimit big_tech chips 1",
+   "text": "No two of big tech or chips per section; colleagues together."
+  },
+  "ter10": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "order chips big_tech ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order chips big_tech ai_lab"
+   ],
+   "gold": "order chips big_tech ai_lab",
+   "text": "Chips first, then big tech, then AI labs."
+  },
+  "ter11": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\napart investor government\norder government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\napart investor government\norder government"
+   ],
+   "gold": "together company\napart investor government\norder government",
+   "text": "Company groups stay whole. Investors and government apart. Government seated first."
+  },
+  "ter12": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\ntogether chips\nlimit investor 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\ntogether chips\nlimit investor 1"
+   ],
+   "gold": "size 3\ntogether chips\nlimit investor 1",
+   "text": "Sections of 3. Chip makers together. Max 1 investor per section."
+  },
+  "for01": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company"
+   ],
+   "gold": "together company",
+   "text": "Guests employed by the same company shall be seated in the same section wherever the section size permits."
+  },
+  "for02": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\nlimit software_security 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\nlimit software_security 1"
+   ],
+   "gold": "size 4\nlimit software_security 1",
+   "text": "No section shall contain more than four guests, and no section shall contain more than one guest from the software and security category."
+  },
+  "for03": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "apart ai_lab investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart ai_lab investor"
+   ],
+   "gold": "apart ai_lab investor",
+   "text": "Representatives of AI laboratories and of the investment community are to be seated in separate sections."
+  },
+  "for04": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "order government big_tech",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order government big_tech"
+   ],
+   "gold": "order government big_tech",
+   "text": "Government officials are to be seated first, followed by representatives of big technology companies."
+  },
+  "for05": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\nlimit government 2",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\nlimit government 2"
+   ],
+   "gold": "together company\nlimit government 2",
+   "text": "It is requested that at most two government officials be assigned to any one section, and that colleagues be kept together."
+  },
+  "for06": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 5\napart ai_lab chips",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\napart ai_lab chips"
+   ],
+   "gold": "size 5\napart ai_lab chips",
+   "text": "Sections shall be limited to five guests. Chip manufacturers shall not share a section with AI laboratory representatives."
+  },
+  "for07": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\ntogether investor\norder ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\ntogether investor\norder ai_lab"
+   ],
+   "gold": "size 3\ntogether investor\norder ai_lab",
+   "text": "The host directs that all investors be seated together, that no section exceed three guests, and that AI laboratory guests be seated first."
+  },
+  "for08": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit ai_lab big_tech 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab big_tech 1"
+   ],
+   "gold": "limit ai_lab big_tech 1",
+   "text": "No section shall include more than one guest drawn from either the AI laboratories or the big technology companies."
+  },
+  "for09": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\napart big_tech chips",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\napart big_tech chips"
+   ],
+   "gold": "together company\napart big_tech chips",
+   "text": "Guests of a common employer shall be placed together; big technology and chip manufacturers shall be kept in separate sections."
+  },
+  "for10": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\norder government investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\norder government investor"
+   ],
+   "gold": "size 4\norder government investor",
+   "text": "Seat the government officials first, then the investors, then the remaining guests, with no more than four persons per section."
+  },
+  "for11": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit investor 1\napart ai_lab government\norder chips",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit investor 1\napart ai_lab government\norder chips"
+   ],
+   "gold": "limit investor 1\napart ai_lab government\norder chips",
+   "text": "No section shall hold more than one investor; AI laboratories and government officials are to be kept apart; and chip manufacturers are to be seated first."
+  },
+  "for12": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\ntogether company\ntogether government\norder ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether company\ntogether government\norder ai_lab"
+   ],
+   "gold": "size 4\ntogether company\ntogether government\norder ai_lab",
+   "text": "Sections of at most four; guests of one company are to sit together; all government officials are to be grouped; AI laboratories are seated first."
+  },
+  "cha01": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company"
+   ],
+   "gold": "together company",
+   "text": "Okay so basically I just want people from the same company sitting together, that's it."
+  },
+  "cha02": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\napart ai_lab big_tech",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\napart ai_lab big_tech"
+   ],
+   "gold": "size 3\napart ai_lab big_tech",
+   "text": "Can we make sure there are never more than 3 folks in a section? And let's keep the AI lab people and the big tech people in different sections, just to mix the room up."
+  },
+  "cha03": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "order chips ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order chips ai_lab"
+   ],
+   "gold": "order chips ai_lab",
+   "text": "I'd love it if the chip folks got the first sections, then the AI labs."
+  },
+  "cha04": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit investor 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit investor 1"
+   ],
+   "gold": "limit investor 1",
+   "text": "Let's not put two investors in the same section, mixing it up is more fun."
+  },
+  "cha05": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\ntogether government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether government"
+   ],
+   "gold": "size 4\ntogether government",
+   "text": "Honestly just keep the government people together and make sections of four."
+  },
+  "cha06": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\nlimit government 2",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\nlimit government 2"
+   ],
+   "gold": "together company\nlimit government 2",
+   "text": "So, colleagues sit together, and I don't want more than two government officials in any one section, okay?"
+  },
+  "cha07": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 2\napart chips investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 2\napart chips investor"
+   ],
+   "gold": "size 2\napart chips investor",
+   "text": "Small sections please, like two people each, and chip makers away from investors."
+  },
+  "cha08": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\norder investor big_tech",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\norder investor big_tech"
+   ],
+   "gold": "together company\norder investor big_tech",
+   "text": "Start with the investors, then the big tech crowd, and try to keep each company together."
+  },
+  "cha09": {
+   "n": 1,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "together software_security\nlimit software_security 5",
+   "vote_size": 1,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "together software_security\nlimit software_security 5"
+   ],
+   "gold": "size 5\ntogether software_security",
+   "text": "Put the software and security companies together in one bunch, and max five to a section."
+  },
+  "cha10": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit ai_lab chips 1\norder ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab chips 1\norder ai_lab"
+   ],
+   "gold": "limit ai_lab chips 1\norder ai_lab",
+   "text": "I want at most one person from AI labs or chips per section, and the AI labs go first."
+  },
+  "cha11": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\napart big_tech investor\norder investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\napart big_tech investor\norder investor"
+   ],
+   "gold": "together company\napart big_tech investor\norder investor",
+   "text": "Same-company folks go together, please keep investors and big tech in separate sections, and seat the investors first!"
+  },
+  "cha12": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\ntogether ai_lab\nlimit government 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\ntogether ai_lab\nlimit government 1"
+   ],
+   "gold": "size 3\ntogether ai_lab\nlimit government 1",
+   "text": "Sections of three, the AI lab people all sit together, and no more than one government person per section."
+  },
+  "neg01": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4"
+   ],
+   "gold": "size 4",
+   "text": "Don't let any section have more than four guests."
+  },
+  "neg02": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\nlimit government 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\nlimit government 1"
+   ],
+   "gold": "together company\nlimit government 1",
+   "text": "Never seat two government officials in the same section, and never split up a company."
+  },
+  "neg03": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 5\napart ai_lab big_tech",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\napart ai_lab big_tech"
+   ],
+   "gold": "size 5\napart ai_lab big_tech",
+   "text": "Do not put AI labs anywhere near big tech, and don't let sections exceed five."
+  },
+  "neg04": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "apart chips investor\norder ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart chips investor\norder ai_lab"
+   ],
+   "gold": "apart chips investor\norder ai_lab",
+   "text": "Nobody from a chip maker sits in a section with an investor. Nobody gets seated ahead of the AI labs."
+  },
+  "neg05": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit investor 2",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit investor 2"
+   ],
+   "gold": "limit investor 2",
+   "text": "No section may hold more than two investors, and no section may hold more than six people, obviously."
+  },
+  "neg06": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together government"
+   ],
+   "gold": "together government",
+   "text": "Don't scatter the government officials across the room; keep them together."
+  },
+  "neg07": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\nlimit ai_lab big_tech 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\nlimit ai_lab big_tech 1"
+   ],
+   "gold": "size 3\nlimit ai_lab big_tech 1",
+   "text": "Nothing fancy: no more than one guest from big tech or AI labs in a section, and never more than three guests total."
+  },
+  "neg08": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\norder investor chips",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\norder investor chips"
+   ],
+   "gold": "together company\norder investor chips",
+   "text": "Don't seat anyone before the investors and the chip makers, in that order, and don't let any company be split up."
+  },
+  "neg09": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "apart ai_lab software_security\napart investor software_security",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart ai_lab software_security\napart investor software_security"
+   ],
+   "gold": "apart ai_lab software_security\napart software_security investor",
+   "text": "No AI lab guest should share a section with a software or security guest, and no investor should share one with a software or security guest either."
+  },
+  "neg10": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit chips 2\napart investor government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit chips 2\napart investor government"
+   ],
+   "gold": "limit chips 2\napart investor government",
+   "text": "Never more than two chip makers in a section; never mix government officials with investors."
+  },
+  "neg11": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together ai_lab\napart big_tech government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together ai_lab\napart big_tech government"
+   ],
+   "gold": "together ai_lab\napart big_tech government",
+   "text": "Don't split up the AI labs, and don't ever put big tech in the same section as government officials."
+  },
+  "neg12": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\nlimit investor 1\napart ai_lab chips\norder government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\nlimit investor 1\napart ai_lab chips\norder government"
+   ],
+   "gold": "size 4\nlimit investor 1\napart ai_lab chips\norder government",
+   "text": "No section bigger than four, no more than one investor in any section, no AI lab in a section with a chip maker, and don't seat anyone ahead of government officials."
+  },
+  "lis01": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\ntogether company",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\ntogether company"
+   ],
+   "gold": "size 3\ntogether company",
+   "text": "Rules:\n- same company together\n- max 3 per section"
+  },
+  "lis02": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit government 2\norder investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit government 2\norder investor"
+   ],
+   "gold": "limit government 2\norder investor",
+   "text": "1. no more than 2 government per section\n2. investors first"
+  },
+  "lis03": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\ntogether ai_lab\napart big_tech investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether ai_lab\napart big_tech investor"
+   ],
+   "gold": "size 4\ntogether ai_lab\napart big_tech investor",
+   "text": "* AI labs together\n* big tech apart from investors\n* sections of 4"
+  },
+  "lis04": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\ntogether company\napart chips software_security",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether company\napart chips software_security"
+   ],
+   "gold": "size 4\ntogether company\napart chips software_security",
+   "text": "Seating rules; (a) sections of 4 (b) chips and software apart (c) colleagues together"
+  },
+  "lis05": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 5\ntogether investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\ntogether investor"
+   ],
+   "gold": "size 5\ntogether investor",
+   "text": "- keep investors together\n- at most 5 per section"
+  },
+  "lis06": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit ai_lab 1\nlimit investor 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab 1\nlimit investor 1"
+   ],
+   "gold": "limit ai_lab 1\nlimit investor 1",
+   "text": "Constraints: one investor per section max; one AI lab per section max."
+  },
+  "lis07": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "order government big_tech ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order government big_tech ai_lab"
+   ],
+   "gold": "order government big_tech ai_lab",
+   "text": "1) government first\n2) then big tech\n3) then AI labs"
+  },
+  "lis08": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\napart ai_lab chips\napart software_security government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\napart ai_lab chips\napart software_security government"
+   ],
+   "gold": "size 3\napart ai_lab chips\napart software_security government",
+   "text": "- apart: AI labs / chips\n- apart: government / software & security\n- cap: 3"
+  },
+  "lis09": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 2\ntogether company\ntogether chips",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 2\ntogether company\ntogether chips"
+   ],
+   "gold": "size 2\ntogether company\ntogether chips",
+   "text": "Do: colleagues together; chip makers together. Limit: two per section."
+  },
+  "lis10": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit ai_lab big_tech 2\norder ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab big_tech 2\norder ai_lab"
+   ],
+   "gold": "limit ai_lab big_tech 2\norder ai_lab",
+   "text": "Rules: max 2 big tech or AI labs per section (combined); AI labs seated first"
+  },
+  "lis11": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit government 1\napart ai_lab investor\norder big_tech",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit government 1\napart ai_lab investor\norder big_tech"
+   ],
+   "gold": "limit government 1\napart ai_lab investor\norder big_tech",
+   "text": "- max 1 government per section\n- AI labs and investors apart\n- big tech first"
+  },
+  "lis12": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 5\ntogether company\ntogether government\norder investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 5\ntogether company\ntogether government\norder investor"
+   ],
+   "gold": "size 5\ntogether company\ntogether government\norder investor",
+   "text": "\u2022 sections \u2264 5\n\u2022 colleagues together\n\u2022 government together\n\u2022 investors first"
+  },
+  "wed01": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\ntogether company",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\ntogether company"
+   ],
+   "gold": "size 4\ntogether company",
+   "text": "Guests who work at the same company are like family, so let's keep them in the same section, and let's keep every section to a cosy four."
+  },
+  "wed02": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "order ai_lab chips",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "order ai_lab chips"
+   ],
+   "gold": "order ai_lab chips",
+   "text": "We shall have our AI lab guests toasted first, taking the first sections, followed by the chip makers."
+  },
+  "wed03": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit government 1",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit government 1"
+   ],
+   "gold": "limit government 1",
+   "text": "Let's not seat two government officials in the same section, it would be too much of the same flavour."
+  },
+  "wed04": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 3\napart big_tech investor",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 3\napart big_tech investor"
+   ],
+   "gold": "size 3\napart big_tech investor",
+   "text": "Big tech and investors should each have their own sections, never mixed, with a lovely intimate three per section."
+  },
+  "wed05": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together software_security",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together software_security"
+   ],
+   "gold": "together software_security",
+   "text": "All our software and security friends in one section together, please, wherever it fits."
+  },
+  "wed06": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together company\nlimit government 2",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together company\nlimit government 2"
+   ],
+   "gold": "together company\nlimit government 2",
+   "text": "Table-plan rule of the day: sprinkle the government officials thinly, two per section at most, and keep colleagues side by side."
+  },
+  "wed07": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "apart big_tech chips\norder investor ai_lab",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "apart big_tech chips\norder investor ai_lab"
+   ],
+   "gold": "apart big_tech chips\norder investor ai_lab",
+   "text": "We want the investors seated first as our guests of honour, then the AI labs, and keep the chip makers and the big tech guests in separate sections."
+  },
+  "wed08": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 2\ntogether company",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 2\ntogether company"
+   ],
+   "gold": "size 2\ntogether company",
+   "text": "Small and sweet: two to a section, and colleagues stay together."
+  },
+  "wed09": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "limit ai_lab big_tech 1\norder government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "limit ai_lab big_tech 1\norder government"
+   ],
+   "gold": "limit ai_lab big_tech 1\norder government",
+   "text": "One AI lab or big tech guest per section, sweetheart, and the government officials go first."
+  },
+  "wed10": {
+   "n": 1,
+   "passed": 0,
+   "strict": 0,
+   "vote_text": "together chips\nlimit chips 5\napart ai_lab chips",
+   "vote_size": 1,
+   "vote_pass": false,
+   "vote_strict": false,
+   "samples": [
+    "together chips\nlimit chips 5\napart ai_lab chips"
+   ],
+   "gold": "size 5\ntogether chips\napart ai_lab chips",
+   "text": "Keep every chip maker together, no more than five to a section, and never put chips with AI labs."
+  },
+  "wed11": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "together investor\napart investor government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "together investor\napart investor government"
+   ],
+   "gold": "together investor\napart investor government",
+   "text": "Seat all the investors together as a group and keep them apart from the government officials."
+  },
+  "wed12": {
+   "n": 1,
+   "passed": 1,
+   "strict": 1,
+   "vote_text": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government",
+   "vote_size": 1,
+   "vote_pass": true,
+   "vote_strict": true,
+   "samples": [
+    "size 4\nlimit investor 1\napart ai_lab big_tech\norder government"
+   ],
+   "gold": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government",
+   "text": "Lovely sections of four, please: one investor at most per section, AI labs and big tech in different sections, and the government officials must come first."
+  }
+ }
+}
