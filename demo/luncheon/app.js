@@ -35,14 +35,29 @@
     { name: "Hard", sentence: "Keep colleagues together, sections of at most four, and never put two government officials in the same section.", prog: "size 4\ntogether company\nlimit government 1" }];
   LEVELS.forEach(function (L) { var r = H6[L.sentence]; if (r && r.ok) { L.prog = r.program; L.secs = r.secs; } });
   var MARK = { 5: ["G", INK, "government official", "government officials"], 0: ["A", INK, "AI lab guest", "AI lab guests"], 1: ["T", "#2f7d4f", "big tech guest", "big tech guests"] };
+  // the President and Vice President keep their posted seats, facing each other mid-table; everyone else is seated by the rules
+  var vpotusGi = real.findIndex(function (g) { return g.name === "VPOTUS"; });
+  var HOSTSEAT = {}; HOSTSEAT[N - 1 - 8] = potusGi; HOSTSEAT[8] = vpotusGi;          // right row 8 and left row 8, as posted
+  var FREE = [], GUESTS = [], POS = {};
+  for (var k0 = 0; k0 < N; k0++) if (!(k0 in HOSTSEAT)) FREE.push(k0);
+  real.forEach(function (g, i) { if (i !== potusGi && i !== vpotusGi) { POS[i] = GUESTS.length; GUESTS.push(i); } });
+  var ENG = GUESTS.map(function (i) { return realEng[i]; });
+  function isHostSeat(k) { return k in HOSTSEAT; }
+  function seatRule(p) {
+    var r = S.seat(ENG, p), seat = new Array(N), groups = new Array(N), n = 0;
+    r.seq.forEach(function (j) { var k = FREE[n++]; seat[k] = GUESTS[j]; groups[k] = r.assign[j]; });
+    Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = null; });
+    return { seat: seat, groups: groups };
+  }
+  function shuffleFree(seat, r) { var vals = FREE.map(function (k) { return seat[k]; }), sh = shuffle(vals, r), out = seat.slice(); FREE.forEach(function (k, n) { out[k] = sh[n]; }); return out; }
   function solve(prog) {
-    var p = S.parse(prog), r = S.seat(realEng, p);
-    return { judge: p, ai: r.seq.slice(), groups: r.seq.map(function (i) { return r.assign[i]; }) };
+    var p = S.parse(prog), a = seatRule(p);
+    return { judge: p, ai: a.seat, groups: a.groups };
   }
   function evalSeats(judge, groups, seat) {
-    var assign = new Array(N);
-    for (var k = 0; k < N; k++) if (seat[k] >= 0) assign[seat[k]] = groups[k];
-    var v = S.violations(realEng, judge, assign);
+    var assign = new Array(GUESTS.length);
+    for (var k = 0; k < N; k++) { var gi = seat[k]; if (gi >= 0 && groups[k] !== null && groups[k] !== undefined && POS[gi] !== undefined) assign[POS[gi]] = groups[k]; }
+    var v = S.violations(ENG, judge, assign);
     return { total: v.v.total, bad: v.badSections, v: v.v };
   }
   function markers(judge) {
@@ -52,6 +67,7 @@
     real.forEach(function (g) { if (g.org) cnt[g.org] = (cnt[g.org] || 0) + 1; });
     var who = {}, pw = {}; (judge.avoids || []).forEach(function (a) { who[a[0]] = 1; who[a[1]] = 1; }); (judge.pairs || []).forEach(function (a) { pw[a[0]] = 1; pw[a[1]] = 1; });
     real.forEach(function (g, i) {
+      if (i === potusGi || i === vpotusGi) return;
       if (Object.keys(pw).some(function (w) { return S.isWho(g, w); })) m[i] = ["P", INK, "must sit together", "must sit together"];
       else if (Object.keys(who).some(function (w) { return S.isWho(g, w); })) m[i] = ["R", INK, "rival", "rivals"];
       else if (cats[g.cat] && MARK[g.cat]) m[i] = MARK[g.cat];
@@ -66,7 +82,7 @@
 
   function newPuzzle(lv) {
     var L = LEVELS[lv], s = solve(L.prog), r = rng((Math.random() * 1e9) | 0), seat = s.ai;
-    var want = L.minScramble || 4; for (var t = 0; t < 120; t++) { seat = shuffle(s.ai, r); if (evalSeats(s.judge, s.groups, seat).total >= want) break; }
+    var want = L.minScramble || 4; for (var t = 0; t < 120; t++) { seat = shuffleFree(s.ai, r); if (evalSeats(s.judge, s.groups, seat).total >= want) break; }
     return { lv: lv, judge: s.judge, groups: s.groups, ai: s.ai, seat: seat, moves: 0, t0: 0, secs: 0, done: false, gaveUp: false, over: false, pd: 0, fp0: 0, pick: -1, marks: markers(s.judge), ev: null };
   }
   function initSea() {
@@ -88,10 +104,9 @@
     return { seatGuest: seatGuest, sec: sec, bad: bad, broken: true };
   }
   function ruleArrange() {
-    var R = st.rule, r = S.seat(realEng, R.exec), sec = r.seq.map(function (i) { return r.assign[i]; });
-    var pa = S.postedAssignment(N, R.exec.cap), vp = S.violations(realEng, R.judge, pa), va = S.violations(realEng, R.judge, r.assign);
-    R.vP = vp.v; R.vA = va.v;
-    return { seatGuest: r.seq, sec: sec, bad: va.badSections };
+    var R = st.rule, a = seatRule(R.exec), ev = evalSeats(R.judge, a.groups, a.seat);
+    R.vA = ev.v; R.vP = ev.v;
+    return { seatGuest: a.seat, sec: a.groups, bad: ev.bad };
   }
   function postedArrange() { var P = []; for (var k = 0; k < N; k++) P.push(S.walkGuest(k, N)); return { seatGuest: P, sec: null, bad: null }; }
   function mainArrange() {
@@ -103,7 +118,7 @@
   }
 
   // ---------- main table layout and animation
-  var mainArr = null, cur = [], anim = null, tgtPos = [];
+  var mainClashes = [], mainArr = null, cur = [], anim = null, tgtPos = [];
   function targetPos(arr) {
     var t = new Array(N);
     for (var k = 0; k < N; k++) { var gi = arr.seatGuest[k], s = seatXY(k); if (gi >= 0 && !t[gi]) t[gi] = { side: s.side, x: s.x, y: s.y, k: k }; }
@@ -113,6 +128,7 @@
   function relayout(animate) {
     var prev = cur.length ? cur.map(function (p) { return { side: p.side, x: p.x, y: p.y }; }) : null;
     mainArr = mainArrange(); tgtPos = targetPos(mainArr);
+    var jd = st.puzzle ? st.puzzle.judge : st.rule ? st.rule.judge : st.chat ? S.parse("limit government 1") : null; mainClashes = clashes(mainArr, jd);
     anim = animate && prev && !reduce ? { t0: performance.now(), dur: 480, from: prev, to: tgtPos } : null;
     cur = anim ? prev.map(function (p, i) { return { side: p.side, x: p.x, y: p.y, k: tgtPos[i].k }; }) : tgtPos.map(function (p) { return { side: p.side, x: p.x, y: p.y, k: p.k }; });
     dirty = true; live();
@@ -176,24 +192,68 @@
       var s0 = seatXY(k), sec = arr.sec[k], m = k;
       while (m + 1 < N && arr.sec[m + 1] === sec && seatXY(m + 1).side === s0.side) m++;
       var a = seatXY(k), b = seatXY(m), top = Math.min(a.y, b.y) - 21.5, bot = Math.max(a.y, b.y) + 21.5, x0 = s0.side < 0 ? -332 : 64, w = 268;
-      var bad = arr.bad && arr.bad.has(sec);
-      if (bad) { ctx.fillStyle = "rgba(168,50,42,.06)"; rr(x0, top + 1, w, bot - top - 2, 6); ctx.fill(); }
-      ctx.strokeStyle = bad ? RED : "#c9c7c0"; ctx.lineWidth = bad ? 2.2 : 1.2; rr(x0, top + 1, w, bot - top - 2, 6); ctx.stroke();
-      if (lod >= 2) {
-        ctx.font = "600 12px " + TEXT; ctx.textBaseline = "middle"; ctx.fillStyle = bad ? RED : MUTE; ctx.textAlign = s0.side < 0 ? "left" : "right";
-        ctx.fillText(String(sec + 1), s0.side < 0 ? x0 + 7 : x0 + w - 7, top + 11);
-      }
+      ctx.strokeStyle = "#d8d6cf"; ctx.lineWidth = 1; rr(x0, top + 1, w, bot - top - 2, 6); ctx.stroke();
       k = m + 1;
     }
+  }
+  // who clashes with whom: two people in one section who break a rule together, or two who must sit together but don't
+  function clashes(arr, judge) {
+    if (!arr || !arr.sec || !judge) return [];
+    var kOf = {}, bySec = {}, out = [];
+    for (var k = 0; k < N; k++) { var gi = arr.seatGuest[k], sc = arr.sec[k]; if (gi < 0 || sc === null || sc === undefined) continue; kOf[gi] = k; (bySec[sc] = bySec[sc] || []).push(gi); }
+    var yOf = function (gi) { return seatXY(kOf[gi]).y; };
+    var nearest = function (a, B) { var best = B[0]; B.forEach(function (b) { if (Math.abs(yOf(b) - yOf(a)) < Math.abs(yOf(best) - yOf(a))) best = b; }); return best; };
+    Object.keys(bySec).forEach(function (sc) {
+      var m = bySec[sc].slice().sort(function (a, b) { return kOf[a] - kOf[b]; });
+      judge.limits.forEach(function (l) { var hit = m.filter(function (gi) { return l[0].indexOf(real[gi].cat) >= 0; }); if (hit.length > l[1]) for (var i = 1; i < hit.length; i++) out.push({ a: hit[i - 1], b: hit[i], kind: "same", g: "s" + sc }); });
+      judge.aparts.forEach(function (ap) { var A = m.filter(function (g) { return real[g].cat === ap[0]; }), B = m.filter(function (g) { return real[g].cat === ap[1]; }); if (B.length) A.forEach(function (a) { out.push({ a: a, b: nearest(a, B), kind: "same", g: "s" + sc }); }); });
+      (judge.avoids || []).forEach(function (av) { m.forEach(function (a) { if (!S.isWho(real[a], av[0])) return; m.forEach(function (b) { if (a !== b && S.isWho(real[b], av[1])) out.push({ a: a, b: b, kind: "same", g: "s" + sc }); }); }); });
+    });
+    var placed = Object.keys(kOf).map(Number);
+    (judge.pairs || []).forEach(function (pr, pi) { placed.forEach(function (a) { if (!S.isWho(real[a], pr[0])) return; placed.forEach(function (b) { if (a !== b && S.isWho(real[b], pr[1]) && arr.sec[kOf[a]] !== arr.sec[kOf[b]]) out.push({ a: a, b: b, kind: "split", g: "p" + pi }); }); }); });
+    // a group that must sit together only clashes when it is split more ways than the section size forces
+    var units = {}, tk = {}; (judge.togCats || []).forEach(function (c) { tk[c] = 1; });
+    placed.forEach(function (gi) { var g = real[gi], key = tk[g.cat] ? "c" + g.cat : (judge.togCompany && g.org ? "o" + g.org : null); if (key) (units[key] = units[key] || []).push(gi); });
+    Object.keys(units).forEach(function (key) {
+      var g = units[key].sort(function (a, b) { return kOf[a] - kOf[b]; }), mf = judge.cap;
+      judge.limits.forEach(function (l) { if (l[0].indexOf(real[g[0]].cat) >= 0) mf = Math.min(mf, l[1]); });
+      var sp = {}; g.forEach(function (gi) { sp[arr.sec[kOf[gi]]] = 1; });
+      if (Object.keys(sp).length <= Math.ceil(g.length / mf)) return;
+      for (var i = 1; i < g.length; i++) if (arr.sec[kOf[g[i]]] !== arr.sec[kOf[g[i - 1]]]) out.push({ a: g[i - 1], b: g[i], kind: "split", g: "u" + key });
+    });
+    out.kOf = kOf; return out;
+  }
+  // one red comb per clash: a line in the margin with a tick at each person involved (dashed when they should be together but aren't)
+  function drawClashes(list) {
+    if (!list || !list.length) return;
+    var groups = {}, order = [];
+    list.forEach(function (c) { var G = groups[c.g]; if (!G) { G = groups[c.g] = { kind: c.kind, who: {} }; order.push(G); } G.who[c.a] = 1; G.who[c.b] = 1; });
+    var lanes = { "-1": [], "1": [] }, under = 0;
+    var lane = function (side, top, bot) { var L = lanes[side], i = 0; while (L[i] !== undefined && L[i] > top - 6) i++; L[i] = bot; return side * (344 + i * 8); };
+    order.map(function (G) {
+      var ys = { "-1": [], "1": [] }; Object.keys(G.who).forEach(function (gi) { var s = seatXY(list.kOf[gi]); ys[s.side].push(s.y); });
+      return { G: G, ys: ys, top: Math.min.apply(null, ys["-1"].concat(ys["1"])) };
+    }).sort(function (p, q) { return p.top - q.top; }).forEach(function (it) {
+      var both = it.ys["-1"].length && it.ys["1"].length, yb = both ? Math.max.apply(null, it.ys["-1"].concat(it.ys["1"])) + 30 + 8 * under++ : 0, xs = {};
+      ctx.strokeStyle = RED; ctx.lineWidth = 2.2; ctx.setLineDash(it.G.kind === "split" ? [5, 5] : []);
+      ["-1", "1"].forEach(function (sd) {
+        var Y = it.ys[sd]; if (!Y.length) return;
+        var t = Math.min.apply(null, Y), bt = both ? yb : Math.max.apply(null, Y), x = xs[sd] = lane(sd, t, bt), tick = -Number(sd) * 10;
+        ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, bt); Y.forEach(function (y) { ctx.moveTo(x, y); ctx.lineTo(x + tick, y); }); ctx.stroke();
+      });
+      if (both) { ctx.beginPath(); ctx.moveTo(xs["-1"], yb); ctx.lineTo(xs["1"], yb); ctx.stroke(); }
+    });
+    ctx.setLineDash([]);
   }
   function mark(mk, x, y) {
     ctx.fillStyle = mk[1]; ctx.beginPath(); ctx.arc(x, y, 9, 0, 6.2832); ctx.fill();
     ctx.fillStyle = "#fff"; ctx.font = "600 11px " + TEXT; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(mk[0], x, y + 0.5);
   }
-  function nameAt(label, x, y, side, mk) {
-    ctx.font = "italic 13.5px " + FONT; ctx.fillStyle = INK; ctx.textBaseline = "middle"; ctx.textAlign = side < 0 ? "right" : "left";
+  function nameAt(label, x, y, side, mk, color) {
+    ctx.font = "italic 13.5px " + FONT; ctx.fillStyle = color || INK; ctx.textBaseline = "middle"; ctx.textAlign = side < 0 ? "right" : "left";
+    var tw = ctx.measureText(label).width; if (tw > 222) { ctx.font = "italic " + (13.5 * 222 / tw).toFixed(2) + "px " + FONT; tw = 222; }
     ctx.fillText(label, x, y);
-    if (mk) { var tw = ctx.measureText(label).width; mark(mk, side < 0 ? x - tw - 13 : x + tw + 13, y); }
+    if (mk) { mark(mk, side < 0 ? x - tw - 13 : x + tw + 13, y); }
   }
   function header() {
     ctx.fillStyle = MUTE; ctx.font = "italic 15px " + FONT; ctx.textAlign = "left"; ctx.textBaseline = "middle";
@@ -205,8 +265,7 @@
 
   var BUBBLES = [
     { who: "Mark Zuckerberg", text: "Send Me Location", src: "Zuckerberg on Instagram, June 2023", dy: 0 },
-    { who: "Elon Musk", text: "I’m up for a cage match if he is", src: "Musk on Twitter, June 2023", dy: -32 },
-    { who: "Elon Musk", text: "Not what I intended at all.", src: "Musk on OpenAI, on X, Feb 2023", dy: 32 }];
+    { who: "Elon Musk", text: "I’m up for a cage match if he is", src: "Musk on Twitter, June 2023", dy: 0 }];
   function bubblesOn() { var z = st.puzzle; if (document.body.classList.contains("card")) return true; return W >= 600 && ((mode === "story" && (chap === 0 || (chap === 1 && z && z.moves === 0))) || (mode === "play" && z && z.lv === 1 && z.moves === 0)); }
   function drawBubbles() {
     var list = BUBBLES;
@@ -217,10 +276,10 @@
     list.forEach(function (b) {
       var gi = real.findIndex(function (g) { return g.name === b.who; }), p = cur[gi]; if (!p || p.side === 0) return;
       ctx.font = "italic 16px " + FONT; var w1 = ctx.measureText("\u201c" + b.text + "\u201d").width; ctx.font = "12px " + TEXT; var tw = Math.max(w1, ctx.measureText(b.src).width) + 28;
-      var y = p.y + b.dy, x0 = p.side > 0 ? 372 : -372 - tw, h = 46, ty = Math.max(y - h / 2 + 8, Math.min(y + h / 2 - 8, p.y));
+      var y = p.y + b.dy, x0 = p.side > 0 ? 380 : -380 - tw, h = 46, ty = Math.max(y - h / 2 + 8, Math.min(y + h / 2 - 8, p.y));
       ctx.fillStyle = "#fff"; ctx.strokeStyle = INK; ctx.lineWidth = 1.6;
       rr(x0, y - h / 2, tw, h, 12); ctx.fill(); ctx.stroke();
-      var ex = p.side > 0 ? x0 : x0 + tw, tip = p.side > 0 ? 350 : -350;
+      var ex = p.side > 0 ? x0 : x0 + tw, tip = p.side * (st.puzzle ? 360 : 350);
       ctx.beginPath(); ctx.moveTo(ex, ty - 7); ctx.lineTo(tip, p.y); ctx.lineTo(ex, ty + 7); ctx.fillStyle = "#fff"; ctx.fill();
       ctx.beginPath(); ctx.moveTo(ex, ty - 7); ctx.lineTo(tip, p.y); ctx.lineTo(ex, ty + 7); ctx.stroke();
       ctx.fillStyle = "#fff"; ctx.fillRect(ex - 1, ty - 6, 2, 12);
@@ -231,8 +290,11 @@
   }
   var drag = null;
   function drawMain(lod) {
-    frame("#000", Math.max(9, 2.2 / cam.s));
-    [100, 138, 565, 688, 725, 883].forEach(function (yy) { var y = -472 + (yy - 62) / 945 * 944; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-372, y); ctx.lineTo(-318, y); ctx.stroke(); });
+    var asPosted = !st.puzzle && !st.chat && !st.rule;
+    if (asPosted || lod < 1) {
+      frame("#000", Math.max(9, 2.2 / cam.s));
+      [100, 138, 565, 688, 725, 883].forEach(function (yy) { var y = -472 + (yy - 62) / 945 * 944; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(-372, y); ctx.lineTo(-318, y); ctx.stroke(); });
+    }
     if (lod >= 1) header();
     else { ctx.fillStyle = INK; ctx.font = "600 " + (18 / cam.s) + "px " + FONT; ctx.textAlign = "center"; ctx.textBaseline = "bottom"; ctx.fillText("The real lunch", 0, -472 - 10 / cam.s); }
     if (mainArr.sec && lod >= 1) strips(mainArr, lod);
@@ -243,12 +305,14 @@
     if (z && z.pick >= 0) { var ps = seatXY(z.pick); ctx.strokeStyle = BLUE; ctx.lineWidth = 3.5; rr(ps.side < 0 ? -334 : 62, ps.y - 20, 272, 40, 8); ctx.stroke(); }
     if (drag && drag.active && drag.hover >= 0 && drag.hover !== drag.k) { var hs = seatXY(drag.hover); ctx.strokeStyle = BLUE; ctx.lineWidth = 3.5; ctx.setLineDash([8, 6]); rr(hs.side < 0 ? -334 : 62, hs.y - 20, 272, 40, 8); ctx.stroke(); ctx.setLineDash([]); }
     if (lod >= 1 && bubblesOn()) drawBubbles();
+    var red = {}; (mainClashes || []).forEach(function (c) { red[c.a] = 1; red[c.b] = 1; });
+    if (lod >= 1) drawClashes(mainClashes);
     if (lod < 2 && !z) return;
     for (var gi = 0; gi < N; gi++) {
       if (drag && drag.active && drag.gi === gi) continue;
       var p = cur[gi];
       if (p.side === 0) { ctx.font = "italic 15px " + FONT; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = MUTE; ctx.fillText(real[gi].label + " — no seat", p.x, p.y); continue; }
-      nameAt(real[gi].label, p.x, p.y, p.side, marks && marks[gi]);
+      nameAt(real[gi].label, p.x, p.y, p.side, marks && marks[gi], red[gi] ? RED : null);
     }
     if (drag && drag.active) {
       var lab = real[drag.gi].label; ctx.font = "italic 16px " + FONT; var tw = ctx.measureText(lab).width + 40;
@@ -267,7 +331,7 @@
     if (c) return c;
     if (performance.now() > budgetEnd) return null;
     if (sea.cache.size > 60000) sea.cache.clear();
-    var seat = shuffle(sea.ai, rng((Math.imul(i, 73856093) ^ Math.imul(j, 19349663) ^ 0x5bd1e995) >>> 0));
+    var seat = shuffleFree(sea.ai, rng((Math.imul(i, 73856093) ^ Math.imul(j, 19349663) ^ 0x5bd1e995) >>> 0));
     var ev = evalSeats(sea.judge, sea.groups, seat);
     c = { seatGuest: seat, sec: sea.groups, bad: ev.bad, broken: ev.total > 0 }; sea.cache.set(key, c);
     return c;
@@ -336,7 +400,7 @@
   // ---------- puzzle actions
   function startPuzzle(lv) { overEl.hidden = true; st.chat = null; st.rule = null; st.marks = null; st.puzzle = newPuzzle(lv); lastInc = ""; relayout(true); paint(); fit(); }
   function swapSeats(a, b, fromDrag) {
-    var z = st.puzzle; if (!z || z.done || a === b) return;
+    var z = st.puzzle; if (!z || z.done || a === b || isHostSeat(a) || isHostSeat(b)) return;
     if (z.over) return;
     if (!z.t0) z.t0 = performance.now();
     var ga = z.seat[a], gb = z.seat[b]; z.seat[a] = gb; z.seat[b] = ga; z.moves++; z.pick = -1;
@@ -348,15 +412,24 @@
   function letAI() { var z = st.puzzle; if (!z) return; z.seat = z.ai.slice(); z.pick = -1; z.done = true; z.gaveUp = true; z.over = false; overEl.hidden = true; relayout(true); paint(); }
   // p(doom): starts high on a scrambled table, climbs when a swap makes things worse, falls when it helps; 1.00 is game over
   var overEl = document.getElementById("over");
-  function flashpoints(z) { return z.ev ? z.ev.bad.size + (z.ev.v.together ? 1 : 0) + (z.ev.v.pair ? 1 : 0) : 0; }
+  function flashpoints(z) { var arr = { seatGuest: z.seat, sec: z.groups }; return clashes(arr, z.judge).length; }
   function rivalsTogether(z) { return incidents(z).filter(function (t) { return t.indexOf("Musk") === 0; }).length; }
   function startDoom(z) { z.fp0 = flashpoints(z); z.riv0 = rivalsTogether(z); z.pd = Math.min(0.72, 0.22 + 0.08 * z.fp0 + 0.05 * z.riv0); }
   function stepDoom(z) {
-    var fp = flashpoints(z), riv = rivalsTogether(z), d = fp - z.fp0, dr = riv - z.riv0;
+    var before = z.pd, fp = flashpoints(z), riv = rivalsTogether(z), d = fp - z.fp0, dr = riv - z.riv0;
     if (fp === 0) z.pd = 0;
     else z.pd = Math.max(0.01, Math.min(1, z.pd + (d > 0 ? 0.14 * d : d < 0 ? 0.1 * d : 0.025) + (dr > 0 ? 0.12 * dr : 0)));
     z.fp0 = fp; z.riv0 = riv;
+    if (Math.abs(z.pd - before) > 0.004) pulse(z.pd - before, d > 0 || dr > 0);
     if (z.pd >= 1) gameOver();
+  }
+  var pulseT = 0, flashCls = "", deltaTxt = "";
+  function pulse(delta, clash) {
+    flashCls = delta > 0 && clash ? " up" : delta < 0 ? " down" : " tick";
+    deltaTxt = (delta > 0 ? "+" : "\u2212") + Math.abs(delta).toFixed(2);
+    var cc = document.getElementById("capclock"); hud.className = "hud"; if (cc) cc.className = "capclock"; void hud.offsetWidth;   // restart the animation
+    clearTimeout(pulseT); pulseT = setTimeout(function () { flashCls = ""; deltaTxt = ""; live(); }, 1200);
+    live();
   }
   function gameOver() {
     var z = st.puzzle; z.over = true; z.pd = 1; z.pick = -1; drag = null;
@@ -390,7 +463,7 @@
     var z = st.puzzle;
     if (ptrs.size === 1 && z && !z.done && !z.over && cam.s >= 0.12) {
       var w = toWorld(e.clientX, e.clientY), k = hitSeat(w.x, w.y);
-      if (k >= 0 && z.seat[k] >= 0) { drag = { k: k, gi: z.seat[k], wx: w.x, wy: w.y, active: false, hover: -1, sx: e.clientX, sy: e.clientY }; return; }
+      if (k >= 0 && z.seat[k] >= 0 && !isHostSeat(k)) { drag = { k: k, gi: z.seat[k], wx: w.x, wy: w.y, active: false, hover: -1, sx: e.clientX, sy: e.clientY }; return; }
     }
     stage.classList.add("drag");
     if (ptrs.size === 2) { drag = null; var a = Array.from(ptrs.values()); pinch0 = { d: Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y), s: cam.s }; }
@@ -404,7 +477,7 @@
     var p = ptrs.get(e.pointerId), dx = e.clientX - p.x, dy = e.clientY - p.y; p.x = e.clientX; p.y = e.clientY;
     if (drag) {
       if (!drag.active && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 5) { drag.active = true; st.puzzle.pick = -1; }
-      if (drag.active) { var w = toWorld(e.clientX, e.clientY); drag.wx = w.x; drag.wy = w.y; drag.hover = hitSeat(w.x, w.y); dirty = true; }
+      if (drag.active) { var w = toWorld(e.clientX, e.clientY); drag.wx = w.x; drag.wy = w.y; drag.hover = hitSeat(w.x, w.y); if (isHostSeat(drag.hover)) drag.hover = -1; dirty = true; }
       return;
     }
     if (ptrs.size === 1) { cam.x -= dx / cam.s; cam.y -= dy / cam.s; dirty = true; }
@@ -461,10 +534,10 @@
       var fp = flashpoints(z), pd = z.done ? 0 : z.over ? 1 : z.pd;
       document.getElementById("doomt").textContent = "p(doom) " + (pd === 1 ? "1.00" : pd.toFixed(2));
       document.getElementById("doombar").style.width = Math.round(pd * 100) + "%";
-      document.getElementById("hudred").textContent = z.done ? (z.gaveUp ? "The program saved this one" : "You saved this timeline") : z.over ? "Game over" : fp + " flashpoint" + (fp === 1 ? "" : "s");
-      var cls = "hud" + (z.done ? " ok" : pd >= 0.75 ? " late" : "");
-      hud.className = cls;
-      if (cc) { cc.className = "capclock" + (z.done ? " ok" : pd >= 0.75 ? " late" : ""); cc.innerHTML = "<b>" + document.getElementById("doomt").textContent + "</b> " + document.getElementById("hudred").textContent; }
+      document.getElementById("hudred").textContent = z.done ? (z.gaveUp ? "The program saved this one" : "You saved this timeline") : z.over ? "Game over" : fp + (fp === 1 ? " clash" : " clashes") + " at the table";
+      var cls = (z.done ? " ok" : pd >= 0.75 ? " late" : "") + (z.done || z.over ? "" : flashCls);
+      hud.className = "hud" + cls; document.getElementById("hudd").textContent = z.done || z.over ? "" : deltaTxt;
+      if (cc) { cc.className = "capclock" + cls; cc.innerHTML = "<b>" + document.getElementById("doomt").textContent + "</b>" + (deltaTxt && !z.done && !z.over ? '<span class="delta">' + deltaTxt + "</span>" : "") + " " + document.getElementById("hudred").textContent; }
     }
     var ss = document.getElementById("seastat");
     if (ss) { var q = seaStats(); ss.textContent = q.n.toLocaleString("en-US") + " lunches on screen, " + q.broken.toLocaleString("en-US") + " breaking the rule" + (q.known < q.n ? " (counting)" : "") + "."; }
@@ -504,13 +577,13 @@
         return "<h1>I trained a tiny model to stop AI leaders from causing the apocalypse.</h1><p class=\"lede\">It does this by fixing the seating chart.</p><p>This is the real seating chart from the White House lunch with AI leaders on 29 September 2026. Every seating plan has rules, and this room comes with some history: a few of these guests have been arguing in public for years.</p>" +
           "<p>Seat these people badly and it’s game over: p(doom) goes to 1, and the AI apocalypse starts somewhere between the soup and the main course. Most versions of this lunch end that way. Your job is to find the one that doesn’t, and then we’ll see whether a small chatbot or our tiny AI can do the same.</p>" +
           '';
-      }, foot: 'A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://x.com/elonmusk/status/1626516035863212034" target="_blank" rel="noopener">1</a>, <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">2</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.', next: "Scramble the table" },
+      }, foot: 'A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">source</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.', next: "Scramble the table" },
     { go: function () { st.chat = null; st.rule = null; st.marks = null; if (st.saved) { st.puzzle = st.saved; st.saved = null; relayout(true); fit(); } else if (!st.puzzle) { st.puzzle = newPuzzle(1); lastInc = ""; relayout(true); fit(); } },
       cap: function () {
         var z = st.puzzle;
-        if (z.over) return "<h1>p(doom) = 1. Game over.</h1><p>With " + flashpoints(z) + " flashpoint" + (flashpoints(z) === 1 ? "" : "s") + " still burning, the AI apocalypse began somewhere between the soup and the main course. Have another go, or let the program show you how it’s done.</p>";
+        if (z.over) return "<h1>p(doom) = 1. Game over.</h1><p>With " + flashpoints(z) + (flashpoints(z) === 1 ? " clash" : " clashes") + " still at the table, the AI apocalypse began somewhere between the soup and the main course. Have another go, or let the program show you how it’s done.</p>";
         if (z.done) return "<h1>" + (z.gaveUp ? "Here’s the program’s answer." : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken and no cage match. The next two steps show how it got there, and how a chatbot does with the same job." : "In this timeline, at least. You cleared it in " + z.moves + " swaps. Lunch is served, and nobody has mentioned the Octagon. Next, let’s see how a chatbot does.") + "</p>";
-        return "<h1>You’re the host</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p><p>Someone has scrambled the seats. Each outlined box is a section of neighbouring seats, and a section that breaks the rule turns red: that\u2019s a flashpoint. Drag a guest onto another seat and the two swap places. Clear a flashpoint and p(doom) falls; make a new one and it climbs. If it reaches 1, it\u2019s game over.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+        return "<h1>You’re the host</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p><p>Someone has scrambled the seats. The President and Vice President keep their places at the middle of the table; everyone else is fair game. The faint boxes are sections of neighbouring seats. Put two people in one section who shouldn\u2019t be there together, and their names turn red, a red line joins them, and p(doom) climbs. Drag a guest onto another seat to swap them. Clear every clash and p(doom) falls to zero; let it reach 1 and it\u2019s game over.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
       }, extra: function () { var z = st.puzzle; return z && z.over ? '<button class="btn" type="button" id="again">Try again</button>' : z && !z.done ? '<button class="btn" type="button" id="giveup">Give up</button>' : ""; }, next: "Next" },
     { go: function () { stash(); st.chat = C.show.secs; st.marks = markers(S.parse(LEVELS[1].prog)); relayout(true); fit(); },
       cap: function () { return "<h1>Now ask a chatbot</h1><p>We gave the officials part of that rule to an ordinary small chatbot and asked it 20 times.</p><p>Every one of its " + C.n + " answers broke the rule. " + C.dup + " seated someone twice, " + C.miss + " left someone without a seat, and between them there were " + C.distinct + " different seatings for the same question. The chart shows one: " + C.show.miss.length + " guests have no seat, which is one way to avoid arguments.</p>"; }, next: "Next" },
@@ -542,8 +615,8 @@
       bar = '<div class="bar"><button class="link" type="button" id="back"' + (chap ? "" : " hidden") + '>Back</button><span class="dots" role="img" aria-label="Step ' + (chap + 1) + " of " + CH.length + '">' + dots + '</span><span class="sp"></span>' + (c.extra ? c.extra() : "") + '<button class="btn primary" type="button" id="next">' + c.next + "</button></div>";
     } else {
       var z = st.puzzle;
-      html = z.over ? "<h1>p(doom) = 1. Game over.</h1><p>" + flashpoints(z) + " flashpoints were still burning when the apocalypse started. Try again, or let the program show you.</p>" : z.done ? "<h1>" + (z.gaveUp ? "The program’s answer" : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken. Try another level, or scramble this one again and beat it yourself." : "You fixed it in " + z.moves + " swaps and " + Math.max(1, Math.round(z.secs)) + " seconds. Lunch is served. Try another rule, or let the tiny AI loose on every other timeline.") + "</p>"
-        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every red flashpoint. Each wrong move pushes p(doom) towards 1. Use the arrows for another rule; there are seven, each written in plain English and read by the tiny AI.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+      html = z.over ? "<h1>p(doom) = 1. Game over.</h1><p>" + flashpoints(z) + " clashes were still at the table when the apocalypse started. Try again, or let the program show you.</p>" : z.done ? "<h1>" + (z.gaveUp ? "The program’s answer" : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken. Try another level, or scramble this one again and beat it yourself." : "You fixed it in " + z.moves + " swaps and " + Math.max(1, Math.round(z.secs)) + " seconds. Lunch is served. Try another rule, or let the tiny AI loose on every other timeline.") + "</p>"
+        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every clash, the red names joined by red lines. Each wrong move pushes p(doom) towards 1. Use the arrows for another rule; there are seven, each written in plain English and read by the tiny AI.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
       bar = '<div class="bar"><span class="stepper"><button class="btn small" type="button" data-lv="' + ((z.lv + LEVELS.length - 1) % LEVELS.length) + '" aria-label="Previous rule">\u2039</button><span class="lvname">' + esc(LEVELS[z.lv].name) + ' <span class="fine">' + (z.lv + 1) + ' of ' + LEVELS.length + '</span></span><button class="btn small" type="button" data-lv="' + ((z.lv + 1) % LEVELS.length) + '" aria-label="Next rule">\u203a</button></span><span class="sp"></span>' +
         (z.done || z.over ? '<button class="btn primary" type="button" id="again">' + (z.over ? 'Try again' : 'New scramble') + '</button>' : '<button class="btn" type="button" id="giveup">Give up</button>') + "</div>" +
         '<div class="links"><button class="link" type="button" id="thousands">Let the tiny AI save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Watch the story again</button></div>';
@@ -577,7 +650,7 @@
   function openSheet() { sheet.hidden = false; document.getElementById("sheetbody").innerHTML = aboutHTML(); sheet.scrollTop = 0; document.getElementById("sheetclose").focus(); }
   document.getElementById("sheetclose").onclick = function () { sheet.hidden = true; };
   document.addEventListener("keydown", function (e) { if (e.key === "Escape") sheet.hidden = true; });
-  var QUOTES = [["Elon Musk on OpenAI", "Not what I intended at all."], ["Elon Musk on Zuckerberg", "I’m up for a cage match if he is."], ["Mark Zuckerberg’s reply", "Send Me Location."]];
+  var QUOTES = [["Elon Musk on Zuckerberg", "I’m up for a cage match if he is."], ["Mark Zuckerberg’s reply", "Send Me Location."]];
   function quoteToasts() { QUOTES.forEach(function (q, i) { setTimeout(function () { if (mode === "story" && chap === 0) toast(q[0] + ": “" + q[1] + "”"); }, 600 + i * 2600); }); }
   var ABOUT = '<div class="pane"><p class="kicker">Seat Intelligence (SI) \u00b7 How it works</p><h1>What we built, and why</h1><p class="fine">A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table.</p>' +
       "<p>Computers follow exact instructions. People describe rules in everyday words, usually over lunch. The small chatbots we tested went straight from the words to a seating, and slipped. We put a tiny AI in the middle that only translates, and let a checked program do the rest.</p>" +
@@ -649,5 +722,5 @@
   }
   requestAnimationFrame(frameLoop);
   window.__luncheon = { st: st, sea: sea, cam: cam, story: story, play: play, swap: swapSeats, letAI: letAI, wave: wave, stepWave: stepWave,
-    render: function () { render(performance.now()); }, sheet: openSheet };
+    render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE };
 })();

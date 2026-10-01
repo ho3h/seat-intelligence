@@ -25,12 +25,12 @@ These are real people. NEVER invent or imply personal feuds, dislikes or relatio
 - Any rule can be scored against the posted arrangement (how many rule violations the posted chart has) as a neutral metric.
 
 ## Ground rules for every agent (from the whole program)
-- No OpenRouter, no paid APIs. Local compute only (MLX venv at /Users/tedsandtads/Documents/GitHub/orbweaver/.venv/bin/python, read-only) plus your own reasoning.
+- No OpenRouter, no paid APIs. Local compute only (an MLX Python venv, read-only) plus your own reasoning.
 - Do not modify frozen artifacts (PHYSICS.md, BEND_PRIMER.md, corpus MANIFEST, gates/g1/prereg.md). New work goes in your own dir.
 - Never run `pkill -f hvm` or kill processes you did not start.
 - Write your kill rule and your test set BEFORE looking at results, and put them in your doc's first section. Report exact denominators. Report negatives plainly.
 - Keep concurrent processes modest (machine is shared with other agents). Cap yourself at 4 heavy processes.
-- Never read or print /Users/tedsandtads/Genome/.env.
+- Never read or print the project .env file.
 - Hand back a SHORT plain-language report: verdict against your kill rule, the key numbers with denominators, caveats, and file paths. Add one dated bullet to gates/STATUS.md and one row/update in docs/SWINGS.md (rows 28-32).
 
 ## The page (2026-09-30)

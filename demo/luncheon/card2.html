@@ -17,9 +17,9 @@
   .table { position:absolute; left:50%; transform:translateX(-50%); width:15%; top:9%; bottom:8%; background:var(--table); border:2px solid var(--ink); border-radius:14px; }
   .seat { position:absolute; display:flex; align-items:center; gap:5px; font-style:italic; font-size:12px; white-space:nowrap; }
   .seat.l { flex-direction:row-reverse; }
-  .chair { width:13px; height:15px; border:1.4px solid var(--ink); border-radius:2px; background:#fff; position:relative; flex:none; }
-  .chair::after { content:""; position:absolute; inset:2px 2.5px; border:1px solid var(--ink); }
-  .chair.potus { background:#4472c4; }
+  .chair { width:13px; height:16px; flex:none; display:block; }
+  .chair path, .chair line, .chair rect { fill:#fff; stroke:var(--ink); stroke-width:1.1; }
+  .chair.potus path { fill:#4472c4; }
   .flash { position:absolute; border:3px solid var(--red); border-radius:6px; background:rgba(176,38,28,.06); }
   .pd { position:absolute; font:700 76px/1 "Courier Prime", "Courier New", monospace; color:var(--red); white-space:nowrap; }
   .lead { position:absolute; height:3px; background:var(--red); transform-origin:left center; }
@@ -51,7 +51,8 @@
   seats.forEach(function (s) {
     var el = document.createElement("div"); el.className = "seat " + (s.side === "left" ? "l" : "r"); el.style.fontSize = fs + "px";
     var label = s.org ? s.name + " – " + s.org : s.name;
-    el.innerHTML = '<span class="chair' + (s.name === "POTUS" ? " potus" : "") + '"' + (SQ ? ' style="width:16px;height:19px"' : "") + '></span><span>' + label + "</span>";
+    var flip = s.side === "left" ? ' style="transform:scaleX(-1)' + (SQ ? ';width:17px;height:21px' : '') + '"' : (SQ ? ' style="width:17px;height:21px"' : '');
+    el.innerHTML = '<svg class="chair' + (s.name === "POTUS" ? " potus" : "") + '" viewBox="-11 -13 22 26"' + flip + '><path d="M-6 -10 L2 -10 Q9 -10 9 -3 L9 3 Q9 10 2 10 L-6 10 Z"/><line x1="-2.5" y1="-8" x2="-2.5" y2="8"/><rect x="-9.5" y="-12" width="5" height="4"/><rect x="-9.5" y="8" width="5" height="4"/></svg><span>' + label + "</span>";
     var y = top + pitch * s.row;
     el.style.top = (y - fs * 0.7) + "px";
     if (s.side === "left") el.style.right = (rw / 2 + rw * 0.075 + 4) + "px"; else el.style.left = (rw / 2 + rw * 0.075 + 4) + "px";
