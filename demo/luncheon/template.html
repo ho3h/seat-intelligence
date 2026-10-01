@@ -5,43 +5,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Who sits next to whom? The White House AI lunch</title>
 <meta name="color-scheme" content="light">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
 <style>
-  /* Single light look on purpose: it copies a printed seating chart. The chart fills the screen; one caption card sits over it. */
-  :root { --ink:#111; --mute:#5f5f5f; --paper:#fff; --soft:#f4f2ec; --bad:#b3261e; --good:#2f7d4f; --blue:#3465a4; }
+  /* Monotone state-dinner stationery: black ink on white card, engraved serif display, a book serif for reading. One caption card over a full-screen chart. Deliberately single-theme. */
+  :root { --ink:#151515; --mute:#6b6b68; --paper:#fbfbf9; --soft:#efeeea; --hair:#d6d4ce; --bad:#151515; --good:#151515; --blue:#151515;
+          --display:"Cormorant Garamond", "EB Garamond", Georgia, serif; --text:"Source Serif 4", Georgia, "Times New Roman", serif; }
   * { box-sizing:border-box; }
+  [hidden] { display:none !important; }
   html,body { margin:0; height:100%; background:var(--paper); color:var(--ink); }
-  body { font:15px/1.45 Calibri, Carlito, "Segoe UI", "Helvetica Neue", Arial, sans-serif; overflow:hidden; }
+  body { font:15.5px/1.55 var(--text); overflow:hidden; }
   #stage { position:fixed; inset:0; overflow:hidden; touch-action:none; cursor:grab; }
   #stage.drag { cursor:grabbing; }
   #stage.can-pick { cursor:pointer; }
   canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
   button { font:inherit; color:inherit; }
-  .btn { background:var(--paper); border:1px solid var(--ink); padding:6px 14px; cursor:pointer; border-radius:0; white-space:nowrap; }
+  .btn { background:var(--paper); border:1px solid var(--ink); padding:6px 16px; cursor:pointer; border-radius:0; white-space:nowrap; font-family:var(--text); font-size:14.5px; letter-spacing:.02em; }
   .btn:hover { background:var(--soft); }
+  .btn.primary { font-variant:small-caps; letter-spacing:.08em; font-size:16px; }
   .btn.primary { background:var(--ink); color:#fff; }
   .btn.primary:hover { background:#333; }
   .btn.small { padding:3px 10px; font-size:14px; }
   .chip[aria-pressed="true"] { background:var(--ink); color:#fff; }
-  .link { background:none; border:0; padding:0; color:#1f4e8c; text-decoration:underline; cursor:pointer; font-size:14px; }
-  a { color:#1f4e8c; }
+  .link { background:none; border:0; padding:0; color:var(--ink); text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; cursor:pointer; font-size:14px; font-family:var(--text); }
+  a { color:var(--ink); text-underline-offset:3px; }
   :focus-visible { outline:2px solid var(--blue); outline-offset:2px; }
-  .nav { position:absolute; top:calc(10px + env(safe-area-inset-top, 0px)); left:10px; display:flex; gap:6px; }
+  .nav { position:absolute; bottom:calc(14px + env(safe-area-inset-bottom, 0px)); left:14px; display:flex; flex-direction:column; gap:6px; }
+  @media (max-width:1020px) { .nav { display:none; } }
   /* the caption card */
   #cap { position:absolute; left:50%; transform:translateX(-50%); bottom:calc(12px + env(safe-area-inset-bottom, 0px)); width:min(560px, calc(100% - 24px));
-         background:var(--paper); border:1px solid var(--ink); box-shadow:0 6px 24px rgba(0,0,0,.12); }
+         background:var(--paper); border:1px solid var(--ink); box-shadow:0 1px 0 var(--ink), 0 10px 30px rgba(0,0,0,.08); }
   .cap-in { padding:12px 16px 4px; max-height:32vh; overflow:auto; }
-  .cap-in h1 { margin:0 0 4px; font-size:21px; line-height:1.2; font-weight:600; text-wrap:balance; }
+  .cap-in h1 { margin:0 0 6px; font:600 28px/1.1 var(--display); letter-spacing:.005em; text-wrap:balance; }
   .cap-in p { margin:0 0 8px; }
-  .rule { font-size:17px; line-height:1.3; font-style:italic; font-weight:600; margin:0 0 6px !important; }
+  .rule { font:italic 600 21px/1.25 var(--display); margin:0 0 8px !important; }
   .keyl { color:var(--mute); font-size:14px; white-space:nowrap; }
-  .dot { display:inline-block; width:17px; height:17px; border-radius:50%; color:#fff; font-size:10.5px; font-weight:700; text-align:center; line-height:17px; margin:0 3px 0 8px; vertical-align:-3px; font-style:normal; }
+  .dot { display:inline-block; width:17px; height:17px; border-radius:50%; color:#fff; font-size:10.5px; font-weight:600; font-family:var(--text); text-align:center; line-height:17px; margin:0 3px 0 8px; vertical-align:-3px; font-style:normal; }
   .fine { color:var(--mute); font-size:13px; }
   .code { display:block; font:13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background:var(--soft); padding:6px 10px; white-space:pre; margin:4px 0 8px; overflow-x:auto; }
   .bar { display:flex; align-items:center; gap:8px; padding:8px 16px 12px; flex-wrap:wrap; }
   .bar .sp { flex:1; }
   .chips { display:flex; gap:6px; }
   .dots { display:flex; gap:5px; }
-  .dots i { width:7px; height:7px; border-radius:50%; background:#ccc; display:block; }
+  .dots i { width:6px; height:6px; border-radius:50%; background:var(--hair); display:block; }
   .dots i.on { background:var(--ink); }
   .links { display:flex; gap:16px; flex-wrap:wrap; padding:0 16px 12px; }
   /* the doomsday clock lives in the frame: a stark quarter dial counting down to midnight */
@@ -52,25 +58,27 @@
   .hud .hand line { stroke:#fff; stroke-width:3; stroke-linecap:round; }
   .hud .hand { transform-origin:58px 58px; transition:transform .7s cubic-bezier(.3,1.6,.5,1); }
   .hud .pivot { fill:#fff; }
-  .hud b { display:block; font-size:22px; line-height:1.05; letter-spacing:.02em; font-variant-numeric:tabular-nums; text-transform:uppercase; }
-  .hud .cap1 { display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#bdbdbd; margin-top:2px; }
+  .hud b { display:block; font:600 21px/1.05 var(--display); letter-spacing:.06em; font-variant-numeric:lining-nums tabular-nums; text-transform:uppercase; }
+  .hud .cap1 { display:block; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase; color:#bdbdb8; margin-top:3px; }
   .hud #hudred { display:block; font-size:12.5px; color:#e7e7e7; }
-  .hud.late { background:var(--bad); }
-  .hud.late .face { fill:#7e1a15; }
-  .hud.ok { background:var(--good); }
-  .hud.ok .face { fill:#1d5434; }
+  .hud.late b { text-decoration:underline; text-underline-offset:4px; }
+  .hud.ok { background:var(--paper); color:var(--ink); border:1px solid var(--ink); }
+  .hud.ok .face { fill:var(--soft); }
+  .hud.ok .ticks rect, .hud.ok .pivot { fill:var(--ink); }
+  .hud.ok .hand line { stroke:var(--ink); }
+  .hud.ok .cap1, .hud.ok #hudred { color:var(--mute); }
   .hud.strike { animation:strike .5s ease-in-out 2; }
   @keyframes strike { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
-  .toast { position:absolute; top:calc(62px + env(safe-area-inset-top, 0px)); left:50%; transform:translateX(-50%); max-width:min(520px, calc(100% - 24px)); background:var(--ink); color:#fff; padding:9px 16px; font-size:15px; font-style:italic; pointer-events:none; opacity:0; transition:opacity .25s; text-align:center; }
+  .toast { position:absolute; top:calc(62px + env(safe-area-inset-top, 0px)); left:50%; transform:translateX(-50%); max-width:min(520px, calc(100% - 24px)); background:var(--ink); color:#fff; padding:10px 18px; font:italic 500 19px/1.3 var(--display); pointer-events:none; opacity:0; transition:opacity .25s; text-align:center; }
   .toast.on { opacity:1; }
   /* How it works */
   #sheet { position:fixed; inset:0; background:rgba(17,17,17,.35); overflow:auto; }
   .sheet-in { background:var(--paper); max-width:640px; margin:calc(24px + env(safe-area-inset-top, 0px)) auto 24px; border:1px solid var(--ink); position:relative; }
   #sheetclose { position:sticky; top:0; float:right; margin:10px; }
   .pane { padding:18px 22px 22px; }
-  .kicker { margin:0 0 6px; font-size:12px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--mute); }
-  .pane h1 { margin:0 0 10px; font-size:26px; line-height:1.15; font-weight:600; text-wrap:balance; }
-  .pane h2 { margin:22px 0 8px; font-size:17px; font-weight:600; }
+  .kicker { margin:0 0 6px; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--mute); }
+  .pane h1 { margin:0 0 10px; font:600 32px/1.1 var(--display); text-wrap:balance; }
+  .pane h2 { margin:24px 0 8px; font:600 23px/1.2 var(--display); }
   .pane p { margin:0 0 10px; }
   .flow { margin:6px 0 14px; }
   .flow .box { border:1px solid var(--ink); padding:8px 10px; }
@@ -80,12 +88,12 @@
   .flow .arrow { text-align:center; line-height:1; padding:3px 0; color:var(--mute); }
   .facts { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:10px 0 12px; }
   .fact { border:1px solid var(--ink); padding:8px 10px; min-width:0; }
-  .fact b { display:block; font-size:26px; line-height:1.05; font-weight:600; font-variant-numeric:tabular-nums; }
+  .fact b { display:block; font:600 30px/1.05 var(--display); font-variant-numeric:lining-nums tabular-nums; }
   .fact span { font-size:13.5px; color:var(--mute); }
   .bars { margin:6px 0 14px; }
   .bars .lab { font-size:14px; margin:6px 0 2px; display:flex; justify-content:space-between; gap:10px; }
-  .bars .track { height:12px; background:#eee; }
-  .bars .fill { height:12px; background:var(--ink); }
+  .bars .track { height:10px; background:var(--soft); border:1px solid var(--hair); }
+  .bars .fill { height:8px; background:var(--ink); }
   .fig { display:block; width:100%; max-width:320px; height:auto; margin:6px 0 4px; }
   .fig .b { fill:var(--soft); stroke:var(--ink); stroke-width:1.5; }
   .fig .n { fill:var(--paper); stroke:var(--ink); stroke-width:1.8; }
@@ -97,8 +105,8 @@
   .pane li { margin:0 0 6px; }
   @media (max-width:600px) {
     .cap-in { padding:10px 12px 2px; max-height:30vh; }
-    .cap-in h1 { font-size:19px; }
-    .rule { font-size:15.5px; }
+    .cap-in h1 { font-size:24px; }
+    .rule { font-size:18px; }
     .bar { padding:6px 12px 10px; }
     .links { padding:0 12px 10px; gap:12px; }
     .hud { padding:6px 10px 6px 6px; gap:8px; }
