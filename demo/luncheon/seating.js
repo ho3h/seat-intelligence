@@ -119,11 +119,16 @@ var Seating = (function () {
     return seq;
   }
 
+  function capAt(cap, breaks, n, idx) {
+    if (!breaks) return cap;
+    var a = 0, b = n; breaks.forEach(function (x) { if (x <= idx) a = Math.max(a, x); else b = Math.min(b, x); });
+    var len = b - a; return Math.min(cap, Math.ceil(len / Math.ceil(len / cap)));
+  }
   function refSections(cap, rl, elems, breaks) {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; });
     var sec = 0, size = 0, out = [];
     elems.forEach(function (e, idx) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= capAt(cap, breaks, elems.length, idx) && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       if (!ok) { if (size > 0) sec++; size = 0; S.forEach(function (r) { r[3] = r[4] = 0; }); }
@@ -140,7 +145,7 @@ var Seating = (function () {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; }), A = avoids.map(function () { return [false, false]; });
     var sec = 0, size = 0, out = [];
     seq.forEach(function (e, idx) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= capAt(cap, breaks, seq.length, idx) && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       var mem = e.s > 0 ? seq.slice(idx, idx + e.s).map(function (x) { return guests[x.i]; }) : [guests[e.i]];
@@ -172,10 +177,33 @@ var Seating = (function () {
     return out;
   }
 
+  // page layout: try the program's units in its own order, then in a fixed run of shuffled orders, and keep the seating
+  // that breaks the fewest rules, then has the fewest one- or two-seat sections, then the fewest sections
+  function seatInRuns(guests, p, seq, breaks) {
+    var units = [], best = null, rnd = 20260929, floor = 0, a0 = 0;
+    for (var i = 0; i < seq.length; i += seq[i].s) units.push(seq.slice(i, i + seq[i].s));
+    breaks.concat([seq.length]).forEach(function (x) { floor += Math.ceil((x - a0) / p.cap); a0 = x; });   // fewest sections possible
+    for (var t = 0; t < 80; t++) {
+      var order = units.slice();
+      for (var a = t ? order.length - 1 : 0; a > 0; a--) { rnd = (Math.imul(rnd, 1103515245) + 12345) >>> 0; var b = rnd % (a + 1), x = order[a]; order[a] = order[b]; order[b] = x; }
+      var fit = fitRuns([].concat.apply([], order), breaks); if (!fit) continue;
+      var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), fit, guests, p.avoids, breaks)
+        : refSections(p.cap, rules(p), fit.map(function (e) { return { c: e.c, s: e.s }; }), breaks);
+      var assign = new Array(guests.length); fit.forEach(function (e, k) { assign[e.i] = secs[k]; });
+      var cnt = {}; secs.forEach(function (sc) { cnt[sc] = (cnt[sc] || 0) + 1; });
+      var sizes = Object.keys(cnt).map(function (k) { return cnt[k]; });
+      var score = [violations(guests, p, assign).v.total, sizes.filter(function (z) { return z <= 2; }).length, sizes.length];
+      if (!best || score[0] < best.score[0] || (score[0] === best.score[0] && (score[1] < best.score[1] || (score[1] === best.score[1] && score[2] < best.score[2]))))
+        best = { score: score, seq: fit.map(function (e) { return e.i; }), assign: assign };
+      if (best.score[0] === 0 && best.score[1] === 0 && best.score[2] <= floor) break;   // can't do better
+    }
+    return best;
+  }
+
   // -> {seq: guest indices in seating order, assign: section per guest}
   function seat(guests, p, breaks) {
     var seq = prep(guests, p);
-    if (breaks) { var fit = fitRuns(seq, breaks); if (fit) seq = fit; else breaks = null; }
+    if (breaks) { var laid = seatInRuns(guests, p, seq, breaks); if (laid) return { seq: laid.seq, assign: laid.assign }; breaks = null; }
     var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), seq, guests, p.avoids, breaks)
       : refSections(p.cap, rules(p), seq.map(function (e) { return { c: e.c, s: e.s }; }), breaks);
     var assign = new Array(guests.length);

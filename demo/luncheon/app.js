@@ -45,12 +45,17 @@
   function isHostSeat(k) { return k in HOSTSEAT; }
   // the Vice President, the foot of the table and the President end a section: free-seat positions 8, 16 and 24
   var BREAKS = [8, 16, 24];
+  var SEATED = {};
   function seatRule(p) {
+    var key = S.toText(p); if (!SEATED[key]) SEATED[key] = seatRule0(p);
+    return { seat: SEATED[key].seat.slice(), groups: SEATED[key].groups.slice() };
+  }
+  function seatRule0(p) {
     var r = S.seat(ENG, p, BREAKS), bad = S.violations(ENG, p, r.assign).v.total;
     if (bad > 0) { var r0 = S.seat(ENG, p); if (S.violations(ENG, p, r0.assign).v.total < bad) r = r0; }   // never let the layout cost a rule
     var seat = new Array(N), groups = new Array(N), n = 0;
     r.seq.forEach(function (j) { var k = FREE[n++]; seat[k] = GUESTS[j]; groups[k] = r.assign[j]; });
-    Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = null; });
+    Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = groups[+k < HALF ? +k - 1 : +k + 1]; });   // each host sits inside the section beside them (row 7's), fixed, and no rule counts them
     return { seat: seat, groups: groups };
   }
   function shuffleFree(seat, r) { var vals = FREE.map(function (k) { return seat[k]; }), sh = shuffle(vals, r), out = seat.slice(); FREE.forEach(function (k, n) { out[k] = sh[n]; }); return out; }
@@ -205,7 +210,7 @@
   function clashes(arr, judge) {
     if (!arr || !arr.sec || !judge) return [];
     var kOf = {}, bySec = {}, out = [];
-    for (var k = 0; k < N; k++) { var gi = arr.seatGuest[k], sc = arr.sec[k]; if (gi < 0 || sc === null || sc === undefined) continue; kOf[gi] = k; (bySec[sc] = bySec[sc] || []).push(gi); }
+    for (var k = 0; k < N; k++) { var gi = arr.seatGuest[k], sc = arr.sec[k]; if (gi < 0 || sc === null || sc === undefined || isHostSeat(k)) continue; kOf[gi] = k; (bySec[sc] = bySec[sc] || []).push(gi); }
     var yOf = function (gi) { return seatXY(kOf[gi]).y; };
     var nearest = function (a, B) { var best = B[0]; B.forEach(function (b) { if (Math.abs(yOf(b) - yOf(a)) < Math.abs(yOf(best) - yOf(a))) best = b; }); return best; };
     Object.keys(bySec).forEach(function (sc) {
@@ -686,7 +691,7 @@
       "" +
       "<li><b>Mistakes were in the planning, not the details.</b> So we built checked building blocks and let the AI choose and combine them.</li>" +
       "<li><b>That made a tiny AI work.</b> Writing whole programs, a small AI got about 1 in 7 tasks right. Choosing from checked building blocks, it got nearly all right when the wording was familiar, and 4 to 8 in 10 when it wasn’t.</li></ul>" +
-      "<h2>What runs on this page</h2><p>The seating program runs live in your browser. It is a JavaScript copy of our checked program, tested to give identical answers on 400 random cases and every recorded example.</p><p>The tiny AI does not run in your browser. Its readings of these sentences were recorded on a laptop beforehand. The chatbot’s answers are its real answers from our test. The name words are new: avoid is now one of the checked building blocks, and pair is handled before the blocks run.</p>";
+      "<h2>What runs on this page</h2><p>The seating program runs live in your browser. It is a JavaScript copy of our checked program, tested to give identical answers on 400 random cases and every recorded example. To make the chart read like a real lunch, the page also treats the President, the Vice President and the foot of the table as section edges and evens the sections out; that step only ever chooses among seatings that break no more rules than the program\u2019s own.</p><p>The tiny AI does not run in your browser. Its readings of these sentences were recorded on a laptop beforehand. The chatbot’s answers are its real answers from our test. The name words are new: avoid is now one of the checked building blocks, and pair is handled before the blocks run.</p>";
   function aboutHTML() { return ABOUT + '<h2>The code</h2><p>Everything is open: the tiny model, the seating program, the test sets, and every experiment that worked or didn\u2019t, with the write-ups. <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">github.com/ho3h/seat-intelligence</a></p><p class="fine">Made by Theo Hopkinson: <a href="https://github.com/ho3h" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.linkedin.com/in/theohopkinson/" target="_blank" rel="noopener">LinkedIn</a>, <a href="https://x.com/theohopkinson" target="_blank" rel="noopener">X</a>.</p></div>'; }
   // ---------- loop
   var liveT = 0;

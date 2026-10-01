@@ -380,11 +380,16 @@ var Seating = (function () {
     return seq;
   }
 
+  function capAt(cap, breaks, n, idx) {
+    if (!breaks) return cap;
+    var a = 0, b = n; breaks.forEach(function (x) { if (x <= idx) a = Math.max(a, x); else b = Math.min(b, x); });
+    var len = b - a; return Math.min(cap, Math.ceil(len / Math.ceil(len / cap)));
+  }
   function refSections(cap, rl, elems, breaks) {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; });
     var sec = 0, size = 0, out = [];
     elems.forEach(function (e, idx) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= capAt(cap, breaks, elems.length, idx) && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       if (!ok) { if (size > 0) sec++; size = 0; S.forEach(function (r) { r[3] = r[4] = 0; }); }
@@ -401,7 +406,7 @@ var Seating = (function () {
     var S = rl.map(function (r) { return [r[0], r[1], r[2], 0, 0]; }), A = avoids.map(function () { return [false, false]; });
     var sec = 0, size = 0, out = [];
     seq.forEach(function (e, idx) {
-      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= cap && !(breaks && breaks.indexOf(idx) >= 0);
+      var c = e.c, t = e.s > 0 ? e.s : 1, ok = size + t <= capAt(cap, breaks, seq.length, idx) && !(breaks && breaks.indexOf(idx) >= 0);
       var ia = S.map(function (r) { return (r[0] >> c) & 1; }), ib = S.map(function (r) { return (r[1] >> c) & 1; });
       S.forEach(function (r, j) { if ((ia[j] && (r[3] + t > r[2] || r[4] > 0)) || (ib[j] && r[3] > 0)) ok = false; });
       var mem = e.s > 0 ? seq.slice(idx, idx + e.s).map(function (x) { return guests[x.i]; }) : [guests[e.i]];
@@ -433,10 +438,33 @@ var Seating = (function () {
     return out;
   }
 
+  // page layout: try the program's units in its own order, then in a fixed run of shuffled orders, and keep the seating
+  // that breaks the fewest rules, then has the fewest one- or two-seat sections, then the fewest sections
+  function seatInRuns(guests, p, seq, breaks) {
+    var units = [], best = null, rnd = 20260929, floor = 0, a0 = 0;
+    for (var i = 0; i < seq.length; i += seq[i].s) units.push(seq.slice(i, i + seq[i].s));
+    breaks.concat([seq.length]).forEach(function (x) { floor += Math.ceil((x - a0) / p.cap); a0 = x; });   // fewest sections possible
+    for (var t = 0; t < 80; t++) {
+      var order = units.slice();
+      for (var a = t ? order.length - 1 : 0; a > 0; a--) { rnd = (Math.imul(rnd, 1103515245) + 12345) >>> 0; var b = rnd % (a + 1), x = order[a]; order[a] = order[b]; order[b] = x; }
+      var fit = fitRuns([].concat.apply([], order), breaks); if (!fit) continue;
+      var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), fit, guests, p.avoids, breaks)
+        : refSections(p.cap, rules(p), fit.map(function (e) { return { c: e.c, s: e.s }; }), breaks);
+      var assign = new Array(guests.length); fit.forEach(function (e, k) { assign[e.i] = secs[k]; });
+      var cnt = {}; secs.forEach(function (sc) { cnt[sc] = (cnt[sc] || 0) + 1; });
+      var sizes = Object.keys(cnt).map(function (k) { return cnt[k]; });
+      var score = [violations(guests, p, assign).v.total, sizes.filter(function (z) { return z <= 2; }).length, sizes.length];
+      if (!best || score[0] < best.score[0] || (score[0] === best.score[0] && (score[1] < best.score[1] || (score[1] === best.score[1] && score[2] < best.score[2]))))
+        best = { score: score, seq: fit.map(function (e) { return e.i; }), assign: assign };
+      if (best.score[0] === 0 && best.score[1] === 0 && best.score[2] <= floor) break;   // can't do better
+    }
+    return best;
+  }
+
   // -> {seq: guest indices in seating order, assign: section per guest}
   function seat(guests, p, breaks) {
     var seq = prep(guests, p);
-    if (breaks) { var fit = fitRuns(seq, breaks); if (fit) seq = fit; else breaks = null; }
+    if (breaks) { var laid = seatInRuns(guests, p, seq, breaks); if (laid) return { seq: laid.seq, assign: laid.assign }; breaks = null; }
     var secs = (p.avoids && p.avoids.length) ? avoidSections(p.cap, rules(p), seq, guests, p.avoids, breaks)
       : refSections(p.cap, rules(p), seq.map(function (e) { return { c: e.c, s: e.s }; }), breaks);
     var assign = new Array(guests.length);
@@ -542,12 +570,17 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
   function isHostSeat(k) { return k in HOSTSEAT; }
   // the Vice President, the foot of the table and the President end a section: free-seat positions 8, 16 and 24
   var BREAKS = [8, 16, 24];
+  var SEATED = {};
   function seatRule(p) {
+    var key = S.toText(p); if (!SEATED[key]) SEATED[key] = seatRule0(p);
+    return { seat: SEATED[key].seat.slice(), groups: SEATED[key].groups.slice() };
+  }
+  function seatRule0(p) {
     var r = S.seat(ENG, p, BREAKS), bad = S.violations(ENG, p, r.assign).v.total;
     if (bad > 0) { var r0 = S.seat(ENG, p); if (S.violations(ENG, p, r0.assign).v.total < bad) r = r0; }   // never let the layout cost a rule
     var seat = new Array(N), groups = new Array(N), n = 0;
     r.seq.forEach(function (j) { var k = FREE[n++]; seat[k] = GUESTS[j]; groups[k] = r.assign[j]; });
-    Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = null; });
+    Object.keys(HOSTSEAT).forEach(function (k) { seat[k] = HOSTSEAT[k]; groups[k] = groups[+k < HALF ? +k - 1 : +k + 1]; });   // each host sits inside the section beside them (row 7's), fixed, and no rule counts them
     return { seat: seat, groups: groups };
   }
   function shuffleFree(seat, r) { var vals = FREE.map(function (k) { return seat[k]; }), sh = shuffle(vals, r), out = seat.slice(); FREE.forEach(function (k, n) { out[k] = sh[n]; }); return out; }
@@ -702,7 +735,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
   function clashes(arr, judge) {
     if (!arr || !arr.sec || !judge) return [];
     var kOf = {}, bySec = {}, out = [];
-    for (var k = 0; k < N; k++) { var gi = arr.seatGuest[k], sc = arr.sec[k]; if (gi < 0 || sc === null || sc === undefined) continue; kOf[gi] = k; (bySec[sc] = bySec[sc] || []).push(gi); }
+    for (var k = 0; k < N; k++) { var gi = arr.seatGuest[k], sc = arr.sec[k]; if (gi < 0 || sc === null || sc === undefined || isHostSeat(k)) continue; kOf[gi] = k; (bySec[sc] = bySec[sc] || []).push(gi); }
     var yOf = function (gi) { return seatXY(kOf[gi]).y; };
     var nearest = function (a, B) { var best = B[0]; B.forEach(function (b) { if (Math.abs(yOf(b) - yOf(a)) < Math.abs(yOf(best) - yOf(a))) best = b; }); return best; };
     Object.keys(bySec).forEach(function (sc) {
@@ -1183,7 +1216,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
       "" +
       "<li><b>Mistakes were in the planning, not the details.</b> So we built checked building blocks and let the AI choose and combine them.</li>" +
       "<li><b>That made a tiny AI work.</b> Writing whole programs, a small AI got about 1 in 7 tasks right. Choosing from checked building blocks, it got nearly all right when the wording was familiar, and 4 to 8 in 10 when it wasn’t.</li></ul>" +
-      "<h2>What runs on this page</h2><p>The seating program runs live in your browser. It is a JavaScript copy of our checked program, tested to give identical answers on 400 random cases and every recorded example.</p><p>The tiny AI does not run in your browser. Its readings of these sentences were recorded on a laptop beforehand. The chatbot’s answers are its real answers from our test. The name words are new: avoid is now one of the checked building blocks, and pair is handled before the blocks run.</p>";
+      "<h2>What runs on this page</h2><p>The seating program runs live in your browser. It is a JavaScript copy of our checked program, tested to give identical answers on 400 random cases and every recorded example. To make the chart read like a real lunch, the page also treats the President, the Vice President and the foot of the table as section edges and evens the sections out; that step only ever chooses among seatings that break no more rules than the program\u2019s own.</p><p>The tiny AI does not run in your browser. Its readings of these sentences were recorded on a laptop beforehand. The chatbot’s answers are its real answers from our test. The name words are new: avoid is now one of the checked building blocks, and pair is handled before the blocks run.</p>";
   function aboutHTML() { return ABOUT + '<h2>The code</h2><p>Everything is open: the tiny model, the seating program, the test sets, and every experiment that worked or didn\u2019t, with the write-ups. <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">github.com/ho3h/seat-intelligence</a></p><p class="fine">Made by Theo Hopkinson: <a href="https://github.com/ho3h" target="_blank" rel="noopener">GitHub</a>, <a href="https://www.linkedin.com/in/theohopkinson/" target="_blank" rel="noopener">LinkedIn</a>, <a href="https://x.com/theohopkinson" target="_blank" rel="noopener">X</a>.</p></div>'; }
   // ---------- loop
   var liveT = 0;
