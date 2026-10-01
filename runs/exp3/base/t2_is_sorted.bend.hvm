@@ -1,0 +1,70 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@check_sorted = ((@check_sorted__C35 a) a)
+
+@check_sorted__C0 = (a (b d))
+  & @check_sorted ~ (c d)
+  & @List/Cons ~ (a (b c))
+
+@check_sorted__C10 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C8 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C11 = (?(((* 1) @check_sorted__C10) a) a)
+
+@check_sorted__C12 = (a ((@check_sorted__C11 (a b)) b))
+
+@check_sorted__C14 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C12 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C15 = (?(((* 1) @check_sorted__C14) a) a)
+
+@check_sorted__C16 = (a ((@check_sorted__C15 (a b)) b))
+
+@check_sorted__C18 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C16 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C19 = (?(((* 1) @check_sorted__C18) a) a)
+
+@check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9 = (* (* (* 0)))
+
+@check_sorted__C2 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C0 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C20 = (a ((@check_sorted__C19 (a b)) b))
+
+@check_sorted__C22 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C20 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C23 = (?(((* 1) @check_sorted__C22) a) a)
+
+@check_sorted__C24 = (a ((@check_sorted__C23 (a b)) b))
+
+@check_sorted__C26 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C24 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C27 = (?(((* 1) @check_sorted__C26) a) a)
+
+@check_sorted__C28 = (a ((@check_sorted__C27 (a b)) b))
+
+@check_sorted__C29 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C28 (* (* (* 0)))) (b (c d))))) d))))
+
+@check_sorted__C3 = (?(((* 1) @check_sorted__C2) a) a)
+
+@check_sorted__C30 = (?(((* 1) @check_sorted__C29) a) a)
+
+@check_sorted__C31 = (a ((@check_sorted__C30 (a b)) b))
+
+@check_sorted__C32 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C31 (* (* (* 0)))) (b (c d))))) d))))
+
+@check_sorted__C33 = (?(((* 1) @check_sorted__C32) a) a)
+
+@check_sorted__C34 = (* (a ((@check_sorted__C33 (a b)) b)))
+
+@check_sorted__C35 = (?((1 @check_sorted__C34) a) a)
+
+@check_sorted__C4 = (a ((@check_sorted__C3 (a b)) b))
+
+@check_sorted__C6 = (* ({a b} (c ($([>] $(a ?((@check_sorted__C4 @check_sorted__C1__M_check_sorted__C13__M_check_sorted__C17__M_check_sorted__C21__M_check_sorted__C25__M_check_sorted__C5__M_check_sorted__C9) (b (c d))))) d))))
+
+@check_sorted__C7 = (?(((* 1) @check_sorted__C6) a) a)
+
+@check_sorted__C8 = (a ((@check_sorted__C7 (a b)) b))
+
+@prog = a
+  & @check_sorted ~ a
+
+

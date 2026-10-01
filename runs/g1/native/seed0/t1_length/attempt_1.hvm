@@ -1,0 +1,11 @@
+@prog = (l out)
+  & @len ~ (l (0 out))
+
+@len = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+1] acc2)
+  & @len ~ (t (acc2 out))

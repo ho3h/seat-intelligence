@@ -1,0 +1,10 @@
+@prog = (l out)
+  & @sum ~ (l (0 out))
+
+@sum = ((?((@sum_nil @sum_cons) (pl (acc out))) pl) (acc out))
+
+@sum_nil = (* (a a))
+
+@sum_cons = (* ((h t) (acc out)))
+  & h ~ $([+] $(acc r))
+  & @sum ~ (t (r out))

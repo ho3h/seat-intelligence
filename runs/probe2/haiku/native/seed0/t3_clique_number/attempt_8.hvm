@@ -1,0 +1,171 @@
+@prog = ((n edges) out)
+  & {n_p n_i} ~ n
+  & {e_p e_i} ~ edges
+  & e_p ~ *
+  & @pow2 ~ ((n_p 1) max_val)
+  & @iter ~ ((0 (max_val (n_i (e_i (0 out))))) *)
+
+@pow2 = ((n acc) out)
+  & {n1 n2} ~ n
+  & z ~ $(n1 [=] 0)
+  & z ~ ?((@pd @pc) (n2 (acc out)))
+
+@pd = (n (a o)) & n ~ * & o ~ a
+
+@pc = (* (n (a o)))
+  & n1 ~ $(n [-] 1)
+  & a2 ~ $(a [*] 2)
+  & @pow2 ~ ((n1 a2) o)
+
+@iter = ((mask (max (n (edges (best out))))) *)
+  & {m1 m2} ~ mask
+  & {x1 x2} ~ max
+  & {n1 n2} ~ n
+  & {e1 e2} ~ edges
+  & {b1 b2} ~ best
+  & done ~ $(m1 [=] x1)
+  & done ~ ?((@idone @istep) ((m2 (x2 (n2 (e2 (b2 out)))))))
+
+@idone = ((m (x (n (e (b o))))))
+  & m ~ * & x ~ * & n ~ * & e ~ * & o ~ b
+
+@istep = (* ((m (x (n (e (b o)))))))
+  & {m_c m_k} ~ m
+  & {n_c n_k} ~ n
+  & {e_c e_k} ~ e
+  & @is_clique ~ ((m_c (n_c e_c)) (v))
+  & v ~ ?((@iskip @iupd) ((m_k (x (n_k (e_k (b o)))))))
+
+@iskip = ((m (x (n (e (b o))))))
+  & m1 ~ $(m [+] 1)
+  & @iter ~ ((m1 (x (n (e (b o))))) *)
+
+@iupd = (* ((m (x (n (e (b o)))))))
+  & @popcount ~ (m c)
+  & {c1 c2} ~ c
+  & {b1 b2} ~ b
+  & cmp ~ $(c1 [>] b1)
+  & cmp ~ ?((@iskip2 @inew) ((m (x (n (e (b2 o)))))))
+
+@iskip2 = ((m (x (n (e (b o))))))
+  & m1 ~ $(m [+] 1)
+  & @iter ~ ((m1 (x (n (e (b o))))) *)
+
+@inew = (* ((m (x (n (e (b o)))))))
+  & m1 ~ $(m [+] 1)
+  & @iter ~ ((m1 (x (n (e (c2 o))))) *)
+
+@is_clique = ((mask (n edges)) (result out))
+  & @chk ~ ((mask (n edges) 0 0) (result out))
+
+@chk = ((mask (n edges i j)) (result out))
+  & {i1 i2} ~ i
+  & {n1 n2} ~ n
+  & {m1 m2} ~ mask
+  & {e1 e2} ~ edges
+  & done ~ $(i1 [=] n1)
+  & done ~ ?((@cret @cj) ((m2 (n2 (e2 (i2 j (result out)))))))
+
+@cret = ((m (n (e (i j (r o))))))
+  & m ~ * & n ~ * & e ~ * & i ~ * & j ~ * & o ~ 1
+
+@cj = (* ((m (n (e (i j (r o)))))))
+  & {j1 j2} ~ j
+  & {n1 n2} ~ n
+  & jeq ~ $(j1 [=] n1)
+  & jeq ~ ?((@ci_next @cpair) ((m (n2 (e (i j2 (r o)))))))
+
+@ci_next = ((m (n (e (i j (r o))))))
+  & i1 ~ $(i [+] 1)
+  & @chk ~ ((m (n e i1 0) (r o)))
+
+@cpair = (* ((m (n (e (i j (r o)))))))
+  & {j1 j2} ~ j
+  & jgt ~ $(j1 [>] i)
+  & jgt ~ ?((@cj_next @cbits) ((m (n (e (i j2 (r o)))))))
+
+@cj_next = ((m (n (e (i j (r o))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@cbits = (* ((m (n (e (i j (r o)))))))
+  & {i1 i2} ~ i
+  & {m1 m2} ~ m
+  & iin ~ $(i1 [&] m1)
+  & iin ~ ?((@cj_next2 @cj_in) ((i2 j (m2 (n (e (r o)))))))
+
+@cj_next2 = ((i (j (m (n (e (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@cj_in = (* ((i j (m (n (e (r o)))))))
+  & {j1 j2} ~ j
+  & {m1 m2} ~ m
+  & jin ~ $(j1 [&] m1)
+  & jin ~ ?((@cj_next3 @cedge) ((i j2 (m2 (n (e (r o)))))))
+
+@cj_next3 = ((i (j (m (n (e (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@cedge = (* ((i j (m (n (e (r o)))))))
+  & {e1 e2} ~ e
+  & @find_edge ~ ((i j e1) (found))
+  & found ~ ?((@cfail @cj_next4) ((i j (m (n (e2 (r o)))))))
+
+@cfail = ((i (j (m (n (e (r o))))))
+  & o ~ 0
+
+@cj_next4 = (* ((i j (m (n (e (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@find_edge = ((i j edges) (result out))
+  & edges ~ ?((@no_e @se) (result out))
+
+@no_e = (r o) & o ~ 0
+
+@se = (* (r o))
+  & edges ~ ((u v) tail)
+  & c1 ~ $(u [=] i)
+  & c1 ~ ?((@chk_v @try_j) ((v i j tail (r o))))
+
+@chk_v = ((v i j tail r o))
+  & c2 ~ $(u [=] j)
+  & c2 ~ ?((@next @found) ((tail (r o))))
+
+@next = ((tail r o))
+  & @find_edge ~ ((i j tail) (r o))
+
+@found = (* ((tail r o))) & o ~ 1
+
+@try_j = (* ((v i j tail r o)))
+  & c3 ~ $(v [=] j)
+  & c3 ~ ?((@next2 @found2) ((tail (r o))))
+
+@next2 = ((tail r o))
+  & @find_edge ~ ((i j tail) (r o))
+
+@found2 = (* ((tail r o))) & o ~ 1
+
+@popcount = (mask out)
+  & @sum ~ ((mask 0) out)
+
+@sum = ((mask acc) out)
+  & {m1 m2} ~ mask
+  & z ~ $(m1 [=] 0)
+  & z ~ ?((@sr @sl) ((m2 (acc out)))
+
+@sr = ((m (a o))) & o ~ a
+
+@sl = (* ((m (a o))))
+  & b ~ $(m [%] 2)
+  & sh ~ $(m [>>] 1)
+  & b ~ ?((@ssk @sad) ((sh (a o))))
+
+@ssk = ((s (a o)))
+  & @sum ~ ((s a) o)
+
+@sad = (* ((s (a o))))
+  & a1 ~ $(a [+] 1)
+  & @sum ~ ((s a1) o)

@@ -1,0 +1,87 @@
+// The exact cases handled here are trees, n <= 1, and n = 2.
+// For n = 2, spanning trees are individual edges, so the answer is
+// the second-smallest edge weight, counting repeats.
+
+@prog = ((n edges) out)
+  & edges ~ {e_len e_keep}
+  & @len ~ (e_len cnt)
+  & @decide ~ (n (cnt (e_keep out)))
+
+@decide = (n (cnt (e out)))
+  & n ~ {ncmp nctx}
+  & ncmp ~ $([>] $(1 c))
+  & c ~ ?((@small @large) (nctx (cnt (e out))))
+
+@small = (n (cnt (e out)))
+  & n ~ *
+  & cnt ~ *
+  & e ~ *
+  & out ~ 16777215
+
+@large = (* (n (cnt (e out))))
+  & n ~ {nsub ntest}
+  & nsub ~ $([-] $(1 nm1))
+  & cnt ~ $([=] $(nm1 eq))
+  & eq ~ ?((@cyclic @tree) (ntest (e out)))
+
+@tree = (* (ntest (e out)))
+  & ntest ~ *
+  & e ~ *
+  & out ~ 16777215
+
+@cyclic = (ntest (e out))
+  & ntest ~ {ncmp nctx}
+  & ncmp ~ $([=] $(2 c))
+  & nctx ~ *
+  & c ~ ?((@other @two) (e out))
+
+@other = (e out)
+  & e ~ *
+  & out ~ 0
+
+@two = (* (e out))
+  & @second ~ (e (16777215 (16777215 out)))
+
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t r)
+  & r ~ $([+1] out)
+
+@second = ((?((@sec_nil @sec_cons) (pl (m1 (m2 out)))) pl) (m1 (m2 out)))
+
+@sec_nil = (pl (m1 (m2 out)))
+  & pl ~ *
+  & m1 ~ *
+  & m2 ~ *
+  & out ~ 16777215
+
+@sec_cons = (* (pl (m1 (m2 out))))
+  & pl ~ ((* (* w)) tail)
+  & w ~ {wa wb}
+  & m1 ~ {ma mb}
+  & wa ~ $([<] $(ma c))
+  & c ~ ?((@sec_not1 @sec_less1) (wb (mb (m2 (tail out)))))
+
+@sec_less1 = (* (w (m1 (m2 (tail out)))))
+  & m2 ~ *
+  & @second ~ (tail (w (m1 out)))
+
+@sec_not1 = (w (m1 (m2 (tail out))))
+  & w ~ {wcmp wctx}
+  & m2 ~ {mcmp mctx}
+  & wcmp ~ $([<] $(mcmp c))
+  & c ~ ?((@sec_not2 @sec_less2) (wctx (m1 (mctx (tail out)))))
+
+@sec_less2 = (* (w (m1 (m2 (tail out)))))
+  & m2 ~ *
+  & @second ~ (tail (m1 (w out)))
+
+@sec_not2 = (w (m1 (m2 (tail out))))
+  & w ~ *
+  & @second ~ (tail (m1 (m2 out)))

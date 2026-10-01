@@ -1,0 +1,101 @@
+@prog = (input out)
+  & @start ~ (input out)
+
+@start = ((n (x edges)) out)
+  & @rounds ~ (n (edges ((1 (x (0 *))) out)))
+
+@rounds = (?((@round_zero @round_succ) (edges (vis out))) (edges (vis out)))
+
+@round_zero = (edges (vis out))
+  & edges ~ *
+  & @max ~ (vis (0 out))
+
+@round_succ = (k (edges (vis out)))
+  & edges ~ {edges_scan edges_keep}
+  & @scan ~ (edges_scan (vis vis_next))
+  & @rounds ~ (k (edges_keep (vis_next out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (vis out))) pl) (vis out))
+
+@scan_nil = (* (vis out))
+  & vis ~ out
+
+@scan_cons = (* ((edge tail) (vis out)))
+  & @process_edge ~ (edge (vis vis_next))
+  & @scan ~ (tail (vis_next out))
+
+@process_edge = ((u v) (vis out))
+  & u ~ {u_test u_keep}
+  & vis ~ {vis_test vis_keep}
+  & @member ~ (u_test (vis_test has_u))
+  & has_u ~ ?((@pe_u_no @pe_u_yes) (u_keep (v (vis_keep out))))
+
+@pe_u_no = (u (v (vis out)))
+  & v ~ {v_test v_keep}
+  & vis ~ {vis_test vis_keep}
+  & @member ~ (v_test (vis_test has_v))
+  & has_v ~ ?((@pe_none @pe_add_u) (u (v_keep (vis_keep out))))
+
+@pe_none = (u (v (vis out)))
+  & u ~ *
+  & v ~ *
+  & vis ~ out
+
+@pe_add_u = (* (u (v (vis out))))
+  & v ~ *
+  & out ~ (1 (u vis))
+
+@pe_u_yes = (* (u (v (vis out))))
+  & u ~ *
+  & v ~ {v_test v_keep}
+  & vis ~ {vis_test vis_keep}
+  & @member ~ (v_test (vis_test has_v))
+  & has_v ~ ?((@pe_add_v @pe_keep) (v_keep (vis_keep out)))
+
+@pe_add_v = (v (vis out))
+  & out ~ (1 (v vis))
+
+@pe_keep = (* (v (vis out)))
+  & v ~ *
+  & vis ~ out
+
+@member = (target (list result))
+  & @mem_list ~ (list (target result))
+
+@mem_list = ((?((@mem_nil @mem_cons) (pl (target result))) pl) (target result))
+
+@mem_nil = (* (target result))
+  & target ~ *
+  & result ~ 0
+
+@mem_cons = (* ((head tail) (target result)))
+  & target ~ {target_cmp target_rec}
+  & head ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@mem_no @mem_yes) (tail (target_rec result)))
+
+@mem_no = (tail (target result))
+  & @mem_list ~ (tail (target result))
+
+@mem_yes = (* (tail (target result)))
+  & tail ~ *
+  & target ~ *
+  & result ~ 1
+
+@max = ((?((@max_nil @max_cons) (pl (acc out))) pl) (acc out))
+
+@max_nil = (* (acc out))
+  & acc ~ out
+
+@max_cons = (* ((head tail) (acc out)))
+  & head ~ {head_cmp head_keep}
+  & acc ~ {acc_cmp acc_keep}
+  & head_cmp ~ $([>] $(acc_cmp gt))
+  & gt ~ ?((@max_old @max_new) (head_keep (tail (acc_keep out))))
+
+@max_old = (head (tail (acc out)))
+  & head ~ *
+  & @max ~ (tail (acc out))
+
+@max_new = (* (head (tail (acc out))))
+  & acc ~ *
+  & @max ~ (tail (head out))

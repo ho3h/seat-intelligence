@@ -1,0 +1,41 @@
+// For three vertices, recognize an edge list containing exactly two edges.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ $([=] $(3 z))
+  & z ~ ?((@other @three) (edges out))
+
+@other = (edges out)
+  & edges ~ *
+  & out ~ (0 *)
+
+@three = (k (edges out))
+  & k ~ *
+  & @check ~ (edges out)
+
+@check = ((?((@empty @first) (pl out)) pl) out)
+
+@empty = (* out)
+  & out ~ (0 *)
+
+@first = (* ((h t) out))
+  & h ~ *
+  & @tail ~ (t out)
+
+@tail = ((?((@tail_empty @tail_cons) (pl out)) pl) out)
+
+@tail_empty = (* out)
+  & out ~ (0 *)
+
+@tail_cons = (* ((h t) out))
+  & h ~ *
+  & @last ~ (t out)
+
+@last = ((?((@last_empty @last_cons) (pl out)) pl) out)
+
+@last_empty = (* out)
+  & out ~ (1 (1 (0 *)))
+
+@last_cons = (* ((h t) out))
+  & h ~ *
+  & t ~ *
+  & out ~ (0 *)

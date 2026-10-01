@@ -1,0 +1,175 @@
+// Count the nodes, allocate an n-by-n zero matrix, then rewrite the edges.
+@prog = ((c edges) out)
+  & c ~ {c_len c_walk}
+  & @len ~ (c_len n)
+  & n ~ {n_rows n_width}
+  & @mkrows ~ (n_rows (n_width matrix))
+  & @walk ~ (edges (c_walk (matrix out)))
+
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t $([+1] out))
+
+// Make n rows, each containing n zeroes.
+@mkrows = (n (width out))
+  & n ~ ?((@mr_zero @mr_succ) (width out))
+
+@mr_zero = (width out)
+  & width ~ *
+  & out ~ (0 *)
+
+@mr_succ = (k (width out))
+  & width ~ {wrow wrec}
+  & @zeros ~ (wrow row)
+  & @mkrows ~ (k (wrec rest))
+  & out ~ (1 (row rest))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_succ = (k out)
+  & @zeros ~ (k rest)
+  & out ~ (1 rest)
+
+// Traverse edges, carrying the clustering and the adjacency matrix.
+@walk = ((?((@walk_nil @walk_cons) (pl (c (matrix out)))) pl) (c (matrix out)))
+
+@walk_nil = (* (c (matrix out)))
+  & c ~ *
+  & @scanrows ~ (matrix (0 ((0 *) out)))
+
+@walk_cons = (* (((u v) tail) (c (matrix out))))
+  & c ~ {cu c1}
+  & c1 ~ {cv cn}
+  & @get ~ (cu (u mu))
+  & @get ~ (cv (v mv))
+  & mu ~ {mu_eq mu_order}
+  & mv ~ {mv_eq mv_order}
+  & mu_eq ~ $([=] $(mv_eq z))
+  & z ~ ?((@walk_diff @walk_same) (mu_order (mv_order (tail (cn (matrix out))))))
+
+@walk_same = (* (mu_order (mv_order (tail (cn (matrix out))))))
+  & mu_order ~ *
+  & mv_order ~ *
+  & @walk ~ (tail (cn (matrix out)))
+
+@walk_diff = (mu_order (mv_order (tail (cn (matrix out)))))
+  & mu_order ~ {mu_cmp mu_keep}
+  & mv_order ~ {mv_cmp mv_keep}
+  & mu_cmp ~ $([<] $(mv_cmp z))
+  & z ~ ?((@norm_ge @norm_lt) (mu_keep (mv_keep (tail (cn (matrix out))))))
+
+// Normalize the endpoints and set the corresponding matrix cell to 1.
+@norm_ge = (mu_keep (mv_keep (tail (cn (matrix out)))))
+  & @setmatrix ~ (matrix (mv_keep (mu_keep (1 newmatrix))))
+  & @walk ~ (tail (cn (newmatrix out)))
+
+@norm_lt = (k (mu_keep (mv_keep (tail (cn (matrix out))))))
+  & k ~ *
+  & @setmatrix ~ (matrix (mu_keep (mv_keep (1 newmatrix))))
+  & @walk ~ (tail (cn (newmatrix out)))
+
+// Look up an index in a list.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (i out))
+  & i ~ *
+  & out ~ *
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_zero @get_succ) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_succ = (j (h (t out)))
+  & h ~ *
+  & @get ~ (t (j out))
+
+// Set one cell in the matrix, selecting its row and then its column.
+@setmatrix = ((?((@sm_nil @sm_cons) (pl (x (y out)))) pl) (x (y out)))
+
+@sm_nil = (* (x (y out)))
+  & x ~ *
+  & y ~ *
+  & out ~ (0 *)
+
+@sm_cons = (* ((row tail) (x (y out))))
+  & x ~ ?((@sm_zero @sm_succ) (row (tail (y out))))
+
+@sm_zero = (row (tail (y out)))
+  & @setlist ~ (row (y (1 newrow)))
+  & out ~ (1 (newrow tail))
+
+@sm_succ = (j (row (tail (y out))))
+  & @setmatrix ~ (tail (j (y rest)))
+  & out ~ (1 (row rest))
+
+// Set an indexed element in a list.
+@setlist = ((?((@sl_nil @sl_cons) (pl (i (v out)))) pl) (i (v out)))
+
+@sl_nil = (* (i (v out)))
+  & i ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@sl_cons = (* ((head tail) (i (v out))))
+  & i ~ ?((@sl_zero @sl_succ) (head (tail (v out))))
+
+@sl_zero = (head (tail (v out)))
+  & head ~ *
+  & out ~ (1 (v tail))
+
+@sl_succ = (j (head (tail (v out))))
+  & @setlist ~ (tail (j (v rest)))
+  & out ~ (1 (head rest))
+
+// Scan matrix rows and columns in ascending order, accumulating edges in reverse.
+@scanrows = ((?((@rows_nil @rows_cons) (pl (x (acc out)))) pl) (x (acc out)))
+
+@rows_nil = (* (x (acc out)))
+  & x ~ *
+  & @rev ~ (acc ((0 *) out))
+
+@rows_cons = (* ((row tail) (x (acc out))))
+  & x ~ {xrow xnext}
+  & @scanrow ~ (row (xrow (0 (acc rowacc))))
+  & @scanrows ~ (tail ($([+1] xnext) (rowacc out)))
+
+@scanrow = ((?((@sr_nil @sr_cons) (pl (x (y (acc out))))) pl) (x (y (acc out))))
+
+@sr_nil = (* (x (y (acc out))))
+  & x ~ *
+  & y ~ *
+  & acc ~ out
+
+@sr_cons = (* ((bit tail) (x (y (acc out)))))
+  & bit ~ ?((@bit_zero @bit_one) (x (y (tail (acc out)))))
+
+@bit_zero = (x (y (tail (acc out))))
+  & @scanrow ~ (tail (x ($([+1] y) (acc out))))
+
+@bit_one = (k (x (y (tail (acc out)))))
+  & k ~ *
+  & x ~ {xp xr}
+  & y ~ {yp yr}
+  & @scanrow ~ (tail (xr ($([+1] yr) (acc rest))))
+  & out ~ (1 ((xp yp) rest))
+
+// Reverse the accumulated edges to obtain lexicographic order.
+@rev = ((?((@rev_nil @rev_cons) (pl (acc out))) pl) (acc out))
+
+@rev_nil = (* (acc out))
+  & acc ~ out
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

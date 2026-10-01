@@ -1,0 +1,28 @@
+{"event": "start", "word": "limit", "note": "word 1/10; library = netlib + 5 base words", "t": 1790775869.544675, "iso": "09:44:29"}
+{"event": "verify", "word": "limit", "pass": true, "secs": 21.9, "n_pass": 15, "first_fail": [], "t": 1790775896.470161, "iso": "09:44:56"}
+{"event": "end", "word": "limit", "note": "passed first attempt; block entry written at design time in lang.ENTRIES", "lines": 4, "chars": 227, "t": 1790775904.3063009, "iso": "09:45:04"}
+{"event": "start", "word": "pair", "note": "word 2/10; reuses scan_net+bank (limit)", "t": 1790775904.556669, "iso": "09:45:04"}
+{"event": "verify", "word": "pair", "pass": true, "secs": 23.3, "n_pass": 12, "first_fail": [], "t": 1790775928.2717571, "iso": "09:45:28"}
+{"event": "end", "word": "pair", "note": "passed first attempt (verify ran 09:4x; end event logged late due to a shell glitch in my batch call)", "lines": 4, "chars": 253, "t": 1790775946.2293959, "iso": "09:45:46"}
+{"event": "note", "word": "apart,vip,stagger", "note": "shell glitch: start/end/verify events not logged for these three, code was written in one batch call with pair; the verify events below are their first verify runs", "t": 1790775946.705635, "iso": "09:45:46"}
+{"event": "verify", "word": "apart", "pass": true, "secs": 24.5, "n_pass": 12, "first_fail": [], "t": 1790775971.970572, "iso": "09:46:11"}
+{"event": "verify", "word": "vip", "pass": true, "secs": 20.0, "n_pass": 12, "first_fail": [], "t": 1790775992.428437, "iso": "09:46:32"}
+{"event": "verify", "word": "stagger", "pass": true, "secs": 21.2, "n_pass": 12, "first_fail": [], "t": 1790776014.000899, "iso": "09:46:54"}
+{"event": "end", "word": "apart", "note": "passed on first verify (see glitch note)", "lines": 3, "chars": 130, "t": 1790776027.2680871, "iso": "09:47:07"}
+{"event": "end", "word": "vip", "note": "first verify pass", "lines": 2, "chars": 69, "t": 1790776027.7584908, "iso": "09:47:07"}
+{"event": "end", "word": "stagger", "note": "first verify pass", "lines": 3, "chars": 144, "t": 1790776028.234289, "iso": "09:47:08"}
+{"event": "start", "word": "headseat", "note": "word 6/10; needs a NEW fragment: two-pass (fold_bank_net was written in the infra phase but never run)", "t": 1790776028.5367649, "iso": "09:47:08"}
+{"event": "verify", "word": "headseat", "pass": true, "secs": 5.5, "n_pass": 3, "first_fail": [], "t": 1790776034.4695308, "iso": "09:47:14"}
+{"event": "end", "word": "headseat", "note": "first verify pass; new fragment two_pass (helper counted in lines/chars)", "lines": 9, "chars": 739, "t": 1790776043.2317362, "iso": "09:47:23"}
+{"event": "start", "word": "bigfirst", "note": "word 7/10; reuses two_pass", "t": 1790776043.4852638, "iso": "09:47:23"}
+{"event": "verify", "word": "bigfirst", "pass": true, "secs": 5.7, "n_pass": 3, "first_fail": [], "t": 1790776049.638746, "iso": "09:47:29"}
+{"event": "end", "word": "bigfirst", "note": "first verify pass", "lines": 3, "chars": 160, "t": 1790776066.096907, "iso": "09:47:46"}
+{"event": "start", "word": "waitlist", "note": "word 8/10; bank, like limit/pair", "t": 1790776066.375415, "iso": "09:47:46"}
+{"event": "verify", "word": "waitlist", "pass": true, "secs": 21.5, "n_pass": 12, "first_fail": [], "t": 1790776088.6204731, "iso": "09:48:08"}
+{"event": "end", "word": "waitlist", "note": "first verify pass", "lines": 2, "chars": 138, "t": 1790776088.9697669, "iso": "09:48:08"}
+{"event": "start", "word": "snake", "note": "word 9/10; first word using position (pos) in the key", "t": 1790776089.177217, "iso": "09:48:09"}
+{"event": "verify", "word": "snake", "pass": true, "secs": 21.4, "n_pass": 15, "first_fail": [], "t": 1790776110.996184, "iso": "09:48:30"}
+{"event": "end", "word": "snake", "note": "first verify pass", "lines": 4, "chars": 176, "t": 1790776117.501339, "iso": "09:48:37"}
+{"event": "start", "word": "sectionlead", "note": "word 10/10; two_pass + pos", "t": 1790776117.806211, "iso": "09:48:37"}
+{"event": "verify", "word": "sectionlead", "pass": true, "secs": 27.6, "n_pass": 15, "first_fail": [], "t": 1790776145.854872, "iso": "09:49:05"}
+{"event": "end", "word": "sectionlead", "note": "first verify pass", "lines": 4, "chars": 313, "t": 1790776154.539444, "iso": "09:49:14"}

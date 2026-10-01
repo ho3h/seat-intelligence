@@ -1,0 +1,77 @@
+@prog = (input output)
+  & input ~ ((c attrs) *)
+  & @collect ~ (c (attrs ((0 *) output)))
+
+@collect = (c (attrs (acc out)))
+  & attrs ~ (?((@coll_nil @coll_cons) (c (acc out))) *)
+
+@coll_nil = (c (acc out))
+  & * ~ c
+  & out ~ acc
+
+@coll_cons = (* (((n (k v)) tail) (c (acc out))))
+  & {c1 c2} ~ c
+  & @get_cid ~ (n (c1 cid_val))
+  & cid_val ~ (cid *)
+  & @collect ~ (c2 (tail (rec_acc out)))
+  & @insert_pair ~ (((cid (k v)) *) (acc rec_acc))
+
+@get_cid = (n (c out))
+  & n ~ ?((@gc_z @gc_s) (c out))
+
+@gc_z = (c out)
+  & c ~ (h t)
+  & * ~ t
+  & out ~ h
+
+@gc_s = (((n_p out) c) *)
+  & @get_cid ~ (n_p (c out))
+
+@insert_pair = (item list_out)
+  & item ~ ((cid (k v)) _)
+  & list_out ~ (list out)
+  & list ~ (?((@ins_nil @ins_cons) out) *)
+
+@ins_nil = (cid k v out)
+  & out ~ (1 (((cid (k v)) (0 *)) *))
+
+@ins_cons = (* (((cid2 (k2 v2)) rest) (cid k v out)))
+  & {c1 c_rest} ~ cid
+  & {c2_1 c2_rest} ~ cid2
+  & c1 ~ $([<] $(c2_1 cmp_c))
+  & cmp_c ~ (?((@ins_lt @ins_ge) ((c_rest c2_rest k k2 v v2 rest out)) *)
+
+@ins_lt = ((c_rest c2_rest k k2 v v2 rest out))
+  & out ~ (1 (((c_rest (k v)) cont) *))
+  & @insert_pair ~ (((c2_rest (k2 v2)) *) (rest cont))
+
+@ins_ge = ((c_rest c2_rest k k2 v v2 rest out))
+  & c_rest ~ $([=] $(c2_rest ceq))
+  & ceq ~ (?((@ins_eq @ins_gt) ((c_rest c2_rest k k2 v v2 rest out)) *)
+
+@ins_eq = ((c_rest c2_rest k k2 v v2 rest out))
+  & k ~ $([=] $(k2 keq))
+  & keq ~ (?((@ins_same @ins_diff) ((c_rest c2_rest k v v2 rest out)) *)
+
+@ins_same = ((c_rest c2_rest k v v2 rest out))
+  & v ~ $([<] $(v2 vmin))
+  & vmin ~ (?((@use_v @use_v2) ((c_rest c2_rest k v v2 rest out))) *)
+
+@use_v = ((c_rest c2_rest k v v2 rest out))
+  & * ~ v2
+  & out ~ (1 (((c_rest (k v)) cont) *))
+  & @insert_pair ~ (((c2_rest (k2 v2)) *) (rest cont))
+
+@use_v2 = ((c_rest c2_rest k v v2 rest out))
+  & * ~ v
+  & out ~ (1 (((c_rest (k v2)) cont) *))
+  & @insert_pair ~ (((c2_rest (k2 v2)) *) (rest cont))
+
+@ins_diff = ((c_rest c2_rest k v v2 rest out))
+  & * ~ v2
+  & out ~ (1 (((c_rest (k v)) cont) *))
+  & @insert_pair ~ (((c2_rest (k2 v2)) *) (rest cont))
+
+@ins_gt = ((c_rest c2_rest k k2 v v2 rest out))
+  & out ~ (1 (((c2_rest (k2 v2)) cont) *))
+  & @insert_pair ~ (((c_rest (k v)) *) (rest cont))

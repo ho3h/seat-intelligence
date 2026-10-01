@@ -1,0 +1,173 @@
+// For k = 0, return immediately. Otherwise, sort while retaining at most
+// the first k elements in every merge.
+@prog = ((k cands) out)
+  & k ~ ?((@prog_zero @prog_pos) (cands out))
+
+@prog_zero = (cands out)
+  & cands ~ *
+  & out ~ (0 *)
+
+@prog_pos = (n (cands out))
+  & n ~ $([+1] kp)
+  & @msk ~ (cands (kp out))
+
+// Merge sort, retaining at most k elements from each sorted sublist.
+@msk = ((?((@msk_nil @msk_cons) (pl (k out))) pl) (k out))
+
+@msk_nil = (* (pl (k out)))
+  & pl ~ *
+  & k ~ *
+  & out ~ (0 *)
+
+@msk_cons = (* ((h t) (k out)))
+  & @tail_test_k ~ (t (k (h out)))
+
+@tail_test_k = ((?((@msk_one @msk_many) (pl (k (h out)))) pl) (k (h out)))
+
+@msk_one = (* (pl (k (h out))))
+  & pl ~ *
+  & k ~ *
+  & out ~ (1 (h (0 *)))
+
+@msk_many = (* (pl (k (h out))))
+  & k ~ {ka kr}
+  & kr ~ {kb km}
+  & @split_odd ~ ((1 pl) pair)
+  & pair ~ (left right)
+  & @msk ~ ((1 (h left)) (ka sl))
+  & @msk ~ (right (kb sr))
+  & @merge_k ~ (km (sl (sr out)))
+
+// Split a list alternately into two lists.
+@split_odd = ((?((@sp_nil @sp_odd_cons) (pl out)) pl) out)
+@split_even = ((?((@sp_nil @sp_even_cons) (pl out)) pl) out)
+
+@sp_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@sp_odd_cons = (* ((h t) out))
+  & @split_even ~ (t pair)
+  & pair ~ (left right)
+  & out ~ (left (1 (h right)))
+
+@sp_even_cons = (* ((h t) out))
+  & @split_odd ~ (t pair)
+  & pair ~ (left right)
+  & out ~ ((1 (h left)) right)
+
+// Merge two sorted lists, producing at most k elements.
+@merge_k = (k (a (b out)))
+  & k ~ ?((@mk_zero @mk_pos) (a (b out)))
+
+@mk_zero = (a (b out))
+  & a ~ *
+  & b ~ *
+  & out ~ (0 *)
+
+@mk_pos = (n (a (b out)))
+  & @merge_body ~ (a (n (b out)))
+
+@merge_body = ((?((@mb_a_nil @mb_a_cons) (pl (n (b out)))) pl) (n (b out)))
+
+@mb_a_nil = (* (pl (n (b out))))
+  & pl ~ *
+  & @take_one_more ~ (n (b out))
+
+@mb_a_cons = (* ((ha ta) (n (b out))))
+  & @mb_b ~ (b (ha (ta (n out))))
+
+@mb_b = ((?((@mb_b_nil @mb_b_cons) (pl (ha (ta (n out)))) pl) (ha (ta (n out))))
+
+@mb_b_nil = (* (pl (ha (ta (n out)))))
+  & pl ~ *
+  & @take_one_more ~ (n ((1 (ha ta)) out))
+
+@mb_b_cons = (* ((hb tb) (ha (ta (n out)))))
+  & @before ~ (ha (hb before))
+  & before ~ ?((@mb_choose_b @mb_choose_a) (n (ha (ta (hb (tb out))))))
+
+@mb_choose_a = (n (ha (ta (hb (tb out)))))
+  & @merge_k ~ (n (ta ((1 (hb tb)) rest)))
+  & out ~ (1 (ha rest))
+
+@mb_choose_b = (n (ha (ta (hb (tb out)))))
+  & @merge_k ~ (n ((1 (ha ta)) (tb rest)))
+  & out ~ (1 (hb rest))
+
+// Take the first n elements of a list.
+@take = (n (list out))
+  & n ~ ?((@take_zero @take_pos) (list out))
+
+@take_zero = (list out)
+  & list ~ *
+  & out ~ (0 *)
+
+@take_pos = (n (list out))
+  & @take_list ~ (list (n out))
+
+@take_list = ((?((@take_nil @take_cons) (pl (n out))) pl) (n out))
+
+@take_nil = (* (n out))
+  & n ~ *
+  & out ~ (0 *)
+
+@take_cons = (* ((head tail) (n out)))
+  & @take ~ (n (tail rest))
+  & out ~ (1 (head rest))
+
+// Take one element plus up to n more.
+@take_one_more = (n (list out))
+  & @tom_list ~ (list (n out))
+
+@tom_list = ((?((@tom_nil @tom_cons) (pl (n out))) pl) (n out))
+
+@tom_nil = (* (n out))
+  & n ~ *
+  & out ~ (0 *)
+
+@tom_cons = (* ((head tail) (n out)))
+  & @take ~ (n (tail rest))
+  & out ~ (1 (head rest))
+
+// Return 1 if cand sorts before head: descending score, then ascending u and v.
+@before = (cand (head out))
+  & cand ~ (cu (cv cs))
+  & head ~ (hu (hv hs))
+  & cs ~ {csg cse}
+  & hs ~ {hsg hse}
+  & csg ~ $([>] $(hsg gt))
+  & cse ~ $([=] $(hse eq))
+  & gt ~ ?((@before_score_no @before_true) (payload out))
+  & payload ~ (eq (cu (cv (hu hv))))
+
+@before_score_no = (payload out)
+  & payload ~ (eq (cu (cv (hu hv))))
+  & eq ~ ?((@before_false @before_score_equal) (payload2 out))
+  & payload2 ~ (cu (cv (hu hv)))
+
+@before_score_equal = (* (payload out))
+  & payload ~ (cu (cv (hu hv)))
+  & cu ~ {cult cueq}
+  & hu ~ {hult hueq}
+  & cult ~ $([<] $(hult lt))
+  & cueq ~ $([=] $(hueq eq))
+  & lt ~ ?((@before_u_no @before_true) (payload2 out))
+  & payload2 ~ (eq (cv hv))
+
+@before_u_no = (payload out)
+  & payload ~ (eq (cv hv))
+  & eq ~ ?((@before_false @before_u_equal) (payload2 out))
+  & payload2 ~ (cv hv)
+
+@before_u_equal = (* (payload out))
+  & payload ~ (cv hv)
+  & cv ~ $([<] $(hv lt))
+  & lt ~ ?((@before_false @before_true) (* out))
+
+@before_true = (* (payload out))
+  & payload ~ *
+  & out ~ 1
+
+@before_false = (payload out)
+  & payload ~ *
+  & out ~ 0

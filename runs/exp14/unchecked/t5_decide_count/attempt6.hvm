@@ -1,0 +1,29 @@
+@prog = ((tau cands) out)
+  & @go ~ (cands (tau (0 out)))
+@go = (list state)
+  & list ~ ?((@stop @next) state)
+@stop = (state s)
+  & s ~ (tau (acc out))
+  & tau ~ *
+  & out ~ acc
+@next = (* (tail s))
+  & s ~ (tau (acc out))
+  & tau ~ {tau1 tau2}
+  & tau1 ~ *
+  & tail ~ (u_v_score rest)
+  & u_v_score ~ (u v_score_pair)
+  & u ~ *
+  & v_score_pair ~ (v score)
+  & v ~ *
+  & tau2 ~ {tau2a tau2b}
+  & tau2a ~ $([>] $(score cond))
+  & cond ~ ?((@skip @incr) (rest (tau2b (acc out))))
+@skip = (rest s)
+  & s ~ (tau (acc out))
+  & @go ~ (rest (tau (acc out)))
+@incr = (* ((rest s) z))
+  & z ~ *
+  & s ~ (tau (acc out))
+  & tau ~ *
+  & acc ~ $([+] $(1 new_acc))
+  & @go ~ (rest (tau (new_acc out)))

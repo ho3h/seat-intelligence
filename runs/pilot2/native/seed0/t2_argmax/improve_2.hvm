@@ -1,0 +1,42 @@
+// @prog = (input output)
+@prog = (l out)
+  & @arg_top ~ (l out)
+
+@arg_top = ((?((@top_nil @top_cons) (pl out)) pl) out)
+
+@top_nil = (* out)
+  & out ~ 0
+
+@top_cons = (* ((h t) out))
+  & @arg ~ (t (m i))
+  & h ~ $([<] $(m z))
+  & z ~ ?((@top_head @top_tail) (i out))
+
+@top_head = (* (i out))
+  & i ~ *
+  & out ~ 0
+
+@top_tail = (* (i out))
+  & i ~ $([+1] j)
+  & out ~ j
+
+@arg = ((?((@arg_nil @arg_cons) (pl out)) pl) out)
+
+@arg_nil = (* out)
+  & out ~ (0 0)
+
+@arg_cons = (* ((h t) out))
+  & h ~ {hc hv}
+  & @arg ~ (t (tailmax tailidx))
+  & tailmax ~ {tc tv}
+  & hc ~ $([<] $(tc z))
+  & z ~ ?((@arg_head @arg_tail) (hv (tv (tailidx out))))
+
+@arg_head = (hv (tv (ti out)))
+  & tv ~ *
+  & ti ~ *
+  & out ~ (hv 0)
+
+@arg_tail = (* (hv (tv (ti out))))
+  & hv ~ *
+  & out ~ (tv $([+1] ti))

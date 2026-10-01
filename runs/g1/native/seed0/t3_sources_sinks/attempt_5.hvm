@@ -1,0 +1,41 @@
+// For each vertex, scan the edge list and record whether it has any
+// incoming or outgoing edges.
+
+@prog = ((n edges) out)
+  & @verts ~ (n (0 (edges (0 (0 out)))))
+
+@verts = (?((@vdone @vstep) ctx) ctx)
+
+@vdone = (i (edges (src (sink out))))
+  & i ~ *
+  & edges ~ *
+  & out ~ (src sink)
+
+@vstep = (rem (i (edges (src (sink out)))))
+  & edges ~ {scan_edges master}
+  & @scan ~ (scan_edges (i (0 (0 (rem (master (src (sink out)))))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl ctx)) pl) ctx)
+
+@scan_nil = (pl ctx)
+  & pl ~ *
+  & @after ~ ctx
+
+@scan_cons = (* (pl ctx))
+  & pl ~ ((u v) tail)
+  & ctx ~ (i (fi (fo (rem (master (src (sink out)))))))
+  & i ~ {iu irest}
+  & irest ~ {iv ikeep}
+  & u ~ $([=] $(iu z_out))
+  & v ~ $([=] $(iv z_in))
+  & fo ~ $([|] $(z_out fo_next))
+  & fi ~ $([|] $(z_in fi_next))
+  & @scan ~ (tail (ikeep (fi_next (fo_next (rem (master (src (sink out))))))))
+
+@after = (i (fi (fo (rem (master (src (sink out)))))))
+  & fi ~ $([=] $(0 no_in))
+  & fo ~ $([=] $(0 no_out))
+  & src ~ $([+] $(no_in src_next))
+  & sink ~ $([+] $(no_out sink_next))
+  & i ~ $([+1] i_next)
+  & @verts ~ (rem (i_next (master (src_next (sink_next out)))))

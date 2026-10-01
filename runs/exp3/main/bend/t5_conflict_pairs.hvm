@@ -1,0 +1,73 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_tree__C2 = (a ({$([-] $(d {$([=0x0000000] ?(((a_q443 ({$([=0x0000001] ?((@build_tree__C2 @build_tree__C3) (a_q443 (b_q443 c_q443)))) b_q443} c_q443)) @build_tree__C5) (c (b_q417 (g h))))) b_q417})) $([:/0x0000002] {{$([=0x0000000] ?(((a_q447 ({$([=0x0000001] ?((@build_tree__C2 @build_tree__C3) (a_q447 (b_q447 c_q447)))) b_q447} c_q447)) @build_tree__C5) (a (b_q418 (f c))))) b_q418} d})} ((0 (f g)) h)))
+
+@build_tree__C3 = (* (((?((((1 (0 0)) @List/Nil) (* (a_q441_q453 (b_q441_q453 ((1 (a_q441_q453 0)) b_q441_q453))))) a_q453) a_q453) a) (* a)))
+
+@build_tree__C4 = (a ({$([=0x0000001] ?((@build_tree__C2 @build_tree__C3) (a (b c)))) b} c))
+
+@build_tree__C5 = (* (a (* (0 a))))
+
+@collect_violations__C0 = (a (b (* ((@collect_violations__C3 (a (b c_q419))) c_q419))))
+
+@collect_violations__C1 = (* (b (c (a ((@collect_violations__C3 (b (c e))) ((1 (a (e c_i39))) c_i39))))))
+
+@collect_violations__C2 = (* ({(c f) j} (k ({a {d h}} ({{$([=0x0000001] ?((@tree_get__C2 @tree_get__C3) (a (b_q421 (c $([=] $(g ?((@collect_violations__C0 @collect_violations__C1) (h (i (j (k l)))))))))))) b_q421} {{$([=0x0000001] ?((((* (d_q459 e_q459)) ({b_q459 $([:/0x0000002] {a_q459 f_q459})} ({$([<] $(a_q459 ?((@tree_get__C0 @tree_get__C1) (b_q459 (c_q459 (d_q459 (e_q459 (f_q459 g_q459)))))))) c_q459} g_q459))) @tree_get__C3) (d (b_q422 (f g))))) b_q422} i}} l)))))
+
+@collect_violations__C3 = (?(((* (* @List/Nil)) @collect_violations__C2) a) a)
+
+@list_length__C0 = (* (* ((@list_length__C1 $([+0x0000001] c)) c)))
+
+@list_length__C1 = (?((0 @list_length__C0) a) a)
+
+@merge_pairs__C0 = (b (c (a (e ((1 (a (f c_i40))) c_i40)))))
+  & ?(((a_q425 a_q425) @merge_pairs__C5) (b (c (e f)))) ~ 1
+
+@merge_pairs__C1 = (* (a ((@merge_pairs__C6 (((1 (c (d c_i43))) c_i43) f)) (c (d ((1 (a (f c_i42))) c_i42))))))
+
+@merge_pairs__C2 = @List/Cons
+
+@merge_pairs__C3 = (* ({({a_i44 d_i44} e_i44) e} (f ({({$([<] $(a_i44 ?((@pair_leq__C1 (* (* (* (* (* 1)))))) (b_i44 (c_i44 (d_i44 (e_i44 $([=0x0000001] ?((@merge_pairs__C0 @merge_pairs__C1) (c (d (e (f g))))))))))))) b_i44} c_i44) c} (d g)))))
+
+@merge_pairs__C4 = (?((@merge_pairs__C2 @merge_pairs__C3) a) a)
+
+@merge_pairs__C5 = (* (a (b ((@merge_pairs__C4 (a (b c))) c))))
+
+@merge_pairs__C6 = (?(((a a) @merge_pairs__C5) b) b)
+
+@merge_sort__C0 = @List/Cons
+
+@merge_sort__C1 = (* (* (* (a (b h)))))
+  & ?((@split_pairs__C2 (* (c_q457 (d_q457 (?((@split_pairs__C1_z @split_pairs__C0_s) (a_q457 (b_q457 (c_q457 (d_q457 e_q457))))) (a_q457 (b_q457 e_q457))))))) (a (b (0 (@List/Nil (@List/Nil (((?((@List/Nil @merge_sort__C3) a_q456) a_q456) (@merge_pairs__C6 (g h))) ((?((@List/Nil @merge_sort__C3) a_q463) a_q463) g)))))))) ~ 1
+
+@merge_sort__C2 = (?((@merge_sort__C0 @merge_sort__C1) a) a)
+
+@merge_sort__C3 = (* (a ({(@merge_sort__C2 (a (b c))) b} c)))
+
+@merge_sort__C4 = (?((@List/Nil @merge_sort__C3) a) a)
+
+@pair_leq__C0 = (* ($([>] $(a $([=0x0000000] ?((0 (* 1)) c)))) (a c)))
+
+@pair_leq__C1 = ($([=] $(a ?(((* (* 0)) @pair_leq__C0) (b c)))) (b (a c)))
+
+@prog = (({b (@list_length__C1 {{$([=0x0000000] ?((@build_tree__C4 @build_tree__C5) (b (b_q433 (d *))))) b_q433} e})} (@collect_violations__C3 (d (e (@merge_sort__C4 h))))) h)
+
+@split_pairs__C2 = (* (a (b (a b))))
+
+@split_pairs__C3 = (* (c (d (?((@split_pairs__C1_z @split_pairs__C0_s) (a (b (c (d e))))) (a (b e))))))
+
+@split_pairs__C4 = (?((@split_pairs__C2 @split_pairs__C3) a) a)
+
+@tree_get__C0 = ($([-] $(b {$([=0x0000001] ?((@tree_get__C2 @tree_get__C3) (a (b_q438 (e f))))) b_q438})) ($([-] $(d e)) (* (a ({b d} f)))))
+
+@tree_get__C1 = (* (* (c (a (* ({$([=0x0000001] ?((@tree_get__C2 @tree_get__C3) (a (b_q439 (c d))))) b_q439} d))))))
+
+@tree_get__C2 = ((* (d e)) ({b $([:/0x0000002] {a f})} ({$([<] $(a ?((@tree_get__C0 @tree_get__C1) (b (c (d (e (f g)))))))) c} g)))
+
+@tree_get__C3 = (* ((* (a *)) (* (* a))))
+
+@split_pairs__C1_z = (c (e (b ((@split_pairs__C4 (1 (((1 (b (c c_i47))) c_i47) (e f)))) f))))
+
+@split_pairs__C0_s = (* (b (d (c ((@split_pairs__C4 (0 (b (((1 (c (d c_i46))) c_i46) f)))) f)))))

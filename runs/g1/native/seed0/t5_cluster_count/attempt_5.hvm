@@ -1,0 +1,103 @@
+// Build labels 0..n-1, then union the endpoints of each edge.
+@prog = ((n pairs) out)
+  & n ~ {n_build n_count}
+  & @build ~ (n_build labels)
+  & @edges ~ (pairs (labels (n_count out)))
+
+@build = (n out)
+  & n ~ ?((@build_zero @build_succ) out)
+
+@build_zero = out
+  & out ~ (0 *)
+
+@build_succ = (k out)
+  & @build ~ (k tail)
+  & @shift ~ (tail shifted)
+  & out ~ (1 (0 shifted))
+
+// Increment every label in a list.
+@shift = ((?((@shift_nil @shift_cons) (pl out)) pl) out)
+
+@shift_nil = (* out)
+  & out ~ (0 *)
+
+@shift_cons = (* ((h t) out))
+  & h ~ $([+1] h1)
+  & @shift ~ (t tail)
+  & out ~ (1 (h1 tail))
+
+// Process the edge list.
+@edges = ((?((@edges_nil @edges_cons) (pl (labels (count out)))) pl) (labels (count out)))
+
+@edges_nil = (* (labels (count out)))
+  & labels ~ *
+  & out ~ count
+
+@edges_cons = (* ((u v) (tail (labels (count out)))))
+  & @lookup ~ (labels (u got1))
+  & got1 ~ (a labels1)
+  & @lookup ~ (labels1 (v got2))
+  & got2 ~ (b labels2)
+  & @compare ~ (a (b (tail (labels2 (count out)))))
+
+@compare = (a (b state))
+  & a ~ {a_cmp a_keep}
+  & b ~ {b_cmp b_keep}
+  & a_cmp ~ $([=] $(b_cmp eq))
+  & eq ~ ?((@same @different) (a_keep (b_keep state)))
+
+@same = (old (new state))
+  & old ~ *
+  & new ~ *
+  & @edges ~ (tail state)
+
+@different = (* (old (new (tail (labels (count out))))))
+  & @replace ~ (labels (old (new mapped)))
+  & count ~ $([-1] count1)
+  & @edges ~ (tail (mapped (count1 out)))
+
+// Return the label at an index, along with the list rebuilt unchanged.
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_at @lookup_after) (h (t out)))
+
+@lookup_at = (h (t out))
+  & h ~ {hv hl}
+  & out ~ (hv (1 (hl t)))
+
+@lookup_after = (k (h (t out)))
+  & h ~ {h_rec h_head}
+  & @lookup ~ (t (k got))
+  & got ~ (value rebuilt)
+  & out ~ (value (1 (h_head rebuilt)))
+
+// Replace every occurrence of old with new.
+@replace = ((?((@replace_nil @replace_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@replace_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@replace_cons = (* ((h t) (old (new out))))
+  & @replace_step ~ (h (t (old (new out))))
+
+@replace_step = (h (t (old (new out))))
+  & h ~ {h_cmp h_keep}
+  & old ~ {old_cmp old_next}
+  & new ~ {new_head new_next}
+  & h_cmp ~ $([=] $(old_cmp eq))
+  & eq ~ ?((@replace_no @replace_yes) (h_keep (t (old_next (new_head (new_next out))))))
+
+@replace_no = (h (t (old (new_head (new out)))))
+  & new_head ~ *
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@replace_yes = (* (h (t (old (new_head (new out))))))
+  & h ~ *
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (new_head rest))

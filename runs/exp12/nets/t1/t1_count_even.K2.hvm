@@ -1,0 +1,32 @@
+@prog = (l out)
+  & @ce ~ (l out)
+
+@ce = (lv1 out)
+  & @ce_cons_lw ~ (lv1 out)
+
+@ce_nil = (* out)
+  & out ~ 0
+
+@ce_cons = (* ((h1 lv2) out))
+  & @ce_more_lw ~ (lv2 (h1 out))
+
+@ce_last = (* (h1 out))
+  & h1 ~ $([&] $(1 p))
+  & p ~ $([^] $(1 out))
+
+@ce_more = (* (($([&] $(1 $([^] $(1 i2)))) t2) ($([&] $(1 $([^] $(1 $([+] $(i2 pairinc)))))) out)))
+  & @ce_cons_lw ~ (t2 $([+] $(pairinc out)))
+
+@ce_cons_lw = (ls22 q13)
+  & ls22 ~ (g19 (e17 (g20 (e18 tk21))))
+  & g19 ~ ?((@ce_nil @ce_cons_la) ((e17 (q15 q16)) q13))
+  & g20 ~ ?((@ce_last @ce_more) ((e18 tk21) (q15 q16)))
+
+@ce_more_lw = (ls33 (q24 q25))
+  & ls33 ~ (g30 (e28 (g31 (e29 tk32))))
+  & g30 ~ ?((@ce_last @ce_more_la) ((e28 q27) (q24 q25)))
+  & g31 ~ ?((@ce_nil @ce_cons) ((e29 tk32) q27))
+
+@ce_cons_la = (* ((h1 (h1 out)) out))
+
+@ce_more_la = (* (($([&] $(1 $([^] $(1 i2)))) $([+] $(pairinc out))) ($([&] $(1 $([^] $(1 $([+] $(i2 pairinc)))))) out)))

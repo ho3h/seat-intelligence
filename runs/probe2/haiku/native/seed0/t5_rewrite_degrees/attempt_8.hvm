@@ -1,0 +1,55 @@
+@prog = (input output)
+  & input ~ (c (e _))
+  & _ ~ *
+  & @proc_edges ~ (c (e (0 output)))
+
+@proc_edges = (c (e (rewrites output)))
+  & e ~ ?((@no_edges @next_edge) ((c (rewrites output))))
+
+@no_edges = (c (rewrites output))
+  & c ~ *
+  & rewrites ~ output
+
+@next_edge = (* ((u v) (tail (c (rewrites output)))))
+  & {c1 c2} ~ c
+  & @lookup ~ (c1 (u (cu_val *)))
+  & @lookup ~ (c2 (v (cv_val *)))
+  & cu_val ~ (cu_a (cu_b *))
+  & cv_val ~ (cv_a (cv_b *))
+  & eq_check ~ $([!] $(cv_a eq_branch))
+  & cu_a ~ eq_check
+  & eq_branch ~ ?((@branch_skip @branch_add) ((cu_b (cv_b (tail (rewrites output))))))
+
+@branch_skip = (cu (cv (tail (rewrites output))))
+  & cu ~ *
+  & cv ~ *
+  & @proc_edges ~ (tail (rewrites output))
+
+@branch_add = (* ((cu (cv (tail (rewrites output))))))
+  & lt_check ~ $([<] $(cv lt_branch))
+  & cu ~ lt_branch
+  & lt_branch ~ ?((@add_cu_cv @add_cv_cu) ((cv (tail (rewrites output)))))
+
+@add_cu_cv = (cv (tail (rewrites output)))
+  & {cu1 cu2} ~ cu
+  & rewrites_new ~ (1 ((cu1 (cv rewrites))))
+  & @proc_edges ~ (tail (rewrites_new output))
+
+@add_cv_cu = (* ((cv (tail (rewrites output)))))
+  & {cu1 cu2} ~ cu
+  & rewrites_new ~ (1 ((cv (cu1 rewrites))))
+  & @proc_edges ~ (tail (rewrites_new output))
+
+@lookup = (lst (idx result))
+  & idx ~ ?((@lz @ls) ((lst result)))
+
+@lz = (ctx)
+  & ctx ~ (lst result)
+  & lst ~ (h t)
+  & t ~ *
+  & h ~ result
+
+@ls = (pred (lst result))
+  & lst ~ (h t)
+  & h ~ *
+  & @lookup ~ (t (pred result))

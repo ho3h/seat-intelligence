@@ -1,0 +1,69 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_neighbors = (a ((@add_neighbors__C5 (a b)) b))
+
+@add_neighbors__C0 = (a (c (b (* d))))
+  & @add_neighbors ~ (a (b (c d)))
+
+@add_neighbors__C1 = (* (a (d (b (c f)))))
+  & @add_neighbors ~ (a (b (e f)))
+  & @List/Cons ~ (c (d e))
+
+@add_neighbors__C2 = ({a b} (c (d (e ($([=] $(a ?((@add_neighbors__C0 @add_neighbors__C1) (b (c (d (e f))))))) f)))))
+
+@add_neighbors__C3 = (* (a (d (b (* (c f))))))
+  & @add_neighbors ~ (a (b (e f)))
+  & @List/Cons ~ (c (d e))
+
+@add_neighbors__C4 = (* (({$([=] $(a ?((@add_neighbors__C2 @add_neighbors__C3) (b (c (d (e (f g)))))))) e} f) (d ({a b} (c g)))))
+
+@add_neighbors__C5 = (?(((* (a a)) @add_neighbors__C4) b) b)
+
+@answer_queries = ((@answer_queries__C3 a) a)
+
+@answer_queries__C0 = ({g d} (f (a (c i))))
+  & @List/Cons ~ (e (h i))
+  & @search ~ (b (@List/Nil (c (d e))))
+  & @List/Cons ~ (a (@List/Nil b))
+  & @answer_queries ~ (f (g h))
+
+@answer_queries__C1 = (* (b (a (* (* d)))))
+  & @List/Cons ~ (1 (c d))
+  & @answer_queries ~ (a (b c))
+
+@answer_queries__C2 = (* (({$([=] $(a ?((@answer_queries__C0 @answer_queries__C1) (b (c (d (e f))))))) d} {a e}) (c (b f))))
+
+@answer_queries__C3 = (?(((* @List/Nil) @answer_queries__C2) a) a)
+
+@contains = (a ((@contains__C2 (a b)) b))
+
+@contains__C0 = a
+  & @contains ~ a
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@prog = ((* (b a)) c)
+  & @answer_queries ~ (a (b c))
+
+@search = ((@search__C4 a) a)
+
+@search__C0 = (f (h ({i b} ({e a} (c j)))))
+  & @search ~ (d (g (h (i j))))
+  & @add_neighbors ~ (a (b (c d)))
+  & @List/Cons ~ (e (f g))
+
+@search__C1 = (* (b (c (d (* (a e))))))
+  & @search ~ (a (b (c (d e))))
+
+@search__C2 = ({c b} (d (e ({f a} g))))
+  & @contains ~ (a (b $([=0x0000001] ?((@search__C0 @search__C1) (c (d (e (f g))))))))
+
+@search__C3 = (* ({$([=] $(a ?((@search__C2 (* (* (* (* (* (* 1))))))) (b (c (d (e (f g)))))))) e} (f (b ({a c} (d g))))))
+
+@search__C4 = (?(((* (* (* 0))) @search__C3) a) a)
+
+

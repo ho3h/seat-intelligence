@@ -1,0 +1,56 @@
+// Build a list of n zeros.
+@prog = ((n edges) out)
+  & n ~ {na nb}
+  & @zeros ~ (na ins)
+  & @zeros ~ (nb outs)
+  & @edproc ~ (edges (ins (outs out)))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) (out *))
+
+@zeros_nil = (out *)
+  & out ~ (0 *)
+
+@zeros_succ = (n (out *))
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Increment the element at index idx in list l.
+@inc = (idx (l out))
+  & idx ~ ?((@inc_at @inc_after) (l out))
+
+@inc_at = (l out)
+  & l ~ (?((@inc_nil @inc_head) (payload (out *))) payload)
+
+@inc_nil = (payload (out *))
+  & payload ~ *
+  & out ~ (0 *)
+
+@inc_head = ((head tail) (out *))
+  & head ~ $([+1] newhead)
+  & out ~ (1 (newhead tail))
+
+@inc_after = (idx (l out))
+  & l ~ (?((@inc_after_nil @inc_after_cons) (payload (idx (out *)))) payload)
+
+@inc_after_nil = (payload (idx (out *)))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@inc_after_cons = ((head tail) (idx (out *)))
+  & @inc ~ (idx (tail newtail))
+  & out ~ (1 (head newtail))
+
+// Process the edge list, updating the in- and out-degree lists.
+@edproc = (edges (ins (outs out)))
+  & edges ~ (?((@ep_nil @ep_cons) (payload (ins (outs out)))) payload)
+
+@ep_nil = (payload (ins (outs out)))
+  & payload ~ *
+  & out ~ (ins outs)
+
+@ep_cons = (((u v) tail) (ins (outs out)))
+  & @inc ~ (u (outs outs2))
+  & @inc ~ (v (ins ins2))
+  & @edproc ~ (tail (ins2 (outs2 out)))

@@ -1,0 +1,17 @@
+@prog = (l out)
+  & @rev ~ (l ((0 *) out))
+
+@rev = (lv1 (acc out))
+  & @rev_cons_lw ~ (lv1 (acc out))
+
+@rev_nil = (* (a a))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev_cons_lw ~ (t ((1 (h acc)) out))
+
+@rev_cons_lw = (ls20 (q10 q11))
+  & ls20 ~ (g17 (e15 (g18 (e16 tk19))))
+  & g17 ~ ?((@rev_nil @rev_cons_la) ((e15 (q13 q14)) (q10 q11)))
+  & g18 ~ ?((@rev_nil @rev_cons) ((e16 tk19) (q13 q14)))
+
+@rev_cons_la = (* ((h ((1 (h acc)) out)) (acc out)))

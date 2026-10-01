@@ -1,0 +1,9 @@
+// t5_decide_top_k: placeholder
+@prog_b1s_b2z = (* (0 *))
+@prog_b1s_b2s = (* (lst lst))
+@prog_b1z = (* (0 *))
+@prog_b1s = (k_minus_1 (cands br))
+  & k_minus_1 ~ $([+1] r)
+  & r ~ ?((@prog_b1s_b2z @prog_b1s_b2s) (cands br))
+@prog = ((k cands) br)
+  & k ~ ?((@prog_b1z @prog_b1s) (cands br))

@@ -1,0 +1,60 @@
+
+@prog = ((tau probs) out)
+  & @stream_walk ~ (probs ((0 (0 (0 *))) result))
+  & result ~ (max_val (min_idx *))
+  & tau ~ $([>] $(max_val tau_gt_max))
+  & tau_gt_max ~ ?((@return_abstain @return_idx) (min_idx out))
+
+@return_abstain = (* (min_idx out))
+  & 6 ~ out
+
+@return_idx = (min_idx out)
+  & min_idx ~ out
+
+// Stream walker: processes a list of probabilities
+// State: (idx (max_val (min_idx *)))
+// Element: val
+// Returns: (next_idx (next_max_val (next_min_idx *)))
+
+@stream_walk = (list state result)
+  & list ~ (?((@stream_nil @stream_cons) state) result)
+
+@stream_nil = (* (state result))
+  & state ~ result
+
+@stream_cons = (* ((val tail) state result))
+  & state ~ (idx (max_val (min_idx *)))
+  & idx ~ $([+] $(1 next_idx))
+  & next_idx ~ idx_plus_1
+  & val ~ $([>] $(max_val val_gt_max))
+  & val_gt_max ~ ?((@case_gt @case_le) (idx (max_val (min_idx (tail (idx_plus_1 result))))))
+
+@case_gt = (idx (max_val (min_idx (tail (idx_plus_1 result)))))
+  & * ~ max_val
+  & * ~ min_idx
+  & val ~ new_max
+  & idx ~ new_min_idx
+  & @stream_walk ~ (tail ((idx_plus_1 (new_max (new_min_idx *))) result))
+
+@case_le = (* (idx (max_val (min_idx (tail (idx_plus_1 result))))))
+  & val ~ $([=] $(max_val val_eq_max))
+  & val_eq_max ~ ?((@case_eq @case_lt) (idx (max_val (min_idx (tail (idx_plus_1 result))))))
+
+@case_eq = (idx (max_val (min_idx (tail (idx_plus_1 result)))))
+  & * ~ val
+  & idx ~ $([<] $(min_idx idx_lt_min))
+  & idx_lt_min ~ ?((@case_lt_yes @case_lt_no) (idx (max_val (min_idx (tail (idx_plus_1 result))))))
+
+@case_lt_yes = (idx (max_val (min_idx (tail (idx_plus_1 result)))))
+  & * ~ max_val
+  & idx ~ new_min_idx
+  & @stream_walk ~ (tail ((idx_plus_1 (max_val (new_min_idx *))) result))
+
+@case_lt_no = (* (idx (max_val (min_idx (tail (idx_plus_1 result))))))
+  & * ~ idx
+  & @stream_walk ~ (tail ((idx_plus_1 (max_val (min_idx *))) result))
+
+@case_lt = (* (* (idx (max_val (min_idx (tail (idx_plus_1 result)))))))
+  & * ~ val
+  & * ~ idx
+  & @stream_walk ~ (tail ((idx_plus_1 (max_val (min_idx *))) result))

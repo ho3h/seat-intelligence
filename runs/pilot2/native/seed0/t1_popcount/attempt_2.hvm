@@ -1,0 +1,15 @@
+// @prog receives a number and returns its population count.
+@prog = (input output)
+  & @pc ~ (input output)
+
+@pc = (n output)
+  & n ~ {check {rawbit shifted}}
+  & check ~ ?((@pc_zero (* @pc_more)) (bit (half output)))
+  & rawbit ~ $([&] $(1 bit))
+  & shifted ~ $([>>] $(1 half))
+
+@pc_zero = (* (* 0))
+
+@pc_more = (bit (half output))
+  & @pc ~ (half rest)
+  & bit ~ $([+] $(rest output))

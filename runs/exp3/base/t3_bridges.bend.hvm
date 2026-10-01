@@ -1,0 +1,111 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@count_roots = ({$([=] $(a ?((@count_roots__C2 (* (* (* (* (* (* (* (b b))))))))) (c (d e))))) c} ({a d} e))
+
+@count_roots__C0 = ($([+0x0000001] a) b)
+  & @count_roots ~ (a b)
+
+@count_roots__C1 = (* ({a $([+0x0000001] h)} ({b i} ({c j} (d (e (f (g o))))))))
+  & @count_roots ~ (h (i (j (k (l (m (n o)))))))
+  & @dfs ~ (a (b (c (d (e (f (g (k (l (m n))))))))))
+
+@count_roots__C2 = ({b c} (d (e ({a f} g))))
+  & @get_at ~ (a (b $([=0x0000000] ?((@count_roots__C0 @count_roots__C1) (c (d (e (f g))))))))
+
+@dfs = ({a {d {l h}}} (b ({f c} (g (k ($([+0x0000001] {o {m i}}) p))))))
+  & @scan_neighbors ~ (a (b (e (f (j (n (o p)))))))
+  & @neighbors ~ (c (d e))
+  & @set_at ~ (g (h (i j)))
+  & @set_at ~ (k (l (m n)))
+
+@get_at = ((@get_at__C2 a) a)
+
+@get_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_at ~ (a (b c))
+
+@get_at__C1 = (* (c (d ({$([=0x0000000] ?((@get_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@neighbors = ((@neighbors__C4 a) a)
+
+@neighbors__C0 = (* a)
+  & @List/Cons ~ a
+
+@neighbors__C1 = (a (c ($([=] $(a ?(((* (b b)) @neighbors__C0) (c d)))) d)))
+
+@neighbors__C2 = (* (* (* a)))
+  & @List/Cons ~ a
+
+@neighbors__C3 = (* (({$([=] $(a ?((@neighbors__C1 @neighbors__C2) (b (c (d (g h))))))) c} d) (e ({a {b f}} h))))
+  & @neighbors ~ (e (f g))
+
+@neighbors__C4 = (?(((* @List/Nil) @neighbors__C3) a) a)
+
+@prog = (({a {e c}} b) g)
+  & @count_roots ~ (0 (a (b (d (f (0 (0 g)))))))
+  & @zeros ~ (c d)
+  & @zeros ~ (e f)
+
+@scan_neighbors = (a (b ((@scan_neighbors__C12 (a (b c))) c)))
+
+@scan_neighbors__C0 = (* (a (* a)))
+
+@scan_neighbors__C1 = (* (b (a c)))
+  & @set_at ~ (a (b c))
+
+@scan_neighbors__C10 = (* (* (* (a (b (c (d (a (b (c d))))))))))
+
+@scan_neighbors__C11 = (* ({b k} (j (c (d (e ({a f} (g (h (i l))))))))))
+  & @get_at ~ (a (b $([=0x0000000] ?((@scan_neighbors__C8 @scan_neighbors__C9) (c (d (e (f (g (h (i (j (k l)))))))))))))
+
+@scan_neighbors__C12 = (?((@scan_neighbors__C10 @scan_neighbors__C11) a) a)
+
+@scan_neighbors__C2 = (a (b (d (e (f (g (h (c (* i)))))))))
+  & @scan_neighbors ~ (a (b (c (d (e (f (g (h i))))))))
+
+@scan_neighbors__C3 = (* ({c {k i}} (d (f ({g a} ({l h} (o (p (e (b q))))))))))
+  & @scan_neighbors ~ (c (d (e (f (g (n (o (p q))))))))
+  & @get_at ~ (a (b {$([<] $(j ?((@scan_neighbors__C0 @scan_neighbors__C1) (k (l (m n)))))) m}))
+  & @get_at ~ (h (i j))
+
+@scan_neighbors__C4 = (a a)
+
+@scan_neighbors__C5 = (* ($([+0x0000001] a) a))
+
+@scan_neighbors__C6 = (* (a (* a)))
+
+@scan_neighbors__C7 = (* (b (a c)))
+  & @set_at ~ (a (b c))
+
+@scan_neighbors__C8 = (b ({a c} (d (e (f (g (h (i ({$([!] $(a ?((@scan_neighbors__C2 @scan_neighbors__C3) (b (c (d (e (f (g (h (i (j k)))))))))))) j} k)))))))))
+
+@scan_neighbors__C9 = (* ({b {j {r {p x}}}} (k ({c m} (d (e (f (g (l ({a i} bb))))))))))
+  & @scan_neighbors ~ (j (k (l (m (n (u (v (ab bb))))))))
+  & @get_at ~ (h (i {$([<] $(q ?((@scan_neighbors__C6 @scan_neighbors__C7) (r (s (t u)))))) {t $([>] $(y ?((@scan_neighbors__C4 @scan_neighbors__C5) (z ab))))}}))
+  & @dfs ~ (a (b (c (d (e (f (g ({n w} ({s {o h}} (v z))))))))))
+  & @get_at ~ (o (p q))
+  & @get_at ~ (w (x y))
+
+@set_at = ((@set_at__C3 a) a)
+
+@set_at__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_at ~ (b (c (d e)))
+
+@set_at__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@set_at__C2 = (* (c (d ({$([=0x0000000] ?((@set_at__C0 @set_at__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_at__C3 = (?(((* (* @List/Nil)) @set_at__C2) a) a)
+
+@zeros = ({$([=0x0000000] ?((@zeros__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@zeros__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (0 (b c))
+  & @zeros ~ (a b)
+
+

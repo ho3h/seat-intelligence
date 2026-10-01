@@ -1,0 +1,34 @@
+@prog = ((n edges) out)
+  & n ~ *
+  & @one ~ (edges out)
+
+@one = ((?((@one_nil @one_cons) (pl out)) pl) out)
+
+@one_nil = (* out)
+  & out ~ 16777215
+
+@one_cons = (* ((edge tail) out))
+  & edge ~ (u v)
+  & @tailcheck ~ (tail (u (v out)))
+
+@tailcheck = ((?((@tail_nil @tail_more) (pl (u (v out)))) pl) (u (v out)))
+
+@tail_nil = (* (u (v out)))
+  & pl ~ *
+  & u ~ $([<] $(v b))
+  & b ~ ?((@take_v @take_u) (u (v out)))
+
+@tail_more = (* ((edge rest) (u (v out))))
+  & edge ~ *
+  & rest ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 16777215
+
+@take_v = (u (v out))
+  & u ~ *
+  & out ~ v
+
+@take_u = (u (v out))
+  & v ~ *
+  & out ~ u

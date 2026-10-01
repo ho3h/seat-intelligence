@@ -1,0 +1,47 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@partition = ((@partition__C12 a) a)
+
+@partition__C0 = (a (@List/Nil b))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@partition__C1 = (* (a (b @List/Nil)))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@partition__C10 = (?((@partition__C8 @partition__C9) a) a)
+
+@partition__C11 = (* (b ((@partition__C10 (a (b c))) (a c))))
+
+@partition__C12 = (?(((* (@List/Nil @List/Nil)) @partition__C11) a) a)
+
+@partition__C2 = (b (c (a (d (a f)))))
+  & @List/Cons ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@partition__C3 = (* (d (a (b (e (c f))))))
+  & @List/Cons ~ (a (b c))
+  & @List/Cons ~ (d (e f))
+
+@partition__C4 = (a (d (b (e (c f)))))
+  & @List/Cons ~ (a (b c))
+  & @List/Cons ~ (d (e f))
+
+@partition__C5 = (* (a (b (c (f (e f))))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@partition__C6 = (a (b ({$([<] $(a ?((@partition__C2 @partition__C3) (b (c d))))) c} d)))
+
+@partition__C7 = (* (a (b ({$([<] $(a ?((@partition__C4 @partition__C5) (b (c d))))) c} d))))
+
+@partition__C8 = (a ({$([<] $(a ?((@partition__C0 @partition__C1) (b c)))) b} c))
+
+@partition__C9 = (* (f (a ({b {c d}} ({$([<] $(c ?((@partition__C6 @partition__C7) (d (e (f (g (h i)))))))) e} i)))))
+  & @partition ~ (a (b (g h)))
+
+@prog = ((b a) c)
+  & @partition ~ (a (b c))
+
+

@@ -1,0 +1,185 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@filter_attrs = ((@filter_attrs__C3 a) a)
+
+@filter_attrs__C0 = (b (c (a (* (* d)))))
+  & @filter_attrs ~ (a (b (c d)))
+
+@filter_attrs__C1 = (* (b (e (a (c (d g))))))
+  & @filter_attrs ~ (a (b (f g)))
+  & @List/Cons ~ ((c d) (e f))
+
+@filter_attrs__C2 = (* ((e ($([=] $(a ?((@filter_attrs__C0 @filter_attrs__C1) (b (c (d (e (f g)))))))) f)) (d ({a b} (c g)))))
+
+@filter_attrs__C3 = (?(((* (a a)) @filter_attrs__C2) b) b)
+
+@gather_values = ((@gather_values__C7 a) a)
+
+@gather_values__C0 = ($([+0x0000001] c) (d (e (a (b (* f))))))
+  & @gather_values ~ (a (b (c (d (e f)))))
+
+@gather_values__C1 = (* ($([+0x0000001] c) (d (f (a (b (e h)))))))
+  & @gather_values ~ (a (b (c (d (g h)))))
+  & @List/Cons ~ (e (f g))
+
+@gather_values__C2 = ($([+0x0000001] e) (f (g (* (a (b (c (* h))))))))
+  & @gather_values ~ (a (d (e (f (g h)))))
+  & @List/Cons ~ (b (c d))
+
+@gather_values__C3 = (* (b ({a c} (d ($([=] $(a ?((@gather_values__C0 @gather_values__C1) (b (c (d (e f))))))) (e (* f)))))))
+
+@gather_values__C4 = (* ({($([=] $(a ?((@gather_values__C2 @gather_values__C3) (b (c (d (e (f (g (h (i j))))))))))) i) g} (h ({a b} (c (d (e (f j))))))))
+
+@gather_values__C5 = (?(((* (* (a (* (* a))))) @gather_values__C4) b) b)
+
+@gather_values__C6 = (* (d (e ((@gather_values__C5 (a (b (c (d (e f)))))) (a (b (c f)))))))
+
+@gather_values__C7 = (?(((* (* (* (a a)))) @gather_values__C6) b) b)
+
+@merge_nums = ((@merge_nums__C6 a) a)
+
+@merge_nums__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_nums ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_nums__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_nums ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_nums__C2__M_merge_pairs__C2 = a
+  & @List/Cons ~ a
+
+@merge_nums__C3 = (* ({a e} (f ({$([>] $(a b)) c} (d g)))))
+  & $(b ?((@merge_nums__C0 @merge_nums__C1) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@merge_nums__C4 = (?((@merge_nums__C2__M_merge_pairs__C2 @merge_nums__C3) a) a)
+
+@merge_nums__C5 = (* (a (b ((@merge_nums__C4 (a (b c))) c))))
+
+@merge_nums__C6 = (?(((a a) @merge_nums__C5) b) b)
+
+@merge_pairs = ((@merge_pairs__C6 a) a)
+
+@merge_pairs__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_pairs__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_pairs__C3 = (* ({(a *) e} (f ({($([>] $(a b)) *) c} (d g)))))
+  & $(b ?((@merge_pairs__C0 @merge_pairs__C1) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@merge_pairs__C4 = (?((@merge_nums__C2__M_merge_pairs__C2 @merge_pairs__C3) a) a)
+
+@merge_pairs__C5 = (* (a (b ((@merge_pairs__C4 (a (b c))) c))))
+
+@merge_pairs__C6 = (?(((a a) @merge_pairs__C5) b) b)
+
+@mode = ((@mode__C1 a) a)
+
+@mode__C0 = (* ({b c} (a d)))
+  & @mode_scan ~ (a (b (1 (c (0 d)))))
+
+@mode__C1 = (?((16777215 @mode__C0) a) a)
+
+@mode_scan = ((@mode_scan__C8 a) a)
+
+@mode_scan__C0 = (* (a a))
+
+@mode_scan__C1 = (* (a (* a)))
+
+@mode_scan__C2 = (* (* (c (d (b (a e))))))
+  & @mode_scan ~ (a (b (1 (c (d e)))))
+
+@mode_scan__C3 = (* (c (d (* (* (b (a e)))))))
+  & @mode_scan ~ (a (b (1 (c (d e)))))
+
+@mode_scan__C4 = (b ({$([>] $(a ?((@mode_scan__C2 @mode_scan__C3) (b (c (d (e f))))))) c} (d ({a e} f))))
+
+@mode_scan__C5 = (* (b ($([+0x0000001] c) (d (e (* (a f)))))))
+  & @mode_scan ~ (a (b (c (d (e f)))))
+
+@mode_scan__C6 = (b ($([>] $(a ?((@mode_scan__C0 @mode_scan__C1) (b (c d))))) (c (a d))))
+
+@mode_scan__C7 = (* ({$([=] $(a ?((@mode_scan__C4 @mode_scan__C5) (b (c (d (e (f (g h))))))))) f} (g ({a b} (c (d (e h)))))))
+
+@mode_scan__C8 = (?((@mode_scan__C6 @mode_scan__C7) a) a)
+
+@prog = ((f (c (a b))) i)
+  & @mode ~ (h i)
+  & @sort_nums ~ (g h)
+  & @gather_values ~ (a (e (0 (f (@List/Nil g)))))
+  & @sort_pairs ~ (d e)
+  & @filter_attrs ~ (b (c (@List/Nil d)))
+
+@sort_nums = ((@sort_nums__C4 a) a)
+
+@sort_nums__C0__M_sort_pairs__C0 = a
+  & @List/Cons ~ a
+
+@sort_nums__C1 = (* (* (* (a (b h)))))
+  & @merge_nums ~ (e (g h))
+  & @split_nums ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@sort_nums ~ (d e)
+  &!@sort_nums ~ (f g)
+
+@sort_nums__C2 = (?((@sort_nums__C0__M_sort_pairs__C0 @sort_nums__C1) a) a)
+
+@sort_nums__C3 = (* (a ({(@sort_nums__C2 (a (b c))) b} c)))
+
+@sort_nums__C4 = (?((@List/Nil @sort_nums__C3) a) a)
+
+@sort_pairs = ((@sort_pairs__C4 a) a)
+
+@sort_pairs__C1 = (* (* (* (a (b h)))))
+  & @merge_pairs ~ (e (g h))
+  & @split_pairs ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@sort_pairs ~ (d e)
+  &!@sort_pairs ~ (f g)
+
+@sort_pairs__C2 = (?((@sort_nums__C0__M_sort_pairs__C0 @sort_pairs__C1) a) a)
+
+@sort_pairs__C3 = (* (a ({(@sort_pairs__C2 (a (b c))) b} c)))
+
+@sort_pairs__C4 = (?((@List/Nil @sort_pairs__C3) a) a)
+
+@split_nums = ((@split_nums__C4 a) a)
+
+@split_nums__C0__M_split_pairs__C0 = (a (b @List/Nil))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@split_nums__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split_nums ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split_nums__C2 = (?((@split_nums__C0__M_split_pairs__C0 @split_nums__C1) a) a)
+
+@split_nums__C3 = (* (a ((@split_nums__C2 (a b)) b)))
+
+@split_nums__C4 = (?(((@List/Nil @List/Nil) @split_nums__C3) a) a)
+
+@split_pairs = ((@split_pairs__C4 a) a)
+
+@split_pairs__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split_pairs ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split_pairs__C2 = (?((@split_nums__C0__M_split_pairs__C0 @split_pairs__C1) a) a)
+
+@split_pairs__C3 = (* (a ((@split_pairs__C2 (a b)) b)))
+
+@split_pairs__C4 = (?(((@List/Nil @List/Nil) @split_pairs__C3) a) a)
+
+

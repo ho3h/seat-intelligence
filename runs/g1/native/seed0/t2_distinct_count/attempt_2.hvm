@@ -1,0 +1,43 @@
+// Count values by keeping a list of those already seen.
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (count out)))) pl) (seen (count out)))
+
+@dc_nil = (* (seen (count out)))
+  & seen ~ *
+  & count ~ out
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & h ~ {hq hs}
+  & seen ~ {sm sr}
+  & @mem ~ (sm (hq found))
+  & found ~ ?((@dc_add @dc_skip) (t (hs (sr (count out)))))
+
+@dc_add = (* (t (hs (sr (count out)))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t ((1 (hs sr)) (count2 out)))
+
+@dc_skip = (* (t (hs (sr (count out)))))
+  & hs ~ *
+  & @dc ~ (t (sr (count out)))
+
+// Return 1 if q occurs in the list, otherwise 0.
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (* (q out))
+  & q ~ *
+  & out ~ 0
+
+@mem_cons = (* ((x xs) (q out)))
+  & q ~ {qc qr}
+  & x ~ $([=] $(qc eq))
+  & eq ~ ?((@mem_no @mem_yes) (qr (xs out)))
+
+@mem_no = (qr (xs out))
+  & @mem ~ (xs (qr out))
+
+@mem_yes = (* (qr (xs out)))
+  & qr ~ *
+  & xs ~ *
+  & out ~ 1

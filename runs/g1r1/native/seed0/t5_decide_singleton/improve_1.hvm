@@ -1,0 +1,122 @@
+// Task: t5_decide_singleton
+
+@prog = (input output)
+  & input ~ (tau probs)
+  & @s0 ~ (probs (tau output))
+
+@s0 = ((?((@s0_nil @s0_cons) (pl (tau out))) pl) (tau out))
+
+@s0_nil = (* (* 6))
+
+@s0_cons = (* ((h t) (tau out)))
+  & @s1 ~ (t (h (0 (tau out))))
+
+@s1 = ((?((@s1_nil @s1_cons) (pl (best (idx (tau out))))) pl) (best (idx (tau out))))
+
+@s1_nil = (* (best (idx (tau out))))
+  & @final ~ (best (idx (tau out)))
+
+@s1_cons = (* ((h t) (best (idx (tau out)))))
+  & h ~ {h_cmp h_save}
+  & best ~ {b_cmp b_save}
+  & h_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@s1_keep @s1_update) (h_save (b_save (t (idx (tau out))))))
+
+@s1_keep = (h (b (t (idx (tau out)))))
+  & h ~ *
+  & @s2 ~ (t (b (idx (tau out))))
+
+@s1_update = (* (h (b (t (idx (tau out))))))
+  & b ~ *
+  & idx ~ *
+  & @s2 ~ (t (h (1 (tau out))))
+
+@s2 = ((?((@s2_nil @s2_cons) (pl (best (idx (tau out))))) pl) (best (idx (tau out))))
+
+@s2_nil = (* (best (idx (tau out))))
+  & @final ~ (best (idx (tau out)))
+
+@s2_cons = (* ((h t) (best (idx (tau out)))))
+  & h ~ {h_cmp h_save}
+  & best ~ {b_cmp b_save}
+  & h_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@s2_keep @s2_update) (h_save (b_save (t (idx (tau out))))))
+
+@s2_keep = (h (b (t (idx (tau out)))))
+  & h ~ *
+  & @s3 ~ (t (b (idx (tau out))))
+
+@s2_update = (* (h (b (t (idx (tau out))))))
+  & b ~ *
+  & idx ~ *
+  & @s3 ~ (t (h (2 (tau out))))
+
+@s3 = ((?((@s3_nil @s3_cons) (pl (best (idx (tau out))))) pl) (best (idx (tau out))))
+
+@s3_nil = (* (best (idx (tau out))))
+  & @final ~ (best (idx (tau out)))
+
+@s3_cons = (* ((h t) (best (idx (tau out)))))
+  & h ~ {h_cmp h_save}
+  & best ~ {b_cmp b_save}
+  & h_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@s3_keep @s3_update) (h_save (b_save (t (idx (tau out))))))
+
+@s3_keep = (h (b (t (idx (tau out)))))
+  & h ~ *
+  & @s4 ~ (t (b (idx (tau out))))
+
+@s3_update = (* (h (b (t (idx (tau out))))))
+  & b ~ *
+  & idx ~ *
+  & @s4 ~ (t (h (3 (tau out))))
+
+@s4 = ((?((@s4_nil @s4_cons) (pl (best (idx (tau out))))) pl) (best (idx (tau out))))
+
+@s4_nil = (* (best (idx (tau out))))
+  & @final ~ (best (idx (tau out)))
+
+@s4_cons = (* ((h t) (best (idx (tau out)))))
+  & h ~ {h_cmp h_save}
+  & best ~ {b_cmp b_save}
+  & h_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@s4_keep @s4_update) (h_save (b_save (t (idx (tau out))))))
+
+@s4_keep = (h (b (t (idx (tau out)))))
+  & h ~ *
+  & @s5 ~ (t (b (idx (tau out))))
+
+@s4_update = (* (h (b (t (idx (tau out))))))
+  & b ~ *
+  & idx ~ *
+  & @s5 ~ (t (h (4 (tau out))))
+
+@s5 = ((?((@s5_nil @s5_cons) (pl (best (idx (tau out))))) pl) (best (idx (tau out))))
+
+@s5_nil = (* (best (idx (tau out))))
+  & @final ~ (best (idx (tau out)))
+
+@s5_cons = (* ((h t) (best (idx (tau out)))))
+  & h ~ {h_cmp h_save}
+  & best ~ {b_cmp b_save}
+  & h_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@s5_keep @s5_update) (h_save (b_save (t (idx (tau out))))))
+
+@s5_keep = (h (b (t (idx (tau out)))))
+  & t ~ *
+  & h ~ *
+  & @final ~ (b (idx (tau out)))
+
+@s5_update = (* (h (b (t (idx (tau out))))))
+  & t ~ *
+  & b ~ *
+  & idx ~ *
+  & @final ~ (h (5 (tau out)))
+
+@final = (best (idx (tau out)))
+  & tau ~ $([>] $(best gt))
+  & gt ~ ?((@take_idx @take_six) (idx out))
+
+@take_idx = (a a)
+
+@take_six = (* 6)

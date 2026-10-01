@@ -1,0 +1,35 @@
+// Consume the list two elements at a time, accumulating two for each
+// pair that is strictly below the target.
+@prog = ((xs tgt) out)
+  & @lb ~ (xs (tgt (0 out)))
+
+@lb = ((?((@lb_nil @lb_cons) (pl (tgt (acc out)))) pl) (tgt (acc out)))
+
+@lb_nil = (* (* (acc out)))
+
+@lb_cons = (* ((h xs) (tgt (acc out))))
+  & tgt ~ {tc tn}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb_stop @lb_more) (tn (xs (acc out))))
+
+@lb_stop = (* (* (acc out)))
+
+@lb_more = (* (tgt (xs (acc out))))
+  & @lb2 ~ (xs (tgt (acc out)))
+
+@lb2 = ((?((@lb2_nil @lb2_cons) (pl (tgt (acc out)))) pl) (tgt (acc out)))
+
+@lb2_nil = (* (* (acc out)))
+  & acc ~ $([+] $(1 out))
+
+@lb2_cons = (* ((h xs) (tgt (acc out))))
+  & tgt ~ {tc tn}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb2_stop @lb2_more) (tn (xs (acc out))))
+
+@lb2_stop = (* (* (acc out)))
+  & acc ~ $([+] $(1 out))
+
+@lb2_more = (* (tgt (xs (acc out))))
+  & acc ~ $([+] $(2 acc2))
+  & @lb ~ (xs (tgt (acc2 out)))

@@ -1,0 +1,72 @@
+// Count each vertex's incident directions by scanning the edge list.
+@prog = (input output)
+  & input ~ (n edges)
+  & @vloop ~ (n (0 (edges (0 (0 output))))
+
+@vloop = (rem ctx)
+  & rem ~ ?((@v_done @v_iter) ctx)
+
+@v_done = (idx (edges (src (sink out))))
+  & idx ~ *
+  & edges ~ *
+  & out ~ (src sink)
+
+@v_iter = (rem ctx)
+  & ctx ~ (idx (edges (src (sink out))))
+  & idx ~ {target idx_keep}
+  & edges ~ {scan_edges edges_keep}
+  & @scan ~
+    (scan_edges
+      (target
+        (0
+          (0
+            (rem
+              (idx_keep
+                (edges_keep
+                  (src (sink out))))))))
+
+@scan =
+  (
+    (
+      ?(
+        (@scan_nil @scan_cons)
+        (payload
+          (target
+            (inflag
+              (outflag
+                (rem
+                  (idx
+                    (edges
+                      (src (sink out)))))))))
+      )
+      payload
+    )
+    (target
+      (inflag
+        (outflag
+          (rem
+            (idx
+              (edges
+                (src (sink out)))))))
+  )
+
+@scan_nil = (* (target (inflag (outflag (rem (idx (edges (src (sink out)))))))))
+  & target ~ *
+  & @vfinish ~ (inflag (outflag (rem (idx (edges (src (sink out)))))))
+
+@scan_cons = (* (((u v) tail) (target (inflag (outflag (rem (idx (edges (src (sink out)))))))))
+  & target ~ {target_u target_rest}
+  & target_rest ~ {target_v target_keep}
+  & u ~ $([=] $(target_u eq_u))
+  & v ~ $([=] $(target_v eq_v))
+  & eq_u ~ $([|] $(outflag new_out))
+  & eq_v ~ $([|] $(inflag new_in))
+  & @scan ~ (tail (target_keep (new_in (new_out (rem (idx (edges (src (sink out))))))))
+
+@vfinish = (inflag (outflag (rem (idx (edges (src (sink out)))))))
+  & inflag ~ $([=] $(0 no_in))
+  & outflag ~ $([=] $(0 no_out))
+  & no_in ~ $([+] $(src src_next))
+  & no_out ~ $([+] $(sink sink_next))
+  & idx ~ $([+1] idx_next)
+  & @vloop ~ (rem (idx_next (edges (src_next (sink_next out)))))

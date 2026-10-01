@@ -1,0 +1,109 @@
+@prog = (({cb cd} edges) out)
+  & @build ~ (edges (cb ((0 *) uniq)))
+  & @deglist ~ (cd (uniq (0 out)))
+
+@build = ((?((@build_nil @build_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@build_nil = (* (* (a a)))
+
+@build_cons = (* ((e tail) ({c1 c2} (acc out))))
+  & @mapedge ~ (e (c1 mapped))
+  & @process ~ (mapped (tail (c2 (acc out))))
+
+@mapedge = ((u v) ({c1 c2} out))
+  & @lookup ~ (c1 (u x))
+  & @lookup ~ (c2 (v y))
+  & x ~ {x1 x2}
+  & y ~ {y1 y2}
+  & x1 ~ $([<] $(y1 z))
+  & z ~ ?((@map_rev @map_fwd) (x2 (y2 out)))
+
+@map_rev = (x (y out))
+  & out ~ (y x)
+
+@map_fwd = (* (x (y out)))
+  & out ~ (x y)
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (i out))) pl) (i out))
+
+@lookup_nil = (* (* 0))
+
+@lookup_cons = (* ((h t) ({ic ir} out)))
+  & ic ~ $([=] $(0 z))
+  & z ~ ?((@lookup_hit @lookup_more) (h (t (ir out))))
+
+@lookup_hit = (h (t (ir out)))
+  & out ~ h
+  & t ~ *
+  & ir ~ *
+
+@lookup_more = (* (h (t (ir out))))
+  & h ~ *
+  & ir ~ $([-] $(1 ir2))
+  & @lookup ~ (t (ir2 out))
+
+@process = (({x1 x2} {y1 y2}) (tail (c (acc out))))
+  & x1 ~ $([=] $(y1 z))
+  & z ~ ?((@process_same @process_distinct) (x2 (y2 (tail (c (acc out))))))
+
+@process_same = (* (* (tail (c (acc out)))))
+  & @build ~ (tail (c (acc out)))
+
+@process_distinct = (* ({xa xb} ({ya yb} (tail (c ({ac ak} out))))))
+  & @has ~ (ac ((xa ya) found))
+  & found ~ ?((@insert_absent @insert_present) (xb (yb (tail (c (ak out))))))
+
+@insert_absent = (x (y (tail (c (acc out)))))
+  & @build ~ (tail (c ((1 ((x y) acc)) out)))
+
+@insert_present = (* (* (* (tail (c (acc out))))))
+  & @build ~ (tail (c (acc out)))
+
+@has = ((?((@has_nil @has_cons) (pl (target out))) pl) (target out))
+
+@has_nil = (* (* 0))
+
+@has_cons = (* (((a b) tail) (({x1 x2} {y1 y2}) out)))
+  & a ~ $([=] $(x1 qx))
+  & b ~ $([=] $(y1 qy))
+  & qx ~ $([&] $(qy found))
+  & found ~ ?((@has_no @has_yes) (tail ((x2 y2) out)))
+
+@has_no = (tail ((x y) out))
+  & @has ~ (tail ((x y) out))
+
+@has_yes = (* (* ((* *) 1)))
+
+@count = ((?((@count_nil @count_cons) (pl (id (acc out)))) pl) (id (acc out)))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* (((x y) tail) ({id1 {id2 idrec}} (acc out))))
+  & x ~ $([=] $(id1 qx))
+  & y ~ $([=] $(id2 qy))
+  & qx ~ $([|] $(qy z))
+  & z ~ ?((@count_no @count_yes) (tail (idrec (acc out))))
+
+@count_no = (tail (id (acc out)))
+  & @count ~ (tail (id (acc out)))
+
+@count_yes = (* (tail (id (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (id (acc2 out)))
+
+@deglist = ((?((@deg_nil @deg_cons) (pl (edges (i out)))) pl) (edges (i out)))
+
+@deg_nil = (* (* (* (0 *))))
+
+@deg_cons = (* (({hcheck hvalue} t) ({ed er} ({ic inext} out))))
+  & hcheck ~ $([=] $(ic z))
+  & inext ~ $([+1] next)
+  & z ~ ?((@deg_skip @deg_keep) (hvalue (t (ed (er (next out))))))
+
+@deg_skip = (* (t (* (er (next out)))))
+  & @deglist ~ (t (er (next out)))
+
+@deg_keep = (* (h (t (ed (er (next out))))))
+  & @count ~ (ed (h (0 d)))
+  & @deglist ~ (t (er (next rest)))
+  & out ~ (1 (d rest))

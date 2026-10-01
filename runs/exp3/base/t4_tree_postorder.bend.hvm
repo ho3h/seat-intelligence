@@ -1,0 +1,23 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@post_acc = ((@post_acc__C1 a) a)
+
+@post_acc__C0 = (* (a (c (b (d g)))))
+  &!@post_acc ~ (a (f g))
+  &!@post_acc ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@post_acc__C1 = (?(((a a) @post_acc__C0) b) b)
+
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* (a (c (b f))))
+  & @post_acc ~ (a (e f))
+  & @post_acc ~ (b (d e))
+  & @List/Cons ~ (c (@List/Nil d))
+
+@prog__C1 = (?((@List/Nil @prog__C0) a) a)
+
+

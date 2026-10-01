@@ -1,0 +1,34 @@
+@prog = (xs out)
+  & {lcount lbuild} ~ xs
+  & @len ~ (lcount (0 n))
+  & @build ~ (n (lbuild result))
+  & result ~ (out *)
+
+@len = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+1] acc2)
+  & @len ~ (t (acc2 out))
+
+@build = (n (l out))
+  & n ~ ?((@build_zero @build_pos) (l out))
+
+@build_zero = (l out)
+  & out ~ ((0 *) l)
+
+@build_pos = (k (l out))
+  & {ka kb} ~ k
+  & ka ~ $([/] $(2 mm))
+  & {mleft msub} ~ mm
+  & kb ~ $([-] $(msub rcount))
+  & @build ~ (mleft (l left_result))
+  & left_result ~ (lefttree remaining)
+  & remaining ~ (tag payload)
+  & tag ~ *
+  & payload ~ (val tail)
+  & @build ~ (rcount (tail right_result))
+  & right_result ~ (righttree finalrest)
+  & out ~ ((1 (lefttree (val righttree))) finalrest)

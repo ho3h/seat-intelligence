@@ -1,0 +1,170 @@
+// Entry point: build the vertex list, then process one component at a time.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {nr nt}
+  & @range ~ (nr (0 candidates))
+  & @components ~ (candidates (nt (edges (0 out))))
+
+// Build [0, 1, ..., n-1].
+@range = (?((@range_nil @range_cons) (i out)) (i out))
+
+@range_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@range_cons = (rem (i out))
+  & i ~ {head iinc}
+  & iinc ~ $([+1] inext)
+  & @range ~ (rem (inext tail))
+  & out ~ (1 (head tail))
+
+// Process the remaining candidate vertices.
+@components = ((?((@components_nil @components_cons) (pl (n (edges (best out))))) pl) (n (edges (best out))))
+
+@components_nil = (* (n (edges (best out))))
+  & n ~ *
+  & edges ~ *
+  & out ~ best
+
+@components_cons = (* ((start tail) (n (edges (best out)))))
+  & n ~ {nflood nnext}
+  & edges ~ {eflood enext}
+  & @flood ~ (start (nflood (eflood comp)))
+  & comp ~ {cfilt ccount}
+  & @count ~ (ccount size)
+  & @filter ~ (tail (cfilt remaining))
+  & @components_after ~ (remaining (nnext (enext (best (size out)))))
+
+@components_after = (remaining (n (edges (best (size out)))))
+  & size ~ {sc sk}
+  & best ~ {bc bk}
+  & sc ~ $([>] $(bc z))
+  & z ~ ?((@components_no @components_yes) (remaining (n (edges (bk (sk out))))))
+
+@components_no = (remaining (n (edges (best (size out)))))
+  & size ~ *
+  & @components ~ (remaining (n (edges (best out))))
+
+@components_yes = (* (remaining (n (edges (best (size out))))))
+  & best ~ *
+  & @components ~ (remaining (n (edges (size out))))
+
+// Flood from one start vertex. Stop early when a full edge scan adds no vertices.
+@flood = (start (n (edges out)))
+  & @sweep ~ (n (edges ((1 (start (0 *))) (1 out))))
+
+@sweep = (?((@sweep_nil @sweep_cons) (edges (seen (prev out)))) (edges (seen (prev out))))
+
+@sweep_nil = (edges (seen (prev out)))
+  & edges ~ *
+  & prev ~ *
+  & out ~ seen
+
+@sweep_cons = (rem (edges (seen (prev out))))
+  & edges ~ {escan enext}
+  & @scan ~ (escan (seen scanned))
+  & scanned ~ {scount skeep}
+  & @count ~ (scount count)
+  & count ~ {ccmp ckeep}
+  & ccmp ~ $([=] $(prev same))
+  & same ~ ?((@sweep_next @sweep_stable) (rem (enext (skeep (ckeep out)))))
+
+@sweep_next = (rem (edges (seen (prev out))))
+  & @sweep ~ (rem (edges (seen (prev out))))
+
+@sweep_stable = (* (rem (edges (seen (prev out)))))
+  & rem ~ *
+  & edges ~ *
+  & prev ~ *
+  & out ~ seen
+
+// Scan every edge, extending the visited set at either endpoint.
+@scan = ((?((@scan_nil @scan_cons) (pl (seen out))) pl) (seen out))
+
+@scan_nil = (* (seen out))
+  & out ~ seen
+
+@scan_cons = (* ((edge tail) (seen out)))
+  & @edge ~ (edge (seen seen2))
+  & @scan ~ (tail (seen2 out))
+
+@edge = ((u v) (seen out))
+  & u ~ {usrc utgt}
+  & v ~ {vtarget vsrc}
+  & @extend ~ (usrc (vtarget (seen mid)))
+  & @extend ~ (vsrc (utgt (mid out)))
+
+// Add dst to seen if src is present and dst is not.
+@extend = (src (dst (seen out)))
+  & seen ~ {stest skeep}
+  & @mem ~ (src (stest found))
+  & found ~ ?((@extend_no @extend_yes) (dst (skeep out)))
+
+@extend_no = (dst (seen out))
+  & dst ~ *
+  & out ~ seen
+
+@extend_yes = (* (dst (seen out)))
+  & seen ~ {stest skeep}
+  & dst ~ {dtest dkeep}
+  & @mem ~ (dtest (stest found))
+  & found ~ ?((@extend_dst_no @extend_dst_yes) (dkeep (skeep out)))
+
+@extend_dst_no = (dst (seen out))
+  & dst ~ *
+  & out ~ seen
+
+@extend_dst_yes = (* (dst (seen out)))
+  & out ~ (1 (dst seen))
+
+// Membership test: output 1 iff x occurs in the list.
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (x out)))
+  & x ~ {xcmp xkeep}
+  & xcmp ~ $([=] $(head z))
+  & z ~ ?((@mem_no @mem_yes) (tail (xkeep out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+// Count list elements.
+@count = ((?((@count_nil @count_cons) (pl out)) pl) out)
+
+@count_nil = (* out)
+  & out ~ 0
+
+@count_cons = (* ((head tail) out))
+  & head ~ *
+  & @count ~ (tail c)
+  & c ~ $([+1] out)
+
+// Keep candidates that are not members of the component.
+@filter = ((?((@filter_nil @filter_cons) (pl (comp out))) pl) (comp out))
+
+@filter_nil = (* (comp out))
+  & comp ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((x tail) (comp out)))
+  & x ~ {xmem xkeep}
+  & comp ~ {cmem cnext}
+  & @mem ~ (xmem (cmem found))
+  & found ~ ?((@filter_absent @filter_present) (xkeep (tail (cnext out))))
+
+@filter_absent = (x (tail (comp out)))
+  & @filter ~ (tail (comp rest))
+  & out ~ (1 (x rest))
+
+@filter_present = (* (x (tail (comp out))))
+  & x ~ *
+  & @filter ~ (tail (comp out))

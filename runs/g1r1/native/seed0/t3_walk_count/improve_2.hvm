@@ -1,0 +1,170 @@
+// Validate the endpoints, determine the trie depth, and initialize the walk counts.
+@prog = ((n (s (t (k edges)))) out)
+  & @run ~ (n (s (t (k (edges out)))))
+
+@run = (n (s (t (k (edges out)))))
+  & n ~ {na nr}
+  & nr ~ {nb nc}
+  & s ~ {sa sb}
+  & t ~ {ta tb}
+  & sa ~ $([<] $(na bs))
+  & ta ~ $([<] $(nb bt))
+  & bs ~ $([&] $(bt valid))
+  & valid ~ ?((@run_invalid @run_valid) (nc (sb (tb (k (edges out))))))
+
+@run_invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@run_valid = (* (n (s (t (k (edges out))))))
+  & n ~ $([-] $(1 nm))
+  & @bitlen ~ (nm (0 bits))
+  & @boot ~ (bits (s (t (k (edges out)))))
+
+@boot = (bits (s (t (k (edges out)))))
+  & bits ~ {d1 d2}
+  & @put ~ (d1 (s (1 ((0 *) initial))))
+  & @walk ~ (k (d2 (initial (edges (t out))))
+
+// Compute the bit length of n-1, enough to represent every valid vertex index.
+@bitlen = (x (count out))
+  & x ~ {x1 x2}
+  & x1 ~ $([>] $(0 positive))
+  & positive ~ ?((@bl_zero @bl_succ) (x2 (count out)))
+
+@bl_zero = (x (count out))
+  & x ~ *
+  & out ~ count
+
+@bl_succ = (* (x (count out)))
+  & x ~ $([>>] $(1 half))
+  & count ~ $([+] $(1 count1))
+  & @bitlen ~ (half (count1 out))
+
+// Read a count from the binary trie.
+@get = (depth (i (tree out)))
+  & depth ~ ?((@get_leaf_depth @get_more) (i (tree out)))
+
+@get_leaf_depth = (i (tree out))
+  & @get_leaf ~ (i (tree out))
+
+@get_leaf = (i ((tag payload) out))
+  & i ~ *
+  & tag ~ ?((@get_leaf_empty @get_leaf_value) (payload out))
+
+@get_leaf_empty = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@get_leaf_value = (* (count out))
+  & out ~ count
+
+@get_more = (depth (i ((tag payload) out)))
+  & tag ~ ?((@get_empty @get_node) (payload (depth (i out))))
+
+@get_empty = (payload (depth (i out)))
+  & payload ~ *
+  & depth ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_node = (* ((left right) (depth (i out))))
+  & i ~ {i1 i2}
+  & i1 ~ $([&] $(1 bit))
+  & i2 ~ $([>>] $(1 rest))
+  & bit ~ ?((@get_left @get_right) (depth (rest (left (right out)))))
+
+@get_left = (depth (rest (left (right out))))
+  & right ~ *
+  & @get ~ (depth (rest (left out)))
+
+@get_right = (* (depth (rest (left (right out)))))
+  & left ~ *
+  & @get ~ (depth (rest (right out)))
+
+// Add delta to a count in the trie, creating empty nodes as needed.
+@put = (depth (i (delta (tree out))))
+  & depth ~ ?((@put_leaf_depth @put_more) (i (delta (tree out))))
+
+@put_leaf_depth = (i (delta (tree out)))
+  & i ~ *
+  & @put_leaf ~ (delta (tree out))
+
+@put_leaf = (delta ((tag payload) out))
+  & tag ~ ?((@put_leaf_empty @put_leaf_value) (payload (delta out)))
+
+@put_leaf_empty = (payload (delta out))
+  & payload ~ *
+  & out ~ (1 delta)
+
+@put_leaf_value = (* (count (delta out)))
+  & count ~ $([+] $(delta sum))
+  & out ~ (1 sum)
+
+@put_more = (depth (i (delta ((tag payload) out))))
+  & tag ~ ?((@put_empty @put_existing) (payload (depth (i (delta out))))
+
+@put_empty = (payload (depth (i (delta out))))
+  & payload ~ *
+  & @put_node ~ (((0 *) (0 *)) (depth (i (delta out))))
+
+@put_existing = (* ((left right) (depth (i (delta out)))))
+  & @put_node ~ ((left right) (depth (i (delta out))))
+
+@put_node = ((left right) (depth (i (delta out))))
+  & i ~ {i1 i2}
+  & i1 ~ $([&] $(1 bit))
+  & i2 ~ $([>>] $(1 rest))
+  & bit ~ ?((@put_left @put_right) (depth (rest (delta (left (right out))))))
+
+@put_left = (depth (rest (delta (left (right out)))))
+  & @put ~ (depth (rest (delta (left newleft))))
+  & out ~ (1 (newleft right))
+
+@put_right = (* (depth (rest (delta (left (right out))))))
+  & left ~ *
+  & @put ~ (depth (rest (delta (right newright))))
+  & out ~ (1 (left newright))
+
+// Apply one transition by scanning the arc list.
+@step = (depth (vec (edges out)))
+  & @edge_loop ~ (edges (depth (vec ((0 *) out))))
+
+@edge_loop = ((tag payload) (depth (vec (acc out))))
+  & tag ~ ?((@edge_nil @edge_cons) (payload (depth (vec (acc out))))
+
+@edge_nil = (payload (depth (vec (acc out))))
+  & payload ~ *
+  & depth ~ *
+  & vec ~ *
+  & out ~ acc
+
+@edge_cons = (* ((edge tail) (depth (vec (acc out)))))
+  & depth ~ {d1 d2}
+  & vec ~ {vec1 vec2}
+  & acc ~ {acc1 acc2}
+  & @edge_proc ~ (edge (d1 (vec1 (acc1 mid))))
+  & @edge_loop ~ (tail (d2 (vec2 (mid out))))
+
+@edge_proc = ((u v) (depth (vec (acc out))))
+  & depth ~ {d1 d2}
+  & @get ~ (d1 (u (vec count)))
+  & @put ~ (d2 (v (count (acc out))))
+
+// Repeat the transition exactly k times.
+@walk = (k (depth (vec (edges (t out)))))
+  & k ~ ?((@walk_zero @walk_succ) (depth (vec (edges (t out))))
+
+@walk_zero = (depth (vec (edges (t out))))
+  & @get ~ (depth (t (vec out)))
+  & edges ~ *
+
+@walk_succ = (m (depth (vec (edges (t out)))))
+  & depth ~ {d1 d2}
+  & edges ~ {edges1 edges2}
+  & @step ~ (d1 (vec (edges1 next)))
+  & @walk ~ (m (d2 (next (edges2 (t out))))

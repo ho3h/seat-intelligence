@@ -1,0 +1,25 @@
+// Evaluate an expression by sending each result directly to its destination.
+@prog = (input out)
+  & @ev ~ (input out)
+
+@ev = (e out)
+  & e ~ (tag payload)
+  & tag ~ ?((@lit @nonlit) (payload out))
+
+// A literal forwards its number to the output.
+@lit = (n n)
+
+// After the first switch, k is 0 for Add and 1 for Mul.
+@nonlit = (k (payload out))
+  & k ~ ?((@add @mul) (payload out))
+
+@add = ((left right) out)
+  & @ev ~ (left x)
+  & x ~ $([+] $(y out))
+  & @ev ~ (right y)
+
+@mul = (z ((left right) out))
+  & z ~ *
+  & @ev ~ (left x)
+  & x ~ $([*] $(y out))
+  & @ev ~ (right y)

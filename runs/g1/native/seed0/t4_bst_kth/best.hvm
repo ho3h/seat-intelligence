@@ -1,0 +1,49 @@
+// Scan in-order, returning (found, (remaining_k, value)).
+@scan = ((?((@scan_leaf @scan_node) (pl (k out))) pl) (k out))
+
+@scan_leaf = (* (k out))
+  & out ~ (0 (k *))
+
+@scan_node = (* ((l (v r)) (k out)))
+  & @scan ~ (l (k left_result))
+  & left_result ~ (flag (rem val))
+  & flag ~ ?((@scan_missing_left @scan_found_left) (rem (val (v (r out)))))
+
+@scan_found_left = (* (rem (val (v (r out)))))
+  & rem ~ *
+  & v ~ *
+  & r ~ *
+  & out ~ (1 (0 val))
+
+@scan_missing_left = (rem (val (v (r out))))
+  & rem ~ {rem_test rem_keep}
+  & rem_test ~ $([=] $(0 eq))
+  & val ~ *
+  & eq ~ ?((@scan_right @scan_here) (rem_keep (v (r out))))
+
+@scan_right = (rem (v (r out)))
+  & v ~ *
+  & rem ~ $([-] $(1 rem2))
+  & @scan ~ (r (rem2 out))
+
+@scan_here = (* (rem (v (r out))))
+  & rem ~ *
+  & r ~ *
+  & out ~ (1 (0 v))
+
+// Convert the scan result to the requested value.
+@finish = ((flag (rem val)) out)
+  & flag ~ ?((@finish_missing @finish_found) (rem (val out)))
+
+@finish_missing = (rem (val out))
+  & rem ~ *
+  & val ~ *
+  & out ~ 16777215
+
+@finish_found = (* (rem (val out)))
+  & rem ~ *
+  & out ~ val
+
+@prog = ((k t) out)
+  & @scan ~ (t (k result))
+  & @finish ~ (result out)

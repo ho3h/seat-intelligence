@@ -1,0 +1,291 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & n ~ {n0 n1}
+  & s ~ {s0 s1}
+  & s0 ~ $([<] $(n0 bs))
+  & bs ~ ?((@bad_s @check_t) (n1 (s1 (t (edges out)))))
+
+@bad_s = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@check_t = (* (n (s (t (edges out)))))
+  & n ~ {nc nw}
+  & t ~ {tc tw}
+  & tc ~ $([<] $(nc bt))
+  & bt ~ ?((@bad_t @good_t) (nw (s (tw (edges out)))))
+
+@bad_t = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@good_t = (* (n (s (t (edges out)))))
+  & n ~ {ni np}
+  & s ~ {si sv}
+  & @init ~ (ni st0)
+  & @set ~ (st0 (si ((1 (0 (1 (1 (sv (0 *)))))) st1)))
+  & np ~ $([-] $(1 cnt))
+  & @passes ~ (cnt (edges (st1 st2)))
+  & @get ~ (st2 (t entry))
+  & entry ~ (reach (dist (len path)))
+  & reach ~ ?((@final_no @final_yes) (dist (len (path out))))
+
+@final_no = (dist (len (path out)))
+  & dist ~ *
+  & len ~ *
+  & path ~ *
+  & out ~ (0 *)
+
+@final_yes = (* (dist (len (path out))))
+  & dist ~ *
+  & len ~ *
+  & out ~ path
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_succ) out)
+
+@init_zero = out
+  & out ~ (0 *)
+
+@init_succ = (* (n out))
+  & @init ~ (n tail)
+  & out ~ (1 ((0 (0 (0 (0 *)))) tail))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 (0 (0 (0 *))))
+
+@get_cons = (* (payload (idx out)))
+  & payload ~ (head tail)
+  & idx ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_next = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (idx out))
+
+@set = ((?((@set_nil @set_cons) (payload (idx (new out)))) payload) (idx (new out)))
+
+@set_nil = (payload (idx (new out)))
+  & payload ~ *
+  & idx ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (payload (idx (new out))))
+  & payload ~ (old tail)
+  & idx ~ ?((@set_here @set_next) (old (tail (new out))))
+
+@set_here = (old (tail (new out)))
+  & old ~ *
+  & out ~ (1 (new tail))
+
+@set_next = (idx (old (tail (new out))))
+  & @set ~ (tail (idx (new tailout)))
+  & out ~ (1 (old tailout))
+
+@passes = (cnt (edges (state out)))
+  & cnt ~ ?((@passes_zero @passes_succ) (edges (state out)))
+
+@passes_zero = (edges (state out))
+  & edges ~ *
+  & out ~ state
+
+@passes_succ = (cnt (edges (state out)))
+  & edges ~ {e1 e2}
+  & @sweep ~ (e1 (state state2))
+  & @passes ~ (cnt (e2 (state2 out)))
+
+@sweep = ((?((@sweep_nil @sweep_cons) (payload (state out))) payload) (state out))
+
+@sweep_nil = (payload (state out))
+  & payload ~ *
+  & out ~ state
+
+@sweep_cons = (* (payload (state out)))
+  & payload ~ (edge tail)
+  & edge ~ (u (v w))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @relax ~ (state (u1 (v1 (w1 mid))))
+  & @relax ~ (mid (v2 (u2 (w2 next))))
+  & @sweep ~ (tail (next out))
+
+@relax = (state (u (v (w out))))
+  & state ~ {stget stkeep}
+  & @get ~ (stget (u src))
+  & src ~ (r (d (l p)))
+  & r ~ ?((@relax_no @relax_yes) (d (l (p (stkeep (v (w out)))))))
+
+@relax_no = (d (l (p (st (v (w out))))))
+  & d ~ *
+  & l ~ *
+  & p ~ *
+  & v ~ *
+  & w ~ *
+  & out ~ st
+
+@relax_yes = (* (d (l (p (st (v (w out)))))))
+  & v ~ {vi vrest}
+  & vrest ~ {va vs}
+  & @append ~ (p (va cp))
+  & d ~ $([+] $(w cd))
+  & l ~ $([+1] cl)
+  & st ~ {stget stset}
+  & @get ~ (stget (vi oldentry))
+  & oldentry ~ (orr (od (ol op)))
+  & orr ~ ?((@old_unreachable @old_reachable) (od (ol (op (stset (vs (cd (cl (cp out)))))))))
+
+@old_unreachable = (od (ol (op (st (v (cd (cl (cp out))))))))
+  & od ~ *
+  & ol ~ *
+  & op ~ *
+  & @do_update ~ (st (v (cd (cl (cp out)))))
+
+@old_reachable = (od (ol (op (st (v (cd (cl (cp out))))))))
+  & cd ~ {cdcmp cdctx}
+  & @cmp ~ (cdcmp (od ((@dist_less (@dist_equal @dist_greater)) (st (v (cdctx (cl (cp (ol (op out))))))))))
+
+@dist_less = (st (v (cd (cl (cp (ol (op out)))))))
+  & ol ~ *
+  & op ~ *
+  & @do_update ~ (st (v (cd (cl (cp out)))))
+
+@dist_greater = (st (v (cd (cl (cp (ol (op out)))))))
+  & ol ~ *
+  & op ~ *
+  & @do_keep ~ (st (v (cd (cl (cp out)))))
+
+@dist_equal = (st (v (cd (cl (cp (ol (op out)))))))
+  & cl ~ {clcmp clctx}
+  & clctx ~ *
+  & @cmp ~ (clcmp (ol ((@len_less (@len_equal @len_greater)) (st (v (cd (cp (op out))))))))
+
+@len_less = (st (v (cd (cl (cp (op out))))))
+  & op ~ *
+  & @do_update ~ (st (v (cd (cl (cp out)))))
+
+@len_greater = (st (v (cd (cl (cp (op out))))))
+  & op ~ *
+  & @do_keep ~ (st (v (cd (cl (cp out)))))
+
+@len_equal = (st (v (cd (cl (cp (op out))))))
+  & cp ~ {cpcmp cpkeep}
+  & @lex ~ (cpcmp (op b))
+  & b ~ ?((@lex_no @lex_yes) (st (v (cd (cl (cpkeep out))))))
+
+@lex_no = (st (v (cd (cl (cp out)))))
+  & @do_keep ~ (st (v (cd (cl (cp out)))))
+
+@lex_yes = (* (st (v (cd (cl (cp out))))))
+  & @do_update ~ (st (v (cd (cl (cp out)))))
+
+@do_update = (st (v (cd (cl (cp out)))))
+  & @set ~ (st (v ((1 (cd (cl cp))) out)))
+
+@do_keep = (st (v (cd (cl (cp out)))))
+  & v ~ *
+  & cd ~ *
+  & cl ~ *
+  & cp ~ *
+  & out ~ st
+
+@cmp = (x (y (cases ctx)))
+  & x ~ {x1 x2}
+  & y ~ {y1 y2}
+  & x1 ~ $([<] $(y1 b))
+  & b ~ ?((@cmp_notless @cmp_less) (x2 (y2 (cases ctx))))
+
+@cmp_less = (* (x (y (cases ctx))))
+  & x ~ *
+  & y ~ *
+  & cases ~ (less rest)
+  & rest ~ (equal greater)
+  & equal ~ *
+  & greater ~ *
+  & less ~ ctx
+
+@cmp_notless = (x (y (cases ctx)))
+  & x ~ $([=] $(y b))
+  & b ~ ?((@cmp_greater @cmp_equal) (cases ctx))
+
+@cmp_greater = (cases ctx)
+  & cases ~ (less rest)
+  & rest ~ (equal greater)
+  & less ~ *
+  & equal ~ *
+  & greater ~ ctx
+
+@cmp_equal = (* (cases ctx))
+  & cases ~ (less rest)
+  & rest ~ (equal greater)
+  & less ~ *
+  & greater ~ *
+  & equal ~ ctx
+
+@append = ((?((@ap_nil @ap_cons) (payload (x out))) payload) (x out))
+
+@ap_nil = (payload (x out))
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ap_cons = (* (payload (x out)))
+  & payload ~ (head tail)
+  & @append ~ (tail (x newtail))
+  & out ~ (1 (head newtail))
+
+@lex = ((?((@lex_anil @lex_acons) (pa (b out))) pa) (b out))
+
+@lex_anil = (pa (b out))
+  & pa ~ *
+  & b ~ ?((@lex_bnil @lex_bcons) (pb out))
+  & pb ~ *
+
+@lex_bnil = (pb out)
+  & pb ~ *
+  & out ~ 0
+
+@lex_bcons = (* (pb out))
+  & pb ~ *
+  & out ~ 1
+
+@lex_acons = (* (pa (b out)))
+  & pa ~ (ha ta)
+  & b ~ ?((@lex_abnil @lex_abcons) (pb (ha (ta out))))
+  & pb ~ *
+
+@lex_abnil = (pb (ha (ta out)))
+  & pb ~ *
+  & ha ~ *
+  & ta ~ *
+  & out ~ 0
+
+@lex_abcons = (* (pb (ha (ta out))))
+  & pb ~ (hb tb)
+  & @cmp ~ (ha (hb ((@lex_less (@lex_equal @lex_greater)) (ta (tb out))))
+
+@lex_less = (ta (tb out))
+  & ta ~ *
+  & tb ~ *
+  & out ~ 1
+
+@lex_greater = (ta (tb out))
+  & ta ~ *
+  & tb ~ *
+  & out ~ 0
+
+@lex_equal = (ta (tb out))
+  & @lex ~ (ta (tb out))

@@ -1,0 +1,38 @@
+@prog = (l out)
+  & @sw ~ (l ((0 (0 0)) s))
+  & @fin ~ (s out)
+
+@sw = ((?((@sw_nil @sw_cons) (pl (acc out))) pl) (acc out))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((h t) (acc out)))
+  & @step ~ (acc (h acc2))
+  & @sw ~ (t (acc2 out))
+
+@step = (acc (x out))
+  & @lift ~ (x hl)
+  & @comb ~ (acc (hl out))
+
+@lift = (a (a (0 1)))
+
+@comb = ((a0 (a1 a2)) ((b0 (b1 b2)) (w6 (w14 w16))))
+  & b0 ~ {b0_0 b0_1}
+  & a0 ~ {a0_0 a0_1}
+  & w2 ~ {w2_0 w2_t0}
+  & w2_t0 ~ {w2_1 w2_t1}
+  & w2_t1 ~ {w2_2 w2_3}
+  & a2 ~ {a2_0 a2_1}
+  & b0_0 ~ $([>] $(a0_0 w2))
+  & w2_0 ~ $([*] $(b0_1 w3))
+  & w2_1 ~ $([^] $(1 w4))
+  & w4 ~ $([*] $(a0_1 w5))
+  & w3 ~ $([+] $(w5 w6))
+  & a2_0 ~ $([+] $(b1 w9))
+  & w2_2 ~ $([*] $(w9 w10))
+  & w2_3 ~ $([^] $(1 w11))
+  & w11 ~ $([*] $(a1 w13))
+  & w10 ~ $([+] $(w13 w14))
+  & a2_1 ~ $([+] $(b2 w16))
+
+@fin = ((* (a1 *)) a1)

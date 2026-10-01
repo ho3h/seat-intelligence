@@ -1,0 +1,18 @@
+// Dot product over the shorter list, accumulating modulo 2^24.
+// The y-list switch is inlined to avoid a per-element helper reference.
+@prog = ((xs ys) out)
+  & @dot ~ (xs (ys (0 out)))
+
+@dot = ((?((@dot_xnil @dot_xcons) (px (ys (acc out)))) px) (ys (acc out)))
+
+@dot_xnil = (* (* (z z)))
+
+@dot_xcons = (* ((x xt) (ys (acc out))))
+  & ((?((@dot_ynil @dot_ycons) (py (x2 (xt2 (acc2 out2))))) py) (x2 (xt2 (acc2 out2)))) ~ (ys (x (xt (acc out))))
+
+@dot_ynil = (* (* (* (z z))))
+
+@dot_ycons = (* ((y yt) (x (xt (acc out)))))
+  & x ~ $([*] $(y p))
+  & p ~ $([+] $(acc na))
+  & @dot ~ (xt (yt (na out)))

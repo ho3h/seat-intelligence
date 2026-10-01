@@ -1,0 +1,108 @@
+@prog = (l out)
+  & @len ~ (l (0 out))
+
+@len = (lv1 (acc out))
+  & @len_cons1_lw ~ (lv1 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons1 = (* ((* lv2) (acc out)))
+  & @len_cons2_lw ~ (lv2 (acc out))
+
+@len1_nil = (* (a out))
+  & a ~ $([+1] out)
+
+@len_cons2 = (* ((* lv3) (acc out)))
+  & @len_cons3_lw ~ (lv3 (acc out))
+
+@len2_nil = (* (a out))
+  & a ~ $([+2] out)
+
+@len_cons3 = (* ((* lv4) (acc out)))
+  & @len_cons4_lw ~ (lv4 (acc out))
+
+@len3_nil = (* (a out))
+  & a ~ $([+3] out)
+
+@len_cons4 = (* ((* lv5) (acc out)))
+  & @len_cons5_lw ~ (lv5 (acc out))
+
+@len4_nil = (* (a out))
+  & a ~ $([+4] out)
+
+@len_cons5 = (* ((* lv6) (acc out)))
+  & @len_cons6_lw ~ (lv6 (acc out))
+
+@len5_nil = (* (a out))
+  & a ~ $([+5] out)
+
+@len_cons6 = (* ((* lv7) (acc out)))
+  & @len_cons7_lw ~ (lv7 (acc out))
+
+@len6_nil = (* (a out))
+  & a ~ $([+6] out)
+
+@len_cons7 = (* ((* lv8) (acc out)))
+  & @len_cons8_lw ~ (lv8 (acc out))
+
+@len7_nil = (* (a out))
+  & a ~ $([+7] out)
+
+@len_cons8 = (* ((* t) ($([+8] acc2) out)))
+  & @len_cons1_lw ~ (t (acc2 out))
+
+@len_cons1_lw = (ls55 (q45 q46))
+  & ls55 ~ (g52 (e50 (g53 (e51 tk54))))
+  & g52 ~ ?((@len_nil @len_cons1_la) ((e50 (q48 q49)) (q45 q46)))
+  & g53 ~ ?((@len1_nil @len_cons2) ((e51 tk54) (q48 q49)))
+
+@len_cons2_lw = (ls67 (q57 q58))
+  & ls67 ~ (g64 (e62 (g65 (e63 tk66))))
+  & g64 ~ ?((@len1_nil @len_cons2_la) ((e62 (q60 q61)) (q57 q58)))
+  & g65 ~ ?((@len2_nil @len_cons3) ((e63 tk66) (q60 q61)))
+
+@len_cons3_lw = (ls79 (q69 q70))
+  & ls79 ~ (g76 (e74 (g77 (e75 tk78))))
+  & g76 ~ ?((@len2_nil @len_cons3_la) ((e74 (q72 q73)) (q69 q70)))
+  & g77 ~ ?((@len3_nil @len_cons4) ((e75 tk78) (q72 q73)))
+
+@len_cons4_lw = (ls91 (q81 q82))
+  & ls91 ~ (g88 (e86 (g89 (e87 tk90))))
+  & g88 ~ ?((@len3_nil @len_cons4_la) ((e86 (q84 q85)) (q81 q82)))
+  & g89 ~ ?((@len4_nil @len_cons5) ((e87 tk90) (q84 q85)))
+
+@len_cons5_lw = (ls103 (q93 q94))
+  & ls103 ~ (g100 (e98 (g101 (e99 tk102))))
+  & g100 ~ ?((@len4_nil @len_cons5_la) ((e98 (q96 q97)) (q93 q94)))
+  & g101 ~ ?((@len5_nil @len_cons6) ((e99 tk102) (q96 q97)))
+
+@len_cons6_lw = (ls115 (q105 q106))
+  & ls115 ~ (g112 (e110 (g113 (e111 tk114))))
+  & g112 ~ ?((@len5_nil @len_cons6_la) ((e110 (q108 q109)) (q105 q106)))
+  & g113 ~ ?((@len6_nil @len_cons7) ((e111 tk114) (q108 q109)))
+
+@len_cons7_lw = (ls127 (q117 q118))
+  & ls127 ~ (g124 (e122 (g125 (e123 tk126))))
+  & g124 ~ ?((@len6_nil @len_cons7_la) ((e122 (q120 q121)) (q117 q118)))
+  & g125 ~ ?((@len7_nil @len_cons8) ((e123 tk126) (q120 q121)))
+
+@len_cons8_lw = (ls139 (q129 q130))
+  & ls139 ~ (g136 (e134 (g137 (e135 tk138))))
+  & g136 ~ ?((@len7_nil @len_cons8_la) ((e134 (q132 q133)) (q129 q130)))
+  & g137 ~ ?((@len_nil @len_cons1) ((e135 tk138) (q132 q133)))
+
+@len_cons1_la = (* ((* (acc out)) (acc out)))
+
+@len_cons2_la = (* ((* (acc out)) (acc out)))
+
+@len_cons3_la = (* ((* (acc out)) (acc out)))
+
+@len_cons4_la = (* ((* (acc out)) (acc out)))
+
+@len_cons5_la = (* ((* (acc out)) (acc out)))
+
+@len_cons6_la = (* ((* (acc out)) (acc out)))
+
+@len_cons7_la = (* ((* (acc out)) (acc out)))
+
+@len_cons8_la = (* ((* (acc2 out)) ($([+8] acc2) out)))

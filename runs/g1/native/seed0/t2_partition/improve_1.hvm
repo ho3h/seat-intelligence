@@ -1,0 +1,58 @@
+// Partition two elements at a time, preserving their order in each output list.
+@prog = (input out)
+  & input ~ (p xs)
+  & @part2 ~ (p (xs out))
+
+@part2 = (p (xs out))
+  & xs ~ (?( (@p2_nil @p2_cons) (body (p out))) body)
+
+@p2_nil = (body (p out))
+  & body ~ *
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@p2_cons = (* (body (p out)))
+  & body ~ (h t)
+  & t ~ (?( (@p2_last @p2_pair) (tail_body (h (p out)))) tail_body)
+
+@p2_last = (body (h (p out)))
+  & body ~ *
+  & h ~ {h_cmp h_keep}
+  & h_cmp ~ $([<] $(p cmp))
+  & cmp ~ ?((@last_ge @last_lt) (h_keep out))
+
+@last_ge = (h out)
+  & out ~ ((0 *) (1 (h (0 *))))
+
+@last_lt = (* (h out))
+  & out ~ ((1 (h (0 *))) (0 *))
+
+@p2_pair = (* (body (h (p out))))
+  & body ~ (k u)
+  & p ~ {p_mid p_tail}
+  & p_mid ~ {p_h p_k}
+  & h ~ {h_cmp h_keep}
+  & k ~ {k_cmp k_keep}
+  & @part2 ~ (p_tail (u res))
+  & res ~ (lo hi)
+  & h_cmp ~ $([<] $(p_h b1))
+  & k_cmp ~ $([<] $(p_k b2))
+  & b1 ~ ?((@pair_first_ge @pair_first_lt) (b2 (h_keep (k_keep (lo (hi out)))))
+
+@pair_first_ge = (b2 (h (k (lo (hi out)))))
+  & b2 ~ ?((@pair_gg @pair_gl) (h (k (lo (hi out)))))
+
+@pair_first_lt = (* (b2 (h (k (lo (hi out))))))
+  & b2 ~ ?((@pair_lg @pair_ll) (h (k (lo (hi out)))))
+
+@pair_gg = (h (k (lo (hi out))))
+  & out ~ (lo (1 (h (1 (k hi)))))
+
+@pair_gl = (* (h (k (lo (hi out)))))
+  & out ~ ((1 (k lo)) (1 (h hi)))
+
+@pair_lg = (h (k (lo (hi out))))
+  & out ~ ((1 (h lo)) (1 (k hi)))
+
+@pair_ll = (* (h (k (lo (hi out)))))
+  & out ~ ((1 (h (1 (k lo)))) hi)

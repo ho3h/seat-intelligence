@@ -1,0 +1,25 @@
+// Scan with accumulator (unmatched closes, open parentheses).
+@prog = (l out)
+  & @scan ~ (l ((0 0) out))
+
+@scan = ((?((@scan_nil @scan_cons) (p (a out))) p) (a out))
+
+@scan_nil = (* (a a))
+
+@scan_cons = (* ((h t) ((u v) out)))
+  & h ~ $([-40] k)
+  & k ~ ?((@scan_open_char @scan_close_char) (t ((u v) out)))
+
+@scan_open_char = (t ((u v) out))
+  & v ~ $([+1] vv)
+  & @scan ~ (t ((u vv) out))
+
+@scan_close_char = (* (t ((u v) out)))
+  & v ~ ?((@scan_zero_open @scan_positive_open) (u (t out)))
+
+@scan_zero_open = (u (t out))
+  & u ~ $([+1] uu)
+  & @scan ~ (t ((uu 0) out))
+
+@scan_positive_open = (vminus (u (t out)))
+  & @scan ~ (t ((u vminus) out))

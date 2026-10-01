@@ -1,0 +1,69 @@
+{
+ "pid": "t5_cluster_members_of",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 120,
+    "itrs_median_big": 246227,
+    "itrs_max": 1760759,
+    "depth_median_big": 76841,
+    "depth_max": 547937
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 868,
+    "itrs_median_big": 1760770,
+    "itrs_max": 4203237,
+    "depth_median_big": 547939,
+    "depth_max": 1271097
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 519,
+    "itrs_median_big": 1252011,
+    "itrs_max": 4206771,
+    "depth_median_big": 390305,
+    "depth_max": 1272448
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 406323,
+ "best": {
+  "itrs_median_small": 519,
+  "itrs_median_big": 1252011,
+  "itrs_max": 4206771,
+  "depth_median_big": 390305,
+  "depth_max": 1272448
+ },
+ "usd": 0.09936195499999999,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

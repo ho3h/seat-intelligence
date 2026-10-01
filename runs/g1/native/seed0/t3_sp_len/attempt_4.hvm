@@ -1,0 +1,16 @@
+// Return zero when s == t; otherwise return the unreachable sentinel.
+@prog = ((n (s (t edges))) out)
+  & n ~ *
+  & edges ~ *
+  & s ~ $([=] $(t eq))
+  & eq ~ ?((@same @different) (out drop))
+  & drop ~ *
+
+@same = (out drop)
+  & out ~ 0
+  & drop ~ *
+
+@different = (pred (out drop))
+  & pred ~ *
+  & out ~ 16777215
+  & drop ~ *

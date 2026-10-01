@@ -1,0 +1,71 @@
+# t5_rewrite_weighted: position-keyed c tree; the edge walk (in parallel) pushes return-address sinks at u and v
+# and sends (y, w) to leaf x = min(c[u], c[v]) of a tree keyed by x (the routing switches wait for the key, then
+# collapse level by level). A leaf keeps a y-sorted list of (y, total), merged on insert (only edges of the
+# same x chain there). Output: right-to-left traversal that threads the tail. Self loops insert nothing.
+def prog(x):
+  (c, es) = x
+  n = len(c)
+  (l, m) = lvl(n, 0, 1)
+  C = cwalk(c, 0, zt(l), l, m)
+  (Q, T) = ewalk(es, zl(l), zl(l), l, m)
+  return seq(deliver_all(C, Q, l), outl(T, l, 0, []))
+
+def ewalk(es, Q, T, l, m):
+  match es:
+    case List/Nil:
+      return (Q, T)
+    case List/Cons:
+      (u, v, w) = es.head
+      Q2 = push(push(Q, u, l, m, lambda $cu: 0), v, l, m, lambda $cv: 0)
+      (x, y) = minmax($cu, $cv)
+      return ewalk(es.tail, Q2, upd(T, x, l, m, y, w), l, m)
+
+def minmax(a, b):
+  t = b < a
+  return (a + t * (b - a), b + t * (a - b))
+
+def upd(t, k, l, m, y, w):
+  switch l:
+    case 0:
+      if k == y:
+        return t
+      else:
+        return ins(t, y, w)
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, upd(b, k, l-1, m >> 1, y, w))
+      else:
+        return (upd(a, k, l-1, m >> 1, y, w), b)
+
+def ins(xs, y, w):
+  match xs:
+    case List/Nil:
+      return [(y, w)]
+    case List/Cons:
+      (y0, w0) = xs.head
+      if y0 < y:
+        return List/Cons((y0, w0), ins(xs.tail, y, w))
+      else:
+        if y0 == y:
+          return List/Cons((y, w0 + w), xs.tail)
+        else:
+          return List/Cons((y, w), List/Cons((y0, w0), xs.tail))
+
+def outl(T, l, base, tl):
+  switch l:
+    case 0:
+      return app(T, base, tl)
+    case _:
+      (a, b) = T
+      h = 1 << (l-1)
+      return outl(a, l-1, base, outl(b, l-1, base + h, tl))
+
+def app(xs, x, tl):
+  match xs:
+    case List/Nil:
+      return tl
+    case List/Cons:
+      (y, w) = xs.head
+      return List/Cons((x, y, w), app(xs.tail, x, tl))
+

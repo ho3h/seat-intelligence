@@ -1,0 +1,97 @@
+// Sort all candidates, then truncate the sorted list to its first k elements.
+@prog = ((k cands) out)
+  & @sort ~ (cands sorted)
+  & @take ~ (k (sorted out))
+
+// Insertion sort on candidate lists.
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((head tail) out))
+  & @sort ~ (tail sorted)
+  & @insert ~ (sorted (head out))
+
+// Insert cand into an already sorted list.
+@insert = ((?((@ins_nil @ins_cons) (pl (cand out))) pl) (cand out))
+
+@ins_nil = (* (cand out))
+  & out ~ (1 (cand (0 *)))
+
+@ins_cons = (* ((head tail) (cand out)))
+  & cand ~ {cand_cmp cand_keep}
+  & head ~ {head_cmp head_keep}
+  & @before ~ (cand_cmp (head_cmp before))
+  & before ~ ?((@insert_after @insert_before) (cand_keep (head_keep (tail out))))
+
+@insert_before = (* (cand (head (tail out))))
+  & out ~ (1 (cand (1 (head tail))))
+
+@insert_after = (cand (head (tail out)))
+  & @insert ~ (tail (cand rest))
+  & out ~ (1 (head rest))
+
+// Return 1 if cand sorts before head, otherwise 0.
+@before = (cand (head out))
+  & cand ~ (cu (cv cs))
+  & head ~ (hu (hv hs))
+  & cs ~ {csg cse}
+  & hs ~ {hsg hse}
+  & csg ~ $([>] $(hsg gt))
+  & cse ~ $([=] $(hse eq))
+  & gt ~ ?((@before_score_no @before_true) (payload out))
+  & payload ~ (eq (cu (cv (hu hv))))
+
+@before_score_no = (payload out)
+  & payload ~ (eq (cu (cv (hu hv))))
+  & eq ~ ?((@before_false @before_score_equal) (payload2 out))
+  & payload2 ~ (cu (cv (hu hv)))
+
+@before_score_equal = (* (payload out))
+  & payload ~ (cu (cv (hu hv)))
+  & cu ~ {cult cueq}
+  & hu ~ {hult hueq}
+  & cult ~ $([<] $(hult lt))
+  & cueq ~ $([=] $(hueq eq))
+  & lt ~ ?((@before_u_no @before_true) (payload2 out))
+  & payload2 ~ (eq (cv hv))
+
+@before_u_no = (payload out)
+  & payload ~ (eq (cv hv))
+  & eq ~ ?((@before_false @before_u_equal) (payload2 out))
+  & payload2 ~ (cv hv)
+
+@before_u_equal = (* (payload out))
+  & payload ~ (cv hv)
+  & cv ~ $([<] $(hv lt))
+  & lt ~ ?((@before_false @before_true) (* out))
+
+@before_true = (* (payload out))
+  & payload ~ *
+  & out ~ 1
+
+@before_false = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+// Take the first k elements of a list.
+@take = (k (list out))
+  & k ~ ?((@take_zero @take_pos) (list out))
+
+@take_zero = (list out)
+  & list ~ *
+  & out ~ (0 *)
+
+@take_pos = (n (list out))
+  & @take_list ~ (list (n out))
+
+@take_list = ((?((@take_nil @take_cons) (pl (n out))) pl) (n out))
+
+@take_nil = (* (n out))
+  & n ~ *
+  & out ~ (0 *)
+
+@take_cons = (* ((head tail) (n out)))
+  & @take ~ (n (tail rest))
+  & out ~ (1 (head rest))

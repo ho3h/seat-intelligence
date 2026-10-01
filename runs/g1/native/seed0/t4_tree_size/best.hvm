@@ -1,0 +1,23 @@
+// The root is handled directly. For a Node, count leaves in its children
+// and subtract one; for a Leaf, return zero.
+@prog = ((?((@root_leaf @root_node) (pl out)) pl) out)
+
+@root_leaf = (* 0)
+
+@root_node = (* ((left (value right)) out))
+  & value ~ *
+  & @lc ~ (left lcount)
+  & @lc ~ (right rcount)
+  & lcount ~ $([+] $(rcount total))
+  & total ~ $([-] $(1 out))
+
+// Count leaves in a subtree.
+@lc = ((?((@lc_leaf @lc_node) (pl out)) pl) out)
+
+@lc_leaf = (* 1)
+
+@lc_node = (* ((left (value right)) out))
+  & value ~ *
+  & @lc ~ (left lcount)
+  & @lc ~ (right rcount)
+  & lcount ~ $([+] $(rcount out))

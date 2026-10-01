@@ -1,0 +1,136 @@
+// Greedy colouring in increasing vertex order.
+// Colours are accumulated in reverse order.
+
+@prog = ((n edges) out)
+  & @loop ~ (n (0 (edges ((0 *) out))))
+
+@loop = (?((@vzero @vmore) ctx) ctx)
+
+@vzero = (v (edges (colors out)))
+  & v ~ *
+  & edges ~ *
+  & @rev ~ (colors out)
+
+@vmore = (rem (v (edges (colors out))))
+  & @choose ~ (0 (rem (v (edges (colors out)))))
+
+@choose = (c (rem (v (edges (colors out)))))
+  & {c_check c_keep} ~ c
+  & {v_check v_keep} ~ v
+  & {edges_check edges_keep} ~ edges
+  & {colors_check colors_keep} ~ colors
+  & @check ~ (edges_check (v_check (c_check (colors_check bad))))
+  & bad ~ ?((@choose_use @choose_next) (c_keep (rem (v_keep (edges_keep (colors_keep out))))))
+
+@choose_use = (c (rem (v (edges (colors out)))))
+  & v ~ $([+] $(1 v_next))
+  & @loop ~ (rem (v_next (edges ((1 (c colors)) out))))
+
+@choose_next = (* (c (rem (v (edges (colors out))))))
+  & c ~ $([+] $(1 c_next))
+  & @choose ~ (c_next (rem (v (edges (colors out))))
+
+// Return 1 if an edge to a prior vertex has colour c; otherwise return 0.
+@check = ((?((@check_nil @check_cons) (payload (v (c (colors out))))) payload) (v (c (colors out))))
+
+@check_nil = (payload (v (c (colors out))))
+  & payload ~ *
+  & v ~ *
+  & c ~ *
+  & colors ~ *
+  & out ~ 0
+
+@check_cons = (* (((u w) tail) (v (c (colors out)))))
+  & @edge ~ ((u w) (tail (v (c (colors out)))))
+
+@edge = ((u w) (tail (v (c (colors out)))))
+  & {u_eq u_keep} ~ u
+  & {v_eq v_keep} ~ v
+  & u_eq ~ $([=] $(v_eq eq))
+  & eq ~ ?((@edge_unequal @edge_equal) (u_keep (w (tail (v_keep (c (colors out)))))))
+
+@edge_equal = (* (u (w (tail (v (c (colors out)))))))
+  & u ~ *
+  & @prior ~ (w (tail (v (c (colors out)))))
+
+@edge_unequal = (u (w (tail (v (c (colors out))))))
+  & {w_eq w_keep} ~ w
+  & {v_eq v_keep} ~ v
+  & w_eq ~ $([=] $(v_eq eq))
+  & eq ~ ?((@edge_neither @edge_other) (u (w_keep (tail (v_keep (c (colors out)))))))
+
+@edge_neither = (u (w (tail (v (c (colors out))))))
+  & u ~ *
+  & w ~ *
+  & @check ~ (tail (v (c (colors out))))
+
+@edge_other = (* (u (w (tail (v (c (colors out)))))))
+  & w ~ *
+  & @prior ~ (u (tail (v (c (colors out)))))
+
+@prior = (neighbor (tail (v (c (colors out)))))
+  & {neighbor_cmp neighbor_keep} ~ neighbor
+  & {v_cmp v_keep} ~ v
+  & neighbor_cmp ~ $([<] $(v_cmp z))
+  & z ~ ?((@prior_skip @prior_lookup) (neighbor_keep (tail (v_keep (c (colors out))))))
+
+@prior_skip = (neighbor (tail (v (c (colors out)))))
+  & neighbor ~ *
+  & @check ~ (tail (v (c (colors out))))
+
+// In the reversed colour list, neighbour's colour is at index v-neighbor-1.
+@prior_lookup = (* (neighbor (tail (v (c (colors out))))))
+  & {v_calc v_keep} ~ v
+  & {c_test c_keep} ~ c
+  & {colors_lookup colors_keep} ~ colors
+  & v_calc ~ $([-] $(neighbor diff))
+  & diff ~ $([-] $(1 idx))
+  & @nth ~ (colors_lookup (idx got))
+  & got ~ $([=] $(c_test eq))
+  & eq ~ ?((@prior_miss @prior_hit) (tail (v_keep (c_keep (colors_keep out)))))
+
+@prior_miss = (tail (v (c (colors out))))
+  & @check ~ (tail (v (c (colors out))))
+
+@prior_hit = (* (tail (v (c (colors out)))))
+  & tail ~ *
+  & v ~ *
+  & c ~ *
+  & colors ~ *
+  & out ~ 1
+
+// Look up an index in a reversed list.
+@nth = ((?((@nth_nil @nth_cons) (payload (idx out))) payload) (idx out))
+
+@nth_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* ((head tail) (idx out)))
+  & {idx_test idx_keep} ~ idx
+  & idx_test ~ $([=] $(0 z))
+  & z ~ ?((@nth_next @nth_zero) (head (tail (idx_keep out))))
+
+@nth_zero = (head (tail (idx out)))
+  & head ~ out
+  & tail ~ *
+  & idx ~ *
+
+@nth_next = (* (head (tail (idx out))))
+  & head ~ *
+  & idx ~ $([-] $(1 idx_next))
+  & @nth ~ (tail (idx_next out))
+
+// Reverse the accumulated colours into vertex order.
+@rev = (list out)
+  & @revacc ~ (list ((0 *) out))
+
+@revacc = ((?((@rev_nil @rev_cons) (payload (acc out))) payload) (acc out))
+
+@rev_nil = (payload (acc out))
+  & payload ~ *
+  & acc ~ out
+
+@rev_cons = (* ((head tail) (acc out)))
+  & @revacc ~ (tail ((1 (head acc)) out))

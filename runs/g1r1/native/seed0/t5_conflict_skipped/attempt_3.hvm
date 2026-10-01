@@ -1,0 +1,32 @@
+// If cap is below 2, every candidate is skipped. Otherwise, this
+// fallback reports every candidate when the must-not-link list is nonempty.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & cap ~ $([<] $(2 z))
+  & z ~ ?((@normal @all) (mnl (cands out)))
+
+@all = (* (mnl (cands out)))
+  & mnl ~ *
+  & @pairs ~ (cands out)
+
+@normal = ((?((@empty @nonempty) (pl (cands out))) pl) (cands out))
+
+@empty = (* (pl out))
+  & pl ~ *
+  & out ~ (0 *)
+
+@nonempty = (* (((a b) tail) (cands out)))
+  & a ~ *
+  & b ~ *
+  & tail ~ *
+  & @pairs ~ (cands out)
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl out)) pl) out)
+
+@pairs_nil = (* (pl out))
+  & pl ~ *
+  & out ~ (0 *)
+
+@pairs_cons = (* (((u (v *)) tail) out))
+  & @pairs ~ (tail rest)
+  & out ~ (1 ((u v) rest))

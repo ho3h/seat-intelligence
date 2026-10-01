@@ -1,0 +1,102 @@
+// Sort recursively, carrying the list length and inversion count.
+@prog = (xs out)
+  & @sort ~ (xs out)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 0))
+
+@sort_cons = (* ((h t) out))
+  & @sort_tail ~ (t (h out))
+
+@sort_tail = ((?((@sort_tnil @sort_tcons) (pl (h out))) pl) (h out))
+
+@sort_tnil = (pl (h out))
+  & pl ~ *
+  & out ~ ((1 (h (0 *))) (1 0))
+
+@sort_tcons = (* ((x xs) (h out)))
+  & @split ~ ((1 (h (1 (x xs)))) sp)
+  & @sort_parts ~ (sp out)
+
+@sort_parts = ((a b) out)
+  & @sort ~ (a ra)
+  & @sort ~ (b rb)
+  & @combine ~ (ra (rb out))
+
+// Split by alternating elements, producing two sublists.
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split_tail ~ (t (h out))
+
+@split_tail = ((?((@split_tnil @split_tcons) (pl (h out))) pl) (h out))
+
+@split_tnil = (pl (h out))
+  & pl ~ *
+  & out ~ ((1 (h (0 *))) (0 *))
+
+@split_tcons = (* ((x xs) (h out)))
+  & @split ~ (xs res)
+  & @split_pair ~ (res ((h x) out))
+
+@split_pair = ((l r) ((h x) out))
+  & out ~ ((1 (h l)) (1 (x r)))
+
+// Merge two sorted lists, counting cross-inversions.
+@combine = ((sa (la ia)) ((sb (lb ib)) out))
+  & la ~ {lm ls}
+  & @merge ~ (sa (sb (lm mr)))
+  & @finish ~ (mr (ls (lb (ia (ib out)))))
+
+@finish = ((merged cross) (la (lb (ia (ib out)))))
+  & la ~ $([+] $(lb len))
+  & ia ~ $([+] $(ib isum))
+  & isum ~ $([+] $(cross inv))
+  & out ~ (merged (len inv))
+
+@merge = ((?((@merge_a_nil @merge_a_cons) (ap (b (la out)))) ap) (b (la out)))
+
+@merge_a_nil = (ap (b (la out)))
+  & ap ~ *
+  & la ~ *
+  & out ~ (b 0)
+
+@merge_a_cons = (* ((ah at) (b (la out))))
+  & @merge_right ~ (b (ah (at (la out))))
+
+@merge_right = ((?((@merge_b_nil @merge_b_cons) (bp (ah (at (la out))))) bp) (ah (at (la out)))
+
+@merge_b_nil = (bp (ah (at (la out))))
+  & bp ~ *
+  & la ~ *
+  & out ~ ((1 (ah at)) 0)
+
+@merge_b_cons = (* ((bh bt) (ah (at (la out)))))
+  & ah ~ {acmp akeep}
+  & bh ~ {bcmp bkeep}
+  & acmp ~ $([>] $(bcmp z))
+  & z ~ ?((@merge_take_a @merge_take_b) (akeep (at (bkeep (bt (la out))))))
+
+@merge_take_a = (ah (at (bh (bt (la out)))))
+  & la ~ $([-] $(1 la2))
+  & @merge ~ (at ((1 (bh bt)) (la2 res)))
+  & @pack_a ~ (res (ah out))
+
+@merge_take_b = (* (ah (at (bh (bt (la out))))))
+  & la ~ {la_rec la_add}
+  & @merge ~ ((1 (ah at)) (bt (la_rec res)))
+  & @pack_b ~ (res (bh (la_add out)))
+
+@pack_a = ((tail cross) (ah out))
+  & out ~ ((1 (ah tail)) cross)
+
+@pack_b = ((tail cross) (bh (la out)))
+  & la ~ $([+] $(cross c))
+  & out ~ ((1 (bh tail)) c)

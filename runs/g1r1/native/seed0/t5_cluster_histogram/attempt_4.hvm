@@ -1,0 +1,196 @@
+@prog = ((n edges) out)
+  & @init ~ (n (0 labels))
+  & @proc ~ (edges (labels final))
+  & final ~ {iter full}
+  & @zero8 ~ (0 hist0)
+  & @hist ~ (iter (full ((0 *) (hist0 out))))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (rem (i out))
+  & i ~ {head ibase}
+  & ibase ~ $([+1] inext)
+  & @init ~ (rem (inext tail))
+  & out ~ (1 (head tail))
+
+@proc = ((?((@proc_nil @proc_cons) (pl (labs out))) pl) (labs out))
+
+@proc_nil = (* (pl (labs out)))
+  & pl ~ *
+  & out ~ labs
+
+@proc_cons = (rem (pl (labs out)))
+  & rem ~ *
+  & pl ~ (edge rest)
+  & edge ~ (u v)
+  & labs ~ {la lb}
+  & lb ~ {lc lm}
+  & @get ~ (u (la lu))
+  & @get ~ (v (lc lv))
+  & @map ~ (lm (lv (lu newlabs)))
+  & @proc ~ (rest (newlabs out))
+
+@get = (idx (list out))
+  & idx ~ ?((@get_zero @get_more) (list out))
+
+@get_zero = (list out)
+  & list ~ (1 (head tail))
+  & tail ~ *
+  & out ~ head
+
+@get_more = (rem (list out))
+  & @get ~ (rem (list out))
+
+@map = ((?((@map_nil @map_cons) (pl (from (to out)))) pl) (from (to out)))
+
+@map_nil = (* (pl (from (to out))))
+  & pl ~ *
+  & from ~ *
+  & to ~ *
+  & out ~ (0 *)
+
+@map_cons = (rem (pl (from (to out))))
+  & rem ~ *
+  & pl ~ (head tail)
+  & from ~ {fc fr}
+  & to ~ {tc tr}
+  & head ~ {hc hh}
+  & hc ~ $([=] $(fc eq))
+  & eq ~ ?((@map_no @map_yes) (hh (tc (fr (tr (tail out))))))
+
+@map_no = (hh (tc (fr (tr (tail out)))))
+  & tc ~ *
+  & @map ~ (tail (fr (tr rest)))
+  & out ~ (1 (hh rest))
+
+@map_yes = (* (hh (tc (fr (tr (tail out))))))
+  & hh ~ *
+  & @map ~ (tail (fr (tr rest)))
+  & out ~ (1 (tc rest))
+
+@hist = ((?((@hist_nil @hist_cons) (pl (full (seen (hist out))))) pl) (full (seen (hist out))))
+
+@hist_nil = (* (pl (full (seen (hist out)))))
+  & pl ~ *
+  & full ~ *
+  & seen ~ *
+  & out ~ hist
+
+@hist_cons = (rem (pl (full (seen (hist out)))))
+  & rem ~ *
+  & pl ~ {xm xt}
+  & xt ~ {xc xs}
+  & full ~ {fc fr}
+  & seen ~ {sm sr}
+  & @mem ~ (sm (xm found))
+  & found ~ ?((@hist_new @hist_seen) (xc (xs (fc (fr (sr (tail (hist out))))))))
+  & tail ~ *
+
+@hist_new = (xc (xs (fc (fr (sr (tail (hist out)))))))
+  & @count ~ (fc (xc (0 count)))
+  & @hinc ~ (count (hist nhist))
+  & @hist ~ (tail (fr ((1 (xs sr)) (nhist out))))
+
+@hist_seen = (* (xc (xs (fc (fr (sr (tail (hist out))))))))
+  & xc ~ *
+  & xs ~ *
+  & fc ~ *
+  & @hist ~ (tail (fr (sr (hist out))))
+
+@count = ((?((@count_nil @count_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@count_nil = (* (pl (target (acc out))))
+  & pl ~ *
+  & target ~ *
+  & out ~ acc
+
+@count_cons = (rem (pl (target (acc out))))
+  & rem ~ *
+  & pl ~ (head tail)
+  & target ~ {tc tr}
+  & head ~ {hc hv}
+  & hc ~ $([=] $(tc eq))
+  & eq ~ ?((@count_no @count_yes) (tr (hv (tail (acc out)))))
+
+@count_no = (tr (hv (tail (acc out))))
+  & hv ~ *
+  & @count ~ (tail (tr (acc out)))
+
+@count_yes = (* (tr (hv (tail (acc out)))))
+  & hv ~ *
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (tr (acc2 out)))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (pl (target out)))
+  & pl ~ *
+  & target ~ *
+  & out ~ 0
+
+@mem_cons = (rem (pl (target out)))
+  & rem ~ *
+  & pl ~ (head tail)
+  & target ~ {tc tr}
+  & head ~ $([=] $(tc eq))
+  & eq ~ ?((@mem_no @mem_yes) (tr (tail out)))
+
+@mem_no = (tr (tail out))
+  & @mem ~ (tail (tr out))
+
+@mem_yes = (* (tr (tail out)))
+  & tr ~ *
+  & tail ~ *
+  & out ~ 1
+
+@hinc = (count (hist out))
+  & count ~ {cc cv}
+  & cc ~ $([>] $(7 flag))
+  & flag ~ ?((@hinc_small @hinc_big) (cv (hist out)))
+
+@hinc_small = (cv (hist out))
+  & cv ~ $([-1] idx)
+  & @incAt ~ (idx (hist out))
+
+@hinc_big = (* (cv (hist out)))
+  & cv ~ *
+  & @incAt ~ (7 (hist out))
+
+@incAt = (idx (hist out))
+  & idx ~ ?((@inc_zero @inc_more) (hist out))
+
+@inc_zero = (hist out)
+  & hist ~ (1 (head tail))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_more = (rem (hist out))
+  & hist ~ (1 (head tail))
+  & @incAt ~ (rem (tail sub))
+  & out ~ (1 (head sub))
+
+@zero8 = (unit out)
+  & unit ~ *
+  & out ~
+    (1 (0
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (1 (0
+                    (0 *)
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))

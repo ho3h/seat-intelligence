@@ -1,0 +1,84 @@
+@prog = (input output)
+  & @scan ~ (input (0 (0 ((0 *) output))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (flag (val (acc out))))) pl) (flag (val (acc out))))
+
+@scan_nil = (* (flag (val (acc out))))
+  & @finish ~ (flag (val (acc out)))
+
+@scan_cons = (* ((h t) (flag (val (acc out)))))
+  & h ~ {a b}
+  & b ~ {c d}
+  & a ~ $([>] $(47 gt))
+  & gt ~ ?((@gt_no @gt_yes) (c (d (t (flag (val (acc out)))))))
+
+@gt_no = (* (d (t (flag (val (acc out))))))
+  & @nondigit ~ (d (t (flag (val (acc out)))))
+
+@gt_yes = (* (c (d (t (flag (val (acc out))))))
+  & c ~ $([<] $(58 lt))
+  & lt ~ ?((@lt_no @digit_yes) (d (t (flag (val (acc out))))))
+
+@lt_no = (d (t (flag (val (acc out)))))
+  & @nondigit ~ (d (t (flag (val (acc out)))))
+
+@digit_yes = (* (d (t (flag (val (acc out))))))
+  & d ~ $([-] $(48 digit))
+  & val ~ $([*] $(10 ten))
+  & ten ~ $([+] $(digit newval))
+  & flag ~ *
+  & @scan ~ (t (1 (newval (acc out))))
+
+@nondigit = (ch (t (flag (val (acc out)))))
+  & ch ~ {a b}
+  & a ~ $([=] $(32 eq))
+  & eq ~ ?((@not_space @space_yes) (b (t (flag (val (acc out))))))
+
+@not_space = (b (t (flag (val (acc out)))))
+  & @punct ~ (b (t (flag (val (acc out)))))
+
+@space_yes = (* (b (t (flag (val (acc out))))))
+  & @space ~ (flag (b (t (val (acc out)))))
+
+@space = (?((@space_empty @space_active) (ch (t (val (acc out))))) (ch (t (val (acc out)))))
+
+@space_empty = (* (t (* (acc out))))
+  & @scan ~ (t (0 (0 (acc out))))
+
+@space_active = (* (ch (t (val (acc out)))))
+  & @scan ~ (t (0 (0 ((1 ((0 val) acc)) out))))
+
+@punct = (ch (t (flag (val (acc out)))))
+  & ch ~ {a b}
+  & a ~ $([<] $(42 lt))
+  & lt ~ ?((@punct_op @punct_paren) (b (t (flag (val (acc out))))))
+
+@punct_op = (b (t (flag (val (acc out)))))
+  & @emit ~ (flag (1 (b (t (val (acc out))))))
+
+@punct_paren = (* (b (t (flag (val (acc out))))))
+  & @emit ~ (flag (2 (b (t (val (acc out))))))
+
+@emit = (?((@emit_no @emit_yes) (kind (ch (t (val (acc out)))))) (kind (ch (t (val (acc out))))))
+
+@emit_no = (kind (ch (t (val (acc out)))))
+  & val ~ *
+  & @scan ~ (t (0 (0 ((1 ((kind ch) acc)) out))))
+
+@emit_yes = (* (kind (ch (t (val (acc out))))))
+  & @scan ~ (t (0 (0 ((1 ((kind ch) (1 ((0 val) acc)))) out))))
+
+@finish = (?((@finish_empty @finish_num) (val (acc out))) (val (acc out)))
+
+@finish_empty = (* (acc out))
+  & @rev ~ (acc out)
+
+@finish_num = (* (val (acc out)))
+  & @rev ~ ((1 ((0 val) acc)) out)
+
+@rev = ((?((@rev_nil @rev_cons) (pl (acc out))) pl) (acc out))
+
+@rev_nil = (* (a a))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

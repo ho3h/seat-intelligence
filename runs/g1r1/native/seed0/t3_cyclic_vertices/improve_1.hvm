@@ -1,0 +1,150 @@
+@prog = ((n edges) out)
+  & @count_vertices ~ (n (0 (0 (edges out))))
+
+@count_vertices = (n (i (acc (edges out))))
+  & i ~ {i_cmp i_ctx}
+  & n ~ {n_cmp n_ctx}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@count_done @count_step) (n_ctx (i_ctx (acc (edges out)))))
+
+@count_done = (n (i (acc (edges out))))
+  & n ~ *
+  & i ~ *
+  & edges ~ *
+  & out ~ acc
+
+@count_step = (* (n (i (acc (edges out)))))
+  & i ~ {i_test i_next}
+  & edges ~ {edges_test edges_next}
+  & @vertex_test ~ (i_test (edges_test cyc))
+  & cyc ~ ?((@count_no @count_yes) (n (i_next (acc (edges_next out)))))
+
+@count_no = (n (i (acc (edges out))))
+  & i ~ $([+1] i2)
+  & @count_vertices ~ (n (i2 (acc (edges out))))
+
+@count_yes = (* (n (i (acc (edges out)))))
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @count_vertices ~ (n (i2 (acc2 (edges out))))
+
+@vertex_test = (start (edges out))
+  & start ~ {source_for_scan start_for_dfs}
+  & edges ~ {edges_scan edges_dfs}
+  & @scan ~ (source_for_scan (edges_scan ((0 *) frontier)))
+  & @dfs ~ (start_for_dfs (frontier ( (1 (0 (1 (0 (1 (0 (1 (0 (1 (0 (1 (0 (0 *))) )) )) )) )) )) (edges_dfs out))))
+
+@scan = (source (list (work out)))
+  & list ~ (?((@scan_nil @scan_cons) (payload (source (work out)))) payload)
+
+@scan_nil = (payload (source (work out)))
+  & payload ~ *
+  & source ~ *
+  & out ~ work
+
+@scan_cons = (* (((u v) tail) (source (work out))))
+  & source ~ {source_eq source_keep}
+  & u ~ $([=] $(source_eq z))
+  & z ~ ?((@scan_no @scan_yes) (v (tail (source_keep (work out)))))
+
+@scan_no = (v (tail (source (work out))))
+  & v ~ *
+  & @scan ~ (source (tail (work out)))
+
+@scan_yes = (* (v (tail (source (work out)))))
+  & @scan ~ (source (tail ((1 (v work)) out)))
+
+@dfs = (start (queue (seen (edges out))))
+  & queue ~ (?((@dfs_nil @dfs_cons) (payload (start (seen (edges out))))) payload)
+
+@dfs_nil = (payload (start (seen (edges out))))
+  & payload ~ *
+  & start ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ 0
+
+@dfs_cons = (* ((candidate rest) (start (seen (edges out)))))
+  & candidate ~ {candidate_eq candidate_keep}
+  & start ~ {start_eq start_keep}
+  & candidate_eq ~ $([=] $(start_eq eq))
+  & eq ~ ?((@dfs_check @dfs_found) (candidate_keep (rest (start_keep (seen (edges out))))))
+
+@dfs_found = (* (candidate (rest (start (seen (edges out))))))
+  & candidate ~ *
+  & rest ~ *
+  & start ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ 1
+
+@dfs_check = (candidate (rest (start (seen (edges out)))))
+  & candidate ~ {target candidate_keep}
+  & seen ~ {seen_test seen_keep}
+  & @contains ~ (target (seen_test z))
+  & z ~ ?((@dfs_expand @dfs_skip) (candidate_keep (rest (start (seen_keep (edges out))))))
+
+@dfs_skip = (* (candidate (rest (start (seen (edges out))))))
+  & candidate ~ *
+  & @dfs ~ (start (rest (seen (edges out))))
+
+@dfs_expand = (candidate (rest (start (seen (edges out)))))
+  & candidate ~ {source candidate_mark}
+  & edges ~ {edges_scan edges_dfs}
+  & @scan ~ (source (edges_scan (rest new_queue)))
+  & @mark ~ (candidate_mark (seen new_seen))
+  & @dfs ~ (start (new_queue (new_seen (edges_dfs out))))
+
+@contains = (target (list out))
+  & list ~ (?((@contains_nil @contains_cons) (payload (target out))) payload)
+
+@contains_nil = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ 0
+
+@contains_cons = (* ((mask tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & target_cmp ~ $([<] $(24 z))
+  & z ~ ?((@contains_large @contains_small) (mask (tail (target_keep out))))
+
+@contains_large = (mask (tail (target out)))
+  & mask ~ *
+  & target ~ $([-24] target2)
+  & @contains ~ (target2 (tail out))
+
+@contains_small = (* (mask (tail (target out))))
+  & 1 ~ $([<<] $(target bit))
+  & mask ~ $([&] $(bit z))
+  & z ~ ?((@contains_no @contains_yes) (tail out))
+
+@contains_no = (tail out)
+  & tail ~ *
+  & out ~ 0
+
+@contains_yes = (tail out)
+  & tail ~ *
+  & out ~ 1
+
+@mark = (target (list out))
+  & list ~ (?((@mark_nil @mark_cons) (payload (target out))) payload)
+
+@mark_nil = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@mark_cons = (* ((mask tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & target_cmp ~ $([<] $(24 z))
+  & z ~ ?((@mark_large @mark_small) (mask (tail (target_keep out))))
+
+@mark_large = (mask (tail (target out)))
+  & target ~ $([-24] target2)
+  & @mark ~ (target2 (tail tail2))
+  & out ~ (1 (mask tail2))
+
+@mark_small = (* (mask (tail (target out))))
+  & 1 ~ $([<<] $(target bit))
+  & mask ~ $([|] $(bit updated))
+  & out ~ (1 (updated tail))

@@ -1,0 +1,15 @@
+// Greatest common divisor by Euclidean recursion.
+@prog = (input out)
+  & input ~ (a b)
+  & @gcd ~ ((a b) out)
+
+@gcd = ((a b) out)
+  & b ~ ?((@gcd_zero @gcd_succ) (a out))
+
+@gcd_zero = (x x)
+
+@gcd_succ = (k (a out))
+  & k ~ $([+1] b)
+  & b ~ {bmod brec}
+  & a ~ $([%] $(bmod rem))
+  & @gcd ~ ((brec rem) out)

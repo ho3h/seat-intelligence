@@ -1,0 +1,184 @@
+// Generate the ascending list [0, ..., n-1].
+@prog = (input out)
+  & input ~ (n edges)
+  & @range ~ (n verts)
+  & verts ~ {vinit vecc}
+  & @adj_init ~ (vinit empty_adj)
+  & @adj_build ~ (edges (empty_adj graph))
+  & @eccs ~ (vecc (graph out))
+
+@range = (n out)
+  & n ~ ?((@range_zero @range_succ) out)
+
+@range_zero = (0 *)
+
+@range_succ = (k out)
+  & k ~ {kn kh}
+  & @range ~ (kn tail)
+  & @append ~ (tail ((1 (kh (0 *))) out))
+
+// Append two lists.
+@append = (a (b out))
+  & a ~ (?( (@append_nil @append_cons) (p (b out))) p)
+
+@append_nil = (p (b out))
+  & p ~ *
+  & out ~ b
+
+@append_cons = (* ((h t) (b out)))
+  & @append ~ (t (b rest))
+  & out ~ (1 (h rest))
+
+// Create an empty adjacency list for each vertex.
+@adj_init = (verts out)
+  & verts ~ (?( (@ai_nil @ai_cons) (p out)) p)
+
+@ai_nil = (p out)
+  & p ~ *
+  & out ~ (0 *)
+
+@ai_cons = (* ((x tail) out))
+  & x ~ *
+  & @adj_init ~ (tail rest)
+  & out ~ (1 ((0 *) rest))
+
+// Build the adjacency lists by inserting both directions of every edge.
+@adj_build = (edges (adj out))
+  & edges ~ (?( (@ab_nil @ab_cons) (p (adj out))) p)
+
+@ab_nil = (p (adj out))
+  & p ~ *
+  & out ~ adj
+
+@ab_cons = (* (((u v) tail) (adj out)))
+  & u ~ {u_idx u_val}
+  & v ~ {v_idx v_val}
+  & @adj_add ~ (adj (u_idx (v_val mid)))
+  & @adj_add ~ (mid (v_idx (u_val next)))
+  & @adj_build ~ (tail (next out))
+
+// Insert val at the front of the adjacency list for idx.
+@adj_add = (adj (idx out))
+  & idx ~ ?((@aa_zero @aa_succ) (adj (val out)))
+
+@aa_zero = (adj (val out))
+  & adj ~ (1 (neighbors tail))
+  & out ~ (1 ((1 (val neighbors)) tail))
+
+@aa_succ = (k (adj (val out)))
+  & adj ~ (1 (neighbors tail))
+  & @adj_add ~ (tail (k (val rest)))
+  & out ~ (1 (neighbors rest))
+
+// Look up the adjacency list at idx.
+@lookup = (adj (idx out))
+  & idx ~ ?((@lookup_zero @lookup_succ) (adj out))
+
+@lookup_zero = (adj out)
+  & adj ~ (1 (neighbors tail))
+  & tail ~ *
+  & out ~ neighbors
+
+@lookup_succ = (k (adj out))
+  & adj ~ (1 (neighbors tail))
+  & neighbors ~ *
+  & @lookup ~ (tail (k out))
+
+// Compute one eccentricity for each vertex, in order.
+@eccs = (verts (graph out))
+  & verts ~ (?( (@ecc_nil @ecc_cons) (p (graph out))) p)
+
+@ecc_nil = (p (graph out))
+  & p ~ *
+  & graph ~ *
+  & out ~ (0 *)
+
+@ecc_cons = (* ((x tail) (graph out)))
+  & graph ~ {g1 g2}
+  & @bfs_start ~ (x (g1 ecc))
+  & @eccs ~ (tail (g2 rest))
+  & out ~ (1 (ecc rest))
+
+@bfs_start = (x (graph out))
+  & x ~ {s1 s2}
+  & @bfs ~ ((1 (s1 (0 *))) ((1 (s2 (0 *))) (graph (0 out))))
+
+// BFS state: (frontier, seen, graph, depth).
+@bfs = (front (seen (graph (depth out))))
+  & graph ~ {graph_calc graph_keep}
+  & @all_candidates ~ (front (graph_calc cand))
+  & @filter ~ (cand (seen pair))
+  & pair ~ (nf seen2)
+  & nf ~ (?( (@bfs_done @bfs_more) (p (seen2 (graph_keep (depth out))))) p)
+
+@bfs_done = (p (seen (graph (depth out))))
+  & p ~ *
+  & seen ~ *
+  & graph ~ *
+  & out ~ depth
+
+@bfs_more = (* ((h t) (seen (graph (depth out)))))
+  & depth ~ $([+1] dnext)
+  & @bfs ~ ((1 (h t)) (seen (graph (dnext out))))
+
+// Gather neighbors for each vertex in the frontier using the adjacency lists.
+@all_candidates = (front (graph out))
+  & front ~ (?( (@ac_nil @ac_cons) (p (graph out))) p)
+
+@ac_nil = (p (graph out))
+  & p ~ *
+  & graph ~ *
+  & out ~ (0 *)
+
+@ac_cons = (* ((x tail) (graph out)))
+  & graph ~ {g1 g2}
+  & @lookup ~ (g1 (x found))
+  & @all_candidates ~ (tail (g2 rest))
+  & @append ~ (found (rest out))
+
+// Filter candidates against seen, also removing duplicates.
+@filter = (cand (seen out))
+  & cand ~ (?( (@filter_nil @filter_cons) (p (seen out))) p)
+
+@filter_nil = (p (seen out))
+  & p ~ *
+  & out ~ ((0 *) seen)
+
+@filter_cons = (* ((h tail) (seen out)))
+  & @filter ~ (tail (seen r))
+  & r ~ (nf seen2)
+  & seen2 ~ {seen_mem seen_out}
+  & h ~ {h_mem h_tmp}
+  & h_tmp ~ {h_new h_seen}
+  & @mem ~ (seen_mem (h_mem m))
+  & m ~ ?((@filter_add @filter_skip) (nf (seen_out (h_new (h_seen out)))))
+
+@filter_add = (nf (seen_out (h_new h_seen)))
+  & out ~ ((1 (h_new nf)) (1 (h_seen seen_out)))
+
+@filter_skip = (* (nf (seen_out (h_new h_seen))))
+  & h_new ~ *
+  & h_seen ~ *
+  & out ~ (nf seen_out)
+
+// Membership test: does x occur in list l?
+@mem = (l (x out))
+  & l ~ (?( (@mem_nil @mem_cons) (p (x out))) p)
+
+@mem_nil = (p (x out))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (x_rec out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1

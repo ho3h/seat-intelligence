@@ -1,0 +1,16 @@
+// Generate [0, 1, ..., n-1] by recursing with the next index.
+@prog = (n out)
+  & @rg ~ (n (0 out))
+
+@rg = (n (i out))
+  & n ~ ?((@rg_zero @rg_succ) (i out))
+
+@rg_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@rg_succ = (n (i out))
+  & i ~ {head next}
+  & next ~ $([+1] i2)
+  & @rg ~ (n (i2 tail))
+  & out ~ (1 (head tail))

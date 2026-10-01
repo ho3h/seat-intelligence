@@ -1,0 +1,66 @@
+// Count each value in the list and retain the most frequent one.
+// Ties are resolved in favor of the smaller value.
+@prog = (l out)
+  & l ~ {rem full}
+  & @walk ~ (rem (full (0 (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (full (bv (bc out))))) pl) (full (bv (bc out))))
+
+@walk_nil = (* (full (bv (bc out))))
+  & full ~ *
+  & bc ~ *
+  & out ~ bv
+
+@walk_cons = (* ((h t) (full (bv (bc out)))))
+  & full ~ {fcount fnext}
+  & h ~ {hcount {hcmp hkeep}}
+  & bv ~ {bvcomp bvkeep}
+  & bc ~ {bcgt {bceq bckeep}}
+  & @count ~ (fcount (hcount (0 c)))
+  & c ~ {cgt {ceq ckeep}}
+  & cgt ~ $([>] $(bcgt gt))
+  & ceq ~ $([=] $(bceq eq))
+  & hcmp ~ $([<] $(bvcomp lt))
+  & gt ~ ?((@check_tie @take_gt) (eq (lt (hkeep (ckeep (t (fnext (bvkeep (bckeep out))))))))
+
+@take_gt = (* (eq (lt (h (c (t (full (bv (bc out))))))))
+  & eq ~ *
+  & lt ~ *
+  & @walk ~ (t (full (h (c out))))
+
+@check_tie = (eq (lt (h (c (t (full (bv (bc out))))))))
+  & eq ~ ?((@keep_eq @check_lt) (lt (h (c (t (full (bv (bc out))))))))
+
+@keep_eq = (* (h (c (t (full (bv (bc out)))))))
+  & h ~ *
+  & c ~ *
+  & @walk ~ (t (full (bv (bc out))))
+
+@check_lt = (* (lt (h (c (t (full (bv (bc out))))))))
+  & lt ~ ?((@walk_keep @walk_take) (h (c (t (full (bv (bc out))))))
+
+@walk_keep = (h (c (t (full (bv (bc out))))))
+  & h ~ *
+  & c ~ *
+  & @walk ~ (t (full (bv (bc out))))
+
+@walk_take = (* (h (c (t (full (bv (bc out)))))))
+  & @walk ~ (t (full (h (c out))))
+
+@count = ((?((@count_nil @count_cons) (pl (x (acc out)))) pl) (x (acc out)))
+
+@count_nil = (* (x (acc out)))
+  & x ~ *
+  & out ~ acc
+
+@count_cons = (* ((h t) (x (acc out))))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc eq))
+  & eq ~ ?((@cnt_no @cnt_yes) (xr (t (acc out))))
+
+@cnt_no = (xr (t (acc out)))
+  & @count ~ (t (xr (acc out)))
+
+@cnt_yes = (* (xr (t (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (xr (acc2 out)))

@@ -1,0 +1,100 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@finish = ((($([+] $(a $([+] $(b $([+] $(c d)))))) ($([+] $(e $([+] $(f $([+] $(g h)))))) ($([+] $(i $([+] $(j $([+] $(k l)))))) $([+] $(m $([+] $(n $([+] $(o p))))))))) (($([+] $(q $([+] $(r $([+] $(s t)))))) ($([+] $(u $([+] $(v $([+] $(w x)))))) ($([+] $(y $([+] $(z $([+] $(ab bb)))))) $([+] $(cb $([+] $(db $([+] $(eb fb))))))))) (($([+] $(gb $([+] $(hb $([+] $(ib jb)))))) ($([+] $(kb $([+] $(lb $([+] $(mb nb)))))) ($([+] $(ob $([+] $(pb $([+] $(qb rb)))))) $([+] $(sb $([+] $(tb $([+] $(ub vb))))))))) ($([+] $(wb $([+] $(xb $([+] $(yb zb)))))) ($([+] $(ac $([+] $(bc $([+] $(cc dc)))))) ($([+] $(ec $([+] $(fc $([+] $(gc hc)))))) $([+] $(ic $([+] $(jc $([+] $(kc lc)))))))))))) (((a (e (i m))) ((q (u (y cb))) ((gb (kb (ob sb))) (wb (ac (ec ic)))))) (((b (f (j n))) ((r (v (z db))) ((hb (lb (pb tb))) (xb (bc (fc jc)))))) (((c (g (k o))) ((s (w (ab eb))) ((ib (mb (qb ub))) (yb (cc (gc kc)))))) bd))))
+  & @List/Cons ~ (d (ad bd))
+  & @List/Cons ~ (h (zc ad))
+  & @List/Cons ~ (l (yc zc))
+  & @List/Cons ~ (p (xc yc))
+  & @List/Cons ~ (t (wc xc))
+  & @List/Cons ~ (x (vc wc))
+  & @List/Cons ~ (bb (uc vc))
+  & @List/Cons ~ (fb (tc uc))
+  & @List/Cons ~ (jb (sc tc))
+  & @List/Cons ~ (nb (rc sc))
+  & @List/Cons ~ (rb (qc rc))
+  & @List/Cons ~ (vb (pc qc))
+  & @List/Cons ~ (zb (oc pc))
+  & @List/Cons ~ (dc (nc oc))
+  & @List/Cons ~ (hc (mc nc))
+  & @List/Cons ~ (lc (@List/Nil mc))
+
+@histogram = ((@histogram__C11 a) a)
+
+@histogram__C0 = (b (e (h (j (a (d (g k)))))))
+  & @finish ~ (c (f (i (j k))))
+  & @inc16 ~ (a (b c))
+  & @inc16 ~ (d (e f))
+  & @inc16 ~ (g (h i))
+
+@histogram__C1 = (* (k (a (c (f (i (l (b (e (h n))))))))))
+  & @histogram ~ (a (d (g (j (m n)))))
+  & @inc16 ~ (b (c d))
+  & @inc16 ~ (e (f g))
+  & @inc16 ~ (h (i j))
+  & @inc16 ~ (k (l m))
+
+@histogram__C10 = (* (e ((@histogram__C8 (a (b (c (d (e f)))))) (a (b (c (d f)))))))
+
+@histogram__C11 = (?((@histogram__C9 @histogram__C10) a) a)
+
+@histogram__C2 = (?((@histogram__C0 @histogram__C1) a) a)
+
+@histogram__C3 = (b (e (g (h (a (d i))))))
+  & @finish ~ (c (f (g (h i))))
+  & @inc16 ~ (a (b c))
+  & @inc16 ~ (d (e f))
+
+@histogram__C4 = (* (g ((@histogram__C2 (a (b (c (d (e (f (g h)))))))) (a (b (c (d (e (f h)))))))))
+
+@histogram__C5 = (?((@histogram__C3 @histogram__C4) a) a)
+
+@histogram__C6 = (b (d (e (f (a g)))))
+  & @finish ~ (c (d (e (f g))))
+  & @inc16 ~ (a (b c))
+
+@histogram__C7 = (* (f ((@histogram__C5 (a (b (c (d (e (f g))))))) (a (b (c (d (e g))))))))
+
+@histogram__C8 = (?((@histogram__C6 @histogram__C7) a) a)
+
+@histogram__C9 = a
+  & @finish ~ a
+
+@inc16 = ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a (b (c (d (e f))))))) a} ((b (c (d e))) f))
+
+@inc16__C0 = ($([:-0x000000C] d) (a (b (c (e (a (b (c f))))))))
+  & @inc4 ~ (d (e f))
+
+@inc16__C1 = (* ($([:-0x0000008] c) (a (b (d (f (a (b (e f)))))))))
+  & @inc4 ~ (c (d e))
+
+@inc16__C2 = ({$([>0x000000C] ?((@inc16__C0 @inc16__C1) (a b))) a} b)
+
+@inc16__C3 = (* ($([:-0x0000004] b) (a (c (e (f (a (d (e f)))))))))
+  & @inc4 ~ (b (c d))
+
+@inc16__C4 = ({$([>0x0000008] ?((@inc16__C2 @inc16__C3) (a b))) a} b)
+
+@inc16__C5 = (* (a (b (d (e (f (c (d (e f)))))))))
+  & @inc4 ~ (a (b c))
+
+@inc4 = ({$([=0x0000000] ?((@inc4__C4 @inc4__C5) (a (b (c (d (e f))))))) a} ((b (c (d e))) f))
+
+@inc4__C0 = (a (b (c ($([+0x0000001] d) (a (b (c d)))))))
+
+@inc4__C1 = (* (a (b ($([+0x0000001] c) (d (a (b (c d))))))))
+
+@inc4__C2 = ($([=0x0000002] ?((@inc4__C0 @inc4__C1) a)) a)
+
+@inc4__C3 = (* (* (a ($([+0x0000001] b) (c (d (a (b (c d)))))))))
+
+@inc4__C4 = ({$([=0x0000001] ?((@inc4__C2 @inc4__C3) (a b))) a} b)
+
+@inc4__C5 = (* (* ($([+0x0000001] a) (b (c (d (a (b (c d)))))))))
+
+@prog = (a f)
+  & @histogram ~ (a (b (c (d (e f)))))
+  & ((0 (0 (0 0))) ((0 (0 (0 0))) ((0 (0 (0 0))) (0 (0 (0 0)))))) ~ {b {c {d e}}}
+
+

@@ -1,0 +1,35 @@
+// Top-level input: (k, xs)
+@prog = ((k xs) out)
+  & @top ~ (xs (k ((0 *) out)))
+
+// Process xs with a bounded, descending accumulator.
+@top = ((?((@top_nil @top_cons) (payload (k (acc out)))) payload) (k (acc out)))
+
+@top_nil = (* (* (a a)))
+
+@top_cons = (* ((h t) (k (acc out))))
+  & k ~ {ki kr}
+  & @ins ~ (ki (h (acc newacc)))
+  & @top ~ (t (kr (newacc out)))
+
+// Insert x into acc, keeping at most cap elements.
+@ins = (?((@ins_zero @ins_pos) (x (acc out))) (x (acc out)))
+
+@ins_zero = (* (* out))
+  & out ~ (0 *)
+
+@ins_pos = (rem (x ((?((@ip_nil @ip_cons) (rem (x (payload out)))) payload) out)))
+
+@ip_nil = (* (x (* out)))
+  & out ~ (1 (x (0 *)))
+
+@ip_cons = (rem (x ((h t) out)))
+  & x ~ $([<] $(h z))
+  & z ~ ?((@ip_ge @ip_lt) (rem (x (h (t out))))
+
+@ip_ge = (* (x (* (t out))))
+  & out ~ (1 (x t))
+
+@ip_lt = (* (rem (x (h (t out)))))
+  & @ins ~ (rem (x (t newtail)))
+  & out ~ (1 (h newtail))

@@ -1,0 +1,206 @@
+// Initialize labels, pack them into 16-element blocks, union each edge,
+// flatten the parent array, and emit each node's component maximum.
+@prog = ((n pairs) out)
+  & @init ~ (n flat)
+  & @pack ~ (flat chunks)
+  & @sweep ~ (pairs (chunks merged))
+  & merged ~ {scan lookup}
+  & @flatten ~ (scan flatparents)
+  & @labels ~ (flatparents (lookup out))
+
+// Build [0, 1, ..., n-1].
+@init = (n out)
+  & n ~ ?((@init_zero @init_more) (out *))
+
+@init_zero = (out *)
+  & out ~ (0 *)
+
+@init_more = (m (out *))
+  & m ~ {m1 m2}
+  & @init ~ (m1 mid)
+  & @append ~ (mid (m2 out))
+
+// Append x to list l.
+@append = ((?((@ap_nil @ap_cons) (pl (x out))) pl) (x out))
+
+@ap_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ap_cons = (* ((h t) (x out)))
+  & @append ~ (t (x mid))
+  & out ~ (1 (h mid))
+
+// Reverse a list.
+@reverse = ((?((@rv_nil @rv_cons) (pl out)) pl) out)
+
+@rv_nil = (* out)
+  & out ~ (0 *)
+
+@rv_cons = (* ((h t) out))
+  & @reverse ~ (t mid)
+  & out ~ (1 (h mid))
+
+// Pack a list into consecutive blocks of up to 16 elements.
+@pack = (list out)
+  & @pack_loop ~ (list (0 ((0 *) ((0 *) out))))
+
+@pack_loop = ((?((@pk_nil @pk_cons) (pl (count (chunk (blocks out)))) pl) (count (chunk (blocks out))))
+
+@pk_nil = (* (count (chunk (blocks out))))
+  & count ~ *
+  & chunk ~ ?((@pk_empty @pk_partial) (blocks out))
+
+@pk_empty = (blocks out)
+  & out ~ blocks
+
+@pk_partial = (* ((h t) (blocks out)))
+  & @reverse ~ ((1 (h t)) rev)
+  & @append ~ (blocks (rev out))
+
+@pk_cons = (* ((head tail) (count (chunk (blocks out)))))
+  & count ~ {ctest cpass}
+  & ctest ~ $([=] $(15 z))
+  & z ~ ?((@pk_more @pk_full) ((head tail) (cpass (chunk (blocks out)))))
+
+@pk_more = ((head tail) (count (chunk (blocks out))))
+  & count ~ $([+1] next)
+  & @pack_loop ~ (tail (next (1 (head chunk)) (blocks out)))
+
+@pk_full = (* ((head tail) (count (chunk (blocks out)))))
+  & count ~ *
+  & @reverse ~ ((1 (head chunk)) rev)
+  & @append ~ (blocks (rev newblocks))
+  & @pack_loop ~ (tail (0 ((0 *) (newblocks out))))
+
+// List lookup and update, used within blocks and on the block list.
+@list_get = ((?((@lg_nil @lg_cons) (pl (idx out))) pl) (idx out))
+
+@lg_nil = (* (idx out))
+  & idx ~ *
+  & out ~ *
+
+@lg_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lg_head @lg_tail) (h (t out)))
+
+@lg_head = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@lg_tail = (idx (* (t out)))
+  & @list_get ~ (t (idx out))
+
+@list_set = ((?((@ls_nil @ls_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@ls_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ *
+
+@ls_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@ls_head @ls_tail) (h (t (val out))))
+
+@ls_head = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@ls_tail = (idx (h (t (val out))))
+  & @list_set ~ (t (idx (val mid)))
+  & out ~ (1 (h mid))
+
+// Blocked lookup: index = 16 * quotient + remainder.
+@get = (chunks (idx out))
+  & idx ~ {ixq ixr}
+  & ixq ~ $([>>4] qraw)
+  & ixr ~ $([&15] r)
+  & qraw ~ {q1 q2}
+  & @list_get ~ (chunks (q1 block))
+  & @list_get ~ (block (r out))
+
+// Blocked update.
+@set = (chunks (idx (val out)))
+  & chunks ~ {cget cset}
+  & idx ~ {ixq ixr}
+  & ixq ~ $([>>4] qraw)
+  & ixr ~ $([&15] r)
+  & qraw ~ {q1 q2}
+  & @list_get ~ (cget (q1 block))
+  & @list_set ~ (block (r (val newblock)))
+  & @list_set ~ (cset (q2 (newblock out)))
+
+// Find the root parent for idx.
+@find = (parents (idx out))
+  & parents ~ {pget prest}
+  & idx ~ {iget irest}
+  & irest ~ {icmp ib}
+  & @get ~ (pget (iget val))
+  & val ~ {vtest vnext}
+  & vtest ~ $([=] $(icmp z))
+  & z ~ ?((@find_next @find_same) (ib (prest (vnext out))))
+
+@find_next = (idx (parents (val out)))
+  & idx ~ *
+  & @find ~ (parents (val out))
+
+@find_same = (* (idx (parents (val out))))
+  & parents ~ *
+  & val ~ *
+  & out ~ idx
+
+// Union the two endpoint components by linking the smaller root to the larger.
+@edge = ((u v) (parents out))
+  & parents ~ {p1 rest}
+  & rest ~ {p2 pset}
+  & @find ~ (p1 (u a))
+  & @find ~ (p2 (v b))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@edge_le @edge_gt) (ar (br (pset out))))
+
+@edge_le = (a (b (parents out)))
+  & @set ~ (parents (a (b out)))
+
+@edge_gt = (* (a (b (parents out))))
+  & @set ~ (parents (b (a out)))
+
+// Process every edge once.
+@sweep = ((?((@sw_nil @sw_cons) (pl (parents out))) pl) (parents out))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((edge tail) (parents out)))
+  & @edge ~ (edge (parents mid))
+  & @sweep ~ (tail (mid out))
+
+// Flatten the blocked parent list.
+@flatten = (chunks out)
+  & @flc ~ (chunks ((0 *) out))
+
+@flc = ((?((@flc_nil @flc_cons) (pl (acc out))) pl) (acc out))
+
+@flc_nil = (* (acc out))
+  & @reverse ~ (acc out)
+
+@flc_cons = (* ((block tail) (acc out)))
+  & @flb ~ (block (tail (acc out)))
+
+@flb = ((?((@flb_nil @flb_cons) (pl (tail (acc out)))) pl) (tail (acc out)))
+
+@flb_nil = (* (tail (acc out)))
+  & @flc ~ (tail (acc out))
+
+@flb_cons = (* ((h rest) (tail (acc out))))
+  & @flb ~ (rest (tail (1 (h acc)) out))
+
+// Map each parent entry to its root, which is the component's largest id.
+@labels = ((?((@labels_nil @labels_cons) (pl (parents out))) pl) (parents out))
+
+@labels_nil = (* (parents out))
+  & parents ~ *
+  & out ~ (0 *)
+
+@labels_cons = (* ((head tail) (parents out)))
+  & parents ~ {pfind prest}
+  & @find ~ (pfind (head root))
+  & @labels ~ (tail (prest mid))
+  & out ~ (1 (root mid))

@@ -1,0 +1,7 @@
+// Generate [0, 1, ..., n-1].
+@prog = (n out)
+  & @rg ~ (n (0 out))
+
+@rg = (n (i out))
+  & n ~ ?((* (0 *)) (m ({head next} (1 (head tail)))))
+  & @rg ~ (m (next tail))

@@ -1,0 +1,146 @@
+@prog = (input output)
+  & input ~ (tau (cap cands))
+  & @build ~ (cands (tau filtered))
+  & @sort ~ (filtered sorted)
+  & @stage ~ (sorted (cap output))
+
+@build = ((?((@build_nil @build_cons) (pl (tau out))) pl) (tau out))
+
+@build_nil = (* (tau out))
+  & tau ~ *
+  & out ~ (0 *)
+
+@build_cons = (* (((u (v score)) tail) (tau out)))
+  & tau ~ {tau_rec tau_cmp}
+  & score ~ {score_cmp score_keep}
+  & @build ~ (tail (tau_rec rest))
+  & score_cmp ~ $([<] $(tau_cmp lt))
+  & lt ~ ?((@build_accept @build_reject) ((u (v score_keep)) (rest out)))
+
+@build_accept = ((u (v score)) (rest out))
+  & out ~ (1 ((u (v score)) rest))
+
+@build_reject = ((u (v score)) (rest out))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & out ~ rest
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((head tail) out))
+  & @split ~ ((1 (head tail)) (0 parts))
+  & parts ~ (left right)
+  & @sort ~ (left sorted_left)
+  & @sort ~ (right sorted_right)
+  & @merge ~ (sorted_left (sorted_right out))
+
+@split = ((?((@split_nil @split_cons) (pl (flag out))) pl) (flag out))
+
+@split_nil = (* (flag out))
+  & flag ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((head tail) (flag out)))
+  & flag ~ ?((@split_left @split_right) ((head tail) out))
+
+@split_left = ((head tail) out)
+  & @split ~ (tail (1 parts))
+  & parts ~ (left right)
+  & out ~ ((1 (head left)) right)
+
+@split_right = (* ((head tail) out))
+  & @split ~ (tail (0 parts))
+  & parts ~ (left right)
+  & out ~ (left (1 (head right)))
+
+@merge = (a (b out))
+  & @merge_left ~ (a (b out))
+
+@merge_left = ((?((@merge_left_nil @merge_left_cons) (pl (b out))) pl) (b out))
+
+@merge_left_nil = (* (b out))
+  & out ~ b
+
+@merge_left_cons = (* ((x xs) (b out)))
+  & @merge_right ~ (b (x (xs out)))
+
+@merge_right = ((?((@merge_right_nil @merge_right_cons) (pl (x (xs out)))) pl) (x (xs out)))
+
+@merge_right_nil = (* (x (xs out)))
+  & out ~ (1 (x xs))
+
+@merge_right_cons = (* ((y ys) (x (xs out))))
+  & @before ~ (x (y pred))
+  & pred ~ ?((@merge_choose_right @merge_choose_left) ((x xs) (y (ys out))))
+
+@merge_choose_right = ((x xs) (y (ys out)))
+  & @merge ~ ((1 (x xs)) (ys rest))
+  & out ~ (1 (y rest))
+
+@merge_choose_left = (* ((x xs) (y (ys out))))
+  & @merge ~ (xs ((1 (y ys)) rest))
+  & out ~ (1 (x rest))
+
+@before = ((u (v s)) ((eu (ev es)) out))
+  & s ~ {sg se}
+  & es ~ {esg ese}
+  & sg ~ $([>] $(esg gt))
+  & gt ~ ?((@before_score_not_gt @before_true) ((u (v (se (eu (ev ese))))) out))
+
+@before_score_not_gt = ((u (v (s (eu (ev es))))) out)
+  & s ~ $([=] $(es eq))
+  & eq ~ ?((@before_false @before_score_equal) ((u (v (eu ev))) out))
+
+@before_score_equal = (* ((u (v (eu ev))) out))
+  & u ~ {ul ue}
+  & eu ~ {eul eue}
+  & ul ~ $([<] $(eul lt))
+  & lt ~ ?((@before_u_not_lt @before_true) ((ue (v (eue ev))) out))
+
+@before_u_not_lt = ((u (v (eu ev))) out)
+  & u ~ $([=] $(eu eq))
+  & eq ~ ?((@before_false @before_v_compare) ((v ev) out))
+
+@before_v_compare = (* ((v ev) out))
+  & v ~ $([<] $(ev out))
+
+@before_true = (* (data out))
+  & data ~ *
+  & out ~ 1
+
+@before_false = (data out)
+  & data ~ *
+  & out ~ 0
+
+@stage = ((?((@stage_nil @stage_cons) (pl (cap out))) pl) (cap out))
+
+@stage_nil = (* (cap out))
+  & cap ~ *
+  & out ~ ((0 *) 0)
+
+@stage_cons = (* (((u (v score)) tail) (cap out)))
+  & cap ~ ?((@stage_exhausted @stage_room) (((u (v score)) tail) out))
+
+@stage_exhausted = (((u (v score)) tail) out)
+  & @length ~ ((1 ((u (v score)) tail)) n)
+  & out ~ ((0 *) n)
+
+@stage_room = (remaining (((u (v score)) tail) out))
+  & @stage ~ (tail (remaining res))
+  & res ~ (staged deferred)
+  & score ~ *
+  & out ~ ((1 ((u v) staged)) deferred)
+
+@length = ((?((@length_nil @length_cons) (pl out)) pl) out)
+
+@length_nil = (* out)
+  & out ~ 0
+
+@length_cons = (* ((head tail) out))
+  & head ~ *
+  & @length ~ (tail n)
+  & n ~ $([+1] out)

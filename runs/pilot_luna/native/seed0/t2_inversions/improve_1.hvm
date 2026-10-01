@@ -1,0 +1,75 @@
+// Sort the list recursively, returning (sorted-list (length inversions)).
+@prog = (input out)
+  & @sort ~ (input out)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ ((0 *) (0 0))
+
+@sort_cons = (* ((h t) out))
+  & @part ~ (t p)
+  & p ~ (a b)
+  & @sort ~ ((1 (h a)) x)
+  & x ~ (sl (lx il))
+  & @sort ~ (b y)
+  & y ~ (sr (ly ir))
+  & lx ~ {lm ls}
+  & @merge ~ (sl (sr (lm m)))
+  & m ~ (sm cm)
+  & ls ~ $([+] $(ly llen))
+  & il ~ $([+] $(ir temp))
+  & cm ~ $([+] $(temp inv))
+  & out ~ (sm (llen inv))
+
+// Partition a list into alternating elements.
+@part = ((?((@part_nil @part_cons) (pl out)) pl) out)
+
+@part_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* ((h t) out))
+  & @part ~ (t p)
+  & p ~ (a b)
+  & out ~ ((1 (h b)) a)
+
+// Merge two sorted lists. The third input is the length of the left list.
+@merge = (inp out)
+  & inp ~ (xs (ys lx))
+  & @mx ~ (xs (ys (lx out)))
+
+@mx = ((?((@mx_nil @mx_cons) (pl (ys (lx out)))) pl) (ys (lx out)))
+
+@mx_nil = (* (ys (lx out)))
+  & lx ~ *
+  & out ~ (ys 0)
+
+@mx_cons = (* ((h t) (ys (lx out))))
+  & @my ~ (ys (h (t (lx out))))
+
+@my = ((?((@my_nil @my_cons) (pl (h (t (lx out)))) pl) (h (t (lx out))))
+
+@my_nil = (* (h (t (lx out))))
+  & lx ~ *
+  & out ~ ((1 (h t)) 0)
+
+@my_cons = (* ((j u) (h (t (lx out)))))
+  & h ~ {hc hk}
+  & j ~ {jc jk}
+  & hc ~ $([>] $(jc z))
+  & z ~ ?((@take_h @take_y) (hk (jk (t (u (lx out)))))
+
+// h is no greater than j: take h from the left list.
+@take_h = (hk (jk (t (u (lx out)))))
+  & lx ~ $([-] $(1 ln))
+  & @mx ~ (t ((1 (jk u)) (ln m)))
+  & m ~ (r c)
+  & out ~ ((1 (hk r)) c)
+
+// h is greater than j: take j and add the remaining left length.
+@take_y = (* (hk (jk (t (u (lx out))))))
+  & lx ~ {lr la}
+  & @mx ~ ((1 (hk t)) (u (lr m)))
+  & m ~ (r c)
+  & la ~ $([+] $(c total))
+  & out ~ ((1 (jk r)) total)

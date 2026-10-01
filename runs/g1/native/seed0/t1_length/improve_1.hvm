@@ -1,0 +1,74 @@
+@prog = (l out)
+  & @len0 ~ (l (0 out))
+
+@len0 = ((?((@len0_nil @len0_cons) (pl (acc out))) pl) (acc out))
+
+@len0_nil = (* (a a))
+
+@len0_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len1 ~ (t (acc out))
+
+@len1 = ((?((@len1_nil @len1_cons) (pl (acc out))) pl) (acc out))
+
+@len1_nil = (* (acc out))
+  & acc ~ $([+1] out)
+
+@len1_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len2 ~ (t (acc out))
+
+@len2 = ((?((@len2_nil @len2_cons) (pl (acc out))) pl) (acc out))
+
+@len2_nil = (* (acc out))
+  & acc ~ $([+2] out)
+
+@len2_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len3 ~ (t (acc out))
+
+@len3 = ((?((@len3_nil @len3_cons) (pl (acc out))) pl) (acc out))
+
+@len3_nil = (* (acc out))
+  & acc ~ $([+3] out)
+
+@len3_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len4 ~ (t (acc out))
+
+@len4 = ((?((@len4_nil @len4_cons) (pl (acc out))) pl) (acc out))
+
+@len4_nil = (* (acc out))
+  & acc ~ $([+4] out)
+
+@len4_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len5 ~ (t (acc out))
+
+@len5 = ((?((@len5_nil @len5_cons) (pl (acc out))) pl) (acc out))
+
+@len5_nil = (* (acc out))
+  & acc ~ $([+5] out)
+
+@len5_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len6 ~ (t (acc out))
+
+@len6 = ((?((@len6_nil @len6_cons) (pl (acc out))) pl) (acc out))
+
+@len6_nil = (* (acc out))
+  & acc ~ $([+6] out)
+
+@len6_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & @len7 ~ (t (acc out))
+
+@len7 = ((?((@len7_nil @len7_cons) (pl (acc out))) pl) (acc out))
+
+@len7_nil = (* (acc out))
+  & acc ~ $([+7] out)
+
+@len7_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+8] acc2)
+  & @len0 ~ (t (acc2 out))

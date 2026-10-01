@@ -1,0 +1,23 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@sel = λ{ 0: λa. λb. b; _: λc. λa. λb. a }
+@min = λ&a. λ&b. @sel((a < b), a, b)
+@max = λ&a. λ&b. @sel((a < b), b, a)
+@ev = λ{
+  #X: λx. x
+  #K: λk. λx. k
+  #Mod: λm. λe. λx. (@ev(e, x) % m)
+  #Add: λl. λr. λ&x. (@ev(l, x) + @ev(r, x))
+  #Sub: λl. λr. λ&x. (@ev(l, x) - @ev(r, x))
+  #Mul: λl. λr. λ&x. (@ev(l, x) * @ev(r, x))
+  #Xor: λl. λr. λ&x. (@ev(l, x) ^ @ev(r, x))
+  #And: λl. λr. λ&x. (@ev(l, x) && @ev(r, x))
+  #Min: λl. λr. λ&x. @min(@ev(l, x), @ev(r, x))
+  #Max: λl. λr. λ&x. @max(@ev(l, x), @ev(r, x))
+  #Lt: λl. λr. λ&x. (@ev(l, x) < @ev(r, x))
+  #Eq: λl. λr. λ&x. (@ev(l, x) == @ev(r, x))
+}
+
+@chk = λ{ []: λys. λp. p; <>: λx. λxs. λ{ <>: λy. λys. λ&p. @g((@ev(p, x) == y), @chk(xs, ys, p)); []: λp. &{} } }
+@P = &LEC{&LED{&LEE{&LEF{#X{},#K{0}},&LEG{#K{1},&LEH{#K{2},#K{3}}}},&LEI{&LEJ{#K{4},#K{5}},&LEK{#Mod{2,&LA{&LB{#X{},&LC{#K{0},#K{1}}},&LD{&LE{#K{2},#K{3}},&LF{#K{4},#K{5}}}}},&LEL{#Mod{3,&LG{&LH{#X{},&LI{#K{0},#K{1}}},&LJ{&LK{#K{2},#K{3}},&LL{#K{4},#K{5}}}}},#Mod{4,&LM{&LN{#X{},&LO{#K{0},#K{1}}},&LP{&LQ{#K{2},#K{3}},&LR{#K{4},#K{5}}}}}}}}},&LEM{&LEN{&LEO{#Mod{5,&LS{&LT{#X{},&LU{#K{0},#K{1}}},&LV{&LW{#K{2},#K{3}},&LX{#K{4},#K{5}}}}},#Add{&LY{&LZ{#X{},&LAA{#K{0},#K{1}}},&LAB{&LAC{#K{2},#K{3}},&LAD{#K{4},#K{5}}}},&LAE{&LAF{#X{},&LAG{#K{0},#K{1}}},&LAH{&LAI{#K{2},#K{3}},&LAJ{#K{4},#K{5}}}}}},&LEP{#Sub{&LAK{&LAL{#X{},&LAM{#K{0},#K{1}}},&LAN{&LAO{#K{2},#K{3}},&LAP{#K{4},#K{5}}}},&LAQ{&LAR{#X{},&LAS{#K{0},#K{1}}},&LAT{&LAU{#K{2},#K{3}},&LAV{#K{4},#K{5}}}}},&LEQ{#Mul{&LAW{&LAX{#X{},&LAY{#K{0},#K{1}}},&LAZ{&LBA{#K{2},#K{3}},&LBB{#K{4},#K{5}}}},&LBC{&LBD{#X{},&LBE{#K{0},#K{1}}},&LBF{&LBG{#K{2},#K{3}},&LBH{#K{4},#K{5}}}}},#Xor{&LBI{&LBJ{#X{},&LBK{#K{0},#K{1}}},&LBL{&LBM{#K{2},#K{3}},&LBN{#K{4},#K{5}}}},&LBO{&LBP{#X{},&LBQ{#K{0},#K{1}}},&LBR{&LBS{#K{2},#K{3}},&LBT{#K{4},#K{5}}}}}}}},&LER{&LES{#And{&LBU{&LBV{#X{},&LBW{#K{0},#K{1}}},&LBX{&LBY{#K{2},#K{3}},&LBZ{#K{4},#K{5}}}},&LCA{&LCB{#X{},&LCC{#K{0},#K{1}}},&LCD{&LCE{#K{2},#K{3}},&LCF{#K{4},#K{5}}}}},#Min{&LCG{&LCH{#X{},&LCI{#K{0},#K{1}}},&LCJ{&LCK{#K{2},#K{3}},&LCL{#K{4},#K{5}}}},&LCM{&LCN{#X{},&LCO{#K{0},#K{1}}},&LCP{&LCQ{#K{2},#K{3}},&LCR{#K{4},#K{5}}}}}},&LET{#Max{&LCS{&LCT{#X{},&LCU{#K{0},#K{1}}},&LCV{&LCW{#K{2},#K{3}},&LCX{#K{4},#K{5}}}},&LCY{&LCZ{#X{},&LDA{#K{0},#K{1}}},&LDB{&LDC{#K{2},#K{3}},&LDD{#K{4},#K{5}}}}},&LEU{#Lt{&LDE{&LDF{#X{},&LDG{#K{0},#K{1}}},&LDH{&LDI{#K{2},#K{3}},&LDJ{#K{4},#K{5}}}},&LDK{&LDL{#X{},&LDM{#K{0},#K{1}}},&LDN{&LDO{#K{2},#K{3}},&LDP{#K{4},#K{5}}}}},#Eq{&LDQ{&LDR{#X{},&LDS{#K{0},#K{1}}},&LDT{&LDU{#K{2},#K{3}},&LDV{#K{4},#K{5}}}},&LDW{&LDX{#X{},&LDY{#K{0},#K{1}}},&LDZ{&LEA{#K{2},#K{3}},&LEB{#K{4},#K{5}}}}}}}}}}
+@main = @chk([17,8,32,15,63,57,60,48,26,12], [51,24,96,45,189,171,180,144,78,36], @P)

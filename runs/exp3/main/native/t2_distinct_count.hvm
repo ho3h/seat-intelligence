@@ -1,0 +1,35 @@
+@prog = ((?((@dc_nil (* ((h_q52 t_q52) ((?(((* (?((@step_zero @step_more) ((0 ((0 *) (0 *))) out_q53)) out_q53)) @trie_node) (pl_q45_q52 (h_q52 (seen2_q52 ?((@dc_skip (* ((?((@dc_nil (* ((h_q59 t_q59) ((?((@trie_empty (* ((terminal_q63 (left_q63 right_q63)) (?((@step_zero @step_more) ((terminal_q63 (left_q63 right_q63)) out_q63)) out_q63)))) (pl_q45_q59 (h_q59 (seen2_q59 ?((@dc_skip (* ((?((@dc_nil (* ((h_q73 t_q73) ((?((@trie_empty (* ((terminal_q79 (left_q79 right_q79)) (?((@step_zero @step_more) ((terminal_q79 (left_q79 right_q79)) out_q79)) out_q79)))) (pl_q45_q73 (h_q73 (seen2_q73 ?((@dc_skip @dc_add) (t_q73 (seen2_q73 (count_q73 out_q73)))))))) pl_q45_q73) (count_q73 out_q73))))) (pl_q47_q68 (seen_q68 (count2_q68 out_q68)))) pl_q47_q68) (seen_q68 ($([+1] count2_q68) out_q68))))) (t_q59 (seen2_q59 (count_q59 out_q59)))))))) pl_q45_q59) (count_q59 out_q59))))) (pl_q47_q56 (seen_q56 (count2_q56 out_q56)))) pl_q47_q56) (seen_q56 ($([+1] count2_q56) out_q56))))) (t_q52 (seen2_q52 (count_q52 out_q52)))))))) pl_q45_q52) (count_q52 out_q52))))) (pl_q44 ((0 *) (0 out)))) pl_q44) out)
+
+@dc_nil = (* (seen (count out)))
+  & seen ~ *
+  & count ~ out
+
+@dc_cons = (* ((h t) ((?((@trie_empty @trie_node) (pl_q45 (h (seen2 ?((((?((@dc_nil @dc_cons) (pl_q46_q90 (seen_q90 (count_q90 out_q90)))) pl_q46_q90) (seen_q90 (count_q90 out_q90))) @dc_add) (t (seen2 (count out)))))))) pl_q45) (count out))))
+
+@dc_skip = ((?((@dc_nil @dc_cons) (pl_q46 (seen (count out)))) pl_q46) (seen (count out)))
+
+@dc_add = (* ((?((@dc_nil (* ((h_q81 t_q81) ((?((@trie_empty @trie_node) (pl_q45_q81 (h_q81 (seen2_q81 ?((@dc_skip @dc_add) (t_q81 (seen2_q81 (count_q81 out_q81)))))))) pl_q45_q81) (count_q81 out_q81))))) (pl_q47 (seen (count2 out)))) pl_q47) (seen ($([+1] count2) out))))
+
+@trie_empty = (* (?((@step_zero @step_more) ((0 ((0 *) (0 *))) out)) out))
+
+@trie_node = (* ((terminal (left right)) (?((@step_zero @step_more) ((terminal (left right)) out)) out)))
+
+@step_zero = ((terminal (left right)) out)
+  & terminal ~ ?((@step_new @step_old) ((left right) out))
+
+@step_new = ((left right) out)
+  & out ~ ((1 (1 (left right))) 1)
+
+@step_old = (* ((left right) out))
+  & out ~ ((1 (1 (left right))) 0)
+
+@step_more = (km ((terminal (left right)) out))
+  & km ~ $([+1] key)
+  & key ~ {k1 k2}
+  & k1 ~ $([:%2] bit)
+  & k2 ~ $([:/2] q)
+  & bit ~ ?((@step_left @step_right) ((terminal (left right)) (q out)))
+
+@step_left = ((terminal ((?((@trie_empty @trie_node) (pl_q50 (q (newchild added)))) pl_q50) right)) (q ((1 (terminal (newchild right))) added)))
+
+@step_right = (* ((terminal (left (?((@trie_empty @trie_node) (pl_q51 (q (newchild added)))) pl_q51))) (q ((1 (terminal (left newchild))) added))))

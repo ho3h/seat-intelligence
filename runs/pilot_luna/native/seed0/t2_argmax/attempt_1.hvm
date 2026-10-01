@@ -1,0 +1,22 @@
+// Entry point: best value, best index, and current index all start at zero.
+@prog = (l out)
+  & @am ~ (l (0 (0 (0 out))))
+
+// Traverse a list with state (best (best_index (current_index output))).
+@am = ((?((@am_nil @am_cons) (pl (best (bi (i out))))) pl) (best (bi (i out))))
+
+@am_nil = (* (* (* (bi (* bi)))))
+
+@am_cons = (* ((h t) (best (bi (i out))))
+  & h ~ {h_cmp h_next}
+  & best ~ {best_cmp best_next}
+  & h_cmp ~ $([>] $(best_cmp cmp))
+  & i ~ $([+1] ni)
+  & cmp ~ ?((@am_keep @am_take) (t (best_next (bi (h_next (ni out)))))
+
+@am_keep = (* (t (best (bi (* (ni out))))))
+  & @am ~ (t (best (bi (ni out))))
+
+@am_take = (* (t (* (* (h (ni out))))))
+  & ni ~ {ni_best ni_next}
+  & @am ~ (t (h (ni_best (ni_next out))))

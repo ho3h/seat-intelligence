@@ -1,0 +1,139 @@
+// Generate the list 0 .. n-1.
+@prog = ((n edges) out)
+  & n ~ {nr nd}
+  & edges ~ {eb ea}
+  & @range ~ (nr verts)
+  & verts ~ {vb va}
+  & @components ~ (nd (vb (eb base)))
+  & va ~ {cand allv}
+  & @arts ~ (cand (allv (ea (base (0 out)))))
+
+@range = (n out)
+  & n ~ ?((@range_nil @range_succ) out)
+
+@range_nil = (0 *)
+
+@range_succ = (k out)
+  & k ~ {k1 k2}
+  & @range ~ (k1 tail)
+  & out ~ (1 (k2 tail))
+
+// Count components after excluding d. Keep d marked visited so BFS
+// cannot add it as a neighbor.
+@components = (d (vs (edges out)))
+  & d ~ {d1 d2}
+  & @cs ~ (vs (d1 (edges ((1 (d2 (0 *))) (0 out))))
+
+@cs = ((?((@cs_nil @cs_cons) (pl (d (edges (visited (count out))))) pl) (d (edges (visited (count out)))))
+
+@cs_nil = (* (* (* (* (a a)))))
+
+@cs_cons = (* ((v rest) (d (edges (visited (count out))))))
+  & v ~ {v_test v_keep}
+  & d ~ {d_test d_keep}
+  & v_test ~ $([=] $(d_test eq))
+  & eq ~ ?((@cs_eq_no @cs_eq_yes) (v_keep (rest (d_keep (edges (visited (count out))))))
+
+@cs_eq_yes = (* (* (rest (d (edges (visited (count out)))))))
+  & @cs ~ (rest (d (edges (visited (count out))))
+
+@cs_eq_no = (v (rest (d (edges (visited (count out))))))
+  & v ~ {vm vc}
+  & visited ~ {vism visc}
+  & @mem ~ (vm (vism m))
+  & m ~ ?((@cs_new @cs_old) (vc (rest (d (edges (visc (count out))))))
+
+@cs_old = (* (* (rest (d (edges (visited (count out)))))))
+  & @cs ~ (rest (d (edges (visited (count out))))
+
+@cs_new = (v (rest (d (edges (visited (count out))))))
+  & v ~ {vq vv}
+  & edges ~ {e1 e2}
+  & @bfs ~ ((1 (vq (0 *))) (e1 ((1 (vv visited)) b)))
+  & count ~ $([+1] c2)
+  & @cs ~ (rest (d (e2 (b (c2 out))))
+
+// Membership test: return 1 if x occurs in list l, otherwise 0.
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (t (x2 out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (* (* 1)))
+
+// Count components by scanning vertices and flooding from each unvisited vertex.
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (edges (visited out))) pl) (edges (visited out))))
+
+@bfs_nil = (* (* (a a)))
+
+@bfs_cons = (* ((cur rest) (edges (visited out))))
+  & edges ~ {e1 e2}
+  & @expand ~ (e1 (cur (visited (rest r))))
+  & r ~ (vis queue)
+  & @bfs ~ (queue (e2 (vis out)))
+
+// Scan all edges for neighbors of cur, returning (visited, queue).
+@expand = ((?((@expand_nil @expand_cons) (pl (cur (visited (queue out)))) pl) (cur (visited (queue out))))
+
+@expand_nil = (* (* (v (q r))))
+  & r ~ (v q)
+
+@expand_cons = (* (((u v) tail) (cur (visited (queue out)))))
+  & cur ~ {c1 c2}
+  & c2 ~ {c3 c4}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @try ~ ((u1 v1) (c1 (visited (queue r1))))
+  & r1 ~ (vis1 queue1)
+  & @try ~ ((v2 u2) (c3 (vis1 (queue1 r2))))
+  & r2 ~ (vis2 queue2)
+  & @expand ~ (tail (c4 (vis2 (queue2 out))))
+
+// If endpoint equals cur, enqueue other unless already visited.
+@try = ((a b) (cur (visited (queue out))))
+  & a ~ $([=] $(cur z))
+  & z ~ ?((@try_no @try_yes) (b (visited (queue out))))
+
+@try_no = (* (v (q r)))
+  & r ~ (v q)
+
+@try_yes = (* (b (visited (queue out))))
+  & b ~ {bm bc}
+  & visited ~ {vm vc}
+  & @mem ~ (bm (vm m))
+  & m ~ ?((@try_add @try_seen) (bc (vc (queue out))))
+
+@try_seen = (* (* (v (q r))))
+  & r ~ (v q)
+
+@try_add = (b (visited (queue out)))
+  & b ~ {b1 b2}
+  & out ~ ((1 (b1 visited)) (1 (b2 queue)))
+
+// For each vertex, compare the component count after deleting it to the
+// original component count.
+@arts = ((?((@arts_nil @arts_cons) (pl (allverts (edges (base (acc out))))) pl) (allverts (edges (base (acc out)))))
+
+@arts_nil = (* (* (* (* (a a)))))
+
+@arts_cons = (* ((v rest) (allverts (edges (base (acc out))))))
+  & allverts ~ {av1 av2}
+  & edges ~ {ed1 ed2}
+  & base ~ {b1 b2}
+  & @components ~ (v (av1 (ed1 c)))
+  & c ~ $([>] $(b1 z))
+  & z ~ ?((@arts_no @arts_yes) (rest (av2 (ed2 (b2 (acc out))))))
+
+@arts_no = (rest (av (ed (b (acc out)))))
+  & @arts ~ (rest (av (ed (b (acc out)))))
+
+@arts_yes = (* (rest (av (ed (b (acc out))))))
+  & acc ~ $([+1] acc2)
+  & @arts ~ (rest (av (ed (b (acc2 out)))))

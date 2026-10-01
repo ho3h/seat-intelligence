@@ -1,0 +1,194 @@
+@prog = ((n edges) out)
+  & @hist8 ~ {hist trash}
+  & trash ~ *
+  & @all ~ (n (0 (edges ((0 *) (hist out))))
+
+@hist8 =
+  (1 (0
+    (1 (0
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (0 *)
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+  ))
+
+@all = (?((@all_done @all_step) (idx (edges (assigned (hist out))))) (idx (edges (assigned (hist out))))
+
+@all_done = (* (* (* (hist hist))))
+
+@all_step = (rem (idx (edges (assigned (hist out)))))
+  & idx ~ {im iw}
+  & assigned ~ {am aw}
+  & @mem ~ (im (am found))
+  & found ~ ?((@all_new @all_seen) (rem (iw (edges (aw (hist out)))))
+
+@all_seen = (rem (idx (edges (assigned (hist out)))))
+  & idx ~ $([+1] next)
+  & @all ~ (rem (next (edges (assigned (hist out)))))
+
+@all_new = (rem (idx (edges (assigned (hist out)))))
+  & idx ~ {ib inext}
+  & edges ~ {eb er}
+  & @bfs ~ (ib (eb vis))
+  & vis ~ {va vl}
+  & @append ~ (va (assigned merged))
+  & @len ~ (vl size)
+  & size ~ $([-] $(1 k))
+  & @inc0 ~ (k (hist nh))
+  & inext ~ $([+1] idx2)
+  & @all ~ (rem (idx2 (er (merged (nh out)))))
+
+@append = ((?((@append_nil @append_cons) (pl (b out))) pl) (b out))
+
+@append_nil = (* (b out))
+
+@append_cons = (* ((h t) (b out)))
+  & @append ~ (t (b rest))
+  & out ~ (1 (h rest))
+
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (* 0)
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t z)
+  & z ~ $([+1] out)
+
+@bfs = (start (edges out))
+  & start ~ {s1 s2}
+  & @bloop ~ (edges ((1 (s1 (0 *))) ((1 (s2 (0 *))) out)))
+
+@bloop = (edges (visited ((?((@bloop_nil @bloop_cons) (edges (visited (pl out)))) pl) out))
+
+@bloop_nil = (* (v (* v)))
+
+@bloop_cons = (* (edges (visited ((cur tail) out))))
+  & edges ~ {e1 e2}
+  & @scan ~ (cur (e1 (visited (tail res))))
+  & res ~ (nv nf)
+  & @bloop ~ (e2 (nv (nf out)))
+
+@scan = (cur ((?((@scan_nil @scan_cons) (cur (pl (visited (front out))))) pl) (visited (front out)))
+
+@scan_nil = (* (* (v (f (v f))))
+
+@scan_cons = (* (cur (pl ((u v) (visited (front out)))))
+  & cur ~ {ce cr}
+  & @edge ~ (ce (u (v (visited (front res)))))
+  & res ~ (nv nf)
+  & @scan ~ (cr (pl (nv (nf out))))
+
+@edge = (cur (u (v (visited (front out))))
+  & cur ~ {c1 c2}
+  & u ~ {u1 u2}
+  & c1 ~ $([=] $(u1 eq))
+  & eq ~ ?((@edge_same @edge_diff) (c2 (u2 (v (visited (front out)))))
+
+@edge_same = (* (* (v (visited (front out)))))
+  & @add_if ~ (v (visited (front out)))
+
+@edge_diff = (c (u (v (visited (front out))))
+  & c ~ {cc cd}
+  & cd ~ *
+  & cc ~ $([=] $(v eq2))
+  & eq2 ~ ?((@edge_diff_no @edge_diff_yes) (u (visited (front out)))
+
+@edge_diff_no = (* (visited (front (visited front))))
+
+@edge_diff_yes = (u (visited (front out)))
+  & @add_if ~ (u (visited (front out)))
+
+@add_if = (x (visited (front out)))
+  & x ~ {xm xb}
+  & visited ~ {vm vb}
+  & @mem ~ (xm (vm b))
+  & b ~ ?((@add_new @add_old) (xb (vb (front out))))
+
+@add_new = (x (visited (front (newv newf))))
+  & x ~ {x1 x2}
+  & newv ~ (1 (x1 visited))
+  & newf ~ (1 (x2 front))
+
+@add_old = (* (visited (front (visited front))))
+
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc b))
+  & b ~ ?((@mem_no @mem_yes) (xr (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (* (* 1)))
+
+@inc0 = (?((@incval @incstep0) (hist out)) (hist out))
+
+@incstep0 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc1 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc1 = (?((@incval @incstep1) (hist out)) (hist out))
+
+@incstep1 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc2 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc2 = (?((@incval @incstep2) (hist out)) (hist out))
+
+@incstep2 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc3 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc3 = (?((@incval @incstep3) (hist out)) (hist out))
+
+@incstep3 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc4 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc4 = (?((@incval @incstep4) (hist out)) (hist out))
+
+@incstep4 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc5 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc5 = (?((@incval @incstep5) (hist out)) (hist out))
+
+@incstep5 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc6 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc6 = (?((@incval @incstep6) (hist out)) (hist out))
+
+@incstep6 = (k ((tag (head tail)) out))
+  & tag ~ *
+  & @inc7 ~ (k (tail sub))
+  & out ~ (1 (head sub))
+
+@inc7 = (* (hist out))
+  & @incval ~ (hist out)
+
+@incval = ((tag (head tail)) out)
+  & tag ~ *
+  & head ~ $([+1] h2)
+  & out ~ (1 (h2 tail))

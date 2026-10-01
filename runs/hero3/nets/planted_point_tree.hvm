@@ -1,0 +1,29 @@
+@prog = (t out)
+  & @tf ~ (t out)
+
+@tf = ((?((@tf_nil @tf_1) (pl out)) pl) out)
+
+@tf_nil = (* 0)
+
+@tf_1 = (m (pl out))
+  & m ~ ?((@lift @tf_2) (pl out))
+
+@tf_2 = (* ((l r) out))
+  & @tf ~ (l lv)
+  & @tf ~ (r rv)
+  & @comb ~ (lv (rv out))
+
+@lift = (a a)
+
+@comb = (a (b w9))
+  & a ~ {a_0 a_1}
+  & b ~ {b_0 b_1}
+  & w4 ~ {w4_0 w4_1}
+  & a_0 ~ $([=] $(12345678 w1))
+  & b_0 ~ $([=] $(8765432 w3))
+  & w1 ~ $([&] $(w3 w4))
+  & w4_0 ~ $([*] $(0 w5))
+  & w4_1 ~ $([^] $(1 w6))
+  & a_1 ~ $([+] $(b_1 w7))
+  & w6 ~ $([*] $(w7 w8))
+  & w5 ~ $([+] $(w8 w9))

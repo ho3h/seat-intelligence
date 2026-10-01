@@ -1,0 +1,33 @@
+// t3_budget_reach (GRAPH-SWING, runs/exp5): undirected adjacency trie built by pre-expanded pushes (both
+// directions) while streaming the edges, then frontier Bellman-Ford over tries with the budget as an acceptance
+// bound (only vertices within budget ever enter the frontier), then a tree reduction counts finite leaves.
+@prog = ((n (s (b es))) out)
+  & n ~ ?((@br_zero @br_pos) (s (b (es out))))
+@br_zero = (* (* (* 0)))
+@br_pos = (nm1 (s (b (es out))))
+  & nm1 ~ {a c}
+  & a ~ $([+1] n)
+  & @lg ~ (c L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sssp_start ~ (n (s (L3 (b (G Df)))))
+  & @cf ~ (Df (L4 out))
+@br_step = ((L g) ((u (v w)) (L3 g3)))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @gp ~ (g (u1 (L1 ((v1 w1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 w2) g3))))
+@br_fin = ((* g) g)
+// cf(t, L): number of leaves < 16777215
+@cf = (t (L o))
+  & L ~ ?((@cf_leaf @cf_node) (t o))
+@cf_leaf = (x o)
+  & x ~ $([<] $(16777215 o))
+@cf_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cf ~ (a (l1 x))
+  & @cf ~ (b (l2 y))
+  & x ~ $([+] $(y o))

@@ -1,0 +1,42 @@
+@List/Nil = ((0 a) a)
+
+@closure = ({(@scan_edges__C8 (b (0 (e $([=0x0000001] ?(((* (c c)) @closure__C0) (d (e f)))))))) d} (b f))
+
+@closure__C0 = (* @closure)
+
+@has = ((@has__C2 a) a)
+
+@has__C1 = (* ($([=] $(a ?(((b_q382 (((?(((* 0) @has__C1) a_q376_q382) a_q376_q382) (b_q382 c_q382)) c_q382)) (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@has__C2 = (?(((* 0) @has__C1) a) a)
+
+@members__C0 = (b (c ({?(((* (* (a_q349 a_q349))) @members__C2_s) (b_q349 (b (c d)))) b_q349} d)))
+
+@members__C1 = (* (b (d ({{?(((* (* (a_q350 a_q350))) @members__C2_s) (b_q350 (b (((1 (c (d c_i82))) c_i82) f)))) b_q350} c} f))))
+
+@prog = (({?(((* (* (a_q351 a_q351))) @members__C2_s) (b_q351 (e (@List/Nil f)))) b_q351} (c {(@scan_edges__C8 (((1 (c (@List/Nil c_i83))) c_i83) (0 (e_q352 $([=0x0000001] ?(((* (c_q352 c_q352)) @closure__C0) (d_q352 (e_q352 e)))))))) d_q352})) f)
+
+@scan_edges = ((@scan_edges__C8 a) a)
+
+@scan_edges__C0 = (b (c ((@scan_edges__C8 (b (c d))) (* d))))
+
+@scan_edges__C1 = (* (c (* ((@scan_edges__C8 (((1 (b (c c_i84))) c_i84) (1 e))) (b e)))))
+
+@scan_edges__C2 = (c (* (a (b e))))
+  & @scan_edges ~ (a (((1 (b (c c_i85))) c_i85) (1 e)))
+
+@scan_edges__C3 = (* (b (c (a (* d)))))
+  & @scan_edges ~ (a (b (c d)))
+
+@scan_edges__C4 = ({(@has__C2 (b $([=0x0000001] ?((@scan_edges__C0 @scan_edges__C1) (c (d (e (f g)))))))) c} (d (e (f (b g)))))
+
+@scan_edges__C5 = (* ({a c} (d (e (* ({b f} g))))))
+  & @has ~ (a (b $([=0x0000001] ?((@scan_edges__C2 @scan_edges__C3) (c (d (e (f g))))))))
+
+@scan_edges__C6 = (a (b (a b)))
+
+@scan_edges__C7 = (* (({b f} g) (e ({(@has__C2 (b $([=0x0000001] ?((@scan_edges__C4 @scan_edges__C5) (c (d (e (f (g h))))))))) c} (d h)))))
+
+@scan_edges__C8 = (?((@scan_edges__C6 @scan_edges__C7) a) a)
+
+@members__C2_s = (* ($([:-0x0000001] {b e}) ({((?((* @has__C1) a_q385) a_q385) (b $([=0x0000001] ?((@members__C0 @members__C1) (c (d (e f))))))) c} (d f))))

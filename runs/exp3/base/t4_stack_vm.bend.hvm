@@ -1,0 +1,114 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@prog = (a b)
+  & @vm_exec ~ (a (0 (@List/Nil b)))
+
+@vm_binary = (a (b (c ((@vm_binary__C7 (a (b (c d)))) d))))
+
+@vm_binary__C0 = (a ($([-] $(a b)) b))
+
+@vm_binary__C1 = (* (a ($([*] $(a b)) b)))
+
+@vm_binary__C2 = ($([=0x0000002] ?((@vm_binary__C0 @vm_binary__C1) a)) a)
+
+@vm_binary__C3 = (* (* (a ($([+] $(a b)) b))))
+
+@vm_binary__C4 = (* (e (g (a (b ({$([=0x0000001] ?((@vm_binary__C2 @vm_binary__C3) (c (d (e f))))) c} (d i)))))))
+  & @vm_exec ~ (a (b (h i)))
+  & @List/Cons ~ (f (g h))
+
+@vm_binary__C5 = (?(((* (* (* (* 0)))) @vm_binary__C4) a) a)
+
+@vm_binary__C6 = (* (d ((@vm_binary__C5 (a (b (c (d e))))) (a (b (c e))))))
+
+@vm_binary__C7 = (?(((* (* (* 0))) @vm_binary__C6) a) a)
+
+@vm_exec = ((@vm_exec__C29 a) a)
+
+@vm_exec__C0 = (?((0 (* (a (* a)))) b) b)
+
+@vm_exec__C1 = (a (* b))
+  & @vm_exec ~ (a b)
+
+@vm_exec__C10 = (?(((* (* (* 0))) @vm_exec__C9) a) a)
+
+@vm_exec__C11 = (* (b ((@vm_exec__C10 (a (b c))) (a c))))
+
+@vm_exec__C12 = (?(((* (* 0)) @vm_exec__C11) a) a)
+
+@vm_exec__C13 = ((@vm_exec__C8 a) a)
+
+@vm_exec__C14 = (* ((@vm_exec__C12 a) a))
+
+@vm_exec__C15 = (a (b ($([=0x0000006] ?((@vm_exec__C5 @vm_exec__C6) (a (b c)))) c)))
+
+@vm_exec__C16 = (* (a (b ($([=0x0000004] ?((@vm_exec__C13 @vm_exec__C14) (a (b c)))) (* c)))))
+
+@vm_exec__C17 = (* ({c d} (e (a (b h)))))
+  & @vm_exec ~ (a (b (g h)))
+  & @List/Cons ~ (c (f g))
+  & @List/Cons ~ (d (e f))
+
+@vm_exec__C18 = (?(((* (* 0)) @vm_exec__C17) a) a)
+
+@vm_exec__C19 = ((@vm_exec__C18 a) a)
+
+@vm_exec__C2 = (* (a ({e $([-] $(b c))} (b f))))
+  & @vm_exec ~ (d (e f))
+  & @vm_skip ~ (a (c d))
+
+@vm_exec__C20 = (* (c (a (b d))))
+  & @vm_binary ~ (a (b (2 (c d))))
+
+@vm_exec__C21 = (c (a (* (b d))))
+  & @vm_binary ~ (a (b (1 (c d))))
+
+@vm_exec__C22 = (* (d (a (c (b f)))))
+  & @vm_exec ~ (a (b (e f)))
+  & @List/Cons ~ (c (d e))
+
+@vm_exec__C23 = (a (b ($([=0x0000002] ?((@vm_exec__C19 @vm_exec__C20) (a (b c)))) (* c))))
+
+@vm_exec__C24 = (* (a (b ($([=0x0000000] ?((@vm_exec__C21 @vm_exec__C22) (a (b c)))) c))))
+
+@vm_exec__C25 = (a (b ({$([>0x0000006] ?((@vm_exec__C15 @vm_exec__C16) (a (b (c d))))) c} d)))
+
+@vm_exec__C26 = (* (a (b ({$([>0x0000002] ?((@vm_exec__C23 @vm_exec__C24) (a (b (c d))))) c} d))))
+
+@vm_exec__C27 = (* ((@vm_exec__C0 a) a))
+
+@vm_exec__C28 = (* (({$([>0x0000004] ?((@vm_exec__C25 @vm_exec__C26) (a (b (c (d (e f))))))) c} d) (b ($([+0x0000001] e) (a f)))))
+
+@vm_exec__C29 = (?((@vm_exec__C27 @vm_exec__C28) a) a)
+
+@vm_exec__C3 = (* ($([=0x0000000] ?((@vm_exec__C1 @vm_exec__C2) (a (b (c (d e)))))) (d (a (b (c e))))))
+
+@vm_exec__C4 = (?(((* (* (* 0))) @vm_exec__C3) a) a)
+
+@vm_exec__C5 = (c (a (* (b d))))
+  & @vm_binary ~ (a (b (7 (c d))))
+
+@vm_exec__C6 = (* ((@vm_exec__C4 a) a))
+
+@vm_exec__C7 = (* (* (c (a (b d)))))
+  & @vm_exec ~ (a (b (c d)))
+
+@vm_exec__C8 = (?(((* (* 0)) @vm_exec__C7) a) a)
+
+@vm_exec__C9 = (* (c (e (a (d (b h))))))
+  & @vm_exec ~ (a (b (g h)))
+  & @List/Cons ~ (c (f g))
+  & @List/Cons ~ (d (e f))
+
+@vm_skip = (b (?(((a a) @vm_skip__C2) (b c)) c))
+
+@vm_skip__C0 = (* (* (a ($([+0x0000001] $([:-0x0000001] b)) c))))
+  & @vm_skip ~ (a (b c))
+
+@vm_skip__C1 = (?(((* @List/Nil) @vm_skip__C0) a) a)
+
+@vm_skip__C2 = (a ((@vm_skip__C1 (a b)) b))
+
+

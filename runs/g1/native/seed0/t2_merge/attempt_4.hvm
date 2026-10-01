@@ -1,0 +1,37 @@
+@prog = (input out)
+  & input ~ (xs ys)
+  & @merge ~ (xs (ys out))
+
+@merge = (x (y out))
+  & x ~ (tag p)
+  & tag ~ ?((@m_xnil @m_xcons) (p (y out)))
+
+@m_xnil = (p (y out))
+  & p ~ *
+  & y ~ out
+
+@m_xcons = (* ((h t) (y out)))
+  & @m_y ~ (h (t (y out)))
+
+@m_y = (h (t (y out)))
+  & y ~ (tag q)
+  & tag ~ ?((@m_ynil @m_ycons) (q (h (t out))))
+
+@m_ynil = (q (h (t out)))
+  & q ~ *
+  & out ~ (1 (h t))
+
+@m_ycons = (* (q (h (t out))))
+  & q ~ (yh yt)
+  & h ~ {hc hk}
+  & yh ~ {yc yk}
+  & hc ~ $([>] $(yc z))
+  & z ~ ?((@m_choose_false @m_choose_true) (hk (yk (t (yt out)))))
+
+@m_choose_false = (hk (yk (t (yt out))))
+  & out ~ (1 (hk r))
+  & @merge ~ (t ((1 (yk yt)) r))
+
+@m_choose_true = (* (hk (yk (t (yt out)))))
+  & out ~ (1 (yk r))
+  & @merge ~ ((1 (hk t)) (yt r))

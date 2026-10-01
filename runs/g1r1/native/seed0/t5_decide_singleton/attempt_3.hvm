@@ -1,0 +1,34 @@
+// Task: t5_decide_singleton
+
+@prog = (input output)
+  & input ~ (tau probs)
+  & @mx ~ (probs (0 (0 (0 (tau output)))))
+
+@mx = ((?((@mx_nil @mx_cons) (pl (pos (best (idx (tau out))))) ) pl) (pos (best (idx (tau out)))))
+
+@mx_nil = (* (pos (best (idx (tau out)))))
+  & pos ~ *
+  & tau ~ $([>] $(best gt))
+  & gt ~ ?((@mx_answer @mx_abstain) (idx out))
+
+@mx_cons = (* ((h t) (pos (best (idx (tau out))))))
+  & h ~ {h_cmp h_keep}
+  & best ~ {best_cmp best_keep}
+  & h_cmp ~ $([>] $(best_cmp cmp))
+  & cmp ~ ?((@mx_keep @mx_update) (h_keep (best_keep (t (pos (idx (tau out)))))))
+
+@mx_keep = (h (best (t (pos (idx (tau out))))))
+  & h ~ *
+  & pos ~ $([+1] pos2)
+  & @mx ~ (t (pos2 (best (idx (tau out)))))
+
+@mx_update = (* (h (best (t (pos (idx (tau out)))))))
+  & best ~ *
+  & idx ~ *
+  & pos ~ {idx_new pos_inc}
+  & pos_inc ~ $([+1] pos2)
+  & @mx ~ (t (pos2 (h (idx_new (tau out)))))
+
+@mx_answer = (a a)
+
+@mx_abstain = (* 6)

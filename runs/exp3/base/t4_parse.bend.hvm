@@ -1,0 +1,102 @@
+@Gexpr/C0 = (a ((0 (a b)) b))
+
+@Gexpr/C2 = (a (b ((2 (a (b c))) c)))
+
+@List/Cons__M_Gexpr/C1 = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@finish_expr = (a (b ($([=0x0000000] ?((@finish_expr__C0 @finish_expr__C1) (a (b c)))) c)))
+
+@finish_expr__C0 = (b (a (d (c d))))
+  & @List/Cons__M_Gexpr/C1 ~ (a (b c))
+
+@finish_expr__C1 = (* (a (* (b (a b)))))
+
+@parse_expr = (a e)
+  & @parse_ops ~ (b (c (0 (d e))))
+  & @parse_factor ~ (a ({b c} d))
+
+@parse_factor = (a b)
+  & @skip_spaces ~ (a (@parse_factor__C6 b))
+
+@parse_factor__C0 = (a (a @List/Nil))
+
+@parse_factor__C1 = (* (* (b (a (a b)))))
+
+@parse_factor__C2 = (?((@parse_factor__C0 @parse_factor__C1) a) a)
+
+@parse_factor__C3 = (a (b (e f)))
+  & @Gexpr/C0 ~ (d e)
+  & @parse_number ~ (c (0 (d f)))
+  & @List/Cons__M_Gexpr/C1 ~ (a (b c))
+
+@parse_factor__C4 = (* (* (a c)))
+  & @parse_expr ~ (a (b (@parse_factor__C2 (b c))))
+
+@parse_factor__C5 = (* ({$([=0x0000028] ?((@parse_factor__C3 @parse_factor__C4) (a b))) a} b))
+
+@parse_factor__C6 = (?(((a @List/Nil) @parse_factor__C5) b) b)
+  & @Gexpr/C0 ~ (0 a)
+
+@parse_number = ((@parse_number__C4 a) a)
+
+@parse_number__C0 = (a (b (c (a d))))
+  & @List/Cons__M_Gexpr/C1 ~ (b (c d))
+
+@parse_number__C1 = (* ($([*0x000000A] $([+] $(b c))) ($([:-0x0000030] b) (a d))))
+  & @parse_number ~ (a (c d))
+
+@parse_number__C2 = (a (a @List/Nil))
+
+@parse_number__C3 = (* ({$([>0x0000030] a) c} (d (b e))))
+  & $(a ?((@parse_number__C0 @parse_number__C1) (b (c (d e))))) ~ [=0x0000000]
+
+@parse_number__C4 = (?((@parse_number__C2 @parse_number__C3) a) a)
+
+@parse_ops = (b (c (d (a e))))
+  & @skip_spaces ~ (a (@parse_ops__C8 (b (c (d e)))))
+
+@parse_ops__C0 = (b (a c))
+  & @List/Cons__M_Gexpr/C1 ~ (a (b c))
+
+@parse_ops__C1 = (* (a (* a)))
+
+@parse_ops__C2 = (a (b (c (d (e g)))))
+  & @finish_expr ~ (a (b (c (f g))))
+  & @List/Cons__M_Gexpr/C1 ~ (d (e f))
+
+@parse_ops__C3 = (* (c (d ($([=0x0000000] ?((@parse_ops__C0 @parse_ops__C1) (c (d e)))) (* (a g))))))
+  & @parse_ops ~ (b (e (1 (f g))))
+  & @parse_factor ~ (a (b f))
+
+@parse_ops__C4 = (a (b (c ({$([=0x000002B] ?((@parse_ops__C2 @parse_ops__C3) (a (b (c (d e)))))) d} e))))
+
+@parse_ops__C5 = (* (b (e (f (* (a h))))))
+  & @parse_ops ~ (d (e (f (g h))))
+  & @parse_factor ~ (a (c g))
+  & @Gexpr/C2 ~ (b (c d))
+
+@parse_ops__C6 = (a (b (c d)))
+  & @finish_expr ~ (a (b (c (@List/Nil d))))
+
+@parse_ops__C7 = (* ({$([=0x000002A] ?((@parse_ops__C4 @parse_ops__C5) (a (b (c (d (e f))))))) d} (e (a (b (c f))))))
+
+@parse_ops__C8 = (?((@parse_ops__C6 @parse_ops__C7) a) a)
+
+@prog = (a b)
+  & @parse_expr ~ (a (b *))
+
+@skip_spaces = ((@skip_spaces__C3 a) a)
+
+@skip_spaces__C0 = a
+  & @List/Cons__M_Gexpr/C1 ~ a
+
+@skip_spaces__C1 = (* (* a))
+  & @skip_spaces ~ a
+
+@skip_spaces__C2 = (* ({$([=0x0000020] ?((@skip_spaces__C0 @skip_spaces__C1) (a b))) a} b))
+
+@skip_spaces__C3 = (?((@List/Nil @skip_spaces__C2) a) a)
+
+

@@ -1,0 +1,38 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = ((?((@lis_nil @lis_cons) (payload (tails out))) payload) (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails out)
+
+@lis_cons = (* ((head tail) (tails out)))
+  & @ins ~ (tails (head newtails))
+  & @lis ~ (tail (newtails out))
+
+@ins = ((?((@ins_nil @ins_cons) (payload (x out))) payload) (x out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((y tl) (x out)))
+  & x ~ {xc xb}
+  & y ~ {yc yb}
+  & yc ~ $([<] $(xc z))
+  & z ~ ?((@ins_replace @ins_recur) (yb (tl (xb out))))
+
+@ins_replace = (* (tl (x out)))
+  & out ~ (1 (x tl))
+
+@ins_recur = (* (y (tl (x out))))
+  & @ins ~ (tl (x next))
+  & out ~ (1 (y next))
+
+@len = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((* tail) out))
+  & @len ~ (tail next)
+  & next ~ $([+1] out)

@@ -1,0 +1,33 @@
+// @prog = (input output)
+@prog = (l out)
+  & @dc ~ (l ((0 *) (0 out)))
+
+// Count distinct values, keeping a list of values already seen.
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (acc out)))) pl) (seen (acc out)))
+
+@dc_nil = (* (* (a a)))
+
+@dc_cons = (* (({h1 h2} t) ({s1 s2} (acc out))))
+  & @mem ~ (s1 (h1 z))
+  & z ~ ?((@dc_new @dc_seen) (t (h2 (s2 (acc out)))))
+
+@dc_new = (t (h (s (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @dc ~ (t ((1 (h s)) (acc2 out)))
+
+@dc_seen = (* (t (* (s (acc out)))))
+  & @dc ~ (t (s (acc out)))
+
+// Return 1 if x occurs in the list, otherwise 0.
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) ({x1 x2} out)))
+  & h ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (t (x2 out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (* (* 1)))

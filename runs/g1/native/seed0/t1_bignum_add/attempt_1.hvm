@@ -1,0 +1,36 @@
+@prog = ((a b) out)
+  & @add ~ ((a (b 0)) out)
+
+@add = (((?((@add_anil @add_acon) (pa (b (c out)))) pa) (b c)) out)
+
+@add_anil = ((?((@add_anil_bnil @add_anil_bcon) (pb (c out))) pb) (c out))
+
+@add_anil_bnil = (* (c out))
+  & @finish ~ (c out)
+
+@add_anil_bcon = (* ((g u) (c out)))
+  & @step ~ ((0 (g ((0 *) (u c)))) out)
+
+@add_acon = (* ((h t) ((?((@add_acon_bnil @add_acon_bcon) (pb (h (t (c out))))) pb) (c out))))
+
+@add_acon_bnil = (* (h (t (c out))))
+  & @step ~ ((h (0 (t ((0 *) c)))) out)
+
+@add_acon_bcon = (* ((g u) (h (t (c out)))))
+  & @step ~ ((h (g (t (u c)))) out)
+
+@step = ((x (y (t (u c)))) out)
+  & x ~ $([+] $(y q))
+  & q ~ $([+] $(c s))
+  & s ~ {s1 s2}
+  & s1 ~ $([&] $(4095 d))
+  & s2 ~ $([>>] $(12 k))
+  & @add ~ ((t (u k)) r)
+  & out ~ (1 (d r))
+
+@finish = (c out)
+  & c ~ ?((@finish_nil @finish_carry) out)
+
+@finish_nil = (0 *)
+
+@finish_carry = (* (1 (1 (0 *))))

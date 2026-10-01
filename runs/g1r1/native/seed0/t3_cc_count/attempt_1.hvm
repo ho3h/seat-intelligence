@@ -1,0 +1,112 @@
+// Initialize the labels to 0..n-1.
+@prog = ((n edges) out)
+  & @init ~ (n ((0 *) labs))
+  & @round ~ (n (edges (labs out)))
+
+@init = (n (acc out))
+  & n ~ ?((@init_zero @init_succ) (acc out))
+
+@init_zero = (a a)
+
+@init_succ = (k (acc out))
+  & k ~ {k1 k2}
+  & @init ~ (k1 ((1 (k2 acc)) out))
+
+// Get the value at index i in a list.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (* 0))
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (* h))
+
+@get_next = (i (h (t out)))
+  & h ~ *
+  & @get ~ (t (i out))
+
+// Set index i in a list to v.
+@set = ((?((@set_nil @set_cons) (pl (i (v out)))) pl) (i (v out)))
+
+@set_nil = (* (i (v out)))
+  & i ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (i (v out))))
+  & i ~ ?((@set_here @set_next) (h (t (v out))))
+
+@set_here = (h (t (v out)))
+  & h ~ *
+  & out ~ (1 (v t))
+
+@set_next = (i (h (t (v out))))
+  & @set ~ (t (i (v mid)))
+  & out ~ (1 (h mid))
+
+// Relax one undirected edge by lowering both endpoint labels.
+@relax = (u (v (labs out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & labs ~ {ls1 lsrest}
+  & lsrest ~ {ls2 ls3}
+  & @get ~ (u1 (ls1 lu))
+  & @get ~ (v1 (ls2 lv))
+  & lu ~ {lut luk}
+  & lv ~ {lvt lvk}
+  & lut ~ $([<] $(lvt z))
+  & z ~ ?((@relax_false @relax_true) (luk (lvk (u2 (v2 (ls3 out)))))
+
+@relax_false = (x (y (u (v (ls out)))))
+  & x ~ *
+  & @apply ~ (y (u (v (ls out))))
+
+@relax_true = (* (x (y (u (v (ls out))))))
+  & y ~ *
+  & @apply ~ (x (u (v (ls out))))
+
+@apply = (m (u (v (labs out))))
+  & m ~ {m1 m2}
+  & @set ~ (u (m1 (labs mid)))
+  & @set ~ (v (m2 (mid out)))
+
+// Sweep over all edges.
+@sweep = ((?((@sweep_nil @sweep_cons) (pl (labs out))) pl) (labs out))
+
+@sweep_nil = (* (a a))
+
+@sweep_cons = (* (((u v) tail) (labs out)))
+  & @relax ~ (u (v (labs mid)))
+  & @sweep ~ (tail (mid out))
+
+// Count labels equal to their vertex indices.
+@count = ((?((@count_nil @count_cons) (pl (i (acc out)))) pl) (i (acc out)))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* ((h t) (i (acc out))))
+  & i ~ {it ir}
+  & h ~ $([=] $(it z))
+  & z ~ ?((@count_no @count_yes) (ir (acc (t out))))
+
+@count_no = (i (acc (t out)))
+  & i ~ $([+1] i2)
+  & @count ~ (t (i2 (acc out)))
+
+@count_yes = (* (i (acc (t out))))
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (i2 (acc2 out)))
+
+// Run n edge sweeps, then count component representatives.
+@round = (n (edges (labs out)))
+  & n ~ ?((@round_zero @round_succ) (edges (labs out)))
+
+@round_zero = (* (labs out))
+  & @count ~ (labs (0 (0 out)))
+
+@round_succ = (k (edges (labs out)))
+  & edges ~ {e1 e2}
+  & @sweep ~ (e1 (labs mid))
+  & @round ~ (k (e2 (mid out)))

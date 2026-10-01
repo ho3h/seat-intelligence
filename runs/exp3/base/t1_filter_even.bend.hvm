@@ -1,0 +1,42 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@filter_even = ((@filter_even__C12 a) a)
+
+@filter_even__C0 = (* @List/Nil)
+
+@filter_even__C1 = (* (a b))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@filter_even__C10 = (?((@filter_even__C8 @filter_even__C9) a) a)
+
+@filter_even__C11 = (* (a ((@filter_even__C10 (a b)) b)))
+
+@filter_even__C12 = (?((@List/Nil @filter_even__C11) a) a)
+
+@filter_even__C2 = (* (a a))
+
+@filter_even__C3 = (* a)
+  & @List/Cons ~ a
+
+@filter_even__C4 = (a (* b))
+  & @List/Cons ~ (a b)
+
+@filter_even__C5 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@filter_even__C6 = (* ({$([&0x0000001] $([=0x0000000] ?((@filter_even__C2 @filter_even__C3) (a b)))) a} b))
+
+@filter_even__C7 = (* (a ({$([&0x0000001] $([=0x0000000] ?((@filter_even__C4 @filter_even__C5) (a (b c))))) b} c)))
+
+@filter_even__C8 = ({$([&0x0000001] $([=0x0000000] ?((@filter_even__C0 @filter_even__C1) (a b)))) a} b)
+
+@filter_even__C9 = (* (b (c ({$([&0x0000001] $([=0x0000000] ?((@filter_even__C6 @filter_even__C7) (a (b (d e)))))) a} e))))
+  & @filter_even ~ (c d)
+
+@prog = a
+  & @filter_even ~ a
+
+

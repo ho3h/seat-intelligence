@@ -1,0 +1,48 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@get_k = ({$([=0x0000000] ?((@get_k__C3 @get_k__C4) (a b))) a} b)
+
+@get_k__C0 = (* (* (b ($([:-0x0000001] a) c))))
+  & @get_k ~ (a (b c))
+
+@get_k__C1 = (?(((* 0) @get_k__C0) a) a)
+
+@get_k__C2 = (?((0 (* (a (* a)))) b) b)
+
+@get_k__C3 = (a ((@get_k__C1 (a b)) b))
+
+@get_k__C4 = (* (* ((@get_k__C2 a) a)))
+
+@insert_sorted = (a ((@insert_sorted__C4 (a b)) b))
+
+@insert_sorted__C0 = (b (a (c e)))
+  & @List/Cons ~ (a (d e))
+  & @insert_sorted ~ (b (c d))
+
+@insert_sorted__C1 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@insert_sorted__C2 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@insert_sorted__C3 = (* ({a d} (e ({$([>] $(a b)) c} f))))
+  & $(b ?((@insert_sorted__C0 @insert_sorted__C1) (c (d (e f))))) ~ [=0x0000000]
+
+@insert_sorted__C4 = (?((@insert_sorted__C2 @insert_sorted__C3) a) a)
+
+@prog = ((a b) d)
+  & @get_k ~ (a (c d))
+  & @sort_list ~ (b c)
+
+@sort_list = ((@sort_list__C1 a) a)
+
+@sort_list__C0 = (* (a (b d)))
+  & @insert_sorted ~ (a (c d))
+  & @sort_list ~ (b c)
+
+@sort_list__C1 = (?((@List/Nil @sort_list__C0) a) a)
+
+

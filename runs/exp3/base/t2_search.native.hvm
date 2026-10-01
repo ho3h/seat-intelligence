@@ -1,0 +1,25 @@
+// Linear search; the input list is ascending, but checking each element also
+// keeps the search correct without relying on early termination.
+@prog = ((xs targ) out)
+  & @bs ~ (xs (targ (0 out)))
+
+@bs = ((?((@bs_nil @bs_cons) (pl (targ (i out)))) pl) (targ (i out)))
+
+@bs_nil = (* (targ (i out)))
+  & targ ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@bs_cons = (* ((h tail) (targ (i out))))
+  & targ ~ {tc tr}
+  & h ~ $([=] $(tc eq))
+  & eq ~ ?((@bs_more @bs_hit) (tail (tr (i out))))
+
+@bs_more = (tail (tr (i out)))
+  & i ~ $([+1] idx)
+  & @bs ~ (tail (tr (idx out)))
+
+@bs_hit = (* (tail (tr (i out))))
+  & tail ~ *
+  & tr ~ *
+  & i ~ out

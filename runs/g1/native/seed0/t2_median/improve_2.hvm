@@ -1,0 +1,86 @@
+// Merge sort with alternating, pairwise splitting; carry the list length.
+@prog = (input out)
+  & @sort ~ (input result)
+  & result ~ (sorted len)
+  & len ~ $([/] $(2 idx))
+  & @sel ~ (sorted (idx out))
+
+@sort = ((?((@sort_nil @sort_cons) (payload out)) payload) out)
+
+@sort_nil = (* out)
+  & out ~ ((0 *) 0)
+
+@sort_cons = (* ((head tail) out))
+  & @split ~ ((1 (head tail)) pair)
+  & pair ~ (left right)
+  & right ~ (?( (@sort_one @sort_many) (payload (left out))) payload)
+
+@sort_one = (* (left out))
+  & out ~ (left 1)
+
+@sort_many = (* ((rh rt) (left out)))
+  & @sort ~ (left lres)
+  & lres ~ (ls llen)
+  & @sort ~ ((1 (rh rt)) rres)
+  & rres ~ (rs rlen)
+  & @merge ~ (ls (rs sorted))
+  & llen ~ $([+] $(rlen len))
+  & out ~ (sorted len)
+
+// Split into alternating elements, consuming two list cells per recursive call.
+@split = ((?((@split_nil @split_cons) (payload out)) payload) out)
+
+@split_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((head tail) out))
+  & tail ~ (?( (@split_single @split_pair) (payload (head out))) payload)
+
+@split_single = (* (head out))
+  & out ~ ((1 (head (0 *))) (0 *))
+
+@split_pair = (* ((h2 rest) (head out)))
+  & @split ~ (rest pair)
+  & pair ~ (a b)
+  & out ~ ((1 (head a)) (1 (h2 b)))
+
+// Merge two sorted lists.
+@merge = ((?((@merge_lnil @merge_lcons) (payload (right out))) payload) (right out))
+
+@merge_lnil = (* (right out))
+  & out ~ right
+
+@merge_lcons = (* ((h1 t1) (right out)))
+  & right ~ (?( (@merge_rnil @merge_both) (payload (h1 (t1 out)))) payload)
+
+@merge_rnil = (* (h1 (t1 out)))
+  & out ~ (1 (h1 t1))
+
+@merge_both = (* ((h2 t2) (h1 (t1 out))))
+  & h1 ~ {h1cmp h1keep}
+  & h2 ~ {h2cmp h2keep}
+  & h1cmp ~ $([<] $(h2cmp cmp))
+  & cmp ~ ?((@merge_take2 @merge_take1) (h1keep (t1 (h2keep (t2 out))))
+
+@merge_take2 = (h1 (t1 (h2 (t2 out))))
+  & @merge ~ ((1 (h1 t1)) (t2 rest))
+  & out ~ (1 (h2 rest))
+
+@merge_take1 = (* (h1 (t1 (h2 (t2 out)))))
+  & @merge ~ (t1 ((1 (h2 t2)) rest))
+  & out ~ (1 (h1 rest))
+
+// Select the zero-based index; an empty list yields zero.
+@sel = ((?((@sel_nil @sel_cons) (payload (idx out))) payload) (idx out))
+
+@sel_nil = (* (* out))
+  & out ~ 0
+
+@sel_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@sel_here @sel_next) (head (tail out)))
+
+@sel_here = (head (* out))
+  & out ~ head
+
+@sel_next = (idx (* (tail out)))
+  & @sel ~ (tail (idx out))

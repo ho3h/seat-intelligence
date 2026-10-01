@@ -1,0 +1,244 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {n_adj0 n_r1}
+  & n_r1 ~ {n_rev0 n_r2}
+  & n_r2 ~ {n_vis1 n_r3}
+  & n_r3 ~ {n_fp n_vis2}
+  & @make_nil ~ (n_adj0 adj0)
+  & @make_nil ~ (n_rev0 rev0)
+  & @build_both ~ (edges (adj0 (rev0 pair_ar)))
+  & pair_ar ~ (adj rev)
+  & @make_zeros ~ (n_vis1 visited1_0)
+  & @make_zeros ~ (n_vis2 visited2_0)
+  & @first_pass ~ (adj (n_fp (0 (visited1_0 ((0 *) first_pair)))))
+  & first_pair ~ (visited1 order)
+  & @second_pass ~ (rev (order (visited2_0 (0 out))))
+
+@make_nil = (n out)
+  & n ~ ?((@mn_zero @mn_succ) out)
+
+@mn_zero = (0 *)
+
+@mn_succ = (n2 out)
+  & @make_nil ~ (n2 rest)
+  & out ~ (1 ((0 *) rest))
+
+@make_zeros = (n out)
+  & n ~ ?((@mz_zero @mz_succ) out)
+
+@mz_zero = (0 *)
+
+@mz_succ = (n2 out)
+  & @make_zeros ~ (n2 rest)
+  & out ~ (1 (0 rest))
+
+@nth = (lst (idx out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@nth_nil @nth_cons) (payload (idx out)))
+
+@nth_nil = (payload (idx out))
+  & out ~ 0
+  & payload ~ *
+  & idx ~ *
+
+@nth_cons = (z (payload (idx out)))
+  & z ~ *
+  & payload ~ (h t)
+  & idx ~ ?((@nth_zero @nth_succ) (h (t out)))
+
+@nth_zero = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@nth_succ = (idx2 (h (t out)))
+  & @nth ~ (t (idx2 out))
+  & h ~ *
+
+@replace_at = (lst (idx (new out)))
+  & lst ~ (tag payload)
+  & tag ~ ?((@rep_nil @rep_cons) (payload (idx (new out))))
+
+@rep_nil = (payload (idx (new out)))
+  & out ~ (0 *)
+  & payload ~ *
+  & idx ~ *
+  & new ~ *
+
+@rep_cons = (z (payload (idx (new out))))
+  & z ~ *
+  & payload ~ (h t)
+  & idx ~ ?((@rep_zero @rep_succ) (h (t (new out))))
+
+@rep_zero = (h (t (new out)))
+  & out ~ (1 (new t))
+  & h ~ *
+
+@rep_succ = (idx2 (h (t (new out))))
+  & @replace_at ~ (t (idx2 (new newtail)))
+  & out ~ (1 (h newtail))
+
+@insert_at = (lst (idx (v out)))
+  & lst ~ (tag payload)
+  & tag ~ ?((@ins_nil @ins_cons) (payload (idx (v out))))
+
+@ins_nil = (payload (idx (v out)))
+  & out ~ (0 *)
+  & payload ~ *
+  & idx ~ *
+  & v ~ *
+
+@ins_cons = (z (payload (idx (v out))))
+  & z ~ *
+  & payload ~ (h t)
+  & idx ~ ?((@ins_zero @ins_succ) (h (t (v out))))
+
+@ins_zero = (h (t (v out)))
+  & out ~ (1 ((1 (v h)) t))
+
+@ins_succ = (idx2 (h (t (v out))))
+  & @insert_at ~ (t (idx2 (v newtail)))
+  & out ~ (1 (h newtail))
+
+@build_both = (edges (adj (rev out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@bb_nil @bb_cons) (payload (adj (rev out))))
+
+@bb_nil = (payload (adj (rev out)))
+  & out ~ (adj rev)
+  & payload ~ *
+
+@bb_cons = (z (payload (adj (rev out))))
+  & z ~ *
+  & payload ~ (edge rest)
+  & edge ~ (u v)
+  & @insert_at ~ (adj (u (v adj2)))
+  & @insert_at ~ (rev (v (u rev2)))
+  & @build_both ~ (rest (adj2 (rev2 out)))
+
+@dfs_visit = (adj (v (visited (order out))))
+  & v ~ {v_mark v_rest}
+  & v_rest ~ {v_lookup v_pass}
+  & adj ~ {adj_lookup adj_rest}
+  & @replace_at ~ (visited (v_mark (1 visited1)))
+  & @nth ~ (adj_lookup (v_lookup neighbors))
+  & @dfs_neighbors ~ (adj_rest (v_pass (neighbors (visited1 (order out)))))
+
+@dfs_neighbors = (adj (v (neighbors (visited (order out)))))
+  & neighbors ~ (tag payload)
+  & tag ~ ?((@dfsn_nil @dfsn_cons) (adj (v (payload (visited (order out))))))
+
+@dfsn_nil = (adj (v (payload (visited (order out)))))
+  & out ~ (visited (1 (v order)))
+  & adj ~ *
+  & payload ~ *
+
+@dfsn_cons = (z (adj (v (payload (visited (order out))))))
+  & z ~ *
+  & payload ~ (w rest)
+  & visited ~ {visited_lookup visited_rest}
+  & @nth ~ (visited_lookup (w b))
+  & b ~ ?((@dfsn_zero @dfsn_nonzero) (adj (v (w (rest (visited_rest (order out)))))))
+
+@dfsn_zero = (adj (v (w (rest (visited (order out))))))
+  & adj ~ {adj_dfs adj_rest}
+  & @dfs_visit ~ (adj_dfs (w (visited (order pair))))
+  & pair ~ (visited2 order2)
+  & @dfs_neighbors ~ (adj_rest (v (rest (visited2 (order2 out)))))
+
+@dfsn_nonzero = (z (adj (v (w (rest (visited (order out)))))))
+  & z ~ *
+  & @dfs_neighbors ~ (adj (v (rest (visited (order out)))))
+  & w ~ *
+
+@dfs_mark = (adj (v (visited out)))
+  & v ~ {v_mark v_lookup}
+  & adj ~ {adj_lookup adj_rest}
+  & @replace_at ~ (visited (v_mark (1 visited1)))
+  & @nth ~ (adj_lookup (v_lookup neighbors))
+  & @dfs_mark_neighbors ~ (adj_rest (neighbors (visited1 out)))
+
+@dfs_mark_neighbors = (adj (neighbors (visited out)))
+  & neighbors ~ (tag payload)
+  & tag ~ ?((@dmark_nil @dmark_cons) (adj (payload (visited out))))
+
+@dmark_nil = (adj (payload (visited out)))
+  & out ~ visited
+  & adj ~ *
+  & payload ~ *
+
+@dmark_cons = (z (adj (payload (visited out))))
+  & z ~ *
+  & payload ~ (w rest)
+  & visited ~ {visited_lookup visited_rest}
+  & @nth ~ (visited_lookup (w b))
+  & b ~ ?((@dmark_zero @dmark_nonzero) (adj (w (rest (visited_rest out)))))
+
+@dmark_zero = (adj (w (rest (visited out))))
+  & adj ~ {adj_dfs adj_rest}
+  & @dfs_mark ~ (adj_dfs (w (visited visited1)))
+  & @dfs_mark_neighbors ~ (adj_rest (rest (visited1 out)))
+
+@dmark_nonzero = (z (adj (w (rest (visited out)))))
+  & z ~ *
+  & @dfs_mark_neighbors ~ (adj (rest (visited out)))
+  & w ~ *
+
+@first_pass = (adj (n (i (visited (order out)))))
+  & n ~ {n_cmp n_ctx}
+  & i ~ {i_cmp i_ctx}
+  & i_cmp ~ $([<] $(n_cmp flag))
+  & flag ~ ?((@fp_done @fp_next) (adj (n_ctx (i_ctx (visited (order out))))))
+
+@fp_done = (adj (n (i (visited (order out)))))
+  & out ~ (visited order)
+  & adj ~ *
+  & n ~ *
+  & i ~ *
+
+@fp_next = (z (adj (n (i (visited (order out))))))
+  & z ~ *
+  & i ~ {i_lookup i_ctx}
+  & visited ~ {visited_lookup visited_rest}
+  & @nth ~ (visited_lookup (i_lookup b))
+  & b ~ ?((@fp_unvisited @fp_visited) (adj (n (i_ctx (visited_rest (order out))))))
+
+@fp_unvisited = (adj (n (i (visited (order out)))))
+  & adj ~ {adj_dfs adj_recur}
+  & i ~ {i_dfs i_inc}
+  & i_inc ~ $([+1] i_next)
+  & @dfs_visit ~ (adj_dfs (i_dfs (visited (order pair))))
+  & pair ~ (visited2 order2)
+  & @first_pass ~ (adj_recur (n (i_next (visited2 (order2 out)))))
+
+@fp_visited = (z (adj (n (i (visited (order out))))))
+  & z ~ *
+  & i ~ $([+1] i_next)
+  & @first_pass ~ (adj (n (i_next (visited (order out)))))
+
+@second_pass = (rev (order (visited (count out))))
+  & order ~ (tag payload)
+  & tag ~ ?((@sp_nil @sp_cons) (rev (payload (visited (count out)))))
+
+@sp_nil = (rev (payload (visited (count out))))
+  & out ~ count
+  & rev ~ *
+  & payload ~ *
+  & visited ~ *
+
+@sp_cons = (z (rev (payload (visited (count out)))))
+  & z ~ *
+  & payload ~ (v rest)
+  & visited ~ {visited_lookup visited_rest}
+  & @nth ~ (visited_lookup (v b))
+  & b ~ ?((@sp_unvisited @sp_visited) (rev (v (rest (visited_rest (count out))))))
+
+@sp_visited = (z (rev (v (rest (visited (count out))))))
+  & z ~ *
+  & @second_pass ~ (rev (rest (visited (count out))))
+  & v ~ *
+
+@sp_unvisited = (rev (v (rest (visited (count out)))))
+  & rev ~ {rev_dfs rev_recur}
+  & count ~ $([+1] count2)
+  & @dfs_mark ~ (rev_dfs (v (visited visited1)))
+  & @second_pass ~ (rev_recur (rest (visited1 (count2 out))))

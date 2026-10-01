@@ -1,0 +1,131 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@collapse = ((@collapse__C1 a) a)
+
+@collapse__C0 = (* ((b (c d)) (a e)))
+  & @collapse_group ~ (a (b (c (d e))))
+
+@collapse__C1 = (?((@List/Nil @collapse__C0) a) a)
+
+@collapse_group = ((@collapse_group__C8 a) a)
+
+@collapse_group__C0 = (b (c (d (a (* e)))))
+  & @collapse_group ~ (a (b (c (d e))))
+
+@collapse_group__C1 = (* (b (c (* (a d)))))
+  & @collapse_group ~ (a (b (c d)))
+
+@collapse_group__C2 = (a (b (c (d (e (* h))))))
+  & @List/Cons ~ ((a (b c)) (g h))
+  & @collapse ~ (f g)
+  & @List/Cons ~ (d (e f))
+
+@collapse_group__C3 = (* (b (c ({a d} (* (e ({$([>] $(a ?((@collapse_group__C0 @collapse_group__C1) (b (c (d (e (f g)))))))) f} g)))))))
+
+@collapse_group__C4 = (a (b (c (d (e (* (* h)))))))
+  & @List/Cons ~ ((a (b c)) (g h))
+  & @collapse ~ (f g)
+  & @List/Cons ~ (d (e f))
+
+@collapse_group__C5 = (* (b ({a c} (d (e (f ($([=] $(a ?((@collapse_group__C2 @collapse_group__C3) (b (c (d (e (f g)))))))) g)))))))
+
+@collapse_group__C6 = (a (b (c d)))
+  & @List/Cons ~ ((a (b c)) (@List/Nil d))
+
+@collapse_group__C7 = (* ({($([=] $(a ?((@collapse_group__C4 @collapse_group__C5) (b (c (d (e (f (g (h i)))))))))) (g h)) e} (f ({a b} (c (d i))))))
+
+@collapse_group__C8 = (?((@collapse_group__C6 @collapse_group__C7) a) a)
+
+@merge = ((@merge__C10 a) a)
+
+@merge__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge__C10 = (?(((a a) @merge__C9) b) b)
+
+@merge__C2 = (b (c (a (e (* (* g))))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge__C3 = (* (c (d (e (f ($([>] $(a b)) (a g)))))))
+  & $(b ?((@merge__C0 @merge__C1) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@merge__C4 = (b (c (d (e ($([=] $(a ?((@merge__C2 @merge__C3) (b (c (d (e (f g)))))))) (f (a g)))))))
+
+@merge__C5 = (* (a (b (c (d (* (* (* (* g)))))))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge__C6 = a
+  & @List/Cons ~ a
+
+@merge__C7 = (* ({({a h} (i *)) d} (e ({({$([<] $(a ?((@merge__C4 @merge__C5) (b (c (d (e (f (g (h (i j))))))))))) f} (g *)) b} (c j)))))
+
+@merge__C8 = (?((@merge__C6 @merge__C7) a) a)
+
+@merge__C9 = (* (a (b ((@merge__C8 (a (b c))) c))))
+
+@normalize = ((@normalize__C3 a) a)
+
+@normalize__C0 = (b (a (c d)))
+  & @List/Cons ~ ((a (b c)) d)
+
+@normalize__C1 = (* (a (b (c d))))
+  & @List/Cons ~ ((a (b c)) d)
+
+@normalize__C2 = (* (({$([<] $(a ?((@normalize__C0 @normalize__C1) (b (c (d (f g))))))) b} ({a c} d)) (e g)))
+  & @normalize ~ (e f)
+
+@normalize__C3 = (?((@List/Nil @normalize__C2) a) a)
+
+@prog = (a d)
+  & @collapse ~ (c d)
+  & @sort ~ (b c)
+  & @normalize ~ (a b)
+
+@sort = ((@sort__C4 a) a)
+
+@sort__C0 = a
+  & @List/Cons ~ a
+
+@sort__C1 = (* (* (* (a (b h)))))
+  & @merge ~ (e (g h))
+  & @split ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@sort ~ (d e)
+  &!@sort ~ (f g)
+
+@sort__C2 = (?((@sort__C0 @sort__C1) a) a)
+
+@sort__C3 = (* (a ({(@sort__C2 (a (b c))) b} c)))
+
+@sort__C4 = (?((@List/Nil @sort__C3) a) a)
+
+@split = ((@split__C4 a) a)
+
+@split__C0 = (a (b @List/Nil))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@split__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split__C2 = (?((@split__C0 @split__C1) a) a)
+
+@split__C3 = (* (a ((@split__C2 (a b)) b)))
+
+@split__C4 = (?(((@List/Nil @List/Nil) @split__C3) a) a)
+
+

@@ -1,0 +1,94 @@
+@List/Nil = ((0 a) a)
+
+@choose_min = ((@choose_min__C8 a) a)
+
+@choose_min__C0 = ($([+0x0000001] b) (c (d (e (a (* f))))))
+  & @choose_min ~ (a (b (c (d (e f)))))
+
+@choose_min__C1 = (* ({$([+0x0000001] b) c} (* (* (* (a d))))))
+  & @choose_min ~ (a (b (1 (c d))))
+
+@choose_min__C4 = ($([+0x0000001] b) (c (d (e ((@choose_min__C8 (b (c (d (e f))))) (* f))))))
+
+@choose_min__C5 = (* (a ({?((({$([+0x0000001] b_q155) c_q155} (* (* (* ((@choose_min__C8 (b_q155 (1 (c_q155 d_q155)))) d_q155))))) @choose_min__C2_s) (a (b c))) b} c)))
+
+@choose_min__C6 = (* (a (b (c (a (b c))))))
+
+@choose_min__C8 = (?((@choose_min__C6 (* (($([=0x0000001] ?((@choose_min__C4 @choose_min__C5) (a_q152 (b_q152 (c_q152 (d_q152 (e_q152 (f_q152 g_q152)))))))) f_q152) (e_q152 (a_q152 (b_q152 (c_q152 (d_q152 g_q152)))))))) a) a)
+
+@count_reachable = ((@count_reachable__C2 a) a)
+
+@count_reachable__C1 = (* ((?(((a a) @count_reachable__C0_s) (c d)) *) ((@count_reachable__C2 c) d)))
+
+@count_reachable__C2 = (?((0 @count_reachable__C1) a) a)
+
+@dijkstra = (b (c (d (?(((a (* (* a))) @dijkstra__C1) (b (c (d e)))) e))))
+
+@dijkstra__C1 = (f ({(@choose_min__C8 (0 (0 (0 (0 (?(((b (* (* (* (* (* b)))))) @dijkstra__C0_s) (c (d (e (f (g (h i))))))) (g h))))))) c} (d (e i))))
+
+@dist_at = ((@dist_at__C2 a) a)
+
+@dist_at__C1 = (* (c (d ({?(((* (a (* a))) @dist_at__C0_s) (b (c (d e)))) b} e))))
+
+@dist_at__C2 = (?(((* (0 0)) @dist_at__C1) a) a)
+
+@init_dist = (?(((* (* @List/Nil)) @init_dist__C2) a) a)
+
+@init_dist__C0 = (b ($([+0x0000001] c) ($([+0x0000001] $([:-0x0000001] ?(((* (* @List/Nil)) @init_dist__C2) (b (c d))))) ((1 ((0 0) (d c_i4))) c_i4))))
+
+@init_dist__C1 = (* (b ($([+0x0000001] c) ($([+0x0000001] $([:-0x0000001] ?(((* (* @List/Nil)) @init_dist__C2) (b (c d))))) ((1 ((1 0) (d c_i5))) c_i5)))))
+
+@init_dist__C2 = (d ({a b} ({$([=] $(a ?((@init_dist__C0 @init_dist__C1) (b (c (d e)))))) c} e)))
+
+@prog = (({a c} ({$([<] $(a ?(((* (* (* (* 0)))) @prog__C0_s) (c (d (e (f g))))))) d} (e f))) g)
+
+@relax_edges__C1 = (* (a ({a_q130 g_q130} ($([-] $(a_q130 b_q130)) (b ({$([>] $(b_q130 ?((@relax_target__C5_z (* (d_q130 (* (* (* d_q130)))))) (a (b (g_q130 (h_q130 f))))))) h_q130} f))))))
+
+@relax_edges__C2 = (b (a (c (d (e ($([=] $(a ?(((a_q162 (* (* (* (* a_q162))))) @relax_edges__C1) (b (c (d (e f))))))) f))))))
+
+@relax_edges__C3 = (* (a (* ({a_q133 g_q133} ($([-] $(a_q133 b_q133)) (* (b ({$([>] $(b_q133 ?((@relax_target__C5_z (* (d_q133 (* (* (* d_q133)))))) (a (b (g_q133 (h_q133 f))))))) h_q133} f))))))))
+
+@relax_edges__C4 = (* (({$([=] $(b ?((@relax_edges__C2 @relax_edges__C3) (c (d (e (f (g (h (i j)))))))))) g} (h i)) ((@relax_edges__C5 (j (k (l (m n))))) (c ({k {b d}} ({l e} ({m f} n)))))))
+
+@relax_edges__C5 = (?(((a (* (* (* a)))) @relax_edges__C4) b) b)
+
+@relax_target__C0 = (a (* (* a)))
+
+@relax_target__C1 = (* (a (b (c d))))
+  & @set_dist ~ (a (b ((1 c) d)))
+
+@relax_target__C4 = (a (b (c (?((@relax_target__C3_z @relax_target__C2_s) (a (b (c d)))) d))))
+
+@set_dist = ((@set_dist__C3 a) a)
+
+@set_dist__C2 = (* (c (d ({?((@set_dist__C1_z @set_dist__C0_s) (a (b (c (d e))))) a} (b e)))))
+
+@set_dist__C3 = (?(((* (* @List/Nil)) @set_dist__C2) a) a)
+
+@choose_min__C2_s = (* (b (c (d ({a e} (f ({$([<] $(a ?((@choose_min__C0 @choose_min__C1) (b (c (d (e (f (g h))))))))) g} h)))))))
+
+@count_reachable__C0_s = (* ($([+0x0000001] a) a))
+
+@dijkstra__C0_s = (* (b ({j (@relax_edges__C5 (e (f (g (h i)))))} ({k h} ($([+0x0000001] $([:-0x0000001] ?(((a_q144 (* (* a_q144))) @dijkstra__C1) (i (j (k m)))))) ({f c} ({g d} m)))))))
+  & @set_dist ~ (b (c ((2 d) e)))
+
+@dist_at__C0_s = (* ($([:-0x0000001] b) (* (a c))))
+  & @dist_at ~ (a (b c))
+
+@prog__C0_s = (* ({f a} (b (e (d h)))))
+  & @count_reachable ~ (g h)
+  & @dijkstra ~ (c (d (e (f g))))
+  & @init_dist ~ (a (b (0 c)))
+
+@relax_target__C5_z = ({a d} ({b e} ($([+] $(f g)) (f j))))
+  & @dist_at ~ (a (b ({$([=0x0000002] ?((@relax_target__C4 (* (c (* (* (* (* c))))))) (d (e (g (h (i j))))))) h} i)))
+
+@relax_target__C3_z = (a (b (c (* d))))
+  & @set_dist ~ (a (b ((1 c) d)))
+
+@relax_target__C2_s = (* (b (c ({$([<] $(a ?((@relax_target__C0 @relax_target__C1) (b (c (d e)))))) d} (a e)))))
+
+@set_dist__C1_z = (* (a (* (b_i7 ((1 (a (b_i7 c_i7))) c_i7)))))
+
+@set_dist__C0_s = (* ($([:-0x0000001] c) (d (a (b ((1 (a (e c_i6))) c_i6))))))
+  & @set_dist ~ (b (c (d e)))

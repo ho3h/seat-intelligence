@@ -1,0 +1,70 @@
+// Entry point
+@prog = (inp out)
+  & inp ~ (x (y t))
+  & @lca ~ (x (y (t out)))
+
+// Match the tree variant tag; carry x, y, the payload, and the output.
+@lca = (x (y ((?((@lca_leaf @lca_node) (x (y (p out)))) p) out))
+
+@lca_leaf = (x (y (p out)))
+  & x ~ *
+  & y ~ *
+  & p ~ *
+  & out ~ 0
+
+// The Node branch receives the decremented tag, which is erased.
+@lca_node = (* (x (y (p out))))
+  & p ~ (l (v r))
+  & x ~ {xl xr}
+  & v ~ {vl vr}
+  & xl ~ $([<] $(vl b))
+  & b ~ ?((@x_ge @x_lt) (xr (y (vr (l (r out)))))
+
+@x_lt = (* (xr (y (v (l (r out))))))
+  & y ~ {yc yr}
+  & v ~ {vc vo}
+  & yc ~ $([<] $(vc b))
+  & b ~ ?((@yl_no @yl_yes) (xr (yr (vo (l (r out)))))
+
+@yl_no = (xr (yr (vo (l (r out)))))
+  & xr ~ *
+  & yr ~ *
+  & l ~ *
+  & r ~ *
+  & vo ~ out
+
+@yl_yes = (* (xr (yr (vo (l (r out))))))
+  & vo ~ *
+  & r ~ *
+  & @lca ~ (xr (yr (l out)))
+
+@x_ge = (xr (y (v (l (r out)))))
+  & xr ~ {xc xrec}
+  & v ~ {vc vo}
+  & xc ~ $([>] $(vc b))
+  & b ~ ?((@x_notgt @x_gt) (xrec (y (vo (l (r out)))))
+
+@x_notgt = (xrec (y (vo (l (r out)))))
+  & xrec ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & vo ~ out
+
+@x_gt = (* (xrec (y (v (l (r out))))))
+  & y ~ {yc yr}
+  & v ~ {vc vo}
+  & yc ~ $([>] $(vc b))
+  & b ~ ?((@yg_no @yg_yes) (xrec (yr (vo (l (r out)))))
+
+@yg_no = (xrec (yr (vo (l (r out)))))
+  & xrec ~ *
+  & yr ~ *
+  & l ~ *
+  & r ~ *
+  & vo ~ out
+
+@yg_yes = (* (xrec (yr (vo (l (r out))))))
+  & vo ~ *
+  & l ~ *
+  & @lca ~ (xrec (yr (r out)))

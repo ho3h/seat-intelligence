@@ -1,0 +1,23 @@
+// t3_in_out_degrees (GRAPH-SWING, runs/exp5): two degree histograms as complete binary tries keyed by vertex id,
+// updated by pre-expanded "increment leaf" updates while streaming the edges, then flattened to lists (tail threaded
+// through the traversal, first n leaves kept).
+@prog = ((n es) out)
+  & n ~ ?((@io_zero @io_pos) (es out))
+@io_zero = (* ((0 *) (0 *)))
+@io_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 L5}}}}
+  & n ~ {n1 n2}
+  & @zt ~ (L1 I0)
+  & @zt ~ (L2 O0)
+  & @w_blk ~ (es ((L3 (I0 O0)) (If Of)))
+  & @tl ~ (If (L4 (0 (n1 ((0 *) li)))))
+  & @tl ~ (Of (L5 (0 (n2 ((0 *) lo)))))
+  & out ~ (li lo)
+@io_step = ((L (I O)) ((u v) (L3 (I2 O2))))
+  & L ~ {L1 {L2 L3}}
+  & @inc ~ (I (v (L1 I2)))
+  & @inc ~ (O (u (L2 O2)))
+@io_fin = ((* (I O)) (I O))

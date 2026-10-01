@@ -1,0 +1,168 @@
+// Process sixteen list elements per recursive call.
+@prog = ((xs t) out)
+  & @ub ~ (xs (t (0 out)))
+
+@ub = ((?((@ub_nil @ub_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@ub_nil = (* (* (a a)))
+
+@ub_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub1 @ub_stop0) (tail (tr (acc out))))
+
+@ub_stop0 = (* (* (* (a a))))
+
+@ub1 = ((?((@ub1_nil @ub1_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub1_nil = (* (* (acc out)))
+  & acc ~ $([+1] out)
+@ub1_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub2 @ub1_stop) (tail (tr (acc out))))
+@ub1_stop = (* (* (* (acc out))))
+  & acc ~ $([+1] out)
+
+@ub2 = ((?((@ub2_nil @ub2_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub2_nil = (* (* (acc out)))
+  & acc ~ $([+2] out)
+@ub2_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub3 @ub2_stop) (tail (tr (acc out))))
+@ub2_stop = (* (* (* (acc out))))
+  & acc ~ $([+2] out)
+
+@ub3 = ((?((@ub3_nil @ub3_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub3_nil = (* (* (acc out)))
+  & acc ~ $([+3] out)
+@ub3_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub4 @ub3_stop) (tail (tr (acc out))))
+@ub3_stop = (* (* (* (acc out))))
+  & acc ~ $([+3] out)
+
+@ub4 = ((?((@ub4_nil @ub4_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub4_nil = (* (* (acc out)))
+  & acc ~ $([+4] out)
+@ub4_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub5 @ub4_stop) (tail (tr (acc out))))
+@ub4_stop = (* (* (* (acc out))))
+  & acc ~ $([+4] out)
+
+@ub5 = ((?((@ub5_nil @ub5_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub5_nil = (* (* (acc out)))
+  & acc ~ $([+5] out)
+@ub5_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub6 @ub5_stop) (tail (tr (acc out))))
+@ub5_stop = (* (* (* (acc out))))
+  & acc ~ $([+5] out)
+
+@ub6 = ((?((@ub6_nil @ub6_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub6_nil = (* (* (acc out)))
+  & acc ~ $([+6] out)
+@ub6_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub7 @ub6_stop) (tail (tr (acc out))))
+@ub6_stop = (* (* (* (acc out))))
+  & acc ~ $([+6] out)
+
+@ub7 = ((?((@ub7_nil @ub7_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub7_nil = (* (* (acc out)))
+  & acc ~ $([+7] out)
+@ub7_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub8 @ub7_stop) (tail (tr (acc out))))
+@ub7_stop = (* (* (* (acc out))))
+  & acc ~ $([+7] out)
+
+@ub8 = ((?((@ub8_nil @ub8_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub8_nil = (* (* (acc out)))
+  & acc ~ $([+8] out)
+@ub8_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub9 @ub8_stop) (tail (tr (acc out))))
+@ub8_stop = (* (* (* (acc out))))
+  & acc ~ $([+8] out)
+
+@ub9 = ((?((@ub9_nil @ub9_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub9_nil = (* (* (acc out)))
+  & acc ~ $([+9] out)
+@ub9_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub10 @ub9_stop) (tail (tr (acc out))))
+@ub9_stop = (* (* (* (acc out))))
+  & acc ~ $([+9] out)
+
+@ub10 = ((?((@ub10_nil @ub10_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub10_nil = (* (* (acc out)))
+  & acc ~ $([+10] out)
+@ub10_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub11 @ub10_stop) (tail (tr (acc out))))
+@ub10_stop = (* (* (* (acc out))))
+  & acc ~ $([+10] out)
+
+@ub11 = ((?((@ub11_nil @ub11_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub11_nil = (* (* (acc out)))
+  & acc ~ $([+11] out)
+@ub11_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub12 @ub11_stop) (tail (tr (acc out))))
+@ub11_stop = (* (* (* (acc out))))
+  & acc ~ $([+11] out)
+
+@ub12 = ((?((@ub12_nil @ub12_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub12_nil = (* (* (acc out)))
+  & acc ~ $([+12] out)
+@ub12_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub13 @ub12_stop) (tail (tr (acc out))))
+@ub12_stop = (* (* (* (acc out))))
+  & acc ~ $([+12] out)
+
+@ub13 = ((?((@ub13_nil @ub13_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub13_nil = (* (* (acc out)))
+  & acc ~ $([+13] out)
+@ub13_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub14 @ub13_stop) (tail (tr (acc out))))
+@ub13_stop = (* (* (* (acc out))))
+  & acc ~ $([+13] out)
+
+@ub14 = ((?((@ub14_nil @ub14_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub14_nil = (* (* (acc out)))
+  & acc ~ $([+14] out)
+@ub14_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub15 @ub14_stop) (tail (tr (acc out))))
+@ub14_stop = (* (* (* (acc out))))
+  & acc ~ $([+14] out)
+
+@ub15 = ((?((@ub15_nil @ub15_cons) (pl (t (acc out)))) pl) (t (acc out)))
+@ub15_nil = (* (* (acc out)))
+  & acc ~ $([+15] out)
+@ub15_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub_finish @ub15_stop) (tail (tr (acc out))))
+@ub15_stop = (* (* (* (acc out))))
+  & acc ~ $([+15] out)
+
+@ub_finish = (tail (t (acc out)))
+  & acc ~ $([+16] acc2)
+  & @ub ~ (tail (t (acc2 out)))

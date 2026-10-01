@@ -1,0 +1,62 @@
+// Split alternately, recursively sort both halves, then merge.
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = ((?((@sort_nil @sort_cons) (payload output)) payload) output)
+
+@sort_nil = (payload output)
+  & payload ~ *
+  & output ~ (0 *)
+
+@sort_cons = (* ((head tail) output))
+  & @splitA ~ ((1 (head tail)) (left right))
+  & @sort_pair ~ ((left right) output)
+
+@sort_pair = ((left right) output)
+  & @sort ~ (left sl)
+  & @sort ~ (right sr)
+  & @merge ~ (sl (sr output))
+
+@splitA = ((?((@split_nil @splitA_cons) (payload out)) payload) out)
+
+@splitB = ((?((@split_nil @splitB_cons) (payload out)) payload) out)
+
+@split_nil = (payload out)
+  & payload ~ *
+  & out ~ ((0 *) (0 *))
+
+@splitA_cons = (* ((head tail) out))
+  & @splitB ~ (tail (left right))
+  & out ~ ((1 (head left)) right)
+
+@splitB_cons = (* ((head tail) out))
+  & @splitA ~ (tail (left right))
+  & out ~ (left (1 (head right)))
+
+// Merge two ascending lists.
+@merge = ((?((@merge_left_nil @merge_left_cons) (payload (right output))) payload) (right output))
+
+@merge_left_nil = (payload (right output))
+  & payload ~ *
+  & output ~ right
+
+@merge_left_cons = (* ((head tail) (right output)))
+  & right ~ ((?((@merge_right_nil @merge_right_cons) (payload (head (tail output)))) payload)
+
+@merge_right_nil = (payload (head (tail output)))
+  & payload ~ *
+  & output ~ (1 (head tail))
+
+@merge_right_cons = (* ((rhead rtail) (head (tail output))))
+  & head ~ {hcmp hkeep}
+  & rhead ~ {rcmp rkeep}
+  & hcmp ~ $([<] $(rcmp lt))
+  & lt ~ ?((@merge_take_right @merge_take_left) (hkeep (rkeep (tail (rtail output))))
+
+@merge_take_right = (head (rhead (tail (rtail output))))
+  & @merge ~ ((1 (head tail)) (rtail rest))
+  & output ~ (1 (rhead rest))
+
+@merge_take_left = (* (head (rhead (tail (rtail output)))))
+  & @merge ~ (tail ((1 (rhead rtail)) rest))
+  & output ~ (1 (head rest))

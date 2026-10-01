@@ -1,0 +1,179 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_row_edges = ((@add_row_edges__C3 a) a)
+
+@add_row_edges__C0 = (b (c (a (* d))))
+  & @add_row_edges ~ (a (b (c d)))
+
+@add_row_edges__C1 = (* (b (c (a (d f)))))
+  & @add_row_edges ~ (a (b (e f)))
+  & @set_mark ~ (c (d e))
+
+@add_row_edges__C2 = (* (($([=] $(a ?((@add_row_edges__C0 @add_row_edges__C1) (b (c (d (e f))))))) e) (d ({a b} (c f)))))
+
+@add_row_edges__C3 = (?(((* (a a)) @add_row_edges__C2) b) b)
+
+@build_rows = ({$([=] $(a ?((@build_rows__C0 (* (* (* (* (* @List/Nil)))))) (b (c d))))) b} ({a c} d))
+
+@build_rows__C0 = ({$([+0x0000001] h) {b e}} (i ({j a} ({k c} m))))
+  & @List/Cons ~ (g (l m))
+  & @add_row_edges ~ (a (b (f g)))
+  & @set_mark ~ (d (e f))
+  & @zero_blocks ~ (c d)
+  & @build_rows ~ (h (i (j (k l))))
+
+@chunk_at = ((@chunk_at__C2 a) a)
+
+@chunk_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @chunk_at ~ (a (b c))
+
+@chunk_at__C1 = (* (c (d ({$([=0x0000000] ?((@chunk_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@chunk_at__C2 = (?(((* @List/Nil) @chunk_at__C1) a) a)
+
+@close_chunk = ((@close_chunk__C2 a) a)
+
+@close_chunk__C0 = (* (b (a c)))
+  & @union_bits ~ (a (b c))
+
+@close_chunk__C1 = (* ({a f} (h ({i e} ({j b} ({k c} m))))))
+  & @List/Cons ~ (g (l m))
+  & @has_mark_block ~ (a (b (c $([=0x0000001] ?(((* (d d)) @close_chunk__C0) (e (f g)))))))
+  & @close_chunk ~ (h (i (j (k l))))
+
+@close_chunk__C2 = (?(((* (* (* @List/Nil))) @close_chunk__C1) a) a)
+
+@close_chunks = ((@close_chunks__C1 a) a)
+
+@close_chunks__C0 = (* (a (f ({g b} ({h c} ({i d} k))))))
+  & @List/Cons ~ (e (j k))
+  & @close_chunk ~ (a (b (c (d e))))
+  & @close_chunks ~ (f (g (h (i j))))
+
+@close_chunks__C1 = (?(((* (* (* @List/Nil))) @close_chunks__C0) a) a)
+
+@close_matrix = ({$([=] $(a ?((@close_matrix__C2 (* (* (* (b (* (* b))))))) (c (d e))))) c} ({a d} e))
+
+@close_matrix__C0 = ($([+0x0000001] a) (b (d ($([*0x0000002] e) (c f)))))
+  & @close_matrix ~ (a (b (c (d (e f)))))
+
+@close_matrix__C1 = (* ($([+0x0000001] a) (b ($([+0x0000001] d) (* (c e))))))
+  & @close_matrix ~ (a (b (c (d (1 e)))))
+
+@close_matrix__C2 = ({$([:%0x0000018] $([=0x0000017] ?((@close_matrix__C0 @close_matrix__C1) (a (b (c (d (m n)))))))) {a {$([:%0x0000018] i) $([:/0x0000018] g)}}} (b ({e f} ({c k} ({d l} n)))))
+  & @close_chunks ~ (e (j (k (l m))))
+  & @list_at ~ (h (i j))
+  & @chunk_at ~ (f (g h))
+
+@count_bits = ((@count_bits__C1 a) a)
+
+@count_bits__C0 = (* (a (b d)))
+  & @popcount24 ~ (a $([+] $(c d)))
+  & @count_bits ~ (b c)
+
+@count_bits__C1 = (?((0 @count_bits__C0) a) a)
+
+@count_chunks = ((@count_chunks__C1 a) a)
+
+@count_chunks__C0 = (* (a (b d)))
+  & @count_rows ~ (a $([+] $(c d)))
+  & @count_chunks ~ (b c)
+
+@count_chunks__C1 = (?((0 @count_chunks__C0) a) a)
+
+@count_rows = ((@count_rows__C1 a) a)
+
+@count_rows__C0 = (* (a (b d)))
+  & @count_bits ~ (a $([+] $(c d)))
+  & @count_rows ~ (b c)
+
+@count_rows__C1 = (?((0 @count_rows__C0) a) a)
+
+@has_mark_block = ((@has_mark_block__C3 a) a)
+
+@has_mark_block__C0 = ($([:-0x0000001] b) (c (* (a d))))
+  & @has_mark_block ~ (a (b (c d)))
+
+@has_mark_block__C1 = (* (* (a ($([&] $(a $([!0x0000000] ?((0 (* 1)) b)))) (* b)))))
+
+@has_mark_block__C2 = (* (c (d ({$([=0x0000000] ?((@has_mark_block__C0 @has_mark_block__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@has_mark_block__C3 = (?(((* (* 0)) @has_mark_block__C2) a) a)
+
+@list_at = ((@list_at__C2 a) a)
+
+@list_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @list_at ~ (a (b c))
+
+@list_at__C1 = (* (c (d ({$([=0x0000000] ?((@list_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@list_at__C2 = (?(((* @List/Nil) @list_at__C1) a) a)
+
+@pack_rows = ((@pack_rows__C1 a) a)
+
+@pack_rows__C0 = (* (a (b g)))
+  & @List/Cons ~ (d (f g))
+  & @take_rows ~ (c (24 (d e)))
+  & @List/Cons ~ (a (b c))
+  & @pack_rows ~ (e f)
+
+@pack_rows__C1 = (?((@List/Nil @pack_rows__C0) a) a)
+
+@popcount24 = ({$([-] $(a {$([&0x0333333] $([+] $(b {$([+] $(c $([&0x00F0F0F] {$([&0x00000FF] $([+] $(d $([+] $(e f))))) {$([:>>0x0000008] $([&0x00000FF] d)) $([:>>0x0000010] $([&0x00000FF] e))}}))) $([:>>0x0000004] c)}))) $([:>>0x0000002] $([&0x0333333] b))})) $([:>>0x0000001] $([&0x0555555] a))} f)
+
+@prog = (({h {a {b $([+0x0000017] $([:/0x0000018] d))}}} c) i)
+  & @count_chunks ~ (g $([-] $(h i)))
+  & @close_matrix ~ (0 (a (f (0 (1 g)))))
+  & @pack_rows ~ (e f)
+  & @build_rows ~ (0 (b (c (d e))))
+
+@set_mark = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @set_mark_block ~ (a (b (d e)))
+  & $(c d) ~ [<<0x0000001]
+
+@set_mark_block = ((@set_mark_block__C3 a) a)
+
+@set_mark_block__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_mark_block ~ (b (c (d e)))
+
+@set_mark_block__C1 = (* (* (a ($([|] $(a b)) c))))
+  & @List/Cons ~ (b c)
+
+@set_mark_block__C2 = (* (c (d ({$([=0x0000000] ?((@set_mark_block__C0 @set_mark_block__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_mark_block__C3 = (?(((* (* @List/Nil)) @set_mark_block__C2) a) a)
+
+@take_rows = (a ({$([=0x0000000] ?((@take_rows__C2 @take_rows__C3) (a (b c)))) b} c))
+
+@take_rows__C0 = (* (c (a ($([:-0x0000001] b) (e f)))))
+  & @List/Cons ~ (c (d e))
+  & @take_rows ~ (a (b (d f)))
+
+@take_rows__C1 = (?(((* (@List/Nil @List/Nil)) @take_rows__C0) a) a)
+
+@take_rows__C2 = ((@take_rows__C1 a) a)
+
+@take_rows__C3 = (* (a (* (@List/Nil a))))
+
+@union_bits = ((@union_bits__C3 a) a)
+
+@union_bits__C0 = (* (a (d ($([|] $(a b)) (c f)))))
+  & @List/Cons ~ (b (e f))
+  & @union_bits ~ (c (d e))
+
+@union_bits__C1 = (?(((* (* @List/Nil)) @union_bits__C0) a) a)
+
+@union_bits__C2 = (* (a (b ((@union_bits__C1 (a (b c))) c))))
+
+@union_bits__C3 = (?(((* @List/Nil) @union_bits__C2) a) a)
+
+@zero_blocks = ({$([=0x0000000] ?((@zero_blocks__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@zero_blocks__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (0 (b c))
+  & @zero_blocks ~ (a b)
+
+

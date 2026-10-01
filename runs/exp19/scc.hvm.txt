@@ -1,0 +1,31 @@
+// t3_scc_count / t3_scc_label (GRAPH-SWING-3, runs/exp19). Two all-sources bitset searches (exp9 msbfs) run in
+// parallel: one on the out-lists (R_v = {u : u reaches v}), one on the in-lists (R_v = {u : v reaches u}); both
+// include v itself (round 0 seeds {v}). SCC(v) = the AND of the two rows, label = its lowest set bit.
+@prog = ((n es) out)
+  & n ~ ?((@sc_zero @sc_pos) (es out))
+@sc_zero = (* ZERO)
+@sc_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & b ~ {b1 b2}
+  & @lg ~ (b1 L)
+  & b2 ~ $([>>] $(4 bw))
+  & @lg ~ (bw W)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 {L7 L8}}}}}}}
+  & W ~ {W1 {W2 {W3 {W4 W5}}}}
+  & @zl ~ (L1 G0)
+  & @zl ~ (L2 H0)
+  & @w_blk ~ (es ((L3 (G0 H0)) (Gf Gb)))
+  & @zs0 ~ (L4 (W1 (0 (S0 T0))))
+  & @zs0 ~ (L5 (W2 (0 (U0 V0))))
+  & @ml ~ ((Gf (S0 (T0 (L6 (W3 0))))) (Sf *))
+  & @ml ~ ((Gb (U0 (V0 (L7 (W4 0))))) (Sb *))
+  & OUTPUT
+@sc_step = ((L (gf gb)) ((u v) (L3 (gf2 gb2))))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @pn ~ (gf (u1 (L1 (v1 gf2))))
+  & @pn ~ (gb (v2 (L2 (u2 gb2))))
+@sc_fin = ((* g) g)
+@xl = (* (* (* (* (* (X (X 16777215)))))))

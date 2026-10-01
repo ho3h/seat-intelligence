@@ -1,0 +1,67 @@
+@prog = (input output)
+  & @msort ~ (input output)
+
+@msort = ((?((@msort_nil @msort_cons) (pl out)) pl) out)
+
+@msort_nil = (* out)
+  & out ~ (0 *)
+
+@msort_cons = (* ((h t) out))
+  & t ~ (?((@msort_single @msort_many) (tp (h out))) tp)
+
+@msort_single = (* (h out))
+  & out ~ (1 (h (0 *)))
+
+@msort_many = (* (tp (h out)))
+  & @count ~ ((1 (h (1 tp))) (len whole))
+  & len ~ $([/] $(2 half))
+  & @splitat ~ (half (whole (left right)))
+  & @msort ~ (left sorted_left)
+  & @msort ~ (right sorted_right)
+  & @merge ~ (sorted_left (sorted_right out))
+
+@count = ((?((@count_nil @count_cons) (pl out)) pl) out)
+
+@count_nil = (* out)
+  & out ~ (0 (0 *))
+
+@count_cons = (* ((h t) out))
+  & @count ~ (t (n rest))
+  & n ~ $([+1] n1)
+  & out ~ (n1 (1 (h rest)))
+
+@splitat = (?((@splitat_zero @splitat_succ) (l out)) (l out))
+
+@splitat_zero = (l out)
+  & out ~ ((0 *) l)
+
+@splitat_succ = (n ((h t) out))
+  & @splitat ~ (n (t (left right)))
+  & out ~ ((1 (h left)) right)
+
+@merge = ((?((@merge_nil @merge_cons) (pl (b out))) pl) (b out))
+
+@merge_nil = (* (b out))
+  & out ~ b
+
+@merge_cons = (* ((ha ta) (b out)))
+  & b ~ (?((@merge_bnil @merge_bcons) (bp (ha (ta out)))) bp)
+
+@merge_bnil = (* (ha (ta out)))
+  & out ~ (1 (ha ta))
+
+@merge_bcons = (* (bp (ha (ta out))))
+  & ha ~ (ka va)
+  & bp ~ ((kb vb) tb)
+  & ka ~ {kac kak}
+  & kb ~ {kbc kbk}
+  & kac ~ $([>] $(kbc cmp))
+  & cmp ~ ?((@merge_take_a @merge_take_b) (kak (va (ta (kbk (vb (tb out)))))))
+
+@merge_take_a = (* (ka (va (ta (kb (vb (tb out)))))))
+  & @merge ~ (ta ((1 ((kb vb) tb)) rec))
+  & out ~ (1 ((ka va) rec))
+
+@merge_take_b = (* (ka (va (ta (kb (vb (tb out)))))))
+  & @merge ~ ((1 ((ka va) ta)) (tb rec))
+  & out ~ (1 ((kb vb) rec))

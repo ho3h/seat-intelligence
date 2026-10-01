@@ -1,0 +1,17 @@
+@st = (b (i (p (j o))))
+  & b ~ {b1 b2}
+  & p ~ {p1 p2}
+  & b1 ~ $([<] $(p1 lt))
+  & lt ~ ?((@st_no @st_yes) (b2 (i (p2 (j o)))))
+@st_no = (b (i (* (* (b i)))))
+@st_yes = (* (* (* (p (j (p j))))))
+@fin_ok = (i i)
+@fin_abs = (* (* 6))
+@prog = ((tau (* (p0 (* (p1 (* (p2 (* (p3 (* (p4 (* (p5 (* *)))))))))))))) out)
+  & @st ~ (p0 (0 (p1 (1 (b1 i1)))))
+  & @st ~ (b1 (i1 (p2 (2 (b2 i2)))))
+  & @st ~ (b2 (i2 (p3 (3 (b3 i3)))))
+  & @st ~ (b3 (i3 (p4 (4 (b4 i4)))))
+  & @st ~ (b4 (i4 (p5 (5 (b5 i5)))))
+  & b5 ~ $([<] $(tau lt))
+  & lt ~ ?((@fin_ok @fin_abs) (i5 out))

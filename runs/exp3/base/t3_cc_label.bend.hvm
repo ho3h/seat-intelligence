@@ -1,0 +1,86 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@all_labels = (b ({$([=] $(a ?((@all_labels__C0 (* (* (* (* @List/Nil))))) (b (c (d e)))))) c} ({a d} e)))
+
+@all_labels__C0 = (a ({c $([+0x0000001] i)} ({b {e j}} l)))
+  & @List/Cons ~ (g (k l))
+  & @tree_get ~ (d (e (f (* (* g)))))
+  & @find_root ~ (a (b (c (f {d h}))))
+  & @all_labels ~ (h (i (j k)))
+
+@build_tree = (a ({$([=0x0000001] ?((@build_tree__C0 @build_tree__C1) (a (b c)))) b} c))
+
+@build_tree__C0 = ({$([+] $(d e)) a} ({$([-] $(f g)) $([:/0x0000002] {d {b f}})} (c h)))
+  &!@build_tree ~ (a (b c))
+  &!@build_tree ~ (e (g h))
+
+@build_tree__C1 = (* ({a b} (* (a (1 b)))))
+
+@find_root = ({a e} ({b f} ({c {d g}} k)))
+  & @tree_get ~ (a (b (c ({$([=] $(d ?((@find_root__C0 @find_root__C1) (e (f (g (h (i (j k))))))))) h} (i j)))))
+
+@find_root__C0 = (a ({b f} (g (c (i (j (d k)))))))
+  & @find_root ~ (a (b (c ({d h} e))))
+  & @tree_set ~ (e (f (g ((h (i j)) k))))
+
+@find_root__C1 = (* (b (* (a (* (* (* (a b))))))))
+
+@min_u = ({$([<] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f))
+
+@prog = (({$([=0x0000000] ?((@prog__C0 (* (* (* @List/Nil)))) (a (b c)))) a} b) c)
+
+@prog__C0 = ({f {d b}} (a g))
+  & @all_labels ~ (e (0 (f g)))
+  & @union_edges ~ (a (c (d e)))
+  & @build_tree ~ (0 (b c))
+
+@tree_get = (b ({$([=0x0000001] ?((@tree_get__C2 (* (a (* (* a))))) (b (c d)))) c} d))
+
+@tree_get__C0 = ($([-] $(c d)) (* (a (c (b e)))))
+  & @tree_get ~ (a (b (d e)))
+
+@tree_get__C1 = (* (c (a (* (b (* d))))))
+  & @tree_get ~ (a (b (c d)))
+
+@tree_get__C2 = ((c d) ({$([-] $(f g)) $([:/0x0000002] {a {e f}})} ({$([<] $(a ?((@tree_get__C0 @tree_get__C1) (b (c (d (e (g h)))))))) b} h)))
+
+@tree_set = (b ({$([=0x0000001] ?((@tree_set__C2 (* (* (* (* (a a)))))) (b (c d)))) c} d))
+
+@tree_set__C0 = ($([-] $(d e)) (f (a (b (d (c (a g)))))))
+  & @tree_set ~ (b (c (e (f g))))
+
+@tree_set__C1 = (* (c (d (a (f (b (* (e f))))))))
+  & @tree_set ~ (a (b (c (d e))))
+
+@tree_set__C2 = ((d e) ({$([-] $(g h)) $([:/0x0000002] {a {f g}})} ({$([<] $(a ?((@tree_set__C0 @tree_set__C1) (b (c (d (e (f (h i))))))))) b} (c i))))
+
+@union_edges = ((@union_edges__C5 a) a)
+
+@union_edges__C0 = ({r {i c}} (a ({j {k e}} (d (b ($([+] $(l m)) (n ({l f} ({o g} s)))))))))
+  & @union_edges ~ (a (q (r s)))
+  & @tree_set ~ (h (i (j ((k (m p)) q))))
+  & @tree_set ~ (b (c (d ((e (f g)) h))))
+  & @min_u ~ (n (o p))
+
+@union_edges__C1 = (* ({r {i c}} (a (d ({j {k e}} (b ({$([+] $(l m)) f} ({n g} (l (o s))))))))))
+  & @union_edges ~ (a (q (r s)))
+  & @tree_set ~ (h (i (j ((k (m p)) q))))
+  & @tree_set ~ (b (c (d ((e (f g)) h))))
+  & @min_u ~ (n (o p))
+
+@union_edges__C2 = ({b {e h}} (i ({c j} ({f k} ({a {d l}} q)))))
+  & @tree_get ~ (d (e (f (* ({g o} p)))))
+  & @tree_get ~ (a (b (c (* ({$([<] $(g ?((@union_edges__C0 @union_edges__C1) (h (i (j (k (l (m (n (o (p q)))))))))))) m} n)))))
+
+@union_edges__C3 = (* (c (a (* (* (b d))))))
+  & @union_edges ~ (a (b (c d)))
+
+@union_edges__C4 = (* ((c f) (i (a ({b {e h}} m)))))
+  & @find_root ~ (d (e (f ({g k} l))))
+  & @find_root ~ (a (b (c ({$([=] $(g ?((@union_edges__C2 @union_edges__C3) (h (i (j (k (l m)))))))) j} d))))
+
+@union_edges__C5 = (?(((a (* a)) @union_edges__C4) b) b)
+
+

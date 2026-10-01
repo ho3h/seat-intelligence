@@ -1,0 +1,158 @@
+// Entry point: validate s and t, initialize the count vector, then walk k steps.
+@prog = ((n (s (t (k edges)))) out)
+  & @run ~ (n (s (t (k (edges out))))
+
+@run = (n (s (t (k (edges out)))))
+  & n ~ {na nr}
+  & nr ~ {nb nc}
+  & s ~ {sa sb}
+  & t ~ {ta tb}
+  & sa ~ $([<] $(na bs))
+  & ta ~ $([<] $(nb bt))
+  & bs ~ $([&] $(bt valid))
+  & valid ~ ?((@run_invalid @run_valid) (nc (sb (tb (k (edges out))))))
+
+@run_invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@run_valid = (* (n (s (t (k (edges out))))))
+  & @zeros ~ (n vec0)
+  & @set ~ (s (1 (vec0 vec1)))
+  & @walk ~ (k (vec1 (edges (t out))))
+
+// Produce a list of n zero counts.
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_succ = (m out)
+  & @zeros ~ (m tail)
+  & out ~ (1 (0 tail))
+
+// Set the count at index i to val.
+@set = (i (val ((tag payload) out)))
+  & tag ~ ?((@set_nil @set_cons) (payload (i (val out))))
+
+@set_nil = (payload (i (val out)))
+  & payload ~ *
+  & i ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (i (val out))))
+  & @set_cell ~ (i (head (tail (val out))))
+
+@set_cell = (i (head (tail (val out))))
+  & i ~ ?((@set_here @set_next) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (i (head (tail (val out))))
+  & @set ~ (i (val (tail rest)))
+  & out ~ (1 (head rest))
+
+// Get the count at index i; an out-of-range index returns zero.
+@get = (i ((tag payload) out))
+  & tag ~ ?((@get_nil @get_cons) (payload (i out)))
+
+@get_nil = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (i out)))
+  & @get_cell ~ (i (head (tail out)))
+
+@get_cell = (i (head (tail out)))
+  & i ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & out ~ head
+  & tail ~ *
+
+@get_next = (i (head (tail out)))
+  & head ~ *
+  & @get ~ (i (tail out))
+
+// Replace a count vector with the next-step vector.
+@step = (vec (edges out))
+  & vec ~ {old1 old2}
+  & @zlike ~ (old1 zero)
+  & @edge_loop ~ (edges (old2 (zero out)))
+
+// Make a zero vector with the same length as the input vector.
+@zlike = ((tag payload) out)
+  & tag ~ ?((@zl_nil @zl_cons) (payload out))
+
+@zl_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@zl_cons = (* ((head tail) out))
+  & head ~ *
+  & @zlike ~ (tail rest)
+  & out ~ (1 (0 rest))
+
+// Scan all arcs, adding the source count into the destination count.
+@edge_loop = ((tag payload) (vec (acc out)))
+  & tag ~ ?((@el_nil @el_cons) (payload (vec (acc out))))
+
+@el_nil = (payload (vec (acc out)))
+  & payload ~ *
+  & vec ~ *
+  & out ~ acc
+
+@el_cons = (* ((edge tail) (vec (acc out))))
+  & vec ~ {vec1 vec2}
+  & @edge_proc ~ (edge (vec1 (acc mid)))
+  & @edge_loop ~ (tail (vec2 (mid out)))
+
+@edge_proc = ((u v) (vec (acc out)))
+  & @get ~ (u (vec count))
+  & @add_at ~ (v (count (acc out)))
+
+// Add delta to the count at index i.
+@add_at = (i (delta ((tag payload) out)))
+  & tag ~ ?((@aa_nil @aa_cons) (payload (i (delta out))))
+
+@aa_nil = (payload (i (delta out)))
+  & payload ~ *
+  & i ~ *
+  & delta ~ *
+  & out ~ (0 *)
+
+@aa_cons = (* ((head tail) (i (delta out))))
+  & @add_cell ~ (i (delta (head (tail out))))
+
+@add_cell = (i (delta (head (tail out))))
+  & i ~ ?((@aa_here @aa_next) (delta (head (tail out))))
+
+@aa_here = (delta (head (tail out)))
+  & head ~ $([+] $(delta sum))
+  & out ~ (1 (sum tail))
+
+@aa_next = (i (delta (head (tail out))))
+  & @add_at ~ (i (delta (tail rest)))
+  & out ~ (1 (head rest))
+
+// Repeat one transition for each of the k arcs.
+@walk = (k (vec (edges (t out))))
+  & k ~ ?((@walk_zero @walk_succ) (vec (edges (t out))))
+
+@walk_zero = (vec (edges (t out)))
+  & @get ~ (t (vec out))
+  & edges ~ *
+
+@walk_succ = (m (vec (edges (t out))))
+  & edges ~ {edges1 edges2}
+  & @step ~ (vec (edges1 next))
+  & @walk ~ (m (next (edges2 (t out))))

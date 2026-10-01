@@ -1,0 +1,11 @@
+@prog = (l out)
+  & @map ~ (l out)
+
+@map = ((?((@map_nil @map_cons) (pl out)) pl) out)
+
+@map_nil = (* (0 *))
+
+@map_cons = (* ((h t) out))
+  & out ~ (1 (d tail_out))
+  & h ~ $([*2] d)
+  & @map ~ (t tail_out)

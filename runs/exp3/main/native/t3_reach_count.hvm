@@ -1,0 +1,50 @@
+@prog = ((* (s edges)) out)
+  & ?((@walk_nil @walk_cons) ((s (0 *)) ((0 *) (edges (0 out))))) ~ 1
+
+@walk = ((?((@walk_nil @walk_cons) (pl (visited (edges (count out))))) pl) (visited (edges (count out))))
+
+@walk_nil = (* (visited (edges (count out))))
+  & visited ~ *
+  & edges ~ *
+  & count ~ out
+
+@walk_cons = (* (({v_mem v_keep} tail) ({(?((@mem_nil @mem_cons) (pl_q152 (v_mem ?((@walk_new @walk_seen) (tail (v_keep (vis_keep (edges (count out))))))))) pl_q152) vis_keep} (edges (count out)))))
+
+@walk_new = (tail ({src_scan v_visit} (visited ({(?((@scan_nil @scan_cons) (pl_q153 (src_scan (tail (?((@walk_nil @walk_cons) (pl_q154 ((1 (v_visit visited)) (edge_walk (count2 out))))) pl_q154))))) pl_q153) edge_walk} ($([+1] count2) out)))))
+
+@walk_seen = (* (tail (v (visited (edges (count out))))))
+  & v ~ *
+  & @walk ~ (tail (visited (edges (count out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (src (stack out)))) pl) (src (stack out)))
+
+@scan_nil = (* (src (stack out)))
+  & src ~ *
+  & stack ~ out
+
+@scan_cons = (* (((u dest) rest) (src (stack out))))
+  & src ~ {src_cmp src_keep}
+  & u ~ $([=] $(src_cmp z))
+  & z ~ ?((((?((@scan_nil @scan_cons) (pl_q156_q160 (src_q160 (stack_q160 out_q160)))) pl_q156_q160) (src_q160 (stack_q160 (* out_q160)))) @scan_push) (rest (src_keep (stack (dest out)))))
+
+@scan_push = (* (rest (src (stack (dest out)))))
+  & @scan ~ (rest (src ((1 (dest stack)) out)))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & h ~ $([=] $(target_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (target_keep out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1

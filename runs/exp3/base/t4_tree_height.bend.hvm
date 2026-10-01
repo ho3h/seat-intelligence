@@ -1,0 +1,13 @@
+@prog = ((@prog__C3 a) a)
+
+@prog__C0 = (* ($([+0x0000001] a) a))
+
+@prog__C1 = (* ($([+0x0000001] a) (* a)))
+
+@prog__C2 = (* (a (* (b f))))
+  &!@prog ~ (b {c e})
+  &!@prog ~ (a {$([>] $(c ?((@prog__C0 @prog__C1) (d (e f))))) d})
+
+@prog__C3 = (?((0 @prog__C2) a) a)
+
+

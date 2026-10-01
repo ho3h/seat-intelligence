@@ -1,0 +1,22 @@
+// Entry point: handle the empty list or start scanning from its first element.
+@prog = ((?((@empty @begin) (payload out)) payload) out)
+
+@empty = (* 1)
+
+@begin = (* ((h t) out))
+  & @check ~ (t (h out))
+
+// Scan the remaining list, carrying the previous element.
+@check = ((?((@check_nil @check_cons) (payload (prev out))) payload) (prev out))
+
+@check_nil = (* (* 1))
+
+@check_cons = (* ((h t) (prev out)))
+  & h ~ {h1 h2}
+  & prev ~ $([>] $(h1 z))
+  & z ~ ?((@ok @bad) (t (h2 out)))
+
+@ok = (t (h out))
+  & @check ~ (t (h out))
+
+@bad = (* (* (* 0)))

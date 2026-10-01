@@ -1,0 +1,1586 @@
+{
+ "baseline_native_v1_iid_by_depth": {
+  "1": {
+   "tasks": 7,
+   "pass@1": 0.625,
+   "boot95": [
+    0.357,
+    0.875
+   ]
+  },
+  "2": {
+   "tasks": 40,
+   "pass@1": 0.244,
+   "boot95": [
+    0.156,
+    0.344
+   ]
+  },
+  "3": {
+   "tasks": 73,
+   "pass@1": 0.043,
+   "boot95": [
+    0.021,
+    0.07
+   ]
+  }
+ },
+ "models": {
+  "0p6b_lr5e5": {
+   "name": "Qwen3-0.6B-4bit, lr 5e-5",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_lr5e5_iid.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "deep": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_lr5e5_deep.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b_lr5e5",
+    "tasks": 180,
+    "n": 4,
+    "outcomes": {
+     "pass": 720
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "3": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "4": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "5": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "7": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "8": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_lr5e5_para.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 208,
+     "parse": 237,
+     "fail": 35
+    },
+    "pass@1": 0.4333,
+    "pass@1_boot95": [
+     0.354,
+     0.512
+    ],
+    "pass@4": 0.5833,
+    "exact_match_rate": 0.4333,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.786,
+      "boot95": [
+       0.5,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.519,
+      "boot95": [
+       0.381,
+       0.656
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.353,
+      "boot95": [
+       0.26,
+       0.445
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.429,
+     "reduce": 0.438
+    }
+   },
+   "novel": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_lr5e5_novel.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 13,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 61,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 46,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": 0.8562,
+    "boot95": [
+     0.809,
+     0.901
+    ]
+   },
+   "errors": {
+    "iid": {
+     "pass_exact": 480
+    },
+    "deep": {
+     "pass_exact": 720
+    },
+    "para": {
+     "pass_exact": 208,
+     "parse_error": 237,
+     "wrong_word": 32,
+     "wrong_subword": 3
+    },
+    "novel": {
+     "pass_exact": 480
+    }
+   }
+  },
+  "1p7b_lr5e5": {
+   "name": "Qwen3-1.7B-4bit, lr 5e-5",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_lr5e5_iid.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 479,
+     "parse": 1
+    },
+    "pass@1": 0.9979,
+    "pass@1_boot95": [
+     0.994,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 0.9979,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.964,
+      "boot95": [
+       0.893,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.996,
+     "reduce": 1.0
+    }
+   },
+   "deep": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_lr5e5_deep.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_lr5e5",
+    "tasks": 180,
+    "n": 4,
+    "outcomes": {
+     "pass": 720
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "3": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "4": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "5": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "7": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "8": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_lr5e5_para.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "parse": 74,
+     "pass": 373,
+     "fail": 33
+    },
+    "pass@1": 0.7771,
+    "pass@1_boot95": [
+     0.706,
+     0.842
+    ],
+    "pass@4": 0.875,
+    "exact_match_rate": 0.7771,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.857,
+      "boot95": [
+       0.571,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.819,
+      "boot95": [
+       0.706,
+       0.919
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.747,
+      "boot95": [
+       0.661,
+       0.829
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.704,
+     "reduce": 0.85
+    }
+   },
+   "novel": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_lr5e5_novel.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 13,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 61,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 46,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": 0.8542,
+    "boot95": [
+     0.807,
+     0.899
+    ]
+   },
+   "errors": {
+    "iid": {
+     "pass_exact": 479,
+     "parse_error": 1
+    },
+    "deep": {
+     "pass_exact": 720
+    },
+    "para": {
+     "parse_error": 74,
+     "pass_exact": 373,
+     "wrong_word": 9,
+     "wrong_subword": 24
+    },
+    "novel": {
+     "pass_exact": 480
+    }
+   }
+  },
+  "4b_lr5e5": {
+   "name": "Qwen3-4B-4bit, lr 5e-5",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/4b_lr5e5_iid.scored.json",
+    "model": "mlx-community/Qwen3-4B-4bit",
+    "adapter": "adapters/exp15_4b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "deep": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/4b_lr5e5_deep.scored.json",
+    "model": "mlx-community/Qwen3-4B-4bit",
+    "adapter": "adapters/exp15_4b_lr5e5",
+    "tasks": 180,
+    "n": 4,
+    "outcomes": {
+     "pass": 720
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "3": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "4": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "5": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "7": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "8": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/4b_lr5e5_para.scored.json",
+    "model": "mlx-community/Qwen3-4B-4bit",
+    "adapter": "adapters/exp15_4b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 320,
+     "parse": 128,
+     "fail": 32
+    },
+    "pass@1": 0.6667,
+    "pass@1_boot95": [
+     0.594,
+     0.74
+    ],
+    "pass@4": 0.8,
+    "exact_match_rate": 0.6667,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.675,
+      "boot95": [
+       0.544,
+       0.8
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.63,
+      "boot95": [
+       0.538,
+       0.716
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.713,
+     "reduce": 0.621
+    }
+   },
+   "novel": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/4b_lr5e5_novel.scored.json",
+    "model": "mlx-community/Qwen3-4B-4bit",
+    "adapter": "adapters/exp15_4b_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 13,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 61,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 46,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": 0.8562,
+    "boot95": [
+     0.809,
+     0.901
+    ]
+   },
+   "errors": {
+    "iid": {
+     "pass_exact": 480
+    },
+    "deep": {
+     "pass_exact": 720
+    },
+    "para": {
+     "pass_exact": 320,
+     "parse_error": 128,
+     "wrong_subword": 25,
+     "wrong_word": 5,
+     "wrong_stage_count": 2
+    },
+    "novel": {
+     "pass_exact": 480
+    }
+   }
+  },
+  "0p6b": {
+   "name": "Qwen3-0.6B-4bit, lr 2e-4 (diverged)",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_iid.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "fail": 278,
+     "parse": 199,
+     "pass": 3
+    },
+    "pass@1": 0.0063,
+    "pass@1_boot95": [
+     0.0,
+     0.015
+    ],
+    "pass@4": 0.025,
+    "exact_match_rate": 0.0021,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.013,
+      "boot95": [
+       0.0,
+       0.031
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.003,
+      "boot95": [
+       0.0,
+       0.01
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.004,
+     "reduce": 0.008
+    }
+   },
+   "deep": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_deep.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b",
+    "tasks": 180,
+    "n": 4,
+    "outcomes": {
+     "parse": 357,
+     "fail": 363
+    },
+    "pass@1": 0.0,
+    "pass@1_boot95": [
+     0.0,
+     0.0
+    ],
+    "pass@4": 0.0,
+    "exact_match_rate": 0.0,
+    "by_depth": {
+     "3": {
+      "tasks": 40,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "4": {
+      "tasks": 40,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "5": {
+      "tasks": 40,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "7": {
+      "tasks": 30,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "8": {
+      "tasks": 30,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.0
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_para.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "fail": 244,
+     "parse": 236
+    },
+    "pass@1": 0.0,
+    "pass@1_boot95": [
+     0.0,
+     0.0
+    ],
+    "pass@4": 0.0,
+    "exact_match_rate": 0.0,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.0,
+     "reduce": 0.0
+    }
+   },
+   "novel": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/0p6b_novel.scored.json",
+    "model": "mlx-community/Qwen3-0.6B-4bit",
+    "adapter": "adapters/exp15_0p6b",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "fail": 273,
+     "parse": 207
+    },
+    "pass@1": 0.0,
+    "pass@1_boot95": [
+     0.0,
+     0.0
+    ],
+    "pass@4": 0.0,
+    "exact_match_rate": 0.0,
+    "by_depth": {
+     "1": {
+      "tasks": 13,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "2": {
+      "tasks": 61,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     },
+     "3": {
+      "tasks": 46,
+      "pass@1": 0.0,
+      "boot95": [
+       0.0,
+       0.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.0,
+     "reduce": 0.0
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": -0.1375,
+    "boot95": [
+     -0.183,
+     -0.095
+    ]
+   },
+   "errors": {
+    "iid": {
+     "wrong_stage_count": 134,
+     "parse_error": 199,
+     "wrong_word": 136,
+     "pass_exact": 1,
+     "wrong_subword": 8,
+     "pass_equivalent_nonexact": 2
+    },
+    "deep": {
+     "parse_error": 357,
+     "wrong_stage_count": 242,
+     "wrong_word": 121
+    },
+    "para": {
+     "wrong_stage_count": 122,
+     "parse_error": 236,
+     "wrong_word": 119,
+     "wrong_subword": 3
+    },
+    "novel": {
+     "wrong_stage_count": 147,
+     "parse_error": 207,
+     "wrong_word": 115,
+     "wrong_subword": 11
+    }
+   }
+  },
+  "1p7b": {
+   "name": "Qwen3-1.7B-4bit, lr 2e-4",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_iid.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "deep": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_deep.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b",
+    "tasks": 180,
+    "n": 4,
+    "outcomes": {
+     "pass": 702,
+     "fail": 16,
+     "parse": 2
+    },
+    "pass@1": 0.975,
+    "pass@1_boot95": [
+     0.954,
+     0.993
+    ],
+    "pass@4": 0.9889,
+    "exact_match_rate": 0.9417,
+    "by_depth": {
+     "3": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "4": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "5": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "7": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "8": {
+      "tasks": 30,
+      "pass@1": 0.85,
+      "boot95": [
+       0.733,
+       0.95
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.975
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_para.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "parse": 178,
+     "pass": 100,
+     "fail": 202
+    },
+    "pass@1": 0.2083,
+    "pass@1_boot95": [
+     0.15,
+     0.269
+    ],
+    "pass@4": 0.3417,
+    "exact_match_rate": 0.1938,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.393,
+      "boot95": [
+       0.179,
+       0.643
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.281,
+      "boot95": [
+       0.175,
+       0.394
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.151,
+      "boot95": [
+       0.086,
+       0.223
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.129,
+     "reduce": 0.287
+    }
+   },
+   "novel": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_novel.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 480
+    },
+    "pass@1": 1.0,
+    "pass@1_boot95": [
+     1.0,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 1.0,
+    "by_depth": {
+     "1": {
+      "tasks": 13,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 61,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 46,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 1.0,
+     "reduce": 1.0
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": 0.8562,
+    "boot95": [
+     0.809,
+     0.901
+    ]
+   },
+   "errors": {
+    "iid": {
+     "pass_exact": 480
+    },
+    "deep": {
+     "pass_exact": 678,
+     "pass_equivalent_nonexact": 24,
+     "wrong_stage_count": 16,
+     "parse_error": 2
+    },
+    "para": {
+     "parse_error": 178,
+     "pass_exact": 93,
+     "wrong_word": 91,
+     "wrong_stage_count": 99,
+     "wrong_subword": 12,
+     "pass_equivalent_nonexact": 7
+    },
+    "novel": {
+     "pass_exact": 480
+    }
+   }
+  },
+  "1p7b_aug_lr5e5": {
+   "name": "Qwen3-1.7B-4bit, lr 5e-5, 3 wordings in training",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_aug_lr5e5_iid.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_aug_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 479,
+     "parse": 1
+    },
+    "pass@1": 0.9979,
+    "pass@1_boot95": [
+     0.994,
+     1.0
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 0.9979,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.964,
+      "boot95": [
+       0.893,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.996,
+     "reduce": 1.0
+    }
+   },
+   "deep": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_aug_lr5e5_deep.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_aug_lr5e5",
+    "tasks": 180,
+    "n": 4,
+    "outcomes": {
+     "pass": 713,
+     "fail": 7
+    },
+    "pass@1": 0.9903,
+    "pass@1_boot95": [
+     0.975,
+     1.0
+    ],
+    "pass@4": 0.9944,
+    "exact_match_rate": 0.9847,
+    "by_depth": {
+     "3": {
+      "tasks": 40,
+      "pass@1": 0.981,
+      "boot95": [
+       0.944,
+       1.0
+      ]
+     },
+     "4": {
+      "tasks": 40,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "5": {
+      "tasks": 40,
+      "pass@1": 0.975,
+      "boot95": [
+       0.925,
+       1.0
+      ]
+     },
+     "7": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "8": {
+      "tasks": 30,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.99
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_aug_lr5e5_para.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_aug_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "parse": 15,
+     "pass": 445,
+     "fail": 20
+    },
+    "pass@1": 0.9271,
+    "pass@1_boot95": [
+     0.879,
+     0.965
+    ],
+    "pass@4": 0.9417,
+    "exact_match_rate": 0.9271,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.536,
+      "boot95": [
+       0.143,
+       0.857
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.925,
+      "boot95": [
+       0.85,
+       0.988
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.966,
+      "boot95": [
+       0.925,
+       0.997
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.9,
+     "reduce": 0.954
+    }
+   },
+   "novel": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/1p7b_aug_lr5e5_novel.scored.json",
+    "model": "mlx-community/Qwen3-1.7B-4bit",
+    "adapter": "adapters/exp15_1p7b_aug_lr5e5",
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 474,
+     "parse": 5,
+     "fail": 1
+    },
+    "pass@1": 0.9875,
+    "pass@1_boot95": [
+     0.975,
+     0.998
+    ],
+    "pass@4": 1.0,
+    "exact_match_rate": 0.9875,
+    "by_depth": {
+     "1": {
+      "tasks": 13,
+      "pass@1": 0.885,
+      "boot95": [
+       0.788,
+       0.962
+      ]
+     },
+     "2": {
+      "tasks": 61,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     },
+     "3": {
+      "tasks": 46,
+      "pass@1": 1.0,
+      "boot95": [
+       1.0,
+       1.0
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.975,
+     "reduce": 1.0
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": 0.8542,
+    "boot95": [
+     0.807,
+     0.898
+    ]
+   },
+   "errors": {
+    "iid": {
+     "pass_exact": 479,
+     "parse_error": 1
+    },
+    "deep": {
+     "pass_exact": 709,
+     "wrong_stage_count": 7,
+     "pass_equivalent_nonexact": 4
+    },
+    "para": {
+     "parse_error": 15,
+     "pass_exact": 445,
+     "wrong_subword": 20
+    },
+    "novel": {
+     "pass_exact": 474,
+     "parse_error": 5,
+     "wrong_stage_count": 1
+    }
+   }
+  },
+  "zs4bi": {
+   "name": "Qwen3-4B-Instruct-2507, no tuning, vocabulary in prompt",
+   "iid": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/zs4bi_iid.scored.json",
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "adapter": null,
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "pass": 343,
+     "fail": 53,
+     "parse": 84
+    },
+    "pass@1": 0.7146,
+    "pass@1_boot95": [
+     0.637,
+     0.79
+    ],
+    "pass@4": 0.7417,
+    "exact_match_rate": 0.6792,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.857,
+      "boot95": [
+       0.571,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.706,
+      "boot95": [
+       0.562,
+       0.831
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.705,
+      "boot95": [
+       0.599,
+       0.808
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.896,
+     "reduce": 0.533
+    }
+   },
+   "para": {
+    "file": "/Users/tedsandtads/Genome/runs/exp15/samples/zs4bi_para.scored.json",
+    "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+    "adapter": null,
+    "tasks": 120,
+    "n": 4,
+    "outcomes": {
+     "fail": 56,
+     "pass": 253,
+     "parse": 171
+    },
+    "pass@1": 0.5271,
+    "pass@1_boot95": [
+     0.442,
+     0.617
+    ],
+    "pass@4": 0.5667,
+    "exact_match_rate": 0.4875,
+    "by_depth": {
+     "1": {
+      "tasks": 7,
+      "pass@1": 0.714,
+      "boot95": [
+       0.286,
+       1.0
+      ]
+     },
+     "2": {
+      "tasks": 40,
+      "pass@1": 0.581,
+      "boot95": [
+       0.431,
+       0.725
+      ]
+     },
+     "3": {
+      "tasks": 73,
+      "pass@1": 0.479,
+      "boot95": [
+       0.37,
+       0.596
+      ]
+     }
+    },
+    "by_family": {
+     "pipeline": 0.65,
+     "reduce": 0.404
+    }
+   },
+   "paired_vs_native_v1_iid": {
+    "tasks": 120,
+    "delta": 0.5708,
+    "boot95": [
+     0.478,
+     0.657
+    ]
+   },
+   "errors": {
+    "iid": {
+     "pass_exact": 326,
+     "wrong_subword": 17,
+     "parse_error": 84,
+     "wrong_stage_count": 32,
+     "pass_equivalent_nonexact": 17,
+     "wrong_word": 4
+    },
+    "para": {
+     "wrong_stage_count": 33,
+     "pass_exact": 234,
+     "parse_error": 171,
+     "wrong_subword": 22,
+     "wrong_word": 1,
+     "pass_equivalent_nonexact": 19
+    }
+   }
+  }
+ }
+}

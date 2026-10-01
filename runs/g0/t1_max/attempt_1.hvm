@@ -1,0 +1,16 @@
+@prog = (l out)
+  & @mx ~ (l (0 out))
+
+@mx = ((?((@mx_nil @mx_cons) (pl (acc out))) pl) (acc out))
+
+@mx_nil = (* (a a))
+
+@mx_cons = (* (({h1 h2} t) ({a1 a2} out)))
+  & h1 ~ $([>] $(a1 c))
+  & c ~ ?((@mx_no @mx_yes) (h2 (a2 (t out))))
+
+@mx_no = (* (a (t out)))
+  & @mx ~ (t (a out))
+
+@mx_yes = (* (h (* (t out))))
+  & @mx ~ (t (h out))

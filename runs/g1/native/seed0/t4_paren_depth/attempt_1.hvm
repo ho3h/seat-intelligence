@@ -1,0 +1,26 @@
+@prog = (l out)
+  & @scan ~ (l (0 (0 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cur (max out)))) pl) (cur (max out)))
+
+@scan_nil = (* (* (x x)))
+
+@scan_cons = (* ((h t) (cur (max out))))
+  & h ~ $([=] $(40 eq))
+  & eq ~ ?((@close @open) (t (cur (max out))))
+
+@close = (t (cur (max out)))
+  & cur ~ $([-] $(1 c2))
+  & @scan ~ (t (c2 (max out)))
+
+@open = (* (t (cur ({m_cmp m_ctx} out))))
+  & cur ~ $([+1] c1)
+  & c1 ~ {c_cmp c_rec}
+  & c_cmp ~ $([>] $(m_cmp gt))
+  & gt ~ ?((@keep @raise) (t (c_rec (m_ctx out))))
+
+@keep = (t (cur (max out)))
+  & @scan ~ (t (cur (max out)))
+
+@raise = (* (t ({c1 c2} (* out))))
+  & @scan ~ (t (c1 (c2 out)))

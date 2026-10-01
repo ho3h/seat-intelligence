@@ -1,0 +1,168 @@
+// Build the vertex list, then test whether each vertex's neighbors remain
+// connected after that vertex is excluded.
+
+@prog = ((n edges) out)
+  & @mkverts ~ (n ((0 *) verts))
+  & @count ~ (verts (edges (0 out)))
+
+@mkverts = ( ?((@mv_zero @mv_succ) (acc out)) (acc out))
+
+@mv_zero = (* (acc out))
+  & acc ~ out
+
+@mv_succ = (m (acc out))
+  & m ~ {m1 m2}
+  & @mkverts ~ (m2 (newacc out))
+  & newacc ~ (1 (m1 acc))
+
+@count = ((?((@count_nil @count_cons) (pl (edges (acc out)))) pl) (edges (acc out)))
+
+@count_nil = (* (edges (acc out)))
+  & edges ~ *
+  & acc ~ out
+
+@count_cons = (* ((v tail) (edges (acc out))))
+  & edges ~ {e1 e2}
+  & @artcheck ~ (v (e1 b))
+  & b ~ ?((@count_no @count_yes) (tail (e2 (acc out))))
+
+@count_no = (tail (e2 (acc out)))
+  & @count ~ (tail (e2 (acc out)))
+
+@count_yes = (* (tail (e2 (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (e2 (acc2 out)))
+
+@artcheck = (v (edges out))
+  & v ~ {v1 v2}
+  & edges ~ {e1 e2}
+  & @neighbors ~ (v1 (e1 ns))
+  & @atleast ~ (ns (v2 (e2 out)))
+
+@atleast = ((?((@atleast_nil @atleast_cons) (pl (v (edges out)))) pl) (v (edges out)))
+
+@atleast_nil = (* (pl (v (edges out))))
+  & pl ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@atleast_cons = (* ((first rest) (v (edges out))))
+  & @more ~ (rest (first (v (edges out))))
+
+@more = ((?((@more_nil @more_cons) (pl (first (v (edges out))))) pl) (first (v (edges out))))
+
+@more_nil = (* (first (v (edges out))))
+  & first ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@more_cons = (* ((h t) (first (v (edges out)))))
+  & @reach ~ ((1 (first (0 *))) ((1 (v (0 *))) (edges seen)))
+  & @allmem ~ ((1 (h t)) (seen b))
+  & b ~ $([!] $(1 out))
+
+@neighbors = ((?((@ne_nil @ne_cons) (pl (target out))) pl) (target out))
+
+@ne_nil = (* (target out))
+  & target ~ *
+  & out ~ (0 *)
+
+@ne_cons = (* (((u v) tail) (target out)))
+  & target ~ {tleft tright}
+  & tleft ~ {tu tv}
+  & u ~ {ucmp ukeep}
+  & v ~ {vcmp vkeep}
+  & ucmp ~ $([=] $(tu zu))
+  & vcmp ~ $([=] $(tv zv))
+  & @neighbors ~ (tright (tail rest))
+  & zu ~ ?((@ne_u0 @ne_u1) (zv ((ukeep vkeep) (rest out))))
+
+@ne_u0 = (* (zv (ukeep (vkeep (rest out)))))
+  & zv ~ ?((@ne_none @ne_vonly) (ukeep (vkeep (rest out))))
+
+@ne_u1 = (* (zv (ukeep (vkeep (rest out)))))
+  & zv ~ ?((@ne_vonly @ne_both) (ukeep (vkeep (rest out))))
+
+@ne_none = (* ((ukeep vkeep) (rest out)))
+  & ukeep ~ *
+  & vkeep ~ *
+  & out ~ rest
+
+@ne_vonly = (* (ukeep (vkeep (rest out))))
+  & vkeep ~ *
+  & out ~ (1 (ukeep rest))
+
+@ne_both = (* (ukeep (vkeep (rest out))))
+  & out ~ (1 (vkeep (1 (ukeep rest))))
+
+@reach = ((?((@reach_nil @reach_cons) (pl (vis (edges out)))) pl) (vis (edges out)))
+
+@reach_nil = (* (vis (edges out)))
+  & edges ~ *
+  & out ~ vis
+
+@reach_cons = (* ((x rest) (vis (edges out))))
+  & x ~ {xm xb}
+  & vis ~ {vm vc}
+  & @mem ~ (xm (vm m))
+  & m ~ ?((@reach_seen @reach_new) (xb (rest (vc (edges out)))))
+
+@reach_seen = (xb (rest (vc (edges out))))
+  & xb ~ *
+  & @reach ~ (rest (vc (edges out)))
+
+@reach_new = (* (xb (rest (vc (edges out)))))
+  & xb ~ {xvis xnb}
+  & edges ~ {enb erec}
+  & @neighbors ~ (xnb (enb ns))
+  & @append ~ (ns (rest stack))
+  & @reach ~ (stack ((1 (xvis vc)) (erec out)))
+
+@append = ((?((@ap_nil @ap_cons) (pl (ys out))) pl) (ys out))
+
+@ap_nil = (* (pl (ys out)))
+  & pl ~ *
+  & out ~ ys
+
+@ap_cons = (* ((h t) (ys out)))
+  & @append ~ (t (ys rest))
+  & out ~ (1 (h rest))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xcmp xrec}
+  & h ~ $([=] $(xcmp z))
+  & z ~ ?((@mem_no @mem_yes) (xrec (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (t out))
+  & t ~ *
+  & out ~ 1
+
+@allmem = ((?((@am_nil @am_cons) (pl (seen out))) pl) (seen out))
+
+@am_nil = (* (seen out))
+  & seen ~ *
+  & out ~ 1
+
+@am_cons = (* ((h t) (seen out)))
+  & seen ~ {seen1 seen2}
+  & @mem ~ (h (seen1 z))
+  & z ~ ?((@am_no @am_yes) (t (seen2 out)))
+
+@am_no = (* (t (seen out)))
+  & t ~ *
+  & seen ~ *
+  & out ~ 0
+
+@am_yes = (* (t (seen out)))
+  & @allmem ~ (t (seen out))

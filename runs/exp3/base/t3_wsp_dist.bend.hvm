@@ -1,0 +1,120 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@dijkstra = (a (b (?((@dijkstra__C3 @dijkstra__C4) (a (b c))) c)))
+
+@dijkstra__C0 = (b ({j a} ({l h} (m ($([+0x0000001] $([:-0x0000001] k)) ({f c} ({g d} n)))))))
+  & @dijkstra ~ (i (j (k (l (m n)))))
+  & @scan_edges ~ (a (e (f (g (h i)))))
+  & @dist_set ~ (b (c ((d 1) e)))
+
+@dijkstra__C1 = (* (* (* (* (* (* (* (a a))))))))
+
+@dijkstra__C2 = (b (c (d ({a e} (f ({$([=] $(a ?((@dijkstra__C0 @dijkstra__C1) (b (c (d (e (f (g h))))))))) g} h))))))
+
+@dijkstra__C3 = (a (* (* (b c))))
+  & @dist_get ~ (a (b (c *)))
+
+@dijkstra__C4 = (f ({a b} (c (d (e i)))))
+  & @find_min ~ (a (0 (0 (16777215 (g {$([=0x0FFFFFF] ?((@dijkstra__C2 (* (* (* (* (* (* (* (* 16777215))))))))) (b (c (d (e (f (g (h i))))))))) h})))))
+
+@dist_get = ((@dist_get__C2 a) a)
+
+@dist_get__C0 = ($([+0x0000001] $([:-0x0000001] b)) (* (a c)))
+  & @dist_get ~ (a (b c))
+
+@dist_get__C1 = (* (b (c (?(((a (* a)) @dist_get__C0) (b (c d))) d))))
+
+@dist_get__C2 = (?(((* (16777215 1)) @dist_get__C1) a) a)
+
+@dist_set = ((@dist_set__C3 a) a)
+
+@dist_set__C0 = (a (* b))
+  & @List/Cons ~ (a b)
+
+@dist_set__C1 = ($([+0x0000001] $([:-0x0000001] c)) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @dist_set ~ (b (c (d e)))
+
+@dist_set__C2 = (* (b (c (?((@dist_set__C0 @dist_set__C1) (a (b (c d)))) (a d)))))
+
+@dist_set__C3 = (?(((* (* @List/Nil)) @dist_set__C2) a) a)
+
+@find_min = ((@find_min__C6 a) a)
+
+@find_min__C0 = ($([+0x0000001] b) (c (d (a (* e)))))
+  & @find_min ~ (a (b (c (d e))))
+
+@find_min__C1 = (* ({$([+0x0000001] b) c} (* (* (a d)))))
+  & @find_min ~ (a (b (c d)))
+
+@find_min__C2 = ($([+0x0000001] b) (c (d (a (* e)))))
+  & @find_min ~ (a (b (c (d e))))
+
+@find_min__C3 = (* (b (c ({a d} (e ({$([<] $(a ?((@find_min__C0 @find_min__C1) (b (c (d (e (f g)))))))) f} g))))))
+
+@find_min__C4 = (* (a (b (a b))))
+
+@find_min__C5 = (* ((e $([=0x0000000] ?((@find_min__C2 @find_min__C3) (a (b (c (d (e f)))))))) (d (a (b (c f))))))
+
+@find_min__C6 = (?((@find_min__C4 @find_min__C5) a) a)
+
+@make_dist = (?(((* (* @List/Nil)) @make_dist__C2) a) a)
+
+@make_dist__C0 = a
+  & @List/Cons ~ ((16777215 0) a)
+
+@make_dist__C1 = (* a)
+  & @List/Cons ~ ((0 0) a)
+
+@make_dist__C2 = ($([+0x0000001] $([:-0x0000001] b)) ({a c} ({$([=] $(a ?((@make_dist__C0 @make_dist__C1) (e f)))) $([+0x0000001] d)} f)))
+  & @make_dist ~ (b (c (d e)))
+
+@prog = (({a c} ({$([<] $(a b)) d} (e f))) g)
+  & $(b ?((@prog__C2 (* (* (* (* (* 16777215)))))) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@prog__C0 = ({e {f a}} (b (g (d h))))
+  & @dijkstra ~ (c (d (e (f (g h)))))
+  & @make_dist ~ (a (b (0 c)))
+
+@prog__C1 = (b ({$([=] $(a ?((@prog__C0 (* (* (* (* (* 0)))))) (b (c (d e)))))) c} ({a d} e)))
+
+@prog__C2 = ({a c} (d ({$([<] $(a b)) e} f)))
+  & $(b ?((@prog__C1 (* (* (* (* (* 16777215)))))) (c (d (e f))))) ~ [=0x0000000]
+
+@relax_to = (d ({$([<] $(a b)) e} (f (g (a h)))))
+  & $(b ?((@relax_to__C4 (* (c (* (* (* c)))))) (d (e (f (g h)))))) ~ [=0x0000000]
+
+@relax_to__C0 = (a (* (* a)))
+
+@relax_to__C1 = (* (a (b (c d))))
+  & @dist_set ~ (a (b ((c 0) d)))
+
+@relax_to__C2 = (c (d ($([+] $(a {$([<] $(b ?((@relax_to__C0 @relax_to__C1) (c (d (e f)))))) e})) (a (b f)))))
+
+@relax_to__C3 = ({a d} ({b e} (f (g i))))
+  & @dist_get ~ (a (b (h $([=0x0000001] ?((@relax_to__C2 (* (c (* (* (* (* c))))))) (d (e (f (g (h i))))))))))
+
+@relax_to__C4 = (e (f ({a g} ({$([<] $(b c)) h} i))))
+  & $(a b) ~ [-0x0FFFFFF]
+  & $(c ?((@relax_to__C3 (* (d (* (* (* d)))))) (e (f (g (h i)))))) ~ [=0x0000000]
+
+@scan_edges = ((@scan_edges__C5 a) a)
+
+@scan_edges__C0 = (a (* (* (* (* a)))))
+
+@scan_edges__C1 = (* (a (c (e (b (d f))))))
+  & @relax_to ~ (a (b (c (d (e f)))))
+
+@scan_edges__C2 = (* (* (* (* (a a)))))
+
+@scan_edges__C3 = (* (c (e (b (d (a f))))))
+  & @relax_to ~ (a (b (c (d (e f)))))
+
+@scan_edges__C4 = (* (({e $([=] $(g ?((@scan_edges__C0 @scan_edges__C1) (h (i (j (k (l m))))))))} ({$([=] $(b ?((@scan_edges__C2 @scan_edges__C3) (c (d (e (f (m n)))))))) k} {f l})) (a (h ({o {b g}} ({p {c i}} ({q {d j}} r)))))))
+  & @scan_edges ~ (a (n (o (p (q r)))))
+
+@scan_edges__C5 = (?(((a (* (* (* a)))) @scan_edges__C4) b) b)
+
+

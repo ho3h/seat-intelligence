@@ -1,0 +1,66 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@closure = ({a d} (b f))
+  & @scan_edges ~ (a (b (0 (e $([=0x0000001] ?(((* (c c)) @closure__C0) (d (e f))))))))
+
+@closure__C0 = (* a)
+  & @closure ~ a
+
+@has = ((@has__C2 a) a)
+
+@has__C0 = (b (a c))
+  & @has ~ (a (b c))
+
+@has__C1 = (* ($([=] $(a ?((@has__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@has__C2 = (?(((* 0) @has__C1) a) a)
+
+@members = ({$([=0x0000000] ?((@members__C2 (* (* (* (a a))))) (b c))) b} c)
+
+@members__C0 = (b (c (a d)))
+  & @members ~ (a (b (c d)))
+
+@members__C1 = (* (b (d ({a c} f))))
+  & @members ~ (a (b (e f)))
+  & @List/Cons ~ (c (d e))
+
+@members__C2 = ($([:-0x0000001] {b e}) ({a c} (d f)))
+  & @has ~ (a (b $([=0x0000001] ?((@members__C0 @members__C1) (c (d (e f)))))))
+
+@prog = ((a (c b)) f)
+  & @members ~ (a (e (@List/Nil f)))
+  & @closure ~ (b (d e))
+  & @List/Cons ~ (c (@List/Nil d))
+
+@scan_edges = ((@scan_edges__C8 a) a)
+
+@scan_edges__C0 = (b (c (a (* d))))
+  & @scan_edges ~ (a (b (c d)))
+
+@scan_edges__C1 = (* (c (* (a (b e)))))
+  & @scan_edges ~ (a (d (1 e)))
+  & @List/Cons ~ (b (c d))
+
+@scan_edges__C2 = (c (* (a (b e))))
+  & @scan_edges ~ (a (d (1 e)))
+  & @List/Cons ~ (b (c d))
+
+@scan_edges__C3 = (* (b (c (a (* d)))))
+  & @scan_edges ~ (a (b (c d)))
+
+@scan_edges__C4 = ({a c} (d (e (f (b g)))))
+  & @has ~ (a (b $([=0x0000001] ?((@scan_edges__C0 @scan_edges__C1) (c (d (e (f g))))))))
+
+@scan_edges__C5 = (* ({a c} (d (e (* ({b f} g))))))
+  & @has ~ (a (b $([=0x0000001] ?((@scan_edges__C2 @scan_edges__C3) (c (d (e (f g))))))))
+
+@scan_edges__C6 = (a (b (a b)))
+
+@scan_edges__C7 = (* (({b f} g) (e ({a c} (d h)))))
+  & @has ~ (a (b $([=0x0000001] ?((@scan_edges__C4 @scan_edges__C5) (c (d (e (f (g h)))))))))
+
+@scan_edges__C8 = (?((@scan_edges__C6 @scan_edges__C7) a) a)
+
+

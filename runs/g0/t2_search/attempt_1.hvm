@@ -1,0 +1,24 @@
+@prog = ((xs t) out)
+  & @s ~ (xs (t (0 out)))
+
+@s = ((?((@s_nil @s_cons) (pl (t (i out)))) pl) (t (i out)))
+
+@s_nil = (* (* (* 16777215)))
+
+@s_cons = (* ((h tl) (t (i out))))
+  & h ~ {h1 h2}
+  & t ~ {t1 {t2 t3}}
+  & h1 ~ $([<] $(t1 lt))
+  & lt ~ ?((@s_stop @s_go) (h2 (t2 (t3 (i (tl out))))))
+
+@s_go = (* (* (* (t (i (tl out))))))
+  & i ~ $([+1] i2)
+  & @s ~ (tl (t (i2 out)))
+
+@s_stop = (h (t (* (i (* out)))))
+  & h ~ $([=] $(t e))
+  & e ~ ?((@s_absent @s_found) (i out))
+
+@s_absent = (* 16777215)
+
+@s_found = (* (i i))

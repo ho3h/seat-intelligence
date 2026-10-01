@@ -1,0 +1,30 @@
+// Start with the first element as the accumulator, avoiding a comparison.
+@prog = (l out)
+  & @mstart ~ (l out)
+
+@mstart = ((?((@ms_nil @ms_cons) (pl out)) pl) out)
+
+@ms_nil = (* out)
+  & out ~ 0
+
+@ms_cons = (* ((h t) out))
+  & @mx ~ (t (h out))
+
+// Process the remaining elements while carrying the current maximum.
+@mx = ((?((@mx_nil @mx_cons) (pl (acc out))) pl) (acc out))
+
+@mx_nil = (* (a a))
+
+@mx_cons = (* ((h t) (acc out)))
+  & h ~ {hc hk}
+  & acc ~ {acmp ak}
+  & hc ~ $([>] $(acmp z))
+  & z ~ ?((@mx_no @mx_yes) (t (ak (hk out))))
+
+@mx_no = (acc (t (old (head out))))
+  & @mx ~ (t (old out))
+  & head ~ *
+
+@mx_yes = (* (t (old (head out))))
+  & @mx ~ (t (head out))
+  & old ~ *

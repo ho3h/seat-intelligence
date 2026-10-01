@@ -1,0 +1,192 @@
+@prog = (input out)
+  & input ~ (n (s (t (k edges))))
+  & @guard ~ (n (s (t (k (edges out)))))
+
+@guard = (n (s (t (k (edges out)))))
+  & n ~ {n_rest n_comp}
+  & n_comp ~ {n_s n_t}
+  & s ~ {s_cont s_lt}
+  & t ~ {t_cont t_lt}
+  & s_lt ~ $([<] $(n_s lt_s))
+  & t_lt ~ $([<] $(n_t lt_t))
+  & lt_s ~ $([&] $(lt_t valid))
+  & valid ~ ?((@invalid @run_dp)
+      (n_rest (s_cont (t_cont (k (edges out))))))
+
+@invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@run_dp = (* (n (s (t (k (edges out))))))
+  & n ~ {n_init n_walk}
+  & @init_dp ~ (n_init (s dp))
+  & @walk ~ (k (n_walk (t (edges (dp out)))))
+
+@init_dp = (n (s out))
+  & @mk_inf ~ (n list)
+  & @set_zero ~ (s (list out))
+
+@mk_inf = (count out)
+  & count ~ ?((@mk_nil @mk_cons) out)
+
+@mk_nil = (0 *)
+
+@mk_cons = (count_minus out)
+  & @mk_inf ~ (count_minus tail)
+  & out ~ (16777215 tail)
+
+@set_zero = (idx (lst out))
+  & idx ~ ?((@set_z @set_s) (lst out))
+
+@set_z = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@set_z_nil @set_z_cons) (payload out))
+
+@set_z_nil = (* (payload out))
+  & payload ~ *
+  & out ~ 16777215
+
+@set_z_cons = (* (payload out))
+  & payload ~ (h t)
+  & h ~ *
+  & out ~ (0 t)
+
+@set_s = (idx_minus (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@set_s_nil @set_s_cons) (payload (idx_minus out)))
+
+@set_s_nil = (* (payload (idx out)))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@set_s_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & @set_zero ~ (idx (t tail_out))
+  & out ~ (h tail_out)
+
+@get = (idx (lst out))
+  & idx ~ ?((@get_z @get_s) (lst out))
+
+@get_z = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@get_z_nil @get_z_cons) (payload out))
+
+@get_z_nil = (* (payload out))
+  & payload ~ *
+  & out ~ 16777215
+
+@get_z_cons = (* (payload out))
+  & payload ~ (h t)
+  & t ~ *
+  & out ~ h
+
+@get_s = (idx_minus (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@get_s_nil @get_s_cons) (payload (idx_minus out)))
+
+@get_s_nil = (* (payload (idx out)))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@get_s_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (idx t out)
+
+@walk = (k (n (t (edges (dp out)))))
+  & k ~ ?((@walk_zero @walk_succ) (n (t (edges (dp out)))))
+
+@walk_zero = (n (t (edges (dp out))))
+  & n ~ *
+  & edges ~ *
+  & @get ~ (t (dp out))
+
+@walk_succ = (km (n (t (edges (dp out)))))
+  & n ~ {n_step n_next}
+  & edges ~ {edges_step edges_next}
+  & @step ~ (n_step (edges_step (dp next_dp)))
+  & @walk ~ (km (n_next (t (edges_next (next_dp out)))))
+
+@step = (n (edges (dp out)))
+  & @gen_walk ~ (n (edges (dp (0 out))))
+
+@gen_walk = (r (edges (dp (v out))))
+  & r ~ ?((@gen_nil @gen_cons) (edges (dp (v out))))
+
+@gen_nil = (edges (dp (v out)))
+  & edges ~ *
+  & dp ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@gen_cons = (r_minus (edges (dp (v out))))
+  & v ~ {v_dest v_inc}
+  & edges ~ {edges_min edges_rec}
+  & dp ~ {dp_min dp_rec}
+  & @min_edges ~ (v_dest (edges_min (dp_min val)))
+  & v_inc ~ $([+1] v_next)
+  & @gen_walk ~ (r_minus (edges_rec (dp_rec (v_next tail))))
+  & out ~ (val tail)
+
+@min_edges = (v (edges (dp out)))
+  & @min_edges_acc ~ (v (edges (dp (16777215 out))))
+
+@min_edges_acc = (v (edges (dp (acc out))))
+  & edges ~ (tag payload)
+  & tag ~ ?((@me_nil @me_cons) (v (payload (dp (acc out)))))
+
+@me_nil = (v (payload (dp (acc out))))
+  & v ~ *
+  & payload ~ *
+  & dp ~ *
+  & out ~ acc
+
+@me_cons = (* (v (payload (dp (acc out)))))
+  & v ~ {v_cmp v_rec}
+  & payload ~ (edge tail_edges)
+  & edge ~ (u (dest w))
+  & dest ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@me_skip @me_cand) (v_rec (tail_edges (u (w (dp (acc out)))))))
+
+@me_skip = (v_rec (tail_edges (u (w (dp (acc out))))))
+  & u ~ *
+  & w ~ *
+  & @min_edges_acc ~ (v_rec (tail_edges (dp (acc out))))
+
+@me_cand = (* (v_rec (tail_edges (u (w (dp (acc out)))))))
+  & dp ~ {dp_get dp_rec}
+  & @get ~ (u (dp_get base))
+  & base ~ {base_check base_cand}
+  & base_check ~ $([=] $(16777215 eq_inf))
+  & eq_inf ~ ?((@cand_compute @cand_skip)
+       (w (v_rec (tail_edges (dp_rec (acc (base_cand out)))))))
+
+@cand_compute = (w (v_rec (tail_edges (dp_rec (acc (base_cand out))))))
+  & base_cand ~ $([+] $(w cand))
+  & @min2 ~ (acc (cand min_val))
+  & @min_edges_acc ~ (v_rec (tail_edges (dp_rec (min_val out))))
+
+@cand_skip = (* (w (v_rec (tail_edges (dp_rec (acc (base_cand out)))))))
+  & w ~ *
+  & base_cand ~ *
+  & @min_edges_acc ~ (v_rec (tail_edges (dp_rec (acc out))))
+
+@min2 = (a (b out))
+  & a ~ {a_cmp a_out}
+  & b ~ {b_cmp b_out}
+  & a_cmp ~ $([<] $(b_cmp lt))
+  & lt ~ ?((@min2_ge @min2_lt) (a_out (b_out out)))
+
+@min2_ge = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min2_lt = (* (a (b out)))
+  & b ~ *
+  & out ~ a

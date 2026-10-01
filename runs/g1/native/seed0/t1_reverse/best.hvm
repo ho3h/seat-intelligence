@@ -1,0 +1,11 @@
+// Reverse a list by prepending each head to the accumulator.
+
+@prog = (l out)
+  & @rev ~ (l ((0 *) out))
+
+@rev = ((?((@rev_nil @rev_cons) (pl (acc out))) pl) (acc out))
+
+@rev_nil = (* (a a))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

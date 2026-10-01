@@ -1,0 +1,17 @@
+@prog = (l out)
+  & @zc ~ (l (0 out))
+
+@zc = ((?((@zc_nil @zc_cons) (pl (acc out))) pl) (acc out))
+
+@zc_nil = (* (a a))
+
+@zc_cons = (* ((h t) (acc out)))
+  & h ~ $([=] $(0 z))
+  & z ~ ?((@zc_no @zc_yes) (acc (t out)))
+
+@zc_no = (acc (t out))
+  & @zc ~ (t (acc out))
+
+@zc_yes = (* (acc (t out)))
+  & acc ~ $([+] $(1 acc2))
+  & @zc ~ (t (acc2 out))

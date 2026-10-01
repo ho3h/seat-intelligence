@@ -1,0 +1,18 @@
+// Count even elements in a list of u24 values.
+@prog = (l out)
+  & @ce ~ (l (0 out))
+
+@ce = ((?((@ce_nil @ce_cons) (pl (acc out))) pl) (acc out))
+
+@ce_nil = (* (a a))
+
+@ce_cons = (* ((h t) (acc out)))
+  & h ~ $([&] $(1 z))
+  & z ~ ?((@ce_even @ce_odd) (acc (t out)))
+
+@ce_even = (acc (t out))
+  & acc ~ $([+] $(1 acc2))
+  & @ce ~ (t (acc2 out))
+
+@ce_odd = (* (acc (t out)))
+  & @ce ~ (t (acc out))

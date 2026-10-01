@@ -1,0 +1,150 @@
+// Build the initial labels [0, 1, ..., n-1], process the edges for n sweeps,
+// then emit each minimum label's component in ascending order.
+@prog = ((n edges) out)
+  & n ~ {n_range {n_repeat n_outer}}
+  & @range ~ (n_range (0 initial))
+  & @repeat ~ (n_repeat (edges (initial labels)))
+  & @outer ~ (n_outer (0 (labels out)))
+
+@range = (n (i out))
+  & n ~ ?((@range_nil @range_succ) (i out))
+
+@range_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@range_succ = (m (i out))
+  & i ~ {cur inc}
+  & inc ~ $([+1] next)
+  & @range ~ (m (next tail))
+  & out ~ (1 (cur tail))
+
+@repeat = (passes (edges (labels out)))
+  & passes ~ ?((@repeat_nil @repeat_succ) (edges (labels out)))
+
+@repeat_nil = (edges (labels out))
+  & edges ~ *
+  & out ~ labels
+
+@repeat_succ = (m (edges (labels out)))
+  & edges ~ {e1 e2}
+  & @sweep ~ (e1 (labels mid))
+  & @repeat ~ (m (e2 (mid out)))
+
+@sweep = ((?((@sweep_nil @sweep_cons) (payload (labels out))) payload) (labels out))
+
+@sweep_nil = (payload (labels out))
+  & payload ~ *
+  & out ~ labels
+
+@sweep_cons = (* ((edge tail) (labels out)))
+  & @edge_apply ~ (edge (labels mid))
+  & @sweep ~ (tail (mid out))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@get_next = (m (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (m out))
+
+@edge_apply = ((u v) (labels out))
+  & labels ~ {l1 {l2 l3}}
+  & @get ~ (l1 (u x))
+  & @get ~ (l2 (v y))
+  & x ~ {xc xk}
+  & y ~ {yc yk}
+  & xc ~ $([<] $(yc b))
+  & b ~ ?((@edge_ylo @edge_xlo) (xk (yk (l3 out))))
+
+@edge_xlo = (lo (hi (labels out)))
+  & @replace ~ (labels (hi (lo out)))
+
+@edge_ylo = (lo (hi (labels out)))
+  & @replace ~ (labels (hi (lo out)))
+
+@replace = ((?((@replace_nil @replace_cons) (payload (hi (lo out)))) payload) (hi (lo out)))
+
+@replace_nil = (payload (hi (lo out)))
+  & payload ~ *
+  & hi ~ *
+  & lo ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* ((head tail) (hi (lo out))))
+  & head ~ {hc hk}
+  & hi ~ {hic hir}
+  & lo ~ {lou lor}
+  & hc ~ $([=] $(hic b))
+  & b ~ ?((@replace_keep @replace_swap) (hk (lou (tail (hir (lor out))))))
+
+@replace_keep = (head (lo (tail (hi (lor out)))))
+  & lo ~ *
+  & @replace ~ (tail (hi (lor rest)))
+  & out ~ (1 (head rest))
+
+@replace_swap = (head (lo (tail (hi (lor out)))))
+  & head ~ *
+  & @replace ~ (tail (hi (lor rest)))
+  & out ~ (1 (lo rest))
+
+@outer = (n (i (labels out)))
+  & n ~ ?((@outer_nil @outer_succ) (i (labels out)))
+
+@outer_nil = (i (labels out))
+  & i ~ *
+  & labels ~ *
+  & out ~ (0 *)
+
+@outer_succ = (m (i (labels out)))
+  & labels ~ {lg {lm lr}}
+  & i ~ {iget ival}
+  & @get ~ (lg (iget v))
+  & ival ~ {ic {ikey inext}}
+  & inext ~ $([+1] next)
+  & v ~ $([=] $(ic b))
+  & b ~ ?((@outer_no @outer_yes) (ikey (next (m (lm (lr out))))))
+
+@outer_no = (key (next (m (lm (lr out)))))
+  & key ~ *
+  & lm ~ *
+  & @outer ~ (m (next (lr out)))
+
+@outer_yes = (key (next (m (lm (lr out)))))
+  & @members ~ (lm (0 (key cluster)))
+  & @outer ~ (m (next (lr tail)))
+  & out ~ (1 (cluster tail))
+
+@members = ((?((@members_nil @members_cons) (payload (idx (key out)))) payload) (idx (key out)))
+
+@members_nil = (payload (idx (key out)))
+  & payload ~ *
+  & idx ~ *
+  & key ~ *
+  & out ~ (0 *)
+
+@members_cons = (* ((head tail) (idx (key out))))
+  & idx ~ {iv ii}
+  & key ~ {kc kr}
+  & ii ~ $([+1] next)
+  & head ~ $([=] $(kc b))
+  & b ~ ?((@members_no @members_yes) (iv (next (tail (kr out)))))
+
+@members_no = (iv (next (tail (key out))))
+  & iv ~ *
+  & @members ~ (tail (next (key out)))
+
+@members_yes = (iv (next (tail (key out))))
+  & @members ~ (tail (next (key rest)))
+  & out ~ (1 (iv rest))

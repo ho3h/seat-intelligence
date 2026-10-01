@@ -1,0 +1,14 @@
+// Mirror a tree recursively.
+@prog = (input out)
+  & @mirror ~ (input out)
+
+@mirror = ((?((@m_leaf @m_node) (p out)) p) out)
+
+@m_leaf = (p out)
+  & p ~ *
+  & out ~ (0 *)
+
+@m_node = (* ((l (v r)) out))
+  & @mirror ~ (l ml)
+  & @mirror ~ (r mr)
+  & out ~ (1 (mr (v ml)))

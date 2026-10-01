@@ -1,0 +1,38 @@
+// Singleton-cluster result. Filter self-loops from the edge list.
+@prog = (inp out)
+  & inp ~ (n (tau (mnl (cands (edges attrs)))))
+  & out ~ (c (e p))
+  & @range ~ (n ((0 *) c))
+  & @filter ~ (edges e)
+  & p ~ attrs
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@range = (?((@rzero @rsucc) ctx) ctx)
+
+@rzero = (acc out)
+  & acc ~ out
+
+@rsucc = (k (acc out))
+  & k ~ {x y}
+  & @range ~ (y ((1 (x acc)) out))
+
+@filter = ((?((@filnil @fcons) (pl out)) pl) out)
+
+@filnil = (* out)
+  & out ~ (0 *)
+
+@fcons = (* ((edge rest) out))
+  & edge ~ (u v)
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([=] $(v1 eq))
+  & @filter ~ (rest tail)
+  & eq ~ ?((@fdrop @fkeep) (u2 (v2 (tail out))))
+
+@fdrop = (* (* (tail out)))
+  & tail ~ out
+
+@fkeep = (* (u (v (tail out))))
+  & out ~ (1 ((u v) tail))

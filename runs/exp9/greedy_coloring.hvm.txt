@@ -1,0 +1,42 @@
+// t3_greedy_coloring (GRAPH-SWING-2, runs/exp9): the greedy recursion col(v) = mex{col(u) : u < v, u ~ v} built
+// directly as a dataflow net (the exp5 dag_longest pattern). Streaming the edges: each edge (lo, hi) pushes a reply
+// wire x onto the multicast chain of lo (request trie Q) and ORs (1 << x) into hi's mask accumulator (trie A).
+// fin wires mex(A[v]) into chain v; chain ends are the colours; tl flattens them. No rounds: colours ripple along
+// increasing-id paths. Limitation: masks are 24-bit, so a vertex with >= 24 lower neighbours all forced into
+// distinct colours >= 23 would be wrong (never met at these sizes: colour <= #lower neighbours).
+@prog = ((n es) out)
+  & n ~ ?((@gc_zero @gc_pos) (es out))
+@gc_zero = (* (0 *))
+@gc_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 L5}}}}
+  & @zt ~ (L1 A0)
+  & @zq ~ (L2 Q0)
+  & @w_blk ~ (es ((L3 (A0 Q0)) (Af Qf)))
+  & @zc ~ (Af (Qf (L4 C)))
+  & @tl ~ (C (L5 (0 (n ((0 *) out)))))
+@gc_step = ((L (A Q)) ((a b) (L3 (A2 Q2))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@gc_swap @gc_keep) (a2 (b2 (u v))))
+  & L ~ {L1 {L2 L3}}
+  & @pu ~ (Q (u (L1 (x Q2))))
+  & 1 ~ $([<<] $(x y))
+  & @oa ~ (A (v (L2 (y A2))))
+@gc_swap = (a (b (b a)))
+@gc_keep = (* (a (b (a b))))
+@gc_fin = ((* s) s)
+@oa_act = (old (y o))
+  & old ~ $([|] $(y o))
+// zc(A, Q, L): trie of chain ends; leaf v: mex(A[v]) enters chain v, the chain's end is the colour itself
+@zc = (a (q (L o)))
+  & L ~ ?((@zc_leaf @zc_node) (a (q o)))
+@zc_leaf = (a ((c o) o))
+  & @mex ~ (a c)
+@zc_node = (lm ((a1 a2) ((q1 q2) (x y))))
+  & lm ~ {l1 l2}
+  & @zc ~ (a1 (q1 (l1 x)))
+  & @zc ~ (a2 (q2 (l2 y)))

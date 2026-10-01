@@ -1,0 +1,164 @@
+// Build the vertex list, find each component, and retain the largest size.
+@prog = (input out)
+  & input ~ (n edges)
+  & @range ~ (n candidates)
+  & @components ~ (candidates (edges (0 out)))
+
+// Generate vertices 0 through n-1.
+@range = (n out)
+  & n ~ ?((@range_zero @range_more) (0 out))
+
+@range_zero = (dummy out)
+  & dummy ~ *
+  & out ~ (0 *)
+
+@range_more = (m (dummy out))
+  & dummy ~ *
+  & m ~ {head rec}
+  & @range ~ (rec tail)
+  & out ~ (1 (head tail))
+
+// Visit candidate vertices, flood each component, and update the maximum.
+@components = ((?((@components_nil @components_cons) (pl (edges (best out)))) pl) (edges (best out)))
+
+@components_nil = (* (edges (best out)))
+  & edges ~ *
+  & out ~ best
+
+@components_cons = (* ((start tail) (edges (best out))))
+  & edges ~ {eflood enext}
+  & @flood ~ (start (eflood comp))
+  & comp ~ {ccount cfilt}
+  & @count ~ (ccount size)
+  & @filter ~ (tail (cfilt remaining))
+  & @max ~ (size (best bestnext))
+  & @components ~ (remaining (enext (bestnext out)))
+
+// Return the size of the component containing start.
+@flood = (start (edges out))
+  & @sweep ~ (edges ((1 (start (0 *))) (1 out)))
+
+// Sweep all edges until a scan adds no new vertices.
+@sweep = (edges (seen (prev out)))
+  & edges ~ {escan enext}
+  & @scan ~ (escan (seen scanned))
+  & scanned ~ {countlist nextseen}
+  & @count ~ (countlist after)
+  & after ~ {acmp anext}
+  & acmp ~ $([=] $(prev eq))
+  & eq ~ ?((@sweep_again @sweep_done) (enext (nextseen (anext out))))
+
+@sweep_again = (edges (seen (prev out)))
+  & @sweep ~ (edges (seen (prev out)))
+
+@sweep_done = (* (edges (seen (prev out))))
+  & edges ~ *
+  & prev ~ *
+  & out ~ seen
+
+// Scan the edge list once, extending the visited set at each edge.
+@scan = ((?((@scan_nil @scan_cons) (pl (seen out))) pl) (seen out))
+
+@scan_nil = (* (seen out))
+  & out ~ seen
+
+@scan_cons = (* ((edge tail) (seen out)))
+  & @edge ~ (edge (seen seen2))
+  & @scan ~ (tail (seen2 out))
+
+// For edge (u,v), add u if v is visited, then add v if u is visited.
+@edge = ((u v) (seen out))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @addif ~ (v1 (u1 (seen mid)))
+  & @addif ~ (u2 (v2 (mid out)))
+
+// Add dst to seen if src is already in seen.
+@addif = (src (dst (seen out)))
+  & seen ~ {stest skeep}
+  & @mem ~ (stest (src found))
+  & found ~ ?((@addif_no @addif_yes) (dst (skeep out)))
+
+@addif_no = (dst (seen out))
+  & dst ~ *
+  & out ~ seen
+
+@addif_yes = (* (dst (seen out)))
+  & seen ~ {dtest dkeep}
+  & dst ~ {dmem dhead}
+  & @mem ~ (dtest (dmem found2))
+  & found2 ~ ?((@addif_new @addif_old) (dhead (dkeep out)))
+
+@addif_new = (dst (seen out))
+  & out ~ (1 (dst seen))
+
+@addif_old = (* (dst (seen out)))
+  & dst ~ *
+  & out ~ seen
+
+// Membership test: output 1 iff x is in the list.
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (x out)))
+  & x ~ {xcmp xkeep}
+  & head ~ $([=] $(xcmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (xkeep out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+// Count the elements of a list.
+@count = ((?((@count_nil @count_cons) (pl out)) pl) out)
+
+@count_nil = (* out)
+  & out ~ 0
+
+@count_cons = (* ((head tail) out))
+  & head ~ *
+  & @count ~ (tail c)
+  & c ~ $([+1] out)
+
+// Keep candidates that are not in the component.
+@filter = ((?((@filter_nil @filter_cons) (pl (comp out))) pl) (comp out))
+
+@filter_nil = (* (comp out))
+  & comp ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((x tail) (comp out)))
+  & x ~ {xmem xkeep}
+  & comp ~ {cmem cnext}
+  & @mem ~ (cmem (xmem found))
+  & found ~ ?((@filter_absent @filter_present) (xkeep (tail (cnext out))))
+
+@filter_absent = (x (tail (comp out)))
+  & @filter ~ (tail (comp rest))
+  & out ~ (1 (x rest))
+
+@filter_present = (* (x (tail (comp out))))
+  & x ~ *
+  & @filter ~ (tail (comp out))
+
+// Return the larger of size and best.
+@max = (size (best out))
+  & size ~ {scmp stake}
+  & best ~ {bcmp bkeep}
+  & scmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (stake (bkeep out)))
+
+@max_no = (size (best out))
+  & size ~ *
+  & out ~ best
+
+@max_yes = (* (size (best out)))
+  & best ~ *
+  & out ~ size

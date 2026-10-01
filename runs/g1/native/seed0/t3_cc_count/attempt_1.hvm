@@ -1,0 +1,93 @@
+// @prog receives (n, edges) and returns the number of connected components.
+@prog = (input out)
+  & input ~ (n edges)
+  & @vertices ~ (n (edges ((0 *) (0 out))))
+
+// Count down through the vertices, carrying edges, visited vertices, and count.
+@vertices = (?((@v_done @v_more) ctx) ctx)
+
+@v_done = (* (* (x x)))
+
+@v_more = (v (edges (visited (count out))))
+  & v ~ {vm vw}
+  & visited ~ {vmem vsaved}
+  & @mem ~ (vmem (vm has))
+  & has ~ ?((@v_new @v_old) (vw (edges (vsaved (count out))))
+
+@v_old = (* (v (edges (visited (count out)))))
+  & @vertices ~ (v (edges (visited (count out))))
+
+@v_new = (v (edges (visited (count out))))
+  & v ~ {vf vl}
+  & edges ~ {ef el}
+  & @flood ~ ((1 (vf (0 *))) (ef (visited visout)))
+  & count ~ $([+1] count2)
+  & @vertices ~ (vl (el (visout (count2 out))))
+
+// Membership test: return 1 if target occurs in list, otherwise 0.
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (* out))
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (target out)))
+  & target ~ {tc tr}
+  & head ~ $([=] $(tc eq))
+  & eq ~ ?((@mem_no @mem_yes) (tail (tr out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (* (* out)))
+  & out ~ 1
+
+// Flood-fill pending vertices, returning the updated visited list.
+@flood = ((?((@f_done @f_step) (pl (edges (visited out)))) pl) (edges (visited out)))
+
+@f_done = (* (* (x x)))
+
+@f_step = (* ((v rest) (edges (visited out))))
+  & v ~ {vm vs}
+  & visited ~ {vmem vsaved}
+  & @mem ~ (vmem (vm has))
+  & has ~ ?((@f_process @f_skip) (vs (rest (edges (vsaved out))))
+
+@f_skip = (* (rest (edges (visited out))))
+  & @flood ~ (rest (edges (visited out)))
+
+@f_process = (vs (rest (edges (visited out))))
+  & vs ~ {scan_target visit_head}
+  & edges ~ {scan_edges flood_edges}
+  & @scan ~ (scan_edges (scan_target (rest pending2)))
+  & @flood ~ (pending2 (flood_edges ((1 (visit_head visited)) out)))
+
+// Scan all edges, adding the other endpoint of each edge adjacent to target.
+@scan = ((?((@scan_nil @scan_cons) (pl (target (pending out)))) pl) (target (pending out)))
+
+@scan_nil = (* (* (x x)))
+
+@scan_cons = (* (((u v) tail) (target (pending out))))
+  & @edge ~ (u (v (tail (target (pending out))))
+
+// Test whether either endpoint of an edge equals target.
+@edge = (u (v (tail (target (pending out)))))
+  & u ~ {ucmp ukeep}
+  & target ~ {tcmp tkeep}
+  & ucmp ~ $([=] $(tcmp eq))
+  & eq ~ ?((@edge_check @edge_yes_v) (ukeep (v (tail (tkeep (pending out)))))
+
+@edge_yes_v = (* (* (v (tail (target (pending out))))))
+  & pending ~ (1 (v pending2))
+  & @scan ~ (tail (target (pending2 out)))
+
+@edge_check = (ukeep (v (tail (target (pending out)))))
+  & target ~ {tc tr}
+  & v ~ $([=] $(tc eq))
+  & eq ~ ?((@edge_no @edge_yes_u) (ukeep (tail (tr (pending out))))
+
+@edge_no = (* (tail (target (pending out))))
+  & @scan ~ (tail (target (pending out)))
+
+@edge_yes_u = (* (ukeep (tail (target (pending out)))))
+  & pending ~ (1 (ukeep pending2))
+  & @scan ~ (tail (target (pending2 out)))

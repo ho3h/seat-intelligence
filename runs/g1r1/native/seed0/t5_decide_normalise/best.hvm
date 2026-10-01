@@ -1,0 +1,85 @@
+@prog = (inp out)
+  & @fold ~ (inp ((0 *) out))
+
+@fold = ((?((@fold_nil @fold_cons) (pl (acc out))) pl) (acc out))
+
+@fold_nil = (* (a a))
+
+@fold_cons = (* ((h t) (acc out)))
+  & @process ~ (h (t (acc out)))
+
+@process = ((u (v s)) (t (acc out)))
+  & u ~ {ut uk}
+  & v ~ {vt vk}
+  & ut ~ $([<] $(vt z))
+  & z ~ ?((@proc_swap @proc_keep) (uk (vk (s (t (acc out))))))
+
+@proc_swap = (u (v (s (t (acc out)))))
+  & @insert ~ ((v (u s)) (acc newacc))
+  & @fold ~ (t (newacc out))
+
+@proc_keep = (* (u (v (s (t (acc out))))))
+  & @insert ~ ((u (v s)) (acc newacc))
+  & @fold ~ (t (newacc out))
+
+@insert = ((u (v s)) ((?((@ins_nil @ins_cons) (pl ((u (v s)) out))) pl) out))
+
+@ins_nil = (* ((u (v s)) out))
+  & out ~ (1 ((u (v s)) (0 *)))
+
+@ins_cons = (* (((a (b c)) xs) ((u (v s)) out)))
+  & u ~ {ut uk}
+  & a ~ {at ak}
+  & ut ~ $([<] $(at z))
+  & z ~ ?((@ins_u_ge @ins_u_lt) (uk (v (s (ak (b (c (xs out))))))))
+
+@ins_u_lt = (* (u (v (s (a (b (c (xs out))))))))
+  & out ~ (1 ((u (v s)) (1 ((a (b c)) xs))))
+
+@ins_u_ge = (u (v (s (a (b (c (xs out)))))))
+  & u ~ {ut uk}
+  & a ~ {at ak}
+  & ut ~ $([=] $(at z))
+  & z ~ ?((@ins_u_ne @ins_u_eq) (uk (v (s (ak (b (c (xs out))))))))
+
+@ins_u_ne = (u (v (s (a (b (c (xs out)))))))
+  & @insert ~ ((u (v s)) (xs r))
+  & out ~ (1 ((a (b c)) r))
+
+@ins_u_eq = (* (u (v (s (a (b (c (xs out))))))))
+  & v ~ {vt vk}
+  & b ~ {bt bk}
+  & vt ~ $([<] $(bt z))
+  & z ~ ?((@ins_v_ge @ins_v_lt) (u (vk (s (a (bk (c (xs out))))))))
+
+@ins_v_lt = (* (u (v (s (a (b (c (xs out))))))))
+  & out ~ (1 ((u (v s)) (1 ((a (b c)) xs))))
+
+@ins_v_ge = (u (v (s (a (b (c (xs out)))))))
+  & v ~ {vt vk}
+  & b ~ {bt bk}
+  & vt ~ $([=] $(bt z))
+  & z ~ ?((@ins_v_ne @ins_v_eq) (u (vk (s (a (bk (c (xs out))))))))
+
+@ins_v_ne = (u (v (s (a (b (c (xs out)))))))
+  & @insert ~ ((u (v s)) (xs r))
+  & out ~ (1 ((a (b c)) r))
+
+@ins_v_eq = (* (u (v (s (a (b (c (xs out))))))))
+  & a ~ *
+  & b ~ *
+  & @ins_score ~ (u (v (s (c (xs out)))))
+
+@ins_score = (u (v (s (c (xs out)))))
+  & s ~ {st sk}
+  & c ~ {ct ck}
+  & st ~ $([>] $(ct z))
+  & z ~ ?((@ins_score_no @ins_score_yes) (u (v (sk (ck (xs out))))))
+
+@ins_score_no = (u (v (s (c (xs out)))))
+  & s ~ *
+  & out ~ (1 ((u (v c)) xs))
+
+@ins_score_yes = (* (u (v (s (c (xs out))))))
+  & c ~ *
+  & out ~ (1 ((u (v s)) xs))

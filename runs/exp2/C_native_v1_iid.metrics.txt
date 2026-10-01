@@ -1,0 +1,42 @@
+runs/exp2/C_native_v1_iid.json
+{
+ "file": "runs/exp2/C_native_v1_iid.scored.json",
+ "tasks": 120,
+ "n": 8,
+ "samples": 960,
+ "outcomes": {
+  "pass": 141,
+  "fail": 262,
+  "static": 551,
+  "noblock": 6
+ },
+ "static_classes": {
+  "wire_once": 512,
+  "brackets": 9,
+  "undef_ref": 19,
+  "other_static": 11
+ },
+ "pass@1": 0.1469,
+ "pass@1_task_boot95": [
+  0.102,
+  0.195
+ ],
+ "pass@1_wilson95_samples(naive)": [
+  0.126,
+  0.171
+ ],
+ "pass@2": 0.2116,
+ "pass@4": 0.2723,
+ "pass@8": 0.3333,
+ "static_filter_best_of_8": 0.2,
+ "static_filter_best_of_n_wilson95": [
+  0.138,
+  0.28
+ ],
+ "pass_given_static_clean": 0.3499,
+ "static_clean_rate": 0.4198,
+ "per_family_pass@1": {
+  "pipeline": 0.127,
+  "reduce": 0.167
+ }
+}

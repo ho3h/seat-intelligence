@@ -1,0 +1,39 @@
+// Patience sorting. The sorted tail list is updated in one recursive pass:
+// when descending past a tail, rebuild that prefix while unwinding.
+
+@prog = (l out)
+  & @lis ~ (l ((0 *) (0 out)))
+
+@lis = ((?((@lis_nil @lis_cons) (p (tails (count out)))) p) (tails (count out)))
+
+@lis_nil = (p (tails (count out)))
+  & p ~ *
+  & tails ~ *
+  & count ~ out
+
+@lis_cons = (* ((h t) (tails (count out))))
+  & @ins ~ ((h tails) res)
+  & res ~ (newtails flag)
+  & count ~ $([+] $(flag next_count))
+  & @lis ~ (t (newtails (next_count out)))
+
+@ins = ((x (?((@ins_nil @ins_cons) (p (x out))) p)) out)
+
+@ins_nil = (p (x out))
+  & p ~ *
+  & out ~ ((1 (x (0 *))) 1)
+
+@ins_cons = (* ((h t) (x out)))
+  & h ~ {h1 h2}
+  & x ~ {x1 x2}
+  & x1 ~ $([>] $(h1 test))
+  & test ~ ?((@ins_replace @ins_continue) (h2 (t (x2 out))))
+
+@ins_replace = (h (t (x out)))
+  & h ~ *
+  & out ~ ((1 (x t)) 0)
+
+@ins_continue = (h (t (x out)))
+  & @ins ~ ((x t) res)
+  & res ~ (newtail flag)
+  & out ~ ((1 (h newtail)) flag)

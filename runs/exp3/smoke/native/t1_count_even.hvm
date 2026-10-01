@@ -1,0 +1,11 @@
+@prog = ((?((@ce_nil @ce_cons) (pl_q0 out)) pl_q0) out)
+
+@ce_nil = (* out)
+  & out ~ 0
+
+@ce_cons = (* ((h1 t1) out))
+  & t1 ~ (?((@ce_last (* (($([&1] $([^1] i2_q2)) (?((@ce_nil @ce_cons) (pl_q1_q2 $([+] $(pairinc_q2 out_q2)))) pl_q1_q2)) ($([&1] $([^1] $([+] $(i2_q2 pairinc_q2)))) out_q2)))) (pl (h1 out))) pl)
+
+@ce_last = (* (h1 out))
+  & h1 ~ $([&1] p)
+  & p ~ $([^1] out)

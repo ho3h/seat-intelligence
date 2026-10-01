@@ -1,0 +1,88 @@
+// t3_forest_mis (GRAPH-SWING-2, runs/exp9). Rooting without a rooted input: min-label propagation on the exp5
+// frontier core with packed labels root*1024 + dist (every vertex starts as its own root at distance 0, arcs add 1),
+// which converges to (smallest id in the tree, distance from it). Then the tree DP
+//   inc(v) = 1 + sum exc(c),  exc(v) = sum max(inc(c), exc(c))   over children c (label(c) == label(v) + 1)
+// is a dataflow net (the count_shortest_paths multicast pattern: every arc fetches the triple (label, inc, exc) of
+// its tail; a switch erases non-children). Answer = sum over roots of max(inc, exc).
+@prog = ((n es) out)
+  & n ~ ?((@fm_zero @fm_pos) (es out))
+@fm_zero = (* 0)
+@fm_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & @zl ~ (L1 G0)
+  & @zq ~ (L5 Q0)
+  & @zl ~ (L6 R0)
+  & @w_blk ~ (es ((L2 (G0 (Q0 R0))) (G (Q R))))
+  & @zi ~ (L3 D0)
+  & @idk ~ (L7 (0 (n C0)))
+  & @loop ~ ((G (D0 (C0 (L4x 16777215)))) Df)
+  & L4 ~ {L4x L4y}
+  & @zf ~ (Df (R (Q (L4y out))))
+@fm_step = ((L (g (q r))) ((u v) (L7 (g3 (q3 r3)))))
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & u ~ {u1 {u2 {u3 u4}}}
+  & v ~ {v1 {v2 {v3 v4}}}
+  & @gp ~ (g (u1 (L1 ((v1 1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 1) g3))))
+  & @pu ~ (q (u3 (L3 (x q2))))
+  & @pu ~ (q2 (v3 (L4 (y q3))))
+  & @gp ~ (r (v4 (L5 (x r2))))
+  & @gp ~ (r2 (u4 (L6 (y r3))))
+@fm_fin = ((* s) s)
+// idk(L, base, n): leaf i holds i*1024 (i < n) or 16777215 (padding)
+@idk = (L (base (n o)))
+  & L ~ ?((@idk_leaf @idk_node) (base (n o)))
+@idk_leaf = (b (n o))
+  & b ~ {b1 b2}
+  & b1 ~ $([<] $(n inr))
+  & inr ~ ?((@idk_pad @idk_in) (b2 o))
+@idk_pad = (* 16777215)
+@idk_in = (* (b o))
+  & b ~ $([*] $(1024 o))
+@idk_node = (lm (base (n (a c))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @idk ~ (l1 (b1 (n1 a)))
+  & @idk ~ (l2 (bR (n2 c)))
+
+// zf(D, R, Q, L) -> sum over roots of max(inc, exc)
+@zf = (d (r (q (L o))))
+  & L ~ ?((@zf_leaf @zf_node) (d (r (q o))))
+@zf_leaf = (d (r (((d2 (inc exc)) *) o)))
+  & d ~ {d1 {d2 d3}}
+  & @fg ~ (r (d1 (sI sE)))
+  & sI ~ $([+1] inc0)
+  & inc0 ~ {inc incx}
+  & sE ~ {exc excx}
+  & d3 ~ $([&] $(1023 dd))
+  & dd ~ $([=] $(0 rt))
+  & rt ~ ?((@zf_nr @zf_r) (incx (excx o)))
+@zf_nr = (* (* 0))
+@zf_r = (* (i (e o)))
+  & @max ~ (i (e o))
+@zf_node = (lm ((da db) ((ra rb) ((qa qb) o))))
+  & lm ~ {l1 l2}
+  & @zf ~ (da (ra (qa (l1 x))))
+  & @zf ~ (db (rb (qb (l2 y))))
+  & x ~ $([+] $(y o))
+// fg(list of (du (iu eu)), d) -> (sum eu, sum max(iu, eu)) over children (du == d + 1)
+@fg = ((?((@fg_nil @fg_cons) (p (d o))) p) (d o))
+@fg_nil = (* (* (0 0)))
+@fg_cons = (* (((du (iu eu)) rest) (d (sI sE))))
+  & d ~ {d1 d2}
+  & d1 ~ $([+1] dp)
+  & du ~ $([=] $(dp eq))
+  & eq ~ ?((@fg_no @fg_yes) (iu (eu (ti te))))
+  & @fg ~ (rest (d2 (ri re)))
+  & ti ~ $([+] $(ri sI))
+  & te ~ $([+] $(re sE))
+@fg_no = (* (* (0 0)))
+@fg_yes = (* (iu (eu (e m))))
+  & eu ~ {e e2}
+  & @max ~ (iu (e2 m))

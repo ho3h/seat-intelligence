@@ -1,0 +1,39 @@
+@prog = (lst out)
+  & @process_list ~ (lst (out *) (*))
+@process_list = (lst (out *) (seen_list *))
+  & lst ~ (?((@process_nil @process_cons) ((out *) (seen_list *))) *)
+@process_nil = (* ((out *) (seen_list *)))
+  & out ~ (0 *)
+  & seen_list ~ *
+@process_cons = ((h t) ((out *) (seen_list *)))
+  & @process_list ~ (t ((out_tail *) (seen_list_next *)) (seen_list2 *))
+  & @find_root ~ (h (seen_list (root *)))
+  & out ~ (1 (root out_tail))
+  & seen_list ~ seen_list_next
+  & seen_list2 ~ seen_list
+@find_root = (p (lst (root *)))
+  & @follow_pointer ~ (p (lst (p (root *))))
+@follow_pointer = (p (lst (p_next (root *))))
+  & @get_at_index ~ (p (lst (p_val *)))
+  & p ~ p_next
+  & p_val ~ (?((@at_root @not_root) ((root *))) *)
+@at_root = (* ((root *)))
+  & root ~ p
+@not_root = ((p_val *) ((root *)))
+  & @follow_pointer ~ (p_val (lst (p_next2 (root *))))
+  & p_next2 ~ p
+@get_at_index = (idx (lst (val *)))
+  & @list_get ~ (0 idx (lst (val *)))
+@list_get = (current_idx target_idx (lst (val *)))
+  & lst ~ (?((@list_get_nil @list_get_cons) (target_idx (val *))) *)
+@list_get_nil = (* (target_idx (val *)))
+  & target_idx ~ *
+  & val ~ 16777215  // Return INF for out-of-bounds
+@list_get_cons = ((h t) (target_idx (val *)))
+  & target_idx ~ ?((@found_idx @not_found_idx) (h (t (val *))))
+@found_idx = (* (h (t (val *))))
+  & val ~ h
+  & t ~ *
+@not_found_idx = ((target_minus_1 *) (h (t (val *))))
+  & @list_get ~ ($([ +] $(current_idx 1)) target_minus_1 (t (val *)))
+  & h ~ *

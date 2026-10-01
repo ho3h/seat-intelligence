@@ -1,0 +1,73 @@
+@prog = ((k xs) out)
+  & @sort ~ (xs sorted)
+  & @take ~ (k (sorted out))
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @insert ~ (h (sorted out))
+  & @sort_cons_lw ~ (t sorted)
+
+@insert = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (pl out))
+  & pl ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {xc xk}
+  & h ~ {hc hk}
+  & xc ~ $([>] $(hc z))
+  & z ~ ?((@ins_no @ins_yes) (xk (hk (t out))))
+
+@ins_no = (x (h (t out)))
+  & @insert ~ (x (t rest))
+  & out ~ (1 (h rest))
+
+@ins_yes = (* (x (h (t out))))
+  & out ~ (1 (x (1 (h t))))
+
+@take = (?((@take_zero @take_pos) ctx) ctx)
+
+@take_zero = (xs out)
+  & xs ~ *
+  & out ~ (0 *)
+
+@take_pos = (km ((?((@take_nil @take_cons) (pl (km out))) pl) out))
+
+@take_nil = (pl (km out))
+  & pl ~ *
+  & km ~ *
+  & out ~ (0 *)
+
+@take_cons = (* (pl (km out)))
+  & pl ~ (h t)
+  & @take ~ (km (t rest))
+  & out ~ (1 (h rest))
+
+@sort_cons_lw = (ls72 q8)
+  & ls72 ~ (g55 (e39 (g56 (e40 (g57 (e41 (g58 (e42 (g59 (e43 (g60 (e44 (g61 (e45 (g62 (e46 (g63 (e47 (g64 (e48 (g65 (e49 (g66 (e50 (g67 (e51 (g68 (e52 (g69 (e53 (g70 (e54 tk71))))))))))))))))))))))))))))))))
+  & g55 ~ ?((@sort_nil @sort_cons_la) ((e39 q10) q8))
+  & g56 ~ ?((@sort_nil @sort_cons_la) ((e40 q12) q10))
+  & g57 ~ ?((@sort_nil @sort_cons_la) ((e41 q14) q12))
+  & g58 ~ ?((@sort_nil @sort_cons_la) ((e42 q16) q14))
+  & g59 ~ ?((@sort_nil @sort_cons_la) ((e43 q18) q16))
+  & g60 ~ ?((@sort_nil @sort_cons_la) ((e44 q20) q18))
+  & g61 ~ ?((@sort_nil @sort_cons_la) ((e45 q22) q20))
+  & g62 ~ ?((@sort_nil @sort_cons_la) ((e46 q24) q22))
+  & g63 ~ ?((@sort_nil @sort_cons_la) ((e47 q26) q24))
+  & g64 ~ ?((@sort_nil @sort_cons_la) ((e48 q28) q26))
+  & g65 ~ ?((@sort_nil @sort_cons_la) ((e49 q30) q28))
+  & g66 ~ ?((@sort_nil @sort_cons_la) ((e50 q32) q30))
+  & g67 ~ ?((@sort_nil @sort_cons_la) ((e51 q34) q32))
+  & g68 ~ ?((@sort_nil @sort_cons_la) ((e52 q36) q34))
+  & g69 ~ ?((@sort_nil @sort_cons_la) ((e53 q38) q36))
+  & g70 ~ ?((@sort_nil @sort_cons) ((e54 tk71) q38))
+
+@sort_cons_la = (* ((h sorted) out))
+  & @insert ~ (h (sorted out))

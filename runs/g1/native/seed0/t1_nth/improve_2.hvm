@@ -1,0 +1,7 @@
+// Inline the cons-case worker in @nth so each list element avoids a helper call.
+@prog = (inp out)
+  & inp ~ (i xs)
+  & @nth ~ (i (* (xs out)))
+
+@nth = (i (* ((?(((* (* 0)) (* ((h t) (j o2)))) (pl (i out))) pl) out))
+  & j ~ ?(((x (* x)) @nth) (h (t o2)))

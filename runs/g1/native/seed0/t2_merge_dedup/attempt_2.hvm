@@ -1,0 +1,59 @@
+// Merge the sorted lists, then remove adjacent duplicates.
+@prog = ((xs ys) out)
+  & @merge ~ (xs (ys merged))
+  & @dedup ~ (merged (0 (0 out)))
+
+@merge = ((?((@mx_nil @mx_cons) (y out)) x) (y out))
+
+@mx_nil = (* (y y))
+
+@mx_cons = (* ((h t) (y out)))
+  & @merge_y ~ (y (h (t out)))
+
+@merge_y = ((?((@my_nil @my_cons) (h (t out))) y) (h (t out)))
+
+@my_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@my_cons = (* ((g u) (h (t out))))
+  & h ~ {hc hs}
+  & g ~ {gc gs}
+  & hc ~ $([<] $(gc z))
+  & z ~ ?((@my_ge @my_lt) (hs (t (gs (u out))))
+
+@my_ge = (hs (t (gs (u out))))
+  & @merge ~ ((1 (hs t)) (u r))
+  & out ~ (1 (gs r))
+
+@my_lt = (* (hs (t (gs (u out)))))
+  & @merge ~ (t ((1 (gs u)) r))
+  & out ~ (1 (hs r))
+
+@dedup = ((?((@dnil @dcons) (pl (has (prev out)))) pl) (has (prev out)))
+
+@dnil = (* (has (prev out)))
+  & has ~ *
+  & prev ~ *
+  & out ~ (0 *)
+
+@dcons = (* ((h t) (has (prev out))))
+  & has ~ ?((@dfirst @dmore) (h (t (prev out))))
+
+@dfirst = (h (t (prev out)))
+  & prev ~ *
+  & h ~ {newprev emitted}
+  & @dedup ~ (t (1 (newprev rest)))
+  & out ~ (1 (emitted rest))
+
+@dmore = (* (h (t (prev out))))
+  & h ~ {hc hn}
+  & hc ~ $([=] $(prev z))
+  & z ~ ?((@dsame @ddiff) (hn (t out)))
+
+@dsame = (hn (t out))
+  & @dedup ~ (t (1 (hn out)))
+
+@ddiff = (* (hn (t out)))
+  & hn ~ {newprev emitted}
+  & @dedup ~ (t (1 (newprev rest)))
+  & out ~ (1 (emitted rest))

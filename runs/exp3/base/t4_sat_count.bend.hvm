@@ -1,0 +1,35 @@
+@popcount8 = ({$([-] $(a {$([&0x0000033] $([+] $(b {$([+] $(c $([&0x000000F] d))) $([:>>0x0000004] c)}))) $([:>>0x0000002] $([&0x0000033] b))})) $([:>>0x0000001] $([&0x0000055] a))} d)
+
+@prog = (a c)
+  & @popcount8 ~ (b c)
+  & @truth_mask ~ (a b)
+
+@truth_mask = ((@truth_mask__C9 a) a)
+
+@truth_mask__C0 = ($([=0x0000001] ?((240 (* 204)) a)) a)
+
+@truth_mask__C1 = (a (b d))
+  &!@truth_mask ~ (a $([&] $(c d)))
+  &!@truth_mask ~ (b c)
+
+@truth_mask__C2 = (* (a (b d)))
+  &!@truth_mask ~ (a $([|] $(c d)))
+  &!@truth_mask ~ (b c)
+
+@truth_mask__C3 = (a c)
+  & $(b c) ~ [^0x00000FF]
+  & @truth_mask ~ (a b)
+
+@truth_mask__C4 = (?((@truth_mask__C1 @truth_mask__C2) a) a)
+
+@truth_mask__C5 = ({$([=0x0000000] ?((@truth_mask__C0 (* (* 170))) (a b))) a} b)
+
+@truth_mask__C6 = (?((@truth_mask__C3 @truth_mask__C4) a) a)
+
+@truth_mask__C7 = (?((@truth_mask__C5 @truth_mask__C6) a) a)
+
+@truth_mask__C8 = (?((255 @truth_mask__C7) a) a)
+
+@truth_mask__C9 = (?((0 @truth_mask__C8) a) a)
+
+

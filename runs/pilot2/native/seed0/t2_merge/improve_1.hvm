@@ -1,0 +1,47 @@
+// Merge by retaining the unconsumed head, so each step scans only the list
+// whose head was just consumed.
+
+@prog = (input output)
+  & input ~ (xs ys)
+  & @merge ~ (xs (ys output))
+
+@merge = ((?((@merge_nil @merge_cons) (p (ys out))) p) (ys out))
+
+@merge_nil = (p (ys out))
+  & p ~ *
+  & ys ~ out
+
+@merge_cons = (* ((x xt) (ys out)))
+  & @scan_y ~ (ys (x (xt out)))
+
+@scan_y = ((?((@scan_y_nil @scan_y_cons) (p (x (xt out)))) p) (x (xt out)))
+
+@scan_y_nil = (p (x (xt out)))
+  & p ~ *
+  & out ~ (1 (x xt))
+
+@scan_y_cons = (* ((y yt) (x (xt out))))
+  & @both ~ (x (xt (y (yt out))))
+
+@scan_x = ((?((@scan_x_nil @scan_x_cons) (p (y (yt out)))) p) (y (yt out)))
+
+@scan_x_nil = (p (y (yt out)))
+  & p ~ *
+  & out ~ (1 (y yt))
+
+@scan_x_cons = (* ((x xt) (y (yt out))))
+  & @both ~ (x (xt (y (yt out))))
+
+@both = (x (xt (y (yt out))))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & xc ~ $([<] $(yc z))
+  & z ~ ?((@take_y @take_x) (xkeep (xt (ykeep (yt out))))
+
+@take_y = (xkeep (xt (ykeep (yt out))))
+  & @scan_y ~ (yt (xkeep (xt rest)))
+  & out ~ (1 (ykeep rest))
+
+@take_x = (* (xkeep (xt (ykeep (yt out)))))
+  & @scan_x ~ (xt (ykeep (yt rest)))
+  & out ~ (1 (xkeep rest))

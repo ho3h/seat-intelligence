@@ -1,0 +1,18 @@
+== native: n=47 (errors 3: ['t3_cheapest_k_walk', 't3_eccentricities', 't3_wsp_all_from'])
+  interactions: median 14.8%, mean 15.0%, max 30.9%; depth: median 3.6%, mean 4.5%, max 21.7%
+  improved (Pareto, seed0 + reseeds 1,2 pass): 44/47 = 93.6%; itrs improved 44, depth improved 41; reseed rollbacks 1
+  best by interactions: t1_replicate (2573, 1288)->(1778, 1008); t4_print (4822, 170)->(3432, 160); t1_range (2828, 1288)->(2036, 1010); t1_reverse (3342, 1801)->(2439, 1668); t4_paren_match (12320, 2742)->(9291, 2564)
+  operator share of kept log(itrs*depth) reduction: inline_call 75% (x267), inline_leaf 15% (x347), preset_all 4% (x11), opt40 3% (x9), preset 1% (x9), inline_leaf+cutwire 1% (x1), eqzi_all 0% (x1), cutwire 0% (x1), erasub 0% (x1), opt400 0% (x1), inline_call+litfirst 0% (x1)
+  random-structural candidates: 2251 evaluated, 56 passed prescreen, kept 4
+  mean candidates used per program: 80; mean secs 198
+== bend: n=48 (errors 2: ['t3_eccentricities', 't3_walk_count'])
+  interactions: median 10.1%, mean 14.9%, max 72.9%; depth: median 5.9%, mean 7.0%, max 20.0%
+  improved (Pareto, seed0 + reseeds 1,2 pass): 48/48 = 100.0%; itrs improved 48, depth improved 48; reseed rollbacks 0
+  best by interactions: t1_replicate (1174, 58)->(318, 50); t1_range (1466, 361)->(636, 340); t1_map_double (4362, 2313)->(2835, 2058); t4_print (4730, 182)->(3160, 171); t1_factorial (14, 10)->(10, 8)
+  operator share of kept log(itrs*depth) reduction: opt40 31% (x31), inline_leaf 30% (x352), inline_call 22% (x385), eqzi_all 12% (x26), numopr_all 3% (x19), opt400 1% (x2), inline_leaf+inline_leaf 1% (x5), inline_call+inline_leaf 0% (x2), swapkids+inline_leaf 0% (x1), opsym+inline_leaf 0% (x1), erasub 0% (x1), preset 0% (x1), inline_leaf+erasub 0% (x1), inline_leaf+cutwire 0% (x1), eqzi 0% (x5), litfirst 0% (x5)
+  random-structural candidates: 1706 evaluated, 47 passed prescreen, kept 10
+  mean candidates used per program: 80; mean secs 244
+== native vs Bend, before (original nets), n=44: native wins (itrs or depth) 36 (81.8%), median gain 22.3%; itrs-only wins 70.5% (median 6.2%); depth-only wins 72.7% (median 19.1%)
+== native vs Bend, after (both arms searched, same budget), n=44: native wins (itrs or depth) 35 (79.5%), median gain 17.9%; itrs-only wins 68.2% (median 9.3%); depth-only wins 68.2% (median 12.8%)
+== native vs Bend, native searched vs original Bend, n=44: native wins (itrs or depth) 38 (86.4%), median gain 27.3%; itrs-only wins 77.3% (median 22.7%); depth-only wins 79.5% (median 21.1%)
+== native vs Bend, original native vs searched Bend, n=44: native wins (itrs or depth) 31 (70.5%), median gain 12.7%; itrs-only wins 34.1% (median -4.8%); depth-only wins 63.6% (median 11.2%)

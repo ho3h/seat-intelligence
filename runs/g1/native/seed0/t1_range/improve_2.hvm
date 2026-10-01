@@ -1,0 +1,61 @@
+// Process sixteen consecutive values per block, then handle the remainder.
+@prog = (n out)
+  & n ~ {a b}
+  & a ~ $([/16] q)
+  & b ~ $([%16] r)
+  & @blocks ~ (q (0 (r out)))
+
+@blocks = (q (i (r out)))
+  & q ~ ?((@blocks_zero @blocks_succ) (i (r out)))
+
+@blocks_zero = (i (r out))
+  & @rg ~ (r (i out))
+
+@blocks_succ = (q (i (r out)))
+  & i ~ {{{{v0 v1} {v2 v3}} {{v4 v5} {v6 v7}}} {{{v8 v9} {v10 v11}} {{v12 v13} {v14 {v15 v16}}}}}
+  & v1 ~ $([+1] x1)
+  & v2 ~ $([+2] x2)
+  & v3 ~ $([+3] x3)
+  & v4 ~ $([+4] x4)
+  & v5 ~ $([+5] x5)
+  & v6 ~ $([+6] x6)
+  & v7 ~ $([+7] x7)
+  & v8 ~ $([+8] x8)
+  & v9 ~ $([+9] x9)
+  & v10 ~ $([+10] x10)
+  & v11 ~ $([+11] x11)
+  & v12 ~ $([+12] x12)
+  & v13 ~ $([+13] x13)
+  & v14 ~ $([+14] x14)
+  & v15 ~ $([+15] x15)
+  & v16 ~ $([+16] ni)
+  & @blocks ~ (q (ni (r tail)))
+  & out ~ (1 (v0 l1))
+  & l1 ~ (1 (x1 l2))
+  & l2 ~ (1 (x2 l3))
+  & l3 ~ (1 (x3 l4))
+  & l4 ~ (1 (x4 l5))
+  & l5 ~ (1 (x5 l6))
+  & l6 ~ (1 (x6 l7))
+  & l7 ~ (1 (x7 l8))
+  & l8 ~ (1 (x8 l9))
+  & l9 ~ (1 (x9 l10))
+  & l10 ~ (1 (x10 l11))
+  & l11 ~ (1 (x11 l12))
+  & l12 ~ (1 (x12 l13))
+  & l13 ~ (1 (x13 l14))
+  & l14 ~ (1 (x14 l15))
+  & l15 ~ (1 (x15 tail))
+
+@rg = (n (i out))
+  & n ~ ?((@rg_zero @rg_succ) (i out))
+
+@rg_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@rg_succ = (n (i out))
+  & i ~ {head next}
+  & next ~ $([+1] i2)
+  & @rg ~ (n (i2 tail))
+  & out ~ (1 (head tail))

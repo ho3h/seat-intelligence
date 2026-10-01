@@ -1,0 +1,38 @@
+// Count each vertex with no incoming edge and no outgoing edge.
+@prog = ((n edges) out)
+  & @verts ~ (n (edges (0 (0 (0 out)))))
+
+@verts = (n ctx)
+  & n ~ ?((@vzero @vstep) ctx)
+
+@vzero = (edges (i (src (sink out))))
+  & edges ~ *
+  & i ~ *
+  & out ~ (src sink)
+
+@vstep = (rem (edges (i (src (sink out)))))
+  & edges ~ {scan_edges next_edges}
+  & @scan ~ (scan_edges (i (0 (0 (rem (next_edges (src (sink out))))))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload ctx)) payload) ctx)
+
+@scan_nil = (payload ctx)
+  & payload ~ *
+  & @after ~ ctx
+
+@scan_cons = (* (((u v) tail) (i (fi (fo (rem (edges (src (sink out))))))))
+  & i ~ {iu irest}
+  & irest ~ {iv ikeep}
+  & u ~ $([=] $(iu z_out))
+  & v ~ $([=] $(iv z_in))
+  & fo ~ $([|] $(z_out fo_next))
+  & fi ~ $([|] $(z_in fi_next))
+  & @scan ~ (tail (ikeep (fi_next (fo_next (rem (edges (src (sink out))))))))
+
+@after = (i (fi (fo (rem (edges (src (sink out)))))))
+  & fi ~ $([=] $(0 is_src))
+  & fo ~ $([=] $(0 is_sink))
+  & src ~ $([+] $(is_src src_next))
+  & sink ~ $([+] $(is_sink sink_next))
+  & i ~ $([+1] i_next)
+  & @verts ~ (rem (edges (i_next (src_next (sink_next out)))))

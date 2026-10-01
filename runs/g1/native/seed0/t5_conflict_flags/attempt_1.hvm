@@ -1,0 +1,74 @@
+// Map each must-not-link endpoint to its canonical cluster id.
+@prog = ((c mnl) out)
+  & {trav c_map} ~ c
+  & @map ~ (mnl (c_map links))
+  & @outer ~ (trav (links (0 out)))
+
+@map = ((?((@map_nil @map_cons) (pl (c out))) pl) (c out))
+
+@map_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@map_cons = (* (((a b) t) (c out)))
+  & {c_rec {c_a c_b}} ~ c
+  & @look ~ (c_a (a va))
+  & @look ~ (c_b (b vb))
+  & @map ~ (t (c_rec tail))
+  & out ~ (1 ((va vb) tail))
+
+// Look up an index in a list of numbers.
+@look = ((?((@look_nil @look_cons) (pl (idx out))) pl) (idx out))
+
+@look_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@look_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@look_zero @look_succ) (h (t out)))
+
+@look_zero = (x (* x))
+
+@look_succ = (idx (h (t out)))
+  & h ~ *
+  & @look ~ (t (idx out))
+
+// Scan mapped links for a pair whose endpoints both equal k.
+@scan = ((?((@scan_nil @scan_cons) (pl (k out))) pl) (k out))
+
+@scan_nil = (* (k out))
+  & k ~ *
+  & out ~ 0
+
+@scan_cons = (* (((a b) t) (k out)))
+  & {k_rec {k_a k_b}} ~ k
+  & @scan ~ (t (k_rec rest))
+  & a ~ $([=] $(k_a ea))
+  & b ~ $([=] $(k_b eb))
+  & ea ~ $([&] $(eb both))
+  & both ~ $([|] $(rest out))
+
+// Walk c in ascending node order, emitting a flag only for canonical ids.
+@outer = ((?((@outer_nil @outer_cons) (pl (links (i out)))) pl) (links (i out)))
+
+@outer_nil = (* (links (i out)))
+  & links ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@outer_cons = (* ((h t) (links (i out))))
+  & {h_eq h_key} ~ h
+  & {i_eq i_inc} ~ i
+  & i_inc ~ $([+1] i_next)
+  & h_eq ~ $([=] $(i_eq z))
+  & z ~ ?((@outer_no @outer_yes) (t (links (i_next (h_key out))))
+
+@outer_no = (* (t (links (i_next (h_key out)))))
+  & @outer ~ (t (links (i_next out)))
+  & h_key ~ *
+
+@outer_yes = (* (t (links (i_next (h_key out)))))
+  & {links_scan links_rec} ~ links
+  & @outer ~ (t (links_rec (i_next rest)))
+  & @scan ~ (links_scan (h_key flag))
+  & out ~ (1 (flag rest))

@@ -1,0 +1,16 @@
+// Dispatch the root directly; recursive subtrees use @map.
+@prog = (input output)
+  & input ~ (k tree)
+  & tree ~ (?(((* ((0 *) *)) @map_node) (k (output p))) p)
+
+@map = (k (tree out))
+  & tree ~ (?(((* ((0 *) *)) @map_node) (k (out p))) p)
+
+@map_node = (* (k (out p)))
+  & p ~ (l (v r))
+  & k ~ {kl kr}
+  & kr ~ {kv kr2}
+  & @map ~ (kl (l lo))
+  & @map ~ (kr2 (r ro))
+  & v ~ $([+] $(kv nv))
+  & out ~ (1 (lo (nv ro)))

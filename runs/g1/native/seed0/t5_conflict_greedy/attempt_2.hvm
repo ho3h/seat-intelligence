@@ -1,0 +1,299 @@
+@prog = ((n (mnl cands)) out)
+  & n ~ {ni nx}
+  & @init ~ (ni ((0 *) labs))
+  & nx ~ *
+  & @sort ~ (cands sorted)
+  & @process ~ (sorted (mnl (labs out)))
+
+@init = (n (acc out))
+  & n ~ ?((@iNil @iSucc) (acc out))
+
+@iNil = (acc out)
+  & out ~ acc
+
+@iSucc = (k (acc out))
+  & k ~ {kr kv}
+  & @init ~ (kr ((1 (kv acc)) out))
+
+@process = ((?((@pNil @pCons) (pl (mnl (labs out)))) pl) (mnl (labs out)))
+
+@pNil = (mnl (labs out))
+  & out ~ labs
+  & mnl ~ *
+
+@pCons = (* ((cand tail) (mnl (labs out))))
+  & @attempt ~ (cand (mnl (labs r)))
+  & r ~ (newlabs newmnl)
+  & @process ~ (tail (newmnl (newlabs out)))
+
+@sort = ((?((@sNil @sCons) (pl out)) pl) out)
+
+@sNil = out
+  & out ~ (0 *)
+
+@sCons = (* ((h t) out))
+  & @isEmpty ~ (t ie)
+  & ie ~ (empty t2)
+  & empty ~ ?((@sMany @sOne) (h (t2 out)))
+
+@sOne = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@sMany = (h (t out))
+  & @splitA ~ ((1 (h t)) halves)
+  & halves ~ (left right)
+  & @sort ~ (left sortedLeft)
+  & @sort ~ (right sortedRight)
+  & @mergeSort ~ (sortedLeft (sortedRight out))
+
+@isEmpty = ((?((@eNil @eCons) (pl out)) pl) out)
+
+@eNil = out
+  & out ~ (1 (0 *))
+
+@eCons = (* ((h t) out))
+  & out ~ (0 (1 (h t)))
+
+@splitA = ((?((@saNil @saCons) (pl out)) pl) out)
+
+@saNil = out
+  & out ~ ((0 *) (0 *))
+
+@saCons = (* ((h t) out))
+  & @splitB ~ (t r)
+  & r ~ (left right)
+  & out ~ ((1 (h left)) right)
+
+@splitB = ((?((@sbNil @sbCons) (pl out)) pl) out)
+
+@sbNil = out
+  & out ~ ((0 *) (0 *))
+
+@sbCons = (* ((h t) out))
+  & @splitA ~ (t r)
+  & r ~ (left right)
+  & out ~ (left (1 (h right)))
+
+@mergeSort = ((?((@ms1Nil @ms1Cons) (p1 (l2 out))) p1) (l2 out))
+
+@ms1Nil = (l2 out)
+  & out ~ l2
+
+@ms1Cons = (* ((h1 t1) (l2 out)))
+  & @msSecond ~ (l2 (h1 (t1 out)))
+
+@msSecond = ((?((@ms2Nil @ms2Cons) (p2 (h1 (t1 out)))) p2) (h1 (t1 out)))
+
+@ms2Nil = (h1 (t1 out))
+  & out ~ (1 (h1 t1))
+
+@ms2Cons = (* ((h2 t2) (h1 (t1 out))))
+  & @before ~ (h1 (h2 flag))
+  & flag ~ ?((@msTake2 @msTake1) (h1 (t1 (h2 (t2 out))))
+
+@msTake1 = (* (h1 (t1 (h2 (t2 out)))))
+  & @mergeSort ~ (t1 ((1 (h2 t2)) r))
+  & out ~ (1 (h1 r))
+
+@msTake2 = (h1 (t1 (h2 (t2 out))))
+  & @mergeSort ~ ((1 (h1 t1)) (t2 r))
+  & out ~ (1 (h2 r))
+
+@before = ((u1 (v1 s1)) ((u2 (v2 s2)) out))
+  & s1 ~ {s1g s1e}
+  & s2 ~ {s2g s2e}
+  & s1g ~ $([>] $(s2g gt))
+  & s1e ~ $([=] $(s2e eq))
+  & gt ~ ?((@bsNo @bsYes) (eq (u1 (v1 (u2 (v2 out)))))
+
+@bsNo = (eq (u1 (v1 (u2 (v2 out))))
+  & eq ~ ?((@beNo @beYes) (u1 (v1 (u2 (v2 out))))
+
+@bsYes = (* (eq (u1 (v1 (u2 (v2 out)))))
+  & eq ~ *
+  & u1 ~ *
+  & v1 ~ *
+  & u2 ~ *
+  & v2 ~ *
+  & out ~ 1
+
+@beNo = (* (u1 (v1 (u2 (v2 out))))
+  & u1 ~ *
+  & v1 ~ *
+  & u2 ~ *
+  & v2 ~ *
+  & out ~ 0
+
+@beYes = (* (u1 (v1 (u2 (v2 out))))
+  & @cmpU ~ (u1 (v1 (u2 (v2 out))))
+
+@cmpU = (u1 (v1 (u2 (v2 out))))
+  & u1 ~ {u1l u1e}
+  & u2 ~ {u2l u2e}
+  & u1l ~ $([<] $(u2l ul))
+  & u1e ~ $([=] $(u2e ue))
+  & ul ~ ?((@uNo @uYes) (ue (v1 (v2 out))))
+
+@uNo = (ue (v1 (v2 out)))
+  & ue ~ ?((@ueNo @ueYes) (v1 (v2 out)))
+
+@uYes = (* (ue (v1 (v2 out))))
+  & ue ~ *
+  & v1 ~ *
+  & v2 ~ *
+  & out ~ 1
+
+@ueNo = (* (v1 (v2 out)))
+  & v1 ~ *
+  & v2 ~ *
+  & out ~ 0
+
+@ueYes = (* (v1 (v2 out)))
+  & @cmpV ~ (v1 (v2 out))
+
+@cmpV = (v1 (v2 out))
+  & v1 ~ $([<] $(v2 z))
+  & z ~ ?((@vNo @vYes) out)
+
+@vNo = (* out)
+  & out ~ 0
+
+@vYes = (* out)
+  & out ~ 1
+
+@attempt = ((u (v *)) (mnl (labs out)))
+  & @get ~ (labs (u g1))
+  & g1 ~ (lu labs1)
+  & @get ~ (labs1 (v g2))
+  & g2 ~ (lv labs2)
+  & lu ~ $([=] $(lv same))
+  & same ~ ?((@aDiff @aSame) (mnl (labs2 (lu (lv out))))
+
+@aSame = (mnl (labs (lu (lv out))))
+  & lu ~ *
+  & lv ~ *
+  & out ~ (labs mnl)
+
+@aDiff = (mnl (labs (lu (lv out))))
+  & @conflict ~ (mnl (labs (lu (lv cf)))
+  & cf ~ (bad mnl2)
+  & bad ~ ?((@aMerge @aSkip) (labs (mnl2 (lu (lv out))))
+
+@aMerge = (labs (mnl (lu (lv out))))
+  & @merge ~ (labs (lu (lv newlabs)))
+  & out ~ (newlabs mnl)
+
+@aSkip = (* (labs (mnl (lu (lv out))))
+  & lu ~ *
+  & lv ~ *
+  & out ~ (labs mnl)
+
+@conflict = ((?((@cfNil @cfCons) (pl (labs (ru (rv out)))) pl) (labs (ru (rv out)))
+
+@cfNil = (labs (ru (rv out)))
+  & labs ~ *
+  & ru ~ *
+  & rv ~ *
+  & out ~ (0 (0 *))
+
+@cfCons = (* (((a b) t) (labs (ru (rv out))))
+  & @get ~ (labs (a ga))
+  & ga ~ (la labs1)
+  & @get ~ (labs1 (b gb))
+  & gb ~ (lb labs2)
+  & ru ~ {rut rur}
+  & rv ~ {rvt rvr}
+  & @pair ~ (la (lb (rut (rvt p)))
+  & p ~ ?((@cfNo @cfYes) (t ((a b) (labs2 (rur (rvr out))))
+
+@cfYes = (* (t ((a b) (labs (ru (rv out)))))
+  & labs ~ *
+  & ru ~ *
+  & rv ~ *
+  & out ~ (1 (1 ((a b) t)))
+
+@cfNo = (t ((a b) (labs (ru (rv out)))))
+  & @conflict ~ (t (labs (ru (rv rec)))
+  & rec ~ (f rest)
+  & out ~ (f (1 ((a b) rest)))
+
+@pair = (la (lb (ru (rv out))))
+  & la ~ {la1 la2}
+  & lb ~ {lb1 lb2}
+  & ru ~ {ru1 ru2}
+  & rv ~ {rv1 rv2}
+  & la1 ~ $([=] $(ru1 e1))
+  & lb1 ~ $([=] $(rv1 e2))
+  & la2 ~ $([=] $(rv2 e3))
+  & lb2 ~ $([=] $(ru2 e4))
+  & e1 ~ $([*] $(e2 p1))
+  & e3 ~ $([*] $(e4 p2))
+  & p1 ~ $([+] $(p2 total))
+  & total ~ $([>] $(0 out))
+
+@merge = (labs (a (b out)))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([<] $(bc z))
+  & z ~ ?((@mxNo @mxYes) (labs (ar (br out))))
+
+@mxNo = (labs (ar (br out)))
+  & ar ~ {amxroot amx}
+  & @map ~ (labs (amxroot (br (amx out))))
+
+@mxYes = (* (labs (ar (br out))))
+  & br ~ {bmxroot bmx}
+  & @map ~ (labs (ar (bmxroot (bmx out))))
+
+@map = ((?((@mapNil @mapCons) (pl (a (b (mx out)))) pl) (a (b (mx out))))
+
+@mapNil = (a (b (mx out)))
+  & a ~ *
+  & b ~ *
+  & mx ~ *
+  & out ~ (0 *)
+
+@mapCons = (* ((h t) (a (b (mx out)))))
+  & h ~ {hkeep hcmp}
+  & hcmp ~ {ha hb}
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & mx ~ {mc mr}
+  & @map ~ (t (ar (br (mr rest))))
+  & ha ~ $([=] $(ac ea))
+  & hb ~ $([=] $(bc eb))
+  & ea ~ ?((@mapANo @mapAYes) (eb (mc (hkeep (rest out))))
+
+@mapAYes = (* (eb (mc (hkeep (rest out))))
+  & eb ~ *
+  & hkeep ~ *
+  & out ~ (1 (mc rest))
+
+@mapANo = (eb (mc (hkeep (rest out))))
+  & eb ~ ?((@mapBNo @mapBYes) (mc (hkeep (rest out))))
+
+@mapBYes = (* (mc (hkeep (rest out))))
+  & hkeep ~ *
+  & out ~ (1 (mc rest))
+
+@mapBNo = (mc (hkeep (rest out)))
+  & mc ~ *
+  & out ~ (1 (hkeep rest))
+
+@get = ((?((@gNil @gCons) (pl (idx out))) pl) (idx out))
+
+@gNil = (idx out)
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@gCons = (* ((h t) (idx out)))
+  & idx ~ ?((@gZero @gSucc) (h (t out)))
+
+@gZero = (h (t out))
+  & h ~ {hv hl}
+  & out ~ (hv (1 (hl t)))
+
+@gSucc = (k (h (t out)))
+  & @get ~ (t (k r))
+  & r ~ (v rt)
+  & out ~ (v (1 (h rt)))

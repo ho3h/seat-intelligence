@@ -1,0 +1,219 @@
+// Build one sorted adjacency list per vertex.
+@prog = ((n edges) out)
+  & n ~ {n_rows n_total}
+  & @rows ~ (n_rows (0 (n_total (edges rows))))
+  & rows ~ {rows_iter rows_all}
+  & @outer ~ (rows_iter (0 (rows_all (0 out))))
+
+@rows = (?((@rows_nil @rows_cons) (v (total (edges out)))) (v (total (edges out))))
+
+@rows_nil = (v (total (edges out)))
+  & v ~ *
+  & total ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@rows_cons = (rem (v (total (edges out))))
+  & v ~ {v_adj v_inc}
+  & total ~ {total_drop total_next}
+  & total_drop ~ *
+  & edges ~ {edges_adj edges_next}
+  & @adjrow ~ (edges_adj (v_adj (0 row)))
+  & v_inc ~ $([+1] v_next)
+  & @rows ~ (rem (v_next (total_next (edges_next tail))))
+  & out ~ (1 (row tail))
+
+// Scan edges and insert each incident opposite endpoint into this sorted row.
+@adjrow = ((?((@ar_nil @ar_cons) (payload (vertex (acc out)))) payload) (vertex (acc out)))
+
+@ar_nil = (* (vertex (acc out)))
+  & vertex ~ *
+  & out ~ acc
+
+@ar_cons = (* ((edge tail) (vertex (acc out))))
+  & edge ~ (u v)
+  & u ~ {u_cmp u_candidate}
+  & v ~ {v_cmp v_candidate}
+  & vertex ~ {vertex_u vertex_v}
+  & u_cmp ~ $([=] $(vertex_u eq_u))
+  & v_cmp ~ $([=] $(vertex_v eq_v))
+  & eq_u ~ ?((@ar_u_no @ar_u_yes) (v_candidate (u_candidate (eq_v (tail (vertex_v (acc out))))))
+
+@ar_u_no = (v_candidate (u_candidate (eq_v (tail (vertex (acc out))))))
+  & v_candidate ~ *
+  & eq_v ~ ?((@ar_v_no @ar_v_yes) (u_candidate (tail (vertex (acc out)))))
+
+@ar_u_yes = (* (v_candidate (u_candidate (eq_v (tail (vertex (acc out))))))
+  & u_candidate ~ *
+  & eq_v ~ *
+  & @insert ~ (acc (v_candidate inserted))
+  & @adjrow ~ (tail (vertex (inserted out)))
+
+@ar_v_no = (u_candidate (tail (vertex (acc out))))
+  & u_candidate ~ *
+  & @adjrow ~ (tail (vertex (acc out)))
+
+@ar_v_yes = (* (u_candidate (tail (vertex (acc out)))))
+  & @insert ~ (acc (u_candidate inserted))
+  & @adjrow ~ (tail (vertex (inserted out)))
+
+// Insert x into a sorted list, preserving uniqueness.
+@insert = ((?((@ins_nil @ins_cons) (payload (x out))) payload) (x out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((head tail) (x out)))
+  & x ~ {x_cmp x_keep}
+  & head ~ {head_cmp head_keep}
+  & x_cmp ~ $([=] $(head_cmp equal))
+  & equal ~ ?((@ins_neq @ins_eq) (x_keep (head_keep (tail out))))
+
+@ins_eq = (* (x (head (tail out))))
+  & x ~ *
+  & out ~ (1 (head tail))
+
+@ins_neq = (x (head (tail out)))
+  & x ~ {x_cmp x_keep}
+  & head ~ {head_cmp head_keep}
+  & x_cmp ~ $([<] $(head_cmp less))
+  & less ~ ?((@ins_after @ins_before) (x_keep (head_keep (tail out))))
+
+@ins_after = (x (head (tail out)))
+  & @insert ~ (tail (x rest))
+  & out ~ (1 (head rest))
+
+@ins_before = (* (x (head (tail out))))
+  & out ~ (1 (x (1 (head tail))))
+
+// Visit later rows in order while advancing through the current sorted row.
+// For each common edge a-b, intersect the neighbors greater than b.
+@outer = ((?((@outer_nil @outer_cons) (payload (a (all (acc out))))) payload) (a (all (acc out))))
+
+@outer_nil = (* (a (all (acc out))))
+  & a ~ *
+  & all ~ *
+  & out ~ acc
+
+@outer_cons = (* ((row tail) (a (all (acc out)))))
+  & a ~ {a_drop a_plus}
+  & a_plus ~ $([+1] a_start)
+  & a_start ~ {b_start next_a}
+  & all ~ {all_walk all_next}
+  & all_walk ~ (tag payload)
+  & tag ~ *
+  & payload ~ (current_row rows_b)
+  & current_row ~ *
+  & @drop ~ (row (a_drop neighbors))
+  & @walk ~ (neighbors (b_start (rows_b (acc walk_acc))))
+  & @outer ~ (tail (next_a (all_next (walk_acc out))))
+
+@walk = ((?((@walk_nil @walk_cons) (payload (b (rows (acc out))))) payload) (b (rows (acc out))))
+
+@walk_nil = (* (b (rows (acc out))))
+  & b ~ *
+  & rows ~ *
+  & out ~ acc
+
+@walk_cons = (* ((x tail) (b (rows (acc out)))))
+  & x ~ {x_lt x_rest}
+  & x_rest ~ {x_eq x_keep}
+  & b ~ {b_lt b_rest}
+  & b_rest ~ {b_eq b_keep}
+  & x_lt ~ $([<] $(b_lt is_lt))
+  & x_eq ~ $([=] $(b_eq is_eq))
+  & is_lt ~ ?((@walk_ge @walk_less) (b_keep (is_eq (x_keep (tail (rows (acc out))))))
+
+@walk_less = (* (b (is_eq (x (tail (rows (acc out))))))
+  & is_eq ~ *
+  & x ~ *
+  & @walk ~ (tail (b (rows (acc out))))
+
+@walk_ge = (b (is_eq (x (tail (rows (acc out))))))
+  & is_eq ~ ?((@walk_skip @walk_hit) (b (x (tail (rows (acc out))))))
+
+@walk_skip = (b (x (tail (rows (acc out)))))
+  & rows ~ (tag payload)
+  & tag ~ *
+  & payload ~ (row_b rest)
+  & row_b ~ *
+  & b ~ $([+1] next_b)
+  & @walk ~ (x (next_b (rest (acc out))))
+
+@walk_hit = (* (b (x (tail (rows (acc out))))))
+  & x ~ *
+  & rows ~ (tag payload)
+  & tag ~ *
+  & payload ~ (row_b rest)
+  & b ~ {b_drop b_inc}
+  & b_inc ~ $([+1] next_b)
+  & tail ~ {tail_intersect tail_recur}
+  & @drop ~ (row_b (b_drop suffix))
+  & @intersect ~ (tail_intersect (suffix (acc next_acc)))
+  & @walk ~ (tail_recur (next_b (rest (next_acc out))))
+
+// Drop the prefix of a sorted list whose values are <= threshold.
+@drop = ((?((@drop_nil @drop_cons) (payload (threshold out))) payload) (threshold out))
+
+@drop_nil = (* (threshold out))
+  & threshold ~ *
+  & out ~ (0 *)
+
+@drop_cons = (* ((head tail) (threshold out)))
+  & head ~ {head_cmp head_keep}
+  & threshold ~ {threshold_cmp threshold_keep}
+  & head_cmp ~ $([>] $(threshold_cmp greater))
+  & greater ~ ?((@drop_no @drop_yes) (head_keep (tail (threshold_keep out))))
+
+@drop_no = (head (tail (threshold out)))
+  & head ~ *
+  & @drop ~ (tail (threshold out))
+
+@drop_yes = (* (head (tail (threshold out))))
+  & threshold ~ *
+  & out ~ (1 (head tail))
+
+// Intersect two sorted lists, incrementing acc for each common value.
+@intersect = ((?((@inter_nil @inter_cons) (payload (list_b (acc out)))) payload) (list_b (acc out)))
+
+@inter_nil = (* (list_b (acc out)))
+  & list_b ~ *
+  & out ~ acc
+
+@inter_cons = (* ((x tail_a) (list_b (acc out))))
+  & list_b ~ (?((@merge_nil @merge_cons) (payload (x (tail_a (acc out))))) payload)
+
+@merge_nil = (payload (x (tail_a (acc out))))
+  & payload ~ *
+  & x ~ *
+  & tail_a ~ *
+  & out ~ acc
+
+@merge_cons = (* ((y tail_b) (x (tail_a (acc out)))))
+  & @merge_cmp ~ (x (tail_a (y (tail_b (acc out)))))
+
+@merge_cmp = (x (tail_a (y (tail_b (acc out)))))
+  & x ~ {x_eq x_keep}
+  & y ~ {y_eq y_keep}
+  & x_eq ~ $([=] $(y_eq equal))
+  & equal ~ ?((@merge_unequal @merge_equal) (x_keep (tail_a (y_keep (tail_b (acc out))))))
+
+@merge_equal = (* (x (tail_a (y (tail_b (acc out))))))
+  & x ~ *
+  & y ~ *
+  & acc ~ $([+1] next_acc)
+  & @intersect ~ (tail_a (tail_b (next_acc out)))
+
+@merge_unequal = (x (tail_a (y (tail_b (acc out)))))
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & x_cmp ~ $([<] $(y_cmp less))
+  & less ~ ?((@merge_ge @merge_lt) (x_keep (tail_a (y_keep (tail_b (acc out))))))
+
+@merge_lt = (* (x (tail_a (y (tail_b (acc out))))))
+  & x ~ *
+  & @intersect ~ (tail_a ((1 (y tail_b)) (acc out)))
+
+@merge_ge = (x (tail_a (y (tail_b (acc out)))))
+  & y ~ *
+  & @intersect ~ ((1 (x tail_a)) (tail_b (acc out)))

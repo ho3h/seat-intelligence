@@ -1,0 +1,32 @@
+@prog = (tree out)
+  & @td ~ (tree (h d))
+  & h ~ *
+  & d ~ out
+
+@td = ((?((@td_leaf @td_node) (pl out)) pl) out)
+
+@td_leaf = (* (h d))
+  & h ~ 0
+  & d ~ 0
+
+@td_node = (* ((l (v r)) out))
+  & v ~ *
+  & @td ~ (l (lh ld))
+  & @td ~ (r (rh rd))
+  & lh ~ {lh_m lh_s}
+  & rh ~ {rh_m rh_s}
+  & lh_m ~ {lhc lhx}
+  & rh_m ~ {rhc rhx}
+  & lhc ~ $([>] $(rhc zh))
+  & zh ~ ?(((* (n0 n0)) (* (y0 (* y0)))) (lhx (rhx hm)))
+  & hm ~ $([+1] h)
+  & lh_s ~ $([+] $(rh_s sum))
+  & ld ~ {ldc ldx}
+  & rd ~ {rdc rdx}
+  & ldc ~ $([>] $(rdc zd1))
+  & zd1 ~ ?(((* (n1 n1)) (* (y1 (* y1)))) (ldx (rdx d1)))
+  & d1 ~ {d1c d1x}
+  & sum ~ {sumc sumx}
+  & d1c ~ $([>] $(sumc zd2))
+  & zd2 ~ ?(((* (n2 n2)) (* (y2 (* y2)))) (d1x (sumx d)))
+  & out ~ (h d)

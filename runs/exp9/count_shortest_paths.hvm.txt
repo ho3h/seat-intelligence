@@ -1,0 +1,62 @@
+// t3_count_shortest_paths (GRAPH-SWING-2, runs/exp9): exp5 frontier Bellman-Ford (weight-1 arcs) gives the BFS
+// distances; the path-count recursion c(v) = [v == s] + sum{c(u) : u ~ v, d(u) + 1 == d(v)} is then a dataflow net
+// (dag_longest pattern). Streaming the edges builds, for every arc u -> v, a reply wire on u's multicast chain (trie Q)
+// that is pushed onto v's list (trie R). fin sends the pair (d(v), c(v)) down chain v; a consumer's term is a switch
+// on d(u) + 1 == d(v) that either waits for c(u) or erases it, so only strictly-closer vertices are awaited (no
+// cycles). c(t) is read out of the trie of chain ends.
+@prog = ((n (s (t es))) out)
+  & n ~ ?((@cs_zero @cs_pos) (s (t (es out))))
+@cs_zero = (* (* (* 0)))
+@cs_pos = (nm1 (s (t (es out))))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & n ~ {n1 n2}
+  & s ~ {s1 s2}
+  & @zl ~ (L1 G0)
+  & @zq ~ (L5 Q0)
+  & @zl ~ (L6 R0)
+  & @w_blk ~ (es ((L2 (G0 (Q0 R0))) (G (Q R))))
+  & @sssp_start ~ (n1 (s1 (L3 (16777215 (G Df)))))
+  & @zs ~ (Df (R (Q (L4 (0 (s2 C))))))
+  & @getd ~ (C (t (n2 (L7 (0 out)))))
+@cs_step = ((L (g (q r))) ((u v) (L7 (g3 (q3 r3)))))
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & u ~ {u1 {u2 {u3 u4}}}
+  & v ~ {v1 {v2 {v3 v4}}}
+  & @gp ~ (g (u1 (L1 ((v1 1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 1) g3))))
+  & @pu ~ (q (u3 (L3 (x q2))))
+  & @pu ~ (q2 (v3 (L4 (y q3))))
+  & @gp ~ (r (v4 (L5 (x r2))))
+  & @gp ~ (r2 (u4 (L6 (y r3))))
+@cs_fin = ((* s) s)
+// zs(D, R, Q, L, base, s) -> trie of path counts
+@zs = (d (r (q (L (base (s o))))))
+  & L ~ ?((@zs_leaf @zs_node) (d (r (q (base (s o))))))
+@zs_leaf = (d (r (((d2 c) (* o)) (i (s o)))))
+  & d ~ {d1 d2}
+  & i ~ $([=] $(s isS))
+  & @gs ~ (r (d1 sm))
+  & sm ~ $([+] $(isS c))
+@zs_node = (lm ((da db) ((ra rb) ((qa qb) (base (s (x y)))))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & s ~ {s1 s2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @zs ~ (da (ra (qa (l1 (b1 (s1 x))))))
+  & @zs ~ (db (rb (qb (l2 (bR (s2 y))))))
+// gs(list of (du cu), dv) = sum of cu over cells with du + 1 == dv; other cu are erased, never awaited
+@gs = ((?((@gs_nil @gs_cons) (p (dv o))) p) (dv o))
+@gs_nil = (* (* 0))
+@gs_cons = (* (((du cu) rest) (dv o)))
+  & dv ~ {d1 d2}
+  & du ~ $([+1] du1)
+  & du1 ~ $([=] $(d1 eq))
+  & eq ~ ?((@gs_no @gs_yes) (cu x))
+  & @gs ~ (rest (d2 y))
+  & x ~ $([+] $(y o))
+@gs_no = (* 0)
+@gs_yes = (* (c c))

@@ -1,0 +1,108 @@
+// Map each edge endpoint to its cluster id, then scan canonical ids in
+// ascending order and emit those adjacent to k.
+@prog = (input out)
+  & input ~ (k (c edges))
+  & c ~ {c_iter c_map}
+  & @map_edges ~ (edges (c_map mapped))
+  & @after_map ~ (c_iter (k (mapped out)))
+
+@after_map = (c_iter (k (mapped out)))
+  & @cand ~ (c_iter (0 (k (mapped out))))
+
+@map_edges = ((?((@map_nil @map_cons) (pl (c out))) pl) (c out))
+
+@map_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@map_cons = (* (((u v) t) (c out)))
+  & c ~ {c_rec c_tmp}
+  & c_tmp ~ {c_u c_v}
+  & @lookup ~ (c_u (u mu))
+  & @lookup ~ (c_v (v mv))
+  & @map_edges ~ (t (c_rec rest))
+  & out ~ (1 ((mu mv) rest))
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_here @lookup_next) (h (t out)))
+
+@lookup_here = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@lookup_next = (idx (h (t out)))
+  & h ~ *
+  & @lookup ~ (t (idx out))
+
+@cand = ((?((@cand_nil @cand_cons) (pl (i (k (medges out))))) pl) (i (k (medges out))))
+
+@cand_nil = (* (i (k (medges out))))
+  & i ~ *
+  & k ~ *
+  & medges ~ *
+  & out ~ (0 *)
+
+@cand_cons = (* ((h t) (i (k (medges out)))))
+  & i ~ {i_cmp i_keep}
+  & h ~ $([=] $(i_cmp z))
+  & z ~ ?((@cand_noncanon @cand_canon) (t (i_keep (k (medges out)))))
+
+@cand_noncanon = (t (i (k (medges out))))
+  & i ~ $([+1] i2)
+  & @cand ~ (t (i2 (k (medges out))))
+
+@cand_canon = (* (t (i (k (medges out)))))
+  & medges ~ {medge_test medge_rec}
+  & k ~ {k_test k_rec}
+  & i ~ {i_test i_rec}
+  & @edge_any ~ (medge_test (k_test (i_test z)))
+  & z ~ ?((@cand_miss @cand_hit) (t (i_rec (k_rec (medge_rec out))))
+
+@cand_miss = (t (i (k (medges out))))
+  & i ~ $([+1] i2)
+  & @cand ~ (t (i2 (k (medges out))))
+
+@cand_hit = (* (t (i (k (medges out)))))
+  & i ~ {ih inext}
+  & inext ~ $([+1] i2)
+  & @cand ~ (t (i2 (k (medges rest))))
+  & out ~ (1 (ih rest))
+
+@edge_any = ((?((@edge_nil @edge_cons) (pl (k (i out)))) pl) (k (i out)))
+
+@edge_nil = (* (k (i out)))
+  & k ~ *
+  & i ~ *
+  & out ~ 0
+
+@edge_cons = (* (((u v) t) (k (i out))))
+  & k ~ {k_next k_tmp}
+  & k_tmp ~ {k1 k_tmp2}
+  & k_tmp2 ~ {k2 k3}
+  & i ~ {i_next i_tmp}
+  & i_tmp ~ {i1 i_tmp2}
+  & i_tmp2 ~ {i2 i3}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([=] $(k1 eq_a))
+  & v1 ~ $([=] $(i1 eq_b))
+  & v2 ~ $([=] $(k2 eq_d))
+  & u2 ~ $([=] $(i2 eq_e))
+  & eq_a ~ $([&] $(eq_b ab))
+  & eq_d ~ $([&] $(eq_e de))
+  & ab ~ $([|] $(de either))
+  & i3 ~ $([!] $(k3 neq))
+  & either ~ $([&] $(neq hit))
+  & hit ~ ?((@edge_miss @edge_hit) (t (k_next (i_next out))))
+
+@edge_miss = (t (k (i out)))
+  & @edge_any ~ (t (k (i out)))
+
+@edge_hit = (* (* (* (* out))))
+  & out ~ 1

@@ -1,0 +1,20 @@
+//
+@prog = (input output)
+  & @der ~ (input output)
+
+@der = ((tag payload) out)
+  & tag ~ ?(((* (0 0)) (?((@der_add (?((@der_mul (* (?(((0 1) (* (0 0))) v) v))) d) d)) c) c)) (payload out))
+
+@der_add = (p out)
+  & p ~ (a b)
+  & @der ~ (a da)
+  & @der ~ (b db)
+  & out ~ (1 (da db))
+
+@der_mul = (p out)
+  & p ~ (a b)
+  & a ~ {ad ao}
+  & b ~ {bd bo}
+  & @der ~ (ad da)
+  & @der ~ (bd db)
+  & out ~ (1 ((2 (da bo)) (2 (ao db))))

@@ -1,0 +1,130 @@
+@prog = ((c edges) out)
+  & c ~ {c1 c2}
+  & @length ~ (c1 n)
+  & @main_loop ~ (c2 (edges (0 n out)))
+
+@main_loop = (c (edges (i (n out))))
+  & i ~ $([=] $(n eq))
+  & eq ~ ?((@ml_cont @ml_done) (c (edges (i n out))))
+
+@ml_done = (c (edges (i n out)))
+  & c ~ *
+  & edges ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ (0 *)
+
+@ml_cont = (c (edges (i n out)))
+  & c ~ {c1 c2}
+  & i ~ {i1 i_rest}
+  & i_rest ~ {i2 i3}
+  & @nth ~ (c1 (i1 ci))
+  & ci ~ $([=] $(i2 eq2))
+  & eq2 ~ ?((@ml_skip @ml_add) (c2 (edges (i3 n out))))
+
+@ml_skip = (c (edges (i n out)))
+  & i ~ $([+1] i1)
+  & @main_loop ~ (c (edges (i1 n out)))
+
+@ml_add = (c (edges (i n out)))
+  & c ~ {c1 c2}
+  & edges ~ {e1 e2}
+  & i ~ {i_deg i_inc}
+  & @degree ~ (c1 (e1 (i_deg deg)))
+  & i_inc ~ $([+1] i_next)
+  & @main_loop ~ (c2 (e2 (i_next n rest)))
+  & out ~ (1 (deg rest))
+
+@degree = (c (edges (i out)))
+  & @scan_edges ~ (c (edges (i (0 * neigh))))
+  & @length ~ (neigh out)
+
+@scan_edges = (c (edges (i (neighbors out))))
+  & edges ~ ( ?((@scan_nil @scan_cons) (c (i (neighbors (out payload))))) payload )
+
+@scan_nil = (c (i (neighbors (out payload))))
+  & c ~ *
+  & i ~ *
+  & payload ~ *
+  & neighbors ~ out
+
+@scan_cons = (* (c (i (neighbors (out (u v))))))
+  & c ~ {c1 c2}
+  & @nth ~ (c1 (u cu))
+  & @nth ~ (c2 (v cv))
+  & cu ~ {cu1 cu2}
+  & cv ~ {cv1 cv2}
+  & i ~ {i1 i_rest}
+  & i_rest ~ {i2 i3}
+  & cu1 ~ $([=] $(i1 e1))
+  & cv1 ~ $([=] $(i2 e2))
+  & e1 ~ $([^] $(e2 cond))
+  & cu2 ~ $([+] $(cv2 sum))
+  & sum ~ $([-] $(i3 other))
+  & cond ~ ?((@scan_skip @scan_update) (neighbors (other out)))
+
+@scan_skip = (neighbors (other out))
+  & other ~ *
+  & neighbors ~ out
+
+@scan_update = (* (neighbors (other out)))
+  & neighbors ~ {n1 n2}
+  & other ~ {o1 o2}
+  & @member ~ (n1 (o1 mem))
+  & mem ~ ?((@scan_add @scan_keep) (n2 (o2 out)))
+
+@scan_add = (n2 (o2 out))
+  & out ~ (1 (o2 n2))
+
+@scan_keep = (n2 (o2 out))
+  & o2 ~ *
+  & n2 ~ out
+
+@member = ((?((@mem_nil @mem_cons) (value (out payload))) payload) (value out))
+
+@mem_nil = (value (out payload))
+  & value ~ *
+  & payload ~ *
+  & out ~ 0
+
+@mem_cons = (* (value (out (head tail))))
+  & value ~ {v1 v2}
+  & head ~ $([=] $(v1 eq))
+  & eq ~ ?((@mem_no @mem_yes) (v2 (tail out)))
+
+@mem_no = (value (tail out))
+  & @member ~ (tail (value out))
+
+@mem_yes = (value (tail out))
+  & value ~ *
+  & tail ~ *
+  & out ~ 1
+
+@length = ((?((@len_nil @len_cons) (out payload)) payload) out)
+
+@len_nil = (out payload)
+  & payload ~ *
+  & out ~ 0
+
+@len_cons = (* (out (head tail)))
+  & head ~ *
+  & @length ~ (tail len)
+  & len ~ $([+1] out)
+
+@nth = ((?((@nth_nil @nth_cons) (index (out payload))) payload) (index out))
+
+@nth_nil = (index (out payload))
+  & index ~ *
+  & payload ~ *
+  & out ~ 0
+
+@nth_cons = (* (index (out (head tail))))
+  & index ~ ?((@nth_ret @nth_rec) (head (tail out)))
+
+@nth_ret = (head (tail out))
+  & tail ~ *
+  & head ~ out
+
+@nth_rec = (idx (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idx out))

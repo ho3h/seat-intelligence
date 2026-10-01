@@ -1,0 +1,21 @@
+@prog = (lst out)
+  & @walk ~ (lst out)
+@walk = (lst out)
+  & lst ~ (?((@done @step) out) *)
+@done = (* out)
+  & out ~ (0 *)
+@step = ((h t) out)
+  & @resolve ~ (h t (r r_list))
+  & out ~ (1 (r r_list))
+@resolve = (h t (r r_list))
+  & @check_pointer ~ (h h (t (r r_list)))
+@check_pointer = (h h_copy (t (r r_list)))
+  & h ~ (h_val cmp_result)
+  & h_val ~ ?((@is_root @not_root) (h_copy (t (r r_list))))
+  & cmp_result ~ *
+@is_root = (* (h_copy (t (r r_list))))
+  & r ~ h_copy
+  & @walk ~ (t r_list)
+@not_root = ((h_next *) (h_copy (t (r r_list))))
+  & @resolve ~ (h_next t (r r_list))
+  & h_copy ~ *

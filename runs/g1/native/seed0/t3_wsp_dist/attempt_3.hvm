@@ -1,0 +1,152 @@
+// Validate the endpoints, then initialize Bellman-Ford distances.
+@prog = (input out)
+  & @start ~ (input out)
+
+@start = (input out)
+  & input ~ (n (s (t edges)))
+  & n ~ {nc nk}
+  & s ~ {sc sk}
+  & sc ~ $([<] $(nc z))
+  & z ~ ?((@invalid @s_ok) (nk (sk (t (edges out)))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@s_ok = (* (n (s (t (edges out)))))
+  & n ~ {nc nk}
+  & t ~ {tc tk}
+  & tc ~ $([<] $(nc z))
+  & z ~ ?((@invalid @t_ok) (nk (s (tk (edges out)))))
+
+@t_ok = (* (n (s (t (edges out)))))
+  & s ~ {sc sk}
+  & t ~ {tc tk}
+  & sc ~ $([=] $(tc z))
+  & z ~ ?((@not_equal @equal) (n (sk (tk (edges out)))))
+
+@equal = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@not_equal = (n (s (t (edges out))))
+  & n ~ {nb np}
+  & @build ~ (nb (0 (s dist)))
+  & @pass ~ (np (t (edges (dist out))))
+
+// Build a distance list of length rem, with 0 at the source index.
+@build = (rem (i (s out)))
+  & rem ~ ?((@build_nil @build_more) (i (s out)))
+
+@build_nil = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@build_more = (rem (i (s out)))
+  & i ~ {ic ir}
+  & s ~ {sc sr}
+  & ic ~ $([=] $(sc z))
+  & 1 ~ $([-] $(z a))
+  & a ~ $([*] $(16777215 head))
+  & ir ~ $([+1] nexti)
+  & out ~ (1 (head tail))
+  & @build ~ (rem (nexti (sr tail)))
+
+// Run rem full edge-list passes, keeping a copy of the edges for the next pass.
+@pass = (rem (t (edges (dist out))))
+  & rem ~ ?((@pass_done @pass_more) (t (edges (dist out))))
+
+@pass_done = (t (edges (dist out)))
+  & edges ~ *
+  & @get ~ (dist (t out))
+
+@pass_more = (rem (t (edges (dist out))))
+  & edges ~ {scan future}
+  & @scan ~ (scan (rem (t (future (dist out)))))
+
+// Scan the edge list, relaxing each undirected edge in both directions.
+@scan = ((?((@scan_nil @scan_cons) (payload (count (t (future (dist out)))))) payload) (count (t (future (dist out)))))
+
+@scan_nil = (* (count (t (future (dist out)))))
+  & @pass ~ (count (t (future (dist out))))
+
+@scan_cons = (* (((u (v w)) tail) (count (t (future (dist out))))))
+  & @relax ~ (u (v (w (dist d1))))
+  & @scan ~ (tail (count (t (future (d1 out)))))
+
+@relax = (u (v (w (dist out))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @dir ~ (u1 (v1 (w1 (dist d1))))
+  & @dir ~ (v2 (u2 (w2 (d1 out))))
+
+// Relax src -> dst, returning an updated distance list.
+@dir = (src (dst (w (dist out))))
+  & dist ~ {ls rem}
+  & rem ~ {ld lw}
+  & dst ~ {dget dset}
+  & @get ~ (ls (src ds))
+  & @get ~ (ld (dget dd))
+  & w ~ {wadd wsub}
+  & 16777215 ~ $([-] $(wsub threshold))
+  & ds ~ {dsa remds}
+  & remds ~ {dsc dsov}
+  & dsa ~ $([+] $(wadd cand))
+  & dsc ~ $([!] $(16777215 finite))
+  & dsov ~ $([>] $(threshold overflow))
+  & 1 ~ $([-] $(overflow good))
+  & cand ~ {cc cv}
+  & dd ~ {dc dk}
+  & cc ~ $([<] $(dc less))
+  & less ~ $([&] $(finite ptemp))
+  & ptemp ~ $([&] $(good improve))
+  & improve ~ {p1 p2}
+  & p1 ~ $([*] $(cv a))
+  & 1 ~ $([-] $(p2 q))
+  & q ~ $([*] $(dk b))
+  & a ~ $([+] $(b new))
+  & @set ~ (lw (dset (new out)))
+
+// Read a distance; an out-of-range index yields infinity.
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (* (* out))
+  & out ~ 16777215
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_next = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (idx out))
+
+// Replace an indexed distance; an out-of-range index leaves the list unchanged.
+@set = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (idx (head (tail (val out))))
+  & head ~ *
+  & @set ~ (tail (idx (val out)))

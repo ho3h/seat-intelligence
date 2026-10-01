@@ -1,0 +1,64 @@
+{
+ "pid": "t3_apsp_matrix",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 49,
+    "itrs_median_big": null,
+    "itrs_max": 49,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 4157,
+    "itrs_median_big": 42813296,
+    "itrs_max": 53463727,
+    "depth_median_big": 6188,
+    "depth_max": 9115
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 49,
+    "itrs_median_big": null,
+    "itrs_max": 49,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 385218,
+ "best": {
+  "itrs_median_small": 4157,
+  "itrs_median_big": 42813296,
+  "itrs_max": 53463727,
+  "depth_median_big": 6188,
+  "depth_max": 9115
+ },
+ "usd": 0.09740326999999999,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

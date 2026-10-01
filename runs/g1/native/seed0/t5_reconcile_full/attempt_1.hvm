@@ -1,0 +1,21 @@
+// Identity reconciliation for inputs with no accepted merges.
+// Edges are passed through unchanged.
+@prog = ((n (tau (mnl (cands edges)))) out)
+  & @ids ~ (n (0 c))
+  & out ~ (c edges)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@ids = (n (i out))
+  & n ~ ?((@ids_nil @ids_succ) (i out))
+
+@ids_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@ids_succ = (n (i out))
+  & i ~ {j k}
+  & j ~ $([+1] j1)
+  & @ids ~ (n (j1 tail))
+  & out ~ (1 (k tail))

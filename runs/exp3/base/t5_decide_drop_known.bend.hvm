@@ -1,0 +1,36 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@contains_pair = ((@contains_pair__C4 a) a)
+
+@contains_pair__C0 = (b (c (a d)))
+  & @contains_pair ~ (a (b (c d)))
+
+@contains_pair__C1 = (b (c (a (* d))))
+  & @contains_pair ~ (a (b (c d)))
+
+@contains_pair__C2 = (* (b ({a c} (d ($([=] $(a ?((@contains_pair__C0 (* (* (* (* 1))))) (b (c (d e)))))) e)))))
+
+@contains_pair__C3 = (* (($([=] $(a ?((@contains_pair__C1 @contains_pair__C2) (b (c (d (e f))))))) e) (d ({a b} (c f)))))
+
+@contains_pair__C4 = (?(((* (* 0)) @contains_pair__C3) a) a)
+
+@filter_cands = ((@filter_cands__C3 a) a)
+
+@filter_cands__C0 = (b (* (a c)))
+  & @filter_cands ~ (a (b c))
+
+@filter_cands__C1 = (* (c (a (b e))))
+  & @List/Cons ~ (a (d e))
+  & @filter_cands ~ (b (c d))
+
+@filter_cands__C2 = (* ({(b (c *)) e} (f ({a d} g))))
+  & @contains_pair ~ (a (b (c $([=0x0000000] ?((@filter_cands__C0 @filter_cands__C1) (d (e (f g))))))))
+
+@filter_cands__C3 = (?(((* @List/Nil) @filter_cands__C2) a) a)
+
+@prog = ((b a) c)
+  & @filter_cands ~ (a (b c))
+
+

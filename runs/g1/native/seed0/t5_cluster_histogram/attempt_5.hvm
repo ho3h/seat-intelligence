@@ -1,0 +1,155 @@
+@prog = ((n edges) out)
+  & n ~ {n_init n_hist}
+  & @init ~ (n_init (0 labels))
+  & @edges ~ (edges (labels final))
+  & @hist ~ (n_hist (final out))
+
+@init = (n (i out))
+  & n ~ ?((@init_zero @init_succ) (i out))
+
+@init_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (rem (i out))
+  & i ~ {ih inext}
+  & inext ~ $([+1] next)
+  & @init ~ (rem (next tailout))
+  & out ~ (1 (ih tailout))
+
+@edges = ((?((@edges_nil @edges_cons) (payload (labels out))) payload) (labels out))
+
+@edges_nil = (* (labels out))
+  & out ~ labels
+
+@edges_cons = (* ((u v) (tail (labels out))))
+  & @getk ~ (labels (u got1))
+  & got1 ~ (ru labels1)
+  & @getk ~ (labels1 (v got2))
+  & got2 ~ (rv labels2)
+  & @replace ~ (labels2 (ru (rv newlabels)))
+  & @edges ~ (tail (newlabels out))
+
+@getk = ((?((@getk_nil @getk_cons) (payload (idx out))) payload) (idx out))
+
+@getk_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@getk_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@getk_here @getk_next) (head (tail out)))
+
+@getk_here = (head (tail out))
+  & head ~ {selected kept}
+  & out ~ (selected (1 (kept tail)))
+
+@getk_next = (idxrem (head (tail out)))
+  & @getk ~ (tail (idxrem got))
+  & got ~ (selected rebuilt)
+  & out ~ (selected (1 (head rebuilt)))
+
+@replace = ((?((@rep_nil @rep_cons) (payload (from (to out)))) payload) (from (to out)))
+
+@rep_nil = (* (from (to out)))
+  & from ~ *
+  & to ~ *
+  & out ~ (0 *)
+
+@rep_cons = (* ((head tail) (from (to out))))
+  & head ~ {hc hs}
+  & from ~ {fc fr}
+  & to ~ {tc tr}
+  & hc ~ $([=] $(fc eq))
+  & eq ~ ?((@rep_no @rep_yes) (hs (tail (fr (tc (tr out))))))
+
+@rep_no = (hs (tail (fr (tc (tr out)))))
+  & tc ~ *
+  & @replace ~ (tail (fr (tr newtail)))
+  & out ~ (1 (hs newtail))
+
+@rep_yes = (hs (tail (fr (tc (tr out)))))
+  & hs ~ *
+  & @replace ~ (tail (fr (tr newtail)))
+  & out ~ (1 (tc newtail))
+
+@countk = ((?((@countk_nil @countk_cons) (payload (target out))) payload) (target out))
+
+@countk_nil = (* (target out))
+  & target ~ *
+  & out ~ (0 (0 *))
+
+@countk_cons = (* ((head tail) (target out)))
+  & head ~ {hc hr}
+  & target ~ {tc tr}
+  & hc ~ $([=] $(tc eq))
+  & @countk ~ (tail (tr restpair))
+  & restpair ~ (rest rebuilt)
+  & eq ~ $([+] $(rest total))
+  & out ~ (total (1 (hr rebuilt)))
+
+@hist = (n (labels out))
+  & @hist_loop ~ (n (0 (labels (@z8 out))))
+
+@hist_loop = (n (id (labels (hist out))))
+  & n ~ ?((@hist_done @hist_more) (id (labels (hist out))))
+
+@hist_done = (id (labels (hist out)))
+  & id ~ *
+  & labels ~ *
+  & out ~ hist
+
+@hist_more = (rem (id (labels (hist out))))
+  & id ~ {id_count id_rec}
+  & @countk ~ (labels (id_count got))
+  & got ~ (freq labels2)
+  & freq ~ {freq_check freq_size}
+  & freq_check ~ $([>] $(0 positive))
+  & positive ~ ?((@hist_skip @hist_nonzero) (freq_size (rem (labels2 (id_rec (hist out))))))
+
+@hist_skip = (freq_size (rem (labels (id (hist out)))))
+  & freq_size ~ *
+  & @hist_loop ~ (rem (id (labels (hist out))))
+
+@hist_nonzero = (freq_size (rem (labels (id (hist out)))))
+  & freq_size ~ {gtcheck minusone}
+  & gtcheck ~ $([>] $(7 gt))
+  & minusone ~ $([-] $(1 idxsmall))
+  & gt ~ ?((@hist_small @hist_big) (idxsmall (rem (labels (id (hist out))))))
+
+@hist_small = (idxsmall (rem (labels (id (hist out)))))
+  & @hist_apply ~ (idxsmall (rem (labels (id (hist out)))))
+
+@hist_big = (idxsmall (rem (labels (id (hist out)))))
+  & idxsmall ~ *
+  & @hist_apply ~ (7 (rem (labels (id (hist out)))))
+
+@hist_apply = (idx (rem (labels (id (hist out)))))
+  & @incat ~ (hist (idx newhist))
+  & @hist_loop ~ (rem (id (labels (newhist out))))
+
+@incat = ((?((@inc_nil @inc_cons) (payload (idx out))) payload) (idx out))
+
+@inc_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 *)
+
+@inc_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@inc_here @inc_next) (head (tail out)))
+
+@inc_here = (head (tail out))
+  & head ~ $([+1] headnext)
+  & out ~ (1 (headnext tail))
+
+@inc_next = (idxrem (head (tail out)))
+  & @incat ~ (tail (idxrem newtail))
+  & out ~ (1 (head newtail))
+
+@z8 = (1 (0 @z7))
+@z7 = (1 (0 @z6))
+@z6 = (1 (0 @z5))
+@z5 = (1 (0 @z4))
+@z4 = (1 (0 @z3))
+@z3 = (1 (0 @z2))
+@z2 = (1 (0 @z1))
+@z1 = (1 (0 @znil))
+@znil = (0 *)

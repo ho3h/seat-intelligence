@@ -1,0 +1,15 @@
+@prog = (((xt xp) (yt yp)) out)
+  & xt ~ $([&] $(yt both))
+  & both ~ ?((@zip_stop @zip_go) (xp (yp out)))
+
+@zip = ((xt xp) ((yt yp) out))
+  & xt ~ $([&] $(yt both))
+  & both ~ ?((@zip_stop @zip_go) (xp (yp out)))
+
+@zip_stop = (* (* out))
+  & out ~ (0 *)
+
+@zip_go = (* ((xh xt) ((yh yt) out)))
+  & xh ~ $([+] $(yh sum))
+  & @zip ~ (xt (yt rest))
+  & out ~ (1 (sum rest))

@@ -1,0 +1,74 @@
+--- 04:59:56
+build.py:46: unknown operator '>='; use one of ! % & * + - / < << = > >> ^ |
+--- 05:00:51
+build.py:30: wire `tau` (num, argument `in0` of @prog (t5_decide_stage_cap), made at build.py:90) belongs to @prog (t5_decide_stage_cap) (@prog), but is used in step of stream `main` (@main_step) (right operand of `<`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:01:47
+build.py:37: wire `u` (num, argument `e0` of step of stream `filter`, made at build.py:82) belongs to step of stream `filter` (@filter_step), but is used in branch nonzero case of step of stream `filter` (@filter_step_b1s) (cons head). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:02:04
+wrong arity: branch zero case of step of stream `filter` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:list[(num num num)], passed[3]:num, passed[4]:num, passed[5]:num, passed[6]:num), i.e. d plus 7 value(s); your function `if_skip` takes 5 parameter(s) (b, tv, cv, al, ac).
+--- 05:02:23
+branch nonzero case of step of stream `filter` (@filter_step_b1s): 1 value(s) never used:
+    `cond_minus_1` (num, argument `cm1` of branch nonzero case of step of stream `filter`, made at build.py:43)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:02:31
+build.py:44: wire `tau_v` (num, argument `tau_v` of step of stream `filter`, made at build.py:85) is used a second time (branch passed[0]); it was already used at build.py:28 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(tau_v, 2)  and use each once.
+--- 05:02:51
+build.py:44: wire `score` (num, argument `e2` of step of stream `filter`, made at build.py:87) is used a second time (branch passed[4]); it was already used at build.py:28 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(score, 2)  and use each once.
+--- 05:03:03
+build.py:89: wire `tau_v` (num, argument `tau_v` of step of stream `filter`, made at build.py:89) is used a second time (returned as `tau_v`); it was already used at build.py:30 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(tau_v, 2)  and use each once.
+--- 05:03:39
+step of stream `filter` (@filter_step): 1 value(s) never used:
+    `cap_v1` (num, copy 1 of `cap_v`, made at build.py:31)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:03:54
+wrong arity: step of stream `extract` is called as f(d, tau_v:num, cap_v:num, sl:list[(num num)], dc:num, idx:num, e0:num, e1:num, e2:num), i.e. d plus 8 value(s); your function `extract_step` takes 7 parameter(s) (d, tau_v2, cap_v2, staged_list, deferred_cnt, item_idx, item).
+--- 05:04:23
+fin of stream `extract` must return exactly one value (the result); returned 2
+--- 05:05:56
+build.py:33: <function prog.<locals>.step.<locals>.if_pass at 0x10a027ed0> is not a glue value (a wire, an int, a Lit, or a tuple of these)
+--- 05:06:12
+build.py:27: wire `u` (num, argument `e0` of step of stream `w`, made at build.py:54) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:06:35
+build.py:28: wire `cap_v1` (num, copy 1 of `cap_v`, made at build.py:17) belongs to step of stream `w` (@w_step), but is used in branch nonzero case of step of stream `w` (@w_step_b1s) (right operand of `<`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:06:48
+build.py:25: wire `cap_v` (num, argument `cap` of step of stream `w`, made at build.py:45) belongs to step of stream `w` (@w_step), but is used in branch nonzero case of step of stream `w` (@w_step_b1s) (right operand of `<`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:07:08
+build.py:25: wire `staged_w` (list[(num num)], argument `passed[0]` of branch nonzero case of step of stream `w`, made at build.py:30) is used a second time (select if_false); it was already used at build.py:25 (cons tail). A wire has exactly two ends. A list[(num num)] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:07:36
+build.py:19: wire `u` (num, argument `e0` of step of stream `w`, made at build.py:47) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:07:56
+build.py:20: wire `accepted_w` (num, argument `passed[2]` of branch nonzero case of step of stream `w`, made at build.py:34) is used a second time (left operand of `<`); it was already used at build.py:19 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(accepted_w, 2)  and use each once.
+--- 05:08:03
+build.py:21: wire `cap_v` (num, argument `cap` of step of stream `w`, made at build.py:41) belongs to step of stream `w` (@w_step), but is used in branch nonzero case of step of stream `w` (@w_step_b1s) (right operand of `<`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:08:24
+wrong arity: step of stream `w` must return 5 value(s) (tau, cap, pairs, deferred, accepted); `step` returned 3.
+--- 05:08:46
+build.py:36: wire `tau_v` (num, argument `tau` of step of stream `w`, made at build.py:42) is used a second time (branch passed[6]); it was already used at build.py:11 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(tau_v, 2)  and use each once.
+--- 05:08:55
+build.py:37: wire `cap_v` (num, argument `cap` of step of stream `w`, made at build.py:43) is used a second time (branch passed[7]); it was already used at build.py:37 (branch passed[5]). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(cap_v, 2)  and use each once.
+--- 05:09:09
+build.py:39: wire `cap_w` (num, argument `passed[5]` of branch nonzero case of step of stream `w`, made at build.py:39) is used a second time (returned as `out1`); it was already used at build.py:24 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(cap_w, 2)  and use each once.
+--- 05:10:15
+build.py:15: wire `u` (num, argument `e0` of step of stream `w`, made at build.py:35) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:10:34
+build.py:20: wire `pairs_w` (list[(num num)], argument `passed[0]` of branch nonzero case of step of stream `w`, made at build.py:25) is used a second time (select if_false); it was already used at build.py:20 (cons tail). A wire has exactly two ends. A list[(num num)] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:10:49
+build.py:26: wire `deferred_w` (num, argument `passed[1]` of branch nonzero case of step of stream `w`, made at build.py:29) belongs to branch nonzero case of step of stream `w` (@w_step_b1s), but is used in branch zero case of branch nonzero case of step of stream `w` (@w_step_b1s_b2z) (left operand of `+`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:11:02
+build.py:15: wire `u` (num, argument `e0` of step of stream `w`, made at build.py:34) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:11:22
+build.py:19: wire `cap_v` (num, argument `cap` of step of stream `w`, made at build.py:32) belongs to step of stream `w` (@w_step), but is used in branch nonzero case of step of stream `w` (@w_step_b1s) (right operand of `<`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:11:32
+wrong arity: branch zero case of step of stream `w` is called as f(d, passed[0]:list[(num num)], passed[1]:num, passed[2]:num, passed[3]:num, passed[4]:num, passed[5]:num), i.e. d plus 6 value(s); your function `reject` takes 6 parameter(s) (b, pairs_w, def_w, stg_w, u_w, v_w).
+--- 05:11:40
+build.py:20: wire `pairs_w` (list[(num num)], argument `passed[0]` of branch nonzero case of step of stream `w`, made at build.py:25) is used a second time (select if_false); it was already used at build.py:20 (cons tail). A wire has exactly two ends. A list[(num num)] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:12:06
+build.py:30: wire `stg_w` (num, argument `passed[2]` of branch nonzero case of step of stream `w`, made at build.py:32) is used a second time (branch passed[2]); it was already used at build.py:19 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(stg_w, 2)  and use each once.
+--- 05:12:26
+build.py:40: wire `tau_v` (num, argument `tau` of step of stream `w`, made at build.py:40) is used a second time (returned as `tau`); it was already used at build.py:11 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(tau_v, 2)  and use each once.
+--- 05:12:37
+build.py:41: wire `cap_v` (num, argument `cap` of step of stream `w`, made at build.py:41) is used a second time (returned as `cap`); it was already used at build.py:34 (branch passed[5]). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(cap_v, 2)  and use each once.
+--- 05:12:49
+fin of stream `w` must return exactly one value (the result); returned 2
+--- 05:12:58
+fin of stream `w` must return exactly one value (the result); returned 2

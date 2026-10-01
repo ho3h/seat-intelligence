@@ -1,0 +1,144 @@
+@prog = ((n pairs) out)
+  & pairs ~ {p_nodes p_uniq}
+  & @nodes ~ (n (0 (p_nodes (0 total))))
+  & @uniq ~ (p_uniq (0 unique))
+  & total ~ $([/] $(2 half))
+  & half ~ $([-] $(unique out))
+
+@nodes = (remaining (i (edges (sum out))))
+  & remaining ~ ?((@nodes_done @nodes_more) (i (edges (sum out))))
+
+@nodes_done = (* (* (z z)))
+
+@nodes_more = (rem (i (edges (sum out))))
+  & i ~ {istart inext}
+  & edges ~ {ebfs enext}
+  & @bfs_start ~ (ebfs (istart comp))
+  & comp ~ $([-] $(1 delta))
+  & sum ~ $([+] $(delta sum2))
+  & inext ~ $([+1] next_i)
+  & @nodes ~ (rem (next_i (enext (sum2 out))))
+
+@bfs_start = (edges (start out))
+  & start ~ {s1 s2}
+  & @bfs ~ ((1 (s1 (0 *))) (edges ((1 (s2 (0 *))) (1 out))))
+
+@bfs = ((?((@bfs_nil @bfs_cons) (payload (edges (visited (count out))))) payload) (edges (visited (count out))))
+
+@bfs_nil = (* (* (* (z z))))
+
+@bfs_cons = (* ((x qtail) (edges (visited (count out)))))
+  & edges ~ {escan ekeep}
+  & @scan ~ (escan (x (qtail (visited (count state)))))
+  & @after_scan ~ (state (ekeep out))
+
+@after_scan = ((queue (visited count)) (edges out))
+  & @bfs ~ (queue (edges (visited (count out))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (x (queue (visited (count out)))))) payload) (x (queue (visited (count out))))
+
+@scan_nil = (* (x (queue (visited (count out)))))
+  & x ~ *
+  & out ~ (queue (visited count))
+
+@scan_cons = (* (((u v) tail) (x (queue (visited (count out))))))
+  & @edge_u ~ (u (v (x (tail (queue (visited (count out)))))))
+
+@edge_u = (u (v (x (tail (queue (visited (count out))))))
+  & u ~ {ucmp ukeep}
+  & x ~ {xcmp xkeep}
+  & ucmp ~ $([=] $(xcmp z1))
+  & z1 ~ ?((@eu_no @eu_yes) (ukeep (v (xkeep (tail (queue (visited (count out))))))))
+
+@eu_yes = (* (ukeep (v (x (tail (queue (visited (count out))))))))
+  & ukeep ~ *
+  & @add ~ (v (x (tail (queue (visited (count out))))))
+
+@eu_no = (ukeep (v (x (tail (queue (visited (count out)))))))
+  & x ~ {xc xn}
+  & v ~ $([=] $(xc z2))
+  & z2 ~ ?((@ev_no @ev_yes) (ukeep (xn (tail (queue (visited (count out)))))))
+
+@ev_yes = (* (u (x (tail (queue (visited (count out)))))))
+  & @add ~ (u (x (tail (queue (visited (count out))))))
+
+@ev_no = (u (x (tail (queue (visited (count out))))))
+  & u ~ *
+  & @scan ~ (tail (x (queue (visited (count out)))))
+
+@add = (candidate (x (tail (queue (visited (count out))))))
+  & candidate ~ {cmem ckeep}
+  & visited ~ {vmem vkeep}
+  & @mem ~ (vmem (cmem z))
+  & z ~ ?((@add_new @add_seen) (ckeep (x (tail (queue (vkeep (count out)))))))
+
+@add_seen = (* (candidate (x (tail (queue (visited (count out)))))))
+  & candidate ~ *
+  & @scan ~ (tail (x (queue (visited (count out)))))
+
+@add_new = (candidate (x (tail (queue (visited (count out))))))
+  & candidate ~ {c1 c2}
+  & count ~ $([+1] count2)
+  & @scan ~ (tail (x ((1 (c1 queue)) ((1 (c2 visited)) (count2 out)))))
+
+@mem = ((?((@mem_nil @mem_cons) (payload (candidate out))) payload) (candidate out))
+
+@mem_nil = (* (candidate out))
+  & candidate ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (candidate out)))
+  & candidate ~ {cm ck}
+  & head ~ $([=] $(cm z))
+  & z ~ ?((@mem_no @mem_yes) (tail (ck out)))
+
+@mem_no = (tail (candidate out))
+  & @mem ~ (tail (candidate out))
+
+@mem_yes = (* (tail (candidate out)))
+  & tail ~ *
+  & candidate ~ *
+  & out ~ 1
+
+@uniq = ((?((@uniq_nil @uniq_cons) (payload (acc out))) payload) (acc out))
+
+@uniq_nil = (* (z z))
+
+@uniq_cons = (* (((u v) tail) (acc out)))
+  & tail ~ {tc tn}
+  & @contains ~ (tc (u (v z)))
+  & z ~ ?((@uniq_new @uniq_old) (tn (acc out)))
+
+@uniq_new = (tail (acc out))
+  & @uniq ~ (tail ($([+1] acc) out))
+
+@uniq_old = (* (tail (acc out)))
+  & @uniq ~ (tail (acc out))
+
+@contains = ((?((@ce_nil @ce_cons) (payload (u (v out)))) payload) (u (v out)))
+
+@ce_nil = (* (* (* out)))
+  & out ~ 0
+
+@ce_cons = (* (((a b) tail) (u (v out))))
+  & u ~ {uc ukeep}
+  & a ~ $([=] $(uc z1))
+  & z1 ~ ?((@ce_a_no @ce_a_yes) (b (tail (ukeep (v out)))))
+
+@ce_a_no = (b (tail (u (v out))))
+  & b ~ *
+  & @contains ~ (tail (u (v out)))
+
+@ce_a_yes = (* (b (tail (u (v out)))))
+  & v ~ {vc vk}
+  & b ~ $([=] $(vc z2))
+  & z2 ~ ?((@ce_b_no @ce_b_yes) (tail (u (vk out))))
+
+@ce_b_no = (tail (u (v out)))
+  & @contains ~ (tail (u (v out)))
+
+@ce_b_yes = (* (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1

@@ -1,0 +1,27 @@
+// Merge two trees by overlaying them and adding values at matching nodes.
+@prog = (input output)
+  & input ~ (a b)
+  & @merge ~ (a (b output))
+
+@merge = ((?( (@ma_leaf @ma_node) (p (b out)) ) p) (b out))
+
+@ma_leaf = (p (b out))
+  & p ~ *
+  & out ~ b
+
+@ma_node = (n (p (b out)))
+  & n ~ *
+  & p ~ (l (v r))
+  & b ~ (?( (@mb_leaf @mb_node) (pb (l (v (r out)))) ) pb)
+
+@mb_leaf = (pb (l (v (r out))))
+  & pb ~ *
+  & out ~ (1 (l (v r)))
+
+@mb_node = (n (pb (l (v (r out)))))
+  & n ~ *
+  & pb ~ (l2 (v2 r2))
+  & @merge ~ (l (l2 left_out))
+  & @merge ~ (r (r2 right_out))
+  & v ~ $([+] $(v2 sum))
+  & out ~ (1 (left_out (sum right_out)))

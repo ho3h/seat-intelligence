@@ -1,0 +1,175 @@
+// Entry point: rewrite edges, then sort and combine equal pairs.
+@prog = (input output)
+  & input ~ (cl edges)
+  & @map ~ (edges (cl mapped))
+  & @sort ~ (mapped output)
+
+// Map each edge through the clustering, dropping internal edges.
+@map = ((?((@map_nil @map_cons) (pl (cl out))) pl) (cl out))
+
+@map_nil = (pl (cl out))
+  & pl ~ *
+  & cl ~ *
+  & out ~ (0 *)
+
+@map_cons = (* (pl (cl out)))
+  & pl ~ (edge tail)
+  & edge ~ (u (v w))
+  & cl ~ {cl_a cl_b}
+  & cl_b ~ {cl_u cl_v}
+  & @map ~ (tail (cl_a rest))
+  & @lookup ~ (u (cl_u cu))
+  & @after_u ~ (cu (v (w (cl_v (rest out))))
+
+@after_u = (cu (v (w (cl (rest out)))))
+  & @lookup ~ (v (cl cv))
+  & @after_v ~ (cv (cu (w (rest out))))
+
+@after_v = (cv (cu (w (rest out))))
+  & cv ~ {cv_a cv_b}
+  & cu ~ {cu_a cu_b}
+  & cu_a ~ $([=] $(cv_a eq))
+  & eq ~ ?((@map_diff @map_same) (cu_b (cv_b (w (rest out))))
+
+@map_same = (* (cu (cv (w (rest out)))))
+  & cu ~ *
+  & cv ~ *
+  & w ~ *
+  & out ~ rest
+
+@map_diff = (cu (cv (w (rest out))))
+  & cu ~ {cu_a cu_b}
+  & cv ~ {cv_a cv_b}
+  & cu_a ~ $([<] $(cv_a lt))
+  & lt ~ ?((@map_reverse @map_forward) (cu_b (cv_b (w (rest out))))
+
+@map_reverse = (* (cu (cv (w (rest out)))))
+  & out ~ (1 ((cv (cu w)) rest))
+
+@map_forward = (* (cu (cv (w (rest out)))))
+  & out ~ (1 ((cu (cv w)) rest))
+
+// Lookup a zero-based index in a list.
+@lookup = (i ((?((@look_nil @look_cons) (pl (i out))) pl) out))
+
+@look_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@look_cons = (* (pl (i out)))
+  & pl ~ (head tail)
+  & i ~ ?((@look_head @look_more) (head (tail out)))
+
+@look_head = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@look_more = (i (head (tail out)))
+  & head ~ *
+  & @lookup ~ (i (tail out))
+
+// Split a list into two order-preserving alternating sublists.
+@split = ((?((@split_nil @split_cons) (pl out))) pl) out
+
+@split_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* (pl out))
+  & pl ~ (head tail)
+  & @split_second ~ (head (tail out))
+
+@split_second = (head ((?((@split_odd @split_even) (head out)) pl) out))
+
+@split_odd = (pl (head out))
+  & pl ~ *
+  & out ~ ((1 (head (0 *))) (0 *))
+
+@split_even = (* (pl (head out)))
+  & pl ~ (second rest)
+  & @split ~ (rest parts)
+  & parts ~ (left right)
+  & out ~ ((1 (head left)) (1 (second right)))
+
+// Merge-sort a list of triples.
+@sort = ((?((@sort_nil @sort_cons) (pl out))) pl) out
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* (pl out))
+  & @split ~ ((1 pl) parts)
+  & parts ~ (left right)
+  & @sort ~ (left sorted_left)
+  & @sort ~ (right sorted_right)
+  & @merge ~ (sorted_left (sorted_right out))
+
+// Merge sorted lists, combining triples with identical endpoint pairs.
+@merge = ((?((@merge_nil @merge_left) (pl (right out))) pl) (right out))
+
+@merge_nil = (pl (right out))
+  & pl ~ *
+  & out ~ right
+
+@merge_left = (* (pl (right out)))
+  & pl ~ (x xs)
+  & @merge_right ~ (right (x (xs out)))
+
+@merge_right = ((?((@merge_empty @merge_both) (pl (x (xs out)))) pl) (x (xs out)))
+
+@merge_empty = (pl (x (xs out)))
+  & pl ~ *
+  & xs ~ *
+  & out ~ (1 (x (0 *)))
+
+@merge_both = (* (pl (x (xs out))))
+  & pl ~ (y ys)
+  & x ~ (a (b wx))
+  & y ~ (c (d wy))
+  & a ~ {a_cmp a_keep}
+  & c ~ {c_cmp c_keep}
+  & a_cmp ~ $([<] $(c_cmp lt))
+  & lt ~ ?((@merge_ge @merge_less) (a_keep (c_keep (b (d (wx (wy (xs (ys out))))))))
+
+@merge_less = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & @merge ~ (xs ((1 ((c (d wy)) ys)) rest))
+  & out ~ (1 ((a (b wx)) rest))
+
+@merge_ge = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & a ~ {a_eq a_keep}
+  & c ~ {c_eq c_keep}
+  & a_eq ~ $([=] $(c_eq eq))
+  & eq ~ ?((@merge_greater @merge_second) (a_keep (c_keep (b (d (wx (wy (xs (ys out))))))))
+
+@merge_greater = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & @merge ~ ((1 ((a (b wx)) xs)) (ys rest))
+  & out ~ (1 ((c (d wy)) rest))
+
+@merge_second = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & b ~ {b_cmp b_keep}
+  & d ~ {d_cmp d_keep}
+  & b_cmp ~ $([<] $(d_cmp lt))
+  & lt ~ ?((@merge_yge @merge_xless) (a (c (b_keep (d_keep (wx (wy (xs (ys out))))))))
+
+@merge_xless = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & @merge ~ (xs ((1 ((c (d wy)) ys)) rest))
+  & out ~ (1 ((a (b wx)) rest))
+
+@merge_yge = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & b ~ {b_eq b_keep}
+  & d ~ {d_eq d_keep}
+  & b_eq ~ $([=] $(d_eq eq))
+  & eq ~ ?((@merge_ygreater @merge_equal) (a (c (b_keep (d_keep (wx (wy (xs (ys out))))))))
+
+@merge_ygreater = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & @merge ~ ((1 ((a (b wx)) xs)) (ys rest))
+  & out ~ (1 ((c (d wy)) rest))
+
+@merge_equal = (* (a (c (b (d (wx (wy (xs (ys out)))))))))
+  & c ~ *
+  & d ~ *
+  & wx ~ $([+] $(wy sum))
+  & @merge ~ (xs (ys rest))
+  & out ~ (1 ((a (b sum)) rest))

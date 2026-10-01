@@ -1,0 +1,10 @@
+--- 04:14:24
+wrong arity: step of stream `w` is called as f(d, tau:num, out_val:list[(num num num)], hole:hole[list[(num num num)]], e0:num, e1:num, e2:num), i.e. d plus 6 value(s); your function `step` takes 5 parameter(s) (d, tau, out_val, hole, triple).
+--- 04:14:43
+build.py:38: wire `score` (num, argument `e2` of step of stream `w`, made at build.py:49) is used a second time (fill_cons head); it was already used at build.py:28 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(score, 2)  and use each once.
+--- 04:14:52
+build.py:40: wire `hole` (hole[list[(num num num)]], argument `hole` of step of stream `w`, made at build.py:52) is used a second time (select if_false); it was already used at build.py:41 (fill_cons). A wire has exactly two ends. A hole[list[(num num num)]] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 04:15:12
+build.py:50: wire `tau` (num, argument `tau` of step of stream `w`, made at build.py:58) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (returned value 0). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:15:22
+build.py:51: wire `tau` (num, argument `tau` of step of stream `w`, made at build.py:59) is used a second time (branch passed[0]); it was already used at build.py:31 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(tau, 2)  and use each once.

@@ -1,0 +1,127 @@
+// Validate the endpoints, initialize the sparse count trie, then walk k arcs.
+@prog = ((n (s (t (k edges)))) out)
+  & @run ~ (n (s (t (k (edges out)))))
+
+@run = (n (s (t (k (edges out)))))
+  & n ~ {na nr}
+  & nr ~ {nb nc}
+  & s ~ {sa sb}
+  & t ~ {ta tb}
+  & sa ~ $([<] $(na bs))
+  & ta ~ $([<] $(nb bt))
+  & bs ~ $([&] $(bt valid))
+  & valid ~ ?((@run_invalid @run_valid) (nc (sb (tb (k (edges out))))))
+
+@run_invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@run_valid = (* (n (s (t (k (edges out))))))
+  & n ~ *
+  & @put ~ (24 (s (1 (0 (0 initial)))))
+  & @walk ~ (k (initial (edges (t out))))
+
+// Sparse binary trie. An empty subtree is 0; a nonempty internal node is
+// (1 (left right)); leaves are the counts. Indices use all 24 bits.
+@get = (depth (i (tree out)))
+  & depth ~ ?((@get_leaf @get_more) (i (tree out)))
+
+@get_leaf = (i (tree out))
+  & i ~ *
+  & out ~ tree
+
+@get_more = (depth (i ((tag payload) out)))
+  & tag ~ ?((@get_empty @get_node) (payload (depth (i out))))
+
+@get_empty = (* (depth (i out)))
+  & depth ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_node = ((left right) (depth (i out)))
+  & i ~ {i1 i2}
+  & i1 ~ $([&] $(1 bit))
+  & i2 ~ $([>>] $(1 rest))
+  & bit ~ ?((@get_left @get_right) (depth (rest (left (right out)))))
+
+@get_left = (depth (rest (left (right out))))
+  & right ~ *
+  & @get ~ (depth (rest (left out)))
+
+@get_right = (* (depth (rest (left (right out)))))
+  & left ~ *
+  & @get ~ (depth (rest (right out)))
+
+// Add delta to the count at trie index i.
+@put = (depth (i (delta (tree out))))
+  & depth ~ ?((@put_leaf @put_more) (i (delta (tree out))))
+
+@put_leaf = (i (delta (tree out)))
+  & i ~ *
+  & tree ~ $([+] $(delta sum))
+  & out ~ sum
+
+@put_more = (depth (i (delta ((tag payload) out))))
+  & tag ~ ?((@put_empty @put_node) (payload (depth (i (delta out)))))
+
+@put_empty = (* (depth (i (delta out))))
+  & payload ~ *
+  & @put_node ~ (depth (i (delta (0 (0 out)))))
+
+@put_node = ((left right) (depth (i (delta out))))
+  & i ~ {i1 i2}
+  & i1 ~ $([&] $(1 bit))
+  & i2 ~ $([>>] $(1 rest))
+  & bit ~ ?((@put_left @put_right) (depth (rest (delta (left (right out))))))
+
+@put_left = (depth (rest (delta (left (right out)))))
+  & right ~ *
+  & @put ~ (depth (rest (delta (left newleft))))
+  & out ~ (1 (newleft right))
+
+@put_right = (* (rest (delta (left (right out)))))
+  & left ~ *
+  & @put ~ (depth (rest (delta (right newright))))
+  & out ~ (1 (left newright))
+
+@put_node_existing = ((left right) (depth (i (delta out))))
+  & @put_node ~ (depth (i (delta (left (right out))))
+
+// Perform one transition, accumulating the contributions of every arc.
+@step = (vec (edges out))
+  & @edge_loop ~ (edges (vec (0 out)))
+
+@edge_loop = ((tag payload) (vec (acc out)))
+  & tag ~ ?((@edge_nil @edge_cons) (payload (vec (acc out))))
+
+@edge_nil = (payload (vec (acc out)))
+  & payload ~ *
+  & vec ~ *
+  & out ~ acc
+
+@edge_cons = (* ((edge tail) (vec (acc out))))
+  & vec ~ {vec1 vec2}
+  & acc ~ {acc1 acc2}
+  & @edge_proc ~ (edge (vec1 (acc1 mid)))
+  & @edge_loop ~ (tail (vec2 (acc2 (mid out))))
+
+@edge_proc = ((u v) (vec (acc out)))
+  & @get ~ (24 (u (vec count)))
+  & @put ~ (24 (v (count (acc out))))
+
+// Repeat one transition for each of the k arcs.
+@walk = (k (vec (edges (t out))))
+  & k ~ ?((@walk_zero @walk_succ) (vec (edges (t out))))
+
+@walk_zero = (vec (edges (t out)))
+  & @get ~ (24 (t (vec out)))
+  & edges ~ *
+
+@walk_succ = (m (vec (edges (t out))))
+  & edges ~ {edges1 edges2}
+  & @step ~ (vec (edges1 next))
+  & @walk ~ (m (next (edges2 (t out))))

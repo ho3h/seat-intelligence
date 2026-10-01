@@ -1,0 +1,35 @@
+@prog = (inp out)
+  & inp ~ (b (e m))
+  & m ~ {m1 m2}
+  & b ~ $([%] $(m1 bn))
+  & @pow ~ (e (bn (m2 out)))
+
+@pow = (e (b (m out)))
+  & e ~ ?((@pow_zero @pow_succ) (b (m out)))
+
+@pow_zero = (b (m out))
+  & b ~ *
+  & 1 ~ $([%] $(m out))
+
+@pow_succ = (k (b (m out)))
+  & k ~ {k1 k2}
+  & k1 ~ $([+1] $([/2] half))
+  & k2 ~ $([+1] $([%2] parity))
+  & b ~ {b1 b2}
+  & m ~ {m1 mrest}
+  & mrest ~ {m2 m3}
+  & @pow ~ (half (b1 (m1 p)))
+  & p ~ {p1 p2}
+  & p1 ~ $([*] $(p2 prod))
+  & prod ~ $([%] $(m2 sq))
+  & parity ~ ?((@pow_even @pow_odd) (sq (b2 (m3 out))))
+
+@pow_even = (sq (b (m out)))
+  & sq ~ out
+  & b ~ *
+  & m ~ *
+
+@pow_odd = (z (sq (b (m out))))
+  & z ~ *
+  & sq ~ $([*] $(b prod))
+  & prod ~ $([%] $(m out))

@@ -1,0 +1,39 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add = ((@add__C10 a) a)
+
+@add__C0 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@add__C1 = (* (* @List/Nil))
+
+@add__C10 = (?((@add__C8 @add__C9) a) a)
+
+@add__C2 = ({$([=0x0000000] ?((@add__C0 @add__C1) (a b))) a} b)
+
+@add__C3 = (* ($([+] $(a {$([:/0x0001000] d) $([:%0x0001000] b)})) (c (a f))))
+  & @List/Cons ~ (b (e f))
+  & @add ~ (@List/Nil (c (d e)))
+
+@add__C4 = (?((@add__C2 @add__C3) a) a)
+
+@add__C5 = (a ($([+] $(a {$([:/0x0001000] d) $([:%0x0001000] b)})) (c f)))
+  & @List/Cons ~ (b (e f))
+  & @add ~ (c (@List/Nil (d e)))
+
+@add__C6 = (* (a (e (b ($([+] $(a $([+] $(b {$([:/0x0001000] f) $([:%0x0001000] c)})))) (d h))))))
+  & @List/Cons ~ (c (g h))
+  & @add ~ (d (e (f g)))
+
+@add__C7 = (?((@add__C5 @add__C6) a) a)
+
+@add__C8 = ((@add__C4 a) a)
+
+@add__C9 = (* (b (c ((@add__C7 (a (b (c d)))) (a d)))))
+
+@prog = ((a b) c)
+  & @add ~ (a (b (0 c)))
+
+

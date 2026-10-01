@@ -1,0 +1,133 @@
+@prog = ((c edges) out)
+  & c ~ {cw cf}
+  & @clusters ~ (cw (cf (edges (0 out))))
+
+@clusters = ((?((@cl_nil @cl_cons) (pl (cf (edges (i out))))) pl) (cf (edges (i out))))
+
+@cl_nil = (* (cf (edges (i out))))
+  & cf ~ *
+  & edges ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@cl_cons = (* (({hc ht} t) ({cfdeg cfrec} ({eddeg edrec} ({icmp inext} out)))))
+  & hc ~ $([=] $(icmp z))
+  & inext ~ $([+1] next)
+  & z ~ ?((@cl_skip @cl_emit) (t (cfdeg (cfrec (eddeg (edrec (ht (next out))))))))
+
+@cl_skip = (t (cfdeg (cfrec (eddeg (edrec (target (next out)))))))
+  & cfdeg ~ *
+  & eddeg ~ *
+  & target ~ *
+  & @clusters ~ (t (cfrec (edrec (next out))))
+
+@cl_emit = (* (t (cfdeg (cfrec (eddeg (edrec (target (next out))))))))
+  & @degree ~ (eddeg (cfdeg (target d)))
+  & @clusters ~ (t (cfrec (edrec (next rest))))
+  & out ~ (1 (d rest))
+
+@degree = (edges (cf (target out)))
+  & @scan ~ (edges (cf (target ((0 *) (0 out)))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cf (target (seen (count out))))) pl) (cf (target (seen (count out)))))
+
+@scan_nil = (* (cf (target (seen (count out)))))
+  & cf ~ *
+  & target ~ *
+  & seen ~ *
+  & out ~ count
+
+@scan_cons = (* ((edge tail) ({cfmap cfnext} ({targetedge targetnext} (seen (count out))))))
+  & @mapedge ~ (edge (cfmap mapped))
+  & @edge_check ~ (mapped (targetedge (seen (count (cfnext (tail out))))))
+
+@mapedge = ((u v) ({cf1 cf2} out))
+  & @lookup ~ (cf1 (u x))
+  & @lookup ~ (cf2 (v y))
+  & out ~ (x y)
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (i out))) pl) (i out))
+
+@lookup_nil = (* (i out))
+  & i ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) ({ic ir} out)))
+  & ic ~ $([=] $(0 z))
+  & z ~ ?((@lookup_more @lookup_hit) (h (t (ir out))))
+
+@lookup_more = (h (t (ir out)))
+  & h ~ *
+  & ir ~ $([-] $(1 ir2))
+  & @lookup ~ (t (ir2 out))
+
+@lookup_hit = (* (h (t (ir out))))
+  & t ~ *
+  & ir ~ *
+  & out ~ h
+
+@edge_check = (({a1 a2} {b1 b2}) ({tc tn} (seen (count (cf (tail out))))))
+  & a1 ~ $([=] $(b1 z))
+  & z ~ ?((@edge_distinct @edge_self) (a2 (b2 (tc (tn (seen (count (cf (tail out)))))))))
+
+@edge_self = (* (a (b (tc (tn (seen (count (cf (tail out)))))))))
+  & a ~ *
+  & b ~ *
+  & tc ~ *
+  & @scan ~ (tail (cf (tn (seen (count out))))
+
+@edge_distinct = ({at an} ({bn bt} ({ta tb} (tn (seen (count (cf (tail out)))))))
+  & at ~ $([=] $(ta z))
+  & z ~ ?((@edge_check_b @edge_inc_a) (an (bn (bt (tb (tn (seen (count (cf (tail out))))))))))
+
+@edge_check_b = (an (bn (bt (tb (tn (seen (count (cf (tail out)))))))))
+  & bt ~ $([=] $(tb z))
+  & z ~ ?((@edge_no_hit @edge_inc_b) (an (bn (tn (seen (count (cf (tail out))))))))
+
+@edge_inc_a = (* (an (bn (bt (tb (tn (seen (count (cf (tail out))))))))))
+  & an ~ *
+  & bt ~ *
+  & tb ~ *
+  & tn ~ *
+  & @record ~ (bn (seen (count (cf (tail out)))))
+
+@edge_no_hit = (an (bn (tn (seen (count (cf (tail out)))))))
+  & an ~ *
+  & bn ~ *
+  & tn ~ *
+  & @scan ~ (tail (cf (seen (count out))))
+
+@edge_inc_b = (* (an (bn (tn (seen (count (cf (tail out))))))))
+  & bn ~ *
+  & tn ~ *
+  & @record ~ (an (seen (count (cf (tail out)))))
+
+@record = ({c1 c2} ({s1 s2} (count (cf (tail out)))))
+  & @member ~ (s1 (c1 found))
+  & found ~ ?((@record_absent @record_present) (c2 (s2 (count (cf (tail out))))))
+
+@record_absent = (candidate (seen (count (cf (tail out)))))
+  & count ~ $([+1] count2)
+  & @scan ~ (tail (cf ((1 (candidate seen)) (count2 out))))
+
+@record_present = (* (candidate (seen (count (cf (tail out))))))
+  & candidate ~ *
+  & @scan ~ (tail (cf (seen (count out))))
+
+@member = ((?((@member_nil @member_cons) (pl (candidate out))) pl) (candidate out))
+
+@member_nil = (* (candidate out))
+  & candidate ~ *
+  & out ~ 0
+
+@member_cons = (* ((h t) ({c1 c2} out)))
+  & h ~ $([=] $(c1 z))
+  & z ~ ?((@member_no @member_yes) (t (c2 out)))
+
+@member_no = (t (c out))
+  & @member ~ (t (c out))
+
+@member_yes = (* (t (c out)))
+  & t ~ *
+  & c ~ *
+  & out ~ 1

@@ -1,0 +1,131 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & n ~ *
+  & s ~ {sf sv}
+  & @bfs ~ (t (edges ((1 (sf (0 *))) ((1 (sv (0 *))) (0 out))))
+
+@bfs = (t (edges (front (visited (dist out)))))
+  & t ~ {tm tr}
+  & front ~ {fm fr}
+  & @mem ~ (tm (fm hit))
+  & hit ~ ?((@bfs_no @bfs_yes) (tr (edges (fr (visited (dist out))))))
+
+@bfs_no = (t (edges (front (visited (dist out)))))
+  & @frontscan ~ (t (edges (front (visited ((0 *) (dist out))))))
+
+@bfs_yes = (* (t (edges (front (visited (dist out))))))
+  & t ~ *
+  & edges ~ *
+  & front ~ *
+  & visited ~ *
+  & out ~ dist
+
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (x out)))
+  & x ~ {xm xr}
+  & h ~ $([=] $(xm eq))
+  & eq ~ ?((@mem_no @mem_yes) (tail (xr out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (x (tail out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+@frontscan = (t (edges (((?((@front_nil @front_cons) (pl (t (edges (visited (next (dist out))))))) pl) (visited (next (dist out))))))
+  
+@front_nil = (pl (t (edges (visited (next (dist out))))))
+  & pl ~ *
+  & @round_check ~ (t (edges (next (visited (dist out)))))
+
+@front_cons = (* ((u tail) (t (edges (visited (next (dist out)))))))
+  & edges ~ {e_scan e_keep}
+  & @escan ~ (u (e_scan ((e_keep (t (tail (dist out)))) (visited next))))
+
+@escan = (u (edges (((?((@es_nil @es_cons) (pl (u (ctx (visited next))))) pl) (ctx (visited next)))))
+
+@es_nil = (pl (u (ctx (visited next))))
+  & pl ~ *
+  & u ~ *
+  & @after_edge_scan ~ (ctx (visited next))
+
+@es_cons = (* (pl (u (ctx (visited next)))))
+  & pl ~ ((a b) tail)
+  & @edge_item ~ (u ((a b) (tail (ctx (visited next)))))
+
+@after_edge_scan = (ctx (visited next))
+  & ctx ~ (edges (t (tail (dist out))))
+  & @frontscan ~ (t (edges (tail (visited (next (dist out))))))
+
+@edge_item = (u ((a b) (tail (ctx (visited next)))))
+  & u ~ {ua ur}
+  & a ~ {ae ap}
+  & b ~ {be bp}
+  & ae ~ $([=] $(ua eq))
+  & eq ~ ?((@edge_a_no @edge_a_yes) (ur (ap (be (bp (tail (ctx (visited next))))))))
+
+@edge_a_no = (ur (ap (be (bp (tail (ctx (visited next)))))))
+  & bp ~ *
+  & ur ~ {ub ur2}
+  & be ~ $([=] $(ub eq2))
+  & eq2 ~ ?((@edge_b_no @edge_b_yes) (ur2 (ap (tail (ctx (visited next))))))
+
+@edge_a_yes = (* (ur (ap (be (bp (tail (ctx (visited next))))))))
+  & ap ~ *
+  & be ~ *
+  & @discover ~ (bp (ur (tail (ctx (visited next)))))
+
+@edge_b_no = (u (a (tail (ctx (visited next)))))
+  & a ~ *
+  & @escan ~ (u (tail (ctx (visited next))))
+
+@edge_b_yes = (* (u (a (tail (ctx (visited next))))))
+  & @discover ~ (a (u (tail (ctx (visited next)))))
+
+@discover = (cand (u (edges (ctx (visited next)))))
+  & cand ~ {cm cr}
+  & visited ~ {vm vr}
+  & @mem ~ (cm (vm hit))
+  & hit ~ ?((@discover_old @discover_new) (cr (u (edges (ctx (vr next))))))
+
+@discover_old = (cand (u (edges (ctx (visited next)))))
+  & cand ~ *
+  & @escan ~ (u (edges (ctx (visited next))))
+
+@discover_new = (* (cand (u (edges (ctx (visited next))))))
+  & cr ~ {c1 c2}
+  & @escan ~ (u (edges (ctx ((1 (c1 visited)) (1 (c2 next))))))
+
+@round_check = (t (edges (next (visited (dist out)))))
+  & @empty ~ (next empty)
+  & empty ~ ?((@round_more @round_empty) (t (edges (next (visited (dist out))))))
+
+@empty = ((?((@empty_nil @empty_cons) (pl out)) pl) out)
+
+@empty_nil = (pl out)
+  & pl ~ *
+  & out ~ 1
+
+@empty_cons = (* (pl out))
+  & pl ~ *
+  & out ~ 0
+
+@round_more = (t (edges (next (visited (dist out)))))
+  & dist ~ $([+1] dist2)
+  & @bfs ~ (t (edges (next (visited (dist2 out)))))
+
+@round_empty = (* (t (edges (next (visited (dist out))))))
+  & t ~ *
+  & edges ~ *
+  & next ~ *
+  & visited ~ *
+  & dist ~ *
+  & out ~ 16777215

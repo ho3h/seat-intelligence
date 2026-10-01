@@ -1,0 +1,65 @@
+# t5_cluster_same: min-label propagation (the exp7 cc engine) for the labels; the query list is walked in
+# parallel with the edge list: each query pushes two "return address" sinks (unscoped lambdas) into a
+# request tree keyed by a and b and emits ($la == $lb) into the output. At the end every final label is
+# wired into its sinks (no keyed reads, no rounds). seq() keeps the delivery alive.
+def prog(x):
+  (n, es, qs) = x
+  (l, m) = lvl(n, 0, 1)
+  A = walk(es, zb(l), l, m)
+  (out, Q) = qwalk(qs, zl(l), l, m)
+  D0 = init(l, 0, n)
+  D = loop(A, D0, emit(A, D0, l, l, m, zinf(l)), l, m)
+  return seq(deliver_all(D, Q, l), out)
+
+def seq(z, v):
+  switch z:
+    case 0:
+      return v
+    case _:
+      return v
+
+def zl(l):
+  switch l:
+    case 0:
+      return []
+    case _:
+      return (zl(l-1), zl(l-1))
+
+def push(t, k, l, m, v):
+  switch l:
+    case 0:
+      return List/Cons(v, t)
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, push(b, k, l-1, m >> 1, v))
+      else:
+        return (push(a, k, l-1, m >> 1, v), b)
+
+def qwalk(qs, Q, l, m):
+  match qs:
+    case List/Nil:
+      return ([], Q)
+    case List/Cons:
+      (a, b) = qs.head
+      (rest, Q2) = qwalk(qs.tail, push(push(Q, a, l, m, lambda $la: 0), b, l, m, lambda $lb: 0), l, m)
+      return (List/Cons($la == $lb, rest), Q2)
+
+def deliver_all(D, Q, l):
+  switch l:
+    case 0:
+      (d, f) = D
+      return deliver(d, Q)
+    case _:
+      (d1, d2) = D
+      (q1, q2) = Q
+      return deliver_all(d1, q1, l-1) + deliver_all(d2, q2, l-1)
+
+def deliver(v, sinks):
+  match sinks:
+    case List/Nil:
+      return 0
+    case List/Cons:
+      f = sinks.head
+      return f(v) + deliver(v, sinks.tail)
+

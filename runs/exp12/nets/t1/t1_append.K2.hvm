@@ -1,0 +1,29 @@
+@prog = ((xs ys) out)
+  & @ap2 ~ (xs (ys out))
+
+@ap2 = (lv1 (ys out))
+  & @ap2_first_lw ~ (lv1 (ys out))
+
+@ap2_nil = (* (a a))
+
+@ap2_first = (* ((head lv2) (ys (1 (head rest)))))
+  & @ap2_two_lw ~ (lv2 (ys rest))
+
+@ap2_one = (* (a a))
+
+@ap2_two = (* ((head2 tail2) (ys (1 (head2 result)))))
+  & @ap2_first_lw ~ (tail2 (ys result))
+
+@ap2_first_lw = (ls25 (q15 q16))
+  & ls25 ~ (g22 (e20 (g23 (e21 tk24))))
+  & g22 ~ ?((@ap2_nil @ap2_first_la) ((e20 (q18 q19)) (q15 q16)))
+  & g23 ~ ?((@ap2_one @ap2_two) ((e21 tk24) (q18 q19)))
+
+@ap2_two_lw = (ls37 (q27 q28))
+  & ls37 ~ (g34 (e32 (g35 (e33 tk36))))
+  & g34 ~ ?((@ap2_one @ap2_two_la) ((e32 (q30 q31)) (q27 q28)))
+  & g35 ~ ?((@ap2_nil @ap2_first) ((e33 tk36) (q30 q31)))
+
+@ap2_first_la = (* ((head (ys rest)) (ys (1 (head rest)))))
+
+@ap2_two_la = (* ((head2 (ys result)) (ys (1 (head2 result)))))

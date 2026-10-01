@@ -1,0 +1,76 @@
+@prog = (input output)
+  & @mode ~ (input stats)
+  & stats ~ (value count)
+  & value ~ output
+  & count ~ *
+
+@mode = ((?((@mn @mc) (pl out)) pl) out)
+
+@mn = (pl out)
+  & pl ~ *
+  & out ~ (0 0)
+
+@mc = (* ((h t) out))
+  & h ~ {hfreq hcand}
+  & t ~ {tmode tfreq}
+  & @mode ~ (tmode mstats)
+  & mstats ~ (best bcount)
+  & @freq ~ (tfreq (hfreq fcount))
+  & fcount ~ $([+1] candcount)
+  & @select ~ (hcand (candcount (best (bcount out))))
+
+@freq = (lv1 (target out))
+  & @freq_cons_lw ~ (lv1 (target out))
+
+@freq_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ 0
+
+@freq_cons = (* (($([=] $(tc eq)) t) ({tc tr} out)))
+  & @freq_cons_lw ~ (t (tr $([+] $(eq out))))
+
+@select = (c (nc (b (bc out))))
+  & nc ~ {ncc nck}
+  & bc ~ {bcc bck}
+  & ncc ~ $([>] $(bcc gt))
+  & gt ~ ?((@sel_no @sel_yes) (c (nck (b (bck out)))))
+
+@sel_yes = (* (c (nc (b (bc out)))))
+  & b ~ *
+  & bc ~ *
+  & out ~ (c nc)
+
+@sel_no = (c (nc (b (bc out))))
+  & nc ~ {nce nck}
+  & bc ~ {bce bck}
+  & nce ~ $([=] $(bce eq))
+  & eq ~ ?((@sel_diff @sel_equal) (c (nck (b (bck out)))))
+
+@sel_diff = (c (nc (b (bc out))))
+  & c ~ *
+  & nc ~ *
+  & out ~ (b bc)
+
+@sel_equal = (* (c (nc (b (bc out)))))
+  & c ~ {ccmp ckeep}
+  & b ~ {bcmp bkeep}
+  & ccmp ~ $([<] $(bcmp lt))
+  & lt ~ ?((@sel_old @sel_new) (ckeep (nc (bkeep (bc out)))))
+
+@sel_old = (ckeep (nc (bkeep (bc out))))
+  & ckeep ~ *
+  & nc ~ *
+  & out ~ (bkeep bc)
+
+@sel_new = (* (ckeep (nc (bkeep (bc out)))))
+  & bkeep ~ *
+  & bc ~ *
+  & out ~ (ckeep nc)
+
+@freq_cons_lw = (ls20 (q10 q11))
+  & ls20 ~ (g17 (e15 (g18 (e16 tk19))))
+  & g17 ~ ?((@freq_nil @freq_cons_la) ((e15 (q13 q14)) (q10 q11)))
+  & g18 ~ ?((@freq_nil @freq_cons) ((e16 tk19) (q13 q14)))
+
+@freq_cons_la = (* (($([=] $(tc eq)) (tr $([+] $(eq out)))) ({tc tr} out)))

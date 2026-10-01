@@ -1,0 +1,202 @@
+// Initialize a list of n copies of 2.
+@init2 = (n out)
+  & n ~ ?((@init2_nil @init2_cons) (out *))
+
+@init2_nil = (out unused)
+  & unused ~ *
+  & out ~ (0 *)
+
+@init2_cons = (n (out unused))
+  & unused ~ *
+  & @init2 ~ (n tail)
+  & out ~ (1 (2 tail))
+
+// Build a list of n empty adjacency lists.
+@adj_init = (n out)
+  & n ~ ?((@adj_init_nil @adj_init_cons) (out *))
+
+@adj_init_nil = (out unused)
+  & unused ~ *
+  & out ~ (0 *)
+
+@adj_init_cons = (n (out unused))
+  & unused ~ *
+  & @adj_init ~ (n tail)
+  & out ~ (1 ((0 *) tail))
+
+// Read list element i.
+@get = (i ((?((@get_nil @get_cons) (pl (i out))) pl) out))
+
+@get_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_here @get_step) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_step = (i (h (t out)))
+  & h ~ *
+  & @get ~ (i (t out))
+
+// Set list element i to v.
+@set = (i (v ((?((@set_nil @set_cons) (i (v (pl out)))) pl) out)))
+
+@set_nil = (i (v (pl out)))
+  & i ~ *
+  & v ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (i (v ((h t) out))))
+  & i ~ ?((@set_here @set_step) (v (h (t out))))
+
+@set_here = (v (h (t out)))
+  & h ~ *
+  & out ~ (1 (v t))
+
+@set_step = (i (v (h (t out))))
+  & @set ~ (i (v (t tail)))
+  & out ~ (1 (h tail))
+
+// Add both directions of every edge to the adjacency lists.
+@build = ((?((@build_nil @build_cons) (pl (adj out))) pl) (adj out))
+
+@build_nil = (pl (adj out))
+  & pl ~ *
+  & out ~ adj
+
+@build_cons = (* (((u v) tail) (adj out)))
+  & u ~ {ug {us uv}}
+  & v ~ {vg {vs vv}}
+  & adj ~ {ag as}
+  & @get ~ (ug (ag oldu))
+  & @set ~ (us ((1 (vv oldu)) (as adj1)))
+  & adj1 ~ {ag2 as2}
+  & @get ~ (vg (ag2 oldv))
+  & @set ~ (vs ((1 (uv oldv)) (as2 adj2)))
+  & @build ~ (tail (adj2 out))
+
+// Walk neighbors, checking and propagating the requested colour.
+@neighbors = ((?((@neighbors_nil @neighbors_cons) (pl (want (adj (colors (bad out))))) pl) (want (adj (colors (bad out)))))
+
+@neighbors_nil = (pl (want (adj (colors (bad out)))))
+  & pl ~ *
+  & want ~ *
+  & adj ~ *
+  & out ~ (colors bad)
+
+@neighbors_cons = (* (((x tail) (want (adj (colors (bad out)))))))
+  & @neighbor_check ~ (x (tail (want (adj (colors (bad out))))))
+
+@neighbor_check = (x (tail (want (adj (colors (bad out))))))
+  & x ~ {xg {xs xd}}
+  & colors ~ {cg cc}
+  & @get ~ (xg (cg val))
+  & val ~ {vtest vkeep}
+  & vtest ~ $([=] $(2 z))
+  & z ~ ?((@nc_assigned @nc_uncoloured) (xs (xd (vkeep (tail (want (adj (cc (bad out))))))))
+
+@nc_uncoloured = (* (xs (xd (vkeep (tail (want (adj (colors (bad out))))))))
+  & xs ~ {xset xdrop}
+  & xdrop ~ *
+  & xset ~ xs2
+  & vkeep ~ *
+  & want ~ {ws {wd wt}}
+  & adj ~ {ad1 ad2}
+  & @set ~ (xs2 (ws (colors nc)))
+  & @dfs ~ (xd (wd (ad1 (nc (bad dstate)))))
+  & dstate ~ (dc db)
+  & @neighbors ~ (tail (wt (ad2 (dc (db out))))
+
+@nc_assigned = (xs (xd (vkeep (tail (want (adj (colors (bad out))))))))
+  & xs ~ *
+  & xd ~ *
+  & want ~ {wc wt}
+  & vkeep ~ $([=] $(wc eq))
+  & eq ~ ?((@nc_ok @nc_conflict) (tail (wt (adj (colors (bad out))))))
+
+@nc_ok = (tail (want (adj (colors (bad out)))))
+  & @neighbors ~ (tail (want (adj (colors (bad out))))
+
+@nc_conflict = (* (tail (want (adj (colors (bad out))))))
+  & tail ~ *
+  & want ~ *
+  & adj ~ *
+  & out ~ (colors 1)
+
+// Explore one vertex and recursively propagate the opposite colour.
+@dfs = (vertex (color (adj (colors (bad out)))))
+  & adj ~ {ag an}
+  & @get ~ (vertex (ag neigh))
+  & 1 ~ $([-] $(color want))
+  & @neighbors ~ (neigh (want (an (colors (bad out))))
+
+// Visit vertices in ascending order. The first uncoloured vertex in a
+// component is therefore seeded with colour 0.
+@loop = (i (n (adj (colors (bad out)))))
+  & i ~ {itest ikeep}
+  & n ~ {ntest nkeep}
+  & itest ~ $([<] $(ntest eq))
+  & eq ~ ?((@loop_done @loop_more) (ikeep (nkeep (adj (colors (bad out))))))
+
+@loop_done = (ikeep (nkeep (adj (colors (bad out)))))
+  & ikeep ~ *
+  & @final ~ (nkeep (adj (colors (bad out))))
+
+@loop_more = (* (ikeep (nkeep (adj (colors (bad out))))))
+  & ikeep ~ {ig {is {id inext}}}
+  & colors ~ {cg ck}
+  & @get ~ (ig (cg cv))
+  & cv ~ $([=] $(2 z))
+  & z ~ ?((@loop_assigned @loop_uncoloured) (is (id (inext (nkeep (adj (ck (bad out))))))))
+
+@loop_assigned = (is (id (inext (n (adj (colors (bad out)))))))
+  & is ~ *
+  & id ~ *
+  & inext ~ $([+1] next)
+  & @loop ~ (next (n (adj (colors (bad out)))))
+
+@loop_uncoloured = (* (is (id (inext (n (adj (colors (bad out))))))))
+  & @set ~ (is (0 (colors seeded)))
+  & adj ~ {adfs aloop}
+  & @dfs ~ (id (0 (adfs (seeded (bad dstate)))))
+  & dstate ~ (dc db)
+  & inext ~ $([+1] next)
+  & @loop ~ (next (n (aloop (dc (db out)))))
+
+@final = (n (adj (colors (bad out))))
+  & bad ~ ?((@final_ok @final_invalid) (n (adj (colors out))))
+
+@final_ok = (n (adj (colors out)))
+  & n ~ *
+  & adj ~ *
+  & out ~ colors
+
+@final_invalid = (* (n (adj (colors out))))
+  & adj ~ *
+  & colors ~ *
+  & @bad_fill ~ (n out)
+
+@bad_fill = (n out)
+  & n ~ ?((@bad_fill_nil @bad_fill_cons) (out *))
+
+@bad_fill_nil = (out unused)
+  & unused ~ *
+  & out ~ (0 *)
+
+@bad_fill_cons = (n (out unused))
+  & unused ~ *
+  & @bad_fill ~ (n tail)
+  & out ~ (1 (16777215 tail))
+
+@prog = ((n edges) out)
+  & n ~ {na {nc nl}}
+  & @adj_init ~ (na adj0)
+  & @init2 ~ (nc colors)
+  & @build ~ (edges (adj0 adj))
+  & @loop ~ (0 (nl (adj (colors (0 out)))))

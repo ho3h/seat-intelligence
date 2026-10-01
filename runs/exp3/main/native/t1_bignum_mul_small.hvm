@@ -1,0 +1,9 @@
+@prog = ((a ?((@kzero ($([+1] k_q3) ((?((@mul_nil @mul_cons) (pl_q0_q3 (k_q3 (0 out_q3)))) pl_q0_q3) out_q3))) (a out))) out)
+
+@kzero = (* (0 *))
+
+@mul_nil = (* (* (?((@finish_zero ($([+1] digit_q7) ((1 (digit_q7 (0 *))) *))) (out *)) out)))
+
+@mul_cons = (* (($([*] $(km $([+] $(carry {$([:%4096] digit) $([:/4096] nextcarry)})))) (?((@mul_nil @mul_cons) (pl_q1 (kr (nextcarry tailout)))) pl_q1)) ({km kr} (carry (1 (digit tailout))))))
+
+@finish_zero = ((0 *) *)

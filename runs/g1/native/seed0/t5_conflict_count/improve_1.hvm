@@ -1,0 +1,38 @@
+@prog = ((cl ml) out)
+  & @count ~ (ml (cl out))
+
+@count = ((?((@count_nil @count_cons) (pl (cl out))) pl) (cl out))
+
+@count_nil = (* (cl out))
+  & cl ~ *
+  & out ~ 0
+
+@count_cons = (* (((a b) rest) (cl out)))
+  & cl ~ {cl_tail cl_pair}
+  & @count ~ (rest (cl_tail tailcount))
+  & @check ~ ((a b) (cl_pair (tailcount out)))
+
+@check = ((a b) (cl (tailcount out)))
+  & cl ~ {ca cb}
+  & @lookup ~ (a (ca va))
+  & @lookup ~ (b (cb vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@no_conflict @one_more) (tailcount out))
+
+@no_conflict = (x x)
+
+@one_more = (tailcount out)
+  & tailcount ~ $([+1] out)
+
+@lookup = (idx (lst out))
+  & idx ~ ?((@look_zero @look_succ) (lst out))
+
+@look_zero = ((tag (head tail)) out)
+  & tag ~ *
+  & tail ~ *
+  & head ~ out
+
+@look_succ = (idx ((tag (head tail)) out))
+  & tag ~ *
+  & head ~ *
+  & @lookup ~ (idx (tail out))

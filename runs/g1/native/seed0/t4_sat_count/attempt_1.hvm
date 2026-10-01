@@ -1,0 +1,69 @@
+// Count satisfying assignments by evaluating the formula for assignments 0 through 7.
+@prog = (input out)
+  & @count ~ (8 (input (0 out)))
+
+@count = (?((@count_done @count_pos) (formula (acc out))) (formula (acc out)))
+
+@count_done = (formula (acc out))
+  & formula ~ *
+  & out ~ acc
+
+@count_pos = (n (formula (acc out)))
+  & n ~ {assignment remaining}
+  & formula ~ {f_eval f_recur}
+  & @eval ~ (f_eval (assignment value))
+  & value ~ $([+] $(acc next))
+  & @count ~ (remaining (f_recur (next out)))
+
+// Evaluate a formula. The constructor tag is sent to the switch;
+// its payload is carried in the switch context.
+@eval = ((?((@ev_false @ev_pos) (payload (vars out))) payload) (vars out))
+
+@ev_false = (payload (vars out))
+  & payload ~ *
+  & vars ~ *
+  & out ~ 0
+
+@ev_pos = (n ctx)
+  & n ~ ?((@ev_true @ev_ge2) ctx)
+
+@ev_true = (payload (vars out))
+  & payload ~ *
+  & vars ~ *
+  & out ~ 1
+
+@ev_ge2 = (n ctx)
+  & n ~ ?((@ev_var @ev_ge3) ctx)
+
+@ev_var = (i (vars out))
+  & vars ~ $([>>] $(i shifted))
+  & shifted ~ $([&] $(1 out))
+
+@ev_ge3 = (n ctx)
+  & n ~ ?((@ev_not @ev_ge4) ctx)
+
+@ev_not = (child (vars out))
+  & @eval ~ (child (vars value))
+  & 1 ~ $([-] $(value out))
+
+@ev_ge4 = (n ctx)
+  & n ~ ?((@ev_and @ev_ge5) ctx)
+
+@ev_and = ((a b) (vars out))
+  & vars ~ {v1 v2}
+  & @eval ~ (a (v1 x))
+  & @eval ~ (b (v2 y))
+  & x ~ $([&] $(y out))
+
+@ev_ge5 = (n ctx)
+  & n ~ ?((@ev_or @ev_bad) ctx)
+
+@ev_or = ((a b) (vars out))
+  & vars ~ {v1 v2}
+  & @eval ~ (a (v1 x))
+  & @eval ~ (b (v2 y))
+  & x ~ $([|] $(y out))
+
+@ev_bad = (n ctx)
+  & n ~ *
+  & ctx ~ *

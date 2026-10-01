@@ -1,0 +1,115 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@prepend8 = (a (b (c (d (e (f (g (h (i q)))))))))
+  & @List/Cons ~ (a (p q))
+  & @List/Cons ~ (b (o p))
+  & @List/Cons ~ (c (n o))
+  & @List/Cons ~ (d (m n))
+  & @List/Cons ~ (e (l m))
+  & @List/Cons ~ (f (k l))
+  & @List/Cons ~ (g (j k))
+  & @List/Cons ~ (h (i j))
+
+@prog = ((a b) c)
+  & @take ~ (a (b c))
+
+@take = ({$([>0x0000008] a) b} c)
+  & $(a ?((@take__C0 @take__C1) (b c))) ~ [=0x0000000]
+
+@take8 = (a ((@take8__C22 (a b)) b))
+
+@take8__C0 = (* (f (a (g (b (c (d (e n))))))))
+  & @List/Cons ~ (a (m n))
+  & @List/Cons ~ (b (l m))
+  & @List/Cons ~ (c (k l))
+  & @List/Cons ~ (d (j k))
+  & @List/Cons ~ (e (i j))
+  & @List/Cons ~ (f (h i))
+  & @List/Cons ~ (g (@List/Nil h))
+
+@take8__C1 = (* (h (j ($([:-0x0000008] i) (f (a (g (b (c (d (e l)))))))))))
+  & @prepend8 ~ (a (b (c (d (e (f (g (h (k l)))))))))
+  & @take ~ (i (j k))
+
+@take8__C10 = (* (f ((@take8__C8 (a (b (c (d (e (f g))))))) (a (b (c (d (e g))))))))
+
+@take8__C11 = (?((@take8__C9 @take8__C10) a) a)
+
+@take8__C12 = (* (a (b (c f))))
+  & @List/Cons ~ (a (e f))
+  & @List/Cons ~ (b (d e))
+  & @List/Cons ~ (c (@List/Nil d))
+
+@take8__C13 = (* (e ((@take8__C11 (a (b (c (d (e f)))))) (a (b (c (d f)))))))
+
+@take8__C14 = (?((@take8__C12 @take8__C13) a) a)
+
+@take8__C15 = (* (a (b d)))
+  & @List/Cons ~ (a (c d))
+  & @List/Cons ~ (b (@List/Nil c))
+
+@take8__C16 = (* (d ((@take8__C14 (a (b (c (d e))))) (a (b (c e))))))
+
+@take8__C17 = (?((@take8__C15 @take8__C16) a) a)
+
+@take8__C18 = (* (a b))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@take8__C19 = (* (c ((@take8__C17 (a (b (c d)))) (a (b d)))))
+
+@take8__C2 = (?((@take8__C0 @take8__C1) a) a)
+
+@take8__C20 = (?((@take8__C18 @take8__C19) a) a)
+
+@take8__C21 = (* (b ((@take8__C20 (a (b c))) (a c))))
+
+@take8__C22 = (?(((* @List/Nil) @take8__C21) a) a)
+
+@take8__C3 = (* (f (a (b (c (d (e l)))))))
+  & @List/Cons ~ (a (k l))
+  & @List/Cons ~ (b (j k))
+  & @List/Cons ~ (c (i j))
+  & @List/Cons ~ (d (h i))
+  & @List/Cons ~ (e (g h))
+  & @List/Cons ~ (f (@List/Nil g))
+
+@take8__C4 = (* (d ((@take8__C2 (a (b (c (d e))))) (a (b (c e))))))
+
+@take8__C5 = (?((@take8__C3 @take8__C4) a) a)
+
+@take8__C6 = (* (a (b (c (d (e j))))))
+  & @List/Cons ~ (a (i j))
+  & @List/Cons ~ (b (h i))
+  & @List/Cons ~ (c (g h))
+  & @List/Cons ~ (d (f g))
+  & @List/Cons ~ (e (@List/Nil f))
+
+@take8__C7 = (* (b ((@take8__C5 (a (b c))) (a c))))
+
+@take8__C8 = (?((@take8__C6 @take8__C7) a) a)
+
+@take8__C9 = (* (a (b (c (d h)))))
+  & @List/Cons ~ (a (g h))
+  & @List/Cons ~ (b (f g))
+  & @List/Cons ~ (c (e f))
+  & @List/Cons ~ (d (@List/Nil e))
+
+@take__C0 = a
+  & @take_small ~ a
+
+@take__C1 = (* a)
+  & @take8 ~ a
+
+@take_small = ({$([=0x0000000] ?((@take_small__C2 (* (* (* @List/Nil)))) (a b))) a} b)
+
+@take_small__C0 = (* (a (c ($([:-0x0000001] b) e))))
+  & @List/Cons ~ (a (d e))
+  & @take_small ~ (b (c d))
+
+@take_small__C1 = (?(((* @List/Nil) @take_small__C0) a) a)
+
+@take_small__C2 = (a ((@take_small__C1 (a b)) b))
+
+

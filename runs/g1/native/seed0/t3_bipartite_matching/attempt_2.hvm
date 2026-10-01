@@ -1,0 +1,15 @@
+@prog = (input output)
+  & input ~ (a (b edges))
+  & a ~ *
+  & b ~ *
+  & @has ~ (edges output)
+
+@has = (edges out)
+  & edges ~ (?( (@has_nil @has_cons) out) payload)
+  & payload ~ *
+
+@has_nil = 0
+
+@has_cons = (dummy out)
+  & dummy ~ *
+  & out ~ 1

@@ -1,0 +1,54 @@
+{
+ "pid": "t3_cyclic_vertices",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 2536,
+    "itrs_median_big": 7715215,
+    "itrs_max": 15021147,
+    "depth_median_big": 3887877,
+    "depth_max": 7137345
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 2998,
+    "itrs_median_big": 6750370,
+    "itrs_max": 18955903,
+    "depth_median_big": 3137796,
+    "depth_max": 8902368
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 244802,
+ "best": {
+  "itrs_median_small": 2998,
+  "itrs_median_big": 6750370,
+  "itrs_max": 18955903,
+  "depth_median_big": 3137796,
+  "depth_max": 8902368
+ },
+ "usd": 0.060124015,
+ "free_rejects": 1,
+ "audit": [
+  "fail",
+  "fail"
+ ]
+}

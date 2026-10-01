@@ -1,0 +1,220 @@
+// Validate the endpoints, then run breadth-first search with path counts.
+@prog = ((n (s (t edges))) out)
+  & @valid_s ~ (n (s (t (edges out))))
+
+@valid_s = (n (s (t (edges out))))
+  & n ~ {nc nk}
+  & s ~ {sc sk}
+  & sc ~ $([<] $(nc ok))
+  & ok ~ ?((@invalid @valid_t) (nk (sk (t (edges out)))))
+
+@valid_t = (n (s (t (edges out))))
+  & n ~ {nc nk}
+  & t ~ {tc tk}
+  & tc ~ $([<] $(nc ok))
+  & ok ~ ?((@invalid @begin) (nk (s (tk (edges out)))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@begin = (n (s (t (edges out))))
+  & s ~ {sf ss}
+  & @bfs ~ ((1 ((sf 1) (0 *))) (t (n (edges ((1 (ss (0 *))) (n out))))))
+
+// BFS state: (frontier, target, vertex-count, edges, visited, rounds-left, output).
+@bfs = (front (t (n (edges (seen (r out)))))
+  & front ~ {fl fr}
+  & t ~ {tl tk}
+  & @lookup ~ (tl (fl found_pair))
+  & found_pair ~ (found count)
+  & found ~ ?((@bfs_miss @bfs_hit) (count (tk (n (edges (fr (seen (r out))))))))
+
+@bfs_hit = (count (t (n (edges (front (seen (r out)))))))
+  & t ~ *
+  & n ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & r ~ *
+  & out ~ count
+
+@bfs_miss = (count (t (n (edges (front (seen (r out)))))))
+  & count ~ *
+  & r ~ {rc rk}
+  & rc ~ $([=] $(0 eq))
+  & eq ~ ?((@bfs_go @bfs_exhaust) (rk (t (n (edges (front (seen out)))))))
+
+@bfs_exhaust = (r (t (n (edges (front (seen out))))))
+  & r ~ *
+  & t ~ *
+  & n ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ 0
+
+@bfs_go = (r (t (n (edges (front (seen out))))))
+  & @vscan ~ (0 (n (t (edges (front (seen ((0 *) ((0 *) (r out))))))))
+
+// Scan vertices in order to build the next frontier.
+@vscan = (i (n (t (edges (front (seen (nf (ns (r out))))))))
+  & i ~ {ic ik}
+  & n ~ {nc nk}
+  & ic ~ $([<] $(nc test))
+  & test ~ ?((@v_done @v_inside) (ik (nk (t (edges (front (seen (nf (ns (r out)))))))))
+
+@v_done = (i (n (t (edges (front (seen (nf (ns (r out))))))))
+  & i ~ *
+  & front ~ *
+  & r ~ $([-1] r2)
+  & @append ~ (seen (ns joined))
+  & @bfs ~ (nf (t (n (edges (joined (r2 out))))))
+
+@v_inside = (i (n (t (edges (front (seen (nf (ns (r out))))))))
+  & i ~ {im ik}
+  & seen ~ {sm sk}
+  & @mem ~ (im (sm found))
+  & found ~ ?((@v_candidate @v_skip) (ik (n (t (edges (front (sk (nf (ns (r out)))))))))
+
+@v_skip = (i (n (t (edges (front (seen (nf (ns (r out))))))))
+  & @vnext ~ (i (n (t (edges (front (seen (nf (ns (r out))))))))
+
+@v_candidate = (i (n (t (edges (front (seen (nf (ns (r out))))))))
+  & i ~ {isum ikeep}
+  & edges ~ {esum ekeep}
+  & front ~ {fsum fkeep}
+  & @sum_edges ~ (esum (isum (fsum (0 (0 pair)))))
+  & pair ~ (has count)
+  & has ~ ?((@candidate_no @candidate_yes) (count (ikeep (n (t (ekeep (fkeep (seen (nf (ns (r out))))))))))
+
+@candidate_no = (count (i (n (t (edges (front (seen (nf (ns (r out)))))))))
+  & count ~ *
+  & @vnext ~ (i (n (t (edges (front (seen (nf (ns (r out))))))))
+
+@candidate_yes = (count (i (n (t (edges (front (seen (nf (ns (r out)))))))))
+  & i ~ {ivf {ivs ivn}}
+  & @vnext ~ (ivn (n (t (edges (front (seen ((1 ((ivf count) nf)) ((1 (ivs ns)) (r out))))))))
+
+@vnext = (i (n (t (edges (front (seen (nf (ns (r out))))))))
+  & i ~ $([+1] i2)
+  & @vscan ~ (i2 (n (t (edges (front (seen (nf (ns (r out))))))))
+
+// Membership test for a vertex in a list.
+@mem = ((?((@mem_nil @mem_cons) (x out)) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (x out)))
+  & h ~ {hv hh}
+  & x ~ {xv xh}
+  & xv ~ $([=] $(hv eq))
+  & eq ~ ?((@mem_no @mem_yes) (hh (tail (xh out))))
+
+@mem_no = (h (tail (x out)))
+  & h ~ *
+  & x ~ *
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+// Look up a vertex in the frontier; return (found, path-count).
+@lookup = ((?((@look_nil @look_cons) (x out)) pl) (x out))
+
+@look_nil = (* (x out))
+  & x ~ *
+  & out ~ (0 0)
+
+@look_cons = (* ((h tail) (x out)))
+  & h ~ {hv hh}
+  & x ~ {xv xh}
+  & xv ~ $([=] $(hv eq))
+  & eq ~ ?((@look_no @look_yes) (hh (tail (xh out))))
+
+@look_no = (hh (tail (x out)))
+  & hh ~ *
+  & @lookup ~ (tail (x out))
+
+@look_yes = (hh (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ (1 hh)
+
+// Sum the path counts at frontier vertices adjacent to i.
+// Return (has-neighbor, total-count).
+@sum_edges = ((?((@sum_nil @sum_cons) (i (front (acc (any out))))) pl) (i (front (acc (any out)))))
+
+@sum_nil = (* (i (front (acc (any out)))))
+  & i ~ *
+  & front ~ *
+  & out ~ (any acc)
+
+@sum_cons = (* ((u v) (tail (i (front (acc (any out)))))))
+  & @edge_check_u ~ (u (v (tail (i (front (acc (any out)))))))
+
+@edge_check_u = (u (v (tail (i (front (acc (any out)))))))
+  & u ~ {uc uk}
+  & i ~ {ic ik}
+  & uc ~ $([=] $(ic eq))
+  & eq ~ ?((@edge_check_v @edge_use_v) (uk (v (tail (ik (front (acc (any out))))))))
+
+@edge_check_v = (u (v (tail (i (front (acc (any out)))))))
+  & u ~ *
+  & v ~ {vc vk}
+  & i ~ {ic ik}
+  & vc ~ $([=] $(ic eq))
+  & eq ~ ?((@edge_skip @edge_use_u) (vk (tail (ik (front (acc (any out)))))))
+
+@edge_use_v = (u (v (tail (i (front (acc (any out)))))))
+  & u ~ *
+  & front ~ {fl fr}
+  & @lookup ~ (v (fl found_pair))
+  & found_pair ~ (present ways)
+  & present ~ ?((@use_v_no @use_v_yes) (ways (tail (i (fr (acc (any out))))))
+
+@use_v_no = (ways (tail (i (front (acc (any out))))))
+  & ways ~ *
+  & @sum_edges ~ (tail (i (front (acc (any out)))))
+
+@use_v_yes = (ways (tail (i (front (acc (any out))))))
+  & acc ~ $([+] $(ways acc2))
+  & any ~ *
+  & @sum_edges ~ (tail (i (front (acc2 (1 out))))
+
+@edge_use_u = (v (tail (i (front (acc (any out))))))
+  & v ~ *
+  & front ~ {fl fr}
+  & @lookup ~ (u (fl found_pair))
+  & found_pair ~ (present ways)
+  & present ~ ?((@use_u_no @use_u_yes) (ways (tail (i (fr (acc (any out))))))
+
+@use_u_no = (ways (tail (i (front (acc (any out))))))
+  & ways ~ *
+  & @sum_edges ~ (tail (i (front (acc (any out)))))
+
+@use_u_yes = (ways (tail (i (front (acc (any out))))))
+  & acc ~ $([+] $(ways acc2))
+  & any ~ *
+  & @sum_edges ~ (tail (i (front (acc2 (1 out))))
+
+@edge_skip = (v (tail (i (front (acc (any out))))))
+  & v ~ *
+  & @sum_edges ~ (tail (i (front (acc (any out)))))
+
+// Append list a to list b.
+@append = ((?((@append_nil @append_cons) (b out)) pl) (b out))
+
+@append_nil = (* (b out))
+  & out ~ b
+
+@append_cons = (* ((h tail) (b out)))
+  & @append ~ (tail (b rest))
+  & out ~ (1 (h rest))

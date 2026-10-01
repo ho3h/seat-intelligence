@@ -1,0 +1,159 @@
+// Greedy colouring, processing vertices in increasing order.
+@prog = ((n edges) out)
+  & @loop ~ (n (0 (edges ((0 *) out))))
+
+@loop = (?( (@done @more) (v (edges (colors out))) ) (v (edges (colors out))))
+
+@done = (v (edges (colors out)))
+  & v ~ *
+  & edges ~ *
+  & @rev ~ (colors out)
+
+@more = (nminus (v (edges (colors out))))
+  & {edges_scan edges_next} ~ edges
+  & {colors_scan colors_next} ~ colors
+  & {v_scan v_inc} ~ v
+  & v_inc ~ $([+] $(1 v_next))
+  & @scan ~ ((edges_scan (v_scan (colors_scan (0 *)))) forbid)
+  & @small ~ (forbid (0 chosen))
+  & @loop ~ (nminus (v_next (edges_next (1 (chosen colors_next))))
+
+// Scan every edge, collecting colours of already-coloured neighbours.
+@scan = (((?((@scan_nil @scan_cons) (payload (v (colors (acc out))))) payload) (v (colors acc))) out)
+
+@scan_nil = (payload (v (colors (acc out))))
+  & payload ~ *
+  & v ~ *
+  & colors ~ *
+  & acc ~ *
+  & out ~ (0 *)
+
+@scan_cons = (* (((u w) t) (v (colors (acc out)))))
+  & @edge ~ ((u (w (v (t (colors acc))))) out)
+
+// Decide whether this edge contributes w or u as a prior neighbour.
+@edge = ((u (w (v (t (colors acc))))) out)
+  & {u_eq u_keep} ~ u
+  & {v_eq v_keep} ~ v
+  & u_eq ~ $([=] $(v_eq eq))
+  & eq ~ ?((@edge_u_no @edge_u_yes) (u_keep (w (v_keep (t (colors (acc out))))))
+
+@edge_u_yes = (* (u (w (v (t (colors (acc out)))))))
+  & u ~ *
+  & {w_cmp w_keep} ~ w
+  & {v_cmp v_keep} ~ v
+  & w_cmp ~ $([<] $(v_cmp z))
+  & z ~ ?((@edge_skip1 @edge_add_w) (w_keep (v_keep (t (colors (acc out))))))
+
+@edge_u_no = (u (w (v (t (colors (acc out))))))
+  & {w_eq w_keep} ~ w
+  & {v_eq v_keep} ~ v
+  & w_eq ~ $([=] $(v_eq z))
+  & z ~ ?((@edge_w_no @edge_w_yes) (u (w_keep (v_keep (t (colors (acc out))))))
+
+@edge_w_yes = (* (u (w (v (t (colors (acc out)))))))
+  & w ~ *
+  & {u_cmp u_keep} ~ u
+  & {v_cmp v_keep} ~ v
+  & u_cmp ~ $([<] $(v_cmp z))
+  & z ~ ?((@edge_skip2 @edge_add_u) (u_keep (v_keep (t (colors (acc out))))))
+
+@edge_w_no = (u (w (v (t (colors (acc out))))))
+  & u ~ *
+  & w ~ *
+  & @scan ~ ((t (v (colors acc))) out)
+
+@edge_skip1 = (w (v (t (colors (acc out)))))
+  & w ~ *
+  & @scan ~ ((t (v (colors acc))) out)
+
+@edge_skip2 = (u (v (t (colors (acc out)))))
+  & u ~ *
+  & @scan ~ ((t (v (colors acc))) out)
+
+@edge_add_w = (w (v (t (colors (acc out)))))
+  & @add_target ~ ((w (v (t (colors acc)))) out)
+
+@edge_add_u = (u (v (t (colors (acc out)))))
+  & @add_target ~ ((u (v (t (colors acc)))) out)
+
+// Look up a prior neighbour's colour and add it to the forbidden list.
+@add_target = ((target (v (t (colors acc)))) out)
+  & {v_calc v_next} ~ v
+  & v_calc ~ $([-] $(target diff))
+  & diff ~ $([-] $(1 idx))
+  & {colors_get colors_next} ~ colors
+  & @nth ~ (colors_get (idx got))
+  & @scan ~ ((t (v_next (colors_next (1 (got acc))))) out)
+
+// Find the colour at index idx in the reversed list of prior colours.
+@nth = ((?((@nth_nil @nth_cons) (payload (idx out))) payload) (idx out))
+
+@nth_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* (payload (idx out)))
+  & {idx_eq idx_keep} ~ idx
+  & idx_eq ~ $([=] $(0 z))
+  & z ~ ?((@nth_zero @nth_nonzero) (head (tail (idx_keep out))))
+
+@nth_zero = (head (tail (idx out)))
+  & head ~ out
+  & tail ~ *
+  & idx ~ *
+
+@nth_nonzero = (* (head (tail (idx out))))
+  & head ~ *
+  & idx ~ $([-] $(1 idx_next))
+  & @nth ~ (tail (idx_next out))
+
+// Choose the smallest colour absent from the forbidden-colour list.
+@small = (forbid (c out))
+  & {forbid_has forbid_keep} ~ forbid
+  & {c_has c_keep} ~ c
+  & @contains ~ (forbid_has (c_has has))
+  & has ~ ?((@small_notfound @small_found) (forbid_keep (c_keep out)))
+
+@small_notfound = (forbid (c out))
+  & forbid ~ *
+  & c ~ out
+
+@small_found = (* (forbid (c out)))
+  & c ~ $([+] $(1 c_next))
+  & @small ~ (forbid (c_next out))
+
+@contains = ((?((@contains_nil @contains_cons) (payload (c out))) payload) (c out))
+
+@contains_nil = (payload (c out))
+  & payload ~ *
+  & c ~ *
+  & out ~ 0
+
+@contains_cons = (* (payload (c out)))
+  & payload ~ (h t)
+  & h ~ $([=] $(c z))
+  & z ~ ?((@contains_no @contains_yes) (t (c out)))
+
+@contains_no = (t (c out))
+  & @contains ~ (t (c out))
+
+@contains_yes = (* (t (c out)))
+  & t ~ *
+  & c ~ *
+  & out ~ 1
+
+// Reverse the accumulated colours to produce vertex order.
+@rev = (list out)
+  & @rev_acc ~ ((list (0 *)) out)
+
+@rev_acc = (((?((@rev_nil @rev_cons) (payload (acc out))) payload) acc) out)
+
+@rev_nil = (payload (acc out))
+  & payload ~ *
+  & acc ~ out
+
+@rev_cons = (* (payload (acc out)))
+  & payload ~ (head tail)
+  & @rev_acc ~ ((tail (1 (head acc))) out)

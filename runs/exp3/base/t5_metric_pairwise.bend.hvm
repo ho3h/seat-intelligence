@@ -1,0 +1,194 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@choose_two = ({$([*] $(a $([:/0x0000002] b))) $([:-0x0000001] a)} b)
+
+@merge_nums = ((@merge_nums__C6 a) a)
+
+@merge_nums__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_nums ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_nums__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_nums ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_nums__C2__M_merge_pairs__C2 = a
+  & @List/Cons ~ a
+
+@merge_nums__C3 = (* ({a e} (f ({$([>] $(a b)) c} (d g)))))
+  & $(b ?((@merge_nums__C0 @merge_nums__C1) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@merge_nums__C4 = (?((@merge_nums__C2__M_merge_pairs__C2 @merge_nums__C3) a) a)
+
+@merge_nums__C5 = (* (a (b ((@merge_nums__C4 (a (b c))) c))))
+
+@merge_nums__C6 = (?(((a a) @merge_nums__C5) b) b)
+
+@merge_pairs = ((@merge_pairs__C6 a) a)
+
+@merge_pairs__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_pairs__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_pairs__C3 = (* ({b e} (f ({a c} (d g)))))
+  & @pair_less ~ (a (b $([=0x0000001] ?((@merge_pairs__C0 @merge_pairs__C1) (c (d (e (f g))))))))
+
+@merge_pairs__C4 = (?((@merge_nums__C2__M_merge_pairs__C2 @merge_pairs__C3) a) a)
+
+@merge_pairs__C5 = (* (a (b ((@merge_pairs__C4 (a (b c))) c))))
+
+@merge_pairs__C6 = (?(((a a) @merge_pairs__C5) b) b)
+
+@num_stats = ((@num_stats__C1 a) a)
+
+@num_stats__C0 = (* (b (a c)))
+  & @scan_nums ~ (a (b (1 (0 c))))
+
+@num_stats__C1 = (?((0 @num_stats__C0) a) a)
+
+@pair_less = (({$([<] $(a ?((@pair_less__C1 (* (* (* (* (* 1)))))) (b (c (d (e f))))))) b} c) (({a d} e) f))
+
+@pair_less__C0 = (* ($([<] $(a ?((0 (* 1)) b))) (a b)))
+
+@pair_less__C1 = ($([=] $(a ?(((* (* 0)) @pair_less__C0) (b c)))) (b (a c)))
+
+@pair_stats = ((@pair_stats__C1 a) a)
+
+@pair_stats__C0 = (* ((b c) (a d)))
+  & @scan_pairs ~ (a (b (c (1 (1 (0 (0 d)))))))
+
+@pair_stats__C1 = (?(((0 0) @pair_stats__C0) a) a)
+
+@prog = ((a {h b}) (e (g k)))
+  & @pair_stats ~ (d ({e {f j}} $([-] $(f g))))
+  & @sort_pairs ~ (c d)
+  & @zip_pairs ~ (a (b c))
+  & @num_stats ~ (i $([-] $(j k)))
+  & @sort_nums ~ (h i)
+
+@scan_nums = ((@scan_nums__C4 a) a)
+
+@scan_nums__C0 = (* (c ($([+] $(d e)) (b (a f)))))
+  & @scan_nums ~ (a (b (1 (e f))))
+  & @choose_two ~ (c d)
+
+@scan_nums__C1 = (* (b ($([+0x0000001] c) (d (* (a e))))))
+  & @scan_nums ~ (a (b (c (d e))))
+
+@scan_nums__C2 = (* (a ($([+] $(b c)) c)))
+  & @choose_two ~ (a b)
+
+@scan_nums__C3 = (* ({$([=] $(a ?((@scan_nums__C0 @scan_nums__C1) (b (c (d (e (f g)))))))) e} (f ({a b} (c (d g))))))
+
+@scan_nums__C4 = (?((@scan_nums__C2 @scan_nums__C3) a) a)
+
+@scan_pairs = ((@scan_pairs__C6 a) a)
+
+@scan_pairs__C0 = (b (* (e ($([+0x0000001] d) ($([+] $(f g)) (h (a (c i))))))))
+  & @scan_pairs ~ (a (b (c (1 (d (g (h i)))))))
+  & @choose_two ~ (e f)
+
+@scan_pairs__C1 = (* (b (c ($([+0x0000001] d) ($([+0x0000001] e) (f (g (a (* h)))))))))
+  & @scan_pairs ~ (a (b (c (d (e (f (g h)))))))
+
+@scan_pairs__C2 = (* (* (d (g ($([+] $(e f)) ($([+] $(h i)) (a (b (c j)))))))))
+  & @scan_pairs ~ (a (b (c (1 (1 (f (i j)))))))
+  & @choose_two ~ (d e)
+  & @choose_two ~ (g h)
+
+@scan_pairs__C3 = (* (b ({a c} (d (e (f (g (h (* ({$([=] $(a ?((@scan_pairs__C0 @scan_pairs__C1) (b (c (d (e (f (g (h (i j))))))))))) i} j))))))))))
+
+@scan_pairs__C4 = (* (* (a (d ($([+] $(b c)) ($([+] $(e f)) (c f)))))))
+  & @choose_two ~ (a b)
+  & @choose_two ~ (d e)
+
+@scan_pairs__C5 = (* (({$([=] $(a ?((@scan_pairs__C2 @scan_pairs__C3) (b (c (d (e (f (g (h (i (j k)))))))))))) i} j) (h ({a b} (c (d (e (f (g k)))))))))
+
+@scan_pairs__C6 = (?((@scan_pairs__C4 @scan_pairs__C5) a) a)
+
+@sort_nums = ((@sort_nums__C4 a) a)
+
+@sort_nums__C0__M_sort_pairs__C0 = a
+  & @List/Cons ~ a
+
+@sort_nums__C1 = (* (* (* (a (b h)))))
+  & @merge_nums ~ (e (g h))
+  & @split_nums ~ (c (0 (@List/Nil (@List/Nil (d f)))))
+  & @List/Cons ~ (a (b c))
+  &!@sort_nums ~ (d e)
+  &!@sort_nums ~ (f g)
+
+@sort_nums__C2 = (?((@sort_nums__C0__M_sort_pairs__C0 @sort_nums__C1) a) a)
+
+@sort_nums__C3 = (* (a ({(@sort_nums__C2 (a (b c))) b} c)))
+
+@sort_nums__C4 = (?((@List/Nil @sort_nums__C3) a) a)
+
+@sort_pairs = ((@sort_pairs__C4 a) a)
+
+@sort_pairs__C1 = (* (* (* (a (b h)))))
+  & @merge_pairs ~ (e (g h))
+  & @split_pairs ~ (c (0 (@List/Nil (@List/Nil (d f)))))
+  & @List/Cons ~ (a (b c))
+  &!@sort_pairs ~ (d e)
+  &!@sort_pairs ~ (f g)
+
+@sort_pairs__C2 = (?((@sort_nums__C0__M_sort_pairs__C0 @sort_pairs__C1) a) a)
+
+@sort_pairs__C3 = (* (a ({(@sort_pairs__C2 (a (b c))) b} c)))
+
+@sort_pairs__C4 = (?((@List/Nil @sort_pairs__C3) a) a)
+
+@split_nums = ((@split_nums__C4 a) a)
+
+@split_nums__C0 = (b (d (c (a f))))
+  & @split_nums ~ (a (0 (b (e f))))
+  & @List/Cons ~ (c (d e))
+
+@split_nums__C1 = (* (c (e (b (a f)))))
+  & @split_nums ~ (a (1 (d (e f))))
+  & @List/Cons ~ (b (c d))
+
+@split_nums__C2__M_split_pairs__C2 = (* (a (b (a b))))
+
+@split_nums__C3 = (* (c (d ($([=0x0000000] ?((@split_nums__C0 @split_nums__C1) (a (b (c (d e)))))) (a (b e))))))
+
+@split_nums__C4 = (?((@split_nums__C2__M_split_pairs__C2 @split_nums__C3) a) a)
+
+@split_pairs = ((@split_pairs__C4 a) a)
+
+@split_pairs__C0 = (b (d (c (a f))))
+  & @split_pairs ~ (a (0 (b (e f))))
+  & @List/Cons ~ (c (d e))
+
+@split_pairs__C1 = (* (c (e (b (a f)))))
+  & @split_pairs ~ (a (1 (d (e f))))
+  & @List/Cons ~ (b (c d))
+
+@split_pairs__C3 = (* (c (d ($([=0x0000000] ?((@split_pairs__C0 @split_pairs__C1) (a (b (c (d e)))))) (a (b e))))))
+
+@split_pairs__C4 = (?((@split_nums__C2__M_split_pairs__C2 @split_pairs__C3) a) a)
+
+@zip_pairs = ((@zip_pairs__C3 a) a)
+
+@zip_pairs__C0 = (* (b (d (a (c f)))))
+  & @List/Cons ~ ((a b) (e f))
+  & @zip_pairs ~ (c (d e))
+
+@zip_pairs__C1 = (?(((* (* @List/Nil)) @zip_pairs__C0) a) a)
+
+@zip_pairs__C2 = (* (a (b ((@zip_pairs__C1 (a (b c))) c))))
+
+@zip_pairs__C3 = (?(((* @List/Nil) @zip_pairs__C2) a) a)
+
+

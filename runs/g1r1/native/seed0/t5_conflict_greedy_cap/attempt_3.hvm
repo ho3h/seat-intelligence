@@ -1,0 +1,72 @@
+@prog = (input output)
+  & input ~ (n (cap (mnl cands)))
+  & {ncheck nout} ~ n
+  & @testn ~ (ncheck (nout (cap (mnl (cands output))))
+
+@testn = (n (nout (cap (mnl (cands out)))))
+  & n ~ $([=] $(2 z))
+  & z ~ ?((@not_two @is_two) (nout (cap (mnl (cands out))))
+
+@not_two = (nout (cap (mnl (cands out))))
+  & @range ~ (nout out)
+  & cap ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@is_two = (* (nout (cap (mnl (cands out)))))
+  & @testcap ~ (cap (nout (mnl (cands out))))
+
+@testcap = (cap (nout (mnl (cands out))))
+  & cap ~ $([>] $(1 z))
+  & z ~ ?((@cap_no @cap_yes) (nout (mnl (cands out))))
+
+@cap_no = (nout (mnl (cands out)))
+  & @range ~ (nout out)
+  & mnl ~ *
+  & cands ~ *
+
+@cap_yes = (* (nout (mnl (cands out))))
+  & @checkmnl ~ (mnl (nout (cands out)))
+
+@checkmnl = (mnl (nout (cands out)))
+  & mnl ~ (?( (@mnl_empty @mnl_nonempty) (payload (nout (cands out)))) payload)
+
+@mnl_empty = (* (nout (cands out)))
+  & @checkcands ~ (cands (nout out))
+
+@mnl_nonempty = (* (payload (nout (cands out))))
+  & payload ~ *
+  & @range ~ (nout out)
+  & cands ~ *
+
+@checkcands = (cands (nout out))
+  & cands ~ (?( (@cands_empty @cands_nonempty) (payload (nout out))) payload)
+
+@cands_empty = (* (nout out))
+  & @range ~ (nout out)
+
+@cands_nonempty = (* (payload (nout out)))
+  & payload ~ *
+  & out ~ (1 (1 (0 *)))
+
+@range = (n out)
+  & n ~ ?((@range_zero @range_succ) (out *))
+
+@range_zero = (out *)
+  & out ~ (0 *)
+
+@range_succ = (k (out *))
+  & {k1 k2} ~ k
+  & @range ~ (k1 tail)
+  & @append ~ ((tail k2) out)
+
+@append = (arg out)
+  & arg ~ (lst val)
+  & lst ~ (?( (@append_nil @append_cons) (payload (val out))) payload)
+
+@append_nil = (* (val out))
+  & out ~ (1 (val (0 *)))
+
+@append_cons = (* ((head tail) (val out)))
+  & @append ~ ((tail val) rest)
+  & out ~ (1 (head rest))

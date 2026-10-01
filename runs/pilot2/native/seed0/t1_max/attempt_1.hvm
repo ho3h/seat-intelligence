@@ -1,0 +1,21 @@
+// Maximum element of a list of u24 values; the accumulator starts at 0.
+@prog = (l out)
+  & @mx ~ (l (0 out))
+
+@mx = ((?((@mx_nil @mx_cons) (pl (acc out))) pl) (acc out))
+
+@mx_nil = (* (a a))
+
+@mx_cons = (* ((h t) (acc out)))
+  & h ~ {hc hk}
+  & acc ~ {acmp ak}
+  & hc ~ $([>] $(acmp z))
+  & z ~ ?((@mx_no @mx_yes) (t (ak (hk out))))
+
+@mx_no = (t (old (head out)))
+  & @mx ~ (t (old out))
+  & head ~ *
+
+@mx_yes = (* (t (old (head out))))
+  & @mx ~ (t (head out))
+  & old ~ *

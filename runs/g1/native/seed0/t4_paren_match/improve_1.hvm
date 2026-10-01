@@ -1,0 +1,73 @@
+// Parse into nested blocks, then expand each block in output order.
+// A block stores (opening_index, (closing_index, interior_sequence)).
+
+@prog = (input output)
+  & @parse ~ (input (0 parsed))
+  & parsed ~ (seq (idx (rest close)))
+  & @walk ~ ((1 ((0 seq) (0 *))) ((0 *) output))
+  & idx ~ *
+  & rest ~ *
+  & close ~ *
+
+@parse = ((?((@parse_nil @parse_cons) (p (idx out))) p) (idx out))
+
+@parse_nil = (* (idx out))
+  & out ~ ((0 *) (idx ((0 *) 0)))
+
+@parse_cons = (* ((h t) (idx out)))
+  & h ~ $([=] $(40 z))
+  & z ~ ?((@parse_close @parse_open) (t (idx out)))
+
+@parse_close = (t (idx out))
+  & idx ~ {cl step}
+  & step ~ $([+1] after)
+  & out ~ ((0 *) (after (t cl)))
+
+@parse_open = (* (t (idx out)))
+  & idx ~ {oi step}
+  & step ~ $([+1] start)
+  & @parse ~ (t (start innerret))
+  & innerret ~ (inside (after (rest close)))
+  & @parse ~ (rest (after suffixret))
+  & suffixret ~ (suffix (next (finalrest finalclose)))
+  & out ~ ((1 ((0 (oi (close inside))) suffix)) (next (finalrest finalclose)))
+
+@walk = ((?((@walk_nil @walk_cons) (p (acc out))) p) (acc out))
+
+@walk_nil = (* (acc out))
+  & @reverse ~ (acc out)
+
+@walk_cons = (* ((task more) (acc out)))
+  & task ~ (kind payload)
+  & kind ~ ?((@task_seq @task_other) (payload (more (acc out))))
+
+@task_seq = (seq (more (acc out)))
+  & @seq_step ~ (seq (more (acc out)))
+
+@task_other = (pred (payload (more (acc out))))
+  & pred ~ ?((@task_open @task_emit) (payload (more (acc out))))
+
+@task_open = ((oi (ci inner)) (more (acc out)))
+  & @walk ~ ((1 ((2 ci) (1 ((0 inner) (1 ((2 oi) more)))))) (acc out))
+
+@task_emit = (* (n (more (acc out))))
+  & @walk ~ (more ((1 (n acc)) out))
+
+@seq_step = ((?((@seq_nil @seq_cons) (p (more (acc out)))) p) (more (acc out)))
+
+@seq_nil = (* (more (acc out)))
+  & @walk ~ (more (acc out))
+
+@seq_cons = (* ((block suffix) (more (acc out))))
+  & @walk ~ ((1 ((1 block) (1 ((0 suffix) more)))) (acc out))
+
+@reverse = (list out)
+  & @rev ~ (list ((0 *) out))
+
+@rev = ((?((@rev_nil @rev_cons) (p (acc out))) p) (acc out))
+
+@rev_nil = (* (acc out))
+  & out ~ acc
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

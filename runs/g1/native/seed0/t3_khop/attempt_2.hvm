@@ -1,0 +1,115 @@
+// Input: (n, s, k, edges)
+@prog = ((n (s (k edges))) out)
+  & @min ~ (n (k rounds))
+  & {s1 s2} ~ s
+  & @run ~ (rounds (edges ((1 (s1 (0 *))) ((1 (s2 (0 *))) out))))
+
+// Minimum of two numbers.
+@min = (a (b out))
+  & {a1 a2} ~ a
+  & {b1 b2} ~ b
+  & a1 ~ $([<] $(b1 z))
+  & z ~ ?((@min_b @min_a) (a2 (b2 out)))
+
+@min_a = (* (a (* out)))
+
+@min_b = (* (b out))
+
+// Run at most min(n, k) rounds.
+@run = (?((@run_stop @run_more) (edges (frontier (all out)))) (edges (frontier (all out))))
+
+@run_stop = (* (* (all out)))
+  & @len ~ (all out)
+
+@run_more = (m (edges (frontier (all out))))
+  & {e_scan e_keep} ~ edges
+  & @scan ~ (e_scan (frontier ((0 *) cands)))
+  & @merge ~ (cands (all ((0 *) merged)))
+  & merged ~ (next all2)
+  & @run ~ (m (e_keep (next (all2 out))))
+
+// Count the elements of a list.
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (* 0)
+
+@len_cons = (* ((* t) out))
+  & @len ~ (t z)
+  & z ~ $([+1] out)
+
+// Scan edges using only the current frontier; collect candidate neighbors.
+@scan = ((?((@scan_nil @scan_cons) (pl (frontier (cand out)))) pl) (frontier (cand out)))
+
+@scan_nil = (* (* (cand cand)))
+
+@scan_cons = (* (((u v) tail) (frontier (cand out))))
+  & @edge_candidates ~ (u (v (frontier (cand r))))
+  & r ~ (frontier1 cand1)
+  & @scan ~ (tail (frontier1 (cand1 out)))
+
+// Return (frontier, candidates) after considering one undirected edge.
+@edge_candidates = (u (v (fr (cand out))))
+  & {u_mem u_keep} ~ u
+  & {v_mem v_keep} ~ v
+  & @mem ~ (u_mem (fr r1))
+  & r1 ~ (b1 fr1)
+  & @mem ~ (v_mem (fr1 r2))
+  & r2 ~ (b2 fr2)
+  & b1 ~ ?((@ec_b1_no @ec_b1_yes) (b2 (u_keep (v_keep (fr2 (cand out))))))
+
+@ec_b1_no = (b2 (u (v (fr (cand out)))))
+  & b2 ~ ?((@ec_00 @ec_01) (u (v (fr (cand out)))))
+
+@ec_b1_yes = (* (b2 (u (v (fr (cand out))))))
+  & b2 ~ ?((@ec_10 @ec_11) (u (v (fr (cand out)))))
+
+@ec_00 = (* (* (fr (cand out))))
+  & out ~ (fr cand)
+
+@ec_01 = (* (u (* (fr (cand out)))))
+  & out ~ (fr (1 (u cand)))
+
+@ec_10 = (* (v (fr (1 (v cand)))))
+  & out ~ (fr (1 (v cand)))
+
+@ec_11 = (* (u (v (fr (cand out)))))
+  & out ~ (fr (1 (v (1 (u cand)))))
+
+// Membership returns (found, original_list).
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (* (* out))
+  & out ~ (0 (0 *))
+
+@mem_cons = (* ((h t) (x out)))
+  & {h1 h2} ~ h
+  & {x1 x2} ~ x
+  & h1 ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (h2 (t (x2 out))))
+
+@mem_yes = (* (h (t (* out))))
+  & out ~ (1 (1 (h t)))
+
+@mem_no = (h (t (x out)))
+  & @mem ~ (x (t r))
+  & r ~ (b sub)
+  & out ~ (b (1 (h sub)))
+
+// Merge candidates into all, building the next frontier from new vertices.
+@merge = ((?((@merge_nil @merge_cons) (pl (all (next out)))) pl) (all (next out)))
+
+@merge_nil = (* (all (next out)))
+  & out ~ (next all)
+
+@merge_cons = (* ((x tail) (all (next out))))
+  & {x_mem x_keep} ~ x
+  & @mem ~ (x_mem (all r))
+  & r ~ (b all1)
+  & b ~ ?((@merge_absent @merge_present) (x_keep (tail (all1 (next out)))))
+
+@merge_absent = (x (tail (all (next out))))
+  & {xa xb} ~ x
+  & @merge ~ (tail ((1 (xa all)) ((1 (xb next)) out)))
+
+@merge_present = (* (* (tail (all (next out)))))
+  & @merge ~ (tail (all (next out)))

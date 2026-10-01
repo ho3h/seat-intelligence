@@ -1,0 +1,72 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@insert_weighted = ((@insert_weighted__C10 a) a)
+
+@insert_weighted__C0 = (c (d (e (a (b g)))))
+  & @List/Cons ~ (a (f g))
+  & @insert_weighted ~ (b (c (d (e f))))
+
+@insert_weighted__C1 = (* (a (b (c (d (e g))))))
+  & @List/Cons ~ ((a (b c)) (f g))
+  & @List/Cons ~ (d (e f))
+
+@insert_weighted__C10 = (?((@insert_weighted__C8 @insert_weighted__C9) a) a)
+
+@insert_weighted__C2 = (c (d (e (a (b g)))))
+  & @List/Cons ~ (a (f g))
+  & @insert_weighted ~ (b (c (d (e f))))
+
+@insert_weighted__C3 = (* (a (b (c (d (e g))))))
+  & @List/Cons ~ ((a (b c)) (f g))
+  & @List/Cons ~ (d (e f))
+
+@insert_weighted__C4 = (b ({$([<] $(a ?((@insert_weighted__C2 @insert_weighted__C3) (b (c (d (e (f g)))))))) c} (d (e (f (* (a (* g))))))))
+
+@insert_weighted__C5 = (* (* (* (c (* (e (a (b ($([+] $(c d)) f)))))))))
+  & @List/Cons ~ ((a (b d)) (e f))
+
+@insert_weighted__C6 = ({$([<] $(a ?((@insert_weighted__C0 @insert_weighted__C1) (b (c (d (e (f g)))))))) b} (c (d (e (f (a (* (* g))))))))
+
+@insert_weighted__C7 = (* (b ({$([=] $(a ?((@insert_weighted__C4 @insert_weighted__C5) (b (c (d (e (f (g (h i)))))))))) c} (d (e (f (g ({a h} i))))))))
+
+@insert_weighted__C8 = (a (b (c d)))
+  & @List/Cons ~ ((a (b c)) (@List/Nil d))
+
+@insert_weighted__C9 = (* ({({a g} (h i)) e} (f ({$([=] $(a ?((@insert_weighted__C6 @insert_weighted__C7) (b (c (d (e (f (g (h (i j))))))))))) b} (c (d j))))))
+
+@nth = ((@nth__C2 a) a)
+
+@nth__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @nth ~ (a (b c))
+
+@nth__C1 = (* (c (d ({$([=0x0000000] ?((@nth__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@nth__C2 = (?(((* 0) @nth__C1) a) a)
+
+@prog = ((a b) c)
+  & @rewrite_edges ~ (a (b (@List/Nil c)))
+
+@rewrite_edges = (a ((@rewrite_edges__C5 (a b)) b))
+
+@rewrite_edges__C0 = (a (c (b (f (e (d h))))))
+  & @rewrite_edges ~ (a (b (g h)))
+  & @insert_weighted ~ (c (d (e (f g))))
+
+@rewrite_edges__C1 = (* (a (c (b (f (d (e h)))))))
+  & @rewrite_edges ~ (a (b (g h)))
+  & @insert_weighted ~ (c (d (e (f g))))
+
+@rewrite_edges__C2 = (b (c (d (e ({$([<] $(a ?((@rewrite_edges__C0 @rewrite_edges__C1) (b (c (d (e (f (g h))))))))) f} ({a g} h))))))
+
+@rewrite_edges__C3 = (* (a (c (b (* (* (* d)))))))
+  & @rewrite_edges ~ (a (b (c d)))
+
+@rewrite_edges__C4 = (* ((b (d i)) (h ({f {c a}} (g l)))))
+  & @nth ~ (c (d {e k}))
+  & @nth ~ (a (b {$([=] $(e ?((@rewrite_edges__C2 @rewrite_edges__C3) (f (g (h (i (j (k l))))))))) j}))
+
+@rewrite_edges__C5 = (?(((* (a a)) @rewrite_edges__C4) b) b)
+
+

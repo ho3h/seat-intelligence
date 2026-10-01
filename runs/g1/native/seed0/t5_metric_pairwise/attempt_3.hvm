@@ -1,0 +1,63 @@
+// Accumulator: (tp (fp (fn out))).
+@prog = ((p t) out)
+  & @outer ~ (p (t (0 (0 (0 out)))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (t (tp (fp (fn out)))))) pl) (t (tp (fp (fn out)))))
+
+@outer_nil = (* (t (tp (fp (fn out)))))
+  & t ~ *
+  & out ~ (tp (fp fn))
+
+@outer_cons = (* ((h pt) (t (tp (fp (fn out))))))
+  & @truth ~ (t (pt (h (tp (fp (fn out))))))
+
+@truth = ((?((@truth_nil @truth_cons) (pl (pt (h (tp (fp (fn out))))))) pl) (pt (h (tp (fp (fn out))))))
+
+@truth_nil = (* (pt (h (tp (fp (fn out))))))
+  & pt ~ *
+  & h ~ *
+  & out ~ (tp (fp fn))
+
+@truth_cons = (* ((k tt) (pt (h (tp (fp (fn out)))))))
+  & pt ~ {pinner pouter}
+  & tt ~ {tinner touter}
+  & @inner ~ (pinner (tinner (h (k (pouter (touter (tp (fp (fn out))))))))
+
+@inner = ((?((@inner_nil @inner_cons) (pl (qi (h (k (po (to (tp (fp (fn out))))))))) pl) (qi (h (k (po (to (tp (fp (fn out)))))))))
+
+@inner_nil = (* (qi (h (k (po (to (tp (fp (fn out)))))))))
+  & qi ~ *
+  & h ~ *
+  & k ~ *
+  & @outer ~ (po (to (tp (fp (fn out)))))
+
+@inner_cons = (* ((u pt) (qi (h (k (po (to (tp (fp (fn out))))))))))
+  & @inner_truth ~ (qi (u (pt (h (k (po (to (tp (fp (fn out)))))))))
+
+@inner_truth = ((?((@it_nil @it_cons) (pl (u (pt (h (k (po (to (tp (fp (fn out))))))))))) pl) (u (pt (h (k (po (to (tp (fp (fn out)))))))))
+
+@it_nil = (* (u (pt (h (k (po (to (tp (fp (fn out))))))))))
+  & u ~ *
+  & pt ~ *
+  & h ~ *
+  & k ~ *
+  & @outer ~ (po (to (tp (fp (fn out)))))
+
+@it_cons = (* ((v qt) (u (pt (h (k (po (to (tp (fp (fn out)))))))))))
+  & h ~ {hc hr}
+  & k ~ {kc kr}
+  & u ~ $([=] $(hc ep))
+  & v ~ $([=] $(kc et))
+  & ep ~ {epa epb}
+  & epa ~ {ept epf}
+  & epb ~ $([=] $(0 epn))
+  & et ~ {eta etb}
+  & eta ~ {ett etf}
+  & etb ~ $([=] $(0 etn))
+  & ept ~ $([&] $(ett btp))
+  & epf ~ $([&] $(etn bfp))
+  & epn ~ $([&] $(etf bfn))
+  & tp ~ $([+] $(btp tp2))
+  & fp ~ $([+] $(bfp fp2))
+  & fn ~ $([+] $(bfn fn2))
+  & @inner ~ (pt (qt (hr (kr (po (to (tp2 (fp2 (fn2 out))))))))

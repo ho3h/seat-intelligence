@@ -1,0 +1,160 @@
+// Build the identity label list [0..n-1].
+@init = (n (id out))
+  & n ~ ?((@init_zero @init_succ) (id out))
+
+@init_zero = (id out)
+  & id ~ *
+  & out ~ (0 *)
+
+@init_succ = (* (remaining (id out)))
+  & id ~ {id_head id_inc}
+  & id_inc ~ $([+1] nextid)
+  & @init ~ (remaining (nextid tail))
+  & out ~ (1 (id_head tail))
+
+// Run n complete edge scans, then emit component sizes.
+@round = (count (total (edges (labels out))))
+  & count ~ ?((@round_zero @round_succ) (total (edges (labels out))))
+
+@round_zero = (total (edges (labels out)))
+  & edges ~ *
+  & @emit ~ (total (0 (labels out)))
+
+@round_succ = (* (remaining (total (edges (labels out)))))
+  & edges ~ {escan enext}
+  & @scan ~ (escan (labels newlabels))
+  & @round ~ (remaining (total (enext (newlabels out)))
+
+// Scan all edges once, updating the labels.
+@scan = ((?((@scan_nil @scan_cons) (pl (labels out))) pl) (labels out))
+
+@scan_nil = (pl (labels out))
+  & pl ~ *
+  & labels ~ out
+
+@scan_cons = (* (pl (labels out)))
+  & pl ~ (edge tail)
+  & edge ~ (u v)
+  & labels ~ {la lb_rest}
+  & lb_rest ~ {lb lc}
+  & @get ~ (u (la a))
+  & @get ~ (v (lb b))
+  & a ~ {a_eq a_rest}
+  & a_rest ~ {a_ord a_keep}
+  & b ~ {b_eq b_rest}
+  & b_rest ~ {b_ord b_keep}
+  & a_eq ~ $([=] $(b_eq same))
+  & same ~ ?((@scan_neq @scan_eq) (a_ord (b_ord (a_keep (b_keep (lc (tail out))))))
+
+@scan_eq = (* (a_ord (b_ord (a_keep (b_keep (labels (tail out))))))
+  & a_ord ~ *
+  & b_ord ~ *
+  & a_keep ~ *
+  & b_keep ~ *
+  & @scan ~ (tail (labels out))
+
+@scan_neq = (a_ord (b_ord (a_keep (b_keep (labels (tail out))))))
+  & a_ord ~ $([>] $(b_ord gt))
+  & gt ~ ?((@scan_low @scan_high) (a_keep (b_keep (labels (tail out))))
+
+@scan_low = (a (b (labels (tail out))))
+  & @replace ~ (a (b (labels updated)))
+  & @scan ~ (tail (updated out))
+
+@scan_high = (* (a (b (labels (tail out)))))
+  & @replace ~ (b (a (labels updated)))
+  & @scan ~ (tail (updated out))
+
+// Replace every occurrence of old with new in a list of labels.
+@replace = (old (new ((?((@rep_nil @rep_cons) (old (new (pl out)))) pl) out))
+
+@rep_nil = (old (new (pl out)))
+  & old ~ *
+  & new ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@rep_cons = (* (old (new (pl out))))
+  & pl ~ (h tail)
+  & old ~ {old_test old_rec}
+  & new ~ {new_pick new_rec}
+  & h ~ {h_test h_pick}
+  & h_test ~ $([=] $(old_test eq))
+  & eq ~ ?((@rep_not @rep_yes) (h_pick (new_pick chosen)))
+  & @replace ~ (old_rec (new_rec (tail tailout)))
+  & out ~ (1 (chosen tailout))
+
+@rep_not = (h (new chosen))
+  & h ~ chosen
+  & new ~ *
+
+@rep_yes = (* (h (new chosen)))
+  & h ~ *
+  & new ~ chosen
+
+// Read the list element at a valid index.
+@get = (idx (list out))
+  & idx ~ ?((@get_zero @get_succ) (list out))
+
+@get_zero = (list out)
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & tail ~ *
+  & head ~ out
+
+@get_succ = (* (idx (list out)))
+  & @get ~ (idx (list out))
+
+// Count occurrences of target in a list.
+@freq = (target ((?((@freq_nil @freq_cons) (target (pl (acc out)))) pl) (acc out)))
+
+@freq_nil = (target (pl (acc out)))
+  & target ~ *
+  & pl ~ *
+  & acc ~ out
+
+@freq_cons = (* (target (pl (acc out))))
+  & pl ~ (h tail)
+  & target ~ {target_test target_rec}
+  & h ~ $([=] $(target_test eq))
+  & eq ~ ?((@freq_skip @freq_hit) (target_rec (tail (acc out))))
+
+@freq_skip = (target (tail (acc out)))
+  & @freq ~ (target (tail (acc out)))
+
+@freq_hit = (* (target (tail (acc out))))
+  & acc ~ $([+1] acc_next)
+  & @freq ~ (target (tail (acc_next out)))
+
+// Visit ids in ascending order; prepend during unwinding to produce
+// sizes in ascending canonical-id order.
+@emit = (remaining (id (labels out)))
+  & remaining ~ ?((@emit_zero @emit_succ) (id (labels out)))
+
+@emit_zero = (id (labels out))
+  & id ~ *
+  & labels ~ *
+  & out ~ (0 *)
+
+@emit_succ = (* (remaining (id (labels out))))
+  & id ~ {id_test id_next}
+  & labels ~ {labels_freq labels_next}
+  & @freq ~ (id_test (labels_freq (0 count)))
+  & id_next ~ $([+1] nextid)
+  & @emit ~ (remaining (nextid (labels_next rest)))
+  & count ~ {count_test count_value}
+  & count_test ~ ?((@emit_skip @emit_add) (count_value (rest out)))
+
+@emit_skip = (count (rest out))
+  & count ~ *
+  & rest ~ out
+
+@emit_add = (* (count (rest out)))
+  & out ~ (1 (count rest))
+
+@prog = (n (edges out))
+  & n ~ {n_init n_rest}
+  & n_rest ~ {n_round n_total}
+  & @init ~ (n_init (0 labels))
+  & @round ~ (n_round (n_total (edges (labels out))))

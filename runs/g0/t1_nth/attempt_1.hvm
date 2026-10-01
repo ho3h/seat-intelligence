@@ -1,0 +1,14 @@
+@prog = ((i xs) out)
+  & @nth ~ (xs (i out))
+
+@nth = ((?((@nth_nil @nth_cons) (pl (i out))) pl) (i out))
+
+@nth_nil = (* (* 0))
+
+@nth_cons = (* ((h t) (i out)))
+  & i ~ ?((@nth_here @nth_next) (h (t out)))
+
+@nth_here = (h (* h))
+
+@nth_next = (j (* (t out)))
+  & @nth ~ (t (j out))

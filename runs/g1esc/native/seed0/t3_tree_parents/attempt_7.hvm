@@ -1,0 +1,159 @@
+@prog = ((n (r edges)) out)
+  & {n1 n2} ~ n
+  & @make_list ~ (n1 list0)
+  & @set_root ~ (r (list0 list1))
+  & @repeat ~ (n2 (edges (list1 out)))
+
+@make_list = (n out)
+  & n ~ ?((@make_list_zero @make_list_succ) out)
+
+@make_list_zero = out
+  & out ~ (0 *)
+
+@make_list_succ = (m out)
+  & @make_list ~ (m tail)
+  & out ~ (1 (16777214 tail))
+
+@set_root = (r ((tag payload) out))
+  & tag ~ ?((@set_root_tag0 @set_root_tag1) (r (payload out)))
+
+@set_root_tag0 = (r (payload out))
+  & r ~ *
+  & payload ~ *
+  & out ~ (0 *)
+
+@set_root_tag1 = (zero (r (payload out)))
+  & zero ~ *
+  & payload ~ (head tail)
+  & r ~ ?((@set_current @set_next) (head (tail out)))
+
+@set_current = (head (tail out))
+  & head ~ *
+  & out ~ (1 (16777215 tail))
+
+@set_next = (m (head (tail out)))
+  & @set_root ~ (m (tail new_tail))
+  & out ~ (1 (head new_tail))
+
+@get = (i (list out))
+  & i ~ ?((@get_i0 @get_i1) (list out))
+
+@get_i0 = (list out)
+  & list ~ ?((@get_i0_nil @get_i0_cons) (payload out))
+
+@get_i0_nil = (payload out)
+  & payload ~ *
+  & out ~ *
+
+@get_i0_cons = (zero (payload out))
+  & zero ~ *
+  & payload ~ (head tail)
+  & head ~ out
+  & tail ~ *
+
+@get_i1 = (m (list out))
+  & list ~ ?((@get_i1_nil @get_i1_cons) (m (payload out)))
+
+@get_i1_nil = (m (payload out))
+  & m ~ *
+  & payload ~ *
+  & out ~ *
+
+@get_i1_cons = (zero (m (payload out)))
+  & zero ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @get ~ (m (tail out))
+
+@set = (i (val (list out)))
+  & i ~ ?((@set_i0 @set_i1) (val (list out)))
+
+@set_i0 = (val (list out))
+  & list ~ ?((@set_i0_nil @set_i0_cons) (val (payload out)))
+
+@set_i0_nil = (val (payload out))
+  & val ~ *
+  & payload ~ *
+  & out ~ *
+
+@set_i0_cons = (zero (val (payload out)))
+  & zero ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_i1 = (m (val (list out)))
+  & list ~ ?((@set_i1_nil @set_i1_cons) (m (val (payload out))))
+
+@set_i1_nil = (m (val (payload out)))
+  & m ~ *
+  & val ~ *
+  & payload ~ *
+  & out ~ *
+
+@set_i1_cons = (zero (m (val (payload out))))
+  & zero ~ *
+  & payload ~ (head tail)
+  & @set ~ (m (val (tail new_tail)))
+  & out ~ (1 (head new_tail))
+
+@process_edge = (u (v (arr out)))
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & {arrA arrBC} ~ arr
+  & {arrB arrC} ~ arrBC
+  & @get ~ (u1 (arrA pu))
+  & @get ~ (v1 (arrB pv))
+  & pu ~ $([!] $(16777214 pu_known))
+  & pv ~ $([!] $(16777214 pv_known))
+  & @decide ~ (pu_known (pv_known (u2 (v2 (arrC out)))))
+
+@decide = (pu (pv (u (v (arr out)))))
+  & pu ~ ?((@decide_pu0 @decide_pu1) (pv (u (v (arr out)))))
+
+@decide_pu0 = (pv (u (v (arr out))))
+  & pv ~ ?((@decide_00 @decide_01) (u (v (arr out))))
+
+@decide_pu1 = (pv (u (v (arr out))))
+  & pv ~ ?((@decide_10 @decide_11) (u (v (arr out))))
+
+@decide_00 = (u (v (arr out)))
+  & u ~ *
+  & v ~ *
+  & arr ~ out
+
+@decide_01 = (u (v (arr out)))
+  & @set ~ (u (v (arr out)))
+
+@decide_10 = (u (v (arr out)))
+  & @set ~ (v (u (arr out)))
+
+@decide_11 = (u (v (arr out)))
+  & u ~ *
+  & v ~ *
+  & arr ~ out
+
+@scan_edges = (edges (arr out))
+  & edges ~ ?((@scan_nil @scan_cons) (payload (arr out)))
+
+@scan_nil = (payload (arr out))
+  & payload ~ *
+  & arr ~ out
+
+@scan_cons = (zero (payload (arr out)))
+  & zero ~ *
+  & payload ~ ((u v) rest)
+  & @process_edge ~ (u (v (arr arr2)))
+  & @scan_edges ~ (rest (arr2 out))
+
+@repeat = (count (edges (arr out)))
+  & count ~ ?((@repeat_done @repeat_step) (edges (arr out)))
+
+@repeat_done = (edges (arr out))
+  & edges ~ *
+  & arr ~ out
+
+@repeat_step = (m (edges (arr out)))
+  & {edges_scan edges_next} ~ edges
+  & @scan_edges ~ (edges_scan (arr arr2))
+  & @repeat ~ (m (edges_next (arr2 out)))

@@ -1,0 +1,78 @@
+@prog = (input output)
+  & @scan ~ (input (0 (0 ((0 *) output)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (flag (val (acc out))))) pl) (flag (val (acc out))))
+
+@scan_nil = (* (flag (val (acc out))))
+  & flag ~ ?((@finish_no @finish_yes) (val (acc out)))
+
+@finish_no = (val (acc out))
+  & val ~ *
+  & @rev ~ (acc out)
+
+@finish_yes = (* (val (acc out)))
+  & @rev ~ ((1 ((0 val) acc)) out)
+
+@scan_cons = (* ((h t) (flag (val (acc out)))))
+  & h ~ {a {b c}}
+  & a ~ $([>] $(47 gt))
+  & gt ~ ?((@not_digit @gt_yes) (b (c (t (flag (val (acc out)))))))
+
+@not_digit = (* (c (t (flag (val (acc out))))))
+  & @nondigit ~ (c (t (flag (val (acc out)))))
+
+@gt_yes = (* (b (c (t (flag (val (acc out))))))
+  & b ~ $([<] $(58 lt))
+  & lt ~ ?((@not_digit_hi @digit_yes) (c (t (flag (val (acc out))))))
+
+@not_digit_hi = (c (t (flag (val (acc out)))))
+  & @nondigit ~ (c (t (flag (val (acc out)))))
+
+@digit_yes = (* (c (t (flag (val (acc out))))))
+  & c ~ $([-] $(48 digit))
+  & flag ~ ?((@start_digit @continue_digit) (digit (t (val (acc out)))))
+
+@start_digit = (digit (t (val (acc out))))
+  & val ~ *
+  & @scan ~ (t (1 (digit (acc out))))
+
+@continue_digit = (* (digit (t (val (acc out)))))
+  & val ~ $([*] $(10 prod))
+  & prod ~ $([+] $(digit newval))
+  & @scan ~ (t (1 (newval (acc out))))
+
+@nondigit = (c (t (flag (val (acc out)))))
+  & flag ~ ?((@no_num @has_num) (c (t (val (acc out)))))
+
+@no_num = (c (t (val (acc out))))
+  & val ~ *
+  & @classify ~ (c (t (acc out)))
+
+@has_num = (* (c (t (val (acc out)))))
+  & @classify ~ (c (t ((1 ((0 val) acc)) out)))
+
+@classify = (c (t (acc out)))
+  & c ~ {a {b keep}}
+  & a ~ $([=] $(32 eq))
+  & eq ~ ?((@not_space @space_yes) (b (keep (t (acc out)))))
+
+@space_yes = (* (* (t (acc out))))
+  & @scan ~ (t (0 (0 (acc out))))
+
+@not_space = (b (keep (t (acc out))))
+  & b ~ $([>] $(41 gt))
+  & gt ~ ?((@paren @operator) (keep (t (acc out))))
+
+@paren = (keep (t (acc out)))
+  & @scan ~ (t (0 (0 ((1 ((2 keep) acc)) out))))
+
+@operator = (* (keep (t (acc out))))
+  & @scan ~ (t (0 (0 ((1 ((1 keep) acc)) out))))
+
+@rev = ((?((@rev_nil @rev_cons) (pl (acc out))) pl) (acc out))
+
+@rev_nil = (* (acc out))
+  & acc ~ out
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

@@ -1,0 +1,830 @@
+{
+ "note": "HERO-1 independent test policies, hand-written before any training/evaluation; frozen. gold = canonical stage program.",
+ "heldout_signatures": {
+  "H1": [
+   "apt",
+   "ord",
+   "tc"
+  ],
+  "H2": [
+   "lim",
+   "size",
+   "tk"
+  ],
+  "H3": [
+   "apt",
+   "lim",
+   "ord"
+  ],
+  "H4": [
+   "ord",
+   "size",
+   "tc",
+   "tk"
+  ],
+  "H5": [
+   "apt",
+   "tk"
+  ],
+  "H6": [
+   "apt",
+   "lim",
+   "ord",
+   "size"
+  ]
+ },
+ "policies": [
+  {
+   "id": "ter01",
+   "voice": "terse",
+   "text": "Colleagues together. Max 4 per section.",
+   "gold": "size 4\ntogether company",
+   "sig": [
+    "size",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter02",
+   "voice": "terse",
+   "text": "No two government officials in one section.",
+   "gold": "limit government 1",
+   "sig": [
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter03",
+   "voice": "terse",
+   "text": "AI labs and big tech apart. Sections of 5.",
+   "gold": "size 5\napart ai_lab big_tech",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter04",
+   "voice": "terse",
+   "text": "Investors first, then AI labs. Same company together.",
+   "gold": "together company\norder investor ai_lab",
+   "sig": [
+    "ord",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter05",
+   "voice": "terse",
+   "text": "Pairs only. Chips and software apart.",
+   "gold": "size 2\napart chips software_security",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter06",
+   "voice": "terse",
+   "text": "Max two investors per section; four per section overall.",
+   "gold": "size 4\nlimit investor 2",
+   "sig": [
+    "lim",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter07",
+   "voice": "terse",
+   "text": "Keep all AI labs together.",
+   "gold": "together ai_lab",
+   "sig": [
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter08",
+   "voice": "terse",
+   "text": "Cap 3. Government officials first.",
+   "gold": "size 3\norder government",
+   "sig": [
+    "ord",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter09",
+   "voice": "terse",
+   "text": "No two of big tech or chips per section; colleagues together.",
+   "gold": "together company\nlimit big_tech chips 1",
+   "sig": [
+    "lim",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter10",
+   "voice": "terse",
+   "text": "Chips first, then big tech, then AI labs.",
+   "gold": "order chips big_tech ai_lab",
+   "sig": [
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "ter11",
+   "voice": "terse",
+   "text": "Company groups stay whole. Investors and government apart. Government seated first.",
+   "gold": "together company\napart investor government\norder government",
+   "sig": [
+    "apt",
+    "ord",
+    "tc"
+   ],
+   "heldout_combo": "H1"
+  },
+  {
+   "id": "ter12",
+   "voice": "terse",
+   "text": "Sections of 3. Chip makers together. Max 1 investor per section.",
+   "gold": "size 3\ntogether chips\nlimit investor 1",
+   "sig": [
+    "lim",
+    "size",
+    "tk"
+   ],
+   "heldout_combo": "H2"
+  },
+  {
+   "id": "for01",
+   "voice": "formal",
+   "text": "Guests employed by the same company shall be seated in the same section wherever the section size permits.",
+   "gold": "together company",
+   "sig": [
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for02",
+   "voice": "formal",
+   "text": "No section shall contain more than four guests, and no section shall contain more than one guest from the software and security category.",
+   "gold": "size 4\nlimit software_security 1",
+   "sig": [
+    "lim",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for03",
+   "voice": "formal",
+   "text": "Representatives of AI laboratories and of the investment community are to be seated in separate sections.",
+   "gold": "apart ai_lab investor",
+   "sig": [
+    "apt"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for04",
+   "voice": "formal",
+   "text": "Government officials are to be seated first, followed by representatives of big technology companies.",
+   "gold": "order government big_tech",
+   "sig": [
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for05",
+   "voice": "formal",
+   "text": "It is requested that at most two government officials be assigned to any one section, and that colleagues be kept together.",
+   "gold": "together company\nlimit government 2",
+   "sig": [
+    "lim",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for06",
+   "voice": "formal",
+   "text": "Sections shall be limited to five guests. Chip manufacturers shall not share a section with AI laboratory representatives.",
+   "gold": "size 5\napart ai_lab chips",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for07",
+   "voice": "formal",
+   "text": "The host directs that all investors be seated together, that no section exceed three guests, and that AI laboratory guests be seated first.",
+   "gold": "size 3\ntogether investor\norder ai_lab",
+   "sig": [
+    "ord",
+    "size",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for08",
+   "voice": "formal",
+   "text": "No section shall include more than one guest drawn from either the AI laboratories or the big technology companies.",
+   "gold": "limit ai_lab big_tech 1",
+   "sig": [
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for09",
+   "voice": "formal",
+   "text": "Guests of a common employer shall be placed together; big technology and chip manufacturers shall be kept in separate sections.",
+   "gold": "together company\napart big_tech chips",
+   "sig": [
+    "apt",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for10",
+   "voice": "formal",
+   "text": "Seat the government officials first, then the investors, then the remaining guests, with no more than four persons per section.",
+   "gold": "size 4\norder government investor",
+   "sig": [
+    "ord",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "for11",
+   "voice": "formal",
+   "text": "No section shall hold more than one investor; AI laboratories and government officials are to be kept apart; and chip manufacturers are to be seated first.",
+   "gold": "limit investor 1\napart ai_lab government\norder chips",
+   "sig": [
+    "apt",
+    "lim",
+    "ord"
+   ],
+   "heldout_combo": "H3"
+  },
+  {
+   "id": "for12",
+   "voice": "formal",
+   "text": "Sections of at most four; guests of one company are to sit together; all government officials are to be grouped; AI laboratories are seated first.",
+   "gold": "size 4\ntogether company\ntogether government\norder ai_lab",
+   "sig": [
+    "ord",
+    "size",
+    "tc",
+    "tk"
+   ],
+   "heldout_combo": "H4"
+  },
+  {
+   "id": "cha01",
+   "voice": "chatty",
+   "text": "Okay so basically I just want people from the same company sitting together, that's it.",
+   "gold": "together company",
+   "sig": [
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha02",
+   "voice": "chatty",
+   "text": "Can we make sure there are never more than 3 folks in a section? And let's keep the AI lab people and the big tech people in different sections, just to mix the room up.",
+   "gold": "size 3\napart ai_lab big_tech",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha03",
+   "voice": "chatty",
+   "text": "I'd love it if the chip folks got the first sections, then the AI labs.",
+   "gold": "order chips ai_lab",
+   "sig": [
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha04",
+   "voice": "chatty",
+   "text": "Let's not put two investors in the same section, mixing it up is more fun.",
+   "gold": "limit investor 1",
+   "sig": [
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha05",
+   "voice": "chatty",
+   "text": "Honestly just keep the government people together and make sections of four.",
+   "gold": "size 4\ntogether government",
+   "sig": [
+    "size",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha06",
+   "voice": "chatty",
+   "text": "So, colleagues sit together, and I don't want more than two government officials in any one section, okay?",
+   "gold": "together company\nlimit government 2",
+   "sig": [
+    "lim",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha07",
+   "voice": "chatty",
+   "text": "Small sections please, like two people each, and chip makers away from investors.",
+   "gold": "size 2\napart chips investor",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha08",
+   "voice": "chatty",
+   "text": "Start with the investors, then the big tech crowd, and try to keep each company together.",
+   "gold": "together company\norder investor big_tech",
+   "sig": [
+    "ord",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha09",
+   "voice": "chatty",
+   "text": "Put the software and security companies together in one bunch, and max five to a section.",
+   "gold": "size 5\ntogether software_security",
+   "sig": [
+    "size",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha10",
+   "voice": "chatty",
+   "text": "I want at most one person from AI labs or chips per section, and the AI labs go first.",
+   "gold": "limit ai_lab chips 1\norder ai_lab",
+   "sig": [
+    "lim",
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "cha11",
+   "voice": "chatty",
+   "text": "Same-company folks go together, please keep investors and big tech in separate sections, and seat the investors first!",
+   "gold": "together company\napart big_tech investor\norder investor",
+   "sig": [
+    "apt",
+    "ord",
+    "tc"
+   ],
+   "heldout_combo": "H1"
+  },
+  {
+   "id": "cha12",
+   "voice": "chatty",
+   "text": "Sections of three, the AI lab people all sit together, and no more than one government person per section.",
+   "gold": "size 3\ntogether ai_lab\nlimit government 1",
+   "sig": [
+    "lim",
+    "size",
+    "tk"
+   ],
+   "heldout_combo": "H2"
+  },
+  {
+   "id": "neg01",
+   "voice": "negative",
+   "text": "Don't let any section have more than four guests.",
+   "gold": "size 4",
+   "sig": [
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg02",
+   "voice": "negative",
+   "text": "Never seat two government officials in the same section, and never split up a company.",
+   "gold": "together company\nlimit government 1",
+   "sig": [
+    "lim",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg03",
+   "voice": "negative",
+   "text": "Do not put AI labs anywhere near big tech, and don't let sections exceed five.",
+   "gold": "size 5\napart ai_lab big_tech",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg04",
+   "voice": "negative",
+   "text": "Nobody from a chip maker sits in a section with an investor. Nobody gets seated ahead of the AI labs.",
+   "gold": "apart chips investor\norder ai_lab",
+   "sig": [
+    "apt",
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg05",
+   "voice": "negative",
+   "text": "No section may hold more than two investors, and no section may hold more than six people, obviously.",
+   "gold": "limit investor 2",
+   "sig": [
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg06",
+   "voice": "negative",
+   "text": "Don't scatter the government officials across the room; keep them together.",
+   "gold": "together government",
+   "sig": [
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg07",
+   "voice": "negative",
+   "text": "Nothing fancy: no more than one guest from big tech or AI labs in a section, and never more than three guests total.",
+   "gold": "size 3\nlimit ai_lab big_tech 1",
+   "sig": [
+    "lim",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg08",
+   "voice": "negative",
+   "text": "Don't seat anyone before the investors and the chip makers, in that order, and don't let any company be split up.",
+   "gold": "together company\norder investor chips",
+   "sig": [
+    "ord",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg09",
+   "voice": "negative",
+   "text": "No AI lab guest should share a section with a software or security guest, and no investor should share one with a software or security guest either.",
+   "gold": "apart ai_lab software_security\napart software_security investor",
+   "sig": [
+    "apt"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg10",
+   "voice": "negative",
+   "text": "Never more than two chip makers in a section; never mix government officials with investors.",
+   "gold": "limit chips 2\napart investor government",
+   "sig": [
+    "apt",
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "neg11",
+   "voice": "negative",
+   "text": "Don't split up the AI labs, and don't ever put big tech in the same section as government officials.",
+   "gold": "together ai_lab\napart big_tech government",
+   "sig": [
+    "apt",
+    "tk"
+   ],
+   "heldout_combo": "H5"
+  },
+  {
+   "id": "neg12",
+   "voice": "negative",
+   "text": "No section bigger than four, no more than one investor in any section, no AI lab in a section with a chip maker, and don't seat anyone ahead of government officials.",
+   "gold": "size 4\nlimit investor 1\napart ai_lab chips\norder government",
+   "sig": [
+    "apt",
+    "lim",
+    "ord",
+    "size"
+   ],
+   "heldout_combo": "H6"
+  },
+  {
+   "id": "lis01",
+   "voice": "list",
+   "text": "Rules:\n- same company together\n- max 3 per section",
+   "gold": "size 3\ntogether company",
+   "sig": [
+    "size",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis02",
+   "voice": "list",
+   "text": "1. no more than 2 government per section\n2. investors first",
+   "gold": "limit government 2\norder investor",
+   "sig": [
+    "lim",
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis03",
+   "voice": "list",
+   "text": "* AI labs together\n* big tech apart from investors\n* sections of 4",
+   "gold": "size 4\ntogether ai_lab\napart big_tech investor",
+   "sig": [
+    "apt",
+    "size",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis04",
+   "voice": "list",
+   "text": "Seating rules; (a) sections of 4 (b) chips and software apart (c) colleagues together",
+   "gold": "size 4\ntogether company\napart chips software_security",
+   "sig": [
+    "apt",
+    "size",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis05",
+   "voice": "list",
+   "text": "- keep investors together\n- at most 5 per section",
+   "gold": "size 5\ntogether investor",
+   "sig": [
+    "size",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis06",
+   "voice": "list",
+   "text": "Constraints: one investor per section max; one AI lab per section max.",
+   "gold": "limit ai_lab 1\nlimit investor 1",
+   "sig": [
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis07",
+   "voice": "list",
+   "text": "1) government first\n2) then big tech\n3) then AI labs",
+   "gold": "order government big_tech ai_lab",
+   "sig": [
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis08",
+   "voice": "list",
+   "text": "- apart: AI labs / chips\n- apart: government / software & security\n- cap: 3",
+   "gold": "size 3\napart ai_lab chips\napart software_security government",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis09",
+   "voice": "list",
+   "text": "Do: colleagues together; chip makers together. Limit: two per section.",
+   "gold": "size 2\ntogether company\ntogether chips",
+   "sig": [
+    "size",
+    "tc",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis10",
+   "voice": "list",
+   "text": "Rules: max 2 big tech or AI labs per section (combined); AI labs seated first",
+   "gold": "limit ai_lab big_tech 2\norder ai_lab",
+   "sig": [
+    "lim",
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "lis11",
+   "voice": "list",
+   "text": "- max 1 government per section\n- AI labs and investors apart\n- big tech first",
+   "gold": "limit government 1\napart ai_lab investor\norder big_tech",
+   "sig": [
+    "apt",
+    "lim",
+    "ord"
+   ],
+   "heldout_combo": "H3"
+  },
+  {
+   "id": "lis12",
+   "voice": "list",
+   "text": "• sections ≤ 5\n• colleagues together\n• government together\n• investors first",
+   "gold": "size 5\ntogether company\ntogether government\norder investor",
+   "sig": [
+    "ord",
+    "size",
+    "tc",
+    "tk"
+   ],
+   "heldout_combo": "H4"
+  },
+  {
+   "id": "wed01",
+   "voice": "wedding",
+   "text": "Guests who work at the same company are like family, so let's keep them in the same section, and let's keep every section to a cosy four.",
+   "gold": "size 4\ntogether company",
+   "sig": [
+    "size",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed02",
+   "voice": "wedding",
+   "text": "We shall have our AI lab guests toasted first, taking the first sections, followed by the chip makers.",
+   "gold": "order ai_lab chips",
+   "sig": [
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed03",
+   "voice": "wedding",
+   "text": "Let's not seat two government officials in the same section, it would be too much of the same flavour.",
+   "gold": "limit government 1",
+   "sig": [
+    "lim"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed04",
+   "voice": "wedding",
+   "text": "Big tech and investors should each have their own sections, never mixed, with a lovely intimate three per section.",
+   "gold": "size 3\napart big_tech investor",
+   "sig": [
+    "apt",
+    "size"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed05",
+   "voice": "wedding",
+   "text": "All our software and security friends in one section together, please, wherever it fits.",
+   "gold": "together software_security",
+   "sig": [
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed06",
+   "voice": "wedding",
+   "text": "Table-plan rule of the day: sprinkle the government officials thinly, two per section at most, and keep colleagues side by side.",
+   "gold": "together company\nlimit government 2",
+   "sig": [
+    "lim",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed07",
+   "voice": "wedding",
+   "text": "We want the investors seated first as our guests of honour, then the AI labs, and keep the chip makers and the big tech guests in separate sections.",
+   "gold": "apart big_tech chips\norder investor ai_lab",
+   "sig": [
+    "apt",
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed08",
+   "voice": "wedding",
+   "text": "Small and sweet: two to a section, and colleagues stay together.",
+   "gold": "size 2\ntogether company",
+   "sig": [
+    "size",
+    "tc"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed09",
+   "voice": "wedding",
+   "text": "One AI lab or big tech guest per section, sweetheart, and the government officials go first.",
+   "gold": "limit ai_lab big_tech 1\norder government",
+   "sig": [
+    "lim",
+    "ord"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed10",
+   "voice": "wedding",
+   "text": "Keep every chip maker together, no more than five to a section, and never put chips with AI labs.",
+   "gold": "size 5\ntogether chips\napart ai_lab chips",
+   "sig": [
+    "apt",
+    "size",
+    "tk"
+   ],
+   "heldout_combo": null
+  },
+  {
+   "id": "wed11",
+   "voice": "wedding",
+   "text": "Seat all the investors together as a group and keep them apart from the government officials.",
+   "gold": "together investor\napart investor government",
+   "sig": [
+    "apt",
+    "tk"
+   ],
+   "heldout_combo": "H5"
+  },
+  {
+   "id": "wed12",
+   "voice": "wedding",
+   "text": "Lovely sections of four, please: one investor at most per section, AI labs and big tech in different sections, and the government officials must come first.",
+   "gold": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government",
+   "sig": [
+    "apt",
+    "lim",
+    "ord",
+    "size"
+   ],
+   "heldout_combo": "H6"
+  }
+ ]
+}

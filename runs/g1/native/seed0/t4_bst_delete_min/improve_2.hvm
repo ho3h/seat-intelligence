@@ -1,0 +1,10 @@
+// Delete the minimum from a BST.
+@prog = ((?(((* (0 *)) (* @walk)) (payload out)) payload) out)
+
+// The input is a Node payload. Inspect its left child's tag.
+@walk = (((?(((* (* (r r))) @walk_node) (lp (value (right out)))) lp) (value right)) out)
+
+// The left child is a Node: recurse on its payload and rebuild this Node.
+@walk_node = (* (lp (value (right out))))
+  & @walk ~ (lp lres)
+  & out ~ (1 (lres (value right)))

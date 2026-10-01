@@ -1,0 +1,161 @@
+@prog = ((n pairs) out)
+  & pairs ~ {p_nodes p_uniq}
+  & @uniq ~ (p_uniq (0 distinct))
+  & @nodes ~ (n (p_nodes (0 (0 total))))
+  & total ~ $([-] $(distinct out))
+
+@nodes = ( ?((@nodes_done @nodes_more) (edges (i (acc out)))) (edges (i (acc out))) )
+
+@nodes_done = (edges (i (acc out)))
+  & edges ~ *
+  & i ~ *
+  & acc ~ out
+
+@nodes_more = (rem (edges (i (acc out))))
+  & rem ~ r_rest
+  & r_rest ~ {r_candidates_src r_next}
+  & r_candidates_src ~ {r_candidates r_op}
+  & edges ~ {e_sweeps e_next}
+  & i ~ {i_seed i_rest}
+  & i_rest ~ {i_inc_input i_for_sum}
+  & i_inc_input ~ $([+1] i_plus)
+  & i_plus ~ {j_start i_next}
+  & i_for_sum ~ $([+] $(r_op r_sweeps))
+  & @sweeps ~ (r_sweeps (e_sweeps ((1 (i_seed (0 *))) seen)))
+  & @count_reach ~ (r_candidates (j_start (seen (0 k))))
+  & k ~ $([+] $(acc acc2))
+  & @nodes ~ (r_next (e_next (i_next (acc2 out))))
+
+@sweeps = ( ?((@sweeps_done @sweeps_more) (edges (seen out))) (edges (seen out)) )
+
+@sweeps_done = (edges (seen out))
+  & edges ~ *
+  & seen ~ out
+
+@sweeps_more = (rem (edges (seen out)))
+  & edges ~ {e_scan e_next}
+  & @scan ~ (e_scan (seen seen_next))
+  & @sweeps ~ (rem (e_next (seen_next out)))
+
+@count_reach = ( ?((@cr_done @cr_more) (j (seen (count out)))) (j (seen (count out))) )
+
+@cr_done = (j (seen (count out)))
+  & j ~ *
+  & seen ~ *
+  & count ~ out
+
+@cr_more = (rem (j (seen (count out))))
+  & seen ~ {s_mem s_next}
+  & j ~ {j_mem j_next}
+  & @mem ~ (s_mem (j_mem found))
+  & found ~ ?((@cr_no @cr_yes) (rem (j_next (s_next (count out)))))
+
+@cr_no = (* (rem (j (seen (count out)))))
+  & @count_reach ~ (rem (j (seen (count out))))
+
+@cr_yes = (* (rem (j (seen (count out)))))
+  & count ~ $([+] $(1 count_next))
+  & @count_reach ~ (rem (j (seen (count_next out))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (seen out))) payload) (seen out))
+
+@scan_nil = (payload (seen out))
+  & payload ~ *
+  & seen ~ out
+
+@scan_cons = (* ((edge tail) (seen out)))
+  & edge ~ (u v)
+  & seen ~ {seen_test seen_keep}
+  & u ~ {u_test u_keep}
+  & @mem ~ (seen_test (u_test found))
+  & found ~ ?((@scan_u_no @scan_u_yes) (tail (seen_keep (u_keep (v out)))))
+
+@scan_u_yes = (* (tail (seen (u (v out)))))
+  & u ~ *
+  & @scan ~ (tail ((1 (v seen)) out))
+
+@scan_u_no = (* (tail (seen (u (v out)))))
+  & seen ~ {s_mem s_next}
+  & v ~ {v_mem v_next}
+  & @mem ~ (s_mem (v_mem found))
+  & found ~ ?((@scan_uv_no @scan_uv_yes) (tail (s_next (u (v_next out)))))
+
+@scan_uv_no = (* (tail (seen (u (v out)))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (seen out))
+
+@scan_uv_yes = (* (tail (seen (u (v out)))))
+  & v ~ *
+  & @scan ~ (tail ((1 (u seen)) out))
+
+@mem = ((?((@mem_nil @mem_cons) (payload (x out))) payload) (x out))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (x out)))
+  & x ~ {x_test x_next}
+  & head ~ $([=] $(x_test found))
+  & found ~ ?((@mem_no @mem_yes) (tail (x_next out)))
+
+@mem_no = (* (tail (x out)))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+@uniq = ((?((@uniq_nil @uniq_cons) (payload (count out))) payload) (count out))
+
+@uniq_nil = (payload (count out))
+  & payload ~ *
+  & count ~ out
+
+@uniq_cons = (* ((edge tail) (count out)))
+  & edge ~ (u v)
+  & tail ~ {tail_test tail_next}
+  & @has_pair ~ (tail_test (u (v found)))
+  & found ~ ?((@uniq_repeat @uniq_new) (tail_next (count out)))
+
+@uniq_repeat = (* (tail (count out)))
+  & @uniq ~ (tail (count out))
+
+@uniq_new = (* (tail (count out)))
+  & count ~ $([+] $(1 count_next))
+  & @uniq ~ (tail (count_next out))
+
+@has_pair = ((?((@hp_nil @hp_cons) (payload (u (v out)))) payload) (u (v out)))
+
+@hp_nil = (payload (u (v out)))
+  & payload ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 0
+
+@hp_cons = (* ((candidate tail) (u (v out))))
+  & candidate ~ (x y)
+  & u ~ {u_test u_keep}
+  & x ~ $([=] $(u_test found))
+  & found ~ ?((@hp_x_no @hp_x_yes) (tail (u_keep (v (y out)))))
+
+@hp_x_no = (* (tail (u (v (y out)))))
+  & y ~ *
+  & @has_pair ~ (tail (u (v out)))
+
+@hp_x_yes = (* (tail (u (v (y out)))))
+  & v ~ {v_test v_keep}
+  & y ~ $([=] $(v_test found))
+  & found ~ ?((@hp_y_no @hp_y_yes) (tail (u (v_keep out))))
+
+@hp_y_no = (* (tail (u (v out))))
+  & @has_pair ~ (tail (u (v out)))
+
+@hp_y_yes = (* (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1

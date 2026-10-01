@@ -1,0 +1,86 @@
+// Merge the sorted inputs while suppressing each value equal to the previous output.
+@prog = ((xs ys) out)
+  & @go ~ (xs (ys (0 (0 out))))
+
+@go = ((?((@gnil @gcons) (px (ys (has (prev out))))) px) (ys (has (prev out))))
+
+@gnil = (* (ys (has (prev out))))
+  & @tail ~ (ys (has (prev out)))
+
+@gcons = (* ((h t) (ys (has (prev out)))))
+  & @check_y ~ (ys (h (t (has (prev out)))))
+
+@check_y = ((?((@ynil @ycons) (py (h (t (has (prev out)))))) py) (h (t (has (prev out)))))
+
+@ynil = (* (h (t (has (prev out)))))
+  & @emit ~ (h (t ((0 *) (has (prev out)))))
+
+@ycons = (* ((g u) (h (t (has (prev out))))))
+  & h ~ {hc hs}
+  & g ~ {gc gs}
+  & hc ~ $([<] $(gc z))
+  & z ~ ?((@yg @yl) (hs (gs (t (u (has (prev out)))))))
+
+@yl = (hs (gs (t (u (has (prev out))))))
+  & @emit ~ (hs (t ((1 (gs u)) (has (prev out)))))
+
+@yg = (hs (gs (t (u (has (prev out))))))
+  & @emit ~ (gs ((1 (hs t)) (u (has (prev out)))))
+
+@tail = ((?((@tnil @tcons) (py (has (prev out)))) py) (has (prev out)))
+
+@tnil = (* (has (prev out)))
+  & has ~ *
+  & prev ~ *
+  & out ~ (0 *)
+
+@tcons = (* ((h t) (has (prev out))))
+  & @emit_tail ~ (h (t (has (prev out))))
+
+@emit = (v (xs (ys (has (prev out)))))
+  & has ~ ?((@efirst @eseen) (v (xs (ys (prev out)))))
+
+@efirst = (v (xs (ys (prev out))))
+  & prev ~ *
+  & v ~ {vo vp}
+  & @go ~ (xs (ys (1 (vp rest))))
+  & out ~ (1 (vo rest))
+
+@eseen = (* (v (xs (ys (prev out)))))
+  & v ~ {vc vk}
+  & prev ~ {pc pk}
+  & vc ~ $([=] $(pc z))
+  & z ~ ?((@ediff @esame) (vk (pk (xs (ys out))))
+
+@ediff = (v (prev (xs (ys out))))
+  & prev ~ *
+  & v ~ {vo vp}
+  & @go ~ (xs (ys (1 (vp rest))))
+  & out ~ (1 (vo rest))
+
+@esame = (* (prev (xs (ys out))))
+  & @go ~ (xs (ys (1 (prev out))))
+
+@emit_tail = (v (ys (has (prev out))))
+  & has ~ ?((@etfirst @etseen) (v (ys (prev out))))
+
+@etfirst = (v (ys (prev out)))
+  & prev ~ *
+  & v ~ {vo vp}
+  & @tail ~ (ys (1 (vp rest)))
+  & out ~ (1 (vo rest))
+
+@etseen = (* (v (ys (prev out))))
+  & v ~ {vc vk}
+  & prev ~ {pc pk}
+  & vc ~ $([=] $(pc z))
+  & z ~ ?((@etdiff @etsame) (vk (pk (ys out))))
+
+@etdiff = (v (prev (ys out)))
+  & prev ~ *
+  & v ~ {vo vp}
+  & @tail ~ (ys (1 (vp rest)))
+  & out ~ (1 (vo rest))
+
+@etsame = (* (prev (ys out)))
+  & @tail ~ (ys (1 (prev out)))

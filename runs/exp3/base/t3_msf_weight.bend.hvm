@@ -1,0 +1,97 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@find_min = ((@find_min__C8 a) a)
+
+@find_min__C0 = (b (c (d (e (a (* (* f)))))))
+  & @find_min ~ (a (b (c (d (e f)))))
+
+@find_min__C1 = (* (b (* (* (* (a c))))))
+  & @find_min ~ (a (b (1 c)))
+
+@find_min__C2 = (b (c ({a d} (e (f ({$([<] $(a ?((@find_min__C0 @find_min__C1) (b (c (d (e (f (g h))))))))) g} h))))))
+
+@find_min__C3 = (* (b (* (* (* (a c))))))
+  & @find_min ~ (a (b (1 c)))
+
+@find_min__C4 = (b (c (d (e (a (* (* (* (* f)))))))))
+  & @find_min ~ (a (b (c (d (e f)))))
+
+@find_min__C5 = (* (a ({$([=0x0000000] ?((@find_min__C2 @find_min__C3) (a (b (c (d (e (f (j k))))))))) b} (c (d (e (h (i (f (g k))))))))))
+  & @pick_vertex ~ (g (h (i j)))
+
+@find_min__C6 = (* (a (b (c (a (b c))))))
+
+@find_min__C7 = (* (({k b} ({l d} m)) (j ({f {c a}} (g (h (i o)))))))
+  & @is_seen ~ (a (b {$([!] $(e ?((@find_min__C4 @find_min__C5) (f (g (h (i (j (k (l (m (n o)))))))))))) n}))
+  & @is_seen ~ (c (d e))
+
+@find_min__C8 = (?((@find_min__C6 @find_min__C7) a) a)
+
+@grow_component = ({a c} ({b d} (e h)))
+  & @find_min ~ (a (b (0 (0 (0 ($([=0x0000000] ?((@grow_component__C0 @grow_component__C1) (c (d (e (f (g h))))))) (f g)))))))
+
+@grow_component__C0 = (a (b ($([+] $(e f)) (e (c g)))))
+  & @grow_component ~ (a (d (f g)))
+  & @mark_seen ~ (b (c d))
+
+@grow_component__C1 = (* (* (a (b (* (* (a b)))))))
+
+@is_seen = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @list_get ~ (a (b $([&] $(d $([!0x0000000] ?((0 (* 1)) e))))))
+  & $(c d) ~ [<<0x0000001]
+
+@list_get = ((@list_get__C2 a) a)
+
+@list_get__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @list_get ~ (a (b c))
+
+@list_get__C1 = (* (c (d ({$([=0x0000000] ?((@list_get__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@list_get__C2 = (?(((* 0) @list_get__C1) a) a)
+
+@list_put = ((@list_put__C3 a) a)
+
+@list_put__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @list_put ~ (b (c (d e)))
+
+@list_put__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@list_put__C2 = (* (c (d ({$([=0x0000000] ?((@list_put__C0 @list_put__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@list_put__C3 = (?(((* (* @List/Nil)) @list_put__C2) a) a)
+
+@make_zeroes = (?((@List/Nil @make_zeroes__C0) a) a)
+
+@make_zeroes__C0 = ($([+0x0000001] $([:-0x0000001] a)) c)
+  & @List/Cons ~ (0 (b c))
+  & @make_zeroes ~ (a b)
+
+@mark_seen = ({a c} ({$([:%0x0000018] e) $([:/0x0000018] {b d})} h))
+  & @list_put ~ (a (b (g h)))
+  & @list_get ~ (c (d $([|] $(f g))))
+  & $(e f) ~ [<<0x0000001]
+
+@pick_vertex = ($([=0x0000001] ?(((a (* a)) (* (* (b b)))) c)) c)
+
+@process_vertices = ({$([=] $(a ?((@process_vertices__C2 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@process_vertices__C0 = ({$([+0x0000001] f) c} (g ({a h} (b (e k)))))
+  & @process_vertices ~ (f (g (h (i (j k)))))
+  & @grow_component ~ (a (d (e (i j))))
+  & @mark_seen ~ (b (c d))
+
+@process_vertices__C1 = (* ($([+0x0000001] a) b))
+  & @process_vertices ~ (a b)
+
+@process_vertices__C2 = ({b c} (d (e ({a f} g))))
+  & @is_seen ~ (a (b $([=0x0000001] ?((@process_vertices__C0 @process_vertices__C1) (c (d (e (f g))))))))
+
+@prog = (({a $([+0x0000017] $([:/0x0000018] c))} b) e)
+  & @process_vertices ~ (0 (a (b (d (0 e)))))
+  & @make_zeroes ~ (c d)
+
+

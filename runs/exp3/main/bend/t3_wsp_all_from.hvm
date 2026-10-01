@@ -1,0 +1,102 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@dijkstra = (?(((* (* (* (a (* a))))) @dijkstra__C1) b) b)
+
+@dijkstra__C0 = ({e {k {$([=0x0000001] ?((@set_tree__C2 (* (* (* (* (a_q136 a_q136)))))) (a (c_q136 (c (1 {p j})))))) c_q136}}} ({f l} ({g (@relax_edges__C11 (i (j (k (l (m (n o)))))))} (i (a ($([+0x0000001] $([:-0x0000001] ?(((* (* (* (a_q135 (* a_q135))))) @dijkstra__C1) (e (f (g (o (p q)))))))) (n ({m c} q))))))))
+
+@dijkstra__C1 = (k ({{$([=0x0000001] ?((@find_min__C6 @find_min__C7) (a (b (c_q138 (0 (d ({$([=0x0FFFFFF] ?((@dijkstra__C0 (* (* (* (* (e (* (* (* (* e)))))))))) (f (g (h (i (j (k (l (m n)))))))))) l} m)))))))) c_q138} f} ({d g} (h ({a i} ({b j} n))))))
+
+@find_capacity = ({a d} ({$([<] $(a ?(((* (c c)) @find_capacity__C0_s) (d (e f))))) e} f))
+
+@find_min__C4 = (* (* (* (16777215 0))))
+
+@find_min__C5 = (* (a (?((@find_min__C3_z @find_min__C2_s) (a b)) b)))
+
+@find_min__C6 = ((a f) ((b g) ($([:/0x0000002] {{$([=0x0000001] ?((@find_min__C6 @find_min__C7) (a (b (c_q140 (d (e ({$([>] $(l ?((@find_min__C1_z @find_min__C0_s) (n (o (p (q r))))))) n} o)))))))) c_q140} {{$([=0x0000001] ?((@find_min__C6 @find_min__C7) (f (g (c_q139 (j (k ({l p} q)))))))) c_q139} i}}) ({d $([+] $(i j))} ({e k} r)))))
+
+@find_min__C7 = (* (b (c (* ({$([<] $(a ?((@find_min__C4 @find_min__C5) (b (c (d e)))))) d} (a e))))))
+
+@get_tree = (b ({$([=0x0000001] ?((@get_tree__C2 (* (a (* (* a))))) (b (c d)))) c} d))
+
+@get_tree__C0 = ($([-] $(c d)) (* (a ({{$([=0x0000001] ?((@get_tree__C2 (* (a_q141 (* (* a_q141))))) (a (c_q141 (d e))))) c_q141} c} e))))
+
+@get_tree__C1 = (* (c (a (* ({$([=0x0000001] ?((@get_tree__C2 (* (a_q142 (* (* a_q142))))) (a (c_q142 (c d))))) c_q142} d)))))
+
+@get_tree__C2 = ((c d) ($([:/0x0000002] {a e}) ({$([<] $(a ?((@get_tree__C0 @get_tree__C1) (b (c (d (e f))))))) b} f)))
+
+@make_dist_tree = ({$([=0x0000001] ?((@make_dist_tree__C1 @make_dist_tree__C2) (a b))) a} b)
+
+@make_dist_tree__C0 = (* ($([=] $(a ?((16777215 (* 0)) b))) (a b)))
+
+@make_dist_tree__C1 = ($([:/0x0000002] {{$([=0x0000001] ?((@make_dist_tree__C1 @make_dist_tree__C2) (a_q144 (h (i (j k)))))) a_q144} {g {$([=0x0000001] ?((@make_dist_tree__C1 @make_dist_tree__C2) (a_q143 (b (c (d e)))))) a_q143}}}) ({$([+] $(g h)) b} ({i c} ({j d} (e k)))))
+
+@make_dist_tree__C2 = (* (* ({$([<] $(a ?(((* (* 16777215)) @make_dist_tree__C0) (b c)))) b} (a c))))
+
+@make_inf = (?((@List/Nil @make_inf__C0) a) a)
+
+@make_inf__C0 = ($([+0x0000001] $([:-0x0000001] ?((@List/Nil @make_inf__C0) b))) c)
+  & @List/Cons ~ (16777215 (b c))
+
+@make_zero_tree__C0 = ($([:/0x0000002] {{$([=0x0000001] ?((@make_zero_tree__C0 (* (* 0))) (a_q150 d))) a_q150} {$([=0x0000001] ?((@make_zero_tree__C0 (* (* 0))) (a_q147 b))) a_q147}}) (b d))
+
+@prog = (({a c} ({$([<] $(a ?((@prog__C1_z @prog__C0_s) (c (d (e f)))))) d} e)) f)
+
+@relax_edges__C0 = (a (* (* (* a))))
+
+@relax_edges__C1 = (* (a (d (b (c e)))))
+  & @set_tree ~ (a (b (c (d e))))
+
+@relax_edges__C10 = (* (($([=] $(b ?((@relax_edges__C8 @relax_edges__C9) (c (d (e (f (g (h (i j)))))))))) (h i)) (((?(((a_q172 (* (* (* (* (* a_q172)))))) @relax_edges__C10) b_q172) b_q172) (j (k (l (m (n (o p))))))) (c ({k d} ({l e} ({m f} ({n b} ({o g} p)))))))))
+
+@relax_edges__C11 = (?(((a (* (* (* (* (* a)))))) @relax_edges__C10) b) b)
+
+@relax_edges__C2 = ({f b} ({h c} ($([+] $(a {$([<] $(e ?((@relax_edges__C0 @relax_edges__C1) (f (g (h (i j))))))) g})) ({i d} (a j)))))
+  & @get_tree ~ (b (c (d e)))
+
+@relax_edges__C3 = (* (a (* (* (* (* a))))))
+
+@relax_edges__C4 = (c (d ({$([-0x0FFFFFF] b) e} (f ({$([>] $(b ?((@relax_edges__C2 @relax_edges__C3) (c (d (e (f (g h)))))))) g} h)))))
+
+@relax_edges__C5 = (* (a (* (* (* (* a))))))
+
+@relax_edges__C8 = (a (* (* (* (* (* (* a)))))))
+
+@relax_edges__C9 = (* (c (d (e (a (f ({$([<] $(a ?((@relax_edges__C7_z @relax_edges__C6_s) (c (d (e (f (g h)))))))) g} h)))))))
+
+@set_tree = (b ({$([=0x0000001] ?((@set_tree__C2 (* (* (* (* (a a)))))) (b (c d)))) c} d))
+
+@set_tree__C0 = ($([-] $(d e)) (f (a (b ({{$([=0x0000001] ?((@set_tree__C2 (* (* (* (* (a_q159 a_q159)))))) (b (c_q159 (e (f g)))))) c_q159} d} (a g))))))
+
+@set_tree__C1 = (* (c (d (a (f ({$([=0x0000001] ?((@set_tree__C2 (* (* (* (* (a_q164 a_q164)))))) (a (c_q164 (c (d e)))))) c_q164} (e f)))))))
+
+@set_tree__C2 = ((d e) ($([:/0x0000002] {a f}) ({$([<] $(a ?((@set_tree__C0 @set_tree__C1) (b (c (d (e (f g)))))))) b} (c g))))
+
+@tree_to_list = (a (b (?(((* (* (* @List/Nil))) @tree_to_list__C0) (a (b c))) c)))
+
+@tree_to_list__C0 = ($([+0x0000001] $([:-0x0000001] g)) ({e a} ({f {$([=0x0000001] ?((@get_tree__C2 (* (a_q181 (* (* a_q181))))) (a (c_q181 (c d))))) c_q181}} ({$([+0x0000001] h) c} ((1 (d (i c_q169))) c_q169)))))
+  & @tree_to_list ~ (e (f (g (h i))))
+
+@find_capacity__C0_s = (* (a ($([*0x0000002] b) c)))
+  & @find_capacity ~ (a (b c))
+
+@find_min__C3_z = (a (b (a b)))
+
+@find_min__C2_s = (* (* (* (16777215 0))))
+
+@find_min__C1_z = (a (b (* (* (a b)))))
+
+@find_min__C0_s = (* (* (* (a (b (a b))))))
+
+@prog__C1_z = (a (* (* b)))
+  & @make_inf ~ (a b)
+
+@prog__C0_s = (* ({?(((* (* (* @List/Nil))) @tree_to_list__C0) (l (m (0 o)))) {b {d {g {$([<1] ?(((* (c_q174 c_q174)) @find_capacity__C0_s) (d_q174 (1 {m {c {{$([=0x0000001] ?((@make_zero_tree__C0 (* (* 0))) (a_q178 k))) a_q178} f}}})))) d_q174}}}}} (h (e o))))
+  & @dijkstra ~ (b (c (d (e (i (k l))))))
+  & @make_dist_tree ~ (f (0 (g (h i))))
+
+@relax_edges__C7_z = (a (* (* (* (* (* a))))))
+
+@relax_edges__C6_s = (* (d (a ({e b} (f ({g c} h))))))
+  & @get_tree ~ (a (b (c ?((@relax_edges__C4 @relax_edges__C5) (d (e (f (g h))))))))

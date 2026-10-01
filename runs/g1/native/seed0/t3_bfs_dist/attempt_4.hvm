@@ -1,0 +1,109 @@
+// Build the distance list, set the source distance to zero, and run n
+// complete edge-relaxation passes.
+@prog = ((n (s edges)) out)
+  & n ~ {n_fill n_round}
+  & @fill ~ (n_fill d0)
+  & @set ~ (d0 (s (0 d1)))
+  & @round ~ (n_round (edges (d1 out)))
+
+// Build a list of n copies of infinity.
+@fill = (n out)
+  & n ~ ?((@fill_zero @fill_more) out)
+
+@fill_zero = (0 *)
+
+@fill_more = (rem out)
+  & @fill ~ (rem tail)
+  & out ~ (1 (16777215 tail))
+
+// Run exactly n passes. Each pass scans the edge list and updates dist.
+@round = (n (edges (dist out)))
+  & n ~ ?((@round_zero @round_more) (edges (dist out)))
+
+@round_zero = (edges (dist out))
+  & edges ~ *
+  & dist ~ out
+
+@round_more = (rem (edges (dist out)))
+  & edges ~ {edges_scan edges_next}
+  & @scan ~ (edges_scan (dist dist2))
+  & @round ~ (rem (edges_next (dist2 out)))
+
+// Scan one edge list, carrying the current distance list.
+@scan = ((?((@scan_nil @scan_cons) (pl (dist out))) pl) (dist out))
+
+@scan_nil = (* (dist out))
+  & dist ~ out
+
+@scan_cons = (* ((h t) (dist out)))
+  & @relax ~ (h (dist dist2))
+  & @scan ~ (t (dist2 out))
+
+// Relax directed edge (u,v).
+@relax = ((u v) (dist out))
+  & dist ~ {dist_u dist_rest}
+  & dist_rest ~ {dist_v dist_set}
+  & @get ~ (dist_u (u du))
+  & v ~ {v_get v_set}
+  & @get ~ (dist_v (v_get dv))
+  & du ~ {du_test du_val}
+  & du_test ~ $([=] $(16777215 z))
+  & z ~ ?((@relax_inf @relax_finite) (du_val (dv (v_set (dist_set out))))
+
+@relax_inf = (du (dv (v (dist out))))
+  & du ~ *
+  & dv ~ *
+  & v ~ *
+  & dist ~ out
+
+@relax_finite = (du (dv (v (dist out))))
+  & du ~ $([+1] cand)
+  & cand ~ {cand_cmp cand_set}
+  & cand_cmp ~ $([<] $(dv z))
+  & z ~ ?((@relax_no @relax_yes) (cand_set (v (dist out))))
+
+@relax_no = (cand (v (dist out)))
+  & cand ~ *
+  & v ~ *
+  & dist ~ out
+
+@relax_yes = (cand (v (dist out)))
+  & @set ~ (dist (v (cand d2)))
+  & out ~ d2
+
+// Read a distance by index.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@get_next = (idx (h (t out)))
+  & h ~ *
+  & @get ~ (t (idx out))
+
+// Replace the value at an index.
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (idx (h (t (val out))))
+  & @set ~ (t (idx (val tail2)))
+  & out ~ (1 (h tail2))

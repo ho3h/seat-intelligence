@@ -1,0 +1,42 @@
+@List/Nil = ((0 a) a)
+
+@count_marked__C2 = (* (c (d ({$([>0x0000018] ?((@count_marked__C1_z @count_marked__C0_s) (b (c (d e))))) b} e))))
+
+@count_marked__C3 = (?(((* 0) @count_marked__C2) a) a)
+
+@make_words = ({?(((* @List/Nil) (* ($([:-0x0000001] {?(((* @List/Nil) (* ($([:-0x0000001] {?(((* @List/Nil) (* ($([:-0x0000001] {?(((* @List/Nil) @make_words__C0_s) (a_q299_q318 b_q318)) a_q299_q318}) ((1 (0 (b_q318 c_i33_q318))) c_i33_q318)))) (a_q299_q313 b_q313)) a_q299_q313}) ((1 (0 (b_q313 c_i33_q313))) c_i33_q313)))) (a_q299_q309 b_q309)) a_q299_q309}) ((1 (0 (b_q309 c_i33_q309))) c_i33_q309)))) (a b)) a} b)
+
+@mark_edges__C0 = (* (({$([:%0x0000018] $([<<0x0000001] f_q290)) $([:/0x0000018] {$([=] $(a_q290 ?((@mark_pair__C0 @mark_pair__C1) (b (c_q290 (d_q290 (f_q290 (h_q290 e)))))))) c_q290})} {$([:%0x0000018] $([<<0x0000001] h_q290)) $([:/0x0000018] {a_q290 d_q290})}) (((?(((a_q330 a_q330) @mark_edges__C0) b_q330) b_q330) (e f)) (b f))))
+
+@mark_edges__C1 = (?(((a a) @mark_edges__C0) b) b)
+
+@mark_pair__C0 = (((?(((* (* @List/Nil)) @set_word__C2) a_q333) a_q333) (b (c (@set_word__C3 (e f))))) (b (e (c f))))
+
+@mark_pair__C1 = (* (((?(((* (* @List/Nil)) @set_word__C2) a_q337) a_q337) (b (d e))) (b (* ($([|] $(c d)) (c e))))))
+
+@popcount = (a ({?(((* (* 0)) @popcount__C0_s) (a (b c))) b} c))
+
+@prog = (({$([-] $(f g)) {e {$([:%0x0000018] ?((@prog__C1_z @prog__C0_s) (b c))) $([:/0x0000018] b)}}} (@mark_edges__C1 (c (@count_marked__C3 (e f))))) g)
+
+@set_word__C2 = (* (c (d ({?((@set_word__C1_z @set_word__C0_s) (a (b (c (d e))))) a} (b e)))))
+
+@set_word__C3 = (?(((* (* @List/Nil)) @set_word__C2) a) a)
+
+@count_marked__C1_z = ($([:-0x0000018] c) (a ((@count_marked__C3 (c d)) e)))
+  & 24 ~ ?(((* (* 0)) @popcount__C0_s) (a (24 $([+] $(d e)))))
+
+@count_marked__C0_s = (* (b (a (* c))))
+  & @popcount ~ (a (b c))
+
+@make_words__C0_s = (* ($([:-0x0000001] {?(((* @List/Nil) @make_words__C0_s) (a_q299 b)) a_q299}) ((1 (0 (b c_i33))) c_i33)))
+
+@popcount__C0_s = (* ({$([&0x0000001] $([+] $(c d))) $([:>>0x0000001] a)} ($([:-0x0000001] {?(((* (* 0)) @popcount__C0_s) (a (b_q301 c))) b_q301}) d)))
+
+@prog__C1_z = @make_words
+
+@prog__C0_s = (* ($([+0x0000001] a) b))
+  & @make_words ~ (a b)
+
+@set_word__C1_z = (* (a ($([|] $(a b)) (b_i35 ((1 (b (b_i35 c_i35))) c_i35)))))
+
+@set_word__C0_s = (* ($([:-0x0000001] c) (d (a (((?(((* (* @List/Nil)) @set_word__C2) a_q329) a_q329) (c (d e))) ((1 (a (e c_i34))) c_i34))))))

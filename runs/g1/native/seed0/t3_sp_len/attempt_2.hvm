@@ -1,0 +1,119 @@
+// Entry point: initialize the frontier and visited set with s.
+@prog = ((n (s (t edges))) out)
+  & n ~ *
+  & s ~ {sf ss}
+  & @bfs ~ (t (edges ((1 (sf (0 *))) ((1 (ss (0 *))) (0 out))))
+
+// Membership test: returns (rebuilt_list, found_boolean).
+@mem = ((?((@mem_nil @mem_cons) (pl (candidate out))) pl) (candidate out))
+
+@mem_nil = (* (candidate out))
+  & candidate ~ *
+  & out ~ ((0 *) 0)
+
+@mem_cons = (* ((head tail) (candidate out)))
+  & candidate ~ {c_eq c_rec}
+  & head ~ {h_eq h_out}
+  & c_eq ~ $([=] $(h_eq eq))
+  & @mem ~ (c_rec (tail mr))
+  & mr ~ (tail2 found)
+  & found ~ $([|] $(eq b))
+  & out ~ ((1 (h_out tail2)) b)
+
+// Add candidate to seen and next only if it is not already in seen.
+@consider = (candidate (seen (next out)))
+  & candidate ~ {cmem ckeep}
+  & @mem ~ (cmem (seen mr))
+  & mr ~ (seen2 found)
+  & found ~ ?((@consider_add @consider_keep) (ckeep (seen2 (next out))))
+
+@consider_add = (* (candidate (seen (next out))))
+  & candidate ~ {c1 c2}
+  & out ~ ((1 (c1 seen)) (1 (c2 next)))
+
+@consider_keep = (* (candidate (seen (next out))))
+  & candidate ~ *
+  & out ~ (seen next)
+
+// Process one undirected edge against the current frontier.
+@edge_step = (u (v (front (seen (next out)))))
+  & u ~ {um ukeep}
+  & v ~ {vm vkeep}
+  & @mem ~ (um (front mr1))
+  & mr1 ~ (front1 uin)
+  & @mem ~ (vm (front1 mr2))
+  & mr2 ~ (front2 vin)
+  & @edge_dispatch ~ (uin (vkeep (ukeep (vin (front2 (seen (next out))))))
+
+@edge_dispatch = (flag (v (u (vin (front (seen (next out))))))
+  & flag ~ ?((@edge_unmatched @edge_matched) (v (u (vin (front (seen (next out))))))
+
+@edge_unmatched = (* (v (u (vin (front (seen (next out))))))
+  & v ~ *
+  & @edge_finish ~ (vin (u (front (seen (next out)))))
+
+@edge_matched = (* (v (u (vin (front (seen (next out))))))
+  & @consider ~ (v (seen (next st)))
+  & st ~ (seen2 next2)
+  & @edge_finish ~ (vin (u (front (seen2 (next2 out)))))
+
+@edge_finish = (flag (u (front (seen (next out)))))
+  & flag ~ ?((@edge_v_unmatched @edge_v_matched) (u (front (seen (next out)))))
+
+@edge_v_unmatched = (* (u (front (seen (next out)))))
+  & u ~ *
+  & out ~ (front (seen next))
+
+@edge_v_matched = (* (u (front (seen (next out)))))
+  & @consider ~ (u (seen (next st)))
+  & st ~ (seen2 next2)
+  & out ~ (front (seen2 next2))
+
+// Scan and rebuild the edge list, accumulating the next frontier.
+@scan = ((?((@scan_nil @scan_cons) (pl (front (seen (next out))))) pl) (front (seen (next out))))
+
+@scan_nil = (* (front (seen (next out))))
+  & out ~ ((0 *) (front (seen next)))
+
+@scan_cons = (* (((u v) tail) (front (seen (next out)))))
+  & u ~ {u_step u_out}
+  & v ~ {v_step v_out}
+  & @edge_step ~ (u_step (v_step (front (seen (next st)))))
+  & st ~ (front2 (seen2 next2))
+  & @scan ~ (tail (front2 (seen2 (next2 rest))))
+  & rest ~ (tail2 (front3 (seen3 next3)))
+  & out ~ ((1 ((u_out v_out) tail2)) (front3 (seen3 next3)))
+
+// Check whether the target is in the frontier; otherwise expand one BFS layer.
+@bfs = (target (edges (front (seen (depth out))))
+  & target ~ {tm tr}
+  & @mem ~ (tm (front mr))
+  & mr ~ (front2 found)
+  & found ~ ?((@bfs_more @bfs_hit) (tr (edges (front2 (seen (depth out))))))
+
+@bfs_hit = (* (target (edges (front (seen (depth out))))))
+  & target ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ depth
+
+@bfs_more = (* (target (edges (front (seen (depth out))))))
+  & @scan ~ (edges (front (seen ((0 *) st))))
+  & st ~ (edges2 (front2 (seen2 next)))
+  & front2 ~ *
+  & @dispatch ~ (next (target (edges2 (seen2 (depth out)))))
+
+// Dispatch on whether the newly built frontier is empty.
+@dispatch = ((?((@dispatch_nil @dispatch_cons) (pl (target (edges (seen (depth out)))))) pl) (target (edges (seen (depth out))))
+
+@dispatch_nil = (* (target (edges (seen (depth out)))))
+  & target ~ *
+  & edges ~ *
+  & seen ~ *
+  & depth ~ *
+  & out ~ 16777215
+
+@dispatch_cons = (* (pl (target (edges (seen (depth out))))))
+  & depth ~ $([+1] d2)
+  & @bfs ~ (target (edges ((1 pl) (seen (d2 out))))

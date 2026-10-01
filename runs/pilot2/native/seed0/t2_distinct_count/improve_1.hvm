@@ -1,0 +1,53 @@
+// @prog input: list[u24]; output: number of distinct values
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (trie (acc out)))) pl) (trie (acc out)))
+
+@dc_nil = (* (* (a a)))
+
+@dc_cons = (* ((h t) (trie (acc out))))
+  & @ins ~ (24 (h (trie res)))
+  & res ~ (trie2 fresh)
+  & acc ~ $([+] $(fresh acc2))
+  & @dc ~ (t (trie2 (acc2 out)))
+
+@ins = (?((@ins_done @ins_more) (n (tree out))) (n (tree out)))
+
+@ins_done = (n (tree out))
+  & n ~ *
+  & @leaf ~ (tree out)
+
+@ins_more = (lvl (n (tree out)))
+  & n ~ {a b}
+  & a ~ $([&] $(1 bit))
+  & b ~ $([>>] $(1 n2))
+  & @ins_step ~ (tree (bit (lvl (n2 out))))
+
+@ins_step = ((?((@step_empty @step_node) (pl (bit (lvl (n out))))) pl) (bit (lvl (n out))))
+
+@step_empty = (* (bit (lvl (n out))))
+  & @choose ~ (bit (lvl (n ((0 *) ((0 *) out))))
+
+@step_node = (* ((left right) (bit (lvl (n out)))))
+  & @choose ~ (bit (lvl (n (left (right out)))))
+
+@choose = (?((@choose_left @choose_right) (lvl (n (left (right out))))) (lvl (n (left (right out)))))
+
+@choose_left = (lvl (n (left (right out))))
+  & @ins ~ (lvl (n (left res)))
+  & res ~ (newleft fresh)
+  & out ~ ((1 (newleft right)) fresh)
+
+@choose_right = (* (lvl (n (left (right out)))))
+  & @ins ~ (lvl (n (right res)))
+  & res ~ (newright fresh)
+  & out ~ ((1 (left newright)) fresh)
+
+@leaf = ((?((@leaf_empty @leaf_full) (pl out)) pl) out)
+
+@leaf_empty = (* out)
+  & out ~ ((1 *) 1)
+
+@leaf_full = (* (* out))
+  & out ~ ((1 *) 0)

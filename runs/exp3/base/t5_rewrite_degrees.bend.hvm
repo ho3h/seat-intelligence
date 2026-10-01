@@ -1,0 +1,102 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_output = ((@build_output__C4 a) a)
+
+@build_output__C0 = (* (a c))
+  & @List/Cons ~ (b c)
+  & @count_list ~ (a b)
+
+@build_output__C1 = (* (c (e ({a $([+0x0000001] f)} ($([=] $(a ?(((* (b b)) @build_output__C0) (c (g h))))) (d h))))))
+  & @build_output ~ (d (e (f g)))
+
+@build_output__C2 = (?(((* (* (* @List/Nil))) @build_output__C1) a) a)
+
+@build_output__C3 = (* (b (c ((@build_output__C2 (a (b (c d)))) (a d)))))
+
+@build_output__C4 = (?(((* (* @List/Nil)) @build_output__C3) a) a)
+
+@contains = ((@contains__C2 a) a)
+
+@contains__C0 = (b (a c))
+  & @contains ~ (a (b c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@count_list = ((@count_list__C1 a) a)
+
+@count_list__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @count_list ~ (a b)
+
+@count_list__C1 = (?((0 @count_list__C0) a) a)
+
+@empty_rows = ((@empty_rows__C1 a) a)
+
+@empty_rows__C0 = (* (* (a c)))
+  & @List/Cons ~ (@List/Nil (b c))
+  & @empty_rows ~ (a b)
+
+@empty_rows__C1 = (?((@List/Nil @empty_rows__C0) a) a)
+
+@insert_neighbor = ({a d} ({b e} f))
+  & @contains ~ (a (b $([=0x0000001] ?((@insert_neighbor__C0 (* (c (* c)))) (d (e f))))))
+
+@insert_neighbor__C0 = (b (a c))
+  & @List/Cons ~ (a (b c))
+
+@lookup = ((@lookup__C2 a) a)
+
+@lookup__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @lookup ~ (a (b c))
+
+@lookup__C1 = (* (c (d ({$([=0x0000000] ?((@lookup__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@lookup__C2 = (?(((* 0) @lookup__C1) a) a)
+
+@process_edges = ((@process_edges__C3 a) a)
+
+@process_edges__C0 = (b (c (a (d (e g)))))
+  & @process_edges ~ (a (b (f g)))
+  & @update_rows ~ (c (0 (d (e f))))
+
+@process_edges__C1 = (* (b (c (a (* (* d))))))
+  & @process_edges ~ (a (b (c d)))
+
+@process_edges__C2 = (* ((b d) (h ({f {c a}} (g k)))))
+  & @lookup ~ (c (d {e j}))
+  & @lookup ~ (a (b {$([=] $(e ?((@process_edges__C0 @process_edges__C1) (f (g (h (i (j k)))))))) i}))
+
+@process_edges__C3 = (?(((* (a a)) @process_edges__C2) b) b)
+
+@prog = (({a {c d}} b) g)
+  & @build_output ~ (a (f (0 g)))
+  & @process_edges ~ (b (c (e f)))
+  & @empty_rows ~ (d e)
+
+@update_rows = ((@update_rows__C5 a) a)
+
+@update_rows__C0 = ($([+0x0000001] c) (d (e (a (b g)))))
+  & @List/Cons ~ (a (f g))
+  & @update_rows ~ (b (c (d (e f))))
+
+@update_rows__C1 = (* ($([+0x0000001] e) ({b f} (g (a (d i))))))
+  & @List/Cons ~ (c (h i))
+  & @insert_neighbor ~ (a (b c))
+  & @update_rows ~ (d (e (f (g h))))
+
+@update_rows__C2 = ({$([=] $(a ?((@update_rows__C0 @update_rows__C1) (b (c (d e)))))) b} (c ({a d} e)))
+
+@update_rows__C3 = (* ($([+0x0000001] e) (f ({b g} (a (d i))))))
+  & @List/Cons ~ (c (h i))
+  & @insert_neighbor ~ (a (b c))
+  & @update_rows ~ (d (e (f (g h))))
+
+@update_rows__C4 = (* (e (f ({$([=] $(a ?((@update_rows__C2 @update_rows__C3) (b (c (d (e (f g)))))))) b} ({a c} (d g))))))
+
+@update_rows__C5 = (?(((* (* (* @List/Nil))) @update_rows__C4) a) a)
+
+

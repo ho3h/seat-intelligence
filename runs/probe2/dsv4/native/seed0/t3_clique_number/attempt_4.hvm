@@ -1,0 +1,198 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & {n_a n_b} ~ n
+  & {n_matrix_cnt n_matrix_size} ~ n_a
+  & {n_cur_len n_search} ~ n_b
+  & @make_matrix ~ (n_matrix_cnt (n_matrix_size adj0))
+  & @build_edges ~ (edges (adj0 adj))
+  & @zeros ~ (n_cur_len cur0)
+  & @search ~ (0 (n_search (adj (cur0 (0 (0 out))))))
+
+@make_matrix = (cnt (size out))
+  & cnt ~ ?((@mm_zero @mm_pos) (size out))
+@mm_zero = (size out)
+  & size ~ *
+  & out ~ (0 *)
+@mm_pos = (cnt_minus (size out))
+  & {size_row size_rec} ~ size
+  & @zeros ~ (size_row row)
+  & @make_matrix ~ (cnt_minus (size_rec rest))
+  & out ~ (1 (row rest))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_zero @zeros_pos) out)
+@zeros_zero = (0 *)
+@zeros_pos = (n_minus out)
+  & @zeros ~ (n_minus tail)
+  & out ~ (1 (0 tail))
+
+@build_edges = (edges (adj_in out))
+  & edges ~ (tag payload)
+  & tag ~ ?((@be_nil @be_cons) (payload (adj_in out)))
+@be_nil = (payload (adj_in out))
+  & payload ~ *
+  & adj_in ~ out
+@be_cons = (* (payload (adj_in out)))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & @set_edge ~ (adj_in (u1 (v1 adj1)))
+  & @set_edge ~ (adj1 (v2 (u2 adj2)))
+  & @build_edges ~ (tail (adj2 out))
+
+@set_edge = (adj (u (v out)))
+  & adj ~ (tag payload)
+  & tag ~ ?((@se_nil @se_cons) (payload (u (v out))))
+@se_nil = (payload (u (v out)))
+  & payload ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ (0 *)
+@se_cons = (* (payload (u (v out))))
+  & payload ~ (row rest)
+  & u ~ ?((@se_row0 @se_rowpos) (row (rest (v out))))
+@se_row0 = (row (rest (v out)))
+  & @set_bit ~ (row (v (1 newrow)))
+  & out ~ (1 (newrow rest))
+@se_rowpos = (u_minus (row (rest (v out))))
+  & @set_edge ~ (rest (u_minus (v newrest)))
+  & out ~ (1 (row newrest))
+
+@set_bit = (lst (idx (bit out)))
+  & lst ~ (tag payload)
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (bit out))))
+@set_nil = (payload (idx (bit out)))
+  & payload ~ *
+  & idx ~ *
+  & bit ~ *
+  & out ~ (0 *)
+@set_cons = (* (payload (idx (bit out))))
+  & payload ~ (h t)
+  & idx ~ ?((@set_idx0 @set_idxpos) (h (t (bit out))))
+@set_idx0 = (h (t (bit out)))
+  & h ~ $([|] $(bit newh))
+  & out ~ (1 (newh t))
+@set_idxpos = (idx_minus (h (t (bit out))))
+  & @set_bit ~ (t (idx_minus (bit newtail)))
+  & out ~ (1 (h newtail))
+
+@nth = (lst (idx out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@nth_nil @nth_cons) (payload (idx out)))
+@nth_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+@nth_cons = (* (payload (idx out)))
+  & payload ~ (head tail)
+  & idx ~ ?((@nth_zero @nth_pos) (head (tail out)))
+@nth_zero = (head (tail out))
+  & tail ~ *
+  & head ~ out
+@nth_pos = (idx_minus (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idx_minus out))
+
+@is_subset = (a (b out))
+  & a ~ (tag payload)
+  & tag ~ ?((@iss_nil @iss_cons) (payload (b out)))
+@iss_nil = (payload (b out))
+  & payload ~ *
+  & b ~ *
+  & out ~ 1
+@iss_cons = (* (payload (b out)))
+  & payload ~ (ha ta)
+  & b ~ (btag bpayload)
+  & btag ~ ?((@iss_bnil @iss_bcons) (ha (ta (bpayload out))))
+@iss_bnil = (ha (ta (bpayload out)))
+  & ha ~ *
+  & ta ~ *
+  & bpayload ~ *
+  & out ~ 0
+@iss_bcons = (* (ha (ta (bpayload out))))
+  & bpayload ~ (hb tb)
+  & ha ~ ?((@iss_ha_zero @iss_ha_one) (hb (tb (ta out))))
+@iss_ha_zero = (hb (tb (ta out)))
+  & hb ~ *
+  & @is_subset ~ (ta (tb out))
+@iss_ha_one = (* (hb (tb (ta out))))
+  & hb ~ ?((@iss_hb_zero @iss_hb_one) (tb (ta out)))
+@iss_hb_zero = (tb (ta out))
+  & ta ~ *
+  & tb ~ *
+  & out ~ 0
+@iss_hb_one = (* (tb (ta out)))
+  & @is_subset ~ (ta (tb out))
+
+@max = (a (b out))
+  & {a1 a2} ~ a
+  & {b1 b2} ~ b
+  & a1 ~ $([>] $(b1 gt))
+  & gt ~ ?((@max_b @max_a) (a2 (b2 out)))
+@max_b = (a (b out))
+  & a ~ *
+  & b ~ out
+@max_a = (* (a (b out)))
+  & b ~ *
+  & a ~ out
+
+@search = (i (n (adj (cur (size (best out))))))
+  & {i1 i2} ~ i
+  & {n1 n2} ~ n
+  & i1 ~ $([<] $(n1 cmp))
+  & cmp ~ ?((@search_done @search_step) (i2 (n2 (adj (cur (size (best out)))))))
+@search_done = (i (n (adj (cur (size (best out))))))
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & cur ~ *
+  & @max ~ (best (size out))
+@search_step = (* (i (n (adj (cur (size (best out)))))))
+  & {i_bound i_work} ~ i
+  & {n_bound n_work} ~ n
+  & {size_bound size_work} ~ size
+  & {best_bound best_work} ~ best
+  & n_bound ~ $([-] $(i_bound rem))
+  & rem ~ $([+] $(size_bound bound))
+  & bound ~ $([>] $(best_bound gt))
+  & gt ~ ?((@search_prune @search_continue) (i_work (n_work (adj (cur (size_work (best_work out)))))))
+@search_prune = (i (n (adj (cur (size (best out))))))
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & cur ~ *
+  & size ~ *
+  & best ~ out
+@search_continue = (* (i (n (adj (cur (size (best out)))))))
+  & {i_add i_work2} ~ i
+  & {i_idx i_unused} ~ i_work2
+  & i_unused ~ *
+  & {i_idx_q i_idx_upd} ~ i_idx
+  & i_add ~ $([+1] iplus)
+  & {iplus_excl iplus_incl} ~ iplus
+  & {n_excl n_incl} ~ n
+  & {adj_nth adj_rest} ~ adj
+  & {adj_excl adj_incl} ~ adj_rest
+  & {cur_excl cur_work} ~ cur
+  & {cur_check cur_new} ~ cur_work
+  & {size_excl size_incl} ~ size
+  & @nth ~ (adj_nth (i_idx_q mask_i))
+  & @search ~ (iplus_excl (n_excl (adj_excl (cur_excl (size_excl (best out_excl))))))
+  & @is_subset ~ (cur_check (mask_i incl))
+  & @maybe_include ~ (incl (cur_new (size_incl (i_idx_upd (out_excl (iplus_incl (n_incl (adj_incl out))))))))
+
+@maybe_include = (incl (cur (size (i_idx (best (i (n (adj out))))))))
+  & incl ~ ?((@no_include @yes_include) (cur (size (i_idx (best (i (n (adj out))))))))
+@no_include = (cur (size (i_idx (best (i (n (adj out)))))))
+  & cur ~ *
+  & size ~ *
+  & i_idx ~ *
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & best ~ out
+@yes_include = (* (cur (size (i_idx (best (i (n (adj out))))))))
+  & @set_bit ~ (cur (i_idx (1 new_cur)))
+  & size ~ $([+1] new_size)
+  & @search ~ (i (n (adj (new_cur (new_size (best out))))))

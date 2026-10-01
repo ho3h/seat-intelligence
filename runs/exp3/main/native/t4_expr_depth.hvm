@@ -1,0 +1,12 @@
+@prog = ((?(((* 1) (* @binary)) (payload_q204 output)) payload_q204) output)
+
+@binary = (((?(((* 1) (* @binary)) (payload_q205 {$([>] $(right_cmp ?((@take_right @take_left) (left_sel (right_sel output))))) left_sel})) payload_q205) (?(((* 1) (* @binary)) (payload_q206 {right_cmp right_sel})) payload_q206)) output)
+
+@take_right = (left (right output))
+  & left ~ *
+  & right ~ $([+1] output)
+
+@take_left = (zero (left (right output)))
+  & zero ~ *
+  & right ~ *
+  & left ~ $([+1] output)

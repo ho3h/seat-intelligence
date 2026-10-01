@@ -1,0 +1,16 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@map_double = ((@map_double__C1 a) a)
+
+@map_double__C0 = (* ($([*0x0000002] a) (b d)))
+  & @List/Cons ~ (a (c d))
+  & @map_double ~ (b c)
+
+@map_double__C1 = (?((@List/Nil @map_double__C0) a) a)
+
+@prog = a
+  & @map_double ~ a
+
+

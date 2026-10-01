@@ -1,0 +1,94 @@
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+ValueError: invalid literal for int() with base 16: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 176, in <module>
+    if __name__ == "__main__": main(sys.argv[1:])
+                               ~~~~^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 171, in main
+    list(ex.map(lambda pid: run_program(a.arm, pid, a.seed, a.model, key, b, a.out, a.thinking,
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        provider=a.provider, reasoning=a.reasoning), ids))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 645, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 312, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 447, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 396, in __get_result
+    raise self._exception
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 171, in <lambda>
+    list(ex.map(lambda pid: run_program(a.arm, pid, a.seed, a.model, key, b, a.out, a.thinking,
+                            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        provider=a.provider, reasoning=a.reasoning), ids))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 124, in run_program
+    net, res = submit(k + 1 + free, "attempt")
+               ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 111, in submit
+    r = chat(provider, model, messages, key, thinking, reasoning)
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 94, in chat
+    if provider == "openrouter": return call_openrouter(model, messages, key, max_tokens=MAX_OUT, reasoning=reasoning)
+                                        ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 52, in call_openrouter
+    with urllib.request.urlopen(req, timeout=900) as r: d = json.load(r)
+                                                            ~~~~~~~~~^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 298, in load
+    return loads(fp.read(),
+                 ~~~~~~~^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ~~~~~~~~~~~~~~~~~~^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(1672 bytes read)
+native seed0 t3_girth: FAIL attempts=9 tokens=179430 usd=0.2358
+native seed0 t3_articulation: FAIL attempts=6 tokens=145586 usd=0.2343
+native seed0 t3_kcore_size: PASS attempts=5 tokens=96051 usd=0.1324
+native seed0 t3_bipartite_comps: PASS attempts=3 tokens=99584 usd=0.1694
+native seed0 t3_max_flow: FAIL attempts=9 tokens=180075 usd=0.2114
+native seed0 t3_lex_shortest_path: FAIL attempts=6 tokens=160937 usd=0.2120
+native seed0 t3_count_shortest_paths: FAIL attempts=9 tokens=193645 usd=0.2353
+native seed0 t3_khop: FAIL attempts=9 tokens=213981 usd=0.2453
+native seed0 t3_articulation_points: FAIL attempts=9 tokens=221485 usd=0.2378
+native seed0 t3_euler_start: FAIL attempts=9 tokens=207546 usd=0.2327
+native seed0 t3_scc_count: FAIL attempts=9 tokens=190751 usd=0.2526
+native seed0 t3_bfs_order: PASS attempts=3 tokens=111250 usd=0.1986
+native seed0 t3_sp_len: FAIL attempts=9 tokens=187020 usd=0.2141
+native seed0 t5_cluster_implied_unproposed: FAIL attempts=9 tokens=192990 usd=0.2332
+native seed0 t3_mst_second: FAIL attempts=9 tokens=232201 usd=0.2888
+native seed0 t3_scc_label: FAIL attempts=9 tokens=219534 usd=0.2416
+native seed0 t5_reconcile_full: FAIL attempts=9 tokens=335354 usd=0.3698
+native seed0 t5_conflict_greedy: FAIL attempts=9 tokens=251590 usd=0.2445
+native seed0 t5_cluster_sizes: FAIL attempts=7 tokens=181897 usd=0.2444
+native seed0 t3_tree_parents: FAIL attempts=8 tokens=182479 usd=0.2942
+native seed0 t5_reconcile_full_props: FAIL attempts=9 tokens=428520 usd=0.4172
+native seed0 t5_reconcile_canon_mnl: FAIL attempts=9 tokens=292549 usd=0.2678
+native seed0 t5_conflict_greedy_cap: FAIL attempts=9 tokens=233553 usd=0.2487
+native seed0 t5_conflict_skipped: FAIL attempts=7 tokens=237285 usd=0.2777

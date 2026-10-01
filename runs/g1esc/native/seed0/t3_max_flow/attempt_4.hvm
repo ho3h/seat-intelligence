@@ -1,0 +1,113 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & @solve ~ (n (s (t (edges out))))
+
+@solve = (n (s (t (edges out))))
+  & n ~ {n_check n_ctx}
+  & s ~ {s_check s_ctx}
+  & t ~ {t_check t_ctx}
+  & @is_invalid ~ (n_check (s_check (t_check invalid)))
+  & invalid ~ ?((@solve_valid @solve_invalid) (n_ctx (s_ctx (t_ctx (edges out)))))
+
+@is_invalid = (n (s (t out)))
+  & s ~ {s1 s2}
+  & t ~ {t1 t2}
+  & n ~ {n1 n2}
+  & s1 ~ $([=] $(t1 eq))
+  & s2 ~ $([<] $(n1 s_lt))
+  & t2 ~ $([<] $(n2 t_lt))
+  & 1 ~ $([-] $(s_lt inv1))
+  & 1 ~ $([-] $(t_lt inv2))
+  & eq ~ $([|] $(inv1 or1))
+  & or1 ~ $([|] $(inv2 out))
+
+@solve_invalid = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@solve_valid = (n (s (t (edges out))))
+  & @mincut ~ (edges (n (s (t out))))
+
+@mincut = (edges (n (s (t out))))
+  & n ~ {n_shift n_ctx}
+  & 1 ~ $([<<] $(n_shift limit))
+  & @mincut_loop ~ (edges (n_ctx (s (t (0 (limit (16777215 out)))))))
+
+@mincut_loop = (edges (n (s (t (mask (limit (best out)))))))
+  & mask ~ {mask_comp mask_ctx}
+  & limit ~ {limit_comp limit_ctx}
+  & mask_comp ~ $([<] $(limit_comp cont))
+  & cont ~ ?((@loop_done @loop_do) (edges (n (s (t (mask_ctx (limit_ctx (best out))))))))
+
+@loop_done = (edges (n (s (t (mask (limit (best out)))))))
+  & edges ~ *
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & mask ~ *
+  & limit ~ *
+  & best ~ out
+
+@loop_do = (* (edges (n (s (t (mask (limit (best out))))))))
+  & mask ~ {mask_a mask_b}
+  & mask_a ~ {mask_s mask_t}
+  & @get_bit ~ (s (mask_s bs))
+  & @get_bit ~ (t (mask_t bt))
+  & 1 ~ $([-] $(bt not_bt))
+  & bs ~ $([&] $(not_bt valid))
+  & valid ~ ?((@loop_invalid @loop_valid) (edges (n (s (t (mask_b (limit (best out))))))))
+
+@loop_invalid = (edges (n (s (t (mask_b (limit (best out)))))))
+  & mask_b ~ $([+1] next_mask)
+  & @mincut_loop ~ (edges (n (s (t (next_mask (limit (best out)))))))
+
+@loop_valid = (* (edges (n (s (t (mask_b (limit (best out))))))))
+  & edges ~ {edges_cut edges_next}
+  & mask_b ~ {mask_cut mask_inc}
+  & @cut_sum ~ (edges_cut (mask_cut (0 cut)))
+  & cut ~ $([<] $(best lt))
+  & lt ~ ?((@use_best @use_cut) (cut (best best2)))
+  & mask_inc ~ $([+1] next_mask)
+  & @mincut_loop ~ (edges_next (n (s (t (next_mask (limit (best2 out)))))))
+
+@use_best = (cut (best best2))
+  & cut ~ *
+  & best ~ best2
+
+@use_cut = (* (cut (best best2)))
+  & best ~ *
+  & cut ~ best2
+
+@cut_sum = (edges (mask (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@cut_nil @cut_cons) (mask (acc (payload out))))
+
+@cut_nil = (mask (acc (payload out)))
+  & mask ~ *
+  & payload ~ *
+  & acc ~ out
+
+@cut_cons = (* (mask (acc ((edge tail) out))))
+  & edge ~ (u (v w))
+  & mask ~ {mask_a mask_b}
+  & mask_a ~ {mask_u mask_v}
+  & @get_bit ~ (u (mask_u bu))
+  & @get_bit ~ (v (mask_v bv))
+  & 1 ~ $([-] $(bv not_bv))
+  & bu ~ $([&] $(not_bv add_ok))
+  & add_ok ~ ?((@cut_skip_add @cut_add) (w (acc (mask_b (tail out)))))
+
+@cut_skip_add = (w (acc (mask_b (tail out))))
+  & w ~ *
+  & @cut_sum ~ (tail (mask_b (acc out)))
+
+@cut_add = (* (w (acc (mask_b (tail out)))))
+  & acc ~ $([+] $(w newacc))
+  & @cut_sum ~ (tail (mask_b (newacc out)))
+
+@get_bit = (pos (mask out))
+  & mask ~ $([>>] $(pos shifted))
+  & shifted ~ $([&] $(1 out))

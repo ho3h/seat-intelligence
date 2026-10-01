@@ -1,0 +1,104 @@
+@prog = ((n (r edges)) out)
+  & @dfs ~ (r (16777215 (edges map)))
+  & @build ~ (0 (n (map out)))
+
+@dfs = (v (p (edges out)))
+  & v ~ {v1 v2}
+  & p ~ {p1 p2}
+  & edges ~ {e1 e2}
+  & @dscan ~ (v1 (p1 (e1 (e2 (1 ((v2 p2) (0 *))) out))))
+
+@dscan = ((?((@dscan_nil @dscan_cons) (pl (v (p (full (acc out)))))) pl) (v (p (full (acc out)))))
+
+@dscan_nil = (* (* (* (* (a a)))))
+
+@dscan_cons = (* ((edge rem) (v (p (full (acc out))))))
+  & edge ~ (u w)
+  & @eroute ~ (u (w (v (p (rem (full (acc out)))))))
+
+@eroute = (u (w (v (p (rem (full (acc out))))))
+  & u ~ {ucmp usave}
+  & v ~ {vcmp vkeep}
+  & ucmp ~ $([=] $(vcmp z))
+  & z ~ ?((@u_no @u_yes) (usave (w (vkeep (p (rem (full (acc out))))))))
+
+@u_no = (usave (w (v (p (rem (full (acc out))))))
+  & @wroute ~ (usave (w (v (p (rem (full (acc out)))))))
+
+@u_yes = (* (usave (w (v (p (rem (full (acc out))))))))
+  & usave ~ *
+  & @consider ~ (w (v (p (rem (full (acc out))))))
+
+@wroute = (u (w (v (p (rem (full (acc out))))))
+  & v ~ {vcmp vkeep}
+  & w ~ $([=] $(vcmp z))
+  & z ~ ?((@w_no @w_yes) (u (vkeep (p (rem (full (acc out)))))))
+
+@w_no = (u (v (p (rem (full (acc out))))))
+  & u ~ *
+  & @dscan ~ (v (p (rem (full (acc out)))))
+
+@w_yes = (* (u (v (p (rem (full (acc out)))))))
+  & @consider ~ (u (v (p (rem (full (acc out))))))
+
+@consider = (c (v (p (rem (full (acc out))))))
+  & c ~ {cc cs}
+  & p ~ {pc pp}
+  & cc ~ $([=] $(pc z))
+  & z ~ ?((@same @different) (cs (v (pp (rem (full (acc out)))))))
+
+@same = (* (v (p (rem (full (acc out))))))
+  & cs ~ *
+  & @dscan ~ (v (p (rem (full (acc out)))))
+
+@different = (* (cs (v (p (rem (full (acc out)))))))
+  & full ~ {fd fs}
+  & @dfs ~ (cs (v (fd childmap)))
+  & @append ~ (childmap (acc nextacc))
+  & @dscan ~ (v (p (rem (fs (nextacc out)))))
+
+@append = ((?((@ap_nil @ap_cons) (pl (ys out))) pl) (ys out))
+
+@ap_nil = (* (a a))
+
+@ap_cons = (* ((h t) (ys out)))
+  & @append ~ (t (ys rest))
+  & out ~ (1 (h rest))
+
+@build = (i (n (map out)))
+  & i ~ {ic ir}
+  & n ~ {nc nr}
+  & ic ~ $([=] $(nc z))
+  & z ~ ?((@build_more @build_done) (ir (nr (map out))))
+
+@build_more = (i (n (map out)))
+  & i ~ {ilook iinc}
+  & map ~ {ml mrec}
+  & @lookup ~ (ilook (ml parent))
+  & iinc ~ $([+1] inext)
+  & @build ~ (inext (n (mrec tailout)))
+  & out ~ (1 (parent tailout))
+
+@build_done = (* (i (n (map out))))
+  & i ~ *
+  & n ~ *
+  & map ~ *
+  & out ~ (0 *)
+
+@lookup = ((?((@lk_nil @lk_cons) (pl (key out))) pl) (key out))
+
+@lk_nil = (* (* out))
+  & out ~ 16777215
+
+@lk_cons = (* (((vertex parent) tail) (key out)))
+  & key ~ {kcmp kkeep}
+  & vertex ~ $([=] $(kcmp z))
+  & z ~ ?((@lk_no @lk_yes) (parent (tail (kkeep out))))
+
+@lk_no = (parent (tail (key out)))
+  & @lookup ~ (key (tail out))
+
+@lk_yes = (* (parent (tail (key out))))
+  & tail ~ *
+  & key ~ *
+  & out ~ parent

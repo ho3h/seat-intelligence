@@ -1,0 +1,50 @@
+// Entry point: process aligned prediction and truth lists with an empty history
+// and zeroed counts.
+@prog = (input out)
+  & input ~ (pred truth)
+  & @walk ~ (pred (truth ((0 *) (0 (0 (0 out))))))
+
+// Walk the lists, keeping prior label pairs and the running (tp, fp, fn).
+@walk = ((?((@wnil @wcons) (pl (truth (seen (tp (fp (fn out))))))) pl) (truth (seen (tp (fp (fn out))))))
+
+@wnil = (* (pl (truth (seen (tp (fp (fn out)))))))
+  & pl ~ *
+  & truth ~ *
+  & seen ~ *
+  & out ~ (tp (fp fn))
+
+@wcons = (* ((h pt) (truth (seen (tp (fp (fn out)))))))
+  & truth ~ (1 (th tt))
+  & h ~ {hs hn}
+  & th ~ {ts tn}
+  & seen ~ {scanseen keepseen}
+  & @scan ~ (scanseen (hs (ts (tp (fp (fn (stp (sfp sfn))))))))
+  & @walk ~ (pt (tt ((1 ((hn tn) keepseen)) (stp (sfp (sfn out))))))
+
+// Scan prior label pairs, adding this node's pairwise contribution for each.
+@scan = ((?((@scan_nil @scan_cons) (pl (p (t (tp (fp (fn out))))))) pl) (p (t (tp (fp (fn out))))))
+
+@scan_nil = (* (pl (p (t (tp (fp (fn out)))))))
+  & pl ~ *
+  & p ~ *
+  & t ~ *
+  & out ~ (tp (fp fn))
+
+@scan_cons = (* ((prevp prevt) (rest (p (t (tp (fp (fn out))))))))
+  & p ~ {pc pn}
+  & t ~ {tc tn}
+  & pc ~ $([=] $(prevp ep))
+  & tc ~ $([=] $(prevt et))
+  & ep ~ {ept epr}
+  & epr ~ {epf epn}
+  & et ~ {ett etr}
+  & etr ~ {etf etn}
+  & ept ~ $([*] $(ett itp))
+  & etf ~ $([^] $(1 notet))
+  & epf ~ $([*] $(notet ifp))
+  & epn ~ $([^] $(1 notep))
+  & notep ~ $([*] $(etn ifn))
+  & tp ~ $([+] $(itp ntp))
+  & fp ~ $([+] $(ifp nfp))
+  & fn ~ $([+] $(ifn nfn))
+  & @scan ~ (rest (pn (tn (ntp (nfp (nfn out))))))

@@ -1,0 +1,98 @@
+@prog = ((n (s edges)) out)
+  & n ~ {n_init n_round}
+  & @init ~ (n_init (s (0 initdist)))
+  & @round ~ (n_round (edges (initdist out)))
+
+@init = (?((@init_zero @init_cons) ctx) ctx)
+
+@init_zero = (* (* out))
+  & out ~ (0 *)
+
+@init_cons = (k (s (i out)))
+  & s ~ {s_eq s_recur}
+  & i ~ {i_eq i_inc}
+  & s_eq ~ $([=] $(i_eq eq))
+  & i_inc ~ $([+1] i_next)
+  & @init ~ (k (s_recur (i_next tail)))
+  & eq ~ ?((@init_other @init_same) (tail out))
+
+@init_other = (tail out)
+  & out ~ (1 (16777215 tail))
+
+@init_same = (tail out)
+  & out ~ (1 (0 tail))
+
+@round = (?((@round_zero @round_succ) ctx) ctx)
+
+@round_zero = (* (dist out))
+  & out ~ dist
+
+@round_succ = (k (edges (dist out)))
+  & edges ~ {edges_scan edges_next}
+  & @scan ~ (edges_scan (dist dist2))
+  & @round ~ (k (edges_next (dist2 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (dist out))) pl) (dist out))
+
+@scan_nil = (* (dist out))
+  & out ~ dist
+
+@scan_cons = (* (((u v) tail) (dist out)))
+  & @relax ~ (u (v (dist dist2)))
+  & @scan ~ (tail (dist2 out))
+
+@relax = (u (v (dist out)))
+  & v ~ {v_idx v_set}
+  & @probe ~ (dist (u src))
+  & src ~ (du dist1)
+  & du ~ {du_cmp du_inc}
+  & du_cmp ~ $([<] $(16777215 finite))
+  & du_inc ~ $([+1] cand)
+  & @probe ~ (dist1 (v_idx dst))
+  & dst ~ (dv dist2)
+  & cand ~ {cand_cmp cand_set}
+  & cand_cmp ~ $([<] $(dv less))
+  & less ~ $([&] $(finite change))
+  & change ~ ?((@relax_no @relax_yes) (dist2 (v_set (cand_set out))))
+
+@relax_no = (dist (* (* out)))
+  & out ~ dist
+
+@relax_yes = (dist (v (cand out)))
+  & @set ~ (dist (v (cand out)))
+
+@probe = ((?((@probe_nil @probe_cons) (pl (idx out))) pl) (idx out))
+
+@probe_nil = (* (* out))
+  & out ~ (0 (0 *))
+
+@probe_cons = (* (((head tail) (idx out))))
+  & @probe_dispatch ~ (idx (head (tail out)))
+
+@probe_dispatch = (?((@probe_here @probe_later) ctx) ctx)
+
+@probe_here = (head (tail out))
+  & head ~ {val cell}
+  & out ~ (val (1 (cell tail)))
+
+@probe_later = (k (head (tail out)))
+  & @probe ~ (tail (k found))
+  & found ~ (val tail2)
+  & out ~ (val (1 (head tail2)))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & @set_dispatch ~ (idx (head (tail (val out))))
+
+@set_dispatch = (?((@set_here @set_later) ctx) ctx)
+
+@set_here = (* (tail (val out)))
+  & out ~ (1 (val tail))
+
+@set_later = (k (head (tail (val out))))
+  & @set ~ (tail (k (val tail2)))
+  & out ~ (1 (head tail2))

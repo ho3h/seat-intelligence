@@ -1,0 +1,223 @@
+@prog = (input out)
+  & input ~ (n (s (t (k edges))))
+  & @guard ~ (n (s (t (k (edges out)))))
+
+@guard = (n (s (t (k (edges out)))))
+  & n ~ {n_rest n_comp}
+  & n_comp ~ {n_s n_t}
+  & s ~ {s_cont s_lt}
+  & t ~ {t_cont t_lt}
+  & s_lt ~ $([<] $(n_s lt_s))
+  & t_lt ~ $([<] $(n_t lt_t))
+  & lt_s ~ $([&] $(lt_t valid))
+  & valid ~ ?((@invalid @run_dp)
+      (n_rest (s_cont (t_cont (k (edges out))))))
+
+@invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@run_dp = (* (n (s (t (k (edges out))))))
+  & n ~ {n_walk n_rest}
+  & n_rest ~ {n_init n_build}
+  & @init_dp ~ (n_init (s dp))
+  & @build_buckets ~ (n_build (edges buckets))
+  & @walk ~ (k (n_walk (t (buckets (dp out)))))
+
+@init_dp = (n (s out))
+  & @mk_inf ~ (n list)
+  & @set_zero ~ (s (list out))
+
+@mk_inf = (count out)
+  & count ~ ?((@mk_nil @mk_cons) out)
+
+@mk_nil = (0 *)
+
+@mk_cons = (count_minus out)
+  & @mk_inf ~ (count_minus tail)
+  & out ~ (1 (16777215 tail))
+
+@set_zero = (idx (lst out))
+  & idx ~ ?((@set_z @set_s) (lst out))
+
+@set_z = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@set_z_nil @set_z_cons) (payload out))
+
+@set_z_nil = (* (payload out))
+  & payload ~ *
+  & out ~ (0 *)
+
+@set_z_cons = (* (payload out))
+  & payload ~ (h t)
+  & h ~ *
+  & out ~ (1 (0 t))
+
+@set_s = (idx_minus (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@set_s_nil @set_s_cons) (payload (idx_minus out)))
+
+@set_s_nil = (* (payload (idx out)))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@set_s_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & @set_zero ~ (idx (t tail_out))
+  & out ~ (1 (h tail_out))
+
+@get = (idx (lst out))
+  & idx ~ ?((@get_z @get_s) (lst out))
+
+@get_z = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@get_z_nil @get_z_cons) (payload out))
+
+@get_z_nil = (* (payload out))
+  & payload ~ *
+  & out ~ 16777215
+
+@get_z_cons = (* (payload out))
+  & payload ~ (h t)
+  & t ~ *
+  & out ~ h
+
+@get_s = (idx_minus (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@get_s_nil @get_s_cons) (payload (idx_minus out)))
+
+@get_s_nil = (* (payload (idx out)))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@get_s_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (idx (t out))
+
+@build_buckets = (n (edges out))
+  & @build_buckets_rec ~ (n (edges (0 out)))
+
+@build_buckets_rec = (r (edges (v out)))
+  & r ~ ?((@bbr_nil @bbr_cons) (edges (v out)))
+
+@bbr_nil = (edges (v out))
+  & edges ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@bbr_cons = (r_minus (edges (v out)))
+  & v ~ {v_collect v_next}
+  & edges ~ {edges_collect edges_rec}
+  & @collect ~ (v_collect (edges_collect (0 bucket)))
+  & v_next ~ $([+1] v2)
+  & @build_buckets_rec ~ (r_minus (edges_rec (v2 tail)))
+  & out ~ (1 (bucket tail))
+
+@collect = (dest (edges (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@collect_nil @collect_cons) (dest (payload (acc out))))
+
+@collect_nil = (dest (payload (acc out)))
+  & dest ~ *
+  & payload ~ *
+  & out ~ acc
+
+@collect_cons = (* (dest (payload (acc out))))
+  & payload ~ (edge tail_edges)
+  & edge ~ (u (v w))
+  & dest ~ {dest_cmp dest_rec}
+  & v ~ $([=] $(dest_cmp eq))
+  & eq ~ ?((@collect_skip @collect_keep) (u (w (dest_rec (tail_edges (acc out))))))
+
+@collect_skip = (u (w (dest_rec (tail_edges (acc out)))))
+  & u ~ *
+  & w ~ *
+  & @collect ~ (dest_rec (tail_edges (acc out)))
+
+@collect_keep = (* (u (w (dest_rec (tail_edges (acc out))))))
+  & @collect ~ (dest_rec (tail_edges ((1 ((u w) acc)) out)))
+
+@walk = (k (n (t (buckets (dp out)))))
+  & k ~ ?((@walk_zero @walk_succ) (n (t (buckets (dp out)))))
+
+@walk_zero = (n (t (buckets (dp out))))
+  & n ~ *
+  & buckets ~ *
+  & @get ~ (t (dp out))
+
+@walk_succ = (km (n (t (buckets (dp out)))))
+  & n ~ {n_step n_next}
+  & buckets ~ {buckets_step buckets_next}
+  & @step ~ (n_step (buckets_step (dp next_dp)))
+  & @walk ~ (km (n_next (t (buckets_next (next_dp out)))))
+
+@step = (n (buckets (dp out)))
+  & @gen_walk ~ (n (buckets (dp (0 out))))
+
+@gen_walk = (r (buckets (dp out)))
+  & r ~ ?((@gen_nil @gen_cons) (buckets (dp out)))
+
+@gen_nil = (buckets (dp out))
+  & buckets ~ *
+  & dp ~ *
+  & out ~ (0 *)
+
+@gen_cons = (r_minus (buckets (dp out)))
+  & buckets ~ (bucket buckets_tail)
+  & dp ~ {dp_min dp_rec}
+  & @min_bucket ~ (bucket (dp_min val))
+  & @gen_walk ~ (r_minus (buckets_tail (dp_rec tail)))
+  & out ~ (1 (val tail))
+
+@min_bucket = (bucket (dp out))
+  & @min_bucket_acc ~ (bucket (dp (16777215 out)))
+
+@min_bucket_acc = (bucket (dp (acc out)))
+  & bucket ~ (tag payload)
+  & tag ~ ?((@mb_nil @mb_cons) (payload (dp (acc out))))
+
+@mb_nil = (payload (dp (acc out)))
+  & payload ~ *
+  & dp ~ *
+  & out ~ acc
+
+@mb_cons = (* (payload (dp (acc out))))
+  & payload ~ (pair bucket_tail)
+  & pair ~ (u w)
+  & dp ~ {dp_get dp_rec}
+  & @get ~ (u (dp_get base))
+  & base ~ {base_check base_cand}
+  & base_check ~ $([=] $(16777215 eq_inf))
+  & eq_inf ~ ?((@mb_cand_compute @mb_cand_skip)
+       (w (bucket_tail (dp_rec (acc (base_cand out))))))
+
+@mb_cand_compute = (w (bucket_tail (dp_rec (acc (base_cand out)))))
+  & base_cand ~ $([+] $(w cand))
+  & @min2 ~ (acc (cand min_val))
+  & @min_bucket_acc ~ (bucket_tail (dp_rec (min_val out)))
+
+@mb_cand_skip = (* (w (bucket_tail (dp_rec (acc (base_cand out))))))
+  & w ~ *
+  & base_cand ~ *
+  & @min_bucket_acc ~ (bucket_tail (dp_rec (acc out)))
+
+@min2 = (a (b out))
+  & a ~ {a_cmp a_out}
+  & b ~ {b_cmp b_out}
+  & a_cmp ~ $([<] $(b_cmp lt))
+  & lt ~ ?((@min2_ge @min2_lt) (a_out (b_out out)))
+
+@min2_ge = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min2_lt = (* (a (b out)))
+  & b ~ *
+  & out ~ a

@@ -1,0 +1,143 @@
+// Exact-k shortest walks by repeated edge relaxation.
+// Distances use 16777215 as the unreachable sentinel.
+
+@prog = (input output)
+  & input ~ (n (s (t (k edges))))
+  & n ~ {n_make n_run}
+  & @make ~ (n_make base)
+  & @set ~ ((base (s 0)) initial)
+  & @run ~ (k (n_run (t (edges initial)))) output
+
+@make = (arg out)
+  & arg ~ ?((@makeNil @makeCons) out)
+
+@makeNil = out
+  & out ~ (0 *)
+
+@makeCons = (rem out)
+  & @make ~ (rem tail)
+  & out ~ (1 (16777215 tail))
+
+@run = (arg out)
+  & arg ~ (steps (n (t (edges dist))))
+  & steps ~ ?((@runDone @runMore) (n (t (edges (dist out)))))
+
+@runDone = (n (t (edges (dist out))))
+  & n ~ *
+  & edges ~ *
+  & @get ~ ((dist t) out)
+
+@runMore = (rem (n (t (edges (dist out)))))
+  & n ~ {n_make n_keep}
+  & edges ~ {edges_fold edges_keep}
+  & @make ~ (n_make fresh)
+  & @fold ~ ((edges_fold (dist fresh)) next)
+  & @run ~ (rem (n_keep (t (edges_keep next)))) out
+
+@fold = (arg out)
+  & arg ~ (es (old next))
+  & es ~ (?( (@foldNil @foldCons) (payload (old (next out)))) payload)
+
+@foldNil = (payload (old (next out)))
+  & payload ~ *
+  & old ~ *
+  & out ~ next
+
+@foldCons = (rem (payload (old (next out))))
+  & rem ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u (v w))
+  & old ~ {old_relax old_keep}
+  & @relax ~ (u (v (w (old_relax next)))) updated
+  & @fold ~ ((tail (old_keep updated)) out)
+
+@relax = (arg out)
+  & arg ~ (u (v (w (old next))))
+  & @get ~ ((old u) d)
+  & d ~ {d_test d_value}
+  & d_test ~ $([=] $(16777215 eq))
+  & eq ~ ?((@relaxUnreachable @relaxReachable) (d_value (v (w (next out)))))
+
+@relaxUnreachable = (d (v (w (next out))))
+  & d ~ *
+  & v ~ *
+  & w ~ *
+  & out ~ next
+
+@relaxReachable = (rem (d (v (w (next out)))))
+  & rem ~ *
+  & d ~ {base addend}
+  & addend ~ $([+] $(w cand))
+  & cand ~ {cand_test cand_keep}
+  & cand_test ~ $([<] $(base overflow))
+  & overflow ~ ?((@relaxNoOverflow @relaxOverflow) (cand_keep (v (w (next out)))))
+
+@relaxOverflow = (rem (cand (v (w (next out)))))
+  & rem ~ *
+  & cand ~ *
+  & v ~ *
+  & w ~ *
+  & out ~ next
+
+@relaxNoOverflow = (cand (v (w (next out))))
+  & w ~ *
+  & cand ~ {cand_read cand_write}
+  & v ~ {v_read v_write}
+  & next ~ {next_read next_write}
+  & @get ~ ((next_read v_read) current)
+  & cand_read ~ $([<] $(current better))
+  & better ~ ?((@relaxNoImprove @relaxImprove) (cand_write (v_write (next_write out))))
+
+@relaxNoImprove = (cand (v (next out)))
+  & cand ~ *
+  & v ~ *
+  & out ~ next
+
+@relaxImprove = (rem (cand (v (next out))))
+  & rem ~ *
+  & @set ~ ((next (v cand)) out)
+
+@get = (arg out)
+  & arg ~ (list idx)
+  & list ~ (?( (@getNil @getCons) (payload (idx out))) payload)
+
+@getNil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@getCons = (rem (payload (idx out)))
+  & rem ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@getHere @getNext) (head (tail out)))
+
+@getHere = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@getNext = (rem (head (tail out)))
+  & head ~ *
+  & @get ~ ((tail rem) out)
+
+@set = (arg out)
+  & arg ~ (list (idx value))
+  & list ~ (?( (@setNil @setCons) (payload (idx (value out)))) payload)
+
+@setNil = (payload (idx (value out)))
+  & payload ~ *
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@setCons = (rem (payload (idx (value out))))
+  & rem ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@setHere @setNext) (head (tail (value out))))
+
+@setHere = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@setNext = (rem (head (tail (value out))))
+  & @set ~ ((tail (rem value)) newtail)
+  & out ~ (1 (head newtail))

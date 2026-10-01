@@ -1,0 +1,3312 @@
+[
+ {
+  "id": "dev_limit_00",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "software_security",
+    "k": 2,
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Split the table into sections of 4 seats, and don't let any section hold more than 2 guests from security and software companies. Tell me which section every guest ends up in."
+ },
+ {
+  "id": "dev_limit_01",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "order_rank"
+   },
+   {
+    "kind": "limit",
+    "cat": "government",
+    "k": 1,
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Start by seating everyone in order of RSVP rank number, lowest number first. Then make sure no block of 5 seats holds more than one government official. Tell me which section of 5 each guest lands in."
+ },
+ {
+  "id": "dev_limit_02",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "ai_lab",
+    "k": 1,
+    "S": 7
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Split the table into sections of 7 seats and tell me which section each guest lands in. No section should hold more than 1 guest from the AI labs."
+ },
+ {
+  "id": "dev_limit_03",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "chips",
+    "k": 1,
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Chop the table into groups of 5 seats and tell me which group each guest lands in. No group should hold more than one chip maker."
+ },
+ {
+  "id": "dev_limit_04",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "chips",
+    "k": 2,
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Please split the table into groups of 4 seats and tell me which group each guest lands in. No group of 4 should hold more than 2 chip makers."
+ },
+ {
+  "id": "dev_limit_05",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "group_company"
+   },
+   {
+    "kind": "limit",
+    "cat": "government",
+    "k": 2,
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "Keep each company's guests together as a single block. Sections are 10 seats each, with no more than two government officials in any one of them; all I need back is each section's captain, meaning whoever has the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_limit_06",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "software_security",
+    "k": 2,
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 5
+  },
+  "text": "We're splitting the table into sections of 5 seats, and no section may have more than two guests from software and security companies. All I need back is each section's captain, meaning whoever has the lowest RSVP rank number there."
+ },
+ {
+  "id": "dev_limit_07",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "software_security",
+    "k": 3,
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Please cap software and security firms at 3 guests per section, with every section being 4 seats wide. What I need back is the section number for every guest."
+ },
+ {
+  "id": "dev_limit_08",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "government",
+    "k": 1,
+    "S": 7
+   },
+   {
+    "kind": "order_company",
+    "names": [
+     "Altimeter"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Sections of 7 seats, please, and I want to know each guest's section. Cap government officials at one per section, and when you seat people, put Altimeter's guests ahead of every other company."
+ },
+ {
+  "id": "dev_limit_09",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "investor",
+    "k": 1,
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Cap investors at one per section, where every section has 10 seats. I need to know which section each guest ends up in."
+ },
+ {
+  "id": "dev_limit_10",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "government",
+    "k": 2,
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Five seats per section, please, and cap government officials at two per section. Just tell me which section each guest lands in."
+ },
+ {
+  "id": "dev_limit_11",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "big_tech",
+    "k": 2,
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Sections of four seats, please, with a cap of two big tech guests per section. Give me the section each guest ends up in."
+ },
+ {
+  "id": "dev_limit_12",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "investor",
+    "k": 2,
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Sections of five seats each, please, and I'd like to know which section every guest ends up in. Keep investors to two per section at the very most."
+ },
+ {
+  "id": "dev_limit_13",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "government",
+    "k": 1,
+    "S": 7
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "For the 7-seat sections, I'd like a section assignment for every guest, with a maximum of one government official in any single section."
+ },
+ {
+  "id": "dev_limit_14",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "big_tech",
+    "k": 3,
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Sections of four seats, please, and I'd like each guest's section as the result. Just make sure no section holds more than three big tech guests."
+ },
+ {
+  "id": "dev_limit_15",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "ai_lab",
+    "k": 3,
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "I'm dividing the table into groups of ten seats; no group may have more than three guests from AI labs. Report the section for each guest."
+ },
+ {
+  "id": "dev_limit_16",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "ai_lab",
+    "k": 2,
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Ten seats to a section. I don't want more than 2 AI lab people in any one section. Just list who sits in which section."
+ },
+ {
+  "id": "dev_limit_17",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "investor",
+    "k": 3,
+    "S": 8
+   },
+   {
+    "kind": "order_category",
+    "names": [
+     "chips",
+     "ai_lab",
+     "government",
+     "investor"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 8
+  },
+  "text": "Eight-seat sections, and I only want the captain of each one, meaning the guest with the lowest RSVP rank number. Allow no more than three investors per section, and rank the categories chip makers first, then AI labs, then government officials, then investors, with any others after that."
+ },
+ {
+  "id": "dev_limit_18",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "government",
+    "k": 3,
+    "S": 7
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Split the table into 7-seat sections and report each guest's section. Up to three government officials per section is the most I'll accept."
+ },
+ {
+  "id": "dev_limit_19",
+  "family": "limit",
+  "items": [
+   {
+    "kind": "limit",
+    "cat": "software_security",
+    "k": 3,
+    "S": 8
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "We're using eight-seat sections. Software and security companies shouldn't take up more than 3 seats in any one of them. Give me each guest's section."
+ },
+ {
+  "id": "dev_pair_00",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "group_company"
+   },
+   {
+    "kind": "pair",
+    "a": "software_security",
+    "b": "big_tech"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "Please seat each company's guests as one block, and make sure every guest from a security or software company sits right beside a big tech guest, matched one to one. Sections are 6 seats, and I only want the captain of each (lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_pair_01",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "ai_lab",
+    "b": "chips"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Each AI lab guest needs a chip maker sitting directly beside them, one chip maker per AI lab guest. The table breaks into sections of six seats, and I'd like to know every guest's section."
+ },
+ {
+  "id": "dev_pair_02",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "software_security",
+    "b": "investor"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 8
+  },
+  "text": "Every guest from a software and security firm needs an investor sitting directly beside them, matched one to one. Use sections of 8 seats and just name each section's captain, i.e. the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_pair_03",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "investor",
+    "b": "software_security"
+   },
+   {
+    "kind": "group_category"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Here's the plan: each investor sits right beside one guest from the software and security firms, matched one to one. After that, keep every category together as a single block. Sections are 7 seats, and I want each guest's section."
+ },
+ {
+  "id": "dev_pair_04",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "chips",
+    "b": "software_security"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Six seats per section; report the section for every guest. Each chip maker needs a software and security company guest sitting immediately beside them, matched one for one."
+ },
+ {
+  "id": "dev_pair_05",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "big_tech",
+    "b": "chips"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Each big tech guest needs a chip maker sitting directly beside them, matched one for one. Use sections of 6 seats and tell me which section each guest is in."
+ },
+ {
+  "id": "dev_pair_06",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "Anthropic",
+     "Microsoft"
+    ]
+   },
+   {
+    "kind": "pair",
+    "a": "investor",
+    "b": "chips"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Anthropic gets seated first, then Microsoft, and every other company after them. Next, each investor should sit right beside a chip maker, matched one to one. Use sections of 5 seats and tell me which section each guest is in."
+ },
+ {
+  "id": "dev_pair_07",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "chips",
+    "b": "big_tech"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "For a table cut into 8-seat sections, tell me each guest's section. Each chip maker should be seated immediately next to a big tech guest, one for one."
+ },
+ {
+  "id": "dev_pair_08",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "investor",
+    "b": "big_tech"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Pair every investor with a big tech guest sitting immediately next to them, one to one. The table splits into sections of 5 seats, and I need the section for each guest."
+ },
+ {
+  "id": "dev_pair_09",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "government",
+    "b": "chips"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Every government official has to be seated directly next to a chip maker, one official per chip maker. Sections are 5 seats wide, and I want to see which section each guest is in."
+ },
+ {
+  "id": "dev_pair_10",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "ai_lab",
+    "b": "government"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Sections of eight seats. Pair every guest from an AI lab with a government official seated right next to them, one to one, and list each guest's section."
+ },
+ {
+  "id": "dev_pair_11",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "investor",
+    "b": "big_tech"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Pair each investor with a big tech guest, seated side by side and matched one for one. We have eight seats per section; please report the section for every guest."
+ },
+ {
+  "id": "dev_pair_12",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "government",
+    "b": "chips"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Four seats per section; I want to see which section each guest goes in. Pair every government official with a chip maker who sits right beside them, one-to-one."
+ },
+ {
+  "id": "dev_pair_13",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "group_category"
+   },
+   {
+    "kind": "pair",
+    "a": "software_security",
+    "b": "investor"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "First, each category should sit as one block. Second, every guest from the software and security firms goes right beside an investor, paired one to one. Use 10-seat sections and just tell me the captain of each, meaning the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_pair_14",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "software_security",
+    "b": "big_tech"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Could you pair off each software and security guest with a big tech guest as immediate neighbors, one to one? The table breaks into sections of 7 seats, and I need each guest's section."
+ },
+ {
+  "id": "dev_pair_15",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "software_security",
+    "b": "ai_lab"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Please pair off guests from security and software companies with guests from AI labs, so each one sits immediately beside their partner, one to one. Nine seats per section; give me the section for every guest."
+ },
+ {
+  "id": "dev_pair_16",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "ai_lab",
+    "b": "chips"
+   },
+   {
+    "kind": "group_category"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Every AI lab guest must sit immediately next to a chip maker, in one-to-one pairs, and each category should also stay together as a single block. Sections are ten seats wide; I want each guest's section."
+ },
+ {
+  "id": "dev_pair_17",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "ai_lab",
+    "b": "software_security"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "We're doing three-seat sections, and I need to know who lands in which one. Every AI lab guest must have a software or security firm guest right next to them, one per person."
+ },
+ {
+  "id": "dev_pair_18",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "group_category"
+   },
+   {
+    "kind": "pair",
+    "a": "government",
+    "b": "ai_lab"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Categories stay together, one block each. Then match every government official with an AI lab guest sitting directly next to them, one to one. Sections of six seats; list which section each guest is in."
+ },
+ {
+  "id": "dev_pair_19",
+  "family": "pair",
+  "items": [
+   {
+    "kind": "pair",
+    "a": "investor",
+    "b": "big_tech"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "I want every investor sitting right beside a big tech guest, paired one to one. Sections of 6, and tell me where each guest ends up by section."
+ },
+ {
+  "id": "dev_apart_00",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "group_category"
+   },
+   {
+    "kind": "apart",
+    "x": "Anthropic",
+    "y": "Altimeter"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Group guests so that everyone from the same category sits together as a block. Put Anthropic's guests at one end of the table and Altimeter's at the opposite end, with everyone else between them. Sections have 6 seats; tell me each guest's section."
+ },
+ {
+  "id": "dev_apart_01",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Service_Now",
+    "y": "Google"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "Put the Service Now guests at one end of the table and the Google guests at the far opposite end, with everyone else between them. With six seats per section, just give me the captain of each section, i.e. the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_apart_02",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Exiger",
+    "y": "Nvidia"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Put Exiger's guests at one end of the table and Nvidia's at the opposite end, with everybody else filling the middle. Sections are 5 seats each, and I'd like each guest's section."
+ },
+ {
+  "id": "dev_apart_03",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Anthropic",
+    "y": "Exiger"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "Put Anthropic's guests at one end of the table and Exiger's guests at the opposite end, with everyone else in the middle. I'm dividing the table into 10-seat sections and only want each section's captain, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_apart_04",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Craft_Ventures",
+    "y": "Palo_Alto_Networks"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Put Craft Ventures at one end of the table and Palo Alto Networks at the opposite end, with everybody else sitting between them. Sections have 9 seats; tell me the section for each guest."
+ },
+ {
+  "id": "dev_apart_05",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Amazon",
+    "y": "OpenAI"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Amazon's guests go at one end of the table, OpenAI's at the far end, and everybody else sits in the middle. We're using sections of 10 seats, and I need each guest's section."
+ },
+ {
+  "id": "dev_apart_06",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Broadcom",
+    "y": "Service_Now"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Broadcom and Service Now shouldn't be anywhere near each other: Broadcom at one end, Service Now at the other, everyone else in the middle. Sections of six seats; which section is each guest in?"
+ },
+ {
+  "id": "dev_apart_07",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Anthropic",
+    "y": "Exiger"
+   },
+   {
+    "kind": "group_category"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Anthropic's people go at one end of the table and Exiger's at the far end, everyone else between them. Beyond that, guests of the same category should form one block per category. Use 6-seat sections and report each guest's section."
+ },
+ {
+  "id": "dev_apart_08",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "group_category"
+   },
+   {
+    "kind": "apart",
+    "x": "Anthropic",
+    "y": "AMD"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Please keep each category together as one block. Also, Anthropic goes at one end of the table and AMD at the other, with everybody else between them. Sections are 5 seats; tell me each guest's section."
+ },
+ {
+  "id": "dev_apart_09",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Social_Capital",
+    "y": "Micron"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Sections of ten seats, and the answer is a section for every guest. Social Capital takes one end of the table, Micron the other, everyone else in the middle."
+ },
+ {
+  "id": "dev_apart_10",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Anthropic",
+    "y": "Craft_Ventures"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Anthropic and Craft Ventures should be kept as far apart as possible: Anthropic at one end, Craft Ventures at the other, all other guests between them. Sections of 9 seats; which section is each guest in?"
+ },
+ {
+  "id": "dev_apart_11",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Social_Capital",
+    "y": "OpenAI"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Social Capital goes at one end of the table, OpenAI at the opposite end, and the rest of the guests fill in between. Sections hold nine seats; I need the section for each guest."
+ },
+ {
+  "id": "dev_apart_12",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Anthropic",
+    "y": "Amazon"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Anthropic takes one end of the table, Amazon takes the other, and the remaining guests sit in between. Seven seats per section; which section is each guest in?"
+ },
+ {
+  "id": "dev_apart_13",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "OpenAI",
+    "y": "Broadcom"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "OpenAI and Broadcom should be as far apart as possible: OpenAI people at one end, Broadcom people at the other, all others in the middle. Nine-seat sections, and I want the section of every guest."
+ },
+ {
+  "id": "dev_apart_14",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Meta",
+    "y": "Exiger"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Meta and Exiger need to be kept as far apart as possible: Meta guests at one end, Exiger guests at the other, all others between. 7 seats per section, and give me each guest's section."
+ },
+ {
+  "id": "dev_apart_15",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Altimeter",
+    "y": "Palantir"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Altimeter takes one end of the table and Palantir the other, with all remaining guests in between. The table is split into 10-seat sections, and I'd like to know each guest's section."
+ },
+ {
+  "id": "dev_apart_16",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Nvidia",
+    "y": "NASA"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Nvidia at one end, NASA at the other, everybody else in between. Five seats per section, and please assign each guest to a section."
+ },
+ {
+  "id": "dev_apart_17",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "OpenAI",
+    "y": "Palantir"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Could you seat OpenAI's guests at one end and Palantir's at the other end, everyone else in the middle? I'm dividing the table into sections of 4 seats and want the section for each guest."
+ },
+ {
+  "id": "dev_apart_18",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "Craft_Ventures",
+    "y": "OpenAI"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Craft Ventures at one end, OpenAI at the other end, everyone else sandwiched between. The table has sections of 9 seats; give me the section for each guest."
+ },
+ {
+  "id": "dev_apart_19",
+  "family": "apart",
+  "items": [
+   {
+    "kind": "apart",
+    "x": "AMD",
+    "y": "Amazon"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "AMD sits at one end of the table, Amazon at the other, everyone else in between. Use sections of 6 seats, and I only want the captain of each section, meaning the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_vip_00",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 8
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "Anyone with an RSVP rank number of 8 or lower should be moved up to the first seats, while everyone else stays in their current relative order behind them. Sections are 6 seats; I just want the captain of each, i.e. the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_vip_01",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 8
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Anyone with an RSVP rank number of 8 or lower should be moved up to the front seats, and everybody else follows in the order they're already in. Nine seats per section; tell me each guest's section."
+ },
+ {
+  "id": "dev_vip_02",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "order_rankdesc"
+   },
+   {
+    "kind": "vip",
+    "R": 12
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Line everyone up by RSVP rank number, biggest number first. Then pull anyone whose rank number is 12 or lower to the front seats, leaving the rest in their relative order behind them. Ten seats per section; give me each guest's section."
+ },
+ {
+  "id": "dev_vip_03",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Anyone with an RSVP rank number of 4 or lower gets moved up to the front seats, while the rest keep their relative order behind them. Sections of 8 seats; which section is each guest in?"
+ },
+ {
+  "id": "dev_vip_04",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "order_rankdesc"
+   },
+   {
+    "kind": "vip",
+    "R": 15
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Sections of 6 seats, and I need each guest's section. Seat people by RSVP rank number, highest number first, but then anyone with a rank number of 15 or lower gets pulled up to the front seats, the rest staying in their relative order behind."
+ },
+ {
+  "id": "dev_vip_05",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Move the guests whose RSVP rank number is 3 or lower to the front seats and leave the rest in the same relative order after them. Divide the table into sections of 8 seats and tell me which section each guest is in."
+ },
+ {
+  "id": "dev_vip_06",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 8
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "VIP treatment for sign-up numbers 8 and below (a lower number is better): those guests take the first seats, and the rest stay in their existing relative order behind them. Sections of three seats; which section is each guest in?"
+ },
+ {
+  "id": "dev_vip_07",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "order_rankdesc"
+   },
+   {
+    "kind": "vip",
+    "R": 12
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Start by ordering guests by RSVP rank number, highest number first. After that, anyone ranked 12 or lower (the better ones) gets moved up to the first seats while everybody else stays in the same relative order. Sections have 7 seats; I need each guest's section."
+ },
+ {
+  "id": "dev_vip_08",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Move guests with an RSVP rank number of 2 or lower (a lower number means higher priority) to the front of the table, and let the others follow in the same relative order they had. Five seats per section, and I want each guest's section."
+ },
+ {
+  "id": "dev_vip_09",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Anyone whose RSVP rank number is 5 or lower goes into the first seats; the remaining guests follow in the order they already have. Six seats per section, and I want each guest's section."
+ },
+ {
+  "id": "dev_vip_10",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 5
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "Front-load the table with guests whose RSVP rank number is 5 or below; the rest follow in their existing relative order. Sections are 10 seats, and the only answer I need is each section's captain (lowest rank number)."
+ },
+ {
+  "id": "dev_vip_11",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 5
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "Move guests holding RSVP rank number 5 or lower (5, 4, down to 1) to the head of the table and leave everyone else in their current relative order after them. With sections of 10 seats, I only want the captain of each section, the guest with the lowest rank number in it."
+ },
+ {
+  "id": "dev_vip_12",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Anyone with an RSVP rank number of 3 or lower should be moved to the first seats, and the others simply stay in their existing relative order after them. Sections of 9 seats, please; tell me each guest's section."
+ },
+ {
+  "id": "dev_vip_13",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Sections of 8 seats - tell me where each guest ends up. Anyone with an RSVP rank number of 2 or lower goes to the first seats, and everybody else stays in their existing relative order after them."
+ },
+ {
+  "id": "dev_vip_14",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 15
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Move every guest with an RSVP rank number of 15 or under up to the front of the table, leaving the rest in their existing relative order. Sections are 6 seats each; tell me the section for every guest."
+ },
+ {
+  "id": "dev_vip_15",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "order_rank"
+   },
+   {
+    "kind": "vip",
+    "R": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Start by seating everyone by RSVP rank number, lowest number first. After that, guests with a rank number of 3 or lower go to the first seats, the others keeping their relative order. Sections of ten seats, and report each guest's section."
+ },
+ {
+  "id": "dev_vip_16",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 12
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Bring the guests whose rank numbers are 12 or under to the very front, keeping everyone else in their existing order behind them. Sections have 3 seats each; give me every guest's section."
+ },
+ {
+  "id": "dev_vip_17",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Which section is everyone in? We have 4 seats per section. Move guests with an RSVP rank number of 5 or lower (better) to the front, and keep the rest in the order they're already in."
+ },
+ {
+  "id": "dev_vip_18",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "vip",
+    "R": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Push everyone whose sign-up number is 5 or lower up to the first seats, leaving all others in their relative order after them. Give me the section for each guest, with 3 seats per section."
+ },
+ {
+  "id": "dev_vip_19",
+  "family": "vip",
+  "items": [
+   {
+    "kind": "group_company"
+   },
+   {
+    "kind": "vip",
+    "R": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Each company should be seated as one continuous block. Then guests with an RSVP rank number of 6 or lower get shifted to the first seats, the rest keeping their relative order. Sections of 5 seats; list each guest's section."
+ },
+ {
+  "id": "dev_stagger_00",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "Craft_Ventures",
+     "Palo_Alto_Networks"
+    ]
+   },
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Craft Ventures gets seated first, then Palo Alto Networks, then all other companies. Seat people in rounds, where each company adds at most 2 guests per round and the rest of its guests wait for later rounds. Sections of 6 seats; tell me every guest's section."
+ },
+ {
+  "id": "dev_stagger_01",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Seat people in rounds where no company sends more than 3 guests per round; whoever is left from that company waits for the next round. Nine seats per section; I want each guest's section."
+ },
+ {
+  "id": "dev_stagger_02",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Seat people in rounds so that no company contributes more than 2 guests per round; its other guests wait for the next rounds. Sections of 9 seats, and I need each guest's section."
+ },
+ {
+  "id": "dev_stagger_03",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 3
+  },
+  "text": "Seat people in rounds, where each company can send at most 2 guests per round and its remaining guests wait for later rounds. Sections have 3 seats; I only need the captain of each, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_stagger_04",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   },
+   {
+    "kind": "order_category",
+    "names": [
+     "big_tech",
+     "investor",
+     "software_security"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Seat in rounds, letting each company send at most 3 guests per round, with the rest of its people waiting for a later round. Order the categories big tech, then investors, then software and security firms, anything else afterwards. Sections of 8 seats; I want each guest's section."
+ },
+ {
+  "id": "dev_stagger_05",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Let's seat people in rounds, with each company sending no more than two guests per round and the remainder waiting for the next one. Sections are 5 seats; what I want back is each guest's section."
+ },
+ {
+  "id": "dev_stagger_06",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "Microsoft",
+     "NASA",
+     "AMD",
+     "Palantir"
+    ]
+   },
+   {
+    "kind": "stagger",
+    "m": 1
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "Company priority goes Microsoft, then NASA, then AMD, then Palantir, with all other companies after. Then seat in rounds, letting each company place only 1 guest per round while its remaining guests wait. Sections are 10 seats; just the captain of each section (lowest RSVP rank number), please."
+ },
+ {
+  "id": "dev_stagger_07",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "I'd like the table filled in waves: every wave takes at most 2 guests from any one company, and whoever's left over from that company waits for a later wave. The table has 9-seat sections, and I want each guest's section."
+ },
+ {
+  "id": "dev_stagger_08",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "I'd like the seating done in waves: no company may place more than three guests in any one wave, and its leftover guests wait for the next waves. Sections of five seats, and tell me each guest's section."
+ },
+ {
+  "id": "dev_stagger_09",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Three seats to a section. Run the seating in rounds where no company places more than 3 guests in one round; its leftover guests come in later rounds. Tell me which section each guest sits in."
+ },
+ {
+  "id": "dev_stagger_10",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Fill the table round by round: two guests per company at most in each round, extra guests waiting for later rounds. Break the table into sections of 3 seats and tell me which section each guest is in."
+ },
+ {
+  "id": "dev_stagger_11",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "group_company"
+   },
+   {
+    "kind": "stagger",
+    "m": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Guests from one company must sit together as a block. Also run the seating in rounds, where each company puts in a single guest per round and its other guests hold for later rounds. Six seats per section; which section is each guest in?"
+ },
+ {
+  "id": "dev_stagger_12",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Fill the seats in rounds, letting each company send up to 3 guests per round, with its remaining guests held for later rounds. Ten seats make a section; tell me the section of every guest."
+ },
+ {
+  "id": "dev_stagger_13",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Round by round, please, with a single guest per company in each round; the rest of that company's guests wait. Use sections of 4 seats and report each guest's section."
+ },
+ {
+  "id": "dev_stagger_14",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Please hand out seats in waves: each wave takes at most 2 guests from any single company, and the rest of that company wait for the next wave. Sections of 6 seats, and I'd like the section for each guest."
+ },
+ {
+  "id": "dev_stagger_15",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Please run the seating in rounds where a company can place up to 3 guests per round, its other guests waiting for a later round. Four seats per section, and give me the section for each guest."
+ },
+ {
+  "id": "dev_stagger_16",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Work in rounds: a company can seat at most two of its guests in each round, and the others wait their turn. Divide the table into eight-seat sections and report each guest's section."
+ },
+ {
+  "id": "dev_stagger_17",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 3
+  },
+  "text": "Work in rounds where a company can put forward at most 3 guests each time, the rest of its people waiting for subsequent rounds. Sections are just 3 seats, and all I want is each section's captain, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_stagger_18",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Bring guests in over several rounds, allowing each company two guests per round at most, with the others waiting their turn. Nine seats to a section; I want to know each guest's section."
+ },
+ {
+  "id": "dev_stagger_19",
+  "family": "stagger",
+  "items": [
+   {
+    "kind": "stagger",
+    "m": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Bring guests in by rounds, with a limit of three per company in every round and anyone left over waiting for the next. We have 9-seat sections; give me each guest's section."
+ },
+ {
+  "id": "dev_headseat_00",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Whoever has the lowest RSVP rank number should sit in the very first seat; everybody else stays where they are in the current order. Sections of 8 seats, and tell me each guest's section."
+ },
+ {
+  "id": "dev_headseat_01",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Whoever has the lowest RSVP rank number gets the first seat at the table; nobody else changes their place relative to the others. Sections of three seats, and I'd like each guest's section."
+ },
+ {
+  "id": "dev_headseat_02",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Put the guest holding the lowest RSVP rank number in the very first seat of the table and leave everyone else in the current order. Sections have 4 seats; which section is each guest in?"
+ },
+ {
+  "id": "dev_headseat_03",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "group_category"
+   },
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 9
+  },
+  "text": "Keep each category together as one block. Then give the very first seat to the guest with the lowest RSVP rank number, leaving everyone else as they are. Sections are nine seats, and I only want the captain of each section, again the guest with the lowest RSVP rank number in it."
+ },
+ {
+  "id": "dev_headseat_04",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Whoever has the lowest RSVP rank number should get the very first seat at the table; leave everybody else as they are now. Sections of 7 seats, and tell me the section of every guest."
+ },
+ {
+  "id": "dev_headseat_05",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Put the guest with the lowest RSVP rank number in seat one and leave all the others in the existing order. I want the table cut into 6-seat sections, with the section listed for each guest."
+ },
+ {
+  "id": "dev_headseat_06",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Give the top seat to the guest with the smallest sign-up number and leave the rest of the line-up as it is. Sections are 6 seats; which section does each guest fall in?"
+ },
+ {
+  "id": "dev_headseat_07",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Whoever has the lowest RSVP rank number should get the head seat, the very first one, while the others stay as they are. With 10 seats per section, tell me each guest's section."
+ },
+ {
+  "id": "dev_headseat_08",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "The guest with the lowest RSVP rank number should sit in seat one; leave everyone else in the current order. Five-seat sections, and list the section for each guest."
+ },
+ {
+  "id": "dev_headseat_09",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Put the guest holding the smallest RSVP rank number in seat one, and don't touch the order of the rest. The table has sections of 6; I need each guest's section."
+ },
+ {
+  "id": "dev_headseat_10",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   },
+   {
+    "kind": "order_category",
+    "names": [
+     "ai_lab",
+     "chips"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "First, the guest with the lowest RSVP rank number takes the very first seat and the rest keep their current order. Second, seat AI labs first, then chip makers, then all remaining categories. Sections have 4 seats; give me each guest's section."
+ },
+ {
+  "id": "dev_headseat_11",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Just one change: the guest with the lowest rank number moves into seat one, and everyone else stays put in the current order. We'll use 5-seat sections; list each guest's section number."
+ },
+ {
+  "id": "dev_headseat_12",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Sections of four seats. The guest with the smallest RSVP rank number takes seat one at the table, everyone else keeps the present order, and I'd like to know each guest's section."
+ },
+ {
+  "id": "dev_headseat_13",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Whoever holds the lowest RSVP rank number takes the first seat at the table, and nobody else moves in the order. The table is divided into sections of 10 seats - which section is each guest in?"
+ },
+ {
+  "id": "dev_headseat_14",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "For sections of 8 seats, tell me where each guest lands. The one change I want: the lowest sign-up (RSVP rank) number takes the head seat of the table, and everyone else stays put in their current order."
+ },
+ {
+  "id": "dev_headseat_15",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "The guest with the lowest RSVP rank number gets the head of the table, seat one, and everyone else stays in the current order. Use sections of four seats; which section is each guest in?"
+ },
+ {
+  "id": "dev_headseat_16",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Let the guest holding the lowest RSVP rank number sit first, and leave the others exactly where they are in the existing order. Sections of 6 seats, and who lands in which section?"
+ },
+ {
+  "id": "dev_headseat_17",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Let me know which section each guest lands in, using 6 seats per section. The only change to the current order is that the guest with the lowest RSVP rank number goes to the first seat of the table."
+ },
+ {
+  "id": "dev_headseat_18",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Give the top spot, the very first seat, to the person with the lowest sign-up number and keep the rest of the current order untouched. Use 5-seat sections and tell me every guest's section."
+ },
+ {
+  "id": "dev_headseat_19",
+  "family": "headseat",
+  "items": [
+   {
+    "kind": "headseat"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Current order stays, except the guest with the lowest RSVP rank number moves into the first seat of the table. Sections are 6 seats, and I want to know each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_00",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "order_rankdesc"
+   },
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Seat guests by RSVP rank number, highest number first. Then larger companies (those who brought more guests) go ahead of smaller ones, ties in any fixed order, and guests with no company at the end. Sections are 8 seats; I need each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_01",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Seat the companies with the most guests first, then the smaller ones, and put anyone with no company at the end; equally sized companies can go in any consistent order. Sections of 6 seats; I'd like each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_02",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Seat the companies that brought the most guests first, then those with fewer (ties in any fixed order), and put guests with no company at the end. Six seats per section; report each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_03",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Seat the companies with the most guests first, working down to the smallest (ties in any consistent order), and put anyone without a company at the end. Sections of ten; which section is each guest in?"
+ },
+ {
+  "id": "dev_bigfirst_04",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Seat the companies with the biggest guest counts first and the smaller ones after (ties in any fixed order), finishing with guests who don't belong to a company. Sections of 6 seats; give me each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_05",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Companies that brought the biggest groups should be seated first, working down to the smallest; equal-sized ones can go in any fixed order, and guests with no company come last. Sections of 4 seats, and list each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_06",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Biggest delegations first: a company that brought more people sits ahead of one that brought fewer (any consistent order for ties), and unaffiliated guests bring up the rear. Seven seats per section; which section is each guest in?"
+ },
+ {
+  "id": "dev_bigfirst_07",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Biggest delegations first, please: a company with more guests sits ahead of one with fewer, ties broken any fixed way, and unaffiliated guests go last. The table is split into 10-seat sections and I want each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_08",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "order_category",
+    "names": [
+     "big_tech",
+     "ai_lab",
+     "chips",
+     "investor"
+    ]
+   },
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Order the categories like this: big tech firms, then AI labs, then chip makers, then investors, with any other categories after them. Also, companies bringing more guests sit before those bringing fewer (ties in any fixed order), and guests with no company go last. 7-seat sections, please give each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_09",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Sections of 6 seats please, with each guest's section as the answer. Line up the companies from the one that brought the most people to the one that brought the fewest (any fixed order for ties), with company-less guests at the very end."
+ },
+ {
+  "id": "dev_bigfirst_10",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 10
+  },
+  "text": "Order the seating by company size: the company with the most guests first, the fewest last, ties in any consistent order, and unaffiliated guests at the end. The table has sections of 10 seats, and I only need each section's captain (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_bigfirst_11",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "order_category",
+    "names": [
+     "investor",
+     "ai_lab",
+     "big_tech",
+     "government"
+    ]
+   },
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "First, order the categories as investors, AI labs, big tech, government officials, with any others after. Then larger companies go before smaller ones (any steady order for ties), and guests with no company come last. Sections of four; tell me each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_12",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   },
+   {
+    "kind": "order_rank"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Order the companies from most guests to fewest (any fixed order for equal sizes), with guests who have no company at the back. Then order guests by RSVP rank number, lowest first. Sections of 4 seats; I want each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_13",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Biggest company groups first, smaller ones after (equal-sized ones in whatever fixed order), and the guests with no company at the very end. Sections of 4 seats; report each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_14",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "group_company"
+   },
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Keep each company's guests together as a single block. Order those blocks so bigger delegations come before smaller ones (any fixed order for equal sizes), with guests who have no company last. Sections are 6 seats; tell me each guest's section."
+ },
+ {
+  "id": "dev_bigfirst_15",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Whichever companies brought more guests should sit ahead of those with fewer guests, with ties in any fixed order and company-less guests last. With sections of 8 seats, which section is each guest in?"
+ },
+ {
+  "id": "dev_bigfirst_16",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   },
+   {
+    "kind": "order_category",
+    "names": [
+     "software_security",
+     "ai_lab",
+     "chips"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 7
+  },
+  "text": "Companies with more guests should sit before those with fewer (ties in any fixed order), and guests with no company come last. After that, order categories as software and security firms, then AI labs, then chip makers, unlisted ones after. Seven seats per section, and I only want each section's captain, the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_bigfirst_17",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "We use 8-seat sections and I need each guest's section. Larger companies should be seated before smaller ones, equal sizes in any fixed order, and guests without a company come last."
+ },
+ {
+  "id": "dev_bigfirst_18",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   },
+   {
+    "kind": "order_company",
+    "names": [
+     "NASA",
+     "Broadcom",
+     "Micron"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 3
+  },
+  "text": "Larger companies go before smaller ones, equal sizes in any fixed order, with company-less guests last. On top of that, use this company priority: NASA, then Broadcom, then Micron, other companies after. Sections of three; I want only each section's captain, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_bigfirst_19",
+  "family": "bigfirst",
+  "items": [
+   {
+    "kind": "bigfirst"
+   },
+   {
+    "kind": "order_company",
+    "names": [
+     "AMD",
+     "Microsoft",
+     "NASA"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 9
+  },
+  "text": "Put the largest company groups first, then smaller ones, with ties in any fixed order and unaffiliated guests last. On top of that, seat companies in this priority: AMD, then Microsoft, then NASA, other companies afterwards. Sections of 9 seats; I only need each section's captain, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_waitlist_00",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Only the first four chip makers keep their place in the seating order; any further chip maker guests get moved to the very end. Nine seats per section, and I'd like each guest's section."
+ },
+ {
+  "id": "dev_waitlist_01",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 2
+   },
+   {
+    "kind": "order_category",
+    "names": [
+     "government",
+     "chips"
+    ]
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Only the first two chip makers hold their spot; any further chip makers go to the very end. Also seat government officials first, then chip makers, with other categories afterwards. Four seats a section; which section is each guest in?"
+ },
+ {
+  "id": "dev_waitlist_02",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "ai_lab",
+    "k": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Only the first two AI labs guests keep their spot in the seating order; any further AI labs guests get moved to the very end. Sections have 6 seats, and I'd like each guest's section."
+ },
+ {
+  "id": "dev_waitlist_03",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "AMD",
+     "Exiger",
+     "Nvidia"
+    ]
+   },
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Company priority: AMD, then Exiger, then Nvidia, everyone else after. Also, only the first 2 chip makers keep their place in the seating order; any further chip makers go to the very end. Sections have 8 seats; give each guest's section."
+ },
+ {
+  "id": "dev_waitlist_04",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "order_category",
+    "names": [
+     "big_tech"
+    ]
+   },
+   {
+    "kind": "waitlist",
+    "cat": "software_security",
+    "k": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Sections of 9 seats; tell me each guest's section. Big tech firms should be seated ahead of every other category. And only the first 3 software and security guests keep their normal place in the order; any further ones from that category go to the very end."
+ },
+ {
+  "id": "dev_waitlist_05",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "ai_lab",
+    "k": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Let four AI lab guests keep their normal places, the first four in the order; any beyond that go to the very end. Sections are 4 seats each; tell me the section for every guest."
+ },
+ {
+  "id": "dev_waitlist_06",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Four chip makers can keep their place in the seating order; if more turn up, they get pushed to the very end. Nine seats per section, and I need each guest's section."
+ },
+ {
+  "id": "dev_waitlist_07",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "group_company"
+   },
+   {
+    "kind": "waitlist",
+    "cat": "ai_lab",
+    "k": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Each company's guests must sit together as one block. Also, of the AI labs, just the first 1 guest keeps their place in the order and any further AI labs guests are sent to the very end. Six seats per section; give me each guest's section."
+ },
+ {
+  "id": "dev_waitlist_08",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 2
+   },
+   {
+    "kind": "group_company"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 3
+  },
+  "text": "Chip makers: only the first two keep their spot in the seating order, and any additional ones get sent to the very end. Then have guests from the same company sit together, one block per company. Three-seat sections; give me just the captain of each, meaning the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_waitlist_09",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "order_category",
+    "names": [
+     "ai_lab",
+     "investor",
+     "government",
+     "big_tech"
+    ]
+   },
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Category priority is AI labs, then investors, then government officials, then big tech, with anything not listed after. Only the first chip maker keeps their place in the order; every additional chip maker goes to the very end. Sections of 9 seats, and I need each guest's section."
+ },
+ {
+  "id": "dev_waitlist_10",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "investor",
+    "k": 2
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 8
+  },
+  "text": "Investors: the first two keep their spots, any other investors go to the back of the line. Sections of 8 seats, and all I need is the captain of each section, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_waitlist_11",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "software_security",
+    "k": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Keep only the first 3 software and security guests where they are; any further guests in that category move to the tail end of the table. Sections of ten; tell me each guest's section."
+ },
+ {
+  "id": "dev_waitlist_12",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "investor",
+    "k": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "In sections of 6 seats, which section is each guest in? Only the first 4 investors hold their place in the order; any additional investors drop to the very end."
+ },
+ {
+  "id": "dev_waitlist_13",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "software_security",
+    "k": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Only the first two guests from software and security firms keep their place; any others from that category get bumped to the very end. Eight seats per section - which section is everyone in?"
+ },
+ {
+  "id": "dev_waitlist_14",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "software_security",
+    "k": 1
+   },
+   {
+    "kind": "group_category"
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "Only the first software and security guest stays in the normal order; any other guests from that category are sent to the tail end. Also, guests of the same category must sit together, one block per category. Sections of 6 seats, and I only need each section's captain, the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_waitlist_15",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "big_tech",
+    "k": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Only one big tech guest, the first in the order, keeps their place; any other big tech guests are moved to the very end. Use sections of 5 seats and report each guest's section."
+ },
+ {
+  "id": "dev_waitlist_16",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Only one chip maker keeps their place in line; any additional chip makers are sent to the very back. Six seats a section, and I'd like the section for each guest."
+ },
+ {
+  "id": "dev_waitlist_17",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "chips",
+    "k": 2
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Let the first 2 chip makers keep their positions in the seating order and push any other chip makers to the very end. Sections are 8 seats wide, and I need each guest's section."
+ },
+ {
+  "id": "dev_waitlist_18",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "government",
+    "k": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Let the first four government officials keep their place in the seating order, and send any more of them to the very end. Sections are 9 seats; tell me each guest's section."
+ },
+ {
+  "id": "dev_waitlist_19",
+  "family": "waitlist",
+  "items": [
+   {
+    "kind": "waitlist",
+    "cat": "big_tech",
+    "k": 1
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Only the first big tech guest keeps their place in the seating order; any further big tech guests get moved to the very end. Sections of 6 seats, and the answer I want is which section each guest is in."
+ },
+ {
+  "id": "dev_snake_00",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Sections are 10 seats each, and every second one (the 2nd, 4th, 6th and so on) should be seated in reverse direction. Tell me which section each guest is in."
+ },
+ {
+  "id": "dev_snake_01",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "order_category",
+    "names": [
+     "big_tech"
+    ]
+   },
+   {
+    "kind": "snake",
+    "S": 9
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Put big tech firms at the front, then everyone else. Sections have nine seats, and every second section (2nd, 4th, 6th and so on) should be filled in reverse direction. Tell me each guest's section."
+ },
+ {
+  "id": "dev_snake_02",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "order_rankdesc"
+   },
+   {
+    "kind": "snake",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Order guests by RSVP rank number, highest number first. Then, with 6 seats per section, every second section (the 2nd, 4th, 6th and so on) runs in reverse direction. Tell me each guest's section."
+ },
+ {
+  "id": "dev_snake_03",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "Craft_Ventures",
+     "NASA",
+     "Altimeter",
+     "Microsoft"
+    ]
+   },
+   {
+    "kind": "snake",
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Company priority: Craft Ventures, NASA, Altimeter, Microsoft, and all other companies afterwards. With sections of 5 seats, run every second section (2nd, 4th, 6th and so on) in reverse direction. Tell me each guest's section."
+ },
+ {
+  "id": "dev_snake_04",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Sections are 6 seats each, and every second section (the 2nd, 4th, 6th and so on) should be filled in the reverse direction. Tell me each guest's section."
+ },
+ {
+  "id": "dev_snake_05",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "Make the table sections of 6 seats, with the 2nd, 4th, 6th sections and so on running in reverse. I'd only like the captain of each section, meaning the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_snake_06",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Fill the table in sections of ten seats, but run every even-numbered section (2nd, 4th, 6th...) backwards. Which section is each guest in?"
+ },
+ {
+  "id": "dev_snake_07",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Five seats per section, and every other section, that is the 2nd, 4th, 6th and so on, should be filled in reverse. I'd like to know which section each guest is in."
+ },
+ {
+  "id": "dev_snake_08",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 6
+  },
+  "text": "Sections are 6 seats each, and every alternate one (the 2nd, 4th, 6th...) should be seated in reverse. I just need the captain of each section, that is the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_snake_09",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Please seat in six-seat sections in a zigzag fashion: the 2nd, 4th, 6th sections and so on run backwards. What I want back is the section of each guest."
+ },
+ {
+  "id": "dev_snake_10",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "Seat it as a zig-zag: sections of four seats, where alternate sections (the 2nd, 4th, 6th, etc.) go in the opposite direction. Which section is each guest in?"
+ },
+ {
+  "id": "dev_snake_11",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 9
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Sections of nine here; alternate sections, meaning the 2nd, 4th, 6th and so on, get seated in reverse. Report each guest's section."
+ },
+ {
+  "id": "dev_snake_12",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "group_category"
+   },
+   {
+    "kind": "snake",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Keep guests of the same category together, one block for each category. On top of that, with sections of 10 seats, seat the 2nd, 4th, 6th (and so on) sections backwards. I need each guest's section."
+ },
+ {
+  "id": "dev_snake_13",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Please seat in 6-seat sections, reversing the direction in every second section (2nd, 4th, 6th, and onward). Give me the section for each guest."
+ },
+ {
+  "id": "dev_snake_14",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 7
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "7 seats per section, with every even-numbered section (the 2nd, 4th, 6th, ...) seated in reverse. Give me each guest's section."
+ },
+ {
+  "id": "dev_snake_15",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Sections of three seats please, and flip the direction of every second section, the 2nd, 4th, 6th, and so on. Give me the section for each guest."
+ },
+ {
+  "id": "dev_snake_16",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Ten seats per section, with every second section (2nd, 4th, 6th...) seated in the opposite direction. I'd like to see each guest's section."
+ },
+ {
+  "id": "dev_snake_17",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Please use sections of 5 seats, and seat every second section (2nd, 4th, 6th, etc.) in the opposite direction. Which section does each guest end up in?"
+ },
+ {
+  "id": "dev_snake_18",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 4
+  },
+  "text": "Four-seat sections, with every even-numbered section (2nd, 4th, 6th...) going in the reverse direction. All I want back is each section's captain, meaning the guest with the lowest RSVP rank number."
+ },
+ {
+  "id": "dev_snake_19",
+  "family": "snake",
+  "items": [
+   {
+    "kind": "snake",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Snake the seating through 10-seat sections: sections 2, 4, 6 and onward are run in reverse. I want each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_00",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 5
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "In each 5-seat section, the guest with the lowest RSVP rank number should take the first seat. Tell me each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_01",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 8
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "In each section of 8 seats, the guest with the lowest RSVP rank number should sit in that section's opening seat. Tell me which section each guest is in."
+ },
+ {
+  "id": "dev_sectionlead_02",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "In every 6-seat section, the guest with the lowest RSVP rank number should get the first seat of that section. Tell me each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_03",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "In each 4-seat section, the guest with the lowest RSVP rank number should have that section's first seat. Tell me which section each guest ends up in."
+ },
+ {
+  "id": "dev_sectionlead_04",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "order_category",
+    "names": [
+     "software_security",
+     "investor",
+     "chips"
+    ]
+   },
+   {
+    "kind": "sectionlead",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Category priority: software and security firms first, then investors, then chip makers, everything else afterwards. In every section of 10 seats, the guest with the lowest RSVP rank number should take the first seat of that section. Tell me each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_05",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 10
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 10
+  },
+  "text": "Section by section, with ten seats each, make sure the guest with the lowest RSVP rank number in the section sits in its opening seat. Report which section each guest is in."
+ },
+ {
+  "id": "dev_sectionlead_06",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Six-seat sections, please, and each one should be led off by whichever of its guests has the lowest sign-up number. What I want back is each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_07",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 9
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Sections are 9 seats each. The lowest RSVP rank number within each section leads it by taking its first seat. What I want back is each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_08",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "Palo_Alto_Networks"
+    ]
+   },
+   {
+    "kind": "sectionlead",
+    "S": 3
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 3
+  },
+  "text": "Make Palo Alto Networks first in the company priority, everyone else afterwards. Then in every 3-seat section, the lowest RSVP rank number gets the section's first seat. I'd like just the captain of each section (the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_sectionlead_09",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 7
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 7
+  },
+  "text": "Every 7-seat section should open with the guest holding the lowest RSVP rank number in its first seat. Which section is each guest in?"
+ },
+ {
+  "id": "dev_sectionlead_10",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Let each 6-seat section start with its guest holding the lowest RSVP rank number. I need to know each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_11",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 9
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "I'd like every nine-seat section to start with its guest of lowest RSVP rank number in the first seat. Give me the section for every guest."
+ },
+ {
+  "id": "dev_sectionlead_12",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 4
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 4
+  },
+  "text": "I'm splitting the table into four-seat sections, and within each one the guest with the lowest RSVP rank number should sit in that section's first seat. Which section is everyone in?"
+ },
+ {
+  "id": "dev_sectionlead_13",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "Craft_Ventures",
+     "Palo_Alto_Networks",
+     "Palantir",
+     "Amazon"
+    ]
+   },
+   {
+    "kind": "sectionlead",
+    "S": 6
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 6
+  },
+  "text": "Company priority runs Craft Ventures, Palo Alto Networks, Palantir, Amazon, then everybody else. Also, in each section of 6 seats, the guest with the lowest RSVP rank number takes the section's first seat. Which section is each guest in?"
+ },
+ {
+  "id": "dev_sectionlead_14",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 3
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 3
+  },
+  "text": "Sections of three. In each one, whoever has the lowest RSVP rank number sits in the section's first seat. I want each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_15",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 5
+   },
+   {
+    "kind": "order_rankdesc"
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 5
+  },
+  "text": "Every section of 5 seats should open with its guest who has the lowest RSVP rank number. Beyond that, seat everyone by rank number with the highest number first. Give me the section of each guest."
+ },
+ {
+  "id": "dev_sectionlead_16",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "order_company",
+    "names": [
+     "OpenAI",
+     "Altimeter",
+     "Exiger",
+     "Google"
+    ]
+   },
+   {
+    "kind": "sectionlead",
+    "S": 8
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 8
+  },
+  "text": "Company priority: OpenAI, Altimeter, Exiger, Google, then all the rest. And in each section of 8 seats, whoever has the lowest RSVP rank number takes the section's first seat. Which section is each guest in?"
+ },
+ {
+  "id": "dev_sectionlead_17",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 9
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "For sections of 9 seats: put the lowest-RSVP-rank-number guest of each section in that section's opening seat. Give me each guest's section."
+ },
+ {
+  "id": "dev_sectionlead_18",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 9
+   }
+  ],
+  "closing": {
+   "kind": "sections",
+   "S": 9
+  },
+  "text": "Nine seats per section; whoever has the lowest RSVP rank number within a section sits in its first seat. Give me every guest's section."
+ },
+ {
+  "id": "dev_sectionlead_19",
+  "family": "sectionlead",
+  "items": [
+   {
+    "kind": "sectionlead",
+    "S": 3
+   }
+  ],
+  "closing": {
+   "kind": "captains",
+   "S": 3
+  },
+  "text": "Sections of three; the lowest RSVP rank number in each one takes its first seat. All I need back is the captain of each section, that is, the guest with the lowest RSVP rank number."
+ }
+]

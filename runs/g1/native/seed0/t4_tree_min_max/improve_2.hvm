@@ -1,0 +1,38 @@
+// Tree minimum and maximum.
+@prog = (tree out)
+  & @tm ~ (tree out)
+
+@tm = ((?((@tm_leaf @tm_node) (p out)) p) out)
+
+@tm_leaf = (* (16777215 0))
+
+@tm_node = (* ((l (v r)) out))
+  & @tm ~ (l (lm lx))
+  & @tm ~ (r (rm rx))
+  & v ~ {vmin vmax}
+
+  // min(lm, vmin)
+  & lm ~ {lma lmas}
+  & vmin ~ {vma vmas}
+  & lma ~ $([<] $(vma lmc))
+  & lmc ~ ?(((* (lmb lmb)) (* (lmt (* lmt)))) (lmas (vmas midmin)))
+
+  // min(midmin, rm)
+  & midmin ~ {mna mnas}
+  & rm ~ {mnb mnbs}
+  & mna ~ $([<] $(mnb mnc))
+  & mnc ~ ?(((* (mnb0 mnb0)) (* (mna0 (* mna0)))) (mnas (mnbs minout)))
+
+  // max(lx, vmax)
+  & lx ~ {lxa lxas}
+  & vmax ~ {vxa vxas}
+  & lxa ~ $([>] $(vxa lxc))
+  & lxc ~ ?(((* (lxb lxb)) (* (lxt (* lxt)))) (lxas (vxas midmax)))
+
+  // max(midmax, rx)
+  & midmax ~ {mxa mxas}
+  & rx ~ {mxb mxbs}
+  & mxa ~ $([>] $(mxb mxc))
+  & mxc ~ ?(((* (mxb0 mxb0)) (* (mxa0 (* mxa0)))) (mxas (mxbs maxout)))
+
+  & out ~ (minout maxout)

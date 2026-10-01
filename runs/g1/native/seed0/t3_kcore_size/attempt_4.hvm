@@ -1,0 +1,117 @@
+// Generate vertices 0 through n-1, then repeatedly peel the k-core.
+@prog = (input out)
+  & @start ~ (input out)
+
+@start = ((n (k edges)) out)
+  & @range ~ (n alive)
+  & @iterate ~ (alive (k (edges out)))
+
+@range = (n out)
+  & n ~ ?((@range_nil @range_more) (out *))
+
+@range_nil = (out *)
+  & out ~ (0 *)
+
+@range_more = (m (out *))
+  & m ~ {mh mr}
+  & @range ~ (mr tail)
+  & out ~ (1 (mh tail))
+
+// Filter rem by degrees measured against the whole alive list.
+// The result is (filtered-list, whether-any-vertex-was-removed).
+@filter = ((?((@filter_nil @filter_cons) (payload (whole (k (edges out))))) payload) (whole (k (edges out))))
+
+@filter_nil = (* (whole (k (edges out))))
+  & whole ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ (0 0)
+
+@filter_cons = (* ((h t) (whole (k (edges out)))))
+  & h ~ {hd hkeep}
+  & whole ~ {whole_d whole_r}
+  & k ~ {k_d k_r}
+  & edges ~ {edges_d edges_r}
+  & @degree ~ (hd (whole_d (edges_d deg)))
+  & @filter ~ (t (whole_r (k_r (edges_r (tail_list tail_changed))))
+  & deg ~ $([<] $(k_d test))
+  & test ~ ?((@filter_keep @filter_drop) (hkeep (tail_list (tail_changed out))))
+
+@filter_keep = (h (tail (changed out)))
+  & out ~ ((1 (h tail)) changed)
+
+@filter_drop = (* (h (tail (changed out))))
+  & h ~ *
+  & out ~ (tail 1)
+
+// Count edges incident to c whose other endpoint is alive.
+@degree = (c (alive (edges out)))
+  & @dscan ~ (edges (c (alive (0 out))))
+
+@dscan = ((?((@ds_nil @ds_cons) (payload (c (alive (acc out))))) payload) (c (alive (acc out))))
+
+@ds_nil = (* (c (alive (acc out))))
+  & c ~ *
+  & alive ~ *
+  & out ~ acc
+
+@ds_cons = (* ((edge tail) (c (alive (acc out)))))
+  & c ~ {c_hit c_rec}
+  & alive ~ {alive_hit alive_rec}
+  & @edge_hit ~ (c_hit (alive_hit (edge hit)))
+  & acc ~ $([+] $(hit next))
+  & @dscan ~ (tail (c_rec (alive_rec (next out))))
+
+// Return 1 if edge (u,v) has an endpoint c and its other endpoint is alive.
+@edge_hit = (c (alive (edge out)))
+  & edge ~ (u v)
+  & c ~ {cu cv}
+  & alive ~ {alive_u alive_v}
+  & u ~ {u_cmp u_query}
+  & v ~ {v_cmp v_query}
+  & @member ~ (v_query (alive_v mem_v))
+  & @member ~ (u_query (alive_u mem_u))
+  & cu ~ $([=] $(u_cmp eq_u))
+  & cv ~ $([=] $(v_cmp eq_v))
+  & eq_u ~ $([&] $(mem_v a))
+  & eq_v ~ $([&] $(mem_u b))
+  & a ~ $([|] $(b out))
+
+// Test whether x occurs in a list of numbers.
+@member = (x ((?((@member_nil @member_cons) (payload (x out))) payload) out))
+
+@member_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@member_cons = (* ((head tail) (x out)))
+  & x ~ {x_cmp x_rec}
+  & x_cmp ~ $([=] $(head eq))
+  & @member ~ (x_rec (tail rest))
+  & eq ~ $([|] $(rest out))
+
+@len = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((head tail) out))
+  & head ~ *
+  & @len ~ (tail rest)
+  & rest ~ $([+1] out)
+
+// Repeat simultaneous peeling rounds until no vertices are removed.
+@iterate = (alive (k (edges out)))
+  & alive ~ {walk whole}
+  & k ~ {kf kr}
+  & edges ~ {ef er}
+  & @filter ~ (walk (whole (kf (ef (new changed)))))
+  & changed ~ ?((@iter_done @iter_changed) (new (kr (er out))))
+
+@iter_done = (new (k (edges out)))
+  & @len ~ (new out)
+  & k ~ *
+  & edges ~ *
+
+@iter_changed = (* (new (k (edges out))))
+  & @iterate ~ (new (k (edges out)))

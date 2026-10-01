@@ -1,0 +1,40 @@
+@count2 = ((@count2__C12 a) a)
+
+@count2__C0 = (a a)
+
+@count2__C1 = (* ($([+0x0000001] a) a))
+
+@count2__C10 = (?((@count2__C8 @count2__C9) a) a)
+
+@count2__C11 = (* ((* (* c)) ((@count2__C10 (a (b (c d)))) (a (b d)))))
+
+@count2__C12 = (?(((* (a a)) @count2__C11) b) b)
+
+@count2__C2 = (b (c (a d)))
+  & @count2 ~ (a (b (c d)))
+
+@count2__C3 = (* (b ($([+0x0000001] c) (a d))))
+  & @count2 ~ (a (b (c d)))
+
+@count2__C4 = (b ($([+0x0000001] c) (a d)))
+  & @count2 ~ (a (b (c d)))
+
+@count2__C5 = (* (b ($([+0x0000002] c) (a d))))
+  & @count2 ~ (a (b (c d)))
+
+@count2__C6 = ({a c} (d ($([<] $(a b)) e)))
+  & $(b ?((@count2__C2 @count2__C3) (c (d e)))) ~ [=0x0000000]
+
+@count2__C7 = (* ({a c} (d ($([<] $(a b)) e))))
+  & $(b ?((@count2__C4 @count2__C5) (c (d e)))) ~ [=0x0000000]
+
+@count2__C8 = (a (c ($([<] $(a b)) d)))
+  & $(b ?((@count2__C0 @count2__C1) (c d))) ~ [=0x0000000]
+
+@count2__C9 = (* ((* (* e)) (f ({a c} (d ($([<] $(a b)) g))))))
+  & $(b ?((@count2__C6 @count2__C7) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@prog = ((b a) c)
+  & @count2 ~ (a (b (0 c)))
+
+

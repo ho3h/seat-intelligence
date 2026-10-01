@@ -1,0 +1,33 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@inorder_node = (a (b ((@inorder_node__C6 (a (b c))) c)))
+
+@inorder_node__C0 = (* a)
+  & @inorder_node ~ a
+
+@inorder_node__C1 = (?(((a a) @inorder_node__C0) b) b)
+
+@inorder_node__C2 = (* a)
+  & @inorder_node ~ a
+
+@inorder_node__C3 = (?(((a a) @inorder_node__C2) b) b)
+
+@inorder_node__C4 = ((@inorder_node__C1 (c d)) (a (b d)))
+  & @List/Cons ~ (a (b c))
+
+@inorder_node__C5 = (* (b (c (d ((@inorder_node__C3 (g h)) (a (e h)))))))
+  & @List/Cons ~ (a (f g))
+  & @inorder_node ~ (b (c (d (e f))))
+
+@inorder_node__C6 = (?((@inorder_node__C4 @inorder_node__C5) a) a)
+
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* (a (b (c d))))
+  & @inorder_node ~ (a (b (c (@List/Nil d))))
+
+@prog__C1 = (?((@List/Nil @prog__C0) a) a)
+
+

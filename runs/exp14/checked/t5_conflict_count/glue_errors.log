@@ -1,0 +1,8 @@
+--- 04:17:01
+step of stream `c_stream` (@c_stream_step): 1 value(s) never used:
+    `L3` (depth, copy 3 of `L`, made at build.py:15)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 04:17:27
+wrong arity: step of stream `mnl_stream` is called as f(d, L:depth, ct:trie[num], count:num, e0:num, e1:num), i.e. d plus 5 value(s); your function `mnl_step` takes 5 parameter(s) (d, L, ct, count, pair).
+--- 04:17:35
+build.py:48: split needs a tuple wire or an explicit n; `c` is list[num]

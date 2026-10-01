@@ -1,0 +1,124 @@
+// Entry point: duplicate the edge list for traversal and edge lookup.
+@prog = ((n edges) out)
+  & n ~ *
+  & {walk full} ~ edges
+  & @outer ~ (walk (full out))
+
+// Visit each edge, pairing it with every later edge.
+@outer = ((?((@outer_nil @outer_cons) (pl (full out))) pl) (full out))
+
+@outer_nil = (* (* 0))
+
+@outer_cons = (* ((e tail) (full out)))
+  & {tail_pairs tail_outer} ~ tail
+  & {full_pairs full_outer} ~ full
+  & @pairs ~ (tail_pairs (e (full_pairs pcount)))
+  & @outer ~ (tail_outer (full_outer ocount))
+  & pcount ~ $([+] $(ocount out))
+
+// For one edge, visit every later edge.
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (edge (full out)))) pl) (edge (full out)))
+
+@pairs_nil = (* (* (* 0)))
+
+@pairs_cons = (* ((f rest) (edge (full out))))
+  & {edge_left edge_right} ~ edge
+  & {full_left full_right} ~ full
+  & @pair_one ~ ((edge_left f) (full_left pcount))
+  & @pairs ~ (rest (edge_right (full_right rcount)))
+  & pcount ~ $([+] $(rcount out))
+
+// Count whether two edges form a qualifying wedge whose closing edge exists.
+@pair_one = ((e1 e2) (full out))
+  & e1 ~ (u v)
+  & e2 ~ (x y)
+
+  & {u1 ur1} ~ u
+  & {u2 ur2} ~ ur1
+  & {u3 ur3} ~ ur2
+  & {u4 ur4} ~ ur3
+  & {u5 u6} ~ ur4
+
+  & {v1 vr1} ~ v
+  & {v2 vr2} ~ vr1
+  & {v3 vr3} ~ vr2
+  & {v4 vr4} ~ vr3
+  & {v5 v6} ~ vr4
+
+  & {x1 xr1} ~ x
+  & {x2 xr2} ~ xr1
+  & {x3 x4} ~ xr2
+
+  & {y1 yr1} ~ y
+  & {y2 yr2} ~ yr1
+  & {y3 y4} ~ yr2
+
+  & {g1 gr1} ~ full
+  & {g2 gr2} ~ gr1
+  & {g3 g4} ~ gr2
+
+  & @eq ~ ((u1 x1) m1)
+  & @eq ~ ((u2 y1) m2)
+  & @eq ~ ((v1 x2) m3)
+  & @eq ~ ((v2 y2) m4)
+
+  & @cand ~ (u3 (v3 (y3 (g1 c1))))
+  & @cand ~ (u4 (v4 (x3 (g2 c2))))
+  & @cand ~ (v5 (u5 (y4 (g3 c3))))
+  & @cand ~ (v6 (u6 (x4 (g4 c4))))
+
+  & m1 ~ $([*] $(c1 p1))
+  & m2 ~ $([*] $(c2 p2))
+  & m3 ~ $([*] $(c3 p3))
+  & m4 ~ $([*] $(c4 p4))
+  & p1 ~ $([+] $(p2 s12))
+  & s12 ~ $([+] $(p3 s123))
+  & s123 ~ $([+] $(p4 out))
+
+// A candidate contributes only when its center is smaller than both endpoints,
+// its endpoints differ, and the closing edge is present.
+@cand = (c (a (b (edges out))))
+  & {c1 c2} ~ c
+  & {a1 ar} ~ a
+  & {a2 a3} ~ ar
+  & {b1 br} ~ b
+  & {b2 b3} ~ br
+  & @lt ~ ((c1 a1) l1)
+  & @lt ~ ((c2 b1) l2)
+  & @ne ~ ((a2 b2) ne)
+  & @has ~ (edges (a3 (b3 h)))
+  & l1 ~ $([*] $(l2 p))
+  & p ~ $([*] $(ne q))
+  & q ~ $([*] $(h out))
+
+// Test whether an undirected edge is present in the edge list.
+@has = ((?((@has_nil @has_cons) (pl (a (b out)))) pl) (a (b out)))
+
+@has_nil = (* (* (* 0)))
+
+@has_cons = (* ((edge tail) (a (b out))))
+  & edge ~ (x y)
+  & {a1 ar} ~ a
+  & {a2 a_rec} ~ ar
+  & {b1 br} ~ b
+  & {b2 b_rec} ~ br
+  & {x1 x2} ~ x
+  & {y1 y2} ~ y
+  & @eq ~ ((x1 a1) e1)
+  & @eq ~ ((y1 b1) e2)
+  & @eq ~ ((x2 b2) e3)
+  & @eq ~ ((y2 a2) e4)
+  & e1 ~ $([*] $(e2 q1))
+  & e3 ~ $([*] $(e4 q2))
+  & q1 ~ $([|] $(q2 hit))
+  & @has ~ (tail (a_rec (b_rec tailhit)))
+  & hit ~ $([|] $(tailhit out))
+
+@eq = ((a b) out)
+  & a ~ $([=] $(b out))
+
+@ne = ((a b) out)
+  & a ~ $([!] $(b out))
+
+@lt = ((a b) out)
+  & a ~ $([<] $(b out))

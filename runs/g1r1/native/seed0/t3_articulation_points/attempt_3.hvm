@@ -1,0 +1,95 @@
+// For graphs with at least three vertices and exactly two edges,
+// a shared endpoint is an articulation point.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ $([>] $(2 z))
+  & z ~ ?((@small @large) (edges out))
+
+@small = (edges out)
+  & edges ~ *
+  & out ~ (0 *)
+
+@large = (edges out)
+  & @case_two_edges ~ (edges out)
+
+@case_two_edges = ((?((@bad @first) (pl out)) pl) out)
+
+@bad = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@first = ((e tail) out)
+  & @second ~ (tail (e out))
+
+@second = ((?((@bad_second @second_cons) (pl (e out))) pl) (e out))
+
+@bad_second = (pl (e out))
+  & pl ~ *
+  & e ~ *
+  & out ~ (0 *)
+
+@second_cons = ((e2 tail2) (e out))
+  & tail2 ~ ?((@process @bad_third) (e (e2 out)))
+
+@bad_third = (k (e (e2 out)))
+  & k ~ *
+  & e ~ *
+  & e2 ~ *
+  & out ~ (0 *)
+
+@process = (e (e2 out))
+  & e ~ (u v)
+  & e2 ~ (a b)
+  & @test_ua ~ (u (v (a (b out))))
+
+@test_ua = (u (v (a (b out))))
+  & u ~ {uc ur}
+  & a ~ {ac ar}
+  & uc ~ $([=] $(ac z))
+  & z ~ ?((@test_ub @ret_u) (ur (v (ar (b out)))))
+
+@test_ub = (u (v (a (b out))))
+  & u ~ {uc ur}
+  & b ~ {bc br}
+  & uc ~ $([=] $(bc z))
+  & z ~ ?((@ub_no @ret_u) (ur (v (a (br out)))))
+
+@ub_no = (u (v (a (b out))))
+  & u ~ *
+  & @test_va ~ (v (a (b out)))
+
+@test_va = (v (a (b out)))
+  & v ~ {vc vr}
+  & a ~ {ac ar}
+  & vc ~ $([=] $(ac z))
+  & z ~ ?((@va_no @ret_v3) (vr (ar (b out))))
+
+@va_no = (v (a (b out)))
+  & a ~ *
+  & @test_vb ~ (v (b out))
+
+@test_vb = (v (b out))
+  & v ~ {vc vr}
+  & b ~ {bc br}
+  & vc ~ $([=] $(bc z))
+  & z ~ ?((@none2 @ret_v2) (vr (br out)))
+
+@ret_u = (u (v (a (b out))))
+  & v ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ (1 (u (0 *)))
+
+@ret_v3 = (v (a (b out)))
+  & a ~ *
+  & b ~ *
+  & out ~ (1 (v (0 *)))
+
+@ret_v2 = (v (b out))
+  & b ~ *
+  & out ~ (1 (v (0 *)))
+
+@none2 = (v (b out))
+  & v ~ *
+  & b ~ *
+  & out ~ (0 *)

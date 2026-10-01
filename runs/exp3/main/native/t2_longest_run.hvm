@@ -1,0 +1,13 @@
+@prog = ((?((@start_nil (* ((head_q100 (?((@worker_nil (* (({head_next_q103 $([=] $(prev_q103 ?((@worker_different @worker_same) (tail_q103 (head_next_q103 (run_q103 (best_q103 out_q103)))))))} tail_q103) (prev_q103 (run_q103 (best_q103 out_q103)))))) (payload_q95_q100 (head_q100 (1 (1 out_q100))))) payload_q95_q100)) out_q100))) (payload_i10 output)) payload_i10) output)
+
+@start_nil = (* 0)
+
+@worker_nil = (* (* (* (out out))))
+
+@worker_different = ((?((@worker_nil (* (({head_next_q111 $([=] $(prev_q111 ?((@worker_different @worker_same) (tail_q111 (head_next_q111 (run_q111 (best_q111 out_q111)))))))} tail_q111) (prev_q111 (run_q111 (best_q111 out_q111)))))) (payload_q96 (head (1 (best out))))) payload_q96) (head (* (best out))))
+
+@worker_same = (* (tail (head ({$([+1] incremented) run_cmp} ({best_keep $([>] $(run_cmp ?((@worker_update @worker_keep) (tail (head (incremented (best_keep out)))))))} out)))))
+
+@worker_update = ((?((@worker_nil (* (({head_next_q121 $([=] $(prev_q121 ?((@worker_different @worker_same) (tail_q121 (head_next_q121 (run_q121 (best_q121 out_q121)))))))} tail_q121) (prev_q121 (run_q121 (best_q121 out_q121)))))) (payload_q97 (head (run_next (best_next out))))) payload_q97) (head ({run_next best_next} (* out))))
+
+@worker_keep = (* ((?((@worker_nil (* (({head_next_q132 $([=] $(prev_q132 ?((@worker_different @worker_same) (tail_q132 (head_next_q132 (run_q132 (best_q132 out_q132)))))))} tail_q132) (prev_q132 (run_q132 (best_q132 out_q132)))))) (payload_q98 (head (incremented (best_keep out))))) payload_q98) (head (incremented (best_keep out)))))

@@ -1,0 +1,28 @@
+@prog = (lv1 out)
+  & @map_cons_lw ~ (lv1 out)
+
+@map_nil = (* (0 *))
+
+@map_cons = (* (($([*2] d) lv2) (1 (d tail_out))))
+  & @map_cons_lw ~ (lv2 tail_out)
+
+@map_cons_lw = (ls71 q7)
+  & ls71 ~ (g54 (e38 (g55 (e39 (g56 (e40 (g57 (e41 (g58 (e42 (g59 (e43 (g60 (e44 (g61 (e45 (g62 (e46 (g63 (e47 (g64 (e48 (g65 (e49 (g66 (e50 (g67 (e51 (g68 (e52 (g69 (e53 tk70))))))))))))))))))))))))))))))))
+  & g54 ~ ?((@map_nil @map_cons_la) ((e38 q9) q7))
+  & g55 ~ ?((@map_nil @map_cons_la) ((e39 q11) q9))
+  & g56 ~ ?((@map_nil @map_cons_la) ((e40 q13) q11))
+  & g57 ~ ?((@map_nil @map_cons_la) ((e41 q15) q13))
+  & g58 ~ ?((@map_nil @map_cons_la) ((e42 q17) q15))
+  & g59 ~ ?((@map_nil @map_cons_la) ((e43 q19) q17))
+  & g60 ~ ?((@map_nil @map_cons_la) ((e44 q21) q19))
+  & g61 ~ ?((@map_nil @map_cons_la) ((e45 q23) q21))
+  & g62 ~ ?((@map_nil @map_cons_la) ((e46 q25) q23))
+  & g63 ~ ?((@map_nil @map_cons_la) ((e47 q27) q25))
+  & g64 ~ ?((@map_nil @map_cons_la) ((e48 q29) q27))
+  & g65 ~ ?((@map_nil @map_cons_la) ((e49 q31) q29))
+  & g66 ~ ?((@map_nil @map_cons_la) ((e50 q33) q31))
+  & g67 ~ ?((@map_nil @map_cons_la) ((e51 q35) q33))
+  & g68 ~ ?((@map_nil @map_cons_la) ((e52 q37) q35))
+  & g69 ~ ?((@map_nil @map_cons) ((e53 tk70) q37))
+
+@map_cons_la = (* (($([*2] d) tail_out) (1 (d tail_out))))

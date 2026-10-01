@@ -1,0 +1,68 @@
+// Empty trie: (0 *)
+// Branch trie: (1 (left right))
+// Present trie leaf: (2 *)
+@prog = (l out)
+  & @dc ~ (l ((0 *) (0 out)))
+
+// Walk the list, carrying a trie and the distinct-value count.
+@dc = ((?((@dc_nil @dc_cons) (pl (trie (acc out)))) pl) (trie (acc out)))
+
+@dc_nil = (* (* (acc acc)))
+
+@dc_cons = (* ((h t) (trie (acc out))))
+  & @ins ~ (h (trie (24 (newtrie added))))
+  & acc ~ $([+] $(added acc2))
+  & @dc ~ (t (newtrie (acc2 out)))
+
+// Insert key into trie, examining 24 bits from least significant to most.
+@ins = (key (trie (depth out)))
+  & depth ~ ?((@ins_end @ins_step) (key (trie out)))
+
+@ins_end = (key ((?((@ins_empty @ins_present) (payload (key out))) payload) out))
+
+@ins_empty = (payload (key out))
+  & payload ~ *
+  & key ~ *
+  & out ~ ((2 *) 1)
+
+@ins_present = (* (payload (key out)))
+  & payload ~ *
+  & key ~ *
+  & out ~ ((2 *) 0)
+
+@ins_step = (prev (key (trie out)))
+  & key ~ {k1 k2}
+  & k1 ~ $([&] $(1 bit))
+  & k2 ~ $([>>] $(1 shifted))
+  & bit ~ ?((@ins_zero @ins_one) (prev (shifted (trie out))))
+
+@ins_zero = (prev (key (trie out)))
+  & @put0 ~ (prev (key (trie out)))
+
+@ins_one = (* (prev (key (trie out))))
+  & @put1 ~ (prev (key (trie out)))
+
+// Follow the zero or one child, then rebuild the current trie node.
+@put0 = (depth (key ((?((@put0_empty @put0_branch) (payload (depth (key out)))) payload) out))
+
+@put0_empty = (payload (depth (key out)))
+  & payload ~ *
+  & @ins ~ (key ((0 *) (depth (newchild added))))
+  & out ~ ((1 (newchild (0 *))) added)
+
+@put0_branch = (* (payload (depth (key out))))
+  & payload ~ (left right)
+  & @ins ~ (key (left (depth (newchild added))))
+  & out ~ ((1 (newchild right)) added)
+
+@put1 = (depth (key ((?((@put1_empty @put1_branch) (payload (depth (key out)))) payload) out))
+
+@put1_empty = (payload (depth (key out)))
+  & payload ~ *
+  & @ins ~ (key ((0 *) (depth (newchild added))))
+  & out ~ ((1 ((0 *) newchild)) added)
+
+@put1_branch = (* (payload (depth (key out))))
+  & payload ~ (left right)
+  & @ins ~ (key (right (depth (newchild added))))
+  & out ~ ((1 (left newchild)) added)

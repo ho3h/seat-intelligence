@@ -1,0 +1,15 @@
+// t4_tree_height
+@prog = (input output)
+  & @height ~ (input output)
+
+@height = ((?(((* 0) @h_node) (payload out)) payload) out)
+
+@h_node = (* ((left (value right)) out))
+  & @height ~ (left hl)
+  & @height ~ (right hr)
+  & value ~ *
+  & hl ~ {hl_cmp hl_keep}
+  & hr ~ {hr_cmp hr_keep}
+  & hl_cmp ~ $([>] $(hr_cmp gt))
+  & gt ~ ?(((* (a a)) (* (b (* b)))) (hl_keep (hr_keep best)))
+  & best ~ $([+1] out)

@@ -1,0 +1,90 @@
+@prog = (input output)
+  & @mode ~ (input stats)
+  & stats ~ (value count)
+  & value ~ output
+  & count ~ *
+
+@mode = ((?((@mn @mc) (pl out)) pl) out)
+
+@mn = (pl out)
+  & pl ~ *
+  & out ~ (0 0)
+
+@mc = (* ((h t) out))
+  & h ~ {hfreq hcand}
+  & t ~ {tmode tfreq}
+  & @mode ~ (tmode mstats)
+  & mstats ~ (best bcount)
+  & @freq ~ (tfreq (hfreq fcount))
+  & fcount ~ $([+1] candcount)
+  & @select ~ (hcand (candcount (best (bcount out))))
+
+@freq = (lv1 (target out))
+  & @freq_cons_lw ~ (lv1 (target out))
+
+@freq_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ 0
+
+@freq_cons = (* (($([=] $(tc eq)) t) ({tc tr} out)))
+  & @freq_cons_lw ~ (t (tr $([+] $(eq out))))
+
+@select = (c (nc (b (bc out))))
+  & nc ~ {ncc nck}
+  & bc ~ {bcc bck}
+  & ncc ~ $([>] $(bcc gt))
+  & gt ~ ?((@sel_no @sel_yes) (c (nck (b (bck out)))))
+
+@sel_yes = (* (c (nc (b (bc out)))))
+  & b ~ *
+  & bc ~ *
+  & out ~ (c nc)
+
+@sel_no = (c (nc (b (bc out))))
+  & nc ~ {nce nck}
+  & bc ~ {bce bck}
+  & nce ~ $([=] $(bce eq))
+  & eq ~ ?((@sel_diff @sel_equal) (c (nck (b (bck out)))))
+
+@sel_diff = (c (nc (b (bc out))))
+  & c ~ *
+  & nc ~ *
+  & out ~ (b bc)
+
+@sel_equal = (* (c (nc (b (bc out)))))
+  & c ~ {ccmp ckeep}
+  & b ~ {bcmp bkeep}
+  & ccmp ~ $([<] $(bcmp lt))
+  & lt ~ ?((@sel_old @sel_new) (ckeep (nc (bkeep (bc out)))))
+
+@sel_old = (ckeep (nc (bkeep (bc out))))
+  & ckeep ~ *
+  & nc ~ *
+  & out ~ (bkeep bc)
+
+@sel_new = (* (ckeep (nc (bkeep (bc out)))))
+  & bkeep ~ *
+  & bc ~ *
+  & out ~ (ckeep nc)
+
+@freq_cons_lw = (ls90 (q10 q11))
+  & ls90 ~ (g73 (e57 (g74 (e58 (g75 (e59 (g76 (e60 (g77 (e61 (g78 (e62 (g79 (e63 (g80 (e64 (g81 (e65 (g82 (e66 (g83 (e67 (g84 (e68 (g85 (e69 (g86 (e70 (g87 (e71 (g88 (e72 tk89))))))))))))))))))))))))))))))))
+  & g73 ~ ?((@freq_nil @freq_cons_la) ((e57 (q13 q14)) (q10 q11)))
+  & g74 ~ ?((@freq_nil @freq_cons_la) ((e58 (q16 q17)) (q13 q14)))
+  & g75 ~ ?((@freq_nil @freq_cons_la) ((e59 (q19 q20)) (q16 q17)))
+  & g76 ~ ?((@freq_nil @freq_cons_la) ((e60 (q22 q23)) (q19 q20)))
+  & g77 ~ ?((@freq_nil @freq_cons_la) ((e61 (q25 q26)) (q22 q23)))
+  & g78 ~ ?((@freq_nil @freq_cons_la) ((e62 (q28 q29)) (q25 q26)))
+  & g79 ~ ?((@freq_nil @freq_cons_la) ((e63 (q31 q32)) (q28 q29)))
+  & g80 ~ ?((@freq_nil @freq_cons_la) ((e64 (q34 q35)) (q31 q32)))
+  & g81 ~ ?((@freq_nil @freq_cons_la) ((e65 (q37 q38)) (q34 q35)))
+  & g82 ~ ?((@freq_nil @freq_cons_la) ((e66 (q40 q41)) (q37 q38)))
+  & g83 ~ ?((@freq_nil @freq_cons_la) ((e67 (q43 q44)) (q40 q41)))
+  & g84 ~ ?((@freq_nil @freq_cons_la) ((e68 (q46 q47)) (q43 q44)))
+  & g85 ~ ?((@freq_nil @freq_cons_la) ((e69 (q49 q50)) (q46 q47)))
+  & g86 ~ ?((@freq_nil @freq_cons_la) ((e70 (q52 q53)) (q49 q50)))
+  & g87 ~ ?((@freq_nil @freq_cons_la) ((e71 (q55 q56)) (q52 q53)))
+  & g88 ~ ?((@freq_nil @freq_cons) ((e72 tk89) (q55 q56)))
+
+@freq_cons_la = (* (($([=] $(tc eq)) (tr $([+] $(eq out)))) ({tc tr} out)))

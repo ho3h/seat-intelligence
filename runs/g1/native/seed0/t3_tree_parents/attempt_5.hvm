@@ -1,0 +1,120 @@
+@prog = ((n (r edges)) out)
+  & r ~ {rw rs}
+  & @walk ~ (rw (edges (1 ((rs 16777215) (0 *)) mapout)))
+  & @build ~ (0 (n (mapout out)))
+
+@walk = (v (edges (map out)))
+  & edges ~ {erem efull}
+  & @scan ~ (erem (v (efull (map out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (v (full (map out))))) pl) (v (full (map out))))
+
+@scan_nil = (v (full (map out)))
+  & v ~ *
+  & full ~ *
+  & out ~ map
+
+@scan_cons = (* ((edge rest) (v (full (map out)))))
+  & edge ~ (u w)
+  & @edge ~ (u (w (rest (v (full (map out))))))
+
+@edge = (u (w (rest (v (full (map out))))))
+  & u ~ {ucmp ukeep}
+  & v ~ {vcmp vkeep}
+  & ucmp ~ $([=] $(vcmp z))
+  & z ~ ?((@edge_other @edge_first) (w (ukeep (rest (vkeep (full (map out)))))))
+
+@edge_other = (w (ukeep (rest (v (full (map out))))))
+  & v ~ {vcmp vkeep}
+  & w ~ $([=] $(vcmp z))
+  & z ~ ?((@edge_next @edge_second) (ukeep (rest (vkeep (full (map out))))))
+
+@edge_first = (* (w (ukeep (rest (v (full (map out)))))))
+  & ukeep ~ *
+  & @candidate ~ (w (rest (v (full (map out)))))
+
+@edge_next = (ukeep (rest (v (full (map out)))))
+  & ukeep ~ *
+  & @scan ~ (rest (v (full (map out))))
+
+@edge_second = (* (ukeep (rest (v (full (map out))))))
+  & @candidate ~ (ukeep (rest (v (full (map out)))))
+
+@candidate = (c (rest (v (full (map out)))))
+  & c ~ {ccheck ckeep}
+  & map ~ {mcheck mkeep}
+  & @has ~ (ccheck (mcheck found))
+  & found ~ ?((@candidate_no @candidate_yes) (ckeep (rest (v (full (mkeep out))))))
+
+@candidate_no = (c (rest (v (full (map out)))))
+  & c ~ {cmap cchild}
+  & v ~ {vmap vrest}
+  & vrest ~ {vchild vscan}
+  & full ~ {fchild fscan}
+  & @walk ~ (cchild (fchild (1 ((cmap vmap) map)) childmap))
+  & @scan ~ (rest (vscan (fscan (childmap out))))
+
+@candidate_yes = (* (ckeep (rest (v (full (map out))))))
+  & ckeep ~ *
+  & @scan ~ (rest (v (full (map out))))
+
+@has = ((?((@has_nil @has_cons) (pl (key out))) pl) (key out))
+
+@has_nil = (key out)
+  & key ~ *
+  & out ~ 0
+
+@has_cons = (* (((vertex parent) tail) (key out)))
+  & key ~ {kcmp kkeep}
+  & vertex ~ $([=] $(kcmp z))
+  & z ~ ?((@has_no @has_yes) (kkeep (parent (tail out))))
+
+@has_no = (kkeep (parent (tail out)))
+  & parent ~ *
+  & @has ~ (kkeep (tail out))
+
+@has_yes = (* (kkeep (parent (tail out))))
+  & kkeep ~ *
+  & parent ~ *
+  & tail ~ *
+  & out ~ 1
+
+@build = (i (n (map out)))
+  & i ~ {icmp ikeep}
+  & n ~ {ncmp nkeep}
+  & icmp ~ $([=] $(ncmp z))
+  & z ~ ?((@build_more @build_done) (ikeep (nkeep (map out))))
+
+@build_more = (i (n (map out)))
+  & i ~ {ilook iinc}
+  & map ~ {mlook mrec}
+  & @lookup ~ (ilook (mlook parent))
+  & iinc ~ $([+1] inext)
+  & @build ~ (inext (n (mrec tailout)))
+  & out ~ (1 (parent tailout))
+
+@build_done = (* (ikeep (nkeep (map out))))
+  & ikeep ~ *
+  & nkeep ~ *
+  & map ~ *
+  & out ~ (0 *)
+
+@lookup = ((?((@lk_nil @lk_cons) (pl (key out))) pl) (key out))
+
+@lk_nil = (key out)
+  & key ~ *
+  & out ~ 16777215
+
+@lk_cons = (* (((vertex parent) tail) (key out)))
+  & key ~ {kcmp kkeep}
+  & vertex ~ $([=] $(kcmp z))
+  & z ~ ?((@lk_no @lk_yes) (parent (tail (kkeep out))))
+
+@lk_no = (parent (tail (key out)))
+  & parent ~ *
+  & @lookup ~ (key (tail out))
+
+@lk_yes = (* (parent (tail (key out))))
+  & tail ~ *
+  & key ~ *
+  & out ~ parent

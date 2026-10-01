@@ -1,0 +1,56 @@
+// Input: (k, xs). Process xs while maintaining a descending list of at most k items.
+@prog = ((k xs) out)
+  & @top ~ (xs (k ((0 *) out)))
+
+@top = ((?((@top_nil @top_cons) (payload (k (acc out)))) payload) (k (acc out)))
+
+@top_nil = (* (* (acc out)))
+
+@top_cons = (* ((h t) (k (acc out))))
+  & k ~ {ki kr}
+  & @ins ~ (ki (h (acc newacc)))
+  & @top ~ (t (kr (newacc out)))
+
+// Insert x into acc, retaining at most cap items.
+@ins = (?((@ins_zero @ins_pos) (x (acc out))) (x (acc out)))
+
+@ins_zero = (* (* (0 *)))
+
+@ins_pos = (rem (x (acc out)))
+  & @iscan ~ (acc (rem (x out)))
+
+@iscan = ((?((@ip_nil @ip_cons) (payload (rem (x out)))) payload) (rem (x out)))
+
+@ip_nil = (* (* (x out)))
+  & out ~ (1 (x (0 *)))
+
+@ip_cons = (* ((h t) (rem (x out))))
+  & x ~ {xc xb}
+  & h ~ {hc hb}
+  & xc ~ $([<] $(hc z))
+  & z ~ ?((@ip_ge @ip_lt) (xb (hb (t (rem out)))))
+
+@ip_ge = (* (x (h (t (rem out)))))
+  & h ~ *
+  & @take ~ (rem (t tail))
+  & out ~ (1 (x tail))
+
+@ip_lt = (* (x (h (t (rem out)))))
+  & @ins ~ (rem (x (t newtail)))
+  & out ~ (1 (h newtail))
+
+// Take the first cap items from xs.
+@take = (?((@take_zero @take_pos) (xs out)) (xs out))
+
+@take_zero = (* (0 *))
+
+@take_pos = (rem (xs out))
+  & @take_list ~ (xs (rem out))
+
+@take_list = ((?((@take_nil @take_cons) (payload (rem out))) payload) (rem out))
+
+@take_nil = (* (rem (0 *)))
+
+@take_cons = (* ((h t) (rem out)))
+  & @take ~ (rem (t tail))
+  & out ~ (1 (h tail))

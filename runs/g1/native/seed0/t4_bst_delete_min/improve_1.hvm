@@ -1,0 +1,22 @@
+// Delete the minimum by inspecting each node's left child directly.
+// Once a left child is known to be a Node, recurse on its payload without
+// rechecking that child's tag.
+@prog = (tree out)
+  & @dm ~ (tree out)
+
+@dm = ((?((@dm_leaf @dm_node) (payload out)) payload) out)
+
+@dm_leaf = (* (0 *))
+
+// The root is a Node; discard the switch's decremented tag and inspect it.
+@dm_node = (* @walk)
+
+@walk = (((?((@walk_leaf @walk_node) (lp (value (right out)))) lp) (value right)) out)
+
+// The left child is Leaf, so return the right subtree.
+@walk_leaf = (* (* (r r)))
+
+// The left child is Node: recurse on its payload and rebuild this Node.
+@walk_node = (* (lp (value (right out))))
+  & @walk ~ (lp lres)
+  & out ~ (1 (lres (value right)))

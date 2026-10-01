@@ -1,0 +1,3865 @@
+{
+ "result": {
+  "source": "runs/hero1/samples/test_t07.json",
+  "overall": {
+   "policies": 72,
+   "samples": 360,
+   "passed": 355,
+   "pass1": 0.9861,
+   "ci": [
+    0.9639,
+    1.0
+   ],
+   "text_match": 0.9861,
+   "parsed": 1.0
+  },
+  "heldout_combo": {
+   "policies": 12,
+   "samples": 60,
+   "passed": 58,
+   "pass1": 0.9667,
+   "ci": [
+    0.9,
+    1.0
+   ],
+   "text_match": 0.9667,
+   "parsed": 1.0
+  },
+  "seen_combo": {
+   "policies": 60,
+   "samples": 300,
+   "passed": 297,
+   "pass1": 0.99,
+   "ci": [
+    0.97,
+    1.0
+   ],
+   "text_match": 0.99,
+   "parsed": 1.0
+  },
+  "by_voice": {
+   "chatty": {
+    "policies": 12,
+    "samples": 60,
+    "passed": 58,
+    "pass1": 0.9667,
+    "ci": [
+     0.9,
+     1.0
+    ],
+    "text_match": 0.9667,
+    "parsed": 1.0
+   },
+   "formal": {
+    "policies": 12,
+    "samples": 60,
+    "passed": 60,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "list": {
+    "policies": 12,
+    "samples": 60,
+    "passed": 60,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "negative": {
+    "policies": 12,
+    "samples": 60,
+    "passed": 60,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "terse": {
+    "policies": 12,
+    "samples": 60,
+    "passed": 60,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "wedding": {
+    "policies": 12,
+    "samples": 60,
+    "passed": 57,
+    "pass1": 0.95,
+    "ci": [
+     0.85,
+     1.0
+    ],
+    "text_match": 0.95,
+    "parsed": 1.0
+   }
+  },
+  "by_heldout": {
+   "H1": {
+    "policies": 2,
+    "samples": 10,
+    "passed": 10,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "H2": {
+    "policies": 2,
+    "samples": 10,
+    "passed": 8,
+    "pass1": 0.8,
+    "ci": [
+     0.6,
+     1.0
+    ],
+    "text_match": 0.8,
+    "parsed": 1.0
+   },
+   "H3": {
+    "policies": 2,
+    "samples": 10,
+    "passed": 10,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "H4": {
+    "policies": 2,
+    "samples": 10,
+    "passed": 10,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "H5": {
+    "policies": 2,
+    "samples": 10,
+    "passed": 10,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   },
+   "H6": {
+    "policies": 2,
+    "samples": 10,
+    "passed": 10,
+    "pass1": 1.0,
+    "ci": [
+     1.0,
+     1.0
+    ],
+    "text_match": 1.0,
+    "parsed": 1.0
+   }
+  },
+  "policy_pass": {
+   "cha01": "5/5",
+   "cha02": "5/5",
+   "cha03": "5/5",
+   "cha04": "5/5",
+   "cha05": "5/5",
+   "cha06": "5/5",
+   "cha07": "5/5",
+   "cha08": "5/5",
+   "cha09": "5/5",
+   "cha10": "5/5",
+   "cha11": "5/5",
+   "cha12": "3/5",
+   "for01": "5/5",
+   "for02": "5/5",
+   "for03": "5/5",
+   "for04": "5/5",
+   "for05": "5/5",
+   "for06": "5/5",
+   "for07": "5/5",
+   "for08": "5/5",
+   "for09": "5/5",
+   "for10": "5/5",
+   "for11": "5/5",
+   "for12": "5/5",
+   "lis01": "5/5",
+   "lis02": "5/5",
+   "lis03": "5/5",
+   "lis04": "5/5",
+   "lis05": "5/5",
+   "lis06": "5/5",
+   "lis07": "5/5",
+   "lis08": "5/5",
+   "lis09": "5/5",
+   "lis10": "5/5",
+   "lis11": "5/5",
+   "lis12": "5/5",
+   "neg01": "5/5",
+   "neg02": "5/5",
+   "neg03": "5/5",
+   "neg04": "5/5",
+   "neg05": "5/5",
+   "neg06": "5/5",
+   "neg07": "5/5",
+   "neg08": "5/5",
+   "neg09": "5/5",
+   "neg10": "5/5",
+   "neg11": "5/5",
+   "neg12": "5/5",
+   "ter01": "5/5",
+   "ter02": "5/5",
+   "ter03": "5/5",
+   "ter04": "5/5",
+   "ter05": "5/5",
+   "ter06": "5/5",
+   "ter07": "5/5",
+   "ter08": "5/5",
+   "ter09": "5/5",
+   "ter10": "5/5",
+   "ter11": "5/5",
+   "ter12": "5/5",
+   "wed01": "5/5",
+   "wed02": "5/5",
+   "wed03": "5/5",
+   "wed04": "5/5",
+   "wed05": "5/5",
+   "wed06": "5/5",
+   "wed07": "5/5",
+   "wed08": "5/5",
+   "wed09": "5/5",
+   "wed10": "2/5",
+   "wed11": "5/5",
+   "wed12": "5/5"
+  }
+ },
+ "per": {
+  "ter01": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    }
+   ]
+  },
+  "ter02": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    }
+   ]
+  },
+  "ter03": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    }
+   ]
+  },
+  "ter04": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor ai_lab"
+    }
+   ]
+  },
+  "ter05": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips software_security"
+    }
+   ]
+  },
+  "ter06": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 2"
+    }
+   ]
+  },
+  "ter07": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab"
+    }
+   ]
+  },
+  "ter08": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\norder government"
+    }
+   ]
+  },
+  "ter09": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit big_tech chips 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit big_tech chips 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit big_tech chips 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit big_tech chips 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit big_tech chips 1"
+    }
+   ]
+  },
+  "ter10": {
+   "voice": "terse",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips big_tech ai_lab"
+    }
+   ]
+  },
+  "ter11": {
+   "voice": "terse",
+   "held": "H1",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart investor government\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart investor government\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart investor government\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart investor government\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart investor government\norder government"
+    }
+   ]
+  },
+  "ter12": {
+   "voice": "terse",
+   "held": "H2",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether chips\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether chips\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether chips\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether chips\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether chips\nlimit investor 1"
+    }
+   ]
+  },
+  "for01": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    }
+   ]
+  },
+  "for02": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit software_security 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit software_security 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit software_security 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit software_security 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit software_security 1"
+    }
+   ]
+  },
+  "for03": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab investor"
+    }
+   ]
+  },
+  "for04": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech"
+    }
+   ]
+  },
+  "for05": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    }
+   ]
+  },
+  "for06": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab chips"
+    }
+   ]
+  },
+  "for07": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether investor\norder ai_lab"
+    }
+   ]
+  },
+  "for08": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1"
+    }
+   ]
+  },
+  "for09": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech chips"
+    }
+   ]
+  },
+  "for10": {
+   "voice": "formal",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\norder government investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\norder government investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\norder government investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\norder government investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\norder government investor"
+    }
+   ]
+  },
+  "for11": {
+   "voice": "formal",
+   "held": "H3",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1\napart ai_lab government\norder chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1\napart ai_lab government\norder chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1\napart ai_lab government\norder chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1\napart ai_lab government\norder chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1\napart ai_lab government\norder chips"
+    }
+   ]
+  },
+  "for12": {
+   "voice": "formal",
+   "held": "H4",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\ntogether government\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\ntogether government\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\ntogether government\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\ntogether government\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\ntogether government\norder ai_lab"
+    }
+   ]
+  },
+  "cha01": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company"
+    }
+   ]
+  },
+  "cha02": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab big_tech"
+    }
+   ]
+  },
+  "cha03": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order chips ai_lab"
+    }
+   ]
+  },
+  "cha04": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 1"
+    }
+   ]
+  },
+  "cha05": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether government"
+    }
+   ]
+  },
+  "cha06": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    }
+   ]
+  },
+  "cha07": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\napart chips investor"
+    }
+   ]
+  },
+  "cha08": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor big_tech"
+    }
+   ]
+  },
+  "cha09": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether software_security"
+    }
+   ]
+  },
+  "cha10": {
+   "voice": "chatty",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab chips 1\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab chips 1\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab chips 1\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab chips 1\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab chips 1\norder ai_lab"
+    }
+   ]
+  },
+  "cha11": {
+   "voice": "chatty",
+   "held": "H1",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech investor\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech investor\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech investor\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech investor\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\napart big_tech investor\norder investor"
+    }
+   ]
+  },
+  "cha12": {
+   "voice": "chatty",
+   "held": "H2",
+   "n": 5,
+   "passed": 3,
+   "text_match": 3,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether ai_lab\nlimit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether ai_lab\nlimit government 1"
+    },
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "gold_violations": 99,
+     "why": "assignment differs from reference on real34,syn48_balanced,syn80_gov_heavy,syn120_tech_heavy",
+     "text": "together ai_lab\nlimit government 1"
+    },
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "gold_violations": 99,
+     "why": "assignment differs from reference on real34,syn48_balanced,syn80_gov_heavy,syn120_tech_heavy",
+     "text": "together ai_lab\nlimit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether ai_lab\nlimit government 1"
+    }
+   ]
+  },
+  "neg01": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4"
+    }
+   ]
+  },
+  "neg02": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 1"
+    }
+   ]
+  },
+  "neg03": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\napart ai_lab big_tech"
+    }
+   ]
+  },
+  "neg04": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart chips investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart chips investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart chips investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart chips investor\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart chips investor\norder ai_lab"
+    }
+   ]
+  },
+  "neg05": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit investor 2"
+    }
+   ]
+  },
+  "neg06": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together government"
+    }
+   ]
+  },
+  "neg07": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\nlimit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\nlimit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\nlimit big_tech ai_lab 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\nlimit ai_lab big_tech 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\nlimit ai_lab big_tech 1"
+    }
+   ]
+  },
+  "neg08": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\norder investor chips"
+    }
+   ]
+  },
+  "neg09": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab software_security\napart software_security investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab software_security\napart software_security investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab software_security\napart software_security investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab software_security\napart software_security investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart ai_lab software_security\napart software_security investor"
+    }
+   ]
+  },
+  "neg10": {
+   "voice": "negative",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit chips 2\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit chips 2\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit chips 2\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit chips 2\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit chips 2\napart investor government"
+    }
+   ]
+  },
+  "neg11": {
+   "voice": "negative",
+   "held": "H5",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab\napart big_tech government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab\napart big_tech government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab\napart big_tech government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab\napart big_tech government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together ai_lab\napart big_tech government"
+    }
+   ]
+  },
+  "neg12": {
+   "voice": "negative",
+   "held": "H6",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab chips\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab chips\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab chips\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab chips\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab chips\norder government"
+    }
+   ]
+  },
+  "lis01": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\ntogether company"
+    }
+   ]
+  },
+  "lis02": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 2\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 2\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 2\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 2\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 2\norder investor"
+    }
+   ]
+  },
+  "lis03": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether ai_lab\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether ai_lab\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether ai_lab\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether ai_lab\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether ai_lab\napart big_tech investor"
+    }
+   ]
+  },
+  "lis04": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\napart chips software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company\napart chips software_security"
+    }
+   ]
+  },
+  "lis05": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether investor"
+    }
+   ]
+  },
+  "lis06": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab 1\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab 1\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab 1\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab 1\nlimit investor 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab 1\nlimit investor 1"
+    }
+   ]
+  },
+  "lis07": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order government big_tech ai_lab"
+    }
+   ]
+  },
+  "lis08": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab chips\napart software_security government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab chips\napart software_security government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab chips\napart software_security government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab chips\napart software_security government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart ai_lab chips\napart software_security government"
+    }
+   ]
+  },
+  "lis09": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company\ntogether chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company\ntogether chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company\ntogether chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company\ntogether chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company\ntogether chips"
+    }
+   ]
+  },
+  "lis10": {
+   "voice": "list",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 2\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 2\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 2\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 2\norder ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 2\norder ai_lab"
+    }
+   ]
+  },
+  "lis11": {
+   "voice": "list",
+   "held": "H3",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1\napart ai_lab investor\norder big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1\napart ai_lab investor\norder big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1\napart ai_lab investor\norder big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1\napart ai_lab investor\norder big_tech"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1\napart ai_lab investor\norder big_tech"
+    }
+   ]
+  },
+  "lis12": {
+   "voice": "list",
+   "held": "H4",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether company\ntogether government\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether company\ntogether government\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether company\ntogether government\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether company\ntogether government\norder investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether company\ntogether government\norder investor"
+    }
+   ]
+  },
+  "wed01": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\ntogether company"
+    }
+   ]
+  },
+  "wed02": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "order ai_lab chips"
+    }
+   ]
+  },
+  "wed03": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit government 1"
+    }
+   ]
+  },
+  "wed04": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart big_tech investor"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 3\napart big_tech investor"
+    }
+   ]
+  },
+  "wed05": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together software_security"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together software_security"
+    }
+   ]
+  },
+  "wed06": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together company\nlimit government 2"
+    }
+   ]
+  },
+  "wed07": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart big_tech chips\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart big_tech chips\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart big_tech chips\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart big_tech chips\norder investor ai_lab"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "apart big_tech chips\norder investor ai_lab"
+    }
+   ]
+  },
+  "wed08": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 2\ntogether company"
+    }
+   ]
+  },
+  "wed09": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "limit ai_lab big_tech 1\norder government"
+    }
+   ]
+  },
+  "wed10": {
+   "voice": "wedding",
+   "held": null,
+   "n": 5,
+   "passed": 2,
+   "text_match": 2,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether chips\napart ai_lab chips"
+    },
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "gold_violations": 43,
+     "why": "assignment differs from reference on real34,syn48_balanced,syn80_gov_heavy,syn120_tech_heavy",
+     "text": "together chips\nlimit chips 5\napart ai_lab chips"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 5\ntogether chips\napart ai_lab chips"
+    },
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "gold_violations": 43,
+     "why": "assignment differs from reference on real34,syn48_balanced,syn80_gov_heavy,syn120_tech_heavy",
+     "text": "together chips\nlimit chips 5\napart ai_lab chips"
+    },
+    {
+     "passed": false,
+     "parsed": true,
+     "text_match": false,
+     "gold_violations": 43,
+     "why": "assignment differs from reference on real34,syn48_balanced,syn80_gov_heavy,syn120_tech_heavy",
+     "text": "together chips\nlimit chips 5\napart ai_lab chips"
+    }
+   ]
+  },
+  "wed11": {
+   "voice": "wedding",
+   "held": "H5",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together investor\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together investor\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together investor\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together investor\napart investor government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "together investor\napart investor government"
+    }
+   ]
+  },
+  "wed12": {
+   "voice": "wedding",
+   "held": "H6",
+   "n": 5,
+   "passed": 5,
+   "text_match": 5,
+   "parsed": 5,
+   "samples": [
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government"
+    },
+    {
+     "passed": true,
+     "parsed": true,
+     "text_match": true,
+     "gold_violations": 0,
+     "why": "",
+     "text": "size 4\nlimit investor 1\napart ai_lab big_tech\norder government"
+    }
+   ]
+  }
+ }
+}

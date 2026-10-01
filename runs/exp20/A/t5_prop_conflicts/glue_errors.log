@@ -1,0 +1,52 @@
+--- 05:01:13
+@prog (t5_prop_conflicts) (@prog): 2 value(s) never used:
+    `c_list` (list[num], argument `in0` of @prog (t5_prop_conflicts), made at build.py:148)
+    `attrs_list` (list[(num num num)], argument `in1` of @prog (t5_prop_conflicts), made at build.py:148)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:01:53
+step of stream `wlk` (@wlk_step): 3 value(s) never used:
+    `node` (num, argument `e0` of step of stream `wlk`, made at build.py:24)
+    `key` (num, argument `e1` of step of stream `wlk`, made at build.py:24)
+    `value` (num, argument `e2` of step of stream `wlk`, made at build.py:24)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:02:07
+wrong arity: step of stream `wlk` must return 3 value(s) (L, L_c, h); `step_fn` returned 1.
+--- 05:02:23
+fin of stream `wlk` (@wlk_fin): 1 value(s) never used:
+    `state_trie` (trie[num], argument `h` of fin of stream `wlk`, made at build.py:33)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:02:29
+build.py:49: kind mismatch at branch condition: expected num, got list[num] `c_list` from argument `in0` of @prog (t5_prop_conflicts) (made at build.py:51).
+--- 05:02:47
+wrong arity: step of stream `build_c` is called as f(d, L:depth, h:trie[num], elem:num), i.e. d plus 3 value(s); your function `step_build_c_trie` takes 5 parameter(s) (d, L, c_trie, c_val, node_idx).
+--- 05:03:14
+build.py:42: wire `L` (depth, argument `L` of step of stream `attrs`, made at build.py:42) is used a second time (returned as `L`); it was already used at build.py:32 (update `dinc` (act inc) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:03:32
+build.py:44: wire `c_trie` (trie[num], argument `c` of step of stream `attrs`, made at build.py:44) is used a second time (returned as `c`); it was already used at build.py:27 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:03:56
+build.py:39: wire `L` (depth, argument `L` of step of stream `attrs`, made at build.py:39) is used a second time (returned as `L`); it was already used at build.py:29 (update `dinc` (act inc) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:08:52
+build.py:50: wire `c_trie` (trie[num], argument `c` of step of stream `attrs`, made at build.py:50) is used a second time (returned as `c`); it was already used at build.py:32 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:09:05
+fin of stream `attrs` (@attrs_fin): 1 value(s) never used:
+    `attrs_trie` (trie[num], argument `a` of fin of stream `attrs`, made at build.py:43)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:10:00
+fin of stream `attrs` (@attrs_fin): 1 value(s) never used:
+    `group_count` (trie[num], argument `cnt` of fin of stream `attrs`, made at build.py:53)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:14:35
+build.py:35: port `base` does not exist on reduce `rgt1` (+) (@rgt1); d.call returns o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    out o: num  [exactly once]
+--- 05:25:48
+wrong arity: step of stream `build_c` is called as f(d, L:depth, c:trie[num], elem:num), i.e. d plus 3 value(s); your function `step_build_c` takes 5 parameter(s) (d, L, c_trie, node_idx, cluster_id).
+--- 05:26:05
+step of stream `build_c` (@build_c_step): 1 value(s) never used:
+    `L1` (depth, copy 1 of `L`, made at build.py:32)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:26:18
+build.py:29: wire `L_c` (depth, argument `L_c` of step of stream `cnt`, made at build.py:29) is used a second time (returned as `L_c`); it was already used at build.py:16 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_c, 2)  and use each once.
+--- 05:26:32
+build.py:27: wire `c_trie` (trie[num], argument `c` of step of stream `cnt`, made at build.py:27) is used a second time (returned as `c`); it was already used at build.py:15 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).

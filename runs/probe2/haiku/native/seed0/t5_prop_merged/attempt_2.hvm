@@ -1,0 +1,95 @@
+@prog = (input output)
+  & input ~ ((c attrs) _)
+  & @collect ~ (c (attrs ((0 *) output)))
+
+@collect = (c (attrs (acc out)))
+  & attrs ~ (?((@coll_nil @coll_cons) (c (acc out))) *)
+
+@coll_nil = (c (acc out))
+  & * ~ c
+  & @merge ~ (acc out)
+
+@coll_cons = (* (((n (k v)) tail) (c (acc out))))
+  & @get_idx ~ (n (c (k v) res))
+  & res ~ ((cid acc2 out_next) *)
+  & @insert_sorted ~ ((cid (k v)) (acc acc2))
+  & @collect ~ (c (tail (acc2 out)))
+
+@get_idx = (n (c (k v) result))
+  & n ~ ?((@gi_zero @gi_succ) (c (k v) result))
+
+@gi_zero = (c (k v) result)
+  & c ~ (x xs)
+  & * ~ xs
+  & result ~ (x *)
+
+@gi_succ = (((n_pred result) (c (k v))) *)
+  & @get_idx ~ (n_pred (c (k v) result))
+
+@insert_sorted = ((cid (k v)) (acc out))
+  & acc ~ (?((@ins_nil @ins_cons) ((cid (k v)) out)) *)
+
+@ins_nil = ((cid (k v)) out)
+  & out ~ ((1 ((cid (k v)) (0 *))) *)
+
+@ins_cons = (* (((e et) ((cid (k v)) out)) _))
+  & e ~ ((cid2 (k2 v2)) *)
+  & @lex_cmp ~ (((cid k) (cid2 k2)) cmp)
+  & cmp ~ (?((@ins_lt @ins_merge) ((cid (k v)) (cid2 (k2 v2)) (e et) out)) *)
+
+@ins_lt = ((cid (k v)) (cid2 (k2 v2)) (e et) out)
+  & out ~ ((1 ((e new_tail) *)) *)
+  & @insert_sorted ~ (((cid (k v)) et) new_tail)
+
+@ins_merge = ((cid (k v)) (cid2 (k2 v2)) (e et) out)
+  & cid ~ ((cid3 _) *)
+  & cid2 ~ ((cid4 _) *)
+  & cid3 ~ ?((@merge_yes @merge_no) ((k k2 v v2 (e et) out)) *)
+
+@merge_yes = ((k k2 v v2 (e et) out))
+  & k ~ ((k5 _) *)
+  & k2 ~ ((k6 _) *)
+  & k5 ~ ?((@same_k @diff_k) ((v v2 (e et) out)) *)
+
+@same_k = ((v v2 (e et) out))
+  & @cmp_vals ~ ((v v2) best)
+  & out ~ ((1 ((cid (k best)) new_tail) *)) *)
+  & @insert_sorted ~ ((cid (k best)) et) new_tail)
+
+@diff_k = ((v v2 (e et) out))
+  & out ~ ((1 ((e new_tail) *)) *)
+  & @insert_sorted ~ (((cid (k v)) et) new_tail)
+
+@merge_no = ((k k2 v v2 (e et) out))
+  & out ~ ((1 ((e new_tail) *)) *)
+  & @insert_sorted ~ (((cid (k v)) et) new_tail)
+
+@lex_cmp = (((c1 k1) (c2 k2)) result)
+  & c1 ~ $([=] $(c2 c_eq))
+  & c_eq ~ ?((@cmp_eq @cmp_ne) ((k1 k2) result))
+
+@cmp_eq = ((k1 k2) result)
+  & k1 ~ $([=] $(k2 result))
+
+@cmp_ne = ((k1 k2) result)
+  & result ~ 0
+
+@cmp_vals = ((v1 v2) best)
+  & v1 ~ $([<] $(v2 cmp))
+  & cmp ~ ?((@min_v2 @min_v1) ((v1 v2) best))
+
+@min_v2 = ((v1 v2) best)
+  & best ~ v2
+
+@min_v1 = ((v1 v2) best)
+  & best ~ v1
+
+@merge = (list out)
+  & list ~ (?((@mrg_nil @mrg_cons) out)) *)
+
+@mrg_nil = (out)
+  & out ~ (0 *)
+
+@mrg_cons = (* (((e et) out) _))
+  & @merge ~ (et rest)
+  & out ~ ((1 ((e rest) *)) *)

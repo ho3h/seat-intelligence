@@ -1,0 +1,191 @@
+@prog = ((n edges) out)
+  & n ~ {ni ns}
+  & @init ~ (ni (0 labels))
+  & @edges ~ (edges (labels done))
+  & @scan_nodes ~ (ns (0 (done
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (1 (0
+                    (1 (0
+                      (0 *)
+                    ))
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+      out)))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (rem (i out))
+  & i ~ {ih ic}
+  & ic ~ $([+1] next)
+  & @init ~ (rem (next tail))
+  & out ~ (1 (ih tail))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (labels out))) pl) (labels out))
+
+@edges_nil = (pl (labels out))
+  & pl ~ *
+  & out ~ labels
+
+@edges_cons = (* ((u v) (tail (labels out))))
+  & labels ~ {l1 lrest}
+  & lrest ~ {l2 l3}
+  & @lookup ~ (u (l1 lu))
+  & @lookup ~ (v (l2 lv))
+  & @merge ~ (lu (lv (tail (l3 out))))
+
+@lookup = (idx (list out))
+  & idx ~ ?((@lookup_zero @lookup_more) (list out))
+
+@lookup_zero = (list out)
+  & list ~ (1 (head tail))
+  & tail ~ *
+  & out ~ head
+
+@lookup_more = (rem (list out))
+  & list ~ (1 (head tail))
+  & head ~ *
+  & @lookup ~ (rem (tail out))
+
+@merge = (a (b (tail (labels out))))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([=] $(bc eq))
+  & eq ~ ?((@merge_diff @merge_same) (ar (br (tail (labels out)))))
+
+@merge_diff = (ar (br (tail (labels out))))
+  & @order ~ (ar (br (tail (labels out))))
+
+@merge_same = (* (ar (br (tail (labels out)))))
+  & ar ~ *
+  & br ~ *
+  & @edges ~ (tail (labels out))
+
+@order = (a (b (tail (labels out))))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([<] $(bc flag))
+  & flag ~ ?((@order_false @order_true) (ar (br (tail (labels out)))))
+
+@order_false = (ar (br (tail (labels out))))
+  & @replace ~ (labels (ar (br newlabels)))
+  & @edges ~ (tail (newlabels out))
+
+@order_true = (* (ar (br (tail (labels out)))))
+  & @replace ~ (labels (br (ar newlabels)))
+  & @edges ~ (tail (newlabels out))
+
+@replace = ((?((@replace_nil @replace_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@replace_nil = (pl (old (new out)))
+  & pl ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* ((head tail) (old (new out))))
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & head ~ {hc hv}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@replace_no @replace_yes) (hv (or (nr (nc (tail out))))))
+
+@replace_no = (hv (or (nr (nc (tail out)))))
+  & nc ~ *
+  & @replace ~ (tail (or (nr rest)))
+  & out ~ (1 (hv rest))
+
+@replace_yes = (* (hv (or (nr (nc (tail out))))))
+  & hv ~ *
+  & @replace ~ (tail (or (nr rest)))
+  & out ~ (1 (nc rest))
+
+@scan_nodes = (n (i (labels (hist out))))
+  & n ~ ?((@scan_nil @scan_more) (i (labels (hist out))))
+
+@scan_nil = (i (labels (hist out)))
+  & i ~ *
+  & labels ~ *
+  & out ~ hist
+
+@scan_more = (rem (i (labels (hist out))))
+  & i ~ {ilook irest}
+  & irest ~ {icmp ir2}
+  & ir2 ~ {itarget inext}
+  & labels ~ {ll lx}
+  & lx ~ {lc lr}
+  & @lookup ~ (ilook (ll value))
+  & value ~ $([=] $(icmp eq))
+  & eq ~ ?((@node_notroot @node_root) (rem (itarget (lc (lr (hist out))))))
+
+@node_notroot = (rem (itarget (lc (lr (hist out)))))
+  & itarget ~ *
+  & lc ~ *
+  & @scan_nodes ~ (rem (inext (lr (hist out))))
+
+@node_root = (* (rem (itarget (lc (lr (hist out))))))
+  & @count ~ (lc (itarget (0 size)))
+  & @hinc ~ (size (hist nhist))
+  & @scan_nodes ~ (rem (inext (lr (nhist out))))
+
+@count = ((?((@count_nil @count_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@count_nil = (pl (target (acc out)))
+  & pl ~ *
+  & target ~ *
+  & out ~ acc
+
+@count_cons = (* ((head tail) (target (acc out))))
+  & target ~ {tc tr}
+  & head ~ {hc hh}
+  & hc ~ $([=] $(tc eq))
+  & eq ~ ?((@count_no @count_yes) (hh (tr (acc (tail out)))))
+
+@count_no = (hh (tr (acc (tail out))))
+  & hh ~ *
+  & @count ~ (tail (tr (acc out)))
+
+@count_yes = (* (hh (tr (acc (tail out)))))
+  & hh ~ *
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (tr (acc2 out)))
+
+@hinc = (size (hist out))
+  & size ~ {s1 s2}
+  & s1 ~ $([>] $(7 flag))
+  & flag ~ ?((@hinc_small @hinc_large) (s2 (hist out)))
+
+@hinc_small = (s2 (hist out))
+  & s2 ~ $([-1] idx)
+  & @inc_at ~ (idx (hist out))
+
+@hinc_large = (* (s2 (hist out)))
+  & s2 ~ *
+  & @inc_at ~ (7 (hist out))
+
+@inc_at = (idx (hist out))
+  & idx ~ ?((@inc_zero @inc_more) (hist out))
+
+@inc_zero = (hist out)
+  & hist ~ (1 (head tail))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_more = (rem (hist out))
+  & hist ~ (1 (head tail))
+  & @inc_at ~ (rem (tail sub))
+  & out ~ (1 (head sub))

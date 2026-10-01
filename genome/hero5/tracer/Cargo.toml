@@ -1,0 +1,32 @@
+[package]
+name = "hvm"
+description = "A massively parallel, optimal functional runtime in Rust."
+license = "Apache-2.0"
+version = "2.0.22"
+edition = "2021"
+rust-version = "1.74"
+build = "build.rs"
+repository = "https://github.com/HigherOrderCO/HVM"
+
+[lib]
+name = "hvm"
+path = "src/lib.rs"
+
+[dependencies]
+TSPL = "0.0.13"
+clap = "4.5.2"
+highlight_error = "0.1.1"
+num_cpus = "1.0"
+
+[build-dependencies]
+cc = "1.0"
+num_cpus = "1.0"
+
+[features]
+default = []
+# C and CUDA features are determined during build
+c = []
+cuda = []
+
+[dev-dependencies]
+insta = { version = "1.39.0", features = ["glob"] }

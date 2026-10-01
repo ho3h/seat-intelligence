@@ -1,0 +1,19 @@
+// @prog takes n and starts with index 0.
+@prog = (n out)
+  & @rg ~ ((n 0) out)
+
+// @rg takes (remaining index) and returns the range list.
+@rg = ((n i) out)
+  & n ~ ?((@rg_zero @rg_succ) (i out))
+
+// No elements remain.
+@rg_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+// Emit the current index, increment it, and recurse.
+@rg_succ = (m (i out))
+  & i ~ {v w}
+  & w ~ $([+1] i2)
+  & @rg ~ ((m i2) tail)
+  & out ~ (1 (v tail))

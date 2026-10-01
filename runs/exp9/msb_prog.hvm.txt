@@ -1,0 +1,17 @@
+// shared entry for the msbfs programs (t3_eccentricities, t3_wiener_index, t3_girth): (n, edges) -> @msb_out ~ (Sf (cand (n (L out))))
+@prog = ((n es) out)
+  & n ~ ?((@mp_zero @mp_pos) (es out))
+@mp_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & b ~ {b1 b2}
+  & @lg ~ (b1 L)
+  & b2 ~ $([>>] $(4 bw))
+  & @lg ~ (bw W)
+  & L ~ {L1 {L2 {L3 {L4 L5}}}}
+  & W ~ {W1 W2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @zs0 ~ (L3 (W1 (0 (S0 T0))))
+  & @ml ~ ((G (S0 (T0 (L4 (W2 0))))) (Sf cand))
+  & @msb_out ~ (Sf (cand (n (L5 out))))

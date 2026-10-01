@@ -1,0 +1,108 @@
+// Count SCCs by processing vertices in order. For each unmarked vertex,
+// intersect its forward and reverse reachability sets and mark that component.
+@prog = ((n edges) out)
+  & n ~ {nr nt}
+  & @sc ~ (nr (0 (nt (edges ((0 *) (0 out)))))
+
+@sc = (?((@sc_done @sc_step) (idx (total (edges (marked (count out)))))) (idx (total (edges (marked (count out))))))
+
+@sc_done = (* (* (* (* (count count)))))
+
+@sc_step = (k (idx (total (edges (marked (count out))))))
+  & idx ~ {i_mem i_keep}
+  & marked ~ {m_mem m_keep}
+  & @mem ~ (i_mem (m_mem found))
+  & found ~ ?((@sc_new @sc_existing) (k (i_keep (total (edges (m_keep (count out))))))
+
+@sc_existing = (* (k (idx (total (edges (marked (count out)))))))
+  & idx ~ $([+1] i2)
+  & @sc ~ (k (i2 (total (edges (marked (count out))))))
+
+@sc_new = (* (k (idx (total (edges (marked (count out)))))))
+  & edges ~ {e_outer {e_fwd e_rev}}
+  & idx ~ {i_outer {i_fwd i_rev}}
+  & total ~ {t_outer {t_fwd t_rev}}
+  & marked ~ {m_outer m_mark}
+  & @reach ~ (t_fwd (e_fwd (i_fwd (0 fset))))
+  & @reach ~ (t_rev (e_rev (i_rev (1 rset))))
+  & @mark ~ (fset (rset (m_mark newmark)))
+  & i_outer ~ $([+1] i2)
+  & count ~ $([+1] c2)
+  & @sc ~ (k (i2 (t_outer (e_outer (newmark (c2 out)))))
+
+// Reachability: perform n full edge scans from the seed set.
+@reach = (?((@reach_done @reach_step) (edges (set (dir out)))) (edges (set (dir out))))
+
+@reach_done = (* (set (* set)))
+
+@reach_step = (k (edges (set (dir out))))
+  & edges ~ {e_scan e_next}
+  & dir ~ {d_scan d_next}
+  & @scan ~ (e_scan (set (d_scan s2)))
+  & @reach ~ (k (e_next (s2 (d_next out))))
+
+// Scan each directed edge once, adding its target when its source is reachable.
+@scan = ((?((@scan_nil @scan_cons) (p (set (dir out)))) p) (set (dir out)))
+
+@scan_nil = (* (set (* set)))
+
+@scan_cons = (* (((u v) tail) (set (dir out))))
+  & dir ~ ?((@scan_fwd @scan_rev) (u (v (tail (set out))))
+
+@scan_fwd = (u (v (tail (set out))))
+  & @edgecheck ~ (u (v (tail (set (0 out))))
+
+@scan_rev = (* (u (v (tail (set out)))))
+  & @edgecheck ~ (v (u (tail (set (1 out))))
+
+// Check whether src is in set; if so, add dst unless it is already present.
+@edgecheck = (src (dst (tail (set (dir out)))))
+  & set ~ {s_mem s_keep}
+  & @mem ~ (src (s_mem found))
+  & found ~ ?((@edge_no @edge_yes) (s_keep (dst (tail (dir out))))
+
+@edge_no = (s (* (tail (set (dir out)))))
+  & @scan ~ (tail (set (dir out)))
+
+@edge_yes = (* (s (dst (tail (dir out)))))
+  & s ~ {s_mem s_keep}
+  & @mem ~ (dst (s_mem found))
+  & found ~ ?((@edge_add @edge_present) (s_keep (dst (tail (dir out))))
+
+@edge_add = (s (dst (tail (dir out))))
+  & @scan ~ (tail ((1 (dst s)) (dir out)))
+
+@edge_present = (* (s (* (tail (set (dir out))))))
+  & @scan ~ (tail (set (dir out)))
+
+// Mark the intersection of forward and reverse reachability.
+@mark = ((?((@mark_nil @mark_cons) (p (rev (marked out)))) p) (rev (marked out)))
+
+@mark_nil = (* (* (marked marked)))
+
+@mark_cons = (* ((h t) (rev (marked out))))
+  & h ~ {hm hc}
+  & rev ~ {rm rc}
+  & @mem ~ (hm (rm found))
+  & found ~ ?((@mark_skip @mark_add) (hc (t (rc (marked out))))
+
+@mark_skip = (* (t (rev (marked out))))
+  & @mark ~ (t (rev (marked out)))
+
+@mark_add = (* (h (t (rev (marked out)))))
+  & @mark ~ (t (rev ((1 (h marked)) out)))
+
+// List membership; result is 0 or 1.
+@mem = ((?((@mem_nil @mem_cons) (p (x out)))) p) (x out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (x_rec (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (* 1))

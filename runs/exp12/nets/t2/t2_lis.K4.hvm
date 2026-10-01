@@ -1,0 +1,57 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = (lv1 (tails out))
+  & @lis_cons_lw ~ (lv1 (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails (0 out))
+
+@lis_cons = (* ((h t) (tails out)))
+  & @ins ~ (h (tails newtails))
+  & @lis_cons_lw ~ (t (newtails out))
+
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(x1 z))
+  & z ~ ?((@ins_replace @ins_more) (h2 (t (x2 out))))
+
+@ins_replace = (* (t (x out)))
+  & out ~ (1 (x t))
+
+@ins_more = (* (h (t (x out))))
+  & @ins ~ (x (t res))
+  & out ~ (1 (h res))
+
+@len = (lv2 (acc out))
+  & @len_cons_lw ~ (lv2 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) ($([+1] acc2) out)))
+  & @len_cons_lw ~ (t (acc2 out))
+
+@lis_cons_lw = (ls38 (q18 q19))
+  & ls38 ~ (g33 (e29 (g34 (e30 (g35 (e31 (g36 (e32 tk37))))))))
+  & g33 ~ ?((@lis_nil @lis_cons_la) ((e29 (q21 q22)) (q18 q19)))
+  & g34 ~ ?((@lis_nil @lis_cons_la) ((e30 (q24 q25)) (q21 q22)))
+  & g35 ~ ?((@lis_nil @lis_cons_la) ((e31 (q27 q28)) (q24 q25)))
+  & g36 ~ ?((@lis_nil @lis_cons) ((e32 tk37) (q27 q28)))
+
+@len_cons_lw = (ls60 (q40 q41))
+  & ls60 ~ (g55 (e51 (g56 (e52 (g57 (e53 (g58 (e54 tk59))))))))
+  & g55 ~ ?((@len_nil @len_cons_la) ((e51 (q43 q44)) (q40 q41)))
+  & g56 ~ ?((@len_nil @len_cons_la) ((e52 (q46 q47)) (q43 q44)))
+  & g57 ~ ?((@len_nil @len_cons_la) ((e53 (q49 q50)) (q46 q47)))
+  & g58 ~ ?((@len_nil @len_cons) ((e54 tk59) (q49 q50)))
+
+@lis_cons_la = (* ((h (newtails out)) (tails out)))
+  & @ins ~ (h (tails newtails))
+
+@len_cons_la = (* ((* (acc2 out)) ($([+1] acc2) out)))

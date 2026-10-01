@@ -1,0 +1,264 @@
+// Register state: (r0 (r1 (r2 (r3 sentinel))))
+
+@prog = (input out)
+  & @run ~ (input ((0 (0 (0 (0 0)))) out))
+
+@run = (l c)
+  & l ~ (tag payload)
+  & tag ~ ?((@run_nil @run_cons) (payload c))
+
+@run_nil = (payload (regs out))
+  & payload ~ *
+  & @emit ~ (regs out)
+
+@run_cons = (z (payload (regs out)))
+  & z ~ *
+  & payload ~ (instr tail)
+  & @step ~ (instr (regs next))
+  & @run ~ (tail (next out))
+
+@step = (instr (regs out))
+  & instr ~ (op (a b))
+  & @dispatch ~ (op (a (b (regs out))))
+
+@dispatch = (op c)
+  & op ~ ?((@step0 @stepS) c)
+
+@step0 = (a (b (regs out)))
+  & @load ~ (a (b (regs out)))
+
+@stepS = (n c)
+  & n ~ ?((@step1 @stepS2) c)
+
+@stepS2 = (n c)
+  & n ~ ?((@step2 @stepS3) c)
+
+@stepS3 = (n c)
+  & n ~ ?((@step3 @step4) c)
+
+@step1 = (a (b (regs out)))
+  & @binary ~ (1 (a (b (regs out))))
+
+@step2 = (a (b (regs out)))
+  & @binary ~ (2 (a (b (regs out))))
+
+@step3 = (a (b (regs out)))
+  & @binary ~ (3 (a (b (regs out))))
+
+@step4 = (z (a (b (regs out))))
+  & z ~ *
+  & @binary ~ (4 (a (b (regs out))))
+
+@load = (a (val (regs out)))
+  & a ~ ?((@load0 @loadS) (val (regs out)))
+
+@loadS = (n c)
+  & n ~ ?((@load1 @loadS2) c)
+
+@loadS2 = (n c)
+  & n ~ ?((@load2 @load3) c)
+
+@load0 = (val (regs out))
+  & regs ~ (old rest)
+  & old ~ *
+  & out ~ (val rest)
+
+@load1 = (val (regs out))
+  & regs ~ (r0 (old rest))
+  & old ~ *
+  & out ~ (r0 (val rest))
+
+@load2 = (val (regs out))
+  & regs ~ (r0 (r1 (old rest)))
+  & old ~ *
+  & out ~ (r0 (r1 (val rest)))
+
+@load3 = (z (val (regs out)))
+  & z ~ *
+  & regs ~ (r0 (r1 (r2 (old sentinel))))
+  & old ~ *
+  & out ~ (r0 (r1 (r2 (val sentinel))))
+
+// Select the destination register first, then select the source directly
+// from the same register tuple. Only the source number is duplicated.
+@binary = (op (a (b (regs out))))
+  & @target ~ (a (op (b (regs out))))
+
+@target = (a c)
+  & a ~ ?((@target0 @targetS) c)
+
+@targetS = (n c)
+  & n ~ ?((@target1 @targetS2) c)
+
+@targetS2 = (n c)
+  & n ~ ?((@target2 @target3) c)
+
+@target0 = (op (b (regs out)))
+  & b ~ ?((@a0b0 @a0s1) (op (regs out)))
+
+@a0s1 = (n c)
+  & n ~ ?((@a0b1 @a0s2) c)
+
+@a0s2 = (n c)
+  & n ~ ?((@a0b2 @a0b3) c)
+
+@a0b0 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & x ~ {lhs rhs}
+  & @calc ~ (op (lhs (rhs val)))
+  & out ~ (val (y (z (w s))))
+
+@a0b1 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & y ~ {keep rhs}
+  & @calc ~ (op (x (rhs val)))
+  & out ~ (val (keep (z (w s))))
+
+@a0b2 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & z ~ {keep rhs}
+  & @calc ~ (op (x (rhs val)))
+  & out ~ (val (y (keep (w s))))
+
+@a0b3 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & w ~ {keep rhs}
+  & @calc ~ (op (x (rhs val)))
+  & out ~ (val (y (z (keep s))))
+
+@target1 = (op (b (regs out)))
+  & b ~ ?((@a1b0 @a1s1) (op (regs out)))
+
+@a1s1 = (n c)
+  & n ~ ?((@a1b1 @a1s2) c)
+
+@a1s2 = (n c)
+  & n ~ ?((@a1b2 @a1b3) c)
+
+@a1b0 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & x ~ {keep rhs}
+  & @calc ~ (op (y (rhs val)))
+  & out ~ (keep (val (z (w s))))
+
+@a1b1 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & y ~ {lhs rhs}
+  & @calc ~ (op (lhs (rhs val)))
+  & out ~ (x (val (z (w s))))
+
+@a1b2 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & z ~ {keep rhs}
+  & @calc ~ (op (y (rhs val)))
+  & out ~ (x (val (keep (w s))))
+
+@a1b3 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & w ~ {keep rhs}
+  & @calc ~ (op (y (rhs val)))
+  & out ~ (x (val (z (keep s))))
+
+@target2 = (op (b (regs out)))
+  & b ~ ?((@a2b0 @a2s1) (op (regs out)))
+
+@a2s1 = (n c)
+  & n ~ ?((@a2b1 @a2s2) c)
+
+@a2s2 = (n c)
+  & n ~ ?((@a2b2 @a2b3) c)
+
+@a2b0 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & x ~ {keep rhs}
+  & @calc ~ (op (z (rhs val)))
+  & out ~ (keep (y (val (w s))))
+
+@a2b1 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & y ~ {keep rhs}
+  & @calc ~ (op (z (rhs val)))
+  & out ~ (x (keep (val (w s))))
+
+@a2b2 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & z ~ {lhs rhs}
+  & @calc ~ (op (lhs (rhs val)))
+  & out ~ (x (y (val (w s))))
+
+@a2b3 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & w ~ {keep rhs}
+  & @calc ~ (op (z (rhs val)))
+  & out ~ (x (y (val (keep s))))
+
+@target3 = (z (op (b (regs out))))
+  & z ~ *
+  & b ~ ?((@a3b0 @a3s1) (op (regs out)))
+
+@a3s1 = (n c)
+  & n ~ ?((@a3b1 @a3s2) c)
+
+@a3s2 = (n c)
+  & n ~ ?((@a3b2 @a3b3) c)
+
+@a3b0 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & x ~ {keep rhs}
+  & @calc ~ (op (w (rhs val)))
+  & out ~ (keep (y (z (val s))))
+
+@a3b1 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & y ~ {keep rhs}
+  & @calc ~ (op (w (rhs val)))
+  & out ~ (x (keep (z (val s))))
+
+@a3b2 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & z ~ {keep rhs}
+  & @calc ~ (op (w (rhs val)))
+  & out ~ (x (y (keep (val s))))
+
+@a3b3 = (op (regs out))
+  & regs ~ (x (y (z (w s))))
+  & w ~ {lhs rhs}
+  & @calc ~ (op (lhs (rhs val)))
+  & out ~ (x (y (z (val s))))
+
+@calc = (op c)
+  & op ~ ?((@calc_bad @calcS) c)
+
+@calc_bad = (c)
+  & c ~ *
+
+@calcS = (n c)
+  & n ~ ?((@calc_add @calcS2) c)
+
+@calcS2 = (n c)
+  & n ~ ?((@calc_sub @calcS3) c)
+
+@calcS3 = (n c)
+  & n ~ ?((@calc_mul @calc_mov) c)
+
+@calc_add = (lhs (rhs out))
+  & lhs ~ $([+] $(rhs out))
+
+@calc_sub = (lhs (rhs out))
+  & lhs ~ $([-] $(rhs out))
+
+@calc_mul = (lhs (rhs out))
+  & lhs ~ $([*] $(rhs out))
+
+@calc_mov = (z (lhs (rhs out)))
+  & z ~ *
+  & lhs ~ *
+  & out ~ rhs
+
+@emit = (regs out)
+  & regs ~ (r0 rest1)
+  & rest1 ~ (r1 rest2)
+  & rest2 ~ (r2 rest3)
+  & rest3 ~ (r3 sentinel)
+  & sentinel ~ *
+  & out ~ (1 (r0 (1 (r1 (1 (r2 (1 (r3 (0 *)))))))))

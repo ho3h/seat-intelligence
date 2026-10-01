@@ -1,0 +1,10 @@
+// Mirror a tree recursively. Inline the leaf case to avoid unfolding a helper reference.
+@prog = (input out)
+  & @mirror ~ (input out)
+
+@mirror = ((?(((* (0 *)) @m_node) (p out)) p) out)
+
+@m_node = (* ((l (v r)) out))
+  & @mirror ~ (l ml)
+  & @mirror ~ (r mr)
+  & out ~ (1 (mr (v ml)))

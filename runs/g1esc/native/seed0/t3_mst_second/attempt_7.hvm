@@ -1,0 +1,348 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & @sort_edges ~ (edges (0 *) sorted)
+  & @range_asc ~ (n (0 *) dsu)
+  & @kruskal_loop ~ (sorted dsu 0 (0 *) (0 *) result)
+  & @after_kruskal ~ (result output)
+
+@after_kruskal = (result output)
+  & result ~ (total mst non_mst)
+  & non_mst ~ {non_mst_match non_mst_use}
+  & non_mst_match ~ ?((@ak_no_non @ak_has_non) (total mst non_mst_use output))
+
+@ak_no_non = (ctx)
+  & ctx ~ (total mst non_mst output)
+  & total ~ *
+  & mst ~ *
+  & non_mst ~ *
+  & output ~ 16777215
+
+@ak_has_non = (z ctx)
+  & z ~ *
+  & ctx ~ (total mst non_mst output)
+  & @min_candidate ~ (non_mst mst total 16777215 output)
+
+@min_candidate = (edges mst total best output)
+  & edges ~ (tag payload)
+  & tag ~ ?((@mc_nil @mc_cons) (payload mst total best output))
+
+@mc_nil = (ctx)
+  & ctx ~ (payload mst total best output)
+  & payload ~ *
+  & mst ~ *
+  & total ~ *
+  & output ~ best
+
+@mc_cons = (z ctx)
+  & z ~ *
+  & ctx ~ (payload mst total best output)
+  & payload ~ (edge rest)
+  & @process_candidate ~ (edge rest mst total best output)
+
+@process_candidate = (edge rest mst total best output)
+  & edge ~ (u vw)
+  & vw ~ (v w)
+  & mst ~ {mst_path mst_rec}
+  & total ~ {total_path total_rec}
+  & @path_max ~ (u v mst_path 0 16777215 pm)
+  & @candidate ~ (total_path pm w cand)
+  & @min2 ~ (best cand new_best)
+  & @min_candidate ~ (rest mst_rec total_rec new_best output)
+
+@candidate = (total pm w out)
+  & total ~ $([-] $(pm diff))
+  & diff ~ $([+] $(w out))
+
+@min2 = (a b out)
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@min2_choose_b @min2_choose_a) (a2 b2 out))
+
+@min2_choose_b = (ctx)
+  & ctx ~ (a b out)
+  & a ~ *
+  & out ~ b
+
+@min2_choose_a = (z ctx)
+  & z ~ *
+  & ctx ~ (a b out)
+  & b ~ *
+  & out ~ a
+
+@path_max = (u v edges acc parent out)
+  & u ~ {u_cmp u_ctx}
+  & v ~ {v_cmp v_ctx}
+  & u_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@pm_continue @pm_done) (u_ctx v_ctx edges acc parent out))
+
+@pm_done = (z ctx)
+  & z ~ *
+  & ctx ~ (u v edges acc parent out)
+  & u ~ *
+  & v ~ *
+  & edges ~ *
+  & parent ~ *
+  & out ~ acc
+
+@pm_continue = (ctx)
+  & ctx ~ (u v edges acc parent out)
+  & @path_search ~ (u v edges acc parent out)
+
+@path_search = (u v edges acc parent out)
+  & edges ~ {edges_trav edges_full}
+  & @path_search_iter ~ (u v edges_trav edges_full acc parent out)
+
+@path_search_iter = (u v edges_trav edges_full acc parent out)
+  & edges_trav ~ (tag payload)
+  & tag ~ ?((@ps_nil @ps_cons) (u v payload edges_full acc parent out))
+
+@ps_nil = (ctx)
+  & ctx ~ (u v payload edges_full acc parent out)
+  & u ~ *
+  & v ~ *
+  & payload ~ *
+  & edges_full ~ *
+  & parent ~ *
+  & out ~ acc
+
+@ps_cons = (z ctx)
+  & z ~ *
+  & ctx ~ (u v payload edges_full acc parent out)
+  & payload ~ (edge rest_trav)
+  & @check_edge ~ (u v edge rest_trav edges_full acc parent out)
+
+@check_edge = (u v edge rest_trav edges_full acc parent out)
+  & edge ~ (a bw)
+  & bw ~ (b w)
+  & u ~ {u1 u2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u1 ~ $([=] $(a1 eq_a))
+  & eq_a ~ ?((@ce_try_b @ce_on_a) (u2 v a2 b1 b2 w rest_trav edges_full acc parent out))
+
+@ce_try_b = (ctx)
+  & ctx ~ (u v a b w rest_trav edges_full acc parent out)
+  & u ~ {u3 u4}
+  & b ~ {b3 b4}
+  & u3 ~ $([=] $(b3 eq_b))
+  & eq_b ~ ?((@ce_skip @ce_on_b) (u4 v a b4 w rest_trav edges_full acc parent out))
+
+@ce_on_a = (z ctx)
+  & z ~ *
+  & ctx ~ (u v a b w rest_trav edges_full acc parent out)
+  & a ~ *
+  & @try_neighbor ~ (u v b w rest_trav edges_full acc parent out)
+
+@ce_on_b = (z ctx)
+  & z ~ *
+  & ctx ~ (u v a b w rest_trav edges_full acc parent out)
+  & b ~ *
+  & @try_neighbor ~ (u v a w rest_trav edges_full acc parent out)
+
+@ce_skip = (ctx)
+  & ctx ~ (u v a b w rest_trav edges_full acc parent out)
+  & u ~ {u_erase u_use}
+  & v ~ {v_erase v_use}
+  & u_erase ~ *
+  & v_erase ~ *
+  & a ~ *
+  & b ~ *
+  & w ~ *
+  & @path_search_iter ~ (u_use v_use rest_trav edges_full acc parent out)
+
+@try_neighbor = (u v neighbor w rest_trav edges_full acc parent out)
+  & neighbor ~ {neighbor_cmp neighbor_ctx}
+  & parent ~ {parent_cmp parent_ctx}
+  & neighbor_cmp ~ $([=] $(parent_cmp eq_parent))
+  & eq_parent ~ ?((@tn_skip @tn_go) (u v neighbor_ctx w rest_trav edges_full acc parent_ctx out))
+
+@tn_skip = (ctx)
+  & ctx ~ (u v neighbor w rest_trav edges_full acc parent out)
+  & u ~ {u_erase u_use}
+  & v ~ {v_erase v_use}
+  & u_erase ~ *
+  & v_erase ~ *
+  & neighbor ~ *
+  & w ~ *
+  & @path_search_iter ~ (u_use v_use rest_trav edges_full acc parent out)
+
+@tn_go = (z ctx)
+  & z ~ *
+  & ctx ~ (u v neighbor w rest_trav edges_full acc parent out)
+  & parent ~ *
+  & rest_trav ~ *
+  & @max ~ (acc w new_acc)
+  & @path_max ~ (neighbor v edges_full new_acc u out)
+
+@max = (a b out)
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([>] $(b1 gt))
+  & gt ~ ?((@max_b @max_a) (a2 b2 out))
+
+@max_a = (z ctx)
+  & z ~ *
+  & ctx ~ (a b out)
+  & b ~ *
+  & out ~ a
+
+@max_b = (ctx)
+  & ctx ~ (a b out)
+  & a ~ *
+  & out ~ b
+
+@edge_weight = (edge out)
+  & edge ~ (u vw)
+  & vw ~ (v w)
+  & u ~ *
+  & v ~ *
+  & w ~ out
+
+@sort_edges = (edges acc out)
+  & edges ~ (tag payload)
+  & tag ~ ?((@sort_nil @sort_cons) (payload acc out))
+
+@sort_nil = (ctx)
+  & ctx ~ (payload acc out)
+  & payload ~ *
+  & acc ~ out
+
+@sort_cons = (z ctx)
+  & z ~ *
+  & ctx ~ (payload acc out)
+  & payload ~ (edge rest)
+  & @insert ~ (edge acc new_acc)
+  & @sort_edges ~ (rest new_acc out)
+
+@insert = (edge sorted out)
+  & sorted ~ (tag payload)
+  & tag ~ ?((@ins_nil @ins_cons) (edge payload out))
+
+@ins_nil = (ctx)
+  & ctx ~ (edge payload out)
+  & payload ~ *
+  & out ~ (1 (edge (0 *)))
+
+@ins_cons = (z ctx)
+  & z ~ *
+  & ctx ~ (edge payload out)
+  & payload ~ (head tail)
+  & edge ~ {edge_w edge_ctx}
+  & head ~ {head_w head_ctx}
+  & @edge_weight ~ (edge_w ew)
+  & @edge_weight ~ (head_w hw)
+  & ew ~ $([>] $(hw cmp))
+  & cmp ~ ?((@ins_before @ins_after) (edge_ctx head_ctx tail out))
+
+@ins_after = (z ctx)
+  & z ~ *
+  & ctx ~ (edge head tail out)
+  & @insert ~ (edge tail new_tail)
+  & out ~ (1 (head new_tail))
+
+@ins_before = (edge head tail out)
+  & out ~ (1 (edge (1 (head tail))))
+
+@range_asc = (n acc out)
+  & n ~ ?((@range_zero @range_pos) (acc out))
+
+@range_zero = (ctx)
+  & ctx ~ (acc out)
+  & acc ~ out
+
+@range_pos = (z ctx)
+  & ctx ~ (acc out)
+  & z ~ {z_rec z_idx}
+  & @range_asc ~ (z_rec (1 (z_idx acc)) out)
+
+@get_at = (list idx out)
+  & idx ~ ?((@ga_zero @ga_pos) (list out))
+
+@ga_zero = (ctx)
+  & ctx ~ (list out)
+  & list ~ (h t)
+  & h ~ out
+  & t ~ *
+
+@ga_pos = (z ctx)
+  & ctx ~ (list out)
+  & list ~ (h t)
+  & h ~ *
+  & @get_at ~ (t z out)
+
+@set_at = (list idx value out)
+  & idx ~ ?((@sa_zero @sa_pos) (list value out))
+
+@sa_zero = (ctx)
+  & ctx ~ (list value out)
+  & list ~ (h t)
+  & h ~ *
+  & out ~ (1 (value t))
+
+@sa_pos = (z ctx)
+  & ctx ~ (list value out)
+  & list ~ (h t)
+  & @set_at ~ (t z value new_t)
+  & out ~ (1 (h new_t))
+
+@find = (x dsu out)
+  & x ~ {x_get x_cmp}
+  & dsu ~ {dsu_get dsu_ctx}
+  & @get_at ~ (dsu_get x_get parent)
+  & parent ~ {parent_cmp parent_ctx}
+  & x_cmp ~ $([=] $(parent_cmp eq))
+  & eq ~ ?((@find_go @find_stop) (parent_ctx dsu_ctx out))
+
+@find_go = (ctx)
+  & ctx ~ (parent dsu out)
+  & @find ~ (parent dsu out)
+
+@find_stop = (z ctx)
+  & z ~ *
+  & ctx ~ (parent dsu out)
+  & dsu ~ *
+  & out ~ parent
+
+@kruskal_loop = (edges dsu total mst non_mst result)
+  & edges ~ (tag payload)
+  & tag ~ ?((@kr_nil @kr_cons) (payload dsu total mst non_mst result))
+
+@kr_nil = (ctx)
+  & ctx ~ (payload dsu total mst non_mst result)
+  & payload ~ *
+  & dsu ~ *
+  & result ~ (total mst non_mst)
+
+@kr_cons = (z ctx)
+  & z ~ *
+  & ctx ~ (payload dsu total mst non_mst result)
+  & payload ~ (edge rest)
+  & @process_edge ~ (edge rest dsu total mst non_mst result)
+
+@process_edge = (edge rest dsu total mst non_mst result)
+  & edge ~ (u vw)
+  & vw ~ (v w)
+  & dsu ~ {dsu_a dsu_bc}
+  & dsu_bc ~ {dsu_b dsu_rec}
+  & u ~ {u_find u_use}
+  & v ~ {v_find v_use}
+  & @find ~ (u_find dsu_a ru)
+  & @find ~ (v_find dsu_b rv)
+  & ru ~ {ru_cmp ru_use}
+  & rv ~ {rv_cmp rv_use}
+  & ru_cmp ~ $([=] $(rv_cmp same))
+  & same ~ ?((@kr_diff @kr_same) (u_use v_use w rest dsu_rec total mst non_mst result ru_use rv_use))
+
+@kr_same = (z ctx)
+  & z ~ *
+  & ctx ~ (u v w rest dsu_rec total mst non_mst result ru rv)
+  & ru ~ *
+  & rv ~ *
+  & @kruskal_loop ~ (rest dsu_rec total mst (1 ((u (v w)) non_mst)) result)
+
+@kr_diff = (u v w rest dsu_rec total mst non_mst result ru rv)
+  & w ~ {w_add w_edge}
+  & @set_at ~ (dsu_rec rv ru new_dsu)
+  & total ~ $([+] $(w_add new_total))
+  & @kruskal_loop ~ (rest new_dsu new_total (1 ((u (v w_edge)) mst)) non_mst result)

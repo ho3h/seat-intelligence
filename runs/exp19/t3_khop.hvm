@@ -1,0 +1,207 @@
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+@gl_sel1 = (x (* x))
+@gl_sel2 = (* (y y))
+@gl_sel1s = (* (x (* x)))
+@gl_sel2s = (* (* (y y)))
+@sp_zc = (?((16777215 @sp_zc_n) o) o)
+@sp_zc_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @sp_zc ~ (l1 a)
+  & @sp_zc ~ (l2 c)
+@sp_cu = (t (k (L (P o))))
+  & L ~ ?((@sp_cu_leaf @sp_cu_node) (t (k (P o))))
+@sp_cu_leaf = (t (* (P o)))
+  & @sp_cu_act ~ (t (P o))
+@sp_cu_act = (x (c o))
+  & x ~ {x1 x2}
+  & c ~ {c1 c2}
+  & c1 ~ $([<] $(x1 lt))
+  & lt ~ ?((@gl_sel1 @gl_sel2s) (x2 (c2 o)))
+@sp_cu_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@sp_cu_L @sp_cu_R) (t (k2 (l2 (P o)))))
+@sp_cu_L = ((l r) (k (L (P (l2 r)))))
+  & @sp_cu ~ (l (k (L (P l2))))
+@sp_cu_R = (* ((l r) (k (L (P (l r2))))))
+  & @sp_cu ~ (r (k (L (P r2))))
+@sp_act = (b (d (c (d2 (f m)))))
+  & c ~ {c1 {c2 c3}}
+  & d ~ {dA dB}
+  & c1 ~ $([<] $(dA lt))
+  & c2 ~ $([>] $(b gt))
+  & lt ~ $([>] $(gt f0))
+  & f0 ~ {f1 f}
+  & f1 ~ ?((@gl_sel1 @gl_sel2s) (dB (c3 nd)))
+  & nd ~ {d2 m}
+@sp_msg = (m (w r))
+  & m ~ $([+] $(w r))
+@sp_loop = ((g (dt (c E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 *)
+  & @sp_zc ~ (L1 ci)
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @sp_rd ~ (Lr (Eb (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & any ~ ?((@sp_done @sp_again) (g2 (dt2 (co (E3 o)))))
+@sp_done = (* (dt (* (* dt))))
+@sp_again = (* (g (dt (c (E o)))))
+  & @sp_loop ~ ((g (dt (c E))) o)
+@sp_rd = (L (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & L ~ ?((@sp_leaf @sp_node) (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+@sp_node = (lm (E ((g1 gr) ((d1 dr) ((c1 cr) (ci ((h1 hr) ((e1 er) (co any)))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @sp_rd ~ (l1 (Ea (g1 (d1 (c1 (ci (h1 (e1 (cm a1)))))))))
+  & @sp_rd ~ (l2 (Eb (gr (dr (cr (cm (hr (er (co a2)))))))))
+  & a1 ~ $([|] $(a2 any))
+@sp_leaf = (E (g (d (c (ci (g2 (d2 (co any))))))))
+  & E ~ {Ex Ey}
+  & Ey ~ (* X)
+  & @sp_act ~ (X (d (c (d2 (f m)))))
+  & f ~ {any f3}
+  & f3 ~ ?((@sp_quiet @sp_emit) (g (m (ci (g2 (co Ex))))))
+@sp_quiet = (g (* (ci (g (ci *)))))
+@sp_emit = (* (g (nd (ci (g2 (co E))))))
+  & E ~ (L *)
+  & @sp_em ~ (g (nd (ci (g2 (co L)))))
+@sp_em = ((?((@sp_em_nil @sp_em_cons) (q (nd (ci (g2 (co L)))))) q) (nd (ci (g2 (co L)))))
+@sp_em_nil = (* (* (ci ((0 *) (ci *)))))
+@sp_em_cons = (* (((v w) rest) (nd (ci ((1 ((v2 w2) rest2)) (co L))))))
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & nd ~ {n1 n2}
+  & L ~ {La Lb}
+  & @sp_msg ~ (n1 (w1 cand))
+  & @sp_cu ~ (ci (v1 (La (cand cm))))
+  & @sp_em ~ (rest (n2 (cm (rest2 (co Lb)))))
+@gl_inf = (?((16777215 @gl_inf_n) o) o)
+@gl_inf_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @gl_inf ~ (l1 a)
+  & @gl_inf ~ (l2 c)
+@sp_seed = (t (k (L (P o))))
+  & L ~ ?((@sp_seed_leaf @sp_seed_node) (t (k (P o))))
+@sp_seed_leaf = (t (* (P o)))
+  & @sp_seed_act ~ (t (P o))
+@sp_seed_act = (x (c o))
+  & x ~ {x1 x2}
+  & c ~ {c1 c2}
+  & c1 ~ $([<] $(x1 lt))
+  & lt ~ ?((@gl_sel1 @gl_sel2s) (x2 (c2 o)))
+@sp_seed_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@sp_seed_L @sp_seed_R) (t (k2 (l2 (P o)))))
+@sp_seed_L = ((l r) (k (L (P (l2 r)))))
+  & @sp_seed ~ (l (k (L (P l2))))
+@sp_seed_R = (* ((l r) (k (L (P (l r2))))))
+  & @sp_seed ~ (r (k (L (P r2))))
+@sp_sssp = (n (s (L (bud (g o)))))
+  & s ~ {s1 s2}
+  & s1 ~ $([<] $(n inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & i2 ~ ?((16777215 (* 0)) val)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @gl_inf ~ (L1 D0)
+  & @gl_inf ~ (L2 Ci)
+  & @sp_seed ~ (Ci (key (L3 (val C0))))
+  & @sp_loop ~ ((g (D0 (C0 (L4 bud)))) o)
+@gl_zl = (?(((0 *) @gl_zl_n) o) o)
+@gl_zl_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @gl_zl ~ (l1 a)
+  & @gl_zl ~ (l2 c)
+@gl_adj = (t (k (L (P o))))
+  & L ~ ?((@gl_adj_leaf @gl_adj_node) (t (k (P o))))
+@gl_adj_leaf = (t (* (P o)))
+  & @gl_adj_act ~ (t (P o))
+@gl_adj_act = (l (x (1 (x l))))
+@gl_adj_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@gl_adj_L @gl_adj_R) (t (k2 (l2 (P o)))))
+@gl_adj_L = ((l r) (k (L (P (l2 r)))))
+  & @gl_adj ~ (l (k (L (P l2))))
+@gl_adj_R = (* ((l r) (k (L (P (l r2))))))
+  & @gl_adj ~ (r (k (L (P r2))))
+@w_step = ((L g) ((u v) (L3 g3)))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @gl_adj ~ (g (u1 (L1 ((v1 1) g2))))
+  & @gl_adj ~ (g2 (v2 (L2 ((u2 1) g3))))
+@w_fin = ((* g) g)
+@w_blk = (t (S0 o0))
+  & t ~ (T1 (E1 (T2 (E2 (T3 (E3 (T4 (E4 (T5 (E5 (T6 (E6 (T7 (E7 (T8 (E8 (T9 (E9 (T10 (E10 (T11 (E11 (T12 (E12 (T13 (E13 (T14 (E14 (T15 (E15 (T16 (E16 t16))))))))))))))))))))))))))))))))
+  & T1 ~ ?((@w_nil @w_cons) (S0 (o0 (E1 (S1 o1)))))
+  & T2 ~ ?((@w_nil @w_cons) (S1 (o1 (E2 (S2 o2)))))
+  & T3 ~ ?((@w_nil @w_cons) (S2 (o2 (E3 (S3 o3)))))
+  & T4 ~ ?((@w_nil @w_cons) (S3 (o3 (E4 (S4 o4)))))
+  & T5 ~ ?((@w_nil @w_cons) (S4 (o4 (E5 (S5 o5)))))
+  & T6 ~ ?((@w_nil @w_cons) (S5 (o5 (E6 (S6 o6)))))
+  & T7 ~ ?((@w_nil @w_cons) (S6 (o6 (E7 (S7 o7)))))
+  & T8 ~ ?((@w_nil @w_cons) (S7 (o7 (E8 (S8 o8)))))
+  & T9 ~ ?((@w_nil @w_cons) (S8 (o8 (E9 (S9 o9)))))
+  & T10 ~ ?((@w_nil @w_cons) (S9 (o9 (E10 (S10 o10)))))
+  & T11 ~ ?((@w_nil @w_cons) (S10 (o10 (E11 (S11 o11)))))
+  & T12 ~ ?((@w_nil @w_cons) (S11 (o11 (E12 (S12 o12)))))
+  & T13 ~ ?((@w_nil @w_cons) (S12 (o12 (E13 (S13 o13)))))
+  & T14 ~ ?((@w_nil @w_cons) (S13 (o13 (E14 (S14 o14)))))
+  & T15 ~ ?((@w_nil @w_cons) (S14 (o14 (E15 (S15 o15)))))
+  & T16 ~ ?((@w_nil @w_last) (S15 (o15 (E16 t16))))
+@w_nil = (S (o *))
+  & @w_fin ~ (S o)
+@w_cons = (* (S (o (E (S2 o)))))
+  & @w_step ~ (S (E S2))
+@w_last = (* (S (o (E t))))
+  & @w_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+@kc = (t (L (base (E o))))
+  & L ~ ?((@kc_leaf @kc_node) (t (base (E o))))
+@kc_leaf = (x (i ((n k) o)))
+  & i ~ $([<] $(n a))
+  & x ~ $([>] $(k g))
+  & g ~ $([^] $(1 le))
+  & a ~ $([&] $(le o))
+@kc_node = (lm ((a c) (base (E o))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & E ~ {E1 E2}
+  & @kc ~ (a (l1 (b1 (E1 x))))
+  & @kc ~ (c (l2 (bR (E2 y))))
+  & x ~ $([+] $(y o))
+@prog = ((n (s (k es))) out)
+  & k ~ {ka kb}
+  & ka ~ $([=] $(0 kz))
+  & kz ~ ?((@kh_nz @kh_zero) (n (s (kb (es out)))))
+@kh_zero = (* (* (* (* (* 1)))))
+@kh_nz = (n (s (k (es out))))
+  & k ~ {ka kb}
+  & ka ~ $([=] $(16777215 ki))
+  & ki ~ ?((@kh_go @kh_all) (n (s (kb (es out)))))
+@kh_all = (* (n (* (* (* n)))))
+@kh_go = (n (s (k (es out))))
+  & n ~ {n1 {n2 n3}}
+  & n3 ~ $([-] $(1 nm1))
+  & @lg ~ (nm1 L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & k ~ {k1 k2}
+  & @gl_zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sp_sssp ~ (n1 (s (L3 (k1 (G D)))))
+  & @kc ~ (D (L4 (0 ((n2 k2) out))))

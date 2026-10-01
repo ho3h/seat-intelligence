@@ -1,0 +1,33 @@
+@prog = (tree out)
+  & @td ~ (tree (h d))
+  & h ~ *
+  & d ~ out
+
+@td = ((?((@td_leaf @td_node) (pl out)) pl) out)
+
+@td_leaf = (* (h d))
+  & h ~ 0
+  & d ~ 0
+
+@td_node = (* ((l (v r)) out))
+  & v ~ *
+  & @td ~ (l (lh ld))
+  & @td ~ (r (rh rd))
+  & lh ~ {lh_m lh_s}
+  & rh ~ {rh_m rh_s}
+  & @max ~ (lh_m (rh_m hm))
+  & hm ~ $([+1] h)
+  & lh_s ~ $([+] $(rh_s sum))
+  & @max ~ (ld (rd d1))
+  & @max ~ (d1 (sum d))
+  & out ~ (h d)
+
+@max = (a (b out))
+  & a ~ {ac ax}
+  & b ~ {bc bx}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@max_no @max_yes) (ax (bx out)))
+
+@max_no = (* (x x))
+
+@max_yes = (* (x (* x)))

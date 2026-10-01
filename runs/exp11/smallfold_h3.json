@@ -1,0 +1,67 @@
+{
+ "config": "smallfold_h3",
+ "dsl": "small",
+ "depth": 3,
+ "kind": "fold",
+ "target": "((acc * x) + 1)",
+ "task": {
+  "kind": "fold",
+  "z": 0,
+  "xss": [
+   [
+    2,
+    9,
+    1,
+    4
+   ],
+   [
+    1,
+    7,
+    7,
+    7
+   ],
+   [
+    6,
+    3,
+    1,
+    7
+   ]
+  ],
+  "ys": [
+   45,
+   400,
+   36
+  ]
+ },
+ "n_candidates": 2703,
+ "sup_itrs": 177892,
+ "sup_wall": 0.010498046875,
+ "sup_heap": 365807,
+ "sup_survivors": 8,
+ "sup_survivors_all_verified": true,
+ "sup_err": "",
+ "sup_examples": [
+  "(1 + (acc * x))",
+  "(1 + (x * acc))",
+  "((acc * x) + 1)",
+  "((x * acc) + 1)",
+  "((acc * x) + (1 * 1))"
+ ],
+ "ind_n": 200,
+ "ind_mean_itrs": 253.78,
+ "ind_compiled_mean_itrs": 52.515,
+ "ind_mean_size": 6.6,
+ "ind_extrap": 685967.34,
+ "ind_compiled_extrap": 141948.045,
+ "gain": 3.856088750477818,
+ "gain_vs_compiled": 0.7979450734153307,
+ "sup_itrs_per_cand": 65.81280059193489,
+ "oe_first_solution": "(1 + (acc * x))",
+ "oe_first_sec": 0.0023469924926757812,
+ "oe_first_vector_evals": 64,
+ "oe_first_classes": 40,
+ "oe_first_fold_checks": 40,
+ "brute_solutions": 8,
+ "brute_sec": 0.014466285705566406,
+ "survivors_match_brute": true
+}

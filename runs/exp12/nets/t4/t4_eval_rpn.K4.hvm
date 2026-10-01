@@ -1,0 +1,64 @@
+@prog = (input out)
+  & @eval ~ (input ((0 *) out))
+
+@eval = (lv1 (stk out))
+  & @eval_cons_lw ~ (lv1 (stk out))
+
+@eval_nil = (* ((1 (value (0 *))) value))
+
+@eval_cons = (* (((z5 val) tail) (stk out)))
+  & z5 ~ ?((@push_hz @operator_hz) (val (xw66 (stk out))))
+  & @eval_cons_lw ~ (tail xw66)
+
+@push = (val (tail (stk out)))
+  & @eval ~ (tail ((1 (val stk)) out))
+
+@operator = (* (op (tail ((1 (b (1 (a rest)))) out))))
+  & op ~ {test keep}
+  & test ~ $([=] $(43 eq))
+  & eq ~ ?((@check_sub @do_add) (keep (a (b (rest (tail out))))))
+
+@check_sub = (keep (a (b (rest (tail out)))))
+  & keep ~ $([=] $(45 check))
+  & check ~ ?((@do_mul @do_sub) (a (b (rest (tail out)))))
+
+@do_add = (* (* (a (b (rest (tail out))))))
+  & a ~ $([+] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@do_sub = (* (a (b (rest (tail out)))))
+  & a ~ $([-] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@do_mul = (a (b (rest (tail out))))
+  & a ~ $([*] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@eval_cons_lw = (ls89 (q69 q70))
+  & ls89 ~ (g84 (e80 (g85 (e81 (g86 (e82 (g87 (e83 tk88))))))))
+  & g84 ~ ?((@eval_nil @eval_cons_la) ((e80 (q72 q73)) (q69 q70)))
+  & g85 ~ ?((@eval_nil @eval_cons_la) ((e81 (q75 q76)) (q72 q73)))
+  & g86 ~ ?((@eval_nil @eval_cons_la) ((e82 (q78 q79)) (q75 q76)))
+  & g87 ~ ?((@eval_nil @eval_cons) ((e83 tk88) (q78 q79)))
+
+@push_hz = (q6 (hw13 (q8 q9)))
+  & hw13 ~ ((1 (q6 q8)) q9)
+
+@do_mul_hz = ($([*] $(q33 q37)) (q33 (q34 (hw41 q36))))
+  & hw41 ~ ((1 (q37 q34)) q36)
+
+@do_sub_hz = (* ($([-] $(q43 q47)) (q43 (q44 (hw51 q46)))))
+  & hw51 ~ ((1 (q47 q44)) q46)
+
+@check_sub_hz = ($([=] $(45 z31)) (q25 (q26 (q27 (hw53 q29)))))
+  & z31 ~ ?((@do_mul_hz @do_sub_hz) (q25 (q26 (q27 (xw52 q29)))))
+  & hw53 ~ xw52
+
+@do_add_hz = (* (* ($([+] $(q55 q59)) (q55 (q56 (hw63 q58))))))
+  & hw63 ~ ((1 (q59 q56)) q58)
+
+@operator_hz = (* ({$([=] $(43 z23)) q21} (hw65 ((1 (q16 (1 (q17 q18)))) q19))))
+  & z23 ~ ?((@check_sub_hz @do_add_hz) (q21 (q17 (q16 (q18 (xw64 q19))))))
+  & hw65 ~ xw64
+
+@eval_cons_la = (* (((?((@push_hz @operator_hz) (val (xw66 (stk out)))) val) xw66) (stk out)))

@@ -1,0 +1,72 @@
+@prog = ((c m) out)
+  & @pairs ~ (m (c (0 out)))
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@pairs_nil = (* (c (acc out)))
+  & c ~ *
+  & out ~ acc
+
+@pairs_cons = (* ((pair tail) (c (acc out))))
+  & pair ~ {pkeep pget}
+  & pget ~ (a b)
+  & c ~ {cnext ctmp}
+  & ctmp ~ {ca cb}
+  & @get ~ (ca (a va))
+  & @get ~ (cb (b vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@pairs_no @pairs_yes) (pkeep (tail (cnext (acc out))))
+
+@pairs_no = (* (p (tail (c (acc out)))))
+  & @pairs ~ (tail (c (acc out)))
+
+@pairs_yes = (* (p (tail (c (acc out)))))
+  & @ins ~ (acc (p newacc))
+  & @pairs ~ (tail (c (newacc out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@idx_zero @idx_succ) (head (tail out)))
+
+@idx_zero = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@idx_succ = (n (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (n out))
+
+@ins = ((?((@ins_nil @ins_cons) (pl (p out))) pl) (p out))
+
+@ins_nil = (* (p out))
+  & out ~ (1 (p (0 *)))
+
+@ins_cons = (* ((q tail) (p out)))
+  & p ~ {pcheck prest}
+  & pcheck ~ (a b)
+  & q ~ {qkeep qcheck}
+  & qcheck ~ (x y)
+  & a ~ {a_lt a_eq}
+  & x ~ {x_lt x_eq}
+  & a_lt ~ $([<] $(x_lt less_first))
+  & a_eq ~ $([=] $(x_eq equal_first))
+  & b ~ {b_lt bdrop}
+  & y ~ {y_lt ydrop}
+  & b_lt ~ $([<] $(y_lt less_second))
+  & bdrop ~ *
+  & ydrop ~ *
+  & equal_first ~ $([&] $(less_second equal_second))
+  & less_first ~ $([|] $(equal_second before))
+  & before ~ ?((@ins_after @ins_before) (prest (qkeep (tail out))))
+
+@ins_after = (p (q (tail out)))
+  & @ins ~ (tail (p sub))
+  & out ~ (1 (q sub))
+
+@ins_before = (* (p (q (tail out))))
+  & out ~ (1 (p (1 (q tail))))

@@ -1,0 +1,65 @@
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+@get_c = (t (k (L o)))
+  & L ~ ?((@get_c_leaf @get_c_node) (t (k o)))
+@get_c_leaf = (x (* x))
+@get_c_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@get_c_L @get_c_R) (t (k2 (l2 o))))
+@get_c_L = ((l *) (k (L o)))
+  & @get_c ~ (l (k (L o)))
+@get_c_R = (* ((* r) (k (L o))))
+  & @get_c ~ (r (k (L o)))
+@count_violations = (t (L (E (acc o))))
+  & L ~ ?((@count_violations_leaf @count_violations_node) (t (E (acc o))))
+@count_violations_leaf = (pair (idx (C (acc o))))
+  & pair ~ (a (b *))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a2 ~ *
+  & b2 ~ *
+  & C ~ {C1 C2}
+  & L ~ {L1 L2}
+  & @get_c ~ (C1 (a1 (L1 ca)))
+  & @get_c ~ (C2 (b1 (L2 cb)))
+  & ca ~ $([=] $(cb eq))
+  & eq ~ ?(((@skip_v @incr_v) acc) o)
+@count_violations_node = (lm ((a c) (E (acc o))))
+  & lm ~ {l1 l2}
+  & E ~ {E1 E2}
+  & @count_violations ~ (a (l1 (E1 (mid o))))
+  & @count_violations ~ (c (l2 (E2 (acc mid))))
+@skip_v = (acc o)
+  & acc ~ o
+@incr_v = (* (acc o))
+  & acc ~ $([+1] acc2)
+  & acc2 ~ o
+@prog = ((c mnl) out)
+  & c ~ ?((@init_n @build_n) (mnl out))
+@init_n = (* (0 *))
+  & mnl ~ (L (out (0 *)))
+@build_n = (* (nm1 (mnl out)))
+  & nm1 ~ {ndum clen}
+  & ndum ~ $([+1] n)
+  & @lg ~ (clen L)
+  & L ~ {L1 {L2 L3}}
+  & @c_to_trie ~ (c (L1 C))
+  & @count_violations ~ (mnl (L2 (C (0 out))))
+@c_to_trie = (l (L (T out)))
+  & l ~ ?(((@c_nil @c_cons) L) out)
+@c_nil = (* out)
+@c_cons = (* (((h t) L) out))
+  & L ~ ?((@c_leaf @c_node) h)
+@c_leaf = (h (T out))
+  & @c_to_trie ~ (t ((0 *) (T out)))
+@c_node = (h (L2 (T out)))
+  & L2 ~ {L1 L2m}
+  & L1 ~ ?((@c_leaf @c_node) h)
+  & @c_to_trie ~ (t (L2m (T out)))

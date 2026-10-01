@@ -1,0 +1,250 @@
+// List indexing and replacement
+@lg = ((?((@lg_nil @lg_cons) (pl (idx out))) pl) (idx out))
+@lg_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+@lg_cons = (* (pl (idx out)))
+  & pl ~ (h tail)
+  & idx ~ ?((@lg_head @lg_next) (h (tail out)))
+@lg_head = (h (tail out))
+  & tail ~ *
+  & out ~ h
+@lg_next = (idx2 (h (tail out)))
+  & h ~ *
+  & @lg ~ (tail (idx2 out))
+
+@ls = ((?((@ls_nil @ls_cons) (pl (idx (val out)))) pl) (idx (val out)))
+@ls_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+@ls_cons = (* (pl (idx (val out))))
+  & pl ~ (h tail)
+  & idx ~ ?((@ls_zero @ls_next) (h (tail (val out))))
+@ls_zero = (h (tail (val out)))
+  & h ~ *
+  & out ~ (1 (val tail))
+@ls_next = (idx2 (h (tail (val out))))
+  & @ls ~ (tail (idx2 (val tail2)))
+  & out ~ (1 (h tail2))
+
+// Zero-filled lists and matrices
+@zl = (?((@zl_zero @zl_succ) out) out)
+@zl_zero = out
+  & out ~ (0 *)
+@zl_succ = (pred out)
+  & @zl ~ (pred out)
+
+@zrows = ((?((@zr_zero @zr_succ) (width out)) width) out)
+@zr_zero = (* (width out))
+  & width ~ *
+  & out ~ (0 *)
+@zr_succ = (pred ({w1 w2} out))
+  & @zl ~ (w1 row)
+  & @zrows ~ (pred (w2 tail))
+  & out ~ (1 (row tail))
+@zmat = ({n1 n2} out)
+  & @zrows ~ (n1 (n2 out))
+
+// Matrix operations
+@mg = (mat (u (v out)))
+  & @lg ~ (mat (u row))
+  & @lg ~ (row (v out))
+
+@ms = ({m1 m2} ({u1 u2} (v (x out))))
+  & @lg ~ (m1 (u1 row))
+  & @ls ~ (row (v (x row2)))
+  & @ls ~ (m2 (u2 (row2 out)))
+
+// Add all input edges to the capacity matrix
+@ef = ((?((@ef_nil @ef_cons) (pl (n (mat out)))) pl) (n (mat out)))
+@ef_nil = (* (n (mat out)))
+  & n ~ *
+  & out ~ mat
+@ef_cons = (* (pl (n (mat out))))
+  & pl ~ (edge tail)
+  & @ef_do ~ (edge (tail (n (mat out))))
+@ef_do = ({u1 u2} ({v1 v2} (w (tail (n ({m1 m2} out))))))
+  & @mg ~ (m1 (u1 (v1 old)))
+  & old ~ $([+] $(w sum))
+  & @ms ~ (m2 (u2 (v2 (sum mat2))))
+  & @ef ~ (tail (n (mat2 out)))
+
+// Visited-vertex membership
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+@mem_cons = (* (pl ({x1 x2} out)))
+  & pl ~ (h tail)
+  & h ~ $([=] $(x1 eq))
+  & eq ~ ?((@mem_next @mem_yes) (tail (x2 out)))
+@mem_next = (tail (x out))
+  & @mem ~ (tail (x out))
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+// Depth-first augmenting-path search
+@dfs = ({u1 u2} ({t1 t2} (n (mat (vis out)))))
+  & u1 ~ $([=] $(t1 eq))
+  & eq ~ ?((@dfs_no @dfs_yes) (u2 (t2 (n (mat (vis out))))))
+@dfs_no = (u (t (n (mat (vis out)))))
+  & @scan ~ (u (0 (t (n (mat (vis out))))))
+@dfs_yes = (* (u (t (n (mat (vis out))))))
+  & t ~ *
+  & n ~ *
+  & mat ~ *
+  & vis ~ *
+  & out ~ (1 (16777215 (1 (u (0 *)))))
+
+@scan = (u ({j1 {j2 j3}} (t ({n1 n2} (mat (vis out))))))
+  & j1 ~ $([<] $(n1 ok))
+  & ok ~ ?((@scan_end @scan_valid) (u (j2 (j3 (t (n2 (mat (vis out))))))))
+@scan_end = (* (u (j (cand (t (n (mat (vis out))))))))
+  & u ~ *
+  & j ~ *
+  & cand ~ *
+  & t ~ *
+  & n ~ *
+  & mat ~ *
+  & vis ~ *
+  & out ~ (0 *)
+@scan_valid = (* (u (j (cand (t (n (mat (vis out))))))))
+  & @scan_try ~ (u (j (cand (t (n (mat (vis out)))))))
+
+@next = (u (j (t (n (mat (vis out))))))
+  & @scan ~ (u ($([+1] j) (t (n (mat (vis out))))))
+
+@scan_try = ({u1 u2} (j ({c1 c2} (t (n ({m1 m2} ({v1 v2} out)))))))
+  & @mg ~ (m1 (u1 (c1 cap)))
+  & cap ~ {cc ck}
+  & cc ~ $([>] $(0 positive))
+  & positive ~ ?((@try_no @try_yes) (u2 (j (c2 (ck (t (n (m2 (v1 (v2 out))))))))))
+
+@try_no = (u (j (cand (cap (t (n (mat (v1 (vis out)))))))))
+  & cand ~ *
+  & cap ~ *
+  & v1 ~ *
+  & @next ~ (u (j (t (n (mat (vis out))))))
+
+@try_yes = (u (j ({cand1 cand2} (cap (t (n (mat (v1 (vis out)))))))))
+  & @mem ~ (v1 (cand1 seen))
+  & seen ~ ?((@try_unvisited @try_seen) (u (j (cand2 (cap (t (n (mat (vis out)))))))))
+
+@try_seen = (* (u (j (cand (cap (t (n (mat (vis out)))))))))
+  & cand ~ *
+  & cap ~ *
+  & @next ~ (u (j (t (n (mat (vis out))))))
+
+@try_unvisited = (u (j ({c1 c2} (cap ({t1 t2} ({n1 n2} ({m1 m2} ({v1 v2} out))))))))
+  & @dfs ~ (c1 (t1 (n1 (m1 ((1 (c2 v1)) child)))))
+  & child ~ (?((@child_none @child_some) (payload (u (j (cap (t2 (n2 (m2 (v2 out))))))))) payload)
+
+@child_none = (* (u (j (cap ({t1 t2} ({n1 n2} ({mat1 mat2} ({vis1 vis2} out))))))))
+  & cap ~ *
+  & t2 ~ *
+  & n2 ~ *
+  & mat2 ~ *
+  & vis2 ~ *
+  & @next ~ (u (j (t1 (n1 (mat1 (vis1 out))))))
+
+@child_some = (* (payload (u (j (cap (t (n (mat (vis out)))))))))
+  & payload ~ (bott path)
+  & j ~ *
+  & t ~ *
+  & n ~ *
+  & mat ~ *
+  & vis ~ *
+  & @minout ~ (u (cap (bott (path out))))
+
+@minout = (u ({c1 c2} ({b1 b2} (path out))))
+  & c1 ~ $([<] $(b1 less))
+  & less ~ ?((@min_b @min_c) (u (c2 (b2 (path out)))))
+@min_b = (u (cap (bott (path out))))
+  & cap ~ *
+  & out ~ (1 (bott (1 (u path))))
+@min_c = (* (u (cap (bott (path out)))))
+  & bott ~ *
+  & out ~ (1 (cap (1 (u path))))
+
+// Update both residual directions for one path edge
+@resup = ({m1 {m2 m3}} ({u1 {u2 {u3 u4}}} ({v1 {v2 {v3 v4}}} ({d1 d2} out))))
+  & @mg ~ (m1 (u1 (v1 fwd)))
+  & @mg ~ (m2 (v2 (u2 back)))
+  & fwd ~ $([-] $(d1 fwd2))
+  & back ~ $([+] $(d2 back2))
+  & @ms ~ (m3 (u3 (v3 (fwd2 m4))))
+  & @ms ~ (m4 (v4 (u4 (back2 out))))
+
+// Apply an augmenting path to the residual matrix
+@aug = (mat ((?((@aug_nil @aug_cons) (pl (mat (d out)))) pl) (d out)))
+@aug_nil = (pl (mat (d out)))
+  & pl ~ *
+  & d ~ *
+  & out ~ mat
+@aug_cons = (* (pl (mat (d out))))
+  & pl ~ (u tail)
+  & @ap ~ (u (tail (mat (d out))))
+
+@ap = (u ((?((@ap_nil @ap_cons) (pl (u (mat (d out))))) pl) (mat (d out))))
+@ap_nil = (pl (u (mat (d out))))
+  & pl ~ *
+  & u ~ *
+  & d ~ *
+  & out ~ mat
+@ap_cons = (* (pl (u (mat ({d1 d2} out)))))
+  & pl ~ ({v1 v2} rest)
+  & @resup ~ (mat (u (v1 (d1 mat2))))
+  & @aug ~ (mat2 ((1 (v2 rest)) (d2 out)))
+
+// Repeatedly augment until no path remains
+@mf = ({n1 n2} ({sdfs {svis s2}} ({tdfs t2} ({m1 m2} (acc out)))))
+  & @dfs ~ (sdfs (tdfs (n1 (m1 (1 (svis (0 *)) opt)))))
+  & opt ~ ((?((@mf_done @mf_some) (payload (n2 (s2 (t2 (m2 (acc out))))))) payload))
+@mf_done = (* (n (s (t (mat (acc out))))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & mat ~ *
+  & out ~ acc
+@mf_some = (* (payload (n (s (t (mat (acc out)))))))
+  & payload ~ ({d1 d2} path)
+  & @aug ~ (mat (path (d1 mat2)))
+  & acc ~ $([+] $(d2 acc2))
+  & @mf ~ (n (s (t (mat2 (acc2 out)))))
+
+// Input validation and program entry point
+@prog = ((n (s (t edges))) out)
+  & @valid ~ (n (s (t (edges out))))
+
+@valid = (n ({s1 s2} ({t1 t2} (edges out))))
+  & s1 ~ $([=] $(t1 eq))
+  & eq ~ ?((@valid_neq @valid_eq) (n (s2 (t2 (edges out)))))
+@valid_eq = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@valid_neq = ({s1 s2} ({n1 n2} (t (edges out))))
+  & s1 ~ $([<] $(n1 ok))
+  & ok ~ ?((@valid_bad @valid_check_t) (n2 (s2 (t (edges out)))))
+
+@valid_check_t = (* ({n1 n2} (s ({t1 t2} (edges out)))))
+  & t1 ~ $([<] $(n1 ok))
+  & ok ~ ?((@valid_bad @valid_run) (n2 (s (t2 (edges out)))))
+
+@valid_bad = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@valid_run = (* ({n1 {n2 n3}} (s (t (edges out)))))
+  & @zmat ~ (n1 mat0)
+  & @ef ~ (edges (n2 (mat0 mat1)))
+  & @mf ~ (n3 (s (t (mat1 out))))

@@ -1,0 +1,33 @@
+// Merge xs and ys, then merge that result with zs.
+@prog = (inp out)
+  & inp ~ (xs (ys zs))
+  & @merge ~ (xs (ys mid))
+  & @merge ~ (mid (zs out))
+
+// Merge a with b, writing the result to out.
+@merge = ((?((@ma_nil @ma_cons) (pa (b out))) pa) (b out))
+
+@ma_nil = (* (x x))
+
+@ma_cons = (* ((h t) (b out)))
+  & @merge_b ~ (b (h (t out)))
+
+// Merge the remaining b with the current head h and tail t from a.
+@merge_b = ((?((@mb_nil @mb_cons) (pb (h (t out)))) pb) (h (t out)))
+
+@mb_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@mb_cons = (* ((j u) (h (t out))))
+  & h ~ {hc hb}
+  & j ~ {jc jb}
+  & hc ~ $([>] $(jc z))
+  & z ~ ?((@mb_take_h @mb_take_j) (hb (t (jb (u out))))
+
+@mb_take_h = (h (t (j (u out))))
+  & out ~ (1 (h q))
+  & @merge ~ (t ((1 (j u)) q))
+
+@mb_take_j = (* (h (t (j (u out)))))
+  & out ~ (1 (j q))
+  & @merge ~ ((1 (h t)) (u q))

@@ -1,0 +1,107 @@
+// List membership: return 1 iff candidate occurs in the list.
+@member = (candidate ((?((@m_nil @m_cons) (pl (candidate out))) pl) out))
+
+@m_nil = (* (* 0))
+
+@m_cons = (* ((head tail) (candidate out)))
+  & candidate ~ {c_eq c_rec}
+  & head ~ {h_eq h_drop}
+  & c_eq ~ $([=] $(h_eq eq))
+  & h_drop ~ *
+  & @member ~ (c_rec (tail rec))
+  & rec ~ $([|] $(eq out))
+
+// Add candidate to seen and next only if it is not already seen.
+@consider = (candidate (seen (next out)))
+  & candidate ~ {cmem ckeep}
+  & seen ~ {smem skeep}
+  & @member ~ (cmem (smem found))
+  & found ~ ?((@consider_add @consider_keep) (ckeep (skeep (next out))))
+
+@consider_add = (candidate (seen (next out)))
+  & candidate ~ {c_seen c_next}
+  & out ~ ((1 (c_seen seen)) (1 (c_next next)))
+
+@consider_keep = (* (candidate (seen (next out))))
+  & candidate ~ *
+  & out ~ (seen next)
+
+// Process an edge: add either endpoint adjacent to the current frontier.
+@edgeproc = (u (v (front (seen (next out)))))
+  & u ~ {u_check u_keep}
+  & v ~ {v_check v_keep}
+  & front ~ {front_u front_v}
+  & @member ~ (u_check (front_u bu))
+  & @member ~ (v_check (front_v bv))
+  & @edgeact ~ (bu (bv (u_keep (v_keep (seen (next out))))))
+
+@edgeact = (?((@edge_u_no @edge_u_yes) (bv (u (v (seen (next out)))))) (bv (u (v (seen (next out))))))
+
+@edge_u_no = (bv (u (v (seen (next out)))))
+  & v ~ *
+  & @edge_vcheck ~ (bv (u (seen (next out))))
+
+@edge_u_yes = (* (bv (u (v (seen (next out))))))
+  & @consider ~ (v (seen (next st)))
+  & st ~ (seen2 next2)
+  & @edge_vcheck ~ (bv (u (seen2 (next2 out))))
+
+@edge_vcheck = (?((@edge_v_no @edge_v_yes) (u (seen (next out)))) (u (seen (next out))))
+
+@edge_v_no = (u (seen (next out)))
+  & u ~ *
+  & out ~ (seen next)
+
+@edge_v_yes = (* (u (seen (next out))))
+  & @consider ~ (u (seen (next out)))
+
+// Scan and rebuild the edge list, accumulating the next frontier.
+@scan = ((?((@scan_nil @scan_cons) (pl (front (seen (next out))))) pl) (front (seen (next out))))
+
+@scan_nil = (* (front (seen (next out))))
+  & front ~ *
+  & out ~ ((0 *) (seen next))
+
+@scan_cons = (* ((u v) (front (seen (next out)))))
+  & u ~ {u_proc u_keep}
+  & v ~ {v_proc v_keep}
+  & front ~ {front_proc front_rec}
+  & @edgeproc ~ (u_proc (v_proc (front_proc (seen (next st))))
+  & st ~ (seen2 next2)
+  & @scan ~ (tail (front_rec (seen2 (next2 rest))))
+  & rest ~ (edges_tail (seen_final next_final))
+  & out ~ ((1 ((u_keep v_keep) edges_tail)) (seen_final next_final))
+
+// Breadth-first search, checking the frontier before expanding it.
+@bfs = (target (edges (front (seen (depth out)))))
+  & target ~ {target_mem target_rec}
+  & front ~ {front_mem front_scan}
+  & @member ~ (target_mem (front_mem found))
+  & found ~ ?((@bfs_more @bfs_hit) (target_rec (edges (front_scan (seen (depth out))))))
+
+@bfs_hit = (* (* (* (* (* (depth out))))))
+  & out ~ depth
+
+@bfs_more = (target (edges (front (seen (depth out)))))
+  & @scan ~ (edges (front (seen ((0 *) st))))
+  & st ~ (edges2 (seen2 next))
+  & @bfs_dispatch ~ (next (target (edges2 (seen2 (depth out))))
+
+// Dispatch on whether the newly discovered frontier is empty.
+@bfs_dispatch = ((?((@bfs_empty @bfs_nonempty) (pl (target (edges (seen (depth out))))) pl) (target (edges (seen (depth out)))))
+
+@bfs_empty = (* (* (* (* (* (* 16777215))))))
+
+@bfs_nonempty = (* (pl (target (edges (seen (depth out))))))
+  & depth ~ $([+1] depth2)
+  & @bfs ~ (target (edges ((1 pl) (seen (depth2 out))))
+
+// Initialize the frontier and visited set with s.
+@prog = ((n (s (t edges))) out)
+  & n ~ *
+  & s ~ {s_front s_seen}
+  & @bfs ~ (t
+      (edges
+        ((1 (s_front (0 *)))
+         ((1 (s_seen (0 *)))
+          (0 out)))))

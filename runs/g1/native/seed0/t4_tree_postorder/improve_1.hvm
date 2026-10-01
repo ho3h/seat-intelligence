@@ -1,0 +1,8 @@
+@prog = (tree out)
+  & @post ~ (tree ((0 *) out))
+
+@post = ((?(((* (x x)) @post_node) (p (s out))) p) (s out))
+
+@post_node = (* ((l (v r)) (s out)))
+  & @post ~ (r ((1 (v s)) mid))
+  & @post ~ (l (mid out))

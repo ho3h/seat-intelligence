@@ -1,0 +1,107 @@
+// Duplicate the edge list: one copy drives the outer traversal, the other is
+// used for closing-edge lookups.
+@prog = ((n edges) out)
+  & n ~ *
+  & {walk full} ~ edges
+  & @outer ~ (walk (full (0 out)))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (full (acc out)))) pl) (full (acc out)))
+
+@outer_nil = (* (* (acc acc)))
+
+@outer_cons = (* ((e tail) (full (acc out))))
+  & {tail_pairs tail_outer} ~ tail
+  & {full_pairs full_outer} ~ full
+  & @pairs ~ (tail_pairs (e (full_pairs (acc pcount))))
+  & @outer ~ (tail_outer (full_outer (pcount out)))
+
+// For each edge, pair it with every later edge.
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (edge (full (acc out))))) pl) (edge (full (acc out))))
+
+@pairs_nil = (* (* (* (acc acc))))
+
+@pairs_cons = (* ((f rest) (edge (full (acc out)))))
+  & {edge_one edge_rec} ~ edge
+  & {full_one full_rec} ~ full
+  & @pair_one ~ ((edge_one f) (full_one (0 one)))
+  & acc ~ $([+] $(one pcount))
+  & @pairs ~ (rest (edge_rec (full_rec (pcount out))))
+
+// Count a triangle only when the two edges share a vertex. Candidate checks
+// are gated by the corresponding endpoint equality before searching the list.
+@pair_one = ((e1 e2) (full out))
+  & e1 ~ (u v)
+  & e2 ~ (x y)
+
+  & {u1 {u2 {u3 {u4 {u5 u6}}}}} ~ u
+  & {v1 {v2 {v3 {v4 {v5 v6}}}}} ~ v
+  & {x1 {x2 {x3 x4}}} ~ x
+  & {y1 {y2 {y3 y4}}} ~ y
+  & {g1 {g2 {g3 g4}}} ~ full
+
+  & @eq ~ ((u1 x1) m1)
+  & @eq ~ ((u2 y1) m2)
+  & @eq ~ ((v1 x2) m3)
+  & @eq ~ ((v2 y2) m4)
+
+  & @cand ~ (m1 (u3 (v3 (y3 (g1 r1)))))
+  & @cand ~ (m2 (u4 (v4 (x3 (g2 r2)))))
+  & @cand ~ (m3 (v5 (u5 (y4 (g3 r3)))))
+  & @cand ~ (m4 (v6 (u6 (x4 (g4 r4)))))
+
+  & r1 ~ $([+] $(r2 s12))
+  & s12 ~ $([+] $(r3 s123))
+  & s123 ~ $([+] $(r4 out))
+
+// Check center < both endpoints and endpoint inequality before searching.
+@cand = (eq (c (a (b (full out)))))
+  & {c1 c2} ~ c
+  & {a1 {a2 a3}} ~ a
+  & {b1 {b2 b3}} ~ b
+  & @lt ~ ((c1 a1) l1)
+  & @lt ~ ((c2 b1) l2)
+  & @ne ~ ((a2 b2) neq)
+  & eq ~ $([*] $(l1 p1))
+  & p1 ~ $([*] $(l2 p2))
+  & p2 ~ $([*] $(neq p))
+  & p ~ ?((@cand_no @cand_yes) (a3 (b3 (full out))))
+
+@cand_no = (* (* (* 0)))
+
+@cand_yes = (a (b (full out)))
+  & @has ~ (full (a (b h)))
+  & h ~ out
+
+// Search the edge list for either orientation of the closing edge.
+@has = ((?((@has_nil @has_cons) (pl (a (b out)))) pl) (a (b out)))
+
+@has_nil = (* (* (* 0)))
+
+@has_cons = (* ((edge tail) (a (b out))))
+  & edge ~ (x y)
+  & {a1 {a2 a_rec}} ~ a
+  & {b1 {b2 b_rec}} ~ b
+  & {x1 x2} ~ x
+  & {y1 y2} ~ y
+  & @eq ~ ((x1 a1) e1)
+  & @eq ~ ((y1 b1) e2)
+  & @eq ~ ((x2 b2) e3)
+  & @eq ~ ((y2 a2) e4)
+  & e1 ~ $([*] $(e2 h1))
+  & e3 ~ $([*] $(e4 h2))
+  & h1 ~ $([|] $(h2 hit))
+  & hit ~ ?((@has_more @has_yes) (tail (a_rec (b_rec out))))
+
+@has_more = (tail (a (b out)))
+  & @has ~ (tail (a (b out)))
+
+@has_yes = (* (* (* 1)))
+
+@eq = ((a b) out)
+  & a ~ $([=] $(b out))
+
+@ne = ((a b) out)
+  & a ~ $([!] $(b out))
+
+@lt = ((a b) out)
+  & a ~ $([<] $(b out))

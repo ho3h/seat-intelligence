@@ -1,0 +1,33 @@
+// @prog = (input output)
+@prog = (l out)
+  & @scan ~ (l (0 (0 out)))
+
+@scan = ((?((@snil @scons) (pl (mx (sc out)))) pl) (mx (sc out)))
+
+@snil = (* (mx (sc out)))
+  & mx ~ *
+  & sc ~ out
+
+@scons = (* ((h t) (mx (sc out))))
+  & h ~ {hc hk}
+  & mx ~ {mc mk}
+  & hc ~ $([>] $(mc z))
+  & z ~ ?((@s_keep @s_greater) (hk (t (mk (sc out)))))
+
+@s_greater = (* (h (t (mx (sc out)))))
+  & sc ~ *
+  & @scan ~ (t (h (mx out)))
+
+@s_keep = (h (t (mx (sc out))))
+  & h ~ {hc hk}
+  & sc ~ {scmp scsave}
+  & hc ~ $([>] $(scmp z))
+  & z ~ ?((@s_ignore @s_second) (hk (t (mx (scsave out)))))
+
+@s_ignore = (h (t (mx (sc out))))
+  & h ~ *
+  & @scan ~ (t (mx (sc out)))
+
+@s_second = (* (h (t (mx (sc out)))))
+  & sc ~ *
+  & @scan ~ (t (mx (h out)))

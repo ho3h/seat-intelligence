@@ -1,0 +1,198 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & n ~ {n_build *}
+  & edges ~ {edges_deg edges_conn}
+  & @build_degrees ~ (0 (n_build (edges_deg ((0 *) degree_list_out))))
+  & @filter_info ~ (degree_list_out ((0 *) ((0 *) info_out)))
+  & @decide ~ (info_out (edges_conn output))
+
+@build_degrees = (i (n (edges (acc out))))
+  & i ~ {i_cmp i_rest}
+  & n ~ {n_cmp n_rec}
+  & edges ~ {edges_cnt edges_rec}
+  & i_rest ~ {i_deg i_next}
+  & i_cmp ~ $([=] $(n_cmp is_done))
+  & is_done ~ ?((@bd_continue @bd_done) (i_deg (i_next (n_rec (edges_cnt (edges_rec (acc out)))))))
+
+@bd_done = (i_deg (i_next (n_rec (edges_cnt (edges_rec (acc out))))))
+  & i_deg ~ *
+  & i_next ~ *
+  & n_rec ~ *
+  & edges_cnt ~ *
+  & edges_rec ~ *
+  & acc ~ out
+
+@bd_continue = (i_deg (i_next (n_rec (edges_cnt (edges_rec (acc out))))))
+  & i_deg ~ {i_deg_c i_deg_v}
+  & i_next ~ $([+1] next_i)
+  & @count_degree ~ (i_deg_c (edges_cnt deg))
+  & @build_degrees ~ (next_i (n_rec (edges_rec (((i_deg_v deg) acc) out))))
+
+@count_degree = (i (edges out))
+  & @count_degree_loop ~ (edges (i (0 out)))
+
+@count_degree_loop = (edges (i (acc out)))
+  & edges ~ {tag payload}
+  & tag ~ ?((@cdl_done @cdl_cons) (payload (i (acc out))))
+
+@cdl_done = (payload (i (acc out)))
+  & payload ~ *
+  & i ~ *
+  & acc ~ out
+
+@cdl_cons = (payload (i (acc out)))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & i ~ {i_u i_rest}
+  & i_rest ~ {i_v i_rec}
+  & @eq ~ (i_u (u b1))
+  & @eq ~ (i_v (v b2))
+  & b1 ~ $([+] $(b2 add))
+  & acc ~ $([+] $(add new_acc))
+  & @count_degree_loop ~ (tail (i_rec (new_acc out)))
+
+@eq = (a (b out))
+  & a ~ {a_cmp a_out}
+  & b ~ {b_cmp b_out}
+  & a_cmp ~ $([=] $(b_cmp same))
+  & same ~ ?((@eq_false @eq_true) (a_out (b_out out)))
+
+@eq_false = (a_out (b_out out))
+  & a_out ~ *
+  & b_out ~ *
+  & out ~ 0
+
+@eq_true = (a_out (b_out out))
+  & a_out ~ *
+  & b_out ~ *
+  & out ~ 1
+
+@filter_info = (lst (active_acc (odd_acc out)))
+  & lst ~ {tag payload}
+  & tag ~ ?((@fi_nil @fi_cons) (payload (active_acc (odd_acc out))))
+
+@fi_nil = (payload (active_acc (odd_acc out)))
+  & payload ~ *
+  & out ~ (active_acc odd_acc)
+
+@fi_cons = (payload (active_acc (odd_acc out)))
+  & payload ~ ((i deg) tail)
+  & deg ~ {deg_pos deg_par}
+  & deg_pos ~ $([>] $(0 is_active))
+  & is_active ~ ?((@fi_skip @fi_active) (i (deg_par (tail (active_acc (odd_acc out))))))
+
+@fi_skip = (i (deg_par (tail (active_acc (odd_acc out)))))
+  & i ~ *
+  & deg_par ~ *
+  & @filter_info ~ (tail (active_acc (odd_acc out)))
+
+@fi_active = (i (deg_par (tail (active_acc (odd_acc out)))))
+  & deg_par ~ $([%] $(2 rem))
+  & rem ~ ?((@fi_even @fi_odd) (i (tail (active_acc (odd_acc out)))))
+
+@fi_even = (i (tail (active_acc (odd_acc out))))
+  & @filter_info ~ (tail ((i active_acc) (odd_acc out)))
+
+@fi_odd = (i (tail (active_acc (odd_acc out))))
+  & i ~ {i_act i_odd}
+  & @filter_info ~ (tail ((i_act active_acc) ((i_odd odd_acc) out)))
+
+@decide = (info (edges output))
+  & info ~ (active odd)
+  & @process_active ~ (active (odd (edges output)))
+
+@process_active = (active (odd (edges output)))
+  & active ~ {tag payload}
+  & tag ~ ?((@active_empty_yes @active_empty_no) (payload (odd (edges output))))
+
+@active_empty_yes = (payload (odd (edges output)))
+  & payload ~ *
+  & odd ~ *
+  & edges ~ *
+  & output ~ 16777215
+
+@active_empty_no = (payload (odd (edges output)))
+  & @process_min ~ (payload (odd (edges output)))
+
+@process_min = (active_list (odd (edges output)))
+  & active_list ~ {tag payload}
+  & tag ~ ?((@min_empty_err @min_first) (payload (odd (edges output))))
+
+@min_first = (payload (odd (edges output)))
+  & payload ~ (h t)
+  & @min_loop ~ (t (h (odd (edges output))))
+
+@min_loop = (lst (min_acc (odd (edges output))))
+  & lst ~ {tag payload}
+  & tag ~ ?((@min_done @min_cons) (payload (min_acc (odd (edges output)))))
+
+@min_done = (payload (min_acc (odd (edges output))))
+  & payload ~ *
+  & @process_odd ~ (min_acc (odd (edges output)))
+
+@min_cons = (payload (min_acc (odd (edges output))))
+  & payload ~ (v t)
+  & @min2 ~ (v (min_acc new_min))
+  & @min_loop ~ (t (new_min (odd (edges output))))
+
+@min2 = (a (b out))
+  & a ~ {aCmp aOut}
+  & b ~ {bCmp bOut}
+  & aCmp ~ $([<] $(bCmp less))
+  & less ~ ?((@min2_b @min2_a) (aOut (bOut out)))
+
+@min2_a = (aOut (bOut out))
+  & bOut ~ *
+  & aOut ~ out
+
+@min2_b = (aOut (bOut out))
+  & aOut ~ *
+  & bOut ~ out
+
+@process_odd = (min_active (odd (edges output)))
+  & @odd_stats ~ (odd (0 (0 (min_active (edges output)))))
+
+@odd_stats = (lst (cnt (min_odd (min_active (edges output)))))
+  & lst ~ {tag payload}
+  & tag ~ ?((@odd_done @odd_cons) (payload (cnt (min_odd (min_active (edges output))))))
+
+@odd_done = (payload (cnt (min_odd (min_active (edges output)))))
+  & payload ~ *
+  & @finalize ~ (cnt (min_odd (min_active (edges output))))
+
+@odd_cons = (payload (cnt (min_odd (min_active (edges output)))))
+  & payload ~ (v t)
+  & cnt ~ $([+1] cnt2)
+  & @min2 ~ (v (min_odd new_min_odd))
+  & @odd_stats ~ (t (cnt2 (new_min_odd (min_active (edges output)))))
+
+@finalize = (cnt (min_odd (min_active (edges output))))
+  & cnt ~ {cnt0 cnt2}
+  & cnt0 ~ $([=] $(0 is0))
+  & is0 ~ ?((@fin_not0 @fin_0) (cnt2 (min_odd (min_active (edges output)))))
+
+@fin_0 = (cnt2 (min_odd (min_active (edges output))))
+  & cnt2 ~ *
+  & min_odd ~ *
+  & @output_min_active ~ (min_active (edges output))
+
+@fin_not0 = (cnt2 (min_odd (min_active (edges output))))
+  & cnt2 ~ $([=] $(2 is2))
+  & is2 ~ ?((@fin_not2 @fin_2) (min_odd (min_active (edges output))))
+
+@fin_2 = (min_odd (min_active (edges output)))
+  & min_active ~ *
+  & edges ~ *
+  & output ~ min_odd
+
+@fin_not2 = (min_odd (min_active (edges output)))
+  & min_odd ~ *
+  & min_active ~ *
+  & edges ~ *
+  & output ~ 16777215
+
+@output_min_active = (min_active (edges output))
+  & edges ~ *
+  & output ~ min_active
+
+@min_empty_err = (* (* (* (* 16777215))))

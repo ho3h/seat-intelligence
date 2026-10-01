@@ -1,0 +1,33 @@
+// Deduplicate a sorted list by recursively deduplicating its tail, then
+// comparing the head with the first element of the deduplicated tail.
+@prog = (input output)
+  & @dd ~ (input output)
+
+@dd = ((?((@dd_nil @dd_cons) (pl out)) pl) out)
+
+@dd_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@dd_cons = (* ((h t) out))
+  & h ~ {hcmp hkeep}
+  & @dd ~ (t res)
+  & res ~ {inspect keep}
+  & inspect ~ (?( (@res_nil @res_cons) (payload (hcmp (hkeep (out keep)))) ) payload)
+
+@res_nil = (payload (hcmp (hkeep (out keep))))
+  & payload ~ *
+  & hcmp ~ *
+  & out ~ (1 (hkeep keep))
+
+@res_cons = (* ((rh rt) (hcmp (hkeep (out keep)))))
+  & hcmp ~ $([=] $(rh eq))
+  & rt ~ *
+  & eq ~ ?((@different @equal) (hkeep (out keep)))
+
+@different = (hkeep (out keep))
+  & out ~ (1 (hkeep keep))
+
+@equal = (* (hkeep (out keep)))
+  & hkeep ~ *
+  & out ~ keep

@@ -1,0 +1,29 @@
+@prog = ((?((@run_nil (* (((?((@step0 (?((@step1 @stepS2) c_q260) c_q260)) (a_i21_q257 (b_i21_q257 (regs_q257 next_q257)))) (a_i21_q257 b_i21_q257)) (?((@run_nil (* (((?((@step0 (?((@step1 (?((@step2 @stepS3) c_q278) c_q278)) c_q273) c_q273)) (a_i21_q266 (b_i21_q266 (regs_q266 next_q266)))) (a_i21_q266 b_i21_q266)) (?((@run_nil @run_cons) (payload_q237_q266 (next_q266 out_q266))) payload_q237_q266)) (regs_q266 out_q266)))) (payload_q237_q257 (next_q257 out_q257))) payload_q237_q257)) (regs_q257 out_q257)))) (payload_q236 ((0 (0 (0 (0 0)))) out))) payload_q236) out)
+
+@run_nil = (* ((r0_i20 (r1_i20 (r2_i20 (r3_i20 *)))) (1 (r0_i20 (1 (r1_i20 (1 (r2_i20 (1 (r3_i20 (0 *)))))))))))
+
+@run_cons = (* (((?((@step0 @stepS) (a_i21 (b_i21 (regs next)))) (a_i21 b_i21)) (?((@run_nil @run_cons) (payload_q237 (next out))) payload_q237)) (regs out)))
+
+@step0 = (?((@set0 @setS) (b (regs out))) (b (regs out)))
+
+@stepS = (?((@step1 @stepS2) c) c)
+
+@stepS2 = (?((@step2 @stepS3) c) c)
+
+@stepS3 = (?((@step3 @step4) c) c)
+
+@step1 = ({?((@get0 @getS) (left_q239 $([+] $(bv_q239 val_q239)))) ?((@set0 @setS) (val_q239 (keep_q239 out)))} (?((@get0 @getS) (right_q239 bv_q239)) ({{left_q239 right_q239} keep_q239} out)))
+
+@step2 = ({?((@get0 @getS) (left_q243 $([-] $(bv_q243 val_q243)))) ?((@set0 @setS) (val_q243 (keep_q243 out)))} (?((@get0 @getS) (right_q243 bv_q243)) ({{left_q243 right_q243} keep_q243} out)))
+
+@step3 = ({?((@get0 @getS) (left_q247 $([*] $(bv_q247 val_q247)))) ?((@set0 @setS) (val_q247 (keep_q247 out)))} (?((@get0 @getS) (right_q247 bv_q247)) ({{left_q247 right_q247} keep_q247} out)))
+
+@step4 = (* (?((@set0 @setS) (val_q251 (keep_q251 out))) (?((@get0 @getS) (source_q251 val_q251)) ({source_q251 keep_q251} out))))
+
+@get0 = ((out *) out)
+
+@getS = (?((@get0 @getS) (rest out)) ((* rest) out))
+
+@set0 = (val ((* rest) (val rest)))
+
+@setS = (?((@set0 @setS) (val (rest tail))) (val ((r0 rest) (r0 tail))))

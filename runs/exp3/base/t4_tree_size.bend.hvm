@@ -1,0 +1,17 @@
+@leaf_count = ((@leaf_count__C1 a) a)
+
+@leaf_count__C0 = (* (a (* (b d))))
+  &!@leaf_count ~ (a $([+] $(c d)))
+  &!@leaf_count ~ (b c)
+
+@leaf_count__C1 = (?((1 @leaf_count__C0) a) a)
+
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* (a (* (b d))))
+  & @prog ~ (a $([+] $(c d)))
+  & @leaf_count ~ (b c)
+
+@prog__C1 = (?((0 @prog__C0) a) a)
+
+

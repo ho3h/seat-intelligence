@@ -1,0 +1,145 @@
+F1_num3a                                      equal    n=400 disagree=  0 lint=ok OK
+F1_num3b                                      equal    n=400 disagree=  0 lint=ok OK
+F1_num3c                                      equal    n=400 disagree=  0 lint=ok OK
+F1_num4                                       equal    n=400 disagree=  0 lint=ok OK
+F1_num4_balanced                              equal    n=400 disagree=  0 lint=ok OK
+F1_pair_fst                                   equal    n=400 disagree=  0 lint=ok OK
+F1_list3                                      equal    n=400 disagree=  0 lint=ok OK
+F1_glue_vs_cmp                                equal    n=400 disagree=  0 lint=ok OK
+F2_id_before                                  equal    n=400 disagree=  0 lint=ok OK
+F2_id_after                                   equal    n=400 disagree=  0 lint=ok OK
+F2_id_middle                                  equal    n=400 disagree=  0 lint=ok OK
+F2_id_after_map                               equal    n=400 disagree=  0 lint=ok OK
+F2_id_in_cmp                                  equal    n=400 disagree=  0 lint=ok OK
+F2_id_cmp_ids                                 equal    n=400 disagree=  0 lint=ok OK
+F2_id_on_component                            equal    n=400 disagree=  0 lint=ok OK
+F2_id_on_fan_branch                           equal    n=400 disagree=  0 lint=ok OK
+F3_dup_literal                                equal    n=400 disagree=  0 lint=ok OK
+F3_dup_of_eraser_dead                         equal    n=400 disagree=  0 lint=ok OK
+F3_dup_erase_one                              equal    n=400 disagree=  0 lint=ok OK
+F3_dup_reassoc                                equal    n=400 disagree=  0 lint=ok OK
+F3_dup_swap_branches                          equal    n=400 disagree=  0 lint=ok OK
+F3_dup_over_pair                              equal    n=400 disagree=  0 lint=ok OK
+F3_dead_code                                  equal    n=400 disagree=  0 lint=ok OK
+F3_dup_output_swap                            equal    n=400 disagree=  0 lint=ok OK
+F4_pair_sa_sb                                 equal    n=400 disagree=  0 lint=ok OK
+F4_triple_123_321                             equal    n=400 disagree=  0 lint=ok OK
+F4_triple_123_213                             equal    n=400 disagree=  0 lint=ok OK
+F4_list_num_sl_sn                             equal    n=400 disagree=  0 lint=ok OK
+F4_redex_order_pair                           equal    n=400 disagree=  0 lint=ok OK
+F4_redex_order_triple                         equal    n=400 disagree=  0 lint=ok OK
+F4_with_identity_stage                        equal    n=400 disagree=  0 lint=ok OK
+F4_num_list_sn_sl                             equal    n=400 disagree=  0 lint=ok OK
+F5_inline_op                                  equal    n=400 disagree=  0 lint=ok OK
+F5_call_inside_branch                         equal    n=400 disagree=  0 lint=ok OK
+F5_inline_dup_helper                          equal    n=400 disagree=  0 lint=ok OK
+F5_two_layer                                  equal    n=400 disagree=  0 lint=ok OK
+F5_unroll_recursion_once                      equal    n=400 disagree=  0 lint=ok OK
+F5_inline_leaf_under_switch                   equal    n=400 disagree=  0 lint=ok OK
+F5_inline_body                                equal    n=400 disagree=  0 lint=ok OK
+F5_inline_const_fn                            equal    n=400 disagree=  0 lint=ok OK
+F6_wrapper2                                   equal    n=400 disagree=  0 lint=ok OK
+F6_wrapper_tuple                              equal    n=400 disagree=  0 lint=ok OK
+F6_twice_inc                                  equal    n=400 disagree=  0 lint=ok OK
+F6_twice_dbl                                  equal    n=400 disagree=  0 lint=ok OK
+F6_pipe2_holes                                equal    n=400 disagree=  0 lint=ok OK
+F6_wrapper_dead_arg                           equal    n=400 disagree=  0 lint=ok OK
+U1_stage1_output_dropped                      unequal  n=400 disagree=400 lint=ok OK
+U1_grouping_off_by_one                        unequal  n=400 disagree=369 lint=ok OK
+U1_triple_rotated                             unequal  n=400 disagree=394 lint=ok OK
+U1_middle_stage_skips                         unequal  n=400 disagree=391 lint=ok OK
+U1_sum_of_pair_vs_double                      unequal  n=400 disagree=381 lint=ok OK
+U1_triple_sum_wrong_pair                      unequal  n=400 disagree=377 lint=ok OK
+U1_stage_on_wrong_component                   unequal  n=400 disagree=399 lint=ok OK
+U1_output_pair_wired_crosswise                unequal  n=400 disagree=395 lint=ok OK
+U2_subp_operands                              unequal  n=400 disagree=370 lint=ok OK
+U2_cmp_order                                  unequal  n=400 disagree=400 lint=ok OK
+U2_swap_vs_id                                 unequal  n=400 disagree=375 lint=ok OK
+U2_filter_branches_swapped                    unequal  n=400 disagree=337 lint=ok OK
+U2_comparison_direction                       unequal  n=400 disagree=338 lint=ok OK
+U2_triple_tail_swapped                        unequal  n=400 disagree=379 lint=ok OK
+U2_output_tuple_order                         unequal  n=400 disagree=328 lint=ok OK
+U2_const_minus_order                          unequal  n=400 disagree=373 lint=ok OK
+U3_drop_inc                                   unequal  n=400 disagree=400 lint=ok OK
+U3_drop_dbl_of_three                          unequal  n=400 disagree=389 lint=ok OK
+U3_drop_map                                   unequal  n=400 disagree=317 lint=ok OK
+U3_drop_pair_stage                            unequal  n=400 disagree=375 lint=ok OK
+U3_double_inc_vs_inc                          unequal  n=400 disagree=400 lint=ok OK
+U3_drop_triple_stage                          unequal  n=400 disagree=376 lint=ok OK
+U3_drop_dec                                   unequal  n=400 disagree=400 lint=ok OK
+U3_drop_add7                                  unequal  n=400 disagree=400 lint=ok OK
+U4_add7_vs_add8                               unequal  n=400 disagree=400 lint=ok OK
+U4_dbl_vs_triple                              unequal  n=400 disagree=371 lint=ok OK
+U4_filter_gt3_vs_gt4                          unequal  n=400 disagree= 69 lint=ok OK
+U4_sum_init_1                                 unequal  n=400 disagree=400 lint=ok OK
+U4_dec_vs_sub2                                unequal  n=400 disagree=400 lint=ok OK
+U4_neg_vs_one_minus                           unequal  n=400 disagree=400 lint=ok OK
+U4_literal_5_vs_6                             unequal  n=400 disagree=400 lint=ok OK
+U4_sq_vs_cube_prefix                          unequal  n=400 disagree=400 lint=ok OK
+U5_addp_vs_subp                               unequal  n=400 disagree=381 lint=ok OK
+U5_mulp_vs_addp                               unequal  n=400 disagree=395 lint=ok OK
+U5_inc_sq_vs_sq_inc                           unequal  n=400 disagree=377 lint=ok OK
+U5_map_inc_vs_map_dbl                         unequal  n=400 disagree=345 lint=ok OK
+U5_sum_vs_len                                 unequal  n=400 disagree=326 lint=ok OK
+U5_map_then_filter_vs_filter                  unequal  n=400 disagree=315 lint=ok OK
+U5_filter_map_vs_map_filter                   unequal  n=400 disagree=109 lint=ok OK
+U5_sl_sn_on_swapped                           unequal  n=400 disagree=368 lint=ok OK
+U5_rare_dec_clamp                             unequal  n=400 disagree= 32 lint=ok OK
+U5_rare_inc_mod1000                           unequal  n=400 disagree=190 lint=ok OK
+U5_rare_sum_first_two                         unequal  n=400 disagree=228 lint=ok OK
+U5_rare_inc_saturating_at_max                 unequal  n=400 disagree= 25 lint=ok OK
+U5_rare_len_vs_len_cap                        unequal  n=400 disagree=102 lint=ok OK
+U5_rare_swap_pair_only_when_lt                unequal  n=400 disagree=200 lint=ok OK
+R1_t1_append                                  equal    n=250 disagree=  0 lint=ok OK
+R2_t1_append                                  equal    n=250 disagree=  0 lint=ok OK
+R1_t1_gcd                                     equal    n=250 disagree=  0 lint=ok OK
+R2_t1_gcd                                     equal    n=250 disagree=  0 lint=ok OK
+R1_t1_range                                   equal    n=240 disagree=  0 lint=ok OK
+R2_t1_range                                   equal    n=240 disagree=  0 lint=ok OK
+R1_t2_histogram                               equal    n=250 disagree=  0 lint=ok OK
+R2_t2_histogram                               equal    n=250 disagree=  0 lint=ok OK
+R1_t2_mode                                    equal    n=250 disagree=  0 lint=ok OK
+R2_t2_mode                                    equal    n=250 disagree=  0 lint=ok OK
+R1_t3_apsp_matrix                             equal    n=250 disagree=  0 lint=ok OK
+R2_t3_apsp_matrix                             equal    n=250 disagree=  0 lint=ok OK
+R1_t3_cycle_rank                              equal    n=250 disagree=  0 lint=ok OK
+R2_t3_cycle_rank                              equal    n=250 disagree=  0 lint=ok OK
+R1_t3_reach_count                             equal    n=250 disagree=  0 lint=ok OK
+R2_t3_reach_count                             equal    n=250 disagree=  0 lint=ok OK
+R1_t4_bst_kth                                 equal    n=250 disagree=  0 lint=ok OK
+R2_t4_bst_kth                                 equal    n=250 disagree=  0 lint=ok OK
+R1_t4_regmachine                              equal    n=250 disagree=  0 lint=ok OK
+R2_t4_regmachine                              equal    n=250 disagree=  0 lint=ok OK
+R1_t4_tree_max_path_sum                       equal    n=250 disagree=  0 lint=ok OK
+R2_t4_tree_max_path_sum                       equal    n=250 disagree=  0 lint=ok OK
+R1_t5_cluster_histogram                       equal    n=250 disagree=  0 lint=ok OK
+R2_t5_cluster_histogram                       equal    n=250 disagree=  0 lint=ok OK
+R1_t5_decide_drop_known                       equal    n=250 disagree=  0 lint=ok OK
+R2_t5_decide_drop_known                       equal    n=250 disagree=  0 lint=ok OK
+R1_t5_prop_conflicts                          equal    n=250 disagree=  0 lint=ok OK
+R2_t5_prop_conflicts                          equal    n=250 disagree=  0 lint=ok OK
+R3_t3_degrees                                 equal    n=250 disagree=  0 lint=ok OK
+R3_t3_cc_largest                              equal    n=250 disagree=  0 lint=ok OK
+R4_list_length_and_copy                       equal    n=250 disagree=  0 lint=ok OK
+R4_list_to_trie_lookup_many                   equal    n=250 disagree=  0 lint=ok OK
+R4_filter_in_order                            equal    n=250 disagree=  0 lint=ok OK
+R4_count_where                                equal    n=250 disagree=  0 lint=ok OK
+R4_take_first                                 equal    n=250 disagree=  0 lint=ok OK
+R4_argmax_first                               equal    n=250 disagree=  0 lint=ok OK
+R4_sort_by                                    equal    n=250 disagree=  0 lint=ok OK
+R4_sort_by_single_key                         equal    n=250 disagree=  0 lint=ok OK
+R4_reduce_by_key_and_select_sorted            equal    n=250 disagree=  0 lint=ok OK
+R4_reduce_by_key_min_argmax_trie              equal    n=250 disagree=  0 lint=ok OK
+R4_count_where_trie                           equal    n=250 disagree=  0 lint=ok OK
+R4_frontier_relax_min                         equal    n=250 disagree=  0 lint=ok OK
+R4_frontier_relax_or                          equal    n=250 disagree=  0 lint=ok OK
+R4_layered_bfs_count_directed                 equal    n=250 disagree=  0 lint=ok OK
+R4_layered_bfs_count_undirected               equal    n=250 disagree=  0 lint=ok OK
+R4_pointer_jump                               equal    n=250 disagree=  0 lint=ok OK
+X1_t1_map_inc                                 equal    n=250 disagree=  0 lint=ok OK
+X1_t1_filter_even                             equal    n=250 disagree=  0 lint=ok OK
+X1_t1_sum                                     equal    n=250 disagree=  0 lint=ok OK
+X1_t1_reverse                                 equal    n=250 disagree=  0 lint=ok OK
+X1_t1_length                                  equal    n=250 disagree=  0 lint=ok OK
+X1_t1_map_double                              equal    n=250 disagree=  0 lint=ok OK
+problems: [] secs 63

@@ -1,0 +1,43 @@
+@List/Nil = ((0 a) a)
+
+@count_items = ((@count_items__C1 a) a)
+
+@count_items__C0 = (* (* (a ($([+0x0000001] b) c))))
+  & @count_items ~ (a (b c))
+
+@count_items__C1 = (?(((a a) @count_items__C0) b) b)
+
+@count_pair__C0 = (b (c ($([+0x0000001] d) (((?((@count_pair__C2 @count_pair__C3) a_q190) a_q190) (b (c (d e)))) e))))
+
+@count_pair__C1 = (* (b ($([+0x0000001] c) (d (((?((@count_pair__C2 @count_pair__C3) a_q194) a_q194) (b (c (d e)))) e)))))
+
+@count_pair__C2 = (* (a (b (a b))))
+
+@count_pair__C3 = (* ($([=] $(a ?((@count_pair__C0 @count_pair__C1) (b (c (d (e f))))))) (e ({a b} (c (d f))))))
+
+@count_pair__C4 = (?((@count_pair__C2 (* ($([=] $(a_q216 ?((@count_pair__C0 @count_pair__C1) (b_q216 (c_q216 (d_q216 (e_q216 f_q216))))))) (e_q216 ({a_q216 b_q216} (c_q216 (d_q216 f_q216))))))) a) a)
+
+@degree_tree__C0 = ((@partition_incidents__C3 (c (d g))) ({e $([+] $(a {c h}))} ({$([-] $(i {?(((* (* (* (a_q172 a_q172)))) @degree_tree__C4_s) (g (h (d_q172 (k l))))) d_q172})) $([:/0x0000002] {{?(((* (* (* (a_q168 a_q168)))) (* (a_q204 (b_q204 ({$([=0x0000001] ?((@degree_tree__C2 @degree_tree__C3) (a_q204 (b_q204 (c_q204 d_q204))))) c_q204} d_q204))))) (d (e (d_q168 (l m))))) d_q168} {a i}})} (k m))))
+
+@degree_tree__C1 = (* ((@count_pair__C4 (b (0 (0 (c d))))) (b (* (e ((1 (c (((1 (d (e c_i9))) c_i9) c_i8))) c_i8))))))
+
+@degree_tree__C2 = (a (b ({$([=0x0000002] ?((@degree_tree__C0 @degree_tree__C1) (a (b (c d))))) c} d)))
+
+@degree_tree__C3 = (* (a (* (* (b_i10 ((1 (b (b_i10 c_i10))) c_i10))))))
+  & @count_items ~ (a (0 b))
+
+@make_incidences__C0 = (* ((a b) ((@make_incidences__C1 d) ((1 (a (((1 (b (d c_i12))) c_i12) c_i11))) c_i11))))
+
+@make_incidences__C1 = (?((@List/Nil @make_incidences__C0) a) a)
+
+@partition_incidents__C0 = (b (a (c (a ((1 (b (c c_i13))) c_i13)))))
+
+@partition_incidents__C1 = (* (a (b (d (((1 (a (b c_i14))) c_i14) d)))))
+
+@partition_incidents__C2 = (* ({$([<] $(c ?((@partition_incidents__C0 @partition_incidents__C1) (d (e (f g)))))) d} ((@partition_incidents__C3 (b (e f))) ({b c} g))))
+
+@partition_incidents__C3 = (?(((* (@List/Nil @List/Nil)) @partition_incidents__C2) a) a)
+
+@prog = (({?(((* (* (* (a_q183 a_q183)))) (* (a_q201 (b_q201 ({$([=0x0000001] ?((@degree_tree__C2 @degree_tree__C3) (a_q201 (b_q201 (c_q201 d_q201))))) c_q201} d_q201))))) (b (0 (d_q183 (@List/Nil d))))) d_q183} ((?((@List/Nil @make_incidences__C0) a_q209) a_q209) b)) d)
+
+@degree_tree__C4_s = (* (a (b ({$([=0x0000001] ?(((a_q207 (b_q207 ({$([=0x0000002] ?((@degree_tree__C0 @degree_tree__C1) (a_q207 (b_q207 (c_q207 d_q207))))) c_q207} d_q207))) @degree_tree__C3) (a (b (c d))))) c} d))))

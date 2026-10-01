@@ -1,0 +1,73 @@
+@prog = ((?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil @build_cons) (i1_q270 tail_q270)) ({ih_q270 $([+1] i1_q270)} (1 (ih_q270 tail_q270))))) (i1_q269 tail_q269)) ({ih_q269 $([+1] i1_q269)} (1 (ih_q269 tail_q269))))) (i1_q268 tail_q268)) ({ih_q268 $([+1] i1_q268)} (1 (ih_q268 tail_q268))))) (i1_q267 tail_q267)) ({ih_q267 $([+1] i1_q267)} (1 (ih_q267 tail_q267))))) (i1_q266 tail_q266)) ({ih_q266 $([+1] i1_q266)} (1 (ih_q266 tail_q266))))) (i1_q265 tail_q265)) ({ih_q265 $([+1] i1_q265)} (1 (ih_q265 tail_q265))))) (i1_q264 tail_q264)) ({ih_q264 $([+1] i1_q264)} (1 (ih_q264 tail_q264))))) (i1_q263 tail_q263)) ({ih_q263 $([+1] i1_q263)} (1 (ih_q263 tail_q263))))) (i1_q262 tail_q262)) ({ih_q262 $([+1] i1_q262)} (1 (ih_q262 tail_q262))))) (i1_q261 tail_q261)) ({ih_q261 $([+1] i1_q261)} (1 (ih_q261 tail_q261))))) (i1_q260 tail_q260)) ({ih_q260 $([+1] i1_q260)} (1 (ih_q260 tail_q260))))) (i1_q259 tail_q259)) ({ih_q259 $([+1] i1_q259)} (1 (ih_q259 tail_q259))))) (i1_q258 tail_q258)) ({ih_q258 $([+1] i1_q258)} (1 (ih_q258 tail_q258))))) (i1_q257 tail_q257)) ({ih_q257 $([+1] i1_q257)} (1 (ih_q257 tail_q257))))) (i1_q256 tail_q256)) ({ih_q256 $([+1] i1_q256)} (1 (ih_q256 tail_q256))))) (i1_q255 tail_q255)) ({ih_q255 $([+1] i1_q255)} (1 (ih_q255 tail_q255))))) (i1_q254 tail_q254)) ({ih_q254 $([+1] i1_q254)} (1 (ih_q254 tail_q254))))) (i1_q253 tail_q253)) ({ih_q253 $([+1] i1_q253)} (1 (ih_q253 tail_q253))))) (i1_q252 tail_q252)) ({ih_q252 $([+1] i1_q252)} (1 (ih_q252 tail_q252))))) (0 labels)) (k (?((@edges_nil @edges_cons) (payload_q235 (labels {(?((@walk_nil @walk_cons) (payload_q237 (master_q236 (k (0 (0 out)))))) payload_q237) master_q236}))) payload_q235))) out)
+
+@build_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@build_cons = (?((@build_nil @build_cons) (i1 tail)) ({ih $([+1] i1)} (1 (ih tail))))
+
+@edges_nil = (* (labels out))
+  & out ~ labels
+
+@edges_cons = (* (((u v) (?((@edges_nil @edges_cons) (payload_q242 (labels2 out))) payload_q242)) ({(?((@get_nil @get_cons) (payload_q239 (u ulabel))) payload_q239) {(?((@get_nil @get_cons) (payload_q240 (v vlabel))) payload_q240) (?((@ra_nil @ra_cons) (payload_q241 (ulabel (vlabel labels2)))) payload_q241)}} out)))
+
+@ra_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@ra_cons = (* ((head tail) (old (new out))))
+  & head ~ {hcmp hkeep}
+  & old ~ {ocmp orest}
+  & new ~ {nhead nrest}
+  & hcmp ~ $([=] $(ocmp flag))
+  & flag ~ ?((((?((@ra_nil @ra_cons) (payload_q243_q272 (old_q272 (newrest_q272 rest_q272)))) payload_q243_q272) (head_q272 (old_q272 (* (newrest_q272 (1 (head_q272 rest_q272))))))) @ra_yes) (tail (hkeep (orest (nhead (nrest out))))))
+
+@ra_yes = (* ((?((@ra_nil @ra_cons) (payload_q244 (old (newrest rest)))) payload_q244) (* (old (newhead (newrest (1 (newhead rest))))))))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_here @get_later) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_later = (rem (* ((?((@get_nil @get_cons) (payload_q245 (rem result))) payload_q245) result)))
+
+@walk_nil = (* (master (k (i (acc out)))))
+  & master ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ acc
+
+@walk_cons = (* ((head tail) (master (k (i (acc out))))))
+  & i ~ {cmpidx nextidx}
+  & cmpidx ~ {cmpfor cmpctx}
+  & nextidx ~ $([+1] inext)
+  & head ~ $([=] $(cmpfor isroot))
+  & isroot ~ ?((@walk_no @walk_yes) (tail (master (k (cmpctx (inext (acc out)))))))
+
+@walk_no = ((?((@walk_nil @walk_cons) (payload_q246 (master (k (next (acc out)))))) payload_q246) (master (k (* (next (acc out))))))
+
+@walk_yes = (* (tail ({(?((@freq_nil @freq_cons) (payload_q247 (cur (0 $([<] $(kf $([=0] ?((@qual_no @qual_yes) (tail (mn (kn (next (acc out))))))))))))) payload_q247) mn} ({kf kn} (cur (next (acc out)))))))
+
+@qual_no = ((?((@walk_nil @walk_cons) (payload_q248 (master (k (next (acc out)))))) payload_q248) (master (k (next (acc out)))))
+
+@qual_yes = (* ((?((@walk_nil @walk_cons) (payload_q249 (master (k (next (acc1 out)))))) payload_q249) (master (k (next ($([+1] acc1) out))))))
+
+@freq_nil = (* (target (cnt out)))
+  & target ~ *
+  & out ~ cnt
+
+@freq_cons = (* ((head tail) (target (cnt out))))
+  & target ~ {tc tr}
+  & head ~ $([=] $(tc flag))
+  & flag ~ ?((@freq_no @freq_yes) (tail (tr (cnt out))))
+
+@freq_no = ((?((@freq_nil @freq_cons) (payload_q250 (target (cnt out)))) payload_q250) (target (cnt out)))
+
+@freq_yes = (* ((?((@freq_nil @freq_cons) (payload_q251 (target (cnt1 out)))) payload_q251) (target ($([+1] cnt1) out))))

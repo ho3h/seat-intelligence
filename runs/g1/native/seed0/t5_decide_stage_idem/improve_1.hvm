@@ -1,0 +1,85 @@
+// Keep only ledger entries with status Staged (0) or Applied (1).
+@prog = ((ledger proposals) out)
+  & @keys ~ (ledger keys)
+  & @filter ~ (proposals (keys ((0 *) out)))
+
+@keys = ((?((@keys_nil @keys_cons) (pl out)) pl) out)
+
+@keys_nil = (* out)
+  & out ~ (0 *)
+
+@keys_cons = (* (((v (t status)) tail) out))
+  & status ~ $([<] $(2 active))
+  & active ~ ?((@keys_inactive @keys_active) (tail (v (t out))))
+
+@keys_inactive = (tail (v (t out)))
+  & v ~ *
+  & t ~ *
+  & @keys ~ (tail out)
+
+@keys_active = (* (tail (v (t out))))
+  & @keys ~ (tail (1 ((v t) out)))
+
+// Filter proposals, using the active ledger keys and prior kept proposals as the seen-list.
+@filter = ((?((@f_nil @f_cons) (pl (seen (acc out)))) pl) (seen (acc out)))
+
+@f_nil = (* (seen (acc out)))
+  & seen ~ *
+  & @rev ~ (acc out)
+
+@f_cons = (* (((v t) rest) (seen (acc out))))
+  & seen ~ {s_chk s_next}
+  & v ~ {vL vA}
+  & t ~ {tL tA}
+  & @hasK ~ (s_chk (vL (tL found)))
+  & found ~ ?((@f_seen_no @f_seen_yes) (rest (s_next (vA (tA (acc out))))))
+
+@f_seen_no = (rest (s_next (vA (tA (acc out)))))
+  & vA ~ {vS vO}
+  & tA ~ {tS tO}
+  & @filter ~ (rest ((1 ((vS tS) s_next)) ((1 ((vO tO) acc)) out)))
+
+@f_seen_yes = (* (rest (s_next (vA (tA (acc out))))))
+  & vA ~ *
+  & tA ~ *
+  & @filter ~ (rest (s_next (acc out)))
+
+// Return 1 if the key-list contains (v, t).
+@hasK = ((?((@hk_nil @hk_cons) (pl (v (t out)))) pl) (v (t out)))
+
+@hk_nil = (* (v (t out)))
+  & v ~ *
+  & t ~ *
+  & out ~ 0
+
+@hk_cons = (* (((ev et) tail) (v (t out))))
+  & v ~ {vc vr}
+  & ev ~ $([=] $(vc eqv))
+  & eqv ~ ?((@hk_vno @hk_vyes) (et (tail (vr (t out)))))
+
+@hk_vno = (et (tail (v (t out))))
+  & et ~ *
+  & @hasK ~ (tail (v (t out)))
+
+@hk_vyes = (* (et (tail (v (t out)))))
+  & t ~ {tc tr}
+  & et ~ $([=] $(tc eqt))
+  & eqt ~ ?((@hk_tno @hk_tyes) (tail (v (tr out))))
+
+@hk_tno = (tail (v (t out)))
+  & @hasK ~ (tail (v (t out)))
+
+@hk_tyes = (* (et (tail (v (t out)))))
+  & tail ~ *
+  & v ~ *
+  & t ~ *
+  & out ~ 1
+
+// Restore the original proposal order.
+@rev = ((?((@rv_nil @rv_cons) (pl (acc out))) pl) (acc out))
+
+@rv_nil = (* (acc out))
+  & out ~ acc
+
+@rv_cons = (* ((head tail) (acc out)))
+  & @rev ~ (tail ((1 (head acc)) out))

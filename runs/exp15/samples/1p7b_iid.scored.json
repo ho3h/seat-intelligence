@@ -1,0 +1,4464 @@
+{
+"meta": {
+"model": "mlx-community/Qwen3-1.7B-4bit",
+"adapter": "adapters/exp15_1p7b",
+"set": "runs/exp15/sets/iid.json",
+"n": 4,
+"temp": 0.7,
+"top_p": 0.95,
+"max_tokens": 160,
+"batch": 64,
+"seed": 0,
+"out": "runs/exp15/samples/1p7b_iid.json",
+"seconds": 36.4,
+"score_seconds": 0.0
+},
+"specs": [
+[
+"gen",
+"pipeline",
+10001
+],
+[
+"gen",
+"pipeline",
+10005
+],
+[
+"gen",
+"pipeline",
+10006
+],
+[
+"gen",
+"pipeline",
+10007
+],
+[
+"gen",
+"pipeline",
+10008
+],
+[
+"gen",
+"pipeline",
+10011
+],
+[
+"gen",
+"pipeline",
+10014
+],
+[
+"gen",
+"pipeline",
+10017
+],
+[
+"gen",
+"pipeline",
+10018
+],
+[
+"gen",
+"pipeline",
+10019
+],
+[
+"gen",
+"pipeline",
+10021
+],
+[
+"gen",
+"pipeline",
+10025
+],
+[
+"gen",
+"pipeline",
+10026
+],
+[
+"gen",
+"pipeline",
+10027
+],
+[
+"gen",
+"pipeline",
+10028
+],
+[
+"gen",
+"pipeline",
+10029
+],
+[
+"gen",
+"pipeline",
+10031
+],
+[
+"gen",
+"pipeline",
+10034
+],
+[
+"gen",
+"pipeline",
+10035
+],
+[
+"gen",
+"pipeline",
+10038
+],
+[
+"gen",
+"pipeline",
+10039
+],
+[
+"gen",
+"pipeline",
+10041
+],
+[
+"gen",
+"pipeline",
+10042
+],
+[
+"gen",
+"pipeline",
+10043
+],
+[
+"gen",
+"pipeline",
+10046
+],
+[
+"gen",
+"pipeline",
+10047
+],
+[
+"gen",
+"pipeline",
+10055
+],
+[
+"gen",
+"pipeline",
+10056
+],
+[
+"gen",
+"pipeline",
+10058
+],
+[
+"gen",
+"pipeline",
+10059
+],
+[
+"gen",
+"pipeline",
+10060
+],
+[
+"gen",
+"pipeline",
+10062
+],
+[
+"gen",
+"pipeline",
+10063
+],
+[
+"gen",
+"pipeline",
+10065
+],
+[
+"gen",
+"pipeline",
+10070
+],
+[
+"gen",
+"pipeline",
+10073
+],
+[
+"gen",
+"pipeline",
+10074
+],
+[
+"gen",
+"pipeline",
+10077
+],
+[
+"gen",
+"pipeline",
+10078
+],
+[
+"gen",
+"pipeline",
+10079
+],
+[
+"gen",
+"pipeline",
+10081
+],
+[
+"gen",
+"pipeline",
+10082
+],
+[
+"gen",
+"pipeline",
+10083
+],
+[
+"gen",
+"pipeline",
+10086
+],
+[
+"gen",
+"pipeline",
+10088
+],
+[
+"gen",
+"pipeline",
+10089
+],
+[
+"gen",
+"pipeline",
+10091
+],
+[
+"gen",
+"pipeline",
+10094
+],
+[
+"gen",
+"pipeline",
+10098
+],
+[
+"gen",
+"pipeline",
+10100
+],
+[
+"gen",
+"pipeline",
+10101
+],
+[
+"gen",
+"pipeline",
+10103
+],
+[
+"gen",
+"pipeline",
+10104
+],
+[
+"gen",
+"pipeline",
+10106
+],
+[
+"gen",
+"pipeline",
+10107
+],
+[
+"gen",
+"pipeline",
+10108
+],
+[
+"gen",
+"pipeline",
+10109
+],
+[
+"gen",
+"pipeline",
+10110
+],
+[
+"gen",
+"pipeline",
+10111
+],
+[
+"gen",
+"pipeline",
+10112
+],
+[
+"gen",
+"reduce",
+10000
+],
+[
+"gen",
+"reduce",
+10001
+],
+[
+"gen",
+"reduce",
+10002
+],
+[
+"gen",
+"reduce",
+10004
+],
+[
+"gen",
+"reduce",
+10005
+],
+[
+"gen",
+"reduce",
+10007
+],
+[
+"gen",
+"reduce",
+10008
+],
+[
+"gen",
+"reduce",
+10012
+],
+[
+"gen",
+"reduce",
+10013
+],
+[
+"gen",
+"reduce",
+10015
+],
+[
+"gen",
+"reduce",
+10016
+],
+[
+"gen",
+"reduce",
+10017
+],
+[
+"gen",
+"reduce",
+10019
+],
+[
+"gen",
+"reduce",
+10020
+],
+[
+"gen",
+"reduce",
+10026
+],
+[
+"gen",
+"reduce",
+10027
+],
+[
+"gen",
+"reduce",
+10037
+],
+[
+"gen",
+"reduce",
+10038
+],
+[
+"gen",
+"reduce",
+10048
+],
+[
+"gen",
+"reduce",
+10049
+],
+[
+"gen",
+"reduce",
+10050
+],
+[
+"gen",
+"reduce",
+10051
+],
+[
+"gen",
+"reduce",
+10052
+],
+[
+"gen",
+"reduce",
+10053
+],
+[
+"gen",
+"reduce",
+10055
+],
+[
+"gen",
+"reduce",
+10056
+],
+[
+"gen",
+"reduce",
+10057
+],
+[
+"gen",
+"reduce",
+10059
+],
+[
+"gen",
+"reduce",
+10060
+],
+[
+"gen",
+"reduce",
+10066
+],
+[
+"gen",
+"reduce",
+10068
+],
+[
+"gen",
+"reduce",
+10069
+],
+[
+"gen",
+"reduce",
+10070
+],
+[
+"gen",
+"reduce",
+10071
+],
+[
+"gen",
+"reduce",
+10075
+],
+[
+"gen",
+"reduce",
+10076
+],
+[
+"gen",
+"reduce",
+10077
+],
+[
+"gen",
+"reduce",
+10078
+],
+[
+"gen",
+"reduce",
+10092
+],
+[
+"gen",
+"reduce",
+10093
+],
+[
+"gen",
+"reduce",
+10094
+],
+[
+"gen",
+"reduce",
+10096
+],
+[
+"gen",
+"reduce",
+10098
+],
+[
+"gen",
+"reduce",
+10099
+],
+[
+"gen",
+"reduce",
+10100
+],
+[
+"gen",
+"reduce",
+10104
+],
+[
+"gen",
+"reduce",
+10108
+],
+[
+"gen",
+"reduce",
+10109
+],
+[
+"gen",
+"reduce",
+10113
+],
+[
+"gen",
+"reduce",
+10114
+],
+[
+"gen",
+"reduce",
+10117
+],
+[
+"gen",
+"reduce",
+10118
+],
+[
+"gen",
+"reduce",
+10130
+],
+[
+"gen",
+"reduce",
+10138
+],
+[
+"gen",
+"reduce",
+10139
+],
+[
+"gen",
+"reduce",
+10140
+],
+[
+"gen",
+"reduce",
+10141
+],
+[
+"gen",
+"reduce",
+10150
+],
+[
+"gen",
+"reduce",
+10154
+],
+[
+"gen",
+"reduce",
+10155
+]
+],
+"scored": {
+"gen_pipeline_10001": [
+{
+"status": "pass",
+"prog": "map lin 2 2",
+"exact": true,
+"itrs": 3852,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 2",
+"exact": true,
+"itrs": 3852,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 2",
+"exact": true,
+"itrs": 3852,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 2",
+"exact": true,
+"itrs": 3852,
+"why": ""
+}
+],
+"gen_pipeline_10005": [
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+}
+],
+"gen_pipeline_10006": [
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+}
+],
+"gen_pipeline_10007": [
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6823,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6823,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6823,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6823,
+"why": ""
+}
+],
+"gen_pipeline_10008": [
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+}
+],
+"gen_pipeline_10011": [
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10714,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10714,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10714,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10714,
+"why": ""
+}
+],
+"gen_pipeline_10014": [
+{
+"status": "pass",
+"prog": "dedup\nsort\nmap mod 3",
+"exact": true,
+"itrs": 401553,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nmap mod 3",
+"exact": true,
+"itrs": 401553,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nmap mod 3",
+"exact": true,
+"itrs": 401553,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nmap mod 3",
+"exact": true,
+"itrs": 401553,
+"why": ""
+}
+],
+"gen_pipeline_10017": [
+{
+"status": "pass",
+"prog": "sort\nreverse\nrunsum",
+"exact": true,
+"itrs": 443779,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreverse\nrunsum",
+"exact": true,
+"itrs": 443779,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreverse\nrunsum",
+"exact": true,
+"itrs": 443779,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreverse\nrunsum",
+"exact": true,
+"itrs": 443779,
+"why": ""
+}
+],
+"gen_pipeline_10018": [
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6159,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6159,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6159,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6159,
+"why": ""
+}
+],
+"gen_pipeline_10019": [
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 432075,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 432075,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 432075,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 432075,
+"why": ""
+}
+],
+"gen_pipeline_10021": [
+{
+"status": "pass",
+"prog": "map div 3\nfilter odd\ndedup",
+"exact": true,
+"itrs": 11715,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 3\nfilter odd\ndedup",
+"exact": true,
+"itrs": 11715,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 3\nfilter odd\ndedup",
+"exact": true,
+"itrs": 11715,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 3\nfilter odd\ndedup",
+"exact": true,
+"itrs": 11715,
+"why": ""
+}
+],
+"gen_pipeline_10025": [
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+}
+],
+"gen_pipeline_10026": [
+{
+"status": "pass",
+"prog": "sort\nfilter lt 50\ntake 8",
+"exact": true,
+"itrs": 415805,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 50\ntake 8",
+"exact": true,
+"itrs": 415805,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 50\ntake 8",
+"exact": true,
+"itrs": 415805,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 50\ntake 8",
+"exact": true,
+"itrs": 415805,
+"why": ""
+}
+],
+"gen_pipeline_10027": [
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+}
+],
+"gen_pipeline_10028": [
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+}
+],
+"gen_pipeline_10029": [
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+}
+],
+"gen_pipeline_10031": [
+{
+"status": "pass",
+"prog": "reverse\ndrop 1\ndedup",
+"exact": true,
+"itrs": 9496,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 1\ndedup",
+"exact": true,
+"itrs": 9496,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 1\ndedup",
+"exact": true,
+"itrs": 9496,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 1\ndedup",
+"exact": true,
+"itrs": 9496,
+"why": ""
+}
+],
+"gen_pipeline_10034": [
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 398067,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 398067,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 398067,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 398067,
+"why": ""
+}
+],
+"gen_pipeline_10035": [
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+}
+],
+"gen_pipeline_10038": [
+{
+"status": "pass",
+"prog": "filter lt 5\ndedup\nmap and 63",
+"exact": true,
+"itrs": 5412,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 5\ndedup\nmap and 63",
+"exact": true,
+"itrs": 5412,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 5\ndedup\nmap and 63",
+"exact": true,
+"itrs": 5412,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 5\ndedup\nmap and 63",
+"exact": true,
+"itrs": 5412,
+"why": ""
+}
+],
+"gen_pipeline_10039": [
+{
+"status": "pass",
+"prog": "map mod 11\nrunsum",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nrunsum",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nrunsum",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nrunsum",
+"exact": true,
+"itrs": 7708,
+"why": ""
+}
+],
+"gen_pipeline_10041": [
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+}
+],
+"gen_pipeline_10042": [
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 6957,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 6957,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 6957,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 6957,
+"why": ""
+}
+],
+"gen_pipeline_10043": [
+{
+"status": "pass",
+"prog": "drop 8\nfilter lt 500\ndrop 8",
+"exact": true,
+"itrs": 5810,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter lt 500\ndrop 8",
+"exact": true,
+"itrs": 5810,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter lt 500\ndrop 8",
+"exact": true,
+"itrs": 5810,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter lt 500\ndrop 8",
+"exact": true,
+"itrs": 5810,
+"why": ""
+}
+],
+"gen_pipeline_10046": [
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10002,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10002,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10002,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10002,
+"why": ""
+}
+],
+"gen_pipeline_10047": [
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 25627,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 25627,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 25627,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 25627,
+"why": ""
+}
+],
+"gen_pipeline_10055": [
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5544,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5544,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5544,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5544,
+"why": ""
+}
+],
+"gen_pipeline_10056": [
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+}
+],
+"gen_pipeline_10058": [
+{
+"status": "pass",
+"prog": "dedup\ndrop 3",
+"exact": true,
+"itrs": 6219,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ndrop 3",
+"exact": true,
+"itrs": 6219,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ndrop 3",
+"exact": true,
+"itrs": 6219,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ndrop 3",
+"exact": true,
+"itrs": 6219,
+"why": ""
+}
+],
+"gen_pipeline_10059": [
+{
+"status": "pass",
+"prog": "dedup\nfilter odd\ntake 2",
+"exact": true,
+"itrs": 12154,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nfilter odd\ntake 2",
+"exact": true,
+"itrs": 12154,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nfilter odd\ntake 2",
+"exact": true,
+"itrs": 12154,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nfilter odd\ntake 2",
+"exact": true,
+"itrs": 12154,
+"why": ""
+}
+],
+"gen_pipeline_10060": [
+{
+"status": "pass",
+"prog": "dedup\nmap add 9",
+"exact": true,
+"itrs": 9440,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap add 9",
+"exact": true,
+"itrs": 9440,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap add 9",
+"exact": true,
+"itrs": 9440,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap add 9",
+"exact": true,
+"itrs": 9440,
+"why": ""
+}
+],
+"gen_pipeline_10062": [
+{
+"status": "pass",
+"prog": "runsum\nfilter odd\ndedup",
+"exact": true,
+"itrs": 12748,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter odd\ndedup",
+"exact": true,
+"itrs": 12748,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter odd\ndedup",
+"exact": true,
+"itrs": 12748,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter odd\ndedup",
+"exact": true,
+"itrs": 12748,
+"why": ""
+}
+],
+"gen_pipeline_10063": [
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6968,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6968,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6968,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6968,
+"why": ""
+}
+],
+"gen_pipeline_10065": [
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+}
+],
+"gen_pipeline_10070": [
+{
+"status": "pass",
+"prog": "sort\ndedup\nsort",
+"exact": true,
+"itrs": 430392,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ndedup\nsort",
+"exact": true,
+"itrs": 430392,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ndedup\nsort",
+"exact": true,
+"itrs": 430392,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ndedup\nsort",
+"exact": true,
+"itrs": 430392,
+"why": ""
+}
+],
+"gen_pipeline_10073": [
+{
+"status": "pass",
+"prog": "filter lt 50\nfilter odd",
+"exact": true,
+"itrs": 5602,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 50\nfilter odd",
+"exact": true,
+"itrs": 5602,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 50\nfilter odd",
+"exact": true,
+"itrs": 5602,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 50\nfilter odd",
+"exact": true,
+"itrs": 5602,
+"why": ""
+}
+],
+"gen_pipeline_10074": [
+{
+"status": "pass",
+"prog": "map xor 7\nfilter lt 50",
+"exact": true,
+"itrs": 8738,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 7\nfilter lt 50",
+"exact": true,
+"itrs": 8738,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 7\nfilter lt 50",
+"exact": true,
+"itrs": 8738,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 7\nfilter lt 50",
+"exact": true,
+"itrs": 8738,
+"why": ""
+}
+],
+"gen_pipeline_10077": [
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+}
+],
+"gen_pipeline_10078": [
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6144,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6144,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6144,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6144,
+"why": ""
+}
+],
+"gen_pipeline_10079": [
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+}
+],
+"gen_pipeline_10081": [
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884858,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884858,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884858,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884858,
+"why": ""
+}
+],
+"gen_pipeline_10082": [
+{
+"status": "pass",
+"prog": "dedup\nmap sq",
+"exact": true,
+"itrs": 9930,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap sq",
+"exact": true,
+"itrs": 9930,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap sq",
+"exact": true,
+"itrs": 9930,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap sq",
+"exact": true,
+"itrs": 9930,
+"why": ""
+}
+],
+"gen_pipeline_10083": [
+{
+"status": "pass",
+"prog": "filter lt 20\ndedup\nsort",
+"exact": true,
+"itrs": 329529,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 20\ndedup\nsort",
+"exact": true,
+"itrs": 329529,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 20\ndedup\nsort",
+"exact": true,
+"itrs": 329529,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 20\ndedup\nsort",
+"exact": true,
+"itrs": 329529,
+"why": ""
+}
+],
+"gen_pipeline_10086": [
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+}
+],
+"gen_pipeline_10088": [
+{
+"status": "pass",
+"prog": "dedup\ntake 3",
+"exact": true,
+"itrs": 7144,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ntake 3",
+"exact": true,
+"itrs": 7144,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ntake 3",
+"exact": true,
+"itrs": 7144,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ntake 3",
+"exact": true,
+"itrs": 7144,
+"why": ""
+}
+],
+"gen_pipeline_10089": [
+{
+"status": "pass",
+"prog": "dedup\ndedup\nfilter even",
+"exact": true,
+"itrs": 17998,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ndedup\nfilter even",
+"exact": true,
+"itrs": 17998,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ndedup\nfilter even",
+"exact": true,
+"itrs": 17998,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\ndedup\nfilter even",
+"exact": true,
+"itrs": 17998,
+"why": ""
+}
+],
+"gen_pipeline_10091": [
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1410,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1410,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1410,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1410,
+"why": ""
+}
+],
+"gen_pipeline_10094": [
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+}
+],
+"gen_pipeline_10098": [
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+}
+],
+"gen_pipeline_10100": [
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+}
+],
+"gen_pipeline_10101": [
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 436305,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 436305,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 436305,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 436305,
+"why": ""
+}
+],
+"gen_pipeline_10103": [
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+}
+],
+"gen_pipeline_10104": [
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 434348,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 434348,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 434348,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 434348,
+"why": ""
+}
+],
+"gen_pipeline_10106": [
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+}
+],
+"gen_pipeline_10107": [
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+}
+],
+"gen_pipeline_10108": [
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+}
+],
+"gen_pipeline_10109": [
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 433096,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 433096,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 433096,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 433096,
+"why": ""
+}
+],
+"gen_pipeline_10110": [
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+}
+],
+"gen_pipeline_10111": [
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+}
+],
+"gen_pipeline_10112": [
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+}
+],
+"gen_reduce_10000": [
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+}
+],
+"gen_reduce_10001": [
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 431527,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 431527,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 431527,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 431527,
+"why": ""
+}
+],
+"gen_reduce_10002": [
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+}
+],
+"gen_reduce_10004": [
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10467,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10467,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10467,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10467,
+"why": ""
+}
+],
+"gen_reduce_10005": [
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+}
+],
+"gen_reduce_10007": [
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 8092,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 8092,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 8092,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 8092,
+"why": ""
+}
+],
+"gen_reduce_10008": [
+{
+"status": "pass",
+"prog": "filter even\ndrop 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8690,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter even\ndrop 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8690,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter even\ndrop 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8690,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter even\ndrop 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8690,
+"why": ""
+}
+],
+"gen_reduce_10012": [
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+}
+],
+"gen_reduce_10013": [
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10240,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10240,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10240,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10240,
+"why": ""
+}
+],
+"gen_reduce_10015": [
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+}
+],
+"gen_reduce_10016": [
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+}
+],
+"gen_reduce_10017": [
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6237,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6237,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6237,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6237,
+"why": ""
+}
+],
+"gen_reduce_10019": [
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13464,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13464,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13464,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13464,
+"why": ""
+}
+],
+"gen_reduce_10020": [
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+}
+],
+"gen_reduce_10026": [
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+}
+],
+"gen_reduce_10027": [
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7596,
+"why": ""
+}
+],
+"gen_reduce_10037": [
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce cntgtfirst",
+"exact": true,
+"itrs": 11283,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce cntgtfirst",
+"exact": true,
+"itrs": 11283,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce cntgtfirst",
+"exact": true,
+"itrs": 11283,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce cntgtfirst",
+"exact": true,
+"itrs": 11283,
+"why": ""
+}
+],
+"gen_reduce_10038": [
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+}
+],
+"gen_reduce_10048": [
+{
+"status": "pass",
+"prog": "dedup\nreverse\nreduce min",
+"exact": true,
+"itrs": 14984,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nreverse\nreduce min",
+"exact": true,
+"itrs": 14984,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nreverse\nreduce min",
+"exact": true,
+"itrs": 14984,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nreverse\nreduce min",
+"exact": true,
+"itrs": 14984,
+"why": ""
+}
+],
+"gen_reduce_10049": [
+{
+"status": "pass",
+"prog": "runsum\ndedup\nreduce count",
+"exact": true,
+"itrs": 14609,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndedup\nreduce count",
+"exact": true,
+"itrs": 14609,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndedup\nreduce count",
+"exact": true,
+"itrs": 14609,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndedup\nreduce count",
+"exact": true,
+"itrs": 14609,
+"why": ""
+}
+],
+"gen_reduce_10050": [
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+}
+],
+"gen_reduce_10051": [
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 445420,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 445420,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 445420,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 445420,
+"why": ""
+}
+],
+"gen_reduce_10052": [
+{
+"status": "pass",
+"prog": "runsum\nfilter lt 20\nreduce first",
+"exact": true,
+"itrs": 9783,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter lt 20\nreduce first",
+"exact": true,
+"itrs": 9783,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter lt 20\nreduce first",
+"exact": true,
+"itrs": 9783,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter lt 20\nreduce first",
+"exact": true,
+"itrs": 9783,
+"why": ""
+}
+],
+"gen_reduce_10053": [
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 446111,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 446111,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 446111,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 446111,
+"why": ""
+}
+],
+"gen_reduce_10055": [
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+}
+],
+"gen_reduce_10056": [
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+}
+],
+"gen_reduce_10057": [
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8224,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8224,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8224,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8224,
+"why": ""
+}
+],
+"gen_reduce_10059": [
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+}
+],
+"gen_reduce_10060": [
+{
+"status": "pass",
+"prog": "dedup\nsort\nreduce cntgtfirst",
+"exact": true,
+"itrs": 402520,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nreduce cntgtfirst",
+"exact": true,
+"itrs": 402520,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nreduce cntgtfirst",
+"exact": true,
+"itrs": 402520,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nreduce cntgtfirst",
+"exact": true,
+"itrs": 402520,
+"why": ""
+}
+],
+"gen_reduce_10066": [
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+}
+],
+"gen_reduce_10068": [
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+}
+],
+"gen_reduce_10069": [
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+}
+],
+"gen_reduce_10070": [
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+}
+],
+"gen_reduce_10071": [
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+}
+],
+"gen_reduce_10075": [
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+}
+],
+"gen_reduce_10076": [
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+}
+],
+"gen_reduce_10077": [
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6955,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6955,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6955,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6955,
+"why": ""
+}
+],
+"gen_reduce_10078": [
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+}
+],
+"gen_reduce_10092": [
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+}
+],
+"gen_reduce_10093": [
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+}
+],
+"gen_reduce_10094": [
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+}
+],
+"gen_reduce_10096": [
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+}
+],
+"gen_reduce_10098": [
+{
+"status": "pass",
+"prog": "dedup\nrunsum\nreduce min",
+"exact": true,
+"itrs": 16028,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nrunsum\nreduce min",
+"exact": true,
+"itrs": 16028,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nrunsum\nreduce min",
+"exact": true,
+"itrs": 16028,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nrunsum\nreduce min",
+"exact": true,
+"itrs": 16028,
+"why": ""
+}
+],
+"gen_reduce_10099": [
+{
+"status": "pass",
+"prog": "take 5\nfilter lt 50\nreduce count",
+"exact": true,
+"itrs": 1329,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nfilter lt 50\nreduce count",
+"exact": true,
+"itrs": 1329,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nfilter lt 50\nreduce count",
+"exact": true,
+"itrs": 1329,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nfilter lt 50\nreduce count",
+"exact": true,
+"itrs": 1329,
+"why": ""
+}
+],
+"gen_reduce_10100": [
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+}
+],
+"gen_reduce_10104": [
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14577,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14577,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14577,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14577,
+"why": ""
+}
+],
+"gen_reduce_10108": [
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+}
+],
+"gen_reduce_10109": [
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6405,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6405,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6405,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6405,
+"why": ""
+}
+],
+"gen_reduce_10113": [
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+}
+],
+"gen_reduce_10114": [
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894732,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894732,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894732,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894732,
+"why": ""
+}
+],
+"gen_reduce_10117": [
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+}
+],
+"gen_reduce_10118": [
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 401371,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 401371,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 401371,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 401371,
+"why": ""
+}
+],
+"gen_reduce_10130": [
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13507,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13507,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13507,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13507,
+"why": ""
+}
+],
+"gen_reduce_10138": [
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+}
+],
+"gen_reduce_10139": [
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+}
+],
+"gen_reduce_10140": [
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13108,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13108,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13108,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13108,
+"why": ""
+}
+],
+"gen_reduce_10141": [
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+}
+],
+"gen_reduce_10150": [
+{
+"status": "pass",
+"prog": "dedup\nmap add 5\nreduce last",
+"exact": true,
+"itrs": 13085,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap add 5\nreduce last",
+"exact": true,
+"itrs": 13085,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap add 5\nreduce last",
+"exact": true,
+"itrs": 13085,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "dedup\nmap add 5\nreduce last",
+"exact": true,
+"itrs": 13085,
+"why": ""
+}
+],
+"gen_reduce_10154": [
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+}
+],
+"gen_reduce_10155": [
+{
+"status": "pass",
+"prog": "filter lt 50\nsort\nreduce last",
+"exact": true,
+"itrs": 104773,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 50\nsort\nreduce last",
+"exact": true,
+"itrs": 104773,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 50\nsort\nreduce last",
+"exact": true,
+"itrs": 104773,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 50\nsort\nreduce last",
+"exact": true,
+"itrs": 104773,
+"why": ""
+}
+]
+},
+"depth": {
+"gen_pipeline_10001": 1,
+"gen_pipeline_10005": 1,
+"gen_pipeline_10006": 1,
+"gen_pipeline_10007": 3,
+"gen_pipeline_10008": 2,
+"gen_pipeline_10011": 3,
+"gen_pipeline_10014": 3,
+"gen_pipeline_10017": 3,
+"gen_pipeline_10018": 2,
+"gen_pipeline_10019": 3,
+"gen_pipeline_10021": 3,
+"gen_pipeline_10025": 3,
+"gen_pipeline_10026": 3,
+"gen_pipeline_10027": 2,
+"gen_pipeline_10028": 1,
+"gen_pipeline_10029": 3,
+"gen_pipeline_10031": 3,
+"gen_pipeline_10034": 3,
+"gen_pipeline_10035": 2,
+"gen_pipeline_10038": 3,
+"gen_pipeline_10039": 2,
+"gen_pipeline_10041": 1,
+"gen_pipeline_10042": 2,
+"gen_pipeline_10043": 3,
+"gen_pipeline_10046": 2,
+"gen_pipeline_10047": 3,
+"gen_pipeline_10055": 1,
+"gen_pipeline_10056": 3,
+"gen_pipeline_10058": 2,
+"gen_pipeline_10059": 3,
+"gen_pipeline_10060": 2,
+"gen_pipeline_10062": 3,
+"gen_pipeline_10063": 3,
+"gen_pipeline_10065": 2,
+"gen_pipeline_10070": 3,
+"gen_pipeline_10073": 2,
+"gen_pipeline_10074": 2,
+"gen_pipeline_10077": 3,
+"gen_pipeline_10078": 3,
+"gen_pipeline_10079": 1,
+"gen_pipeline_10081": 3,
+"gen_pipeline_10082": 2,
+"gen_pipeline_10083": 3,
+"gen_pipeline_10086": 2,
+"gen_pipeline_10088": 2,
+"gen_pipeline_10089": 3,
+"gen_pipeline_10091": 3,
+"gen_pipeline_10094": 2,
+"gen_pipeline_10098": 2,
+"gen_pipeline_10100": 2,
+"gen_pipeline_10101": 3,
+"gen_pipeline_10103": 3,
+"gen_pipeline_10104": 2,
+"gen_pipeline_10106": 3,
+"gen_pipeline_10107": 3,
+"gen_pipeline_10108": 3,
+"gen_pipeline_10109": 3,
+"gen_pipeline_10110": 3,
+"gen_pipeline_10111": 2,
+"gen_pipeline_10112": 3,
+"gen_reduce_10000": 2,
+"gen_reduce_10001": 3,
+"gen_reduce_10002": 3,
+"gen_reduce_10004": 3,
+"gen_reduce_10005": 3,
+"gen_reduce_10007": 3,
+"gen_reduce_10008": 3,
+"gen_reduce_10012": 3,
+"gen_reduce_10013": 3,
+"gen_reduce_10015": 2,
+"gen_reduce_10016": 3,
+"gen_reduce_10017": 3,
+"gen_reduce_10019": 3,
+"gen_reduce_10020": 2,
+"gen_reduce_10026": 2,
+"gen_reduce_10027": 2,
+"gen_reduce_10037": 2,
+"gen_reduce_10038": 3,
+"gen_reduce_10048": 3,
+"gen_reduce_10049": 3,
+"gen_reduce_10050": 3,
+"gen_reduce_10051": 3,
+"gen_reduce_10052": 3,
+"gen_reduce_10053": 2,
+"gen_reduce_10055": 3,
+"gen_reduce_10056": 3,
+"gen_reduce_10057": 2,
+"gen_reduce_10059": 2,
+"gen_reduce_10060": 3,
+"gen_reduce_10066": 3,
+"gen_reduce_10068": 2,
+"gen_reduce_10069": 2,
+"gen_reduce_10070": 2,
+"gen_reduce_10071": 3,
+"gen_reduce_10075": 3,
+"gen_reduce_10076": 2,
+"gen_reduce_10077": 3,
+"gen_reduce_10078": 3,
+"gen_reduce_10092": 3,
+"gen_reduce_10093": 3,
+"gen_reduce_10094": 3,
+"gen_reduce_10096": 2,
+"gen_reduce_10098": 3,
+"gen_reduce_10099": 3,
+"gen_reduce_10100": 2,
+"gen_reduce_10104": 3,
+"gen_reduce_10108": 2,
+"gen_reduce_10109": 2,
+"gen_reduce_10113": 2,
+"gen_reduce_10114": 3,
+"gen_reduce_10117": 3,
+"gen_reduce_10118": 3,
+"gen_reduce_10130": 3,
+"gen_reduce_10138": 2,
+"gen_reduce_10139": 3,
+"gen_reduce_10140": 3,
+"gen_reduce_10141": 2,
+"gen_reduce_10150": 3,
+"gen_reduce_10154": 3,
+"gen_reduce_10155": 3
+},
+"gold": {
+"gen_pipeline_10001": "map lin 2 2",
+"gen_pipeline_10005": "take 1",
+"gen_pipeline_10006": "drop 8",
+"gen_pipeline_10007": "filter ge 10\ntake 2\nrunsum",
+"gen_pipeline_10008": "take 5\nmap xor 63",
+"gen_pipeline_10011": "filter ge 5\nreverse\nfilter ge 5",
+"gen_pipeline_10014": "dedup\nsort\nmap mod 3",
+"gen_pipeline_10017": "sort\nreverse\nrunsum",
+"gen_pipeline_10018": "drop 5\ndedup",
+"gen_pipeline_10019": "sort\nmap mod 8\ndrop 8",
+"gen_pipeline_10021": "map div 3\nfilter odd\ndedup",
+"gen_pipeline_10025": "drop 1\nrunsum\nmap xor 15",
+"gen_pipeline_10026": "sort\nfilter lt 50\ntake 8",
+"gen_pipeline_10027": "take 8\ndedup",
+"gen_pipeline_10028": "map mod 3",
+"gen_pipeline_10029": "reverse\ndrop 8\nmap lin 2 0",
+"gen_pipeline_10031": "reverse\ndrop 1\ndedup",
+"gen_pipeline_10034": "sort\nrunsum\nmap xor 255",
+"gen_pipeline_10035": "drop 3\ndrop 1",
+"gen_pipeline_10038": "filter lt 5\ndedup\nmap and 63",
+"gen_pipeline_10039": "map mod 11\nrunsum",
+"gen_pipeline_10041": "filter gt 20",
+"gen_pipeline_10042": "filter odd\nreverse",
+"gen_pipeline_10043": "drop 8\nfilter lt 500\ndrop 8",
+"gen_pipeline_10046": "map sq\nfilter ge 3",
+"gen_pipeline_10047": "filter modeq 5 2\nsort\nreverse",
+"gen_pipeline_10055": "filter gt 10",
+"gen_pipeline_10056": "runsum\ntake 5\nreverse",
+"gen_pipeline_10058": "dedup\ndrop 3",
+"gen_pipeline_10059": "dedup\nfilter odd\ntake 2",
+"gen_pipeline_10060": "dedup\nmap add 9",
+"gen_pipeline_10062": "runsum\nfilter odd\ndedup",
+"gen_pipeline_10063": "filter modeq 3 2\ndrop 1\nreverse",
+"gen_pipeline_10065": "map add 2\nmap div 2",
+"gen_pipeline_10070": "sort\ndedup\nsort",
+"gen_pipeline_10073": "filter lt 50\nfilter odd",
+"gen_pipeline_10074": "map xor 7\nfilter lt 50",
+"gen_pipeline_10077": "take 1\nsort\nmap and 3",
+"gen_pipeline_10078": "filter odd\ndrop 1\ntake 8",
+"gen_pipeline_10079": "map and 63",
+"gen_pipeline_10081": "drop 1\nrunsum\nsort",
+"gen_pipeline_10082": "dedup\nmap sq",
+"gen_pipeline_10083": "filter lt 20\ndedup\nsort",
+"gen_pipeline_10086": "map sq\ndrop 5",
+"gen_pipeline_10088": "dedup\ntake 3",
+"gen_pipeline_10089": "dedup\ndedup\nfilter even",
+"gen_pipeline_10091": "take 8\ndrop 5\nsort",
+"gen_pipeline_10094": "runsum\nreverse",
+"gen_pipeline_10098": "drop 5\ndrop 2",
+"gen_pipeline_10100": "reverse\nmap lin 10 7",
+"gen_pipeline_10101": "reverse\ndrop 3\nsort",
+"gen_pipeline_10103": "map xor 63\nrunsum\nreverse",
+"gen_pipeline_10104": "sort\ntake 5",
+"gen_pipeline_10106": "take 1\ntake 2\ntake 2",
+"gen_pipeline_10107": "take 8\ntake 8\ndrop 3",
+"gen_pipeline_10108": "drop 2\nrunsum\ndrop 2",
+"gen_pipeline_10109": "sort\nfilter lt 10\nsort",
+"gen_pipeline_10110": "take 1\nmap lin 2 100\nsort",
+"gen_pipeline_10111": "take 5\nreverse",
+"gen_pipeline_10112": "map add 1\nrunsum\nfilter gt 10",
+"gen_reduce_10000": "take 5\nreduce last",
+"gen_reduce_10001": "sort\nfilter gt 20\nreduce first",
+"gen_reduce_10002": "map lin 2 100\ndrop 5\nreduce sum",
+"gen_reduce_10004": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"gen_reduce_10005": "reverse\nrunsum\nreduce first",
+"gen_reduce_10007": "drop 3\nfilter even\nreduce xor",
+"gen_reduce_10008": "filter even\ndrop 5\nreduce cntgtfirst",
+"gen_reduce_10012": "runsum\ntake 2\nreduce min",
+"gen_reduce_10013": "drop 1\nfilter ge 3\nreduce xor",
+"gen_reduce_10015": "drop 2\nreduce first",
+"gen_reduce_10016": "drop 2\nreverse\nreduce last",
+"gen_reduce_10017": "filter modeq 5 4\ntake 2\nreduce max",
+"gen_reduce_10019": "reverse\ndedup\nreduce xor",
+"gen_reduce_10020": "map and 255\nreduce min",
+"gen_reduce_10026": "map div 10\nreduce count",
+"gen_reduce_10027": "filter odd\nreduce sum",
+"gen_reduce_10037": "filter lt 100\nreduce cntgtfirst",
+"gen_reduce_10038": "take 5\ntake 8\nreduce count",
+"gen_reduce_10048": "dedup\nreverse\nreduce min",
+"gen_reduce_10049": "runsum\ndedup\nreduce count",
+"gen_reduce_10050": "drop 1\nmap and 63\nreduce last",
+"gen_reduce_10051": "sort\nmap lin 3 2\nreduce min",
+"gen_reduce_10052": "runsum\nfilter lt 20\nreduce first",
+"gen_reduce_10053": "sort\nreduce max",
+"gen_reduce_10055": "drop 8\ndedup\nreduce xor",
+"gen_reduce_10056": "take 1\ntake 1\nreduce min",
+"gen_reduce_10057": "filter gt 500\nreduce cntgtfirst",
+"gen_reduce_10059": "filter lt 100\nreduce sum",
+"gen_reduce_10060": "dedup\nsort\nreduce cntgtfirst",
+"gen_reduce_10066": "map mod 6\ndrop 1\nreduce first",
+"gen_reduce_10068": "map add 5\nreduce xor",
+"gen_reduce_10069": "drop 3\nreduce first",
+"gen_reduce_10070": "drop 3\nreduce min",
+"gen_reduce_10071": "drop 8\nreverse\nreduce cntgtfirst",
+"gen_reduce_10075": "runsum\ndrop 8\nreduce last",
+"gen_reduce_10076": "take 5\nreduce xor",
+"gen_reduce_10077": "drop 8\nfilter modeq 4 2\nreduce count",
+"gen_reduce_10078": "take 2\ntake 5\nreduce first",
+"gen_reduce_10092": "drop 1\ntake 2\nreduce sum",
+"gen_reduce_10093": "drop 2\ntake 1\nreduce max",
+"gen_reduce_10094": "runsum\ntake 5\nreduce cntgtfirst",
+"gen_reduce_10096": "drop 1\nreduce count",
+"gen_reduce_10098": "dedup\nrunsum\nreduce min",
+"gen_reduce_10099": "take 5\nfilter lt 50\nreduce count",
+"gen_reduce_10100": "drop 2\nreduce sum",
+"gen_reduce_10104": "runsum\nreverse\nreduce min",
+"gen_reduce_10108": "map and 63\nreduce count",
+"gen_reduce_10109": "drop 5\nreduce min",
+"gen_reduce_10113": "map add 1\nreduce min",
+"gen_reduce_10114": "runsum\nsort\nreduce last",
+"gen_reduce_10117": "drop 1\nrunsum\nreduce last",
+"gen_reduce_10118": "map mod 11\nsort\nreduce min",
+"gen_reduce_10130": "runsum\nfilter even\nreduce min",
+"gen_reduce_10138": "map xor 3\nreduce min",
+"gen_reduce_10139": "map mod 11\nmap mod 11\nreduce last",
+"gen_reduce_10140": "reverse\nreverse\nreduce min",
+"gen_reduce_10141": "map lin 10 2\nreduce count",
+"gen_reduce_10150": "dedup\nmap add 5\nreduce last",
+"gen_reduce_10154": "reverse\nrunsum\nreduce cntgtfirst",
+"gen_reduce_10155": "filter lt 50\nsort\nreduce last"
+}
+}

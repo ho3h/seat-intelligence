@@ -1,0 +1,24 @@
+--- 05:38:12
+build.py:37: wire `leaf` (num, argument `leaf` of act of update `uconf`, made at build.py:43) is used a second time (left operand of `=`); it was already used at build.py:36 (left operand of `=`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(leaf, 2)  and use each once.
+--- 05:39:01
+step of stream `rk_w` (@rk_w_step): 1 value(s) never used:
+    `e32` (num, copy 2 of `e3`, made at build.py:33)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:39:48
+build.py:85: wire `L` (depth, output `L` of lg, made at recipes.py:156) is used a second time (recipe lookup_many `lk` port `L`); it was already used at build.py:82 (recipe list_to_trie `tri` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:40:16
+build.py:59: wire `r` (num, result of `+`, made at build.py:51) belongs to branch nonzero case of @prog (t5_prop_conflicts) (@prog_b1s), but is used in @prog (t5_prop_conflicts) (@prog) (left operand of `<<`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:40:36
+build.py:55: wire `r` (num, result of `+`, made at build.py:47) is used a second time (left operand of `<<`); it was already used at recipes.py:154 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:40:58
+build.py:59: wire `L1` (depth, copy 1 of `L`, made at build.py:51) is used a second time (recipe reduce_by_key `rk` (fn) port `E`); it was already used at build.py:53 (recipe list_to_trie `tri` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L1, 2)  and use each once.
+--- 05:41:17
+build.py:60: wire `L` (depth, output `L` of lg, made at recipes.py:156) is used a second time (recipe count_where_trie `cnt` port `L`); it was already used at build.py:59 (recipe reduce_by_key `rk` (fn) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:41:36
+@prog (t5_prop_conflicts) (@prog): 1 value(s) never used:
+    `n` (num, output `n` of recipe list_length_and_copy `lc2`, made at build.py:39)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:46:15
+build.py:31: wire `r` (num, result of `=`, made at build.py:25) is used a second time (select condition); it was already used at build.py:28 (left operand of `|`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:46:24
+build.py:32: wire `v` (num, argument `p` of act of update `rk_u`, made at recipes.py:580) is used a second time (select if_true); it was already used at build.py:27 (right operand of `=`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(v, 2)  and use each once.

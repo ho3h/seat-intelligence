@@ -1,0 +1,30 @@
+// Start with the first element as the accumulator, avoiding a comparison
+// against the empty-list sentinel for every nonempty input.
+@prog = (l out)
+  & @mn_start ~ (l (* out))
+
+@mn_start = ((?((@mn_start_nil @mn_start_cons) (pl (unused out))) pl) (unused out))
+
+@mn_start_nil = (* (* 16777215))
+
+@mn_start_cons = (* ((h t) (unused out)))
+  & unused ~ *
+  & @mn ~ (t (h out))
+
+@mn = ((?((@mn_nil @mn_cons) (pl (acc out))) pl) (acc out))
+
+@mn_nil = (* (a a))
+
+@mn_cons = (* ((h t) (acc out)))
+  & acc ~ {acmp actx}
+  & h ~ {hcmp hctx}
+  & hcmp ~ $([<] $(acmp cmp))
+  & cmp ~ ?((@mn_keep @mn_take) (t (hctx (actx out))))
+
+@mn_keep = (t (h (acc out)))
+  & @mn ~ (t (acc out))
+  & h ~ *
+
+@mn_take = (* (t (h (acc out))))
+  & acc ~ *
+  & @mn ~ (t (h out))

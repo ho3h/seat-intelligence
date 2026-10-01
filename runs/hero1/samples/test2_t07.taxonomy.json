@@ -1,0 +1,124 @@
+{
+ "failed_samples": 34,
+ "components": {
+  "apart:missing_or_wrong_pair": 15,
+  "apart:extra_or_wrong_pair": 10,
+  "limit:extra": 5,
+  "parse_error:parse: unknown word: apart ai_lab big_te": 5,
+  "order:wrong_categories": 5,
+  "parse_error:parse: unknown word: limit big_tech lab ": 2,
+  "together_company:extra": 2,
+  "limit:wrong_categories": 2,
+  "parse_error:parse: bad together: together pool": 2,
+  "parse_error:parse: unknown word: order lab chips": 1,
+  "parse_error:parse: unknown word: limit big_tech labs": 1,
+  "parse_error:parse: bad together: together pools": 1
+ },
+ "by_voice": {
+  "poem": {
+   "together_company:extra": 2,
+   "limit:wrong_categories": 2,
+   "parse_error:parse: bad together: together pool": 2,
+   "parse_error:parse: unknown word: order lab chips": 1,
+   "parse_error:parse: bad together: together pools": 1
+  },
+  "terse": {
+   "parse_error:parse: unknown word: limit big_tech lab ": 2,
+   "parse_error:parse: unknown word: limit big_tech labs": 1
+  },
+  "shouty": {
+   "apart:missing_or_wrong_pair": 5,
+   "apart:extra_or_wrong_pair": 5
+  },
+  "rambling": {
+   "limit:extra": 5,
+   "apart:missing_or_wrong_pair": 5,
+   "order:wrong_categories": 5
+  },
+  "teacher": {
+   "apart:missing_or_wrong_pair": 5,
+   "apart:extra_or_wrong_pair": 5
+  },
+  "legalese": {
+   "parse_error:parse: unknown word: apart ai_lab big_te": 5
+  }
+ },
+ "examples": {
+  "apart:missing_or_wrong_pair": [
+   [
+    "a38",
+    "apart ai_lab big_tech ; apart investor big_tech"
+   ],
+   [
+    "a38",
+    "apart ai_lab big_tech ; apart investor big_tech"
+   ],
+   [
+    "a38",
+    "apart ai_lab big_tech ; apart investor big_tech"
+   ]
+  ],
+  "apart:extra_or_wrong_pair": [
+   [
+    "a38",
+    "apart ai_lab big_tech ; apart investor big_tech"
+   ],
+   [
+    "a38",
+    "apart ai_lab big_tech ; apart investor big_tech"
+   ],
+   [
+    "a38",
+    "apart ai_lab big_tech ; apart investor big_tech"
+   ]
+  ],
+  "limit:extra": [
+   [
+    "a49",
+    "together software_security ; limit ai_lab chips 1 ; order government"
+   ],
+   [
+    "a49",
+    "together software_security ; limit ai_lab chips 1 ; order government"
+   ],
+   [
+    "a49",
+    "together software_security ; limit ai_lab chips 1 ; order government"
+   ]
+  ],
+  "together_company:extra": [
+   [
+    "a57",
+    "size 3 ; together company ; limit ai_lab 1"
+   ],
+   [
+    "a57",
+    "size 3 ; together company ; limit ai_lab 1"
+   ]
+  ],
+  "limit:wrong_categories": [
+   [
+    "a57",
+    "size 3 ; together company ; limit ai_lab 1"
+   ],
+   [
+    "a57",
+    "size 3 ; together company ; limit ai_lab 1"
+   ]
+  ],
+  "order:wrong_categories": [
+   [
+    "a72",
+    "size 3 ; together software_security ; together investor ; order investor"
+   ],
+   [
+    "a72",
+    "size 3 ; together software_security ; together investor ; order investor"
+   ],
+   [
+    "a72",
+    "size 3 ; together software_security ; together investor ; order investor"
+   ]
+  ]
+ }
+}

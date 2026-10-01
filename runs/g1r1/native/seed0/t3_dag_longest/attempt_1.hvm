@@ -1,0 +1,87 @@
+@prog = ((n edges) out)
+  & n ~ {n1 n2}
+  & @makezeros ~ (n1 dist)
+  & @rounds ~ (n2 (edges (dist out)))
+
+@makezeros = (?((@mz0 @mzS) (0 out)) out)
+
+@mz0 = (* (0 *))
+
+@mzS = (n (* (1 (0 rest))))
+  & @makezeros ~ (n rest)
+
+@rounds = ((?((@rd0 @rdS) (edges (dist out))) (edges dist)) out)
+
+@rd0 = (* (dist out))
+  & @maxlist ~ (dist out)
+
+@rdS = (k (edges (dist out)))
+  & edges ~ {e1 e2}
+  & @pass ~ (e1 (dist d2))
+  & @rounds ~ (k (e2 (d2 out)))
+
+@pass = (((?((@p0 @p1) (payload (dist out))) payload) dist) out)
+
+@p0 = (* (a a))
+
+@p1 = (z ((edge tail) (dist out)))
+  & z ~ *
+  & @update ~ (edge (dist d2))
+  & @pass ~ (tail (d2 out))
+
+@get = ((?((@g0 @gS) (list out)) list) out)
+
+@g0 = ((tag (head tail)) head)
+  & tag ~ *
+  & tail ~ *
+
+@gS = (idx ((tag (head tail)) out))
+  & tag ~ *
+  & head ~ *
+  & @get ~ ((idx tail) out)
+
+@update = (((u v) dist) out)
+  & dist ~ {dA dBC}
+  & dBC ~ {dB dC}
+  & v ~ {v_get v_set}
+  & @get ~ ((u dA) du)
+  & @get ~ ((v_get dB) dv)
+  & du ~ $([+1] cand)
+  & cand ~ {cand_test cand_ctx}
+  & cand_test ~ $([>] $(dv cmp))
+  & cmp ~ ?((@upd_no @upd_yes) (v_set (cand_ctx (dC out))))
+
+@upd_no = (* (* (a a)))
+
+@upd_yes = (v (cand (dC out)))
+  & @set ~ ((v (cand dC)) out)
+
+@set = ((?((@s0 @sS) (val (list out))) (val list)) out)
+
+@s0 = (val ((tag (head tail)) (1 (val tail))))
+  & tag ~ *
+  & head ~ *
+
+@sS = (idx (val ((tag (head tail)) (1 (head newtail)))))
+  & tag ~ *
+  & @set ~ ((idx (val tail)) newtail)
+
+@maxlist = (list out)
+  & @maxacc ~ (list (0 out))
+
+@maxacc = (((?((@ma0 @ma1) (payload (acc out))) payload) (acc out)) out)
+
+@ma0 = (* (a a))
+
+@ma1 = (z ((h t) (acc out)))
+  & z ~ *
+  & h ~ {h_test h_ctx}
+  & acc ~ {acc_test acc_ctx}
+  & h_test ~ $([>] $(acc_test cmp))
+  & cmp ~ ?((@ma_no @ma_yes) (h_ctx (t (acc_ctx out))))
+
+@ma_no = (* (t (acc out)))
+  & @maxacc ~ (t (acc out))
+
+@ma_yes = (h (t (* out)))
+  & @maxacc ~ (t (h out))

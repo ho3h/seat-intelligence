@@ -1,0 +1,52 @@
+# t3_wiener_index: all-sources BFS as one bitset label propagation over channels (lib/chan_gen): every vertex v
+# streams R_r(v) = the set of vertices within r hops (bitset, lib/bits), R_{r+1}(v) = R_r(v) | OR of its
+# neighbours' R_r. Since dist(u, v) = #{r >= 0 : u not in R_r(v)}, each vertex accumulates n - |R_r(v)| per round
+# (0 once converged, so speculative rounds are harmless). Answer = (sum over v) / 2.
+#include base
+#include chan_gen
+#include bits
+def prog(x):
+  (n, es) = x
+  (l, m) = lvl(n, 0, 1)
+  T = chan_walk(es, zio(l), l, m)
+  (wl, q) = lvl(n / 24 + 1, 0, 1)
+  (F, z) = chan_gen(T, (wl, n), 3, l, n)
+  return z + tsum(F, l) / 2
+
+def tsum(t, l):
+  switch l:
+    case 0:
+      return t
+    case _:
+      (a, b) = t
+      return tsum(a, l-1) + tsum(b, l-1)
+
+# state: (R, acc)
+def lab0(mode, base):
+  (wl, n) = mode
+  return (bit(base, wl), 0)
+
+def out(mode, st):
+  (R, acc) = st
+  return R
+
+def pre(mode, meta, h):
+  return h
+
+def unit(mode):
+  (wl, n) = mode
+  return bzero(wl)
+
+def comb(mode, a, b):
+  (wl, n) = mode
+  return bor(a, b, wl)
+
+def upd(mode, st, x):
+  (wl, n) = mode
+  (R, acc) = st
+  R2 = bor(R, x, wl)
+  return ((R2, acc + n - bpop(R, wl)), 1 - beq(R, R2, wl))
+
+def fin(mode, base, st, ins):
+  (R, acc) = st
+  return ([], acc)

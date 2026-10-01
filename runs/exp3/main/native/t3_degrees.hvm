@@ -1,0 +1,18 @@
+@prog = ((?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) (?(((0 *) @z_more) tail_q187) (1 (0 tail_q187)))) tail_q184) (1 (0 tail_q184)))) tail_q183) (1 (0 tail_q183)))) tail_q182) (1 (0 tail_q182)))) tail_q181) (1 (0 tail_q181)))) tail_q180) (1 (0 tail_q180)))) tail_q179) (1 (0 tail_q179)))) tail_q178) (1 (0 tail_q178)))) tail_q177) (1 (0 tail_q177)))) tail_q176) (1 (0 tail_q176)))) tail_q175) (1 (0 tail_q175)))) tail_q174) (1 (0 tail_q174)))) tail_q173) (1 (0 tail_q173)))) tail_q172) (1 (0 tail_q172)))) tail_q171) (1 (0 tail_q171)))) tail_q170) (1 (0 tail_q170)))) tail_q169) (1 (0 tail_q169)))) tail_q168) (1 (0 tail_q168)))) tail_q167) (1 (0 tail_q167)))) tail_q166) (1 (0 tail_q166)))) tail_q165) (1 (0 tail_q165)))) tail_q164) (1 (0 tail_q164)))) tail_q163) (1 (0 tail_q163)))) tail_q162) (1 (0 tail_q162)))) tail_q161) (1 (0 tail_q161)))) tail_q160) (1 (0 tail_q160)))) tail_q159) (1 (0 tail_q159)))) tail_q158) (1 (0 tail_q158)))) tail_q157) (1 (0 tail_q157)))) tail_q156) (1 (0 tail_q156)))) tail_q155) (1 (0 tail_q155)))) tail_q154) (1 (0 tail_q154)))) zlist) (?((@p_nil @p_cons) (pl_q148 (zlist out))) pl_q148)) out)
+
+@z_more = (?(((0 *) @z_more) tail) (1 (0 tail)))
+
+@p_nil = (* (a a))
+
+@p_cons = (* (((u v) (?((@p_nil @p_cons) (pl_q152 (deg3 out))) pl_q152)) ((?((@inc_nil @inc_cons) (pl_q150 (u (?((@inc_nil @inc_cons) (pl_q151 (v deg3))) pl_q151)))) pl_q150) out)))
+
+@inc_nil = (* (* out))
+  & out ~ (0 *)
+
+@inc_cons = (* ((head tail) (?((@here @later) (head (tail out))) out)))
+
+@here = (head (tail out))
+  & head ~ $([+1] h2)
+  & out ~ (1 (h2 tail))
+
+@later = (idx (head ((?((@inc_nil @inc_cons) (pl_q153 (idx tail2))) pl_q153) (1 (head tail2)))))

@@ -1,0 +1,171 @@
+@prog = ((c attrs) out)
+  & c ~ {c_enum c_map}
+  & @map ~ (attrs (c_map mapped))
+  & @enum ~ (c_enum (mapped (0 out)))
+
+@map = ((?((@map_nil @map_cons) (pl (c (out)))) pl) (c (out)))
+
+@map_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@map_cons = (* (((node (key val)) tail) (c out)))
+  & c ~ {c_nth c_rec}
+  & @nth ~ (c_nth (node cid))
+  & @map ~ (tail (c_rec mapped_tail))
+  & out ~ (1 ((cid (key val)) mapped_tail))
+
+@enum = ((?((@enum_nil @enum_cons) (pl (attrs (idx out)))) pl) (attrs (idx out)))
+
+@enum_nil = (* (attrs (idx out)))
+  & attrs ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@enum_cons = (* ((cid tail) (attrs (idx out))))
+  & cid ~ {cid_cmp cid_drop}
+  & idx ~ {idx_cmp idx_keep}
+  & cid_cmp ~ $([=] $(idx_cmp eq))
+  & cid_drop ~ *
+  & eq ~ ?((@enum_nonroot @enum_root) (tail (attrs (idx_keep out))))
+
+@enum_nonroot = (tail (attrs (idx out)))
+  & idx ~ $([+1] ni)
+  & @enum ~ (tail (attrs (ni out)))
+
+@enum_root = (* (tail (attrs (idx out))))
+  & idx ~ {candidate next}
+  & next ~ $([+1] ni)
+  & candidate ~ {cid_scan cid_emit}
+  & attrs ~ {attrs_scan attrs_rec}
+  & @scan ~ (attrs_scan (cid_scan ((0 (0 0)) ((0 (0 0)) ((0 (0 0)) (0 (0 0)))) states)))
+  & @emit ~ (states (cid_emit out))
+  & @enum ~ (tail (attrs_rec (ni out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cid (state out)))) pl) (cid (state out)))
+
+@scan_nil = (* (cid (state out)))
+  & cid ~ *
+  & out ~ state
+
+@scan_cons = (* (((ac (key val)) tail) (cid (state out))))
+  & cid ~ {cid_cmp cid_keep}
+  & ac ~ $([=] $(cid_cmp eq))
+  & eq ~ ?((@scan_other @scan_match) (tail (cid_keep (key (val (state out))))))
+
+@scan_other = (tail (cid (key (val (state out)))))
+  & key ~ *
+  & val ~ *
+  & @scan ~ (tail (cid (state out)))
+
+@scan_match = (tail (cid (key (val (state out)))))
+  & @dispatch ~ (key (val (state (tail (cid out)))))
+
+@dispatch = ((?((@upd0 @dispatch1) (pl (val (state (tail (cid out)))))) pl) (val (state (tail (cid out)))))
+
+@dispatch1 = ((?((@upd1 @dispatch2) (pl (val (state (tail (cid out)))))) pl) (val (state (tail (cid out)))))
+
+@dispatch2 = ((?((@upd2 @dispatch3) (pl (val (state (tail (cid out)))))) pl) (val (state (tail (cid out)))))
+
+@dispatch3 = ((?((@upd3 @invalid_key) (pl (val (state (tail (cid out)))))) pl) (val (state (tail (cid out)))))
+
+@invalid_key = (km (val (state (tail (cid out)))))
+  & km ~ *
+  & val ~ *
+  & @scan ~ (tail (cid (state out)))
+
+@upd0 = (val (((s0 (b0 f0)) ((s1 (b1 f1)) ((s2 (b2 f2)) (s3 (b3 f3)))) (tail (cid out))))
+  & @track ~ (s0 (b0 (f0 (val updated))))
+  & @scan ~ (tail (cid (updated ((s1 (b1 f1)) ((s2 (b2 f2)) (s3 (b3 f3)))) out)))
+
+@upd1 = (val (((s0 (b0 f0)) ((s1 (b1 f1)) ((s2 (b2 f2)) (s3 (b3 f3)))) (tail (cid out))))
+  & @track ~ (s1 (b1 (f1 (val updated))))
+  & @scan ~ (tail (cid ((s0 (b0 f0)) (updated ((s2 (b2 f2)) (s3 (b3 f3)))) out)))
+
+@upd2 = (val (((s0 (b0 f0)) ((s1 (b1 f1)) ((s2 (b2 f2)) (s3 (b3 f3)))) (tail (cid out))))
+  & @track ~ (s2 (b2 (f2 (val updated))))
+  & @scan ~ (tail (cid ((s0 (b0 f0)) ((s1 (b1 f1)) (updated (s3 (b3 f3)))) out)))
+
+@upd3 = (val (((s0 (b0 f0)) ((s1 (b1 f1)) ((s2 (b2 f2)) (s3 (b3 f3)))) (tail (cid out))))
+  & @track ~ (s3 (b3 (f3 (val updated))))
+  & @scan ~ (tail (cid ((s0 (b0 f0)) ((s1 (b1 f1)) ((s2 (b2 f2)) updated)) out)))
+
+@track = ((?((@track_first @track_again) (pl (base (found (val out))))) pl) (base (found (val out))))
+
+@track_first = (base (found (val out)))
+  & base ~ *
+  & found ~ *
+  & out ~ (1 (val 0))
+
+@track_again = (base (found (val out)))
+  & base ~ {bc bk}
+  & val ~ $([!] $(bc diff))
+  & found ~ $([|] $(diff nf))
+  & out ~ (1 (bk nf))
+
+@emit = (((s0 (b0 f0)) ((s1 (b1 f1)) ((s2 (b2 f2)) (s3 (b3 f3))))) (cid out))
+  & s0 ~ *
+  & b0 ~ *
+  & s1 ~ *
+  & b1 ~ *
+  & s2 ~ *
+  & b2 ~ *
+  & s3 ~ *
+  & b3 ~ *
+  & @emit3 ~ (f3 (cid ((0 *) r3)))
+  & @emit2 ~ (f2 (cid (r3 r2)))
+  & @emit1 ~ (f1 (cid (r2 r1)))
+  & @emit0 ~ (f0 (cid (r1 out)))
+
+@emit0 = ((?((@emit0_no @emit0_yes) (pl (cid (rest out)))) pl) (cid (rest out)))
+
+@emit0_no = (cid (rest out))
+  & cid ~ *
+  & out ~ rest
+
+@emit0_yes = (* (cid (rest out)))
+  & out ~ (1 ((cid 0) rest))
+
+@emit1 = ((?((@emit1_no @emit1_yes) (pl (cid (rest out)))) pl) (cid (rest out)))
+
+@emit1_no = (cid (rest out))
+  & cid ~ *
+  & out ~ rest
+
+@emit1_yes = (* (cid (rest out)))
+  & out ~ (1 ((cid 1) rest))
+
+@emit2 = ((?((@emit2_no @emit2_yes) (pl (cid (rest out)))) pl) (cid (rest out)))
+
+@emit2_no = (cid (rest out))
+  & cid ~ *
+  & out ~ rest
+
+@emit2_yes = (* (cid (rest out)))
+  & out ~ (1 ((cid 2) rest))
+
+@emit3 = ((?((@emit3_no @emit3_yes) (pl (cid (rest out)))) pl) (cid (rest out)))
+
+@emit3_no = (cid (rest out))
+  & cid ~ *
+  & out ~ rest
+
+@emit3_yes = (* (cid (rest out)))
+  & out ~ (1 ((cid 3) rest))
+
+@nth = ((?((@nth_nil @nth_cons) (pl (idx out))) pl) (idx out))
+
+@nth_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@nth_here @nth_later) (head (tail out)))
+
+@nth_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@nth_later = (idxm (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idxm out))

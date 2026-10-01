@@ -1,0 +1,20 @@
+// Stable partition of xs into values below p and values at least p.
+@prog = ((p xs) out)
+  & @part ~ (xs (p out))
+
+@part = ((?((@part_nil @part_cons) (payload (p out))) payload) (p out))
+
+@part_nil = (* (* ((0 *) (0 *))))
+
+@part_cons = (* ((h t) (p out)))
+  & p ~ {p_rec p_cmp}
+  & h ~ {h_cmp h_out}
+  & @part ~ (t (p_rec rec))
+  & h_cmp ~ $([<] $(p_cmp z))
+  & z ~ ?((@part_hi @part_lo) (h_out (rec out)))
+
+// The branch roots directly pattern-match the recursive pair and wire
+// the selected result to out, avoiding separate body rewrites.
+@part_hi = (* (h ((lo hi) (lo (1 (h hi))))))
+
+@part_lo = (* (h ((lo hi) ((1 (h lo)) hi))))

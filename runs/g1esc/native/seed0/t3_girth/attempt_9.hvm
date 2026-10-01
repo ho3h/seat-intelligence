@@ -1,0 +1,220 @@
+@prog = (n (edges out))
+  & @loop_sources ~ (0 (n (edges (0 out))))
+
+@loop_sources = (i (n (edges (acc out))))
+  & i ~ {i_lt i_ctx}
+  & n ~ {n_lt n_ctx}
+  & @lt ~ (i_lt (n_lt z))
+  & z ~ ?((@ls_done @ls_next) (i_ctx (n_ctx (edges (acc out)))))
+
+@ls_done = (i (n (edges (acc out))))
+  & acc ~ out
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+
+@ls_next = (* (i (n (edges (acc out)))))
+  & i ~ {i_bfs i_inc}
+  & n ~ {n_bfs n_next}
+  & edges ~ {edges_bfs edges_next}
+  & @bfs_source ~ (i_bfs (n_bfs (edges_bfs src_min)))
+  & @update_min ~ (src_min (acc new_acc))
+  & i_inc ~ $([+1] i_next)
+  & @loop_sources ~ (i_next (n_next (edges_next (new_acc out))))
+
+@bfs_source = (s (n (edges out)))
+  & s ~ {s_front s_vis}
+  & n ~ {n_parent n_arg}
+  & @bfs_loop ~ ((1 ((s_front n_parent) (0 *))) (0 ((1 ((s_vis 0) (0 *))) (0 (n_arg (edges out))))))
+
+@bfs_loop = (frontier (d (vstd (mn (n (edges out))))))
+  & d ~ {d_proc d_cont}
+  & n ~ {n_proc n_cont}
+  & edges ~ {edges_proc edges_cont}
+  & @process_frontier ~ (frontier (d_proc (n_proc (edges_proc (vstd ((0 *) mn) state_out)))))
+  & @bfs_continue ~ (state_out (d_cont (n_cont (edges_cont out))))
+
+@bfs_continue = ((new_vstd ((tag payload) new_mn)) (d (n (edges out))))
+  & tag ~ ?((@bc_done @bc_next) (payload (new_vstd (new_mn (d (n (edges out)))))))
+
+@bc_done = (payload (new_vstd (new_mn (d (n (edges out))))))
+  & new_mn ~ out
+  & payload ~ *
+  & new_vstd ~ *
+  & d ~ *
+  & n ~ *
+  & edges ~ *
+
+@bc_next = (* (payload (new_vstd (new_mn (d (n (edges out)))))))
+  & d ~ $([+1] d_next)
+  & @bfs_loop ~ ((1 payload) (d_next (new_vstd (new_mn (n (edges out))))))
+
+@process_frontier = ((tag payload) (d (n (edges (state out)))))
+  & tag ~ ?((@pf_nil @pf_cons) (payload (d (n (edges (state out))))))
+
+@pf_nil = (payload (d (n (edges (state out)))))
+  & state ~ out
+  & payload ~ *
+  & d ~ *
+  & n ~ *
+  & edges ~ *
+
+@pf_cons = (* (((u p) rest) (d (n (edges (state out))))))
+  & d ~ {d_now d_next}
+  & n ~ {n_now n_next}
+  & edges ~ {edges_now edges_next}
+  & @process_edges ~ (edges_now (u (p (d_now (n_now (state state_mid))))))
+  & @process_frontier ~ (rest (d_next (n_next (edges_next (state_mid out)))))
+
+@process_edges = ((tag payload) (u (p (d (n (state out))))))
+  & tag ~ ?((@pe_nil @pe_cons) (payload (u (p (d (n (state out)))))))
+
+@pe_nil = (payload (u (p (d (n (state out))))))
+  & state ~ out
+  & payload ~ *
+  & u ~ *
+  & p ~ *
+  & d ~ *
+  & n ~ *
+
+@pe_cons = (* ((edge tail) (u (p (d (n (state out)))))))
+  & u ~ {u_now u_next}
+  & p ~ {p_now p_next}
+  & d ~ {d_now d_next}
+  & n ~ {n_now n_next}
+  & @handle_edge ~ (edge (u_now (p_now (d_now (n_now (state state_mid))))))
+  & @process_edges ~ (tail (u_next (p_next (d_next (n_next (state_mid out))))))
+
+@handle_edge = (edge (u (p (d (n (state out))))))
+  & u ~ {u_edge u_ctx}
+  & n ~ {n_edge n_rest}
+  & n_rest ~ {n_lt n_ctx}
+  & @edge_neighbor ~ (edge (u_edge (n_edge nb_raw)))
+  & nb_raw ~ {nb_lt nb_ctx}
+  & @lt ~ (nb_lt (n_lt found))
+  & found ~ ?((@he_skip @he_incident) (nb_ctx (u_ctx (p (d (n_ctx (state out)))))))
+
+@he_skip = (nb (u (p (d (n (state out))))))
+  & state ~ out
+  & nb ~ *
+  & u ~ *
+  & p ~ *
+  & d ~ *
+  & n ~ *
+
+@he_incident = (* (nb (u (p (d (n ((vs (nf mn)) out)))))))
+  & nb ~ {nb_look nb_keep}
+  & n ~ {n_look n_lt}
+  & vs ~ {vs_look vs_keep}
+  & @lookup_dist ~ (vs_look (nb_look (n_look dist_raw)))
+  & dist_raw ~ {dist_lt dist_ctx}
+  & @lt ~ (dist_lt (n_lt found))
+  & found ~ ?((@he_notfound @he_found) (dist_ctx (nb_keep (u (p (d ((vs_keep (nf mn)) out)))))))
+
+@he_notfound = (dist (nb (u (p (d ((vs (nf mn)) out))))))
+  & nb ~ {nb_vs nb_nf}
+  & d ~ $([+1] dist1)
+  & out ~ ((1 ((nb_vs dist1) vs)) ((1 ((nb_nf u) nf)) mn))
+  & dist ~ *
+  & p ~ *
+
+@he_found = (* (dist (nb (u (p (d ((vs (nf mn)) out)))))))
+  & @eq ~ (nb (p z))
+  & u ~ *
+  & z ~ ?((@hf_diff @hf_same) (dist (d ((vs (nf mn)) out))))
+
+@hf_diff = (dist (d ((vs (nf mn)) out)))
+  & d ~ $([+] $(dist sum))
+  & sum ~ $([+1] cand)
+  & @update_min ~ (cand (mn new_mn))
+  & out ~ (vs (nf new_mn))
+
+@hf_same = (* (dist (d ((vs (nf mn)) out))))
+  & out ~ (vs (nf mn))
+  & dist ~ *
+  & d ~ *
+
+@lookup_dist = ((tag payload) (v (n out)))
+  & tag ~ ?((@ld_nil @ld_cons) (payload (v (n out))))
+
+@ld_nil = (payload (v (n out)))
+  & n ~ out
+  & payload ~ *
+  & v ~ *
+
+@ld_cons = (* (((x d) tail) (v (n out))))
+  & x ~ {x_eq x_ctx}
+  & v ~ {v_eq v_ctx}
+  & @eq ~ (x_eq (v_eq z))
+  & z ~ ?((@ld_eq @ld_recurse) (((x_ctx d) tail) (v_ctx (n out))))
+
+@ld_eq = (((x d) tail) (v (n out)))
+  & d ~ out
+  & x ~ *
+  & tail ~ *
+  & v ~ *
+  & n ~ *
+
+@ld_recurse = (* (((x d) tail) (v (n out))))
+  & @lookup_dist ~ (tail (v (n out)))
+  & x ~ *
+  & d ~ *
+
+@edge_neighbor = ((a b) (u (n out)))
+  & a ~ {a_eq a_ctx}
+  & u ~ {u_eq u_ctx}
+  & @eq ~ (a_eq (u_eq z))
+  & z ~ ?((@en_a_eq @en_check_b) ((a_ctx b) (u_ctx (n out))))
+
+@en_a_eq = ((a b) (u (n out)))
+  & b ~ out
+  & a ~ *
+  & u ~ *
+  & n ~ *
+
+@en_check_b = (* ((a b) (u (n out))))
+  & b ~ {b_eq b_ctx}
+  & u ~ {u_eq u_ctx}
+  & @eq ~ (b_eq (u_eq z2))
+  & z2 ~ ?((@en_b_eq @en_none) ((a b_ctx) (u_ctx (n out))))
+
+@en_b_eq = ((a b) (u (n out)))
+  & a ~ out
+  & b ~ *
+  & u ~ *
+  & n ~ *
+
+@en_none = (* ((a b) (u (n out))))
+  & n ~ out
+  & a ~ *
+  & b ~ *
+  & u ~ *
+
+@eq = (a (b out))
+  & a ~ $([=] $(b out))
+
+@lt = (a (b out))
+  & a ~ $([<] $(b out))
+
+@update_min = (cand (cur out))
+  & cur ~ {cur_eq cur_ctx}
+  & @eq ~ (cur_eq (0 z))
+  & z ~ ?((@um_nonzero @um_zero) (cand (cur_ctx out)))
+
+@um_zero = (* (cand (cur out)))
+  & cand ~ out
+  & cur ~ *
+
+@um_nonzero = (cand (cur out))
+  & cand ~ {cand_lt cand_ctx}
+  & cur ~ {cur_lt cur_ctx}
+  & @lt ~ (cand_lt (cur_lt z2))
+  & z2 ~ ?((@um_no @um_yes) (cand_ctx (cur_ctx out)))
+
+@um_yes = (* (cand (cur out)))
+  & cand ~ out
+  & cur ~ *
+
+@um_no = (cand (cur out))
+  & cur ~ out
+  & cand ~ *

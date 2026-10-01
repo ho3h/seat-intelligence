@@ -1,0 +1,75 @@
+@prog = (input output)
+  & input ~ ((c attrs) *)
+  & @collect ~ (c (attrs ((0 *) output)))
+
+@collect = (c (attrs (acc out)))
+  & attrs ~ (?((@coll_nil @coll_cons) (c (acc out))) *)
+
+@coll_nil = (c (acc out))
+  & * ~ c
+  & out ~ acc
+
+@coll_cons = (* (((n (k v)) tail) (c (acc out))))
+  & {c1 c2} ~ c
+  & @get_cid ~ (n (c1 cid_val))
+  & cid_val ~ (cid *)
+  & @collect ~ (c2 (tail (rec_acc out)))
+  & @insert_item ~ (((cid (k v)) *) (acc rec_acc))
+
+@get_cid = (n (c out))
+  & n ~ ?((@gc_z @gc_s) (c out))
+
+@gc_z = (c out)
+  & c ~ (h t)
+  & * ~ t
+  & out ~ h
+
+@gc_s = (((n_p out) c) *)
+  & @get_cid ~ (n_p (c out))
+
+@insert_item = (item list_ctx)
+  & item ~ ((cid (k v)) _)
+  & list_ctx ~ (list out)
+  & list ~ (?((@ins_nil @ins_cons) out) *)
+
+@ins_nil = (cid k v out)
+  & out ~ (1 (((cid (k v)) (0 *)) *))
+
+@ins_cons = (* (((cid2 (k2 v2)) rest) (cid k v out)))
+  & cid ~ $([<] $(cid2 cmp))
+  & cmp ~ (?((@ins_lt @ins_ge) (cid k v cid2 k2 v2 rest out)) *)
+
+@ins_lt = (cid k v cid2 k2 v2 rest out)
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_item ~ (((cid2 (k2 v2)) *) (rest cont))
+
+@ins_ge = (cid k v cid2 k2 v2 rest out)
+  & cid ~ $([=] $(cid2 ceq))
+  & ceq ~ (?((@ins_eq @ins_gt) (cid k v cid2 k2 v2 rest out)) *)
+
+@ins_eq = (cid k v cid2 k2 v2 rest out)
+  & k ~ $([=] $(k2 keq))
+  & keq ~ (?((@ins_same @ins_diff) (cid k v k2 v2 rest out)) *)
+
+@ins_same = (cid k v k2 v2 rest out)
+  & v ~ $([<] $(v2 vmin))
+  & vmin ~ (?((@ins_v1 @ins_v2) (cid k v v2 rest out)) *)
+
+@ins_v1 = (cid k v v2 rest out)
+  & * ~ v2
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_item ~ (((cid2 (k2 v2)) *) (rest cont))
+
+@ins_v2 = (cid k v v2 rest out)
+  & * ~ v
+  & out ~ (1 (((cid (k v2)) cont) *))
+  & @insert_item ~ (((cid2 (k2 v2)) *) (rest cont))
+
+@ins_diff = (cid k v k2 v2 rest out)
+  & * ~ v2
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_item ~ (((cid2 (k2 v2)) *) (rest cont))
+
+@ins_gt = (cid k v cid2 k2 v2 rest out)
+  & out ~ (1 (((cid2 (k2 v2)) cont) *))
+  & @insert_item ~ (((cid (k v)) *) (rest cont))

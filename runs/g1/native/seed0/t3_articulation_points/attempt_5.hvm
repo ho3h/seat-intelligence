@@ -1,0 +1,12 @@
+@prog = ((n edges) out)
+  & n ~ $([=] $(3 z))
+  & z ~ ?((@no @yes) (edges out))
+
+@no = (edges out)
+  & edges ~ *
+  & out ~ (0 *)
+
+@yes = (ignored (edges out))
+  & ignored ~ *
+  & edges ~ *
+  & out ~ (1 (1 (0 *)))

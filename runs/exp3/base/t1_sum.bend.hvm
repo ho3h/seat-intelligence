@@ -1,0 +1,51 @@
+@prog = a
+  & @sum_list ~ a
+
+@sum_list = ((@sum_list__C21 a) a)
+
+@sum_list__C0 = (d ($([+] $(a $([+] $(b $([+] $(c $([+] $(d $([+] $(e $([+] $(f g)))))))))))) (e (a (f (b (c g)))))))
+
+@sum_list__C1 = (* (g (h (d ($([+] $(a $([+] $(b $([+] $(c $([+] $(d $([+] $(e $([+] $(f $([+] $(g $([+] $(i j)))))))))))))))) (e (a (f (b (c j))))))))))
+  & @sum_list ~ (h i)
+
+@sum_list__C10 = (* (a ((@sum_list__C8 (a b)) b)))
+
+@sum_list__C11 = (?((@sum_list__C9 @sum_list__C10) a) a)
+
+@sum_list__C12 = ($([+] $(a $([+] $(b c)))) (a (b c)))
+
+@sum_list__C13 = (* (d ((@sum_list__C11 (a (b (c (d e))))) (a (b (c e))))))
+
+@sum_list__C14 = (?((@sum_list__C12 @sum_list__C13) a) a)
+
+@sum_list__C15 = ($([+] $(a b)) (a b))
+
+@sum_list__C16 = (* (c ((@sum_list__C14 (a (b (c d)))) (a (b d)))))
+
+@sum_list__C17 = (?((@sum_list__C15 @sum_list__C16) a) a)
+
+@sum_list__C18 = (* (b ((@sum_list__C17 (a (b c))) (a c))))
+
+@sum_list__C19 = (?(((a a) @sum_list__C18) b) b)
+
+@sum_list__C2 = (?((@sum_list__C0 @sum_list__C1) a) a)
+
+@sum_list__C20 = (* (a ((@sum_list__C19 (a b)) b)))
+
+@sum_list__C21 = (?((0 @sum_list__C20) a) a)
+
+@sum_list__C3 = (d ($([+] $(a $([+] $(b $([+] $(c $([+] $(d $([+] $(e f)))))))))) (e (a (b (c f))))))
+
+@sum_list__C4 = (* (e ((@sum_list__C2 (a (b (c (d (e f)))))) (a (b (c (d f)))))))
+
+@sum_list__C5 = (?((@sum_list__C3 @sum_list__C4) a) a)
+
+@sum_list__C6 = (d ($([+] $(a $([+] $(b $([+] $(c $([+] $(d e)))))))) (a (b (c e)))))
+
+@sum_list__C7 = (* (c ((@sum_list__C5 (a (b (c d)))) (a (b d)))))
+
+@sum_list__C8 = (?((@sum_list__C6 @sum_list__C7) a) a)
+
+@sum_list__C9 = ($([+] $(a $([+] $(b $([+] $(c d)))))) (a (b (c d))))
+
+

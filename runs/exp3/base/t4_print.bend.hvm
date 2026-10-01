@@ -1,0 +1,133 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@digits = ({$([>0x000000A] ?((@digits__C12 @digits__C13) (a b))) a} b)
+
+@digits__C0 = ({$([:/0x0989680] a) {$([:/0x00F4240] $([:%0x000000A] c)) {$([:/0x00186A0] $([:%0x000000A] e)) {$([:/0x0002710] $([:%0x000000A] g)) {$([:/0x00003E8] $([:%0x000000A] i)) {$([:/0x0000064] $([:%0x000000A] k)) {$([:/0x000000A] $([:%0x000000A] m)) $([:%0x000000A] o)}}}}}}} (q y))
+  & @List/Cons ~ (b (x y))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (w x))
+  & $(c d) ~ [+0x0000030]
+  & @List/Cons ~ (f (v w))
+  & $(e f) ~ [+0x0000030]
+  & @List/Cons ~ (h (u v))
+  & $(g h) ~ [+0x0000030]
+  & @List/Cons ~ (j (t u))
+  & $(i j) ~ [+0x0000030]
+  & @List/Cons ~ (l (s t))
+  & $(k l) ~ [+0x0000030]
+  & @List/Cons ~ (n (r s))
+  & $(m n) ~ [+0x0000030]
+  & @List/Cons ~ (p (q r))
+  & $(o p) ~ [+0x0000030]
+
+@digits__C1 = (* ({$([:/0x00F4240] a) {$([:/0x00186A0] $([:%0x000000A] c)) {$([:/0x0002710] $([:%0x000000A] e)) {$([:/0x00003E8] $([:%0x000000A] g)) {$([:/0x0000064] $([:%0x000000A] i)) {$([:/0x000000A] $([:%0x000000A] k)) $([:%0x000000A] m)}}}}}} (o v)))
+  & @List/Cons ~ (b (u v))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (t u))
+  & $(c d) ~ [+0x0000030]
+  & @List/Cons ~ (f (s t))
+  & $(e f) ~ [+0x0000030]
+  & @List/Cons ~ (h (r s))
+  & $(g h) ~ [+0x0000030]
+  & @List/Cons ~ (j (q r))
+  & $(i j) ~ [+0x0000030]
+  & @List/Cons ~ (l (p q))
+  & $(k l) ~ [+0x0000030]
+  & @List/Cons ~ (n (o p))
+  & $(m n) ~ [+0x0000030]
+
+@digits__C10 = ({$([>0x00003E8] ?((@digits__C8 @digits__C9) (a b))) a} b)
+
+@digits__C11 = (* ({$([:/0x000000A] a) $([:%0x000000A] c)} (e g)))
+  & @List/Cons ~ (b (f g))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (e f))
+  & $(c d) ~ [+0x0000030]
+
+@digits__C12 = ({$([>0x0000064] ?((@digits__C10 @digits__C11) (a b))) a} b)
+
+@digits__C13 = (* (a c))
+  & @List/Cons ~ (b c)
+  & $(a b) ~ [+0x0000030]
+
+@digits__C2 = ({$([>0x0989680] ?((@digits__C0 @digits__C1) (a b))) a} b)
+
+@digits__C3 = (* ({$([:/0x00186A0] a) {$([:/0x0002710] $([:%0x000000A] c)) {$([:/0x00003E8] $([:%0x000000A] e)) {$([:/0x0000064] $([:%0x000000A] g)) {$([:/0x000000A] $([:%0x000000A] i)) $([:%0x000000A] k)}}}}} (m s)))
+  & @List/Cons ~ (b (r s))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (q r))
+  & $(c d) ~ [+0x0000030]
+  & @List/Cons ~ (f (p q))
+  & $(e f) ~ [+0x0000030]
+  & @List/Cons ~ (h (o p))
+  & $(g h) ~ [+0x0000030]
+  & @List/Cons ~ (j (n o))
+  & $(i j) ~ [+0x0000030]
+  & @List/Cons ~ (l (m n))
+  & $(k l) ~ [+0x0000030]
+
+@digits__C4 = ({$([>0x00F4240] ?((@digits__C2 @digits__C3) (a b))) a} b)
+
+@digits__C5 = (* ({$([:/0x0002710] a) {$([:/0x00003E8] $([:%0x000000A] c)) {$([:/0x0000064] $([:%0x000000A] e)) {$([:/0x000000A] $([:%0x000000A] g)) $([:%0x000000A] i)}}}} (k p)))
+  & @List/Cons ~ (b (o p))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (n o))
+  & $(c d) ~ [+0x0000030]
+  & @List/Cons ~ (f (m n))
+  & $(e f) ~ [+0x0000030]
+  & @List/Cons ~ (h (l m))
+  & $(g h) ~ [+0x0000030]
+  & @List/Cons ~ (j (k l))
+  & $(i j) ~ [+0x0000030]
+
+@digits__C6 = ({$([>0x00186A0] ?((@digits__C4 @digits__C5) (a b))) a} b)
+
+@digits__C7 = (* ({$([:/0x00003E8] a) {$([:/0x0000064] $([:%0x000000A] c)) {$([:/0x000000A] $([:%0x000000A] e)) $([:%0x000000A] g)}}} (i m)))
+  & @List/Cons ~ (b (l m))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (k l))
+  & $(c d) ~ [+0x0000030]
+  & @List/Cons ~ (f (j k))
+  & $(e f) ~ [+0x0000030]
+  & @List/Cons ~ (h (i j))
+  & $(g h) ~ [+0x0000030]
+
+@digits__C8 = ({$([>0x0002710] ?((@digits__C6 @digits__C7) (a b))) a} b)
+
+@digits__C9 = (* ({$([:/0x0000064] a) {$([:/0x000000A] $([:%0x000000A] c)) $([:%0x000000A] e)}} (g j)))
+  & @List/Cons ~ (b (i j))
+  & $(a b) ~ [+0x0000030]
+  & @List/Cons ~ (d (h i))
+  & $(c d) ~ [+0x0000030]
+  & @List/Cons ~ (f (g h))
+  & $(e f) ~ [+0x0000030]
+
+@print_expr = ((@print_expr__C4 a) a)
+
+@print_expr__C0 = (a (b (c h)))
+  & @List/Cons ~ (40 (g h))
+  &!@print_expr ~ (a (f g))
+  & @List/Cons ~ (43 (e f))
+  &!@print_expr ~ (b (d e))
+  & @List/Cons ~ (41 (c d))
+
+@print_expr__C1 = (* (a (b (c h))))
+  & @List/Cons ~ (40 (g h))
+  &!@print_expr ~ (a (f g))
+  & @List/Cons ~ (42 (e f))
+  &!@print_expr ~ (b (d e))
+  & @List/Cons ~ (41 (c d))
+
+@print_expr__C2 = a
+  & @digits ~ a
+
+@print_expr__C3 = (?((@print_expr__C0 @print_expr__C1) a) a)
+
+@print_expr__C4 = (?((@print_expr__C2 @print_expr__C3) a) a)
+
+@prog = (a b)
+  & @print_expr ~ (a (@List/Nil b))
+
+

@@ -1,0 +1,333 @@
+// Input: (n, tau, must-not-link pairs, candidate triples)
+@prog = (inp out)
+  & inp ~ (n (tau (mnl cands)))
+  & n ~ {ni ne}
+  & @init ~ (ni labsr)
+  & @reverse ~ (labsr ((0 *) labs))
+  & @edges ~ (cands (ne (tau (mnl (labs out))))
+
+// Build the labels in reverse order, then reverse them.
+@init = ( ?((@init_zero @init_succ) (out *)) out)
+
+@init_zero = (out dummy)
+  & dummy ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (out dummy))
+  & dummy ~ *
+  & k ~ {a b}
+  & @init ~ (a tail)
+  & out ~ (1 (b tail))
+
+@reverse = ((?((@reverse_nil @reverse_cons) (pl (acc out))) pl) (acc out))
+
+@reverse_nil = (pl (acc out))
+  & pl ~ *
+  & out ~ acc
+
+@reverse_cons = (k (pl (acc out)))
+  & k ~ *
+  & pl ~ (h t)
+  & @reverse ~ (t ((1 (h acc)) out))
+
+// Select the best remaining raw candidate. Removing all copies of its pair
+// ensures that the pair is processed once, at its highest score.
+@edges = ((?((@edges_nil @edges_cons) (pl (st out))) pl) (st out))
+
+@edges_nil = (pl (st out))
+  & pl ~ *
+  & st ~ (n (tau (mnl labs)))
+  & n ~ *
+  & tau ~ *
+  & mnl ~ *
+  & labs ~ out
+
+@edges_cons = (k (pl (st out)))
+  & k ~ *
+  & pl ~ {ps po}
+  & @best ~ ((1 ps) best)
+  & best ~ (tag payload)
+  & tag ~ ?((@edges_done @edges_take) (payload ((1 po) (st out))))
+
+@edges_done = (payload (orig (st out)))
+  & payload ~ *
+  & orig ~ *
+  & st ~ (n (tau (mnl labs)))
+  & n ~ *
+  & tau ~ *
+  & mnl ~ *
+  & labs ~ out
+
+@edges_take = (k (payload (orig (st out))))
+  & k ~ *
+  & @process ~ (payload (orig (st out)))
+
+// Return (0 *) for an empty list, otherwise (1 best_candidate).
+@best = ((?((@best_nil @best_cons) (pl out)) pl) out)
+
+@best_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@best_cons = (k (pl out))
+  & k ~ *
+  & pl ~ (h t)
+  & @best ~ (t tailbest)
+  & tailbest ~ (tag payload)
+  & tag ~ ?((@best_tail_nil @best_tail_yes) (payload (h out)))
+
+@best_tail_nil = (payload (h out))
+  & payload ~ *
+  & out ~ (1 h)
+
+@best_tail_yes = (k (payload (h out)))
+  & k ~ *
+  & @choose ~ (h (payload chosen))
+  & out ~ (1 chosen)
+
+// Choose the preferred candidate from the head and the best tail candidate.
+@choose = (h (b out))
+  & h ~ (hu (hv hs))
+  & b ~ (bu (bv bs))
+  & hu ~ {huc hur}
+  & hv ~ {hvc hvr}
+  & hs ~ {hsc hsr}
+  & bu ~ {buc bur}
+  & bv ~ {bvc bvr}
+  & bs ~ {bsc bsr}
+  & @better ~ ((huc (hvc hsc)) ((buc (bvc bsc)) z))
+  & z ~ ?((@choose_best @choose_head) (hur (hvr (hsr (bur (bvr (bsr out))))))
+
+@choose_best = (hur (hvr (hsr (bur (bvr (bsr out))))))
+  & hur ~ *
+  & hvr ~ *
+  & hsr ~ *
+  & out ~ (bur (bvr bsr))
+
+@choose_head = (k (hur (hvr (hsr (bur (bvr (bsr out)))))))
+  & k ~ *
+  & bur ~ *
+  & bvr ~ *
+  & bsr ~ *
+  & out ~ (hur (hvr hsr))
+
+// True iff h sorts before b: score descending, then u and v ascending.
+@better = (h (b out))
+  & h ~ (hu (hv hs))
+  & b ~ (bu (bv bs))
+  & hs ~ {hsg hse}
+  & bs ~ {bsg bse}
+  & hu ~ {hul hue}
+  & bu ~ {bul bue}
+  & hsg ~ $([>] $(bsg gt))
+  & hse ~ $([=] $(bse eqs))
+  & hul ~ $([<] $(bul ult))
+  & hue ~ $([=] $(bue ueq))
+  & hv ~ $([<] $(bv vlt))
+  & ueq ~ $([&] $(vlt uv))
+  & ult ~ $([|] $(uv usel))
+  & eqs ~ $([&] $(usel tie))
+  & gt ~ $([|] $(tie out))
+
+// Filter every occurrence of the selected pair from the candidate list.
+// If the selected maximum score is below tau, no remaining candidate qualifies.
+@process = (cand (orig (st out)))
+  & cand ~ (u (v score))
+  & u ~ {uf um}
+  & v ~ {vf vm}
+  & score ~ {sg1 sg2}
+  & st ~ (n (tau (mnl labs)))
+  & tau ~ {ta1 ta2}
+  & @filter ~ (orig (uf (vf filtered)))
+  & sg1 ~ $([>] $(ta1 gt))
+  & sg2 ~ $([=] $(ta2 eq))
+  & gt ~ $([|] $(eq ok))
+  & ok ~ ?((@process_reject @process_accept) (um (vm (filtered (n (ta2 (mnl (labs out)))))))
+
+@process_reject = (um (vm (filtered (n (ta2 (mnl (labs out)))))))
+  & um ~ *
+  & vm ~ *
+  & filtered ~ *
+  & n ~ *
+  & ta2 ~ *
+  & mnl ~ *
+  & labs ~ out
+
+@process_accept = (k (um (vm (filtered (n (ta2 (mnl (labs out)))))))
+  & k ~ *
+  & @merge ~ (um (vm (filtered (n (ta2 (mnl (labs out))))))
+
+@filter = ((?((@filter_nil @filter_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@filter_nil = (pl (u (v out)))
+  & pl ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@filter_cons = (k (pl (u (v out))))
+  & k ~ *
+  & pl ~ (h t)
+  & h ~ (hu (hv hs))
+  & u ~ {ue ur}
+  & v ~ {ve vr}
+  & hu ~ {huc hur}
+  & hv ~ {hvc hvr}
+  & @filter ~ (t (ur (vr ft)))
+  & huc ~ $([=] $(ue ex))
+  & hvc ~ $([=] $(ve ey))
+  & ex ~ $([&] $(ey same))
+  & same ~ ?((@filter_keep @filter_drop) (hur (hvr (hs (ft out))))
+
+@filter_keep = (hur (hvr (hs (ft out))))
+  & out ~ (1 ((hur (hvr hs)) ft))
+
+@filter_drop = (k (hur (hvr (hs (ft out)))))
+  & k ~ *
+  & hur ~ *
+  & hvr ~ *
+  & hs ~ *
+  & out ~ ft
+
+// Look up a zero-based index in a list.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_cons = (k (pl (i out)))
+  & k ~ *
+  & pl ~ (h t)
+  & i ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & h ~ out
+
+@get_next = (k (h (t out)))
+  & k ~ *
+  & h ~ *
+  & @get ~ (t (k out))
+
+// Merge the clusters containing u and v unless a must-not-link crosses them.
+@merge = (u (v (filtered (st out))))
+  & st ~ (n (tau (mnl labs)))
+  & labs ~ {ll ls}
+  & ll ~ {lu lv}
+  & @get ~ (lu (u ra))
+  & @get ~ (lv (v rb))
+  & ra ~ {rae rac}
+  & rb ~ {rbe rbc}
+  & rae ~ $([=] $(rbe same))
+  & same ~ ?((@merge_diff @merge_same) (filtered (n (tau (mnl (ls (rac (rbc out)))))))
+
+@merge_same = (k (filtered (n (tau (mnl (ls (rac (rbc out)))))))
+  & k ~ *
+  & rac ~ *
+  & rbc ~ *
+  & @edges ~ (filtered (n (tau (mnl (ls out)))))
+
+@merge_diff = (filtered (n (tau (mnl (ls (rac (rbc out)))))))
+  & mnl ~ {mc mr}
+  & ls ~ {lc la}
+  & rac ~ {rcc rcu}
+  & rbc ~ {rbcc rbu}
+  & @conflict ~ (mc (lc (rcc (rbcc conflict))))
+  & conflict ~ ?((@merge_do @merge_skip) (filtered (n (tau (mr (la (rcu (rbu out)))))))
+
+@merge_do = (filtered (n (tau (mr (la (rcu (rbu out)))))))
+  & @update ~ (la (rcu (rbu updated)))
+  & @edges ~ (filtered (n (tau (mr (updated out)))))
+
+@merge_skip = (k (filtered (n (tau (mr (la (rcu (rbu out)))))))
+  & k ~ *
+  & rcu ~ *
+  & rbu ~ *
+  & @edges ~ (filtered (n (tau (mr (la out)))))
+
+// Return 1 if any must-not-link pair crosses clusters a and b.
+@conflict = ((?((@conf_nil @conf_cons) (pl (labs (a (b out))))) pl) (labs (a (b out))))
+
+@conf_nil = (pl (labs (a (b out))))
+  & pl ~ *
+  & labs ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@conf_cons = (k (pl (labs (a (b out)))))
+  & k ~ *
+  & pl ~ (pair tail)
+  & pair ~ (x y)
+  & labs ~ {lr ll}
+  & ll ~ {lxlist lylist}
+  & a ~ {ar ac}
+  & b ~ {br bc}
+  & ac ~ {aa ab}
+  & bc ~ {ba bb}
+  & @get ~ (lxlist (x xlab))
+  & @get ~ (lylist (y ylab))
+  & xlab ~ {x1 x2}
+  & ylab ~ {y1 y2}
+  & x1 ~ $([=] $(aa e1))
+  & y1 ~ $([=] $(ba e2))
+  & x2 ~ $([=] $(bb e3))
+  & y2 ~ $([=] $(ab e4))
+  & e1 ~ $([&] $(e2 d1))
+  & e3 ~ $([&] $(e4 d2))
+  & d1 ~ $([|] $(d2 z))
+  & z ~ ?((@conf_no @conf_yes) (tail (lr (ar (br out))))
+
+@conf_no = (tail (lr (ar (br out))))
+  & @conflict ~ (tail (lr (ar (br out))))
+
+@conf_yes = (k (tail (lr (ar (br out)))))
+  & k ~ *
+  & tail ~ *
+  & lr ~ *
+  & ar ~ *
+  & br ~ *
+  & out ~ 1
+
+// Relabel every member of the smaller cluster with the larger representative.
+@update = (labs (a (b out)))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@upd_ab @upd_ba) (labs (ar (br out))))
+
+@upd_ab = (labs (ar (br out)))
+  & @map ~ (labs (ar (br out)))
+
+@upd_ba = (k (labs (ar (br out))))
+  & k ~ *
+  & @map ~ (labs (br (ar out)))
+
+@map = ((?((@map_nil @map_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@map_nil = (pl (old (new out)))
+  & pl ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@map_cons = (k (pl (old (new out))))
+  & k ~ *
+  & pl ~ (h t)
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & h ~ {hc hk}
+  & @map ~ (t (or (nr mt)))
+  & hc ~ $([=] $(oc same))
+  & same ~ ?((@map_keep @map_replace) (hk (nc (mt out))))
+
+@map_keep = (hk (nc (mt out)))
+  & nc ~ *
+  & out ~ (1 (hk mt))
+
+@map_replace = (k (hk (nc (mt out))))
+  & k ~ *
+  & hk ~ *
+  & out ~ (1 (nc mt))

@@ -1,0 +1,40 @@
+// With no candidates, return the singleton ids. For a nonempty candidate
+// list, emit a list of the correct length filled with n-1.
+@prog = ((n (tau (mnl ((?((@empty @nonempty) (payload (n out))) payload)))) out)
+  & tau ~ *
+  & mnl ~ *
+
+@empty = (* (n out))
+  & @gen ~ (n (0 out))
+
+@nonempty = (prev (payload (n out)))
+  & prev ~ *
+  & payload ~ *
+  & n ~ {len cmp}
+  & cmp ~ $([-] $(1 val))
+  & @fill ~ (len (val out))
+
+@gen = (n (i out))
+  & n ~ ?((@gen_nil @gen_succ) (i out))
+
+@gen_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@gen_succ = (prev (i out))
+  & i ~ {inc val}
+  & inc ~ $([+1] next)
+  & @gen ~ (prev (next rest))
+  & out ~ (1 (val rest))
+
+@fill = (n (val out))
+  & n ~ ?((@fill_nil @fill_succ) (val out))
+
+@fill_nil = (val out)
+  & val ~ *
+  & out ~ (0 *)
+
+@fill_succ = (prev (val out))
+  & val ~ {head nextval}
+  & @fill ~ (prev (nextval rest))
+  & out ~ (1 (head rest))

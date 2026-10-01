@@ -1,0 +1,36 @@
+@prog = (l out)
+  & @ps0 ~ (l out)
+
+@ps0 = (lv1 out)
+  & @ps0_cons_lw ~ (lv1 out)
+
+@ps0_nil = (* (0 *))
+
+@ps0_cons = (* (({first carry} t) (1 (first rest))))
+  & @ps_cons_lw ~ (t (carry rest))
+
+@ps = (lv2 (acc out))
+  & @ps_cons_lw ~ (lv2 (acc out))
+
+@ps_nil = (* (* (0 *)))
+
+@ps_cons = (* ((h t) ($([+] $(h {headacc nextacc})) (1 (headacc rest)))))
+  & @ps_cons_lw ~ (t (nextacc rest))
+
+@ps0_cons_lw = (ls36 q17)
+  & ls36 ~ (g31 (e27 (g32 (e28 (g33 (e29 (g34 (e30 tk35))))))))
+  & g31 ~ ?((@ps0_nil @ps0_cons_la) ((e27 (q19 q20)) q17))
+  & g32 ~ ?((@ps_nil @ps_cons_la) ((e28 (q22 q23)) (q19 q20)))
+  & g33 ~ ?((@ps_nil @ps_cons_la) ((e29 (q25 q26)) (q22 q23)))
+  & g34 ~ ?((@ps_nil @ps_cons) ((e30 tk35) (q25 q26)))
+
+@ps_cons_lw = (ls58 (q38 q39))
+  & ls58 ~ (g53 (e49 (g54 (e50 (g55 (e51 (g56 (e52 tk57))))))))
+  & g53 ~ ?((@ps_nil @ps_cons_la) ((e49 (q41 q42)) (q38 q39)))
+  & g54 ~ ?((@ps_nil @ps_cons_la) ((e50 (q44 q45)) (q41 q42)))
+  & g55 ~ ?((@ps_nil @ps_cons_la) ((e51 (q47 q48)) (q44 q45)))
+  & g56 ~ ?((@ps_nil @ps_cons) ((e52 tk57) (q47 q48)))
+
+@ps0_cons_la = (* (({first carry} (carry rest)) (1 (first rest))))
+
+@ps_cons_la = (* ((h (nextacc rest)) ($([+] $(h {headacc nextacc})) (1 (headacc rest)))))

@@ -1,0 +1,129 @@
+@prog = ((k (key (cl attrs))) out)
+  & @filter ~ (attrs (k (key (cl filtered))))
+  & @mode ~ (filtered (24 (* out)))
+
+@filter = ((?((@filter_nil @filter_cons) (payload (k (key (cl out))))) payload) (k (key (cl out))))
+
+@filter_nil = (* (k (key (cl out))))
+  & k ~ *
+  & key ~ *
+  & cl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (((node (akey val)) tail) (k (key (cl out)))))
+  & k ~ {kt kr}
+  & key ~ {keyt keyr}
+  & cl ~ {clt clr}
+  & @eligkey ~ (kt (keyt (clt (node (akey ok)))))
+  & @filter ~ (tail (kr (keyr (clr filtered))))
+  & @filter_join ~ (ok (val (filtered out)))
+
+@filter_join = (ok (val (filtered out)))
+  & ok ~ ?((@filter_drop @filter_keep) (val (filtered out)))
+
+@filter_drop = (val (filtered out))
+  & val ~ *
+  & out ~ filtered
+
+@filter_keep = (* (val (filtered out)))
+  & out ~ (1 (val filtered))
+
+@eligkey = (k (key (cl (node (akey out)))))
+  & @get ~ (node (cl cid))
+  & akey ~ $([=] $(key eq1))
+  & cid ~ $([=] $(k eq2))
+  & eq1 ~ $([&] $(eq2 out))
+
+@get = (idx ((?((@get_nil @get_cons) (payload (idx out))) payload) out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_head @get_step) (head (tail out)))
+
+@get_head = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_step = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (idx (tail out))
+
+@mode = ((?((@mode_empty @mode_nonempty) (payload (bits out))) payload) (bits out))
+
+@mode_empty = (* (bits out))
+  & bits ~ *
+  & out ~ (0 16777215)
+
+@mode_nonempty = (* ((head tail) (bits out)))
+  & @mode_bits ~ (bits ((1 (head tail)) out))
+
+@mode_bits = (bits (lst out))
+  & bits ~ ?((@mode_leaf @mode_node) (lst out))
+
+@mode_leaf = ((?((@ml_nil @ml_cons) (payload out)) payload) out)
+
+@ml_nil = (* out)
+  & out ~ (0 16777215)
+
+@ml_cons = (* ((head tail) out))
+  & @length ~ (tail len)
+  & len ~ $([+1] cnt)
+  & out ~ (cnt head)
+
+@length = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((head tail) out))
+  & head ~ *
+  & @length ~ (tail len)
+  & len ~ $([+1] out)
+
+@mode_node = (idx (lst out))
+  & idx ~ {splitidx restidx}
+  & restidx ~ {zidx oidx}
+  & @split ~ (lst (splitidx (zeros ones)))
+  & @mode ~ (zeros (zidx (zc zv)))
+  & @mode ~ (ones (oidx (oc ov)))
+  & zc ~ {zcgt zrest}
+  & zrest ~ {zceq zcout}
+  & oc ~ {ocgt orest}
+  & orest ~ {oceq ocout}
+  & zcgt ~ $([>] $(ocgt gt))
+  & zceq ~ $([=] $(oceq eq))
+  & eq ~ $([|] $(gt win))
+  & win ~ ?((@mode_choose_one @mode_choose_zero) (zcout (zv (ocout (ov out)))))
+
+@mode_choose_one = (zc (zv (oc (ov out))))
+  & zc ~ *
+  & zv ~ *
+  & out ~ (oc ov)
+
+@mode_choose_zero = (* (zc (zv (oc (ov out)))))
+  & oc ~ *
+  & ov ~ *
+  & out ~ (zc zv)
+
+@split = ((?((@sp_nil @sp_cons) (payload (bit out))) payload) (bit out))
+
+@sp_nil = (* (bit out))
+  & bit ~ *
+  & out ~ ((0 *) (0 *))
+
+@sp_cons = (* ((val tail) (bit out)))
+  & bit ~ {bshift brec}
+  & val ~ {vtest vkeep}
+  & vtest ~ $([>>] $(bshift shifted))
+  & shifted ~ $([&] $(1 bitval))
+  & @split ~ (tail (brec (zeros ones)))
+  & bitval ~ ?((@sp_zero @sp_one) (vkeep (zeros (ones out))))
+
+@sp_zero = (val (zeros (ones out)))
+  & out ~ ((1 (val zeros)) ones)
+
+@sp_one = (* (val (zeros (ones out))))
+  & out ~ (zeros (1 (val ones)))

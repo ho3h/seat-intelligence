@@ -1,0 +1,100 @@
+// Map each query to its directed reachability result.
+@prog = (input out)
+  & input ~ (n (queries edges))
+  & n ~ *
+  & @map ~ (queries (edges out))
+
+@map = ((?((@map_nil @map_cons) (pl (es out))) pl) (es out))
+
+@map_nil = (* (es out))
+  & es ~ *
+  & out ~ (0 *)
+
+@map_cons = (* ((q tail) (es out)))
+  & q ~ (a b)
+  & {e1 e2} ~ es
+  & @reach ~ (a (b (e1 r)))
+  & @map ~ (tail (e2 restout))
+  & out ~ (1 (r restout))
+
+// Reachability from a to b, starting with a as the worklist.
+@reach = (a (b (es out)))
+  & @walk ~ ((1 (a (0 *))) (b (es ((0 *) out))))
+
+// Process the worklist, retaining visited vertices.
+@walk = ((?((@walk_nil @walk_cons) (pl (b (es (vis out))))) pl) (b (es (vis out))))
+
+@walk_nil = (* (b (es (vis out))))
+  & b ~ *
+  & es ~ *
+  & vis ~ *
+  & out ~ 0
+
+@walk_cons = (* ((x rest) (b (es (vis out)))))
+  & {xc xp} ~ x
+  & {bc bp} ~ b
+  & xc ~ $([=] $(bc eq))
+  & eq ~ ?((@walk_not_target @walk_found) (xp (rest (bp (es (vis out))))))
+
+@walk_found = (* (rest (b (es (vis out)))))
+  & rest ~ *
+  & b ~ *
+  & es ~ *
+  & vis ~ *
+  & out ~ 1
+
+@walk_not_target = (x (rest (b (es (vis out)))))
+  & {xm xr} ~ x
+  & {vm vr} ~ vis
+  & @member ~ (vm (xm m))
+  & m ~ ?((@walk_unseen @walk_seen) (xr (rest (b (es (vr out))))))
+
+@walk_seen = (* (x (rest (b (es (vis out))))))
+  & x ~ *
+  & @walk ~ (rest (b (es (vis out))))
+
+@walk_unseen = (x (rest (b (es (vis out)))))
+  & {e_expand e_keep} ~ es
+  & {xv xe} ~ x
+  & @expand ~ (e_expand (xe (rest w)))
+  & @walk ~ (w (b (e_keep ((1 (xv vis)) out))))
+
+// Test whether x is in a visited-vertex list.
+@member = ((?((@member_nil @member_cons) (x (pl out))) pl) (x out))
+
+@member_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@member_cons = (* ((h t) (x out)))
+  & {xc xr} ~ x
+  & xc ~ $([=] $(h eq))
+  & eq ~ ?((@member_next @member_found) (xr (t out)))
+
+@member_next = (x (t out))
+  & @member ~ (x (t out))
+
+@member_found = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+// Scan all edges, adding the destinations of edges leaving source to work.
+@expand = ((?((@expand_nil @expand_cons) (pl (source (work out)))) pl) (source (work out)))
+
+@expand_nil = (* (source (work out)))
+  & source ~ *
+  & out ~ work
+
+@expand_cons = (* ((edge tail) (source (work out))))
+  & edge ~ (u v)
+  & {sc sr} ~ source
+  & u ~ $([=] $(sc eq))
+  & eq ~ ?((@expand_no @expand_yes) (v (tail (sr (work out)))))
+
+@expand_no = (v (tail (source (work out))))
+  & v ~ *
+  & @expand ~ (tail (source (work out)))
+
+@expand_yes = (* (v (tail (source (work out)))))
+  & @expand ~ (tail (source ((1 (v work)) out)))

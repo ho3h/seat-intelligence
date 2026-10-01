@@ -1,0 +1,86 @@
+// Build one 24-bit incidence mask per block of 24 node IDs, mark edge endpoints,
+// then count set bits and subtract the number of incident nodes from n.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {ncalc norig}
+  & ncalc ~ $([+23] nplus)
+  & nplus ~ $([/24] groups)
+  & @mk_groups ~ (groups masks)
+  & @walk_edges ~ (edges (masks masks2))
+  & @count_groups ~ (masks2 (0 used))
+  & norig ~ $([-] $(used answer))
+  & answer ~ out
+
+// Construct a list of zero-valued masks.
+@mk_groups = (k out)
+  & k ~ ?((@mk_nil @mk_cons) out)
+
+@mk_nil = out
+  & out ~ (0 *)
+
+@mk_cons = (rem out)
+  & @mk_groups ~ (rem rest)
+  & out ~ (1 (0 rest))
+
+// Update both endpoints of every edge.
+@walk_edges = ((?((@edges_nil @edges_cons) (payload (masks out))) payload) (masks out))
+
+@edges_nil = (* (masks out))
+  & out ~ masks
+
+@edges_cons = (* ((u v) (tail (masks out))))
+  & u ~ {u_group_in u_offset_in}
+  & u_group_in ~ $([/24] u_group)
+  & u_offset_in ~ $([%24] u_offset)
+  & 1 ~ $([<<] $(u_offset u_bit))
+  & @set_bit ~ (masks (u_group (u_bit masks1)))
+  & v ~ {v_group_in v_offset_in}
+  & v_group_in ~ $([/24] v_group)
+  & v_offset_in ~ $([%24] v_offset)
+  & 1 ~ $([<<] $(v_offset v_bit))
+  & @set_bit ~ (masks1 (v_group (v_bit masks2)))
+  & @walk_edges ~ (tail (masks2 out))
+
+// Set the requested bits in the mask at index idx.
+@set_bit = (masks (idx (bit out)))
+  & idx ~ ?((@set_here @set_more) (masks (bit out)))
+
+@set_here = ((tag (head tail)) (bit out))
+  & tag ~ *
+  & head ~ $([|] $(bit newhead))
+  & out ~ (1 (newhead tail))
+
+@set_more = (rem ((tag (head tail)) (bit out)))
+  & tag ~ *
+  & @set_bit ~ (tail (rem (bit subout)))
+  & out ~ (1 (head subout))
+
+// Count the set bits in all masks. Each mask has exactly 24 bits.
+@count_groups = ((?((@count_nil @count_cons) (payload (acc out))) payload) (acc out))
+
+@count_nil = (* (acc out))
+  & acc ~ out
+
+@count_cons = (* ((mask tail) (acc out)))
+  & @popcount ~ (mask (24 (acc acc2)))
+  & @count_groups ~ (tail (acc2 out))
+
+@popcount = (mask (steps (acc out)))
+  & steps ~ ?((@pop_done @pop_step) (mask (acc out)))
+
+@pop_done = (mask (acc out))
+  & mask ~ *
+  & acc ~ out
+
+@pop_step = (rem (mask (acc out)))
+  & mask ~ {mtest mshift}
+  & mtest ~ $([&] $(1 bit))
+  & mshift ~ $([>>] $(1 shifted))
+  & bit ~ ?((@pop_zero @pop_one) (shifted (rem (acc out))))
+
+@pop_zero = (shifted (rem (acc out)))
+  & @popcount ~ (shifted (rem (acc out)))
+
+@pop_one = (* (shifted (rem (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @popcount ~ (shifted (rem (acc2 out))

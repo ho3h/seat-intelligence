@@ -1,0 +1,21 @@
+// Drop the first k elements of xs.
+@prog = ((k xs) out)
+  & @drop ~ (k (xs out))
+
+@drop = (k (xs out))
+  & k ~ ?((@drop_zero @more) (xs out))
+
+@drop_zero = (x x)
+
+// Inspect the list. A Cons branch enters @iter with its head and tail
+// already exposed, avoiding a separate recursive @drop call.
+@more = (k ((?((@drop_nil @iter) (pl (k out))) pl) out))
+
+@drop_nil = (pl (k out))
+  & pl ~ *
+  & k ~ *
+  & out ~ (0 *)
+
+@iter = (* ((head tail) (k out)))
+  & head ~ *
+  & k ~ ?((@drop_zero @more) (tail out))

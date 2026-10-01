@@ -1,0 +1,53 @@
+@prog = (input output)
+  & input ~ (c (e _))
+  & _ ~ *
+  & @proc_edges ~ (c (e (0 output)))
+
+@proc_edges = (c (e (edges output)))
+  & e ~ ?((@done @one_edge) ((c (edges output))))
+
+@done = (c (edges output))
+  & c ~ *
+  & edges ~ output
+
+@one_edge = (* ((u v) (tail (c (edges output)))))
+  & {c1 c2} ~ c
+  & @lookup ~ (c1 (u cu_res))
+  & @lookup ~ (c2 (v cv_res))
+  & cu_res ~ (cu_a (cu_b *))
+  & cv_res ~ (cv_a (cv_b *))
+  & cu_a ~ $([!] $(cv_a eq_res))
+  & eq_res ~ ?((@skip @add) ((cu_b (cv_b (tail (edges output))))))
+
+@skip = (cu (cv (tail (edges output))))
+  & cu ~ *
+  & cv ~ *
+  & @proc_edges ~ (c (tail (edges output)))
+
+@add = (* ((cu (cv (tail (edges output))))))
+  & {cu1 cu2} ~ cu
+  & {cv1 cv2} ~ cv
+  & cu1 ~ $([<] $(cv1 lt_res))
+  & lt_res ~ ?((@add_cu_cv @add_cv_cu) ((cu2 (cv2 (tail (edges output))))))
+
+@add_cu_cv = (cu (cv (tail (edges output))))
+  & new_edges ~ (1 ((cu (cv edges))))
+  & @proc_edges ~ (c (tail (new_edges output)))
+
+@add_cv_cu = (* ((cu (cv (tail (edges output))))))
+  & new_edges ~ (1 ((cv (cu edges))))
+  & @proc_edges ~ (c (tail (new_edges output)))
+
+@lookup = (lst (idx result))
+  & idx ~ ?((@lz @ls) ((lst result)))
+
+@lz = (ctx)
+  & ctx ~ (lst result)
+  & lst ~ (h t)
+  & t ~ *
+  & h ~ result
+
+@ls = (pred (lst result))
+  & lst ~ (h t)
+  & h ~ *
+  & @lookup ~ (t (pred result))

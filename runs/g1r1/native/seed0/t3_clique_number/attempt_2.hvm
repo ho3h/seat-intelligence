@@ -1,0 +1,135 @@
+@prog = ((n edges) out)
+  & @copy_edges ~ (edges ecopy)
+  & @search ~ (n ((0 *) (0 (ecopy (0 out))))
+
+@copy_edges = ((?((@ce_nil @ce_cons) (p out)) p) out)
+
+@ce_nil = (* out)
+  & out ~ (0 *)
+
+@ce_cons = (* ((edge tail) out))
+  & edge ~ (u v)
+  & @copy_edges ~ (tail tailcopy)
+  & out ~ (1 ((u v) tailcopy))
+
+@search = (n (chosen (size (edges (best out)))))
+  & @bound ~ (n (chosen (size (edges (best out)))))
+
+@bound = (n (chosen (size (edges (best out)))))
+  & n ~ {n_sum n_run}
+  & size ~ {s_sum s_run}
+  & best ~ {b_cmp b_run}
+  & n_sum ~ $([+] $(s_sum upper))
+  & upper ~ $([>] $(b_cmp go))
+  & go ~ ?((@bound_no @bound_yes) (n_run (chosen (s_run (edges (b_run out))))))
+
+@bound_no = (n (chosen (size (edges (best out)))))
+  & n ~ *
+  & chosen ~ *
+  & size ~ *
+  & edges ~ *
+  & out ~ best
+
+@bound_yes = (* (n (chosen (size (edges (best out))))))
+  & @s_dispatch ~ (n (chosen (size (edges (best out)))))
+
+@s_dispatch = ((?((@s_nil @s_cons) (chosen (size (edges (best out))))) *) (chosen (size (edges (best out)))))
+
+@s_nil = (chosen (size (edges (best out))))
+  & chosen ~ *
+  & edges ~ *
+  & @max ~ (size (best out))
+
+@s_cons = (pred (chosen (size (edges (best out)))))
+  & pred ~ {p_skip p_more}
+  & p_more ~ {n_add v_more}
+  & v_more ~ {v_check v_add}
+  & chosen ~ {ch_check ch_more}
+  & ch_more ~ {ch_skip ch_add}
+  & size ~ {s_skip s_add}
+  & edges ~ {e_check e_more}
+  & e_more ~ {e_skip e_add}
+  & best ~ {b_skip b_add}
+  & @alladj ~ (ch_check (v_check (e_check ok)))
+  & ok ~ ?((@s_no @s_yes) ((p_skip (ch_skip (s_skip (e_skip b_skip)))) ((n_add (v_add (ch_add (s_add (e_add b_add))))) out))
+
+@s_no = ((p (chosen (size (edges best)))) (addpack out))
+  & addpack ~ *
+  & @search ~ (p (chosen (size (edges (best out)))))
+
+@s_yes = (* ((p_skip (ch_skip (s_skip (e_skip b_skip)))) ((n_add (v_add (chosen (size (edges (best)))))) out))
+  & b_skip ~ *
+  & @search ~ (n_add ((1 (v_add chosen)) (size (edges (best improved)))))
+  & @search ~ (p_skip (ch_skip (s_skip (e_skip (improved out)))))
+
+@alladj = ((?((@aa_nil @aa_cons) (p (v (edges out)))) p) (v (edges out)))
+
+@aa_nil = (* (v (edges out)))
+  & v ~ *
+  & edges ~ *
+  & out ~ 1
+
+@aa_cons = (* ((u tail) (v (edges out))))
+  & v ~ {v_check v_rec}
+  & edges ~ {e_check e_rec}
+  & @hasedge ~ (e_check (u (v_check found)))
+  & found ~ ?((@aa_no @aa_yes) (tail (v_rec (e_rec out))))
+
+@aa_no = (tail (v (edges out)))
+  & tail ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@aa_yes = (* (tail (v (edges out))))
+  & @alladj ~ (tail (v (edges out)))
+
+@hasedge = ((?((@he_nil @he_cons) (p (a (b out)))) p) (a (b out)))
+
+@he_nil = (* (a (b out)))
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@he_cons = (* ((edge tail) (a (b out))))
+  & edge ~ (u v)
+  & a ~ {a_match a_rec}
+  & b ~ {b_match b_rec}
+  & @edge_match ~ ((u v) (a_match (b_match matched)))
+  & matched ~ ?((@he_no @he_yes) (tail (a_rec (b_rec out))))
+
+@he_no = (tail (a (b out)))
+  & @hasedge ~ (tail (a (b out)))
+
+@he_yes = (* (tail (a (b out))))
+  & tail ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@edge_match = ((u v) (a (b out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u1 ~ $([=] $(a1 eq1))
+  & v1 ~ $([=] $(b1 eq2))
+  & u2 ~ $([=] $(b2 eq3))
+  & v2 ~ $([=] $(a2 eq4))
+  & eq1 ~ $([*] $(eq2 ab))
+  & eq3 ~ $([*] $(eq4 ba))
+  & ab ~ $([|] $(ba out))
+
+@max = (a (b out))
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & acmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (akeep (bkeep out)))
+
+@max_no = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@max_yes = (* (a (b out)))
+  & a ~ out
+  & b ~ *

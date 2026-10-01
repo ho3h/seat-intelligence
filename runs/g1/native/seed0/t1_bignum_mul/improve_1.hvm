@@ -1,0 +1,121 @@
+// Multiply little-endian base-4096 naturals.
+// Each step computes h*b + 4096*(t*b).
+@prog = (input output)
+  & input ~ (a b)
+  & @mul ~ (a (b output))
+
+@mul = ((?((@mul_nil @mul_cons) (p (b out))) p) (b out))
+
+@mul_nil = (p (b out))
+  & p ~ *
+  & b ~ *
+  & out ~ (0 *)
+
+@mul_cons = (* ((h t) (b out)))
+  & b ~ {b1 b2}
+  & @mul ~ (t (b1 mid))
+  & @mul_step ~ (h (b2 (mid out)))
+
+// If h is zero, just shift the recursive product.
+// Otherwise add h*b to that shifted product.
+@mul_step = (h (b (mid out)))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(0 z))
+  & z ~ ?((@ms_zero @ms_nonzero) (h2 (b (mid out))))
+
+@ms_zero = (h (b (mid out)))
+  & h ~ *
+  & b ~ *
+  & @shift ~ (mid out)
+
+@ms_nonzero = (* (h (b (mid out))))
+  & @mdigit ~ (b (h (0 row)))
+  & @shift ~ (mid shifted)
+  & @add ~ (row (shifted (0 out)))
+
+// Prepend a zero limb, keeping the empty list canonical.
+@shift = ((?((@shift_nil @shift_cons) (p out)) p) out)
+
+@shift_nil = (p out)
+  & p ~ *
+  & out ~ (0 *)
+
+@shift_cons = (* ((h t) out))
+  & out ~ (1 (0 (1 (h t))))
+
+// Multiply each digit of b by d, carrying in base 4096.
+@mdigit = ((?((@md_nil @md_cons) (p (d (c out)))) p) (d (c out)))
+
+@md_nil = (p (d (c out)))
+  & p ~ *
+  & d ~ *
+  & c ~ {c1 c2}
+  & c1 ~ $([=] $(0 z))
+  & z ~ ?((@md_czero @md_cnonzero) (c2 out))
+
+@md_czero = (c out)
+  & c ~ *
+  & out ~ (0 *)
+
+@md_cnonzero = (* (c out))
+  & out ~ (1 (c (0 *)))
+
+@md_cons = (* ((x xs) (d (c out))))
+  & d ~ {d1 d2}
+  & x ~ $([*] $(d1 $([+] $(c v))))
+  & v ~ {v1 v2}
+  & v1 ~ $([%] $(4096 digit))
+  & v2 ~ $([/] $(4096 c2))
+  & @mdigit ~ (xs (d2 (c2 tail)))
+  & out ~ (1 (digit tail))
+
+// Add two limb lists with carry c.
+@add = ((?((@add_xnil @add_xcons) (p (y (c out)))) p) (y (c out)))
+
+@add_xnil = (p (y (c out)))
+  & p ~ *
+  & @add0 ~ (y (c out))
+
+@add_xcons = (* ((xh xt) (y (c out))))
+  & @add_y ~ (y (xh (xt (c out))))
+
+@add_y = ((?((@add_y_nil @add_y_cons) (p (xh (xt (c out))))) p) (xh (xt (c out))))
+
+@add_y_nil = (p (xh (xt (c out))))
+  & p ~ *
+  & @addstep ~ (xh (0 (c (digit c2))))
+  & @add ~ (xt ((0 *) (c2 tail)))
+  & out ~ (1 (digit tail))
+
+@add_y_cons = (* ((yh yt) (xh (xt (c out)))))
+  & @addstep ~ (xh (yh (c (digit c2))))
+  & @add ~ (xt (yt (c2 tail)))
+  & out ~ (1 (digit tail))
+
+// Add y and carry c to a zero-padded list.
+@add0 = ((?((@add0_nil @add0_cons) (p (c out))) p) (c out))
+
+@add0_nil = (p (c out))
+  & p ~ *
+  & c ~ {c1 c2}
+  & c1 ~ $([=] $(0 z))
+  & z ~ ?((@add0_czero @add0_cnonzero) (c2 out))
+
+@add0_czero = (c out)
+  & c ~ *
+  & out ~ (0 *)
+
+@add0_cnonzero = (* (c out))
+  & out ~ (1 (c (0 *)))
+
+@add0_cons = (* ((yh yt) (c out)))
+  & @addstep ~ (0 (yh (c (digit c2))))
+  & @add0 ~ (yt (c2 tail))
+  & out ~ (1 (digit tail))
+
+// Produce digit and carry for x + y + c.
+@addstep = (x (y (c (digit carry))))
+  & x ~ $([+] $(y $([+] $(c v))))
+  & v ~ {v1 v2}
+  & v1 ~ $([%] $(4096 digit))
+  & v2 ~ $([/] $(4096 carry))

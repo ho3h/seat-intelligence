@@ -1,0 +1,29 @@
+# t5_rewrite_collapsed: c -> position-keyed tuple tree (keyed sets); the edge list is walked in parallel and
+# each edge pushes two "return address" sinks (unscoped lambdas) at u and v; every c value is then wired into
+# its sinks. Each edge sets bit (min, max) of a pair bitset (tree keyed by (x, word of y), 16-bit words; the
+# keyed updates wait for their keys, then collapse level by level). Answer = m - popcount (self loops set no bit).
+def prog(x):
+  (c, es) = x
+  n = len(c)
+  (l, m) = lvl(n, 0, 1)
+  (lw, mw) = lvl((n + 15) / 16, 0, 1)
+  L = l + lw
+  C = cwalk(c, 0, zt(l), l, m)
+  (Q, B, ne) = ewalk(es, zl(l), zt(L), l, m, L, top(L), lw, 0)
+  return seq(deliver_all(C, Q, l), ne - pcount(B, L))
+
+def ewalk(es, Q, B, l, m, L, M, lw, ne):
+  match es:
+    case List/Nil:
+      return (Q, B, ne)
+    case List/Cons:
+      (u, v) = es.head
+      Q2 = push(push(Q, u, l, m, lambda $cu: 0), v, l, m, lambda $cv: 0)
+      (x, y) = minmax($cu, $cv)
+      B2 = setb(B, (x << lw) | (y >> 4), L, M, (x != y) << (y & 15))
+      return ewalk(es.tail, Q2, B2, l, m, L, M, lw, ne + 1)
+
+def minmax(a, b):
+  t = b < a
+  return (a + t * (b - a), b + t * (a - b))
+

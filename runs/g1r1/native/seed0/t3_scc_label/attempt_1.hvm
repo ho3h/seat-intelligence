@@ -1,0 +1,155 @@
+// Build the vertices in descending order; reverse the final labels.
+@prog = ((n edges) out)
+  & @range ~ (n vs)
+  & @labels ~ (vs (edges labs))
+  & @reverse ~ (labs out)
+
+@range = (n out)
+  & n ~ ?((@range_nil @range_succ) out)
+
+@range_nil = out
+  & out ~ (0 *)
+
+@range_succ = (k out)
+  & k ~ {k1 k2}
+  & @range ~ (k1 tail)
+  & out ~ (1 (k2 tail))
+
+// Produce one label for each vertex.
+@labels = ((?((@labs_nil @labs_cons) (p (edges out))) p) (edges out))
+
+@labs_nil = (* (edges out))
+  & edges ~ *
+  & out ~ (0 *)
+
+@labs_cons = (* ((v vs) (edges out)))
+  & edges ~ {e1 e2}
+  & @least ~ (v (e1 lab))
+  & @labels ~ (vs (e2 tail))
+  & out ~ (1 (lab tail))
+
+// Find the smallest u such that v reaches u and u reaches v.
+@least = (v (edges out))
+  & v ~ {v1 v23}
+  & v23 ~ {v2 v3}
+  & edges ~ {e1 e2}
+  & @reach ~ (v1 (e1 reachlist))
+  & @cand ~ (v2 (reachlist (e2 (v3 out))))
+
+// Iterate over vertices reachable from v. Start best at v.
+@cand = (v (((?((@cand_nil @cand_cons) (p (v (edges (best out))))) p) (edges (best out))))
+
+@cand_nil = (* (v (edges (best out))))
+  & v ~ *
+  & edges ~ *
+  & out ~ best
+
+@cand_cons = (* ((u us) (v (edges (best out)))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & edges ~ {e1 e2}
+  & @reach ~ (u1 (e1 ru))
+  & @member ~ (v1 (ru yes))
+  & yes ~ ?((@cand_skip @cand_check) (u2 (us (v2 (e2 (best out)))))
+
+@cand_skip = (u (us (v (edges (best out)))))
+  & u ~ *
+  & @cand ~ (v (us (edges (best out))))
+
+@cand_check = (* (u (us (v (edges (best out))))))
+  & u ~ {u1 u2}
+  & best ~ {b1 b2}
+  & u1 ~ $([<] $(b1 z))
+  & z ~ ?((@cand_keep @cand_update) (u2 (us (v (edges (b2 out)))))
+
+@cand_keep = (u (us (v (edges (best out)))))
+  & u ~ *
+  & @cand ~ (v (us (edges (best out))))
+
+@cand_update = (* (u (us (v (edges (best out))))))
+  & best ~ *
+  & @cand ~ (v (us (edges (u out))))
+
+// Reachability by walking a frontier and scanning all directed edges.
+@reach = (src (edges out))
+  & @walk ~ ((1 (src (0 *))) (edges ((0 *) out)))
+
+@walk = ((?((@walk_nil @walk_cons) (p (edges (visited out)))) p) (edges (visited out)))
+
+@walk_nil = (* (edges (visited out)))
+  & edges ~ *
+  & out ~ visited
+
+@walk_cons = (* ((x rest) (edges (visited out))))
+  & x ~ {x1 x2}
+  & visited ~ {vis1 vis2}
+  & @member ~ (x1 (vis1 seen))
+  & seen ~ ?((@walk_skip @walk_expand) (x2 (rest (edges (vis2 out))))
+
+@walk_skip = (x (rest (edges (visited out))))
+  & x ~ *
+  & @walk ~ (rest (edges (visited out)))
+
+@walk_expand = (* (x (rest (edges (visited out)))))
+  & x ~ {xs xv}
+  & edges ~ {e1 e2}
+  & @scan ~ (xs (e1 (rest q)))
+  & @walk ~ (q (e2 ((1 (xv visited)) out)))
+
+// Collect outgoing neighbors of x, prepending them to queue.
+@scan = (x (((?((@scan_nil @scan_cons) (p (x (queue out)))) p) (queue out)))
+
+@scan_nil = (* (x (queue out)))
+  & x ~ *
+  & out ~ queue
+
+@scan_cons = (* (((u v) tail) (x (queue out))))
+  & x ~ {x1 x2}
+  & u ~ $([=] $(x1 z))
+  & z ~ ?((@scan_no @scan_yes) (v (tail (x2 (queue out))))
+
+@scan_no = (v (tail (x (queue out))))
+  & v ~ *
+  & @scan ~ (x (tail (queue out)))
+
+@scan_yes = (* (v (tail (x (queue out)))))
+  & @scan ~ (x (tail (1 (v out))))
+
+// Test whether a number is in a list.
+@member = (x (((?((@mem_nil @mem_cons) (p (x out))) p) out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (x2 (t out)))
+
+@mem_no = (x (t out))
+  & @member ~ (x (t out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+// Reverse a list, using append to put each head at the end.
+@reverse = ((?((@rev_nil @rev_cons) (p out)) p) out)
+
+@rev_nil = (* out)
+  & out ~ (0 *)
+
+@rev_cons = (* ((h t) out))
+  & @reverse ~ (t r)
+  & @append ~ (r (h out))
+
+@append = ((?((@app_nil @app_cons) (p (item out))) p) (item out))
+
+@app_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@app_cons = (* ((h t) (item out)))
+  & @append ~ (t (item r))
+  & out ~ (1 (h r))

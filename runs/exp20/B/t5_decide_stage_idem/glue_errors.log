@@ -1,0 +1,16 @@
+--- 05:12:12
+build.py:44: wire `blocked` (trie[num], argument `blocked` of step of stream `ledger_walk`, made at build.py:53) is used a second time (select if_false); it was already used at build.py:45 (update `set_blocked` (act set) port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:12:59
+build.py:58: kind mismatch at stream `ledger_walk` port `init`: expected trie[num], got (trie[num]) (<wire t: trie[num] in @prog>,).
+--- 05:13:17
+build.py:71: wire `r` (num, result of `|`, made at build.py:65) is used a second time (update `peek_check` (act peek) port `k`); it was already used at build.py:68 (update `peek_check` (act peek) port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:13:35
+build.py:86: wire `verb` (num, argument `e0` of step of stream `proposals_walk`, made at build.py:96) is used a second time (fill_cons head); it was already used at build.py:66 (left operand of `<<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(verb, 2)  and use each once.
+--- 05:13:45
+build.py:89: wire `r` (num, result of `-`, made at build.py:82) is used a second time (select condition); it was already used at build.py:86 (update `or_blocked` (act or) port `P`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:13:54
+build.py:92: wire `h_out` (hole[list[(num num)]], argument `h_out` of step of stream `proposals_walk`, made at build.py:103) is used a second time (select if_false); it was already used at build.py:93 (fill_cons). A wire has exactly two ends. A hole[list[(num num)]] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:14:09
+@prog (t5_decide_stage_idem) (@prog): 1 value(s) never used:
+    `out` (num, output `out` of stream `proposals_walk`, made at build.py:117)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

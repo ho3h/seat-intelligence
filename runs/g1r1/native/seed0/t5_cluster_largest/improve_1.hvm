@@ -1,0 +1,184 @@
+@prog = (input out)
+  & input ~ (n pairs)
+  & n ~ {n1 n2}
+  & @build ~ (n1 (0 labels))
+  & @ones ~ (n2 sizes)
+  & @edges ~ (pairs (labels (sizes done)))
+  & @maxlist ~ (done (0 out))
+
+@build = (n (idx out))
+  & n ~ ?((@b_zero @b_succ) (idx out))
+
+@b_zero = (idx out)
+  & idx ~ *
+  & out ~ (0 *)
+
+@b_succ = (m (idx out))
+  & idx ~ {i1 i2}
+  & out ~ (1 (i1 tail))
+  & i2 ~ $([+1] next)
+  & @build ~ (m (next tail))
+
+@ones = (n out)
+  & n ~ ?((@o_zero @o_succ) out)
+
+@o_zero = out
+  & out ~ (0 *)
+
+@o_succ = (m out)
+  & out ~ (1 tail)
+  & @ones ~ (m tail)
+
+@edges = ((?((@e_nil @e_cons) (payload (labels (sizes out)))) payload) (labels (sizes out)))
+
+@e_nil = (payload (labels (sizes out)))
+  & payload ~ *
+  & labels ~ *
+  & out ~ sizes
+
+@e_cons = (* ((edge tail) (labels (sizes out))))
+  & edge ~ (u v)
+  & @merge ~ (u (v (labels (sizes next))))
+  & @edges ~ (tail (next out))
+
+@merge = (u (v (labels (sizes out))))
+  & labels ~ {l1 rem}
+  & rem ~ {l2 l3}
+  & @get ~ (u (l1 lu))
+  & @get ~ (v (l2 lv))
+  & @m_check ~ (lu (lv (l3 (sizes out)))
+
+@m_check = (lu (lv (labels (sizes out))))
+  & lu ~ {lc lr0}
+  & lr0 ~ {lr ls}
+  & lv ~ {vc vr0}
+  & vr0 ~ {vr vs}
+  & lc ~ $([=] $(vc z))
+  & z ~ ?((@m_union @m_same) (lr (vr (ls (vs (labels (sizes out)))))))
+
+@m_same = (* (lr (vr (ls (vs (labels (sizes out)))))))
+  & lr ~ *
+  & vr ~ *
+  & ls ~ *
+  & vs ~ *
+  & out ~ (labels sizes)
+
+@m_union = (lr (vr (ls (vs (labels (sizes out))))))
+  & ls ~ {ls_get ls_set}
+  & vs ~ {vs_get vs_set}
+  & sizes ~ {s1 sr}
+  & sr ~ {s2 s3}
+  & @get ~ (ls_get (s1 su))
+  & @get ~ (vs_get (s2 sv))
+  & su ~ $([+] $(sv sum))
+  & @replace ~ (labels (lr (vr newlabels)))
+  & @set ~ (ls_set (0 (s3 afterzero)))
+  & @set ~ (vs_set (sum (afterzero newsizes)))
+  & out ~ (newlabels newsizes)
+
+@get = (idx (list out))
+  & idx ~ ?((@g_zero @g_succ) (list out))
+
+@g_zero = ((?((@g_nil @g_cons) (payload out)) payload) out)
+
+@g_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@g_cons = (* (payload out))
+  & payload ~ (h t)
+  & t ~ *
+  & out ~ h
+
+@g_succ = (idx (list out))
+  & @g_s_list ~ (list (idx out))
+
+@g_s_list = ((?((@gs_nil @gs_cons) (payload (idx out))) payload) (idx out))
+
+@gs_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@gs_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (idx (t out))
+
+@replace = ((?((@r_nil @r_cons) (payload (old (new out)))) payload) (old (new out)))
+
+@r_nil = (payload (old (new out)))
+  & payload ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@r_cons = (* ((h t) (old (new out))))
+  & @rep_one ~ (h (old (new (t out))))
+
+@rep_one = (h (old (new (t out))))
+  & h ~ {hc hr}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@rp_no @rp_yes) (hr (nc (or (nr (t out))))))
+
+@rp_no = (hr (nc (or (nr (t out)))))
+  & nc ~ *
+  & @replace ~ (t (or (nr rest)))
+  & out ~ (1 (hr rest))
+
+@rp_yes = (* (hr (nc (or (nr (t out))))))
+  & hr ~ *
+  & @replace ~ (t (or (nr rest)))
+  & out ~ (1 (nc rest))
+
+@set = (idx (val (list out)))
+  & idx ~ ?((@set_zero @set_succ) (val (list out)))
+
+@set_zero = (val (list out))
+  & list ~ (?( (@sz_nil @sz_cons) (payload (val out))) payload)
+
+@sz_nil = (payload (val out))
+  & payload ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@sz_cons = (* (payload (val out)))
+  & payload ~ (h t)
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_succ = (idx (val (list out)))
+  & list ~ (?( (@ss_nil @ss_cons) (payload (idx (val out))) ) payload)
+
+@ss_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@ss_cons = (* (payload (idx (val out))))
+  & payload ~ (h t)
+  & @set ~ (idx (val (t rest)))
+  & out ~ (1 (h rest))
+
+@maxlist = ((?((@mx_nil @mx_cons) (payload (acc out))) payload) (acc out))
+
+@mx_nil = (payload (acc out))
+  & payload ~ *
+  & out ~ acc
+
+@mx_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & acc ~ {ac ar}
+  & hc ~ $([>] $(ac z))
+  & z ~ ?((@mx_no @mx_yes) (hr (ar (t out))))
+
+@mx_no = (hr (ar (t out)))
+  & hr ~ *
+  & @maxlist ~ (t (ar out))
+
+@mx_yes = (* (hr (ar (t out))))
+  & ar ~ *
+  & @maxlist ~ (t (hr out))

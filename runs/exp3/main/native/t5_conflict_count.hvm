@@ -1,0 +1,16 @@
+@prog = ((cl (?((@iter_nil @iter_cons) (pl_q369 (cl (0 out)))) pl_q369)) out)
+
+@iter_nil = (* (* (a a)))
+
+@iter_cons = (* (((?((@look_zero (?((@look_zero (?((@look_zero (?((@look_zero @look_succ) (tail_q381 out_q381)) ((* (* tail_q381)) out_q381))) (tail_q379 out_q379)) ((* (* tail_q379)) out_q379))) (tail_q377 out_q377)) ((* (* tail_q377)) out_q377))) (ca_q370 $([=] $(vb_q370 ?((@check_no @check_yes) (rest (cnext_q370 (acc out)))))))) ?((@look_zero (?((@look_zero (?((@look_zero (?((@look_zero (?((@look_zero @look_succ) (tail_q401 out_q401)) ((* (* tail_q401)) out_q401))) (tail_q396 out_q396)) ((* (* tail_q396)) out_q396))) (tail_q391 out_q391)) ((* (* tail_q391)) out_q391))) (tail_q386 out_q386)) ((* (* tail_q386)) out_q386))) (cb2_q370 vb_q370))) rest) ({ca_q370 {cb2_q370 cnext_q370}} (acc out))))
+
+@check_no = ((?((@iter_nil @iter_cons) (pl_q373 (cnext (acc out)))) pl_q373) (cnext (acc out)))
+
+@check_yes = (* ((?((@iter_nil @iter_cons) (pl_q374 (cnext (acc2 out)))) pl_q374) (cnext ($([+1] acc2) out))))
+
+@look_zero = ((tag (head tail)) out)
+  & tag ~ *
+  & tail ~ *
+  & head ~ out
+
+@look_succ = (?((@look_zero @look_succ) (tail out)) ((* (* tail)) out))

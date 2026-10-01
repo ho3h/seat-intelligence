@@ -1,0 +1,207 @@
+@prog = ((n (s (b edges))) out)
+  & n ~ {n_check n_use}
+  & s ~ {s_check s_use}
+  & s_check ~ $([<] $(n_check valid))
+  & valid ~ ?((@bad @good) (n_use (s_use (b (edges out)))))
+
+@bad = (n (s (b (edges out))))
+  & n ~ *
+  & s ~ *
+  & b ~ *
+  & edges ~ *
+  & out ~ 0
+
+@good = (* (n (s (b (edges out)))))
+  & @good_run ~ (n (s (b (edges out))))
+
+@good_run = (n (s (b (edges out))))
+  & n ~ {ni np}
+  & @init ~ (ni (0 (s d0)))
+  & @passes ~ (np (d0 (edges d1)))
+  & @count_list ~ (d1 (b (0 out)))
+
+@init = (n (i (s out)))
+  & n ~ ?((@init_nil @init_succ) (i (s out)))
+
+@init_nil = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (i (s out)))
+  & i ~ {i_test i_inc}
+  & s ~ {s_test s_rec}
+  & i_test ~ $([=] $(s_test eq))
+  & i_inc ~ $([+1] i_next)
+  & eq ~ ?((@init_other @init_match) (k (i_next (s_rec out))))
+
+@init_other = (k (i (s out)))
+  & @init ~ (k (i (s tail)))
+  & out ~ (1 ((0 0) tail))
+
+@init_match = (* (k (i (s out))))
+  & @init ~ (k (i (s tail)))
+  & out ~ (1 ((1 0) tail))
+
+@passes = (n (d (edges out)))
+  & n ~ ?((@passes_done @passes_more) (d (edges out)))
+
+@passes_done = (d (edges out))
+  & edges ~ *
+  & out ~ d
+
+@passes_more = (k (d (edges out)))
+  & edges ~ {e_scan e_more}
+  & @scan ~ (e_scan (d (0 scan_out)))
+  & scan_out ~ (d_next changed)
+  & changed ~ ?((@passes_stop @passes_repeat) (k (d_next (e_more out))))
+
+@passes_stop = (k (d (edges out)))
+  & k ~ *
+  & edges ~ *
+  & out ~ d
+
+@passes_repeat = (* (k (d (edges out))))
+  & @passes ~ (k (d (edges out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (d (changed out)))) pl) (d (changed out)))
+
+@scan_nil = (* (d (changed out)))
+  & out ~ (d changed)
+
+@scan_cons = (* ((edge tail) (d (changed out))))
+  & @relax_edge ~ (d (edge (changed pair)))
+  & pair ~ (d_next changed_next)
+  & @scan ~ (tail (d_next (changed_next out)))
+
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (i out))
+  & i ~ *
+  & out ~ (0 0)
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_head @get_next) (h (t out)))
+
+@get_head = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_next = (i (h (t out)))
+  & h ~ *
+  & @get ~ (t (i out))
+
+@set = ((?((@set_nil @set_cons) (pl (i (v out)))) pl) (i (v out)))
+
+@set_nil = (* (i (v out)))
+  & i ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (i (v out))))
+  & i ~ ?((@set_zero @set_next) (h (t (v out))))
+
+@set_zero = (h (t (v out)))
+  & h ~ *
+  & out ~ (1 (v t))
+
+@set_next = (i (h (t (v out))))
+  & @set ~ (t (i (v tail)))
+  & out ~ (1 (h tail))
+
+@relax_edge = (d (edge (changed out)))
+  & edge ~ (u (v w))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @tryrelax ~ (d (u1 (v1 (w1 (changed pair1)))))
+  & pair1 ~ (d_next changed_next)
+  & @tryrelax ~ (d_next (v2 (u2 (w2 (changed_next out)))))
+
+@tryrelax = (d (src (dst (w (changed out)))))
+  & d ~ {d_src {d_dst d_set}}
+  & dst ~ {dst_get dst_keep}
+  & @get ~ (d_src (src es))
+  & @get ~ (d_dst (dst_get et))
+  & @tr_cmp ~ (es (et (d_set (dst_keep (w (changed out))))))
+
+@tr_cmp = (es (et (d (dst (w (changed out))))))
+  & es ~ (fs ds)
+  & et ~ (ft dt)
+  & fs ~ ?((@tr_src_no @tr_src_yes) (ds (ft (dt (d (dst (w (changed out))))))))
+
+@tr_src_no = (ds (ft (dt (d (dst (w (changed out)))))))
+  & ds ~ *
+  & ft ~ *
+  & dt ~ *
+  & dst ~ *
+  & w ~ *
+  & out ~ (d changed)
+
+@tr_src_yes = (* (ds (ft (dt (d (dst (w (changed out))))))))
+  & ds ~ {ds_add ds_check}
+  & ds_add ~ $([+] $(w cand))
+  & cand ~ {cand_check cand_pass}
+  & cand_check ~ $([<] $(ds_check overflow))
+  & overflow ~ ?((@tr_safe @tr_over) (cand_pass (ft (dt (d (dst (changed out)))))))
+
+@tr_safe = (cand (ft (dt (d (dst (changed out))))))
+  & @tr_candidate ~ (cand (ft (dt (d (dst (changed out))))))
+
+@tr_over = (* (cand (ft (dt (d (dst (changed out)))))))
+  & cand ~ *
+  & ft ~ *
+  & dt ~ *
+  & dst ~ *
+  & out ~ (d changed)
+
+@tr_candidate = (cand (ft (dt (d (dst (changed out))))))
+  & cand ~ {cand_compare cand_keep}
+  & ft ~ ?((@tr_empty @tr_full) (cand_compare (cand_keep (dt (d (dst (changed out)))))))
+
+@tr_empty = (cand_compare (cand_keep (dt (d (dst (changed out))))))
+  & cand_compare ~ *
+  & dt ~ *
+  & changed ~ *
+  & @set ~ (d (dst (cand_keep d_next)))
+  & out ~ (d_next 1)
+
+@tr_full = (* (cand_compare (cand_keep (dt (d (dst (changed out)))))))
+  & cand_compare ~ $([<] $(dt lt))
+  & lt ~ ?((@tr_ge @tr_less) (cand_keep (d (dst (changed out)))))
+
+@tr_ge = (cand_keep (d (dst (changed out))))
+  & cand_keep ~ *
+  & dst ~ *
+  & out ~ (d changed)
+
+@tr_less = (* (cand_keep (d (dst (changed out)))))
+  & changed ~ *
+  & @set ~ (d (dst (cand_keep d_next)))
+  & out ~ (d_next 1)
+
+@count_list = ((?((@count_nil @count_cons) (pl (b (acc out)))) pl) (b (acc out)))
+
+@count_nil = (* (b (acc out)))
+  & b ~ *
+  & out ~ acc
+
+@count_cons = (* ((h t) (b (acc out))))
+  & h ~ (flag val)
+  & flag ~ ?((@count_unreachable @count_reachable) (val (t (b (acc out)))))
+
+@count_unreachable = (val (t (b (acc out))))
+  & val ~ *
+  & @count_list ~ (t (b (acc out)))
+
+@count_reachable = (* (val (t (b (acc out)))))
+  & b ~ {b_cmp b_ctx}
+  & val ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@count_in @count_out) (t (b_ctx (acc out))))
+
+@count_in = (t (b (acc out)))
+  & acc ~ $([+1] acc_next)
+  & @count_list ~ (t (b (acc_next out)))
+
+@count_out = (* (t (b (acc out))))
+  & @count_list ~ (t (b (acc out)))

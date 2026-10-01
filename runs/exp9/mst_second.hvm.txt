@@ -1,0 +1,33 @@
+// t3_mst_second (GRAPH-SWING-2, runs/exp9): Prim over tries (prim template, second=True). second-best spanning tree
+// weight = MST + min over non-tree edges e = (v, x) of w_e - maxpath_T(v, x); the minimum of that difference is
+// found while Prim runs: when v joins, each arc to an already-visited x other than its parent is a non-tree edge,
+// and maxpath is a min-max zip of the two ancestor rows. A tree (m == n - 1, including n <= 1) has one spanning tree.
+@prog = ((n es) out)
+  & n ~ ?((@ms_zero @ms_pos) (es out))
+@ms_zero = (* 16777215)
+@ms_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & n ~ {n1 {n2 n3}}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 (G0 0)) (G m)))
+  & @ki ~ (G (L3 (0 (n1 K0))))
+  & @zr ~ (L4 (L5 (0 M0)))
+  & @prim ~ (n2 (K0 (M0 (L6 ((0 16777215) (tot best))))))
+  & n3 ~ $([-] $(1 nm))
+  & m ~ $([=] $(nm eq))
+  & eq ~ ?((@ms_ok @ms_tree) (tot (best out)))
+@ms_ok = (t (b o))
+  & t ~ $([+] $(b o))
+@ms_tree = (* (* (* 16777215)))
+@ms_step = ((L (g m)) ((u (v w)) (L3 (g3 m2))))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @gp ~ (g (u1 (L1 ((v1 w1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 w2) g3))))
+  & m ~ $([+1] m2)
+@ms_fin = ((* s) s)

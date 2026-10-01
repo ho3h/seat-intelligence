@@ -1,0 +1,133 @@
+// Process each query independently.
+@prog = (input output)
+  & input ~ (n (edges queries))
+  & n ~ *
+  & @qloop ~ (queries (edges output))
+
+@qloop = ((?((@qnil @qcons) (pl (edges out))) pl) (edges out))
+
+@qnil = (* (edges out))
+  & edges ~ *
+  & out ~ (0 *)
+
+@qcons = (* ((a b) (tail (edges out))))
+  & edges ~ {edge_copy edge_next}
+  & @same ~ (a (b (edge_copy result)))
+  & @qloop ~ (tail (edge_next rest))
+  & out ~ (1 (result rest))
+
+// Check equality first; otherwise search the graph from a.
+@same = (a (b (edges out)))
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & acmp ~ $([=] $(bcmp z))
+  & z ~ ?((@same_no @same_yes) (akeep (bkeep (edges out))))
+
+@same_yes = (* (a (b (edges out))))
+  & a ~ *
+  & b ~ *
+  & edges ~ *
+  & out ~ 1
+
+@same_no = (a (b (edges out)))
+  & a ~ {queue_start visited_start}
+  & @search ~ ((1 (queue_start (0 *))) (b (edges (1 (visited_start (0 *))) out)))
+
+// Search with a stack, target, edges, visited list, and output.
+@search = ((?((@search_nil @search_cons) (pl (target (edges (visited out))))) pl) (target (edges (visited out))))
+
+@search_nil = (* (target (edges (visited out))))
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 0
+
+@search_cons = (* ((x q) (target (edges (visited out)))))
+  & x ~ {xc xkeep}
+  & target ~ {tc tkeep}
+  & xc ~ $([=] $(tc z))
+  & z ~ ?((@search_more @search_hit) (xkeep (q (tkeep (edges (visited out))))))
+
+@search_hit = (* (x (q (target (edges (visited out))))))
+  & x ~ *
+  & q ~ *
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 1
+
+@search_more = (* (x (q (target (edges (visited out))))))
+  & edges ~ {scan_edges original_edges}
+  & @scan ~ (scan_edges (x (q (target (original_edges (visited out))))))
+
+// Scan every edge for a neighbor of the current node.
+@scan = ((?((@scan_nil @scan_cons) (pl (x (queue (target (original (visited out))))))) pl) (x (queue (target (original (visited out))))))
+
+@scan_nil = (* (x (queue (target (original (visited out))))))
+  & x ~ *
+  & @search ~ (queue (target (original (visited out))))
+
+@scan_cons = (* ((u v) (tail (x (queue (target (original (visited out))))))))
+  & @edge ~ (x (u (v (tail (queue (target (original (visited out))))))))
+
+@edge = (x (u (v (tail (queue (target (original (visited out))))))))
+  & x ~ {xc xkeep}
+  & u ~ {uc ukeep}
+  & xc ~ $([=] $(uc z))
+  & z ~ ?((@edge_u_no @edge_u_yes) (xkeep (ukeep (v (tail (queue (target (original (visited out))))))))
+
+@edge_u_no = (x (u (v (tail (queue (target (original (visited out))))))))
+  & @edge_v ~ (x (u (v (tail (queue (target (original (visited out))))))))
+
+@edge_u_yes = (* (x (u (v (tail (queue (target (original (visited out)))))))))
+  & u ~ *
+  & @admit ~ (v (x (tail (queue (target (original (visited out)))))))
+
+@edge_v = (x (u (v (tail (queue (target (original (visited out))))))))
+  & x ~ {xc xkeep}
+  & v ~ {vc vkeep}
+  & xc ~ $([=] $(vc z))
+  & z ~ ?((@edge_v_no @edge_v_yes) (xkeep (u (vkeep (tail (queue (target (original (visited out))))))))
+
+@edge_v_no = (x (u (v (tail (queue (target (original (visited out))))))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (x (queue (target (original (visited out))))))
+
+@edge_v_yes = (* (x (u (v (tail (queue (target (original (visited out)))))))))
+  & v ~ *
+  & @admit ~ (u (x (tail (queue (target (original (visited out)))))))
+
+@admit = (neighbor (x (tail (queue (target (original (visited out)))))))
+  & visited ~ {vtest vkeep}
+  & neighbor ~ {ntest nkeep}
+  & @mem ~ (vtest (ntest found))
+  & found ~ ?((@admit_new @admit_seen) (x (nkeep (tail (queue (target (original (vkeep out))))))))
+
+@admit_new = (x (neighbor (tail (queue (target (original (visited out)))))))
+  & neighbor ~ {nq nv}
+  & @scan ~ (tail (x ((1 (nq queue)) (target (original (1 (nv visited)) out)))))
+
+@admit_seen = (* (x (neighbor (tail (queue (target (original (visited out))))))))
+  & neighbor ~ *
+  & @scan ~ (tail (x (queue (target (original (visited out))))))
+
+// Membership test for a number in a list.
+@mem = ((?((@mem_nil @mem_cons) (pl (item out))) pl) (item out))
+
+@mem_nil = (* (item out))
+  & item ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (item out)))
+  & item ~ {i1 i2}
+  & i1 ~ $([=] $(h z))
+  & z ~ ?((@mem_no @mem_yes) (i2 (t out)))
+
+@mem_no = (item (tail out))
+  & @mem ~ (tail (item out))
+
+@mem_yes = (* (item (tail out)))
+  & item ~ *
+  & tail ~ *
+  & out ~ 1

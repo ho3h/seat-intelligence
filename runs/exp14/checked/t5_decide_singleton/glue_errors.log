@@ -1,0 +1,40 @@
+--- 04:15:00
+build.py:27: wire `val` (num, argument `elem` of step of stream `w`, made at build.py:66) is used a second time (left operand of `=`); it was already used at build.py:26 (left operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(val, 2)  and use each once.
+--- 04:15:45
+build.py:30: wire `max_val` (num, argument `max_val` of step of stream `w`, made at build.py:72) is used a second time (right operand of `=`); it was already used at build.py:29 (right operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(max_val, 2)  and use each once.
+--- 04:16:30
+build.py:65: wire `r` (num, result of `+`, made at build.py:35) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (returned value 0). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:16:55
+wrong arity: branch zero case of step of stream `w` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:num, passed[3]:num, passed[4]:num, passed[5]:num), i.e. d plus 6 value(s); your function `gt_case` takes 5 parameter(s) (b, i, mx, mn, v3).
+--- 04:17:22
+build.py:52: wire `v3` (num, argument `passed[3]` of branch zero case of step of stream `w`, made at build.py:69) belongs to branch zero case of step of stream `w` (@w_step_b1z), but is used in branch zero case of branch zero case of branch zero case of step of stream `w` (@w_step_b1z_b2z_b3z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:17:45
+build.py:40: wire `val2` (num, copy 2 of `val`, made at build.py:22) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (left operand of `=`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:18:04
+wrong arity: branch zero case of branch zero case of step of stream `w` is called as f(d, passed[0]:num, passed[1]:num), i.e. d plus 2 value(s); your function `if_equal` takes 2 parameter(s) (b2, _dec).
+--- 04:18:36
+build.py:42: wire `r` (num, result of `=`, made at build.py:25) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (left operand of `=`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:19:08
+build.py:100: wire `val` (num, argument `elem` of step of stream `w`, made at build.py:135) is used a second time (left operand of `=`); it was already used at build.py:87 (left operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(val, 2)  and use each once.
+--- 04:19:32
+build.py:33: wire `val2` (num, copy 2 of `val`, made at build.py:18) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:19:46
+build.py:36: wire `r` (num, result of `+`, made at build.py:24) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (returned value 0). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:19:59
+build.py:36: wire `min_idx` (num, argument `min_idx` of step of stream `w`, made at build.py:42) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (returned value 2). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:20:07
+fin of stream `w` must return exactly one value (the result); returned 2
+--- 04:20:24
+fin of stream `w` must return exactly one value (the result); returned 2
+--- 04:21:20
+build.py:57: wire `out` (num, output `out` of stream `w`, made at build.py:53) is used a second time (left operand of `&`); it was already used at build.py:56 (left operand of `>>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(out, 2)  and use each once.
+--- 04:21:34
+build.py:72: wire `r` (num, result of `&`, made at build.py:60) belongs to @prog (t5_decide_singleton) (@prog), but is used in branch nonzero case of @prog (t5_decide_singleton) (@prog_b2s) (returned as `out0`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 04:21:41
+wrong arity: branch zero case of @prog (t5_decide_singleton) is called as f(d, passed[0]:num), i.e. d plus 1 value(s); your function `if_below` takes 1 parameter(s) (b).
+--- 04:22:25
+wrong arity: branch zero case of branch zero case of step of stream `w` is called as f(d, ), i.e. d plus 0 value(s); your function `if_val_equal` takes 2 parameter(s) (b2, _eq).
+--- 04:22:58
+wrong arity: branch zero case of branch zero case of step of stream `w` is called as f(d, ), i.e. d plus 0 value(s); your function `if_equal` takes 2 parameter(s) (b2, _eq).
+--- 04:23:37
+build.py:26: wire `val` (num, argument `elem` of step of stream `w`, made at build.py:53) belongs to step of stream `w` (@w_step), but is used in branch zero case of step of stream `w` (@w_step_b1z) (left operand of `=`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.

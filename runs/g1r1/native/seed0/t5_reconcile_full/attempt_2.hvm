@@ -1,0 +1,29 @@
+// Generate the descending list n-1, ..., 0; reverse it for the canonical ids.
+@prog = ((n (tau (mnl (cands edges)))) out)
+  & @gen ~ (n (0 ids))
+  & @rev ~ (ids ((0 *) c))
+  & out ~ (c (0 *))
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & edges ~ *
+
+@gen = (?((@gnil @gsucc) (0 out)) (0 out))
+
+@gnil = (dummy out)
+  & dummy ~ *
+  & out ~ (0 *)
+
+@gsucc = (k (dummy out))
+  & dummy ~ *
+  & k ~ {k1 k2}
+  & @gen ~ (k1 (0 tail))
+  & out ~ (1 (k2 tail))
+
+@rev = ((?((@rvnil @rvcons) (payload (acc out))) payload) (acc out))
+
+@rvnil = (* (acc out))
+  & acc ~ out
+
+@rvcons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

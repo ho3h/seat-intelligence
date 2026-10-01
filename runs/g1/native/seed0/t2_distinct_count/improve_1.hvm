@@ -1,0 +1,71 @@
+// Store previously encountered values in a binary trie.
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (count out)))) pl) (seen (count out)))
+
+@dc_nil = (* (seen (count out)))
+  & seen ~ *
+  & count ~ out
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & @upd ~ (seen (h ur))
+  & ur ~ (seen2 added)
+  & added ~ ?((@dc_skip @dc_add) (t (seen2 (count out))))
+
+@dc_skip = (t (seen (count out)))
+  & @dc ~ (t (seen (count out)))
+
+@dc_add = (* (t (seen (count out))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t (seen (count2 out)))
+
+// Update a trie with a key; return (updated_trie, was_new).
+// Empty is (0 *); a node is (1 (end (left right))).
+@upd = ((?((@upd_empty @upd_node) (pl (key out))) pl) (key out))
+
+@upd_empty = (* (pl (key out)))
+  & pl ~ *
+  & @upd_logic ~ ((0 ((0 *) (0 *))) (key res))
+  & res ~ (fields added)
+  & out ~ ((1 fields) added)
+
+@upd_node = (* (pl (key out)))
+  & pl ~ (end lr)
+  & lr ~ (left right)
+  & @upd_logic ~ ((end (left right)) (key res))
+  & res ~ (fields added)
+  & out ~ ((1 fields) added)
+
+// At key zero, mark this node terminal. Otherwise follow the low bit.
+@upd_logic = ((end (left right)) (key out))
+  & key ~ {kt ka}
+  & kt ~ ?((@upd_zero @upd_more) ((end (left right)) (ka out)))
+
+@upd_zero = ((end (left right)) (ka out))
+  & ka ~ *
+  & end ~ ?((@upd_znew @upd_zold) (left (right res)))
+  & res ~ (fields added)
+  & out ~ (fields added)
+
+@upd_znew = (left (right res))
+  & res ~ ((1 (left right)) 1)
+
+@upd_zold = (* (left (right res)))
+  & res ~ ((1 (left right)) 0)
+
+@upd_more = (* ((end (left right)) (ka out)))
+  & ka ~ {km kd}
+  & km ~ $([%] $(2 bit))
+  & kd ~ $([/] $(2 q))
+  & bit ~ ?((@upd_left @upd_right) ((end (left right)) (q out)))
+
+@upd_left = ((end (left right)) (q out))
+  & @upd ~ (left (q rr))
+  & rr ~ (newchild added)
+  & out ~ ((end (newchild right)) added)
+
+@upd_right = (* ((end (left right)) (q out)))
+  & @upd ~ (right (q rr))
+  & rr ~ (newchild added)
+  & out ~ ((end (left newchild)) added)

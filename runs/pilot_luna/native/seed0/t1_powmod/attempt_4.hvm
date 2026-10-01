@@ -1,0 +1,22 @@
+// Compute base^exp mod m by repeated multiplication.
+
+@prog = ((b (e m)) out)
+  & m ~ {m_b {m_a m_loop}}
+  & b ~ $([%] $(m_b b0))
+  & 1 ~ $([%] $(m_a acc0))
+  & @pow ~ (e (b0 (m_loop (acc0 out))))
+
+@pow = (e (b (m (acc out))))
+  & e ~ ?((@zero @more) (b (m (acc out))))
+
+@zero = (b (m (acc out)))
+  & b ~ *
+  & m ~ *
+  & acc ~ out
+
+@more = (em1 (b (m (acc out))))
+  & b ~ {b_mul b_rec}
+  & m ~ {m_calc m_rec}
+  & b_mul ~ $([*] $(acc product))
+  & product ~ $([%] $(m_calc acc_next))
+  & @pow ~ (em1 (b_rec (m_rec (acc_next out))))

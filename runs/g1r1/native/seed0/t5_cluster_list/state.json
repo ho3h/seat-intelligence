@@ -1,0 +1,54 @@
+{
+ "pid": "t5_cluster_list",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 3657,
+    "itrs_median_big": 2359391,
+    "itrs_max": 2625512,
+    "depth_median_big": 287412,
+    "depth_max": 388756
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 1260,
+    "itrs_median_big": null,
+    "itrs_max": 3050,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 260114,
+ "best": {
+  "itrs_median_small": 3657,
+  "itrs_median_big": 2359391,
+  "itrs_max": 2625512,
+  "depth_median_big": 287412,
+  "depth_max": 388756
+ },
+ "usd": 0.063646815,
+ "free_rejects": 1,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

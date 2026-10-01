@@ -1,0 +1,29 @@
+// Emit the first element directly, then carry the running sum through the tail.
+@prog = (l out)
+  & @ps0 ~ (l out)
+
+@ps0 = ((?((@ps0_nil @ps0_cons) (pl out)) pl) out)
+
+@ps0_nil = (0 *)
+
+@ps0_cons = (* ((h t) out))
+  & @after ~ (t (h out))
+
+// The prior sum is emitted when the tail is known to be nonempty or empty.
+@after = ((?((@after_nil @after_cons) (pl (sum out))) pl) (sum out))
+
+@after_nil = (* (sum out))
+  & out ~ (1 (sum (0 *)))
+
+@after_cons = (* ((h t) (sum out)))
+  & sum ~ {headacc nextacc}
+  & out ~ (1 (headacc rest))
+  & @ps ~ (t (nextacc rest))
+
+@ps = ((?((@ps_nil @ps_cons) (pl (acc out))) pl) (acc out))
+
+@ps_nil = (* (* (0 *)))
+
+@ps_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h sum))
+  & @after ~ (t (sum out))

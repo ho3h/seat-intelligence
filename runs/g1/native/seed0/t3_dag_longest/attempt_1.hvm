@@ -1,0 +1,111 @@
+// Entry point: initialize all distances to zero, then relax every edge n times.
+@prog = ((n edges) out)
+  & n ~ {nz nr}
+  & @zeros ~ (nz z)
+  & @rounds ~ (nr (edges (z out)))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_more) out)
+
+@zeros_nil = (0 *)
+
+@zeros_more = (k out)
+  & @zeros ~ (k tail)
+  & out ~ (1 (0 tail))
+
+@rounds = (n (edges (dist out)))
+  & n ~ ?((@rounds_done @rounds_more) (edges (dist out)))
+
+@rounds_done = (edges (dist out))
+  & edges ~ *
+  & @max ~ (dist out)
+
+@rounds_more = (k (edges (dist out)))
+  & edges ~ {e1 e2}
+  & @sweep ~ (e1 (dist dist2))
+  & @rounds ~ (k (e2 (dist2 out)))
+
+// Sweep the edge list, updating dist[v] to max(dist[v], dist[u] + 1).
+@sweep = ((?((@sweep_nil @sweep_cons) (payload (dist out))) payload) (dist out))
+
+@sweep_nil = (* (dist out))
+  & dist ~ out
+
+@sweep_cons = (* ((u v) (tail (dist out))))
+  & dist ~ {d1 {d2 d3}}
+  & v ~ {v1 v2}
+  & @lookup ~ (u (d1 su))
+  & @lookup ~ (v1 (d2 tv))
+  & su ~ $([+] $(1 cand))
+  & tv ~ {tv_cmp tv_keep}
+  & cand ~ {cand_cmp cand_keep}
+  & cand_cmp ~ $([>] $(tv_cmp gt))
+  & gt ~ ?((@choose_old @choose_new) (tv_keep (cand_keep (v2 (d3 (tail out)))))
+
+@choose_old = (tv (cand (idx (list (tail out)))))
+  & cand ~ *
+  & @set ~ (idx (tv (list updated)))
+  & @sweep ~ (tail (updated out))
+
+@choose_new = (* (tv (cand (idx (list (tail out))))))
+  & tv ~ *
+  & @set ~ (idx (cand (list updated)))
+  & @sweep ~ (tail (updated out))
+
+// Look up list[idx].
+@lookup = (idx ((?((@lookup_nil @lookup_cons) (payload (idx out))) payload) out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@lookup_zero @lookup_more) (head (tail out)))
+
+@lookup_zero = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@lookup_more = (idx (head (tail out)))
+  & head ~ *
+  & @lookup ~ (idx (tail out))
+
+// Set list[idx] = value.
+@set = (idx (value ((?((@set_nil @set_cons) (payload (idx (value out)))) payload) out)))
+
+@set_nil = (* (idx (value out)))
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (value out))))
+  & idx ~ ?((@set_zero @set_more) (head (tail (value out))))
+
+@set_zero = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@set_more = (idx (head (tail (value out))))
+  & @set ~ (idx (value (tail rest)))
+  & out ~ (1 (head rest))
+
+// Return the maximum value in a list.
+@max = ((?((@max_nil @max_cons) (payload out)) payload) out)
+
+@max_nil = (* out)
+  & out ~ 0
+
+@max_cons = (* ((head tail) out))
+  & @max ~ (tail rest)
+  & head ~ {head_cmp head_keep}
+  & rest ~ {rest_cmp rest_keep}
+  & head_cmp ~ $([>] $(rest_cmp gt))
+  & gt ~ ?((@max_rest @max_head) (rest_keep (head_keep out)))
+
+@max_rest = (rest (head out))
+  & head ~ *
+  & out ~ rest
+
+@max_head = (* (rest (head out)))
+  & rest ~ *
+  & out ~ head

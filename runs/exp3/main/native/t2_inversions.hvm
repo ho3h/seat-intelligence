@@ -1,0 +1,16 @@
+@prog = ((?((@inv_nil @inv_cons) (pl_q33 ((0 *) (0 out)))) pl_q33) out)
+
+@inv_nil = (* (* (a a)))
+
+@inv_cons = (* (({h1 h2} (?((@inv_nil @inv_cons) (pl_q35 ((1 (h2 s2)) (acc2 out)))) pl_q35)) ({(?((@count_nil @count_cons) (pl_q34 (h1 (0 $([+] $(acc acc2)))))) pl_q34) s2} (acc out))))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* ((y ys) (h (acc out))))
+  & h ~ {h1 h2}
+  & y ~ $([>] $(h1 b))
+  & b ~ ?((@count_no @count_yes) (h2 (ys (acc out))))
+
+@count_no = (h ((?((@count_nil @count_cons) (pl_q36 (h (acc out)))) pl_q36) (acc out)))
+
+@count_yes = (* (h ((?((@count_nil @count_cons) (pl_q37 (h (acc2 out)))) pl_q37) ($([+1] acc2) out))))

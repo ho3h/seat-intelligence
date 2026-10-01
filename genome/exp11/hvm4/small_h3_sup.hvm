@@ -1,0 +1,17 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@sel = λ{ 0: λa. λb. b; _: λc. λa. λb. a }
+@min = λ&a. λ&b. @sel((a < b), a, b)
+@max = λ&a. λ&b. @sel((a < b), b, a)
+@ev = λ{
+  #X: λx. x
+  #K: λk. λx. k
+  #Mod: λm. λe. λx. (@ev(e, x) % m)
+  #Add: λl. λr. λ&x. (@ev(l, x) + @ev(r, x))
+  #Mul: λl. λr. λ&x. (@ev(l, x) * @ev(r, x))
+  #Xor: λl. λr. λ&x. (@ev(l, x) ^ @ev(r, x))
+}
+
+@chk = λ{ []: λys. λp. p; <>: λx. λxs. λ{ <>: λy. λys. λ&p. @g((@ev(p, x) == y), @chk(xs, ys, p)); []: λp. &{} } }
+@P = &LBI{&LBJ{#X{},#K{1}},&LBK{#Add{&LG{&LH{#X{},#K{1}},&LI{#Add{&LA{#X{},#K{1}},&LB{#X{},#K{1}}},&LJ{#Mul{&LC{#X{},#K{1}},&LD{#X{},#K{1}}},#Xor{&LE{#X{},#K{1}},&LF{#X{},#K{1}}}}}},&LQ{&LR{#X{},#K{1}},&LS{#Add{&LK{#X{},#K{1}},&LL{#X{},#K{1}}},&LT{#Mul{&LM{#X{},#K{1}},&LN{#X{},#K{1}}},#Xor{&LO{#X{},#K{1}},&LP{#X{},#K{1}}}}}}},&LBL{#Mul{&LAA{&LAB{#X{},#K{1}},&LAC{#Add{&LU{#X{},#K{1}},&LV{#X{},#K{1}}},&LAD{#Mul{&LW{#X{},#K{1}},&LX{#X{},#K{1}}},#Xor{&LY{#X{},#K{1}},&LZ{#X{},#K{1}}}}}},&LAK{&LAL{#X{},#K{1}},&LAM{#Add{&LAE{#X{},#K{1}},&LAF{#X{},#K{1}}},&LAN{#Mul{&LAG{#X{},#K{1}},&LAH{#X{},#K{1}}},#Xor{&LAI{#X{},#K{1}},&LAJ{#X{},#K{1}}}}}}},#Xor{&LAU{&LAV{#X{},#K{1}},&LAW{#Add{&LAO{#X{},#K{1}},&LAP{#X{},#K{1}}},&LAX{#Mul{&LAQ{#X{},#K{1}},&LAR{#X{},#K{1}}},#Xor{&LAS{#X{},#K{1}},&LAT{#X{},#K{1}}}}}},&LBE{&LBF{#X{},#K{1}},&LBG{#Add{&LAY{#X{},#K{1}},&LAZ{#X{},#K{1}}},&LBH{#Mul{&LBA{#X{},#K{1}},&LBB{#X{},#K{1}}},#Xor{&LBC{#X{},#K{1}},&LBD{#X{},#K{1}}}}}}}}}}
+@main = @chk([4,2,8,3,15,14,15,12,6,3], [17,5,65,10,226,197,226,145,37,10], @P)

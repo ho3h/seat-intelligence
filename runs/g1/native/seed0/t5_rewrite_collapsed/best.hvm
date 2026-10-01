@@ -1,0 +1,144 @@
+// Count loops and duplicate rewritten edges using a binary trie of packed pairs.
+@prog = (input out)
+  & input ~ (c edges)
+  & @walk ~ (edges (c ((0 *) (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (c (trie (acc out))))) pl) (c (trie (acc out))))
+
+@walk_nil = (pl (c (trie (acc out))))
+  & pl ~ *
+  & c ~ *
+  & trie ~ *
+  & acc ~ out
+
+@walk_cons = (* ((edge tail) (c (trie (acc out)))))
+  & @edge_start ~ (edge (tail (c (trie (acc out)))))
+
+@edge_start = (edge (tail (c (trie (acc out)))))
+  & edge ~ (u v)
+  & c ~ {c1 ctemp}
+  & ctemp ~ {c2 cnext}
+  & @get ~ (c1 (u x))
+  & @after_x ~ (v (x (c2 (tail (cnext (trie (acc out)))))))
+
+@after_x = (v (x (c2 (tail (c (trie (acc out)))))))
+  & @get ~ (c2 (v y))
+  & @compare ~ (x (y (tail (c (trie (acc out))))))
+
+@compare = (x (y (tail (c (trie (acc out))))))
+  & x ~ {xe xkeep}
+  & y ~ {ye ykeep}
+  & xe ~ $([=] $(ye eq))
+  & eq ~ ?((@compare_different @compare_loop) (xkeep (ykeep (tail (c (trie (acc out)))))))
+
+@compare_loop = (* (x (y (tail (c (trie (acc out)))))))
+  & x ~ *
+  & y ~ *
+  & acc ~ $([+1] acc2)
+  & @walk ~ (tail (c (trie (acc2 out))))
+
+@compare_different = (x (y (tail (c (trie (acc out))))))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & xc ~ $([<] $(yc lt))
+  & lt ~ ?((@order_reverse @order_forward) (xkeep (ykeep (tail (c (trie (acc out)))))))
+
+@order_reverse = (x (y (tail (c (trie (acc out))))))
+  & @make_key ~ (y (x (tail (c (trie (acc out))))))
+
+@order_forward = (* (x (y (tail (c (trie (acc out)))))))
+  & @make_key ~ (x (y (tail (c (trie (acc out))))))
+
+@make_key = (x (y (tail (c (trie (acc out))))))
+  & x ~ $([<<] $(12 xshift))
+  & xshift ~ $([|] $(y key))
+  & @insert ~ (20 (trie (key (updated duplicate))))
+  & duplicate ~ ?((@new_pair @duplicate_pair) (tail (c (updated (acc out)))))
+
+@new_pair = (tail (c (updated (acc out))))
+  & @walk ~ (tail (c (updated (acc out))))
+
+@duplicate_pair = (* (tail (c (updated (acc out)))))
+  & acc ~ $([+1] acc2)
+  & @walk ~ (tail (c (updated (acc2 out))))
+
+// Insert key into a trie. The fresh flag is 0 for a new key and 1 for a duplicate.
+// Internal nodes are (1 (left right)); empty nodes are (0 *); leaves are (1 *).
+@insert = (d (trie (key (out fresh))))
+  & d ~ ?((@ins_leaf @ins_step) (trie (key (out fresh))))
+
+@ins_leaf = (trie (key (out fresh)))
+  & trie ~ (tag payload)
+  & tag ~ ?((@leaf_empty @leaf_full) (payload (key (out fresh))))
+
+@leaf_empty = (payload (key (out fresh)))
+  & payload ~ *
+  & key ~ *
+  & out ~ (1 *)
+  & fresh ~ 0
+
+@leaf_full = (zero (payload (key (out fresh))))
+  & zero ~ *
+  & payload ~ *
+  & key ~ *
+  & out ~ (1 *)
+  & fresh ~ 1
+
+@ins_step = (depth (trie (key (out fresh))))
+  & depth ~ {ds dr}
+  & key ~ {ks kr}
+  & ks ~ $([>>] $(ds shifted))
+  & shifted ~ $([&] $(1 bit))
+  & trie ~ (tag payload)
+  & tag ~ ?((@step_empty @step_branch) (payload (bit (dr (kr (out fresh))))))
+
+@step_empty = (payload (bit (depth (key (out fresh)))))
+  & payload ~ *
+  & bit ~ ?((@empty_left @empty_right) (depth (key (out fresh))))
+
+@empty_left = (depth (key (out fresh)))
+  & @insert ~ (depth ((0 *) (key (child subfresh))))
+  & subfresh ~ *
+  & out ~ (1 (child (0 *)))
+  & fresh ~ 0
+
+@empty_right = (zero (depth (key (out fresh))))
+  & zero ~ *
+  & @insert ~ (depth ((0 *) (key (child subfresh))))
+  & subfresh ~ *
+  & out ~ (1 ((0 *) child))
+  & fresh ~ 0
+
+@step_branch = (zero (payload (bit (depth (key (out fresh))))))
+  & zero ~ *
+  & payload ~ (left right)
+  & bit ~ ?((@branch_left @branch_right) (left (right (depth (key (out fresh))))))
+
+@branch_left = (left (right (depth (key (out fresh)))))
+  & @insert ~ (depth (left (key (child subfresh))))
+  & out ~ (1 (child right))
+  & fresh ~ subfresh
+
+@branch_right = (zero (left (right (depth (key (out fresh))))))
+  & zero ~ *
+  & @insert ~ (depth (right (key (child subfresh))))
+  & out ~ (1 (left child))
+  & fresh ~ subfresh
+
+// Return the element at a valid index in the cluster list.
+@get = (l (idx out))
+  & idx ~ ?((@get_zero @get_succ) (l out))
+
+@get_zero = (l out)
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (idx (l out))
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @get ~ (tail (idx out))

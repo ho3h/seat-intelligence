@@ -1,0 +1,107 @@
+// Maximum independent set of a forest: n minus a maximum matching.
+// Repeatedly match a leaf to its neighbor, then remove both vertices.
+
+@prog = ((n edges) out)
+  & @match ~ (edges m)
+  & n ~ $([-] $(m out))
+
+@match = ((?((@m_nil @m_cons) (pl out)) pl) out)
+
+@m_nil = (* 0)
+
+@m_cons = (* ((edge tail) out))
+  & @step ~ ((1 (edge tail)) out)
+
+@step = (full out)
+  & full ~ {fa fb}
+  & fb ~ {scan filt}
+  & @find ~ (fa (scan (x y)))
+  & @remove ~ (filt (x (y cleaned)))
+  & @match ~ (cleaned rest)
+  & rest ~ $([+1] out)
+
+// Find an edge with a degree-one endpoint. The full edge list is the
+// degree-counting universe; scan is the list currently being searched.
+@find = (full ((?((@f_nil @f_cons) (full (pl out))) pl) out))
+
+@f_nil = (* (* (0 0)))
+
+@f_cons = (* (full ((edge tail) out)))
+  & edge ~ (u v)
+  & full ~ {fa fr}
+  & fr ~ {fb fc}
+  & @deg ~ (fa (u du))
+  & @deg ~ (fb (v dv))
+  & du ~ $([=] $(1 b0))
+  & dv ~ $([=] $(1 c))
+  & b0 ~ {bmain bsum}
+  & bmain ~ {bcompl bprod}
+  & bprod ~ {bu bv}
+  & 1 ~ $([-] $(bcompl nb))
+  & nb ~ {nbu nbv}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([*] $(bu pu))
+  & v1 ~ $([*] $(bv pv))
+  & u2 ~ $([*] $(nbu qu))
+  & v2 ~ $([*] $(nbv qv))
+  & pu ~ $([+] $(qv sx))
+  & pv ~ $([+] $(qu sy))
+  & bsum ~ $([+] $(c total))
+  & total ~ $([>] $(0 z))
+  & z ~ ?((@f_next @f_found) (sx (sy (fc (tail out))))
+
+@f_next = (* (* (fc (tail out))))
+  & @find ~ (fc (tail out))
+
+@f_found = (* (sx (sy (* (* out)))))
+  & out ~ (sx sy)
+
+// Count the edges incident to a vertex.
+@deg = (edges (x out))
+  & @dloop ~ (edges (x (0 out)))
+
+@dloop = ((?((@dl_nil @dl_cons) (pl (x (acc out)))) pl) (x (acc out)))
+
+@dl_nil = (* (* (a a)))
+
+@dl_cons = (* ((edge tail) (x (acc out))))
+  & edge ~ (u v)
+  & x ~ {x1 xr}
+  & xr ~ {x2 xrec}
+  & u ~ $([=] $(x1 a))
+  & v ~ $([=] $(x2 b))
+  & a ~ $([+] $(b s))
+  & s ~ $([+] $(acc acc2))
+  & @dloop ~ (tail (xrec (acc2 out)))
+
+// Remove all edges incident to either selected endpoint.
+@remove = ((?((@r_nil @r_cons) (pl (x (y out)))) pl) (x (y out)))
+
+@r_nil = (* (* (* (0 *))))
+
+@r_cons = (* ((edge tail) (x (y out))))
+  & edge ~ {edge1 edge2}
+  & edge1 ~ (u v)
+  & u ~ {ux uy}
+  & v ~ {vx vy}
+  & x ~ {xu xr}
+  & xr ~ {xv xrec}
+  & y ~ {yu yr}
+  & yr ~ {yv yrec}
+  & ux ~ $([=] $(xu a))
+  & vx ~ $([=] $(xv b))
+  & uy ~ $([=] $(yu c))
+  & vy ~ $([=] $(yv d))
+  & a ~ $([+] $(b s1))
+  & s1 ~ $([+] $(c s2))
+  & s2 ~ $([+] $(d hits))
+  & hits ~ $([=] $(0 z))
+  & z ~ ?((@r_keep @r_drop) (edge2 (tail (xrec (yrec out))))
+
+@r_keep = (edge (tail (x (y out))))
+  & @remove ~ (tail (x (y rt)))
+  & out ~ (1 (edge rt))
+
+@r_drop = (* (* (tail (x (y out)))))
+  & @remove ~ (tail (x (y out)))

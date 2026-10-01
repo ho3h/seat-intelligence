@@ -1,0 +1,21 @@
+@prog = ((tau probs) out)
+  & @loop ~ (probs (0 (6 0) (tau out)))
+@loop = ((lst idx min_idx max) (tau out))
+  & lst ~ ?((@fin @cont) (idx (min_idx (max (tau out)))))
+@fin = (idx (min_idx (max (tau out))))
+  & max ~ $([<] $(tau check))
+  & check ~ ?((@return_6 @return_min) (min_idx out))
+@return_6 = (min_idx out)
+  & min_idx ~ *
+  & 6 ~ out
+@return_min = (* (min_idx out))
+  & min_idx ~ out
+@cont = ((* (val rest)) (idx (min_idx (max (tau out)))))
+  & max ~ $([<] $(val cond))
+  & cond ~ ?((@no_upd @do_upd) (idx (rest (min_idx (max (tau out))))))
+@no_upd = (i (r (mi (m (t out)))))
+  & i ~ $([+1] ni)
+  & @loop ~ (r (ni (mi (m (t out)))))
+@do_upd = (* (i (r (mi (m (t out))))))
+  & i ~ $([+1] ni)
+  & @loop ~ (r (ni (i (t out))))

@@ -1,0 +1,62 @@
+{
+ "limit": [
+  "{N} <cat> <k> <S>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). In each section of S seats, seat at most k guests of category <cat>. All three arguments are required, in this order: category token, k, S.",
+  "No table of 7 may have more than 3 investors; tell me each guest's table.",
+  "{N} investor 3 7` then `sections 7"
+ ],
+ "pair": [
+  "{N} <catA> <catB>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Seat every guest of category <catA> directly next to a guest of category <catB> (A, B, A, B, ...).",
+  "Put each AI lab guest right beside a chip maker.",
+  "{N} ai_lab chips"
+ ],
+ "apart": [
+  "{N} <CoX> <CoY>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Keep the guests of company X as far from company Y's guests as the table allows (X at the head, Y at the foot).",
+  "Keep Meta and Amazon at opposite ends of the table.",
+  "{N} Meta Amazon"
+ ],
+ "vip": [
+  "{N} <R>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Guests whose rank number is R or lower take the first seats; the rest keep their order after them.",
+  "Anyone with rank 4 or better goes to the front.",
+  "{N} 4"
+ ],
+ "stagger": [
+  "{N} <m>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Seat in rounds: each round takes at most m guests from every company; later guests of a company wait for later rounds.",
+  "Bring guests in waves, no more than 2 from any one company per wave.",
+  "{N} 2"
+ ],
+ "headseat": [
+  "{N}",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). The guest with the lowest rank number takes seat 1; everyone else keeps their order.",
+  "Whoever has the smallest rank number gets the first seat.",
+  "{N}"
+ ],
+ "bigfirst": [
+  "{N}",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Larger company delegations are seated before smaller ones (ties by company); guests without a company go last.",
+  "Companies that brought the most people are seated first.",
+  "{N}"
+ ],
+ "waitlist": [
+  "{N} <cat> <k>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Only the first k guests of category <cat> keep their place; further ones of that category go to the very end.",
+  "Only the first 3 chip makers get regular seats; the rest wait at the end.",
+  "{N} chips 3"
+ ],
+ "snake": [
+  "{N} <S>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). Reverse the seat order inside every second section (the 2nd, 4th, ...) of S seats.",
+  "Every other table of 6 runs in the opposite direction; which table is each guest at?",
+  "{N} 6` then `sections 6"
+ ],
+ "sectionlead": [
+  "{N} <S>",
+  "ARRANGEMENT word (not a closing word; a closing word line still ends the program). In each section of S seats, the guest with the lowest rank number moves to the section's first seat.",
+  "At each table of 5, the lowest-ranked guest takes the head seat; tell me each guest's table.",
+  "{N} 5` then `sections 5"
+ ]
+}

@@ -1,0 +1,25 @@
+// Filter the tail while testing the current head, so the comparison does not
+// have to finish before the recursive filter can begin.
+@prog = ((k xs) out)
+  & @filter_gt ~ (k (xs out))
+
+@filter_gt = (k ((?((@filter_nil @filter_cons) (pl (ka (kr o)))) pl) o))
+  & k ~ {ka kr}
+
+@filter_nil = (pl (ka (kr out)))
+  & pl ~ *
+  & ka ~ *
+  & kr ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((h t) (ka (kr out))))
+  & @filter_gt ~ (kr (t ft))
+  & h ~ {ht hk}
+  & ht ~ $([>] $(ka z))
+  & z ~ ?((@filter_drop @filter_keep) (hk (ft out)))
+
+@filter_drop = (hk (ft ft))
+  & hk ~ *
+
+@filter_keep = (* (hk (ft out)))
+  & out ~ (1 (hk ft))

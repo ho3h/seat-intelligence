@@ -1,0 +1,20 @@
+// Generate the singleton-cluster canonical-id list.
+// Edges are passed through unchanged; reconciliation and edge rewriting remain unimplemented.
+@prog = ((n (tau (mnl (cands edges)))) out)
+  & @init ~ (n (0 ids))
+  & out ~ (ids edges)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@init = (n (i out))
+  & n ~ ?((@init_zero @init_succ) (i out))
+
+@init_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (i out))
+  & i ~ {iout inext}
+  & @init ~ (k ($([+1] inext) tail))
+  & out ~ (1 (iout tail))

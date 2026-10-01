@@ -1,0 +1,18 @@
+// Dot product over the shorter list; each product is computed independently
+// of the recursive tail sum.
+@prog = ((xs ys) out)
+  & @dot ~ (xs (ys out))
+
+@dot = ((?((@dot_xnil @dot_xcons) (px (ys out))) px) (ys out))
+
+@dot_xnil = (* (* 0))
+
+@dot_xcons = (* ((x xt) (ys out)))
+  & ((?((@dot_ynil @dot_ycons) (py (x2 (xt2 out2)))) py) (x2 (xt2 out2))) ~ (ys (x (xt out)))
+
+@dot_ynil = (* (* (* 0)))
+
+@dot_ycons = (* ((y yt) (x (xt out))))
+  & x ~ $([*] $(y p))
+  & @dot ~ (xt (yt s))
+  & s ~ $([+] $(p out))

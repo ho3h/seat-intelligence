@@ -1,0 +1,65 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@list_length = ((@list_length__C1 a) a)
+
+@list_length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @list_length ~ (a b)
+
+@list_length__C1 = (?((0 @list_length__C0) a) a)
+
+@merge_count = ((@merge_count__C7 a) a)
+
+@merge_count__C0 = ({d i} (a (b (f (e (h j))))))
+  & @List/Cons ~ (f (g h))
+  & @merge_count ~ (c (d (e (g $([+] $(i j))))))
+  & @List/Cons ~ (a (b c))
+
+@merge_count__C1 = (* ($([:-0x0000001] b) (f (a (c (d (h i)))))))
+  & @List/Cons ~ (f (g h))
+  & @merge_count ~ (a (b (e (g i))))
+  & @List/Cons ~ (c (d e))
+
+@merge_count__C2 = (* (a (b (c 0))))
+  & @List/Cons ~ (a (b c))
+
+@merge_count__C3 = (* ({a f} (g (c ({$([>] $(a b)) d} (e h))))))
+  & $(b ?((@merge_count__C0 @merge_count__C1) (c (d (e (f (g h))))))) ~ [=0x0000000]
+
+@merge_count__C4 = (?((@merge_count__C2 @merge_count__C3) a) a)
+
+@merge_count__C5 = (* (a (a 0)))
+
+@merge_count__C6 = (* (b (c (a ((@merge_count__C4 (a (b (c d)))) d)))))
+
+@merge_count__C7 = (?((@merge_count__C5 @merge_count__C6) a) a)
+
+@prog = (a b)
+  & @sort_count ~ (a (* b))
+
+@sort_count = ({b a} d)
+  & @list_length ~ (a {$([>0x0000002] ?((@sort_count__C0 @sort_count__C1) (b (c d)))) c})
+
+@sort_count__C0 = (a ($([:/0x0000002] {b f}) (h k)))
+  & @merge_count ~ (e (f (g (h j))))
+  &!@sort_count ~ (d (g i))
+  &!@sort_count ~ (c (e $([+] $(i $([+] $(j k))))))
+  & @split_at ~ (a (b (c d)))
+
+@sort_count__C1 = (* (a (* (a 0))))
+
+@split_at = (a ({$([=0x0000000] ?((@split_at__C2 @split_at__C3) (a (b c)))) b} c))
+
+@split_at__C0 = (* (c (a ($([:-0x0000001] b) (e f)))))
+  & @List/Cons ~ (c (d e))
+  & @split_at ~ (a (b (d f)))
+
+@split_at__C1 = (?(((* (@List/Nil @List/Nil)) @split_at__C0) a) a)
+
+@split_at__C2 = ((@split_at__C1 a) a)
+
+@split_at__C3 = (* (a (* (@List/Nil a))))
+
+

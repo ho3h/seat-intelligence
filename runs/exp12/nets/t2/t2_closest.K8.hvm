@@ -1,0 +1,121 @@
+@prog = (inp out)
+  & inp ~ (x xs)
+  & @start ~ (xs (x out))
+
+@start = (lv1 (x out))
+  & @first_cell_lw ~ (lv1 (x out))
+
+@empty = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@first_cell = (* (({hc {hs hkeep}} t) ({$([<] $(hc z11)) {xs xkeep}} out)))
+  & z11 ~ ?((@start_ge_hz @start_lt_hz) (xs (hs (xkeep (hkeep (xw48 out))))))
+  & @cons_lw ~ (t xw48)
+
+@start_ge = (xs (hs (x (h (t out)))))
+  & xs ~ $([-] $(hs d))
+  & @seed ~ (d (h (x (t out))))
+
+@start_lt = (* (xs (hs (x (h (t out))))))
+  & hs ~ $([-] $(xs d))
+  & @seed ~ (d (h (x (t out))))
+
+@seed = (d (h (x (t out))))
+  & @walk ~ (t (x (h (d out))))
+
+@walk = (lv2 (x (best (bd out))))
+  & @cons_lw ~ (lv2 (x (best (bd out))))
+
+@nil = (* (x (best (bd out))))
+  & x ~ *
+  & bd ~ *
+  & best ~ out
+
+@cons = (* (({hc {hs hcand}} t) ({$([<] $(hc z49)) {xs xrec}} (best (bd out)))))
+  & z49 ~ ?((@ge_hz @clt_hz) (xs (hs (xrec (hcand (xw174 (best (bd out))))))))
+  & @cons_lw ~ (t xw174)
+
+@ge = (xs (hs (xr (hc (t (best (bd out)))))))
+  & xs ~ $([-] $(hs d))
+  & @consider ~ (d (hc (xr (t (best (bd out))))))
+
+@clt = (* (xs (hs (xr (hc (t (best (bd out))))))))
+  & hs ~ $([-] $(xs d))
+  & @consider ~ (d (hc (xr (t (best (bd out))))))
+
+@consider = (d (h (x (t (best (bd out))))))
+  & d ~ {dl dr}
+  & dr ~ {deq dcand}
+  & bd ~ {bdl bdr}
+  & bdr ~ {beq bdkeep}
+  & h ~ {hcand hcmp}
+  & best ~ {bestcmp bestkeep}
+  & dl ~ $([<] $(bdl less))
+  & deq ~ $([=] $(beq equal))
+  & hcmp ~ $([<] $(bestcmp hless))
+  & equal ~ $([&] $(hless tie))
+  & less ~ $([|] $(tie update))
+  & update ~ ?((@keep @replace) (dcand (bdkeep (hcand (bestkeep (x (t out)))))))
+
+@keep = (d (bd (h (best (x (t out))))))
+  & d ~ *
+  & h ~ *
+  & @walk ~ (t (x (best (bd out))))
+
+@replace = (* (d (bd (h (best (x (t out)))))))
+  & best ~ *
+  & bd ~ *
+  & @walk ~ (t (x (h (d out))))
+
+@first_cell_lw = (ls232 (q178 q179))
+  & ls232 ~ (g223 (e215 (g224 (e216 (g225 (e217 (g226 (e218 (g227 (e219 (g228 (e220 (g229 (e221 (g230 (e222 tk231))))))))))))))))
+  & g223 ~ ?((@empty @first_cell_la) ((e215 (q181 (q182 (q183 q184)))) (q178 q179)))
+  & g224 ~ ?((@nil @cons_la) ((e216 (q186 (q187 (q188 q189)))) (q181 (q182 (q183 q184)))))
+  & g225 ~ ?((@nil @cons_la) ((e217 (q191 (q192 (q193 q194)))) (q186 (q187 (q188 q189)))))
+  & g226 ~ ?((@nil @cons_la) ((e218 (q196 (q197 (q198 q199)))) (q191 (q192 (q193 q194)))))
+  & g227 ~ ?((@nil @cons_la) ((e219 (q201 (q202 (q203 q204)))) (q196 (q197 (q198 q199)))))
+  & g228 ~ ?((@nil @cons_la) ((e220 (q206 (q207 (q208 q209)))) (q201 (q202 (q203 q204)))))
+  & g229 ~ ?((@nil @cons_la) ((e221 (q211 (q212 (q213 q214)))) (q206 (q207 (q208 q209)))))
+  & g230 ~ ?((@nil @cons) ((e222 tk231) (q211 (q212 (q213 q214)))))
+
+@cons_lw = (ls290 (q234 (q235 (q236 q237))))
+  & ls290 ~ (g281 (e273 (g282 (e274 (g283 (e275 (g284 (e276 (g285 (e277 (g286 (e278 (g287 (e279 (g288 (e280 tk289))))))))))))))))
+  & g281 ~ ?((@nil @cons_la) ((e273 (q239 (q240 (q241 q242)))) (q234 (q235 (q236 q237)))))
+  & g282 ~ ?((@nil @cons_la) ((e274 (q244 (q245 (q246 q247)))) (q239 (q240 (q241 q242)))))
+  & g283 ~ ?((@nil @cons_la) ((e275 (q249 (q250 (q251 q252)))) (q244 (q245 (q246 q247)))))
+  & g284 ~ ?((@nil @cons_la) ((e276 (q254 (q255 (q256 q257)))) (q249 (q250 (q251 q252)))))
+  & g285 ~ ?((@nil @cons_la) ((e277 (q259 (q260 (q261 q262)))) (q254 (q255 (q256 q257)))))
+  & g286 ~ ?((@nil @cons_la) ((e278 (q264 (q265 (q266 q267)))) (q259 (q260 (q261 q262)))))
+  & g287 ~ ?((@nil @cons_la) ((e279 (q269 (q270 (q271 q272)))) (q264 (q265 (q266 q267)))))
+  & g288 ~ ?((@nil @cons) ((e280 tk289) (q269 (q270 (q271 q272)))))
+
+@start_ge_hz = ($([-] $(q13 q18)) (q13 (q14 (q15 (hw29 q17)))))
+  & hw29 ~ (q14 (q15 (q18 q17)))
+
+@start_lt_hz = (* (q30 ($([-] $(q30 q36)) (q32 (q33 (hw47 q35))))))
+  & hw47 ~ (q32 (q33 (q36 q35)))
+
+@first_cell_la = (* (({hc {hs hkeep}} xw48) ({$([<] $(hc ?((@start_ge_hz @start_lt_hz) (xs (hs (xkeep (hkeep (xw48 out)))))))) {xs xkeep}} out)))
+
+@keep_hz = (* (q85 (* (q87 (q88 (hw96 q90))))))
+  & hw96 ~ (q88 (q87 (q85 q90)))
+
+@replace_hz = (* (q97 (* (q99 (* (q101 (hw109 q103)))))))
+  & hw109 ~ (q101 (q99 (q97 q103)))
+
+@ge_hz = ($([-] $(q51 {$([<] $(q70 $([|] $(q81 z83)))) {$([=] $(q72 $([&] $(q80 q81)))) q69}})) (q51 (q52 ({q74 $([<] $(q76 q80))} (hw111 ({q76 q77} ({q70 {q72 q73}} q57)))))))
+  & z83 ~ ?((@keep_hz @replace_hz) (q69 (q73 (q74 (q77 (q52 (xw110 q57)))))))
+  & hw111 ~ xw110
+
+@keep_hz1 = (* (q147 (* (q149 (q150 (hw158 q152))))))
+  & hw158 ~ (q150 (q149 (q147 q152)))
+
+@replace_hz1 = (* (q159 (* (q161 (* (q163 (hw171 q165)))))))
+  & hw171 ~ (q163 (q161 (q159 q165)))
+
+@clt_hz = (* (q112 ($([-] $(q112 {$([<] $(q132 $([|] $(q143 z145)))) {$([=] $(q134 $([&] $(q142 q143)))) q131}})) (q114 ({q136 $([<] $(q138 q142))} (hw173 ({q138 q139} ({q132 {q134 q135}} q119))))))))
+  & z145 ~ ?((@keep_hz1 @replace_hz1) (q131 (q135 (q136 (q139 (q114 (xw172 q119)))))))
+  & hw173 ~ xw172
+
+@cons_la = (* (({hc {hs hcand}} xw174) ({$([<] $(hc ?((@ge_hz @clt_hz) (xs (hs (xrec (hcand (xw174 (best (bd out)))))))))) {xs xrec}} (best (bd out)))))

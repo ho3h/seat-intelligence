@@ -1,0 +1,15 @@
+@prog = ((?((@am_nil @am_cons) (pl_q45 (0 (0 (0 out))))) pl_q45) out)
+
+@am_nil = (* (idx (bv (bi out))))
+  & idx ~ *
+  & bv ~ *
+  & bi ~ out
+
+@am_cons = (* ((h t) (idx (bv (bi out)))))
+  & h ~ {hc hnew}
+  & bv ~ {bc bvkeep}
+  & idx ~ {inx ibest}
+  & hc ~ $([>] $(bc z))
+  & z ~ ?((((?((@am_nil @am_cons) (pl_q46_q48 (idx2_q48 (bvkeep_q48 (bi_q48 out_q48))))) pl_q46_q48) ($([+1] idx2_q48) (* (bvkeep_q48 (* (bi_q48 out_q48)))))) @am_yes) (t (inx (hnew (bvkeep (ibest (bi out)))))))
+
+@am_yes = (* ((?((@am_nil @am_cons) (pl_q47 (idx2 (hnew (ibest out))))) pl_q47) ($([+1] idx2) (hnew (* (ibest (* out)))))))

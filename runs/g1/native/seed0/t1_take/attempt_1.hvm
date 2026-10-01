@@ -1,0 +1,27 @@
+// @prog receives (k, xs) and returns the requested prefix.
+@prog = (input out)
+  & input ~ (k xs)
+  & @take ~ (k (xs out))
+
+// Stop immediately when k is zero; otherwise inspect the list.
+@take = (k (xs out))
+  & k ~ ?((@take_zero @take_list) (xs out))
+
+@take_zero = (xs out)
+  & xs ~ *
+  & out ~ (0 *)
+
+// Inspect the list tag, keeping k and out in the switch context.
+@take_list = (k ((?((@take_nil @take_cons) (pl (k out))) pl) out))
+
+@take_nil = (pl (k out))
+  & pl ~ *
+  & k ~ *
+  & out ~ (0 *)
+
+// A Cons tag supplies zero; emit its head and recurse on its tail.
+@take_cons = (z (pl (k out)))
+  & z ~ *
+  & pl ~ (h t)
+  & @take ~ (k (t rest))
+  & out ~ (1 (h rest))

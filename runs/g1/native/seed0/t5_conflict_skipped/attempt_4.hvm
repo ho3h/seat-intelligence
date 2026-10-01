@@ -1,0 +1,72 @@
+// When cap is below two, every candidate is skipped. Otherwise this filters
+// candidates whose pair is directly listed as must-not-link.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & cap ~ $([<] $(2 low))
+  & low ~ ?((@filter_entry @map_entry) (cands (mnl out)))
+
+@map_entry = (cands (mnl out))
+  & mnl ~ *
+  & @map ~ (cands out)
+
+@filter_entry = (cands (mnl out))
+  & @filter ~ (cands (mnl out))
+
+// Drop scores while preserving the candidate list order.
+@map = ((?((@map_nil @map_cons) (payload out)) payload) out)
+
+@map_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@map_cons = (((u (v score)) tail) out)
+  & score ~ *
+  & @map ~ (tail rest)
+  & out ~ (1 ((u v) rest))
+
+// Keep candidates that directly match a must-not-link pair.
+@filter = ((?((@filter_nil @filter_cons) (payload (mnl out))) payload) (mnl out))
+
+@filter_nil = (payload (mnl out))
+  & payload ~ *
+  & mnl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (((u (v score)) tail) (mnl out))
+  & @has ~ (mnl (u (v found)))
+  & found ~ ?((@omit @emit) (u (v (score (tail (mnl out)))))
+
+@omit = (u (v (score (tail (mnl out)))))
+  & score ~ *
+  & @filter ~ (tail (mnl rest))
+  & out ~ rest
+
+@emit = (u (v (score (tail (mnl out)))))
+  & score ~ *
+  & @filter ~ (tail (mnl rest))
+  & out ~ (1 ((u v) rest))
+
+// Test whether (u,v) appears in the must-not-link list.
+@has = ((?((@has_nil @has_cons) (payload (u (v out)))) payload) (u (v out)))
+
+@has_nil = (payload (u (v out)))
+  & payload ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 0
+
+@has_cons = ((a b) (tail (u (v out))))
+  & a ~ $([=] $(u eq_a))
+  & b ~ $([=] $(v eq_b))
+  & eq_a ~ $([&] $(eq_b eq))
+  & eq ~ ?((@has_recurse @has_true) (tail (u (v out)))
+
+@has_recurse = (tail (u (v out)))
+  & @has ~ (tail (u (v found)))
+  & out ~ found
+
+@has_true = (tail (u (v out)))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1

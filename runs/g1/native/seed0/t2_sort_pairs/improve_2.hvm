@@ -1,0 +1,56 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & t ~ (?((@sort_one @sort_many) (pl (h out))) pl)
+
+@sort_one = (pl (h out))
+  & pl ~ *
+  & out ~ (1 (h (0 *)))
+
+@sort_many = (* (pl (h out)))
+  & @split ~ ((1 (h pl)) (left right))
+  & @sort ~ (left sorted_left)
+  & @sort ~ (right sorted_right)
+  & @merge ~ (sorted_left (sorted_right out))
+
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split ~ (t (l r))
+  & out ~ ((1 (h r)) l)
+
+@merge = ((?((@merge_nil @merge_cons) (pl (b out))) pl) (b out))
+
+@merge_nil = (pl (b out))
+  & pl ~ *
+  & out ~ b
+
+@merge_cons = (* ((({ak akc} av) ta) (b out)))
+  & b ~ (?((@merge_bnil @merge_bcons) (bp ((ak (akc av)) (ta out)))) bp)
+
+@merge_bnil = (bp ((ak (akc av)) (ta out)))
+  & bp ~ *
+  & akc ~ *
+  & out ~ (1 ((ak av) ta))
+
+@merge_bcons = (* ((({bk bkc} bv) tb) ((ak (akc av)) (ta out))))
+  & bkc ~ $([<] $(akc cmp))
+  & cmp ~ ?((@merge_take_a @merge_take_b) ((ak (av ta)) (bk (bv (tb out))))
+
+@merge_take_a = ((ak (av ta)) (bk (bv (tb out))))
+  & @merge ~ (ta ((1 ((bk bv) tb)) rec))
+  & out ~ (1 ((ak av) rec))
+
+@merge_take_b = (* ((ak (av ta)) (bk (bv (tb out)))))
+  & @merge ~ ((1 ((ak av) ta)) (tb rec))
+  & out ~ (1 ((bk bv) rec))

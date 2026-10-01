@@ -1,0 +1,37 @@
+@prog = ((cl ml) out)
+  & @iter ~ (ml (cl (0 out)))
+
+@iter = ((?((@iter_nil @iter_cons) (pl (cl (acc out)))) pl) (cl (acc out)))
+
+@iter_nil = (* (* (a a)))
+
+@iter_cons = (* (((a b) rest) (cl (acc out))))
+  & @check ~ ((a b) (rest (cl (acc out))))
+
+@check = ((a b) (rest (cl (acc out))))
+  & cl ~ {ca cb}
+  & cb ~ {cb2 cnext}
+  & @lookup ~ (a (ca va))
+  & @lookup ~ (b (cb2 vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@check_no @check_yes) (rest (cnext (acc out))))
+
+@check_no = (rest (cnext (acc out)))
+  & @iter ~ (rest (cnext (acc out)))
+
+@check_yes = (* (rest (cnext (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @iter ~ (rest (cnext (acc2 out)))
+
+@lookup = (idx (lst out))
+  & idx ~ ?((@look_zero @look_succ) (lst out))
+
+@look_zero = ((tag (head tail)) out)
+  & tag ~ *
+  & tail ~ *
+  & head ~ out
+
+@look_succ = (idx ((tag (head tail)) out))
+  & tag ~ *
+  & head ~ *
+  & @lookup ~ (idx (tail out))

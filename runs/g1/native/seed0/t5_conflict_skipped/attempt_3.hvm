@@ -1,0 +1,22 @@
+// With cap at most one, every candidate is skipped. For larger caps, return no skips.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & mnl ~ *
+  & cap ~ $([>] $(1 z))
+  & z ~ ?((@low_cap @high_cap) (cands out))
+
+@low_cap = (cands out)
+  & @pairs ~ (cands out)
+
+@high_cap = (* (cands out))
+  & cands ~ *
+  & out ~ (0 *)
+
+@pairs = ((?((@pairs_nil @pairs_cons) (payload out)) payload) out)
+
+@pairs_nil = (* (0 *))
+
+@pairs_cons = (* (((u (v score)) tail) out))
+  & score ~ *
+  & @pairs ~ (tail rest)
+  & out ~ (1 ((u v) rest))

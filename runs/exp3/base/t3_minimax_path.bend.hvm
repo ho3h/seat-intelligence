@@ -1,0 +1,98 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@get_at = (a (?((@get_at__C3 @get_at__C4) (a b)) b))
+
+@get_at__C0 = (?((16777215 (* (a (* a)))) b) b)
+
+@get_at__C1 = (* (* (a ($([+0x0000001] $([:-0x0000001] b)) c))))
+  & @get_at ~ (a (b c))
+
+@get_at__C2 = (?(((* 16777215) @get_at__C1) a) a)
+
+@get_at__C3 = ((@get_at__C0 a) a)
+
+@get_at__C4 = (a ((@get_at__C2 (a b)) b))
+
+@make_dist = (?(((* (* @List/Nil)) @make_dist__C2) a) a)
+
+@make_dist__C0 = a
+  & @List/Cons ~ (16777215 a)
+
+@make_dist__C1 = (* a)
+  & @List/Cons ~ (0 a)
+
+@make_dist__C2 = ($([+0x0000001] $([:-0x0000001] b)) ({a c} ({$([=] $(a ?((@make_dist__C0 @make_dist__C1) (e f)))) $([+0x0000001] d)} f)))
+  & @make_dist ~ (b (c (d e)))
+
+@max2 = ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f))
+
+@prog = (({a c} ({$([<] $(a b)) d} (e f))) g)
+  & $(b ?((@prog__C2 (* (* (* (* (* 16777215)))))) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@prog__C0 = ({a {f c}} (d (h (b i))))
+  & @get_at ~ (g (h i))
+  & @repeat_passes ~ (a (b (e (f g))))
+  & @make_dist ~ (c (d (0 e)))
+
+@prog__C1 = (b ({$([=] $(a ?((@prog__C0 (* (* (* (* (* 0)))))) (b (c (d e)))))) c} ({a d} e)))
+
+@prog__C2 = ({a c} (d ({$([<] $(a b)) e} f)))
+  & $(b ?((@prog__C1 (* (* (* (* (* 16777215)))))) (c (d (e f))))) ~ [=0x0000000]
+
+@relax_edges = ((@relax_edges__C9 a) a)
+
+@relax_edges__C0 = (a (* (* a)))
+
+@relax_edges__C1 = (* a)
+  & @set_at ~ a
+
+@relax_edges__C2 = (* (* (a a)))
+
+@relax_edges__C3 = (* (c (b (a d))))
+  & @set_at ~ (a (b (c d)))
+
+@relax_edges__C4 = (b (c (a (* (* (* d))))))
+  & @relax_edges ~ (a (b (c d)))
+
+@relax_edges__C5 = (* ({n {c a}} (s (i ({l b} ({o d} ({h f} t)))))))
+  & @relax_edges ~ (i (r (s t)))
+  & @max2 ~ (g (h {$([<] $(j ?((@relax_edges__C2 @relax_edges__C3) (k (l (q r)))))) k}))
+  & @max2 ~ (e (f {$([<] $(m ?((@relax_edges__C0 @relax_edges__C1) (n (o (p q)))))) p}))
+  & @get_at ~ (c (d {g m}))
+  & @get_at ~ (a (b {j e}))
+
+@relax_edges__C6 = (b (c (a (* (* (* d))))))
+  & @relax_edges ~ (a (b (c d)))
+
+@relax_edges__C7 = (* (b ({a c} (d (e ({$([<] $(a ?((@relax_edges__C4 @relax_edges__C5) (b (c (d (e (f g)))))))) f} g))))))
+
+@relax_edges__C8 = (* (({$([<] $(a ?((@relax_edges__C6 @relax_edges__C7) (b (c (d (e (f (g h))))))))) e} (f g)) (d (b ({a c} h)))))
+
+@relax_edges__C9 = (?(((a (* a)) @relax_edges__C8) b) b)
+
+@repeat_passes = (?(((* (a (* a))) @repeat_passes__C0) b) b)
+
+@repeat_passes__C0 = ($([+0x0000001] $([:-0x0000001] a)) ({b c} (d ({g e} h))))
+  & @repeat_passes ~ (a (b (f (g h))))
+  & @relax_edges ~ (c (d (e f)))
+
+@set_at = (a (?((@set_at__C4 @set_at__C5) (a b)) b))
+
+@set_at__C0 = (* (* (b (a c))))
+  & @List/Cons ~ (a (b c))
+
+@set_at__C1 = (?(((* @List/Nil) @set_at__C0) a) a)
+
+@set_at__C2 = (* (a (b (d ($([+0x0000001] $([:-0x0000001] c)) f)))))
+  & @List/Cons ~ (a (e f))
+  & @set_at ~ (b (c (d e)))
+
+@set_at__C3 = (?(((* (* @List/Nil)) @set_at__C2) a) a)
+
+@set_at__C4 = ((@set_at__C1 a) a)
+
+@set_at__C5 = (b ((@set_at__C3 (a (b c))) (a c)))
+
+

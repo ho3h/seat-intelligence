@@ -1,0 +1,123 @@
+// Initialize each node as its own parent, union each edge, then emit each
+// node's component maximum.
+@prog = ((n pairs) out)
+  & @init ~ (n parents)
+  & @sweep ~ (pairs (parents merged))
+  & merged ~ {scan lookup}
+  & @labels ~ (scan (lookup out))
+
+// Build [0, 1, ..., n-1].
+@init = (n out)
+  & n ~ ?((@init_zero @init_more) (out *))
+
+@init_zero = (out *)
+  & out ~ (0 *)
+
+@init_more = (m (out *))
+  & m ~ {m1 m2}
+  & @init ~ (m1 mid)
+  & @append ~ (mid (m2 out))
+
+// Append x to list l.
+@append = ((?((@ap_nil @ap_cons) (pl (x out))) pl) (x out))
+
+@ap_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ap_cons = (* ((h t) (x out)))
+  & @append ~ (t (x mid))
+  & out ~ (1 (h mid))
+
+// Look up the value at index idx in list l.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ *
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_head @get_tail) (h (t out)))
+
+@get_head = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@get_tail = (idx (* (t out)))
+  & @get ~ (t (idx out))
+
+// Replace the value at index idx in list l with val.
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ *
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_head @set_tail) (h (t (val out))))
+
+@set_head = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_tail = (idx (h (t (val out))))
+  & @set ~ (t (idx (val mid)))
+  & out ~ (1 (h mid))
+
+// Find the root parent for idx, following parent links.
+@find = (parents (idx out))
+  & parents ~ {pget prest}
+  & idx ~ {iget irest}
+  & irest ~ {icmp ib}
+  & @get ~ (pget (iget val))
+  & val ~ {vtest vnext}
+  & vtest ~ $([=] $(icmp z))
+  & z ~ ?((@find_next @find_same) (ib (prest (vnext out))))
+
+@find_next = (idx (parents (val out)))
+  & idx ~ *
+  & @find ~ (parents (val out))
+
+@find_same = (* (idx (parents (val out))))
+  & parents ~ *
+  & val ~ *
+  & out ~ idx
+
+// Union the two endpoint components by linking the smaller root to the larger.
+@edge = ((u v) (parents out))
+  & parents ~ {p1 rest}
+  & rest ~ {p2 pset}
+  & @find ~ (p1 (u a))
+  & @find ~ (p2 (v b))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@edge_le @edge_gt) (ar (br (pset out))))
+
+@edge_le = (a (b (parents out)))
+  & @set ~ (parents (a (b out)))
+
+@edge_gt = (* (a (b (parents out))))
+  & @set ~ (parents (b (a out)))
+
+// Process every edge once.
+@sweep = ((?((@sw_nil @sw_cons) (pl (parents out))) pl) (parents out))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((edge tail) (parents out)))
+  & @edge ~ (edge (parents mid))
+  & @sweep ~ (tail (mid out))
+
+// Map the parent list to the final component ids.
+@labels = ((?((@labels_nil @labels_cons) (pl (parents out))) pl) (parents out))
+
+@labels_nil = (* (parents out))
+  & parents ~ *
+  & out ~ (0 *)
+
+@labels_cons = (* ((head tail) (parents out)))
+  & parents ~ {pfind prest}
+  & @find ~ (pfind (head root))
+  & @labels ~ (tail (prest mid))
+  & out ~ (1 (root mid))

@@ -1,0 +1,161 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & @solve ~ (n (edges output))
+
+@solve = (n (edges out))
+  & @mkverts ~ (n (0 verts))
+  & @peel ~ (verts (edges (0 out)))
+
+@mkverts = (n (i out))
+  & n ~ ?((@mkv_nil @mkv_succ) (i out))
+
+@mkv_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@mkv_succ = (n (i out))
+  & i ~ {i_out i_inc}
+  & out ~ (1 (i_out tail))
+  & i_inc ~ $([+1] i_next)
+  & @mkverts ~ (n (i_next tail))
+
+@peel = (verts (edges (acc out)))
+  & verts ~ {find_verts keep_verts}
+  & edges ~ {find_edges keep_edges}
+  & @find ~ (find_verts (find_edges found))
+  & found ~ ?((@peel_done @peel_found) (keep_verts (keep_edges (acc out))))
+
+@peel_done = (payload (verts (edges (acc out))))
+  & payload ~ *
+  & verts ~ *
+  & edges ~ *
+  & out ~ acc
+
+@peel_found = (* ((v (d nb)) (verts (edges (acc out)))))
+  & v ~ {v_verts v_edges}
+  & @fverts ~ (verts (v_verts verts2))
+  & @fedges ~ (edges (v_edges edges2))
+  & acc ~ $([+] $(1 acc2))
+  & d ~ ?((@peel_iso @peel_pair) (verts2 (edges2 (nb (acc2 out))))
+
+@peel_iso = (verts (edges (nb (acc out))))
+  & nb ~ *
+  & @peel ~ (verts (edges (acc out)))
+
+@peel_pair = (* (verts (edges (nb (acc out)))))
+  & nb ~ {nb_verts nb_edges}
+  & @fverts ~ (verts (nb_verts verts2))
+  & @fedges ~ (edges (nb_edges edges2))
+  & @peel ~ (verts2 (edges2 (acc out)))
+
+@find = ((?((@find_nil @find_cons) (pl (edges out))) pl) (edges out))
+
+@find_nil = (pl (edges out))
+  & pl ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@find_cons = (* ((v vs) (edges out)))
+  & edges ~ {e_deg e_rec}
+  & v ~ {v_deg v_keep}
+  & @degree ~ (v_deg (e_deg degree_result))
+  & degree_result ~ (d nb)
+  & d ~ $([<] $(2 z))
+  & z ~ ?((@find_next @find_yes) (v_keep (vs (e_rec (d (nb out)))))
+
+@find_next = (v (vs (edges (d (nb out)))))
+  & v ~ *
+  & d ~ *
+  & nb ~ *
+  & @find ~ (vs (edges out))
+
+@find_yes = (* (v (vs (edges (d (nb out))))))
+  & vs ~ *
+  & edges ~ *
+  & out ~ (1 (v (d nb)))
+
+@degree = (v (edges out))
+  & @degloop ~ (v (edges (0 (0 out))))
+
+@degloop = ((?((@deg_nil @deg_cons) (pl (v (count (neighbor out))))) pl) (v (count (neighbor out))))
+
+@deg_nil = (pl (v (count (neighbor out))))
+  & pl ~ *
+  & v ~ *
+  & out ~ (count neighbor)
+
+@deg_cons = (* (((u w) tail) (v (count (neighbor out)))))
+  & v ~ {v_cmp1 v_rest}
+  & v_rest ~ {v_cmp2 v_rec}
+  & u ~ {u_cmp u_cand}
+  & w ~ {w_cmp w_cand}
+  & u_cmp ~ $([=] $(v_cmp1 z1))
+  & w_cmp ~ $([=] $(v_cmp2 z2))
+  & z1 ~ ?((@deg_check2 @deg_hit_w) (tail (v_rec (count (neighbor (u_cand (w_cand out)))))))
+
+@deg_check2 = (tail (v (count (neighbor (u (w out))))))
+  & z2 ~ ?((@deg_nohit @deg_hit_u) (tail (v (count (neighbor (u (w out)))))))
+
+@deg_nohit = (tail (v (count (neighbor (u (w out))))))
+  & u ~ *
+  & w ~ *
+  & @degloop ~ (v (tail (count (neighbor out))))
+
+@deg_hit_u = (* (tail (v (count (neighbor (u (w out)))))))
+  & neighbor ~ *
+  & w ~ *
+  & count ~ $([+1] count2)
+  & @degloop ~ (v (tail (count2 (u out))))
+
+@deg_hit_w = (* (tail (v (count (neighbor (u (w out)))))))
+  & neighbor ~ *
+  & u ~ *
+  & count ~ $([+1] count2)
+  & @degloop ~ (v (tail (count2 (w out))))
+
+@fverts = ((?((@fv_nil @fv_cons) (pl (target out))) pl) (target out))
+
+@fv_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@fv_cons = (* ((x xs) (target out)))
+  & x ~ {x_cmp x_keep}
+  & target ~ {target_cmp target_rec}
+  & x_cmp ~ $([=] $(target_cmp z))
+  & z ~ ?((@fv_keep @fv_drop) (x_keep (xs (target_rec out))))
+
+@fv_keep = (x (xs (target out)))
+  & out ~ (1 (x tail))
+  & @fverts ~ (xs (target tail))
+
+@fv_drop = (* (x (xs (target out))))
+  & x ~ *
+  & @fverts ~ (xs (target out))
+
+@fedges = ((?((@fe_nil @fe_cons) (pl (target out))) pl) (target out))
+
+@fe_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@fe_cons = (* (((u v) xs) (target out)))
+  & u ~ {u_cmp u_keep}
+  & v ~ {v_cmp v_keep}
+  & target ~ {target_u target_rest}
+  & target_rest ~ {target_v target_rec}
+  & u_cmp ~ $([=] $(target_u zu))
+  & v_cmp ~ $([=] $(target_v zv))
+  & zu ~ $([|] $(zv rm))
+  & rm ~ ?((@fe_keep @fe_drop) (u_keep (v_keep (xs (target_rec out))))
+
+@fe_keep = (u (v (xs (target out))))
+  & out ~ (1 ((u v) tail))
+  & @fedges ~ (xs (target tail))
+
+@fe_drop = (* (u (v (xs (target out)))))
+  & u ~ *
+  & v ~ *
+  & @fedges ~ (xs (target out))

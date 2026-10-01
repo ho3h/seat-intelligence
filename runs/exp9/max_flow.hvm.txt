@@ -1,0 +1,141 @@
+// t3_max_flow (GRAPH-SWING-2, runs/exp9): Edmonds-Karp over tries. Arc trie A keyed by arc id (edge i gives arcs
+// 2i = u->v with capacity w and 2i+1 = v->u with capacity 0), leaves (tail (head cap)). One iteration:
+//  (1) one traversal of A pushes (head, 4096 + arc) into a fresh adjacency trie for every arc with cap > 0;
+//  (2) the exp5 frontier Bellman-Ford core with packed labels hops*4096 + parent-arc (emission takes the parent's
+//      hop part and adds 4096 + arc), i.e. a BFS that also records a parent arc;
+//  (3) if t is unreached, stop; else walk parent arcs from t to s (one lookup per hop in copies of D and A) collecting
+//      the path and its bottleneck b; (4) keyed updates cap(a) -= b, cap(a^1) += b along the path.
+// Trivial inputs (s == t, s >= n, t >= n, no edges) answer 0 without reading the edge list.
+@prog = ((n (s (t es))) out)
+  & n ~ {n1 {n2 n3}}
+  & s ~ {s1 {s2 {s3 s4}}}
+  & t ~ {t1 {t2 t3}}
+  & s1 ~ $([!] $(t1 ne))
+  & s2 ~ $([<] $(n1 sin))
+  & t2 ~ $([<] $(n2 tin))
+  & ne ~ $([&] $(sin a))
+  & a ~ $([&] $(tin ok))
+  & ok ~ ?((@mf_triv @mf_go) (n3 (s3 (t3 (es out)))))
+  & s4 ~ *
+@mf_triv = (* (* (* (* 0))))
+@mf_go = (* (n (s (t (es out)))))
+  & n ~ {n1 n2}
+  & n1 ~ $([-] $(1 nm))
+  & @lg ~ (nm L)
+  & @w_blk ~ (es ((0 (0 *)) (m el)))
+  & m ~ {m1 m2}
+  & m1 ~ ?((@mf_none @mf_some) (m2 (el (n2 (s (t (L (0 out))))))))
+@mf_none = (* (* (* (* (* (* (f f)))))))
+// mf_some: m edges, el = indexed list of (u (v (cap (revcap i)))), f0 = initial flow value
+@mf_some = (* (m (el (n (s (t (L (f0 out))))))))
+  & m ~ $([*] $(2 m2))
+  & m2 ~ $([-] $(1 mm))
+  & @lg ~ (mm La)
+  & La ~ {La1 {La2 La3}}
+  & @za ~ (La1 A0)
+  & @ba ~ (el (A0 (La2 A)))
+  & @mfi ~ (A (f0 ((n (s (t (L La3)))) out)))
+@mf_step = ((i l) ((u (v c)) (i2 (1 ((u (v (c (0 i1)))) l)))))
+  & i ~ {i1 i3}
+  & i3 ~ $([+1] i2)
+@mf_fin = (s s)
+// za(La): arc trie with leaves (0 (0 0))
+@za = (?(((0 (0 0)) @za_node) o) o)
+@za_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @za ~ (l1 a)
+  & @za ~ (l2 b)
+// ba(edge list with indices, A, La) -> A with both arcs of every edge set
+@ba = ((?((@ba_nil @ba_cons) (p (A (La o)))) p) (A (La o)))
+@ba_nil = (* (A (* A)))
+@ba_cons = (* (((u (v (c (rc i)))) rest) (A (La o))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & i ~ $([*] $(2 a))
+  & a ~ {a1 a2}
+  & a2 ~ $([+1] a3)
+  & La ~ {L1 {L2 L3}}
+  & @stn ~ (A (a1 (L1 ((u1 (v1 c)) A1))))
+  & @stn ~ (A1 (a3 (L2 ((v2 (u2 rc)) A2))))
+  & @ba ~ (rest (A2 (L3 o)))
+// one augmentation round; C = (n (s (t (L La))))
+@mfi = (A (flow (C o)))
+  & C ~ {Ca {Cb {Cc Cd}}}
+  & Ca ~ (* (* (* (Lx La1))))
+  & Lx ~ {L1 Lv}
+  & @zl ~ (L1 G0)
+  & @bg ~ (A (La1 (0 (Lv (G0 (A2 G))))))
+  & Cb ~ (n2 (s2 (* (L2 *))))
+  & @sssp_start ~ (n2 (s2 (L2 (16777215 (G D)))))
+  & D ~ {D1 D2}
+  & Cc ~ (* (* (t3 (L3 *))))
+  & @lk ~ (D1 (t3 (L3 dt)))
+  & dt ~ $([<] $(16777215 r))
+  & r ~ ?((@mfi_done @mfi_aug) (A2 (D2 (flow (Cd o)))))
+@mfi_done = (* (* (f (* f))))
+@mfi_aug = (* (A (D (flow (C o)))))
+  & A ~ {Ac Au}
+  & C ~ {Ca {Cb Cc}}
+  & Ca ~ (* (s (t (L La))))
+  & @tr ~ (t (D (Ac ((s (L La)) (path b)))))
+  & b ~ {b1 b2}
+  & flow ~ $([+] $(b1 f2))
+  & Cb ~ (* (* (* (* La2))))
+  & @up ~ (path (b2 (Au (La2 A2))))
+  & @mfi ~ (A2 (f2 (Cc o)))
+// bg(A, Lr, base, Lv, G) -> (A G'): push (head, 4096 + arc) at tail for arcs with cap > 0
+@bg = (A (Lr (base (Lv (G o)))))
+  & Lr ~ ?((@bg_leaf @bg_node) (A (base (Lv (G o)))))
+@bg_leaf = ((u (v c)) (a (Lv (G ((u2 (v2 c2)) G2)))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & c ~ {c1 c2}
+  & c1 ~ $([>] $(0 pos))
+  & pos ~ ?((@bg_no @bg_yes) (G (u1 (v1 (a (Lv G2))))))
+@bg_no = (g (* (* (* (* g)))))
+@bg_yes = (* (g (u (v (a (Lv g2))))))
+  & a ~ $([+] $(4096 w))
+  & @gp ~ (g (u (Lv ((v w) g2))))
+@bg_node = (lm ((Aa Ab) (base (Lv (G ((Xa Xb) G2))))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & Lv ~ {Lv1 Lv2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @bg ~ (Aa (l1 (b1 (Lv1 (G (Xa Gm))))))
+  & @bg ~ (Ab (l2 (bR (Lv2 (Gm (Xb G2))))))
+// tr(v, D, A, (s (L La))) -> (path arcs, bottleneck), following parent arcs from v back to s
+@tr = (v (D (A (E o))))
+  & E ~ {E1 E2}
+  & E1 ~ (s *)
+  & v ~ {v1 v2}
+  & v1 ~ $([=] $(s eq))
+  & eq ~ ?((@tr_go @tr_end) (v2 (D (A (E2 o)))))
+@tr_end = (* (* (* (* (* ((0 *) 16777215))))))
+@tr_go = (v (D (A (E ((1 (a rest)) b)))))
+  & D ~ {D1 D2}
+  & A ~ {A1 A2}
+  & E ~ {Ex {Ey Ez}}
+  & Ex ~ (* (L *))
+  & @lk ~ (D1 (v (L pk)))
+  & pk ~ $([&] $(4095 a0))
+  & a0 ~ {a a1}
+  & Ey ~ (* (* La))
+  & @lk ~ (A1 (a1 (La (u (* c)))))
+  & @tr ~ (u (D2 (A2 (Ez (rest b0)))))
+  & @min ~ (c (b0 b))
+// up(path, b, A, La): cap(a) -= b, cap(a ^ 1) += b
+@up = ((?((@up_nil @up_cons) (p (b (A (La o))))) p) (b (A (La o))))
+@up_nil = (* (* (A (* A))))
+@up_cons = (* ((a rest) (b (A (La o)))))
+  & a ~ {a1 a2}
+  & a2 ~ $([^] $(1 ar))
+  & b ~ {b1 {b2 b3}}
+  & La ~ {L1 {L2 L3}}
+  & @csub ~ (A (a1 (L1 (b1 A1))))
+  & @cadd ~ (A1 (ar (L2 (b2 A2))))
+  & @up ~ (rest (b3 (A2 (L3 o))))
+@csub_act = ((u (v c)) (b (u (v c2))))
+  & c ~ $([-] $(b c2))
+@cadd_act = ((u (v c)) (b (u (v c2))))
+  & c ~ $([+] $(b c2))

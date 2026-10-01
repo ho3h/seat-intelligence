@@ -1,0 +1,18 @@
+@prog = (l out)
+  & @prod ~ (l out)
+
+@prod = ((?((@prod_nil @prod_cons) (pl out)) pl) out)
+
+@prod_nil = (* 1)
+
+@prod_cons = (* ((h t) out))
+  & @prod2 ~ (t (h out))
+
+@prod2 = ((?((@prod2_nil @prod2_cons) (pl (h out))) pl) (h out))
+
+@prod2_nil = (* (a a))
+
+@prod2_cons = (* ((h2 t2) (a out)))
+  & a ~ $([*] $(h2 pair))
+  & @prod ~ (t2 rest)
+  & pair ~ $([*] $(rest out))

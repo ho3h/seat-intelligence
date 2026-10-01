@@ -1,0 +1,72 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@get_cluster = ((@get_cluster__C2 a) a)
+
+@get_cluster__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_cluster ~ (a (b c))
+
+@get_cluster__C1 = (* (c (d ({$([=0x0000000] ?((@get_cluster__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_cluster__C2 = (?(((* 0) @get_cluster__C1) a) a)
+
+@insert_edge = ((@insert_edge__C10 a) a)
+
+@insert_edge__C0 = (c (a (b e)))
+  & @List/Cons ~ (a (d e))
+  & @insert_edge ~ (b (c d))
+
+@insert_edge__C1 = (* (* a))
+  & @List/Cons ~ a
+
+@insert_edge__C10 = (?((@insert_edge__C8 @insert_edge__C9) a) a)
+
+@insert_edge__C2 = (b (c (d ($([=] $(a ?((@insert_edge__C0 @insert_edge__C1) (b (c (d e)))))) (a e)))))
+
+@insert_edge__C3 = (* (a (b (c (* (* e))))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@insert_edge__C4 = (c (a (b (* (* e)))))
+  & @List/Cons ~ (a (d e))
+  & @insert_edge ~ (b (c d))
+
+@insert_edge__C5 = (* (b (c (d ({$([<] $(a ?((@insert_edge__C2 @insert_edge__C3) (b (c (d (e (f g)))))))) e} ({a f} g))))))
+
+@insert_edge__C6 = (b (c (d ($([=] $(a ?((@insert_edge__C4 @insert_edge__C5) (b (c (d (e f))))))) (e (a f))))))
+
+@insert_edge__C7 = (* (a (b (c (* (* (* (* e))))))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@insert_edge__C8 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@insert_edge__C9 = (* ({({a g} h) c} (d ({({$([<] $(a ?((@insert_edge__C6 @insert_edge__C7) (b (c (d (e (f (g (h i)))))))))) e} f) b} i))))
+
+@prog = ((a b) c)
+  & @rewrite_edges ~ (a (b (@List/Nil c)))
+
+@rewrite_edges = (a ((@rewrite_edges__C5 (a b)) b))
+
+@rewrite_edges__C0 = (a (c (b (e (d g)))))
+  & @rewrite_edges ~ (a (b (f g)))
+  & @insert_edge ~ (c ((d e) f))
+
+@rewrite_edges__C1 = (* (a (c (b (d (e g))))))
+  & @rewrite_edges ~ (a (b (f g)))
+  & @insert_edge ~ (c ((d e) f))
+
+@rewrite_edges__C2 = (b (c (d ({$([<] $(a ?((@rewrite_edges__C0 @rewrite_edges__C1) (b (c (d (e (f g)))))))) e} ({a f} g)))))
+
+@rewrite_edges__C3 = (* (a (c (b (* (* d))))))
+  & @rewrite_edges ~ (a (b (c d)))
+
+@rewrite_edges__C4 = (* ((b d) (h ({f {c a}} (g k)))))
+  & @get_cluster ~ (c (d {e j}))
+  & @get_cluster ~ (a (b {$([=] $(e ?((@rewrite_edges__C2 @rewrite_edges__C3) (f (g (h (i (j k)))))))) i}))
+
+@rewrite_edges__C5 = (?(((* (a a)) @rewrite_edges__C4) b) b)
+
+

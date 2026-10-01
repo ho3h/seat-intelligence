@@ -1,0 +1,27 @@
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 121095.39it/s]
+generated 16/64  14s
+generated 32/64  26s
+generated 48/64  47s
+generated 64/64  69s
+{
+ "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+ "adapter": "adapters/native_v1",
+ "arm": "native",
+ "split": "indist",
+ "n": 2,
+ "tasks": 32,
+ "samples": 64,
+ "pass@1": 0.1875,
+ "pass@2": 0.25,
+ "outcomes": {
+  "pass": 12,
+  "static": 36,
+  "fail": 16
+ },
+ "per_family_pass1": {
+  "position": 1.0,
+  "reduce": 0.13333333333333333,
+  "pipeline": 0.13333333333333333
+ },
+ "seconds": 90.37702512741089
+}

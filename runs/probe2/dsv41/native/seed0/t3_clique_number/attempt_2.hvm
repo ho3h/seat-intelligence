@@ -1,0 +1,146 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {n1 n2}
+  & @build_adj ~ (n1 (edges adj))
+  & @make_vertices ~ (n2 verts)
+  & @mc ~ (adj (verts (0 (0 out))))
+
+@make_list = (n out)
+  & n ~ ?((@make_list_zero @make_list_succ) out)
+
+@make_list_zero = (0 *)
+
+@make_list_succ = (nm1 out)
+  & @make_list ~ (nm1 tail)
+  & out ~ (1 ((0 *) tail))
+
+@build_adj = (n (edges out))
+  & @make_list ~ (n adj)
+  & @process_edges ~ (edges (adj out))
+
+@process_edges = (edges (adj out))
+  & edges ~ (?((@pe_nil @pe_cons) (adj (pl out))) pl)
+
+@pe_nil = (adj (* out))
+  & out ~ adj
+
+@pe_cons = (* (adj (((u v) rest) out)))
+  & adj ~ {adj1 adj2}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @add_at ~ (adj1 (u1 (v1 adj3)))
+  & @add_at ~ (adj3 (v2 (u2 adj4)))
+  & @process_edges ~ (rest (adj4 out))
+
+@add_at = (lst (idx (val out)))
+  & idx ~ ?((@add_at_zero @add_at_succ) (lst (val out)))
+
+@add_at_zero = ((1 (sub rest)) (val out))
+  & out ~ (1 ((1 (val sub)) rest))
+
+@add_at_succ = (idxm1 ((1 (sub rest)) (val out)))
+  & @add_at ~ (rest (idxm1 (val newrest)))
+  & out ~ (1 (sub newrest))
+
+@make_vertices = (n out)
+  & n ~ ?((@mv_zero @mv_succ) out)
+
+@mv_zero = (0 *)
+
+@mv_succ = (x out)
+  & x ~ {xa xb}
+  & @make_vertices ~ (xa tail)
+  & out ~ (1 (xb tail))
+
+@mc = (adj (vlist (curr (best out))))
+  & vlist ~ (?((@mc_nil @mc_cons) (adj (pl (curr (best out))))) pl)
+
+@mc_nil = (adj (pl (curr (best out))))
+  & adj ~ *
+  & pl ~ *
+  & @max ~ (best (curr out))
+
+@mc_cons = (* (adj ((v rest) (curr (best out)))))
+  & adj ~ {adj1 adjrest}
+  & adjrest ~ {adj2 adj3}
+  & @get ~ (adj1 (v neigh))
+  & rest ~ {rest1 rest2}
+  & curr ~ {curr1 curr2}
+  & @intersect ~ (rest1 (neigh newcands))
+  & curr1 ~ $([+1] newcurr)
+  & @mc ~ (adj2 (newcands (newcurr (best best1))))
+  & @mc ~ (adj3 (rest2 (curr2 (best1 out))))
+
+@get = (lst (idx out))
+  & idx ~ ?((@get_zero @get_succ) (lst out))
+
+@get_zero = ((1 (h t)) out)
+  & t ~ *
+  & out ~ h
+
+@get_succ = (idxm1 (lst out))
+  & lst ~ (?((@gs_unused @gs_cons) (idxm1 (pl out))) pl)
+
+@gs_unused = (idxm1 (* out))
+  & idxm1 ~ *
+  & out ~ (0 *)
+
+@gs_cons = (* (idxm1 ((h t) out)))
+  & h ~ *
+  & @get ~ (t (idxm1 out))
+
+@intersect = (cands (neigh out))
+  & cands ~ (?((@int_nil @int_cons) (neigh (pl out))) pl)
+
+@int_nil = (neigh (* out))
+  & neigh ~ *
+  & out ~ (0 *)
+
+@int_cons = (* ((u rest) (neigh (pl out))))
+  & neigh ~ {neigh1 neigh2}
+  & u ~ {u_mem u_ctx}
+  & @mem ~ (u_mem (neigh1 in_or_not))
+  & in_or_not ~ ?((@int_skip @int_keep) (u_ctx (rest (neigh2 (pl out)))))
+
+@int_skip = (u (rest (neigh (* out))))
+  & u ~ *
+  & @intersect ~ (rest (neigh out))
+
+@int_keep = (* (u (rest (neigh (* out)))))
+  & @intersect ~ (rest (neigh out2))
+  & out ~ (1 (u out2))
+
+@mem = (x (lst out))
+  & lst ~ (?((@mem_nil @mem_cons) (x (pl out))) pl)
+
+@mem_nil = (x (* out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* (x ((u rest) out)))
+  & u ~ {u_mem u_ctx}
+  & x ~ {x_mem x_ctx}
+  & u_mem ~ $([=] $(x_mem eq))
+  & eq ~ ?((@mem_no @mem_yes) (x_ctx (rest out)))
+
+@mem_no = (x (rest out))
+  & @mem ~ (x (rest out))
+
+@mem_yes = (* (x (rest out)))
+  & x ~ *
+  & rest ~ *
+  & out ~ 1
+
+@max = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 c))
+  & c ~ ?((@max_false @max_true) (a2 (b2 out)))
+
+@max_false = (a (b out))
+  & b ~ *
+  & out ~ a
+
+@max_true = (* (a (b out)))
+  & a ~ *
+  & out ~ b

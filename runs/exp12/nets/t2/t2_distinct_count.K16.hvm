@@ -1,0 +1,85 @@
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = (lv1 (seen (count out)))
+  & @dc_cons_lw ~ (lv1 (seen (count out)))
+
+@dc_nil = (* (seen (count out)))
+  & seen ~ *
+  & count ~ out
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & @trie ~ (seen (h (seen2 z6)))
+  & z6 ~ ?((@dc_skip_hz @dc_add_hz) (xw26 (seen2 (count out))))
+  & @dc_cons_lw ~ (t xw26)
+
+@dc_skip = (t (seen (count out)))
+  & @dc ~ (t (seen (count out)))
+
+@dc_add = (* (t (seen (count out))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t (seen (count2 out)))
+
+@trie = ((?((@trie_empty @trie_node) (pl (key out))) pl) (key out))
+
+@trie_empty = (* (key out))
+  & @step ~ ((0 ((0 *) (0 *))) (key out))
+
+@trie_node = (* ((terminal children) (key out)))
+  & children ~ (left right)
+  & @step ~ ((terminal (left right)) (key out))
+
+@step = ((terminal (left right)) (?((@step_zero @step_more) ((terminal (left right)) out)) out))
+
+@step_zero = ((?((@step_new @step_old) ((left right) out)) (left right)) out)
+
+@step_new = ((left right) out)
+  & out ~ ((1 (1 (left right))) 1)
+
+@step_old = (* ((left right) out))
+  & out ~ ((1 (1 (left right))) 0)
+
+@step_more = (km ((terminal (left right)) out))
+  & km ~ $([+1] key)
+  & key ~ {k1 k2}
+  & k1 ~ $([%] $(2 bit))
+  & k2 ~ $([/] $(2 q))
+  & bit ~ ?((@step_left @step_right) ((terminal (left right)) (q out)))
+
+@step_left = ((terminal (left right)) (q out))
+  & @trie ~ (left (q result))
+  & result ~ (newchild added)
+  & out ~ ((1 (terminal (newchild right))) added)
+
+@step_right = (* ((terminal (left right)) (q out)))
+  & @trie ~ (right (q result))
+  & result ~ (newchild added)
+  & out ~ ((1 (terminal (left newchild))) added)
+
+@dc_cons_lw = (ls125 (q29 (q30 q31)))
+  & ls125 ~ (g108 (e92 (g109 (e93 (g110 (e94 (g111 (e95 (g112 (e96 (g113 (e97 (g114 (e98 (g115 (e99 (g116 (e100 (g117 (e101 (g118 (e102 (g119 (e103 (g120 (e104 (g121 (e105 (g122 (e106 (g123 (e107 tk124))))))))))))))))))))))))))))))))
+  & g108 ~ ?((@dc_nil @dc_cons_la) ((e92 (q33 (q34 q35))) (q29 (q30 q31))))
+  & g109 ~ ?((@dc_nil @dc_cons_la) ((e93 (q37 (q38 q39))) (q33 (q34 q35))))
+  & g110 ~ ?((@dc_nil @dc_cons_la) ((e94 (q41 (q42 q43))) (q37 (q38 q39))))
+  & g111 ~ ?((@dc_nil @dc_cons_la) ((e95 (q45 (q46 q47))) (q41 (q42 q43))))
+  & g112 ~ ?((@dc_nil @dc_cons_la) ((e96 (q49 (q50 q51))) (q45 (q46 q47))))
+  & g113 ~ ?((@dc_nil @dc_cons_la) ((e97 (q53 (q54 q55))) (q49 (q50 q51))))
+  & g114 ~ ?((@dc_nil @dc_cons_la) ((e98 (q57 (q58 q59))) (q53 (q54 q55))))
+  & g115 ~ ?((@dc_nil @dc_cons_la) ((e99 (q61 (q62 q63))) (q57 (q58 q59))))
+  & g116 ~ ?((@dc_nil @dc_cons_la) ((e100 (q65 (q66 q67))) (q61 (q62 q63))))
+  & g117 ~ ?((@dc_nil @dc_cons_la) ((e101 (q69 (q70 q71))) (q65 (q66 q67))))
+  & g118 ~ ?((@dc_nil @dc_cons_la) ((e102 (q73 (q74 q75))) (q69 (q70 q71))))
+  & g119 ~ ?((@dc_nil @dc_cons_la) ((e103 (q77 (q78 q79))) (q73 (q74 q75))))
+  & g120 ~ ?((@dc_nil @dc_cons_la) ((e104 (q81 (q82 q83))) (q77 (q78 q79))))
+  & g121 ~ ?((@dc_nil @dc_cons_la) ((e105 (q85 (q86 q87))) (q81 (q82 q83))))
+  & g122 ~ ?((@dc_nil @dc_cons_la) ((e106 (q89 (q90 q91))) (q85 (q86 q87))))
+  & g123 ~ ?((@dc_nil @dc_cons) ((e107 tk124) (q89 (q90 q91))))
+
+@dc_skip_hz = (hw15 (q8 (q9 q10)))
+  & hw15 ~ (q8 (q9 q10))
+
+@dc_add_hz = (* (hw25 (q17 ($([+1] q20) q19))))
+  & hw25 ~ (q17 (q20 q19))
+
+@dc_cons_la = (* ((h xw26) (seen (count out))))
+  & @trie ~ (seen (h (seen2 ?((@dc_skip_hz @dc_add_hz) (xw26 (seen2 (count out)))))))

@@ -1,0 +1,32 @@
+// @prog receives the list and starts with largest = second-largest = 0.
+@prog = (l out)
+  & @scan ~ (l (0 (0 out)))
+
+// Carry the list, largest, second-largest, and output.
+@scan = ((?((@nil @cons) (pl (a (b out)))) pl) (a (b out)))
+
+@nil = (* (* (b b)))
+
+@cons = (* ((h t) (a (b out))))
+  & h ~ {x x_test}
+  & a ~ {a_keep a_test}
+  & x_test ~ $([>] $(a_test z))
+  & z ~ ?((@notbig @big) (x (a_keep (b (t out)))))
+
+@big = (* (x (a (b (t out)))))
+  & b ~ *
+  & @scan ~ (t (x (a out)))
+
+@notbig = (x (a (b (t out))))
+  & x ~ {x_keep x_test}
+  & b ~ {b_keep b_test}
+  & x_test ~ $([>] $(b_test z))
+  & z ~ ?((@keep @mid) (x_keep (a (b_keep (t out)))))
+
+@keep = (* (x (a (b (t out)))))
+  & x ~ *
+  & @scan ~ (t (a (b out)))
+
+@mid = (* (x (a (b (t out)))))
+  & b ~ *
+  & @scan ~ (t (a (x out)))

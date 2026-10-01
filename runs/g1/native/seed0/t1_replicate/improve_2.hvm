@@ -1,0 +1,30 @@
+// Build a list by recursively splitting the count into balanced halves.
+@prog = (input output)
+  & input ~ (n v)
+  & @rep ~ (n (v ((0 *) output)))
+
+@rep = (n (v (tail out)))
+  & n ~ ?((@rep_zero @rep_succ) (v (tail out)))
+
+@rep_zero = (v (tail out))
+  & v ~ *
+  & out ~ tail
+
+@rep_succ = (m (v (tail out)))
+  & m ~ ?((@rep_one @rep_more) (v (tail out)))
+
+@rep_one = (m (v (tail out)))
+  & m ~ *
+  & out ~ (1 (v tail))
+
+// Here k = n - 2. Split k, then add one to each half.
+@rep_more = (k (v (tail out)))
+  & k ~ {kdiv ksub}
+  & kdiv ~ $([/2] q)
+  & ksub ~ $([-] $(qsub rem))
+  & q ~ {qsub qleft}
+  & qleft ~ $([+1] left)
+  & rem ~ $([+1] right)
+  & v ~ {vleft vright}
+  & @rep ~ (left (vleft (mid out)))
+  & @rep ~ (right (vright (tail mid)))

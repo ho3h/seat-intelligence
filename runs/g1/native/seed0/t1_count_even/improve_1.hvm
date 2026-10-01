@@ -1,0 +1,17 @@
+// Count even elements, recursively computing the tail count independently
+// of the current element's parity test.
+@prog = (l out)
+  & @ce ~ (l out)
+
+@ce = ((?((@ce_nil @ce_cons) (pl out)) pl) out)
+
+@ce_nil = (* out)
+
+@ce_cons = (* ((h t) out))
+  & @ce ~ (t tail)
+  & h ~ $([&] $(1 z))
+  & z ~ ?((@ce_even @ce_odd) (tail out))
+
+@ce_even = ($([+] $(1 out)) out)
+
+@ce_odd = (* (a a))

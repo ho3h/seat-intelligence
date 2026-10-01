@@ -1,0 +1,39 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @insert ~ (sorted (h out))
+  & @sort_cons_lw ~ (t sorted)
+
+@insert = ((?((@ins_nil @ins_cons) (x (payload out))) payload) (x out))
+
+@ins_nil = (x (payload out))
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((y ys) out)))
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & y_cmp ~ $([>] $(x_cmp z))
+  & z ~ ?((@ins_before @ins_after) (x_keep (y_keep (ys out))))
+
+@ins_before = (x (y (ys out)))
+  & out ~ (1 (x (1 (y ys))))
+
+@ins_after = (* (x (y (ys out))))
+  & @insert ~ (ys (x rest))
+  & out ~ (1 (y rest))
+
+@sort_cons_lw = (ls16 q8)
+  & ls16 ~ (g13 (e11 (g14 (e12 tk15))))
+  & g13 ~ ?((@sort_nil @sort_cons_la) ((e11 q10) q8))
+  & g14 ~ ?((@sort_nil @sort_cons) ((e12 tk15) q10))
+
+@sort_cons_la = (* ((h sorted) out))
+  & @insert ~ (sorted (h out))

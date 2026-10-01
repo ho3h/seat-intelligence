@@ -1,0 +1,148 @@
+Port signatures of typical instances (generated from genome/lib/glue.py; `?` = any kind, matched per call)
+
+lg (@lg); d.call returns L:
+    in  x: num  [exactly once]
+    out L: depth  [exactly once]
+
+const_trie `z0` (leaf 0) (@z0); d.call returns t:
+    in  L: depth  [exactly once]
+    out t: trie[num]  [exactly once]
+
+empty_adj `gl_zl` (@gl_zl); d.call returns t:
+    in  L: depth  [exactly once]
+    out t: adj (trie[list[(num num)]])  [exactly once]
+
+iota_trie `io` (@io); d.call returns t:
+    in  L: depth  [exactly once]
+    in  base: num  [0..1, default 0]
+    out t: trie[num]  [exactly once]
+
+update `hadd` (act add) (@hadd); d.call returns t2:
+    in  t: trie[num]  [exactly once]
+    in  k: num  [exactly once]
+    in  L: depth  [exactly once]
+    in  P: num  [exactly once]
+    out t2: trie[num]  [exactly once]
+
+update `dinc` (act inc) (@dinc); d.call returns t2:
+    in  t: trie[num]  [exactly once]
+    in  k: num  [exactly once]
+    in  L: depth  [exactly once]
+    out t2: trie[num]  [exactly once]
+
+update `pk` (act peek) (@pk); d.call returns P, t2:
+    in  t: adj (trie[list[(num num)]])  [exactly once]
+    in  k: num  [exactly once]
+    in  L: depth  [exactly once]
+    out P: list[(num num)]  [exactly once]  -- copy of the leaf
+    out t2: adj (trie[list[(num num)]])  [exactly once]
+
+adjacency `gl_adj` (@gl_adj); d.call returns G2:
+    in  G: adj (trie[list[(num num)]])  [exactly once]
+    in  u: num  [exactly once]
+    in  L: depth  [exactly once]
+    in  v: num  [exactly once]
+    in  w: num  [0..1, default 0]
+    out G2: adj (trie[list[(num num)]])  [exactly once]
+
+get `gt` (@gt); d.call returns o:
+    in  t: trie[?]  [exactly once]
+    in  k: num  [exactly once]
+    in  L: depth  [exactly once]
+    out o: ?  [exactly once]
+
+reduce `r` (+) (@r); d.call returns o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  base: num  [0..1, default 0]
+    in  E: num  [exactly once]
+    out o: num  [exactly once]
+
+fold `f` (@f); d.call returns o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  base: num  [0..1, default 0]
+    in  acc: num  [exactly once]
+    out o: num  [exactly once]
+
+to_list `tl` (@tl); d.call returns o:
+    in  t: trie[?]  [exactly once]
+    in  L: depth  [exactly once]
+    in  n: num  [exactly once]
+    in  tail: list[?]  [0..1, default (0 *)]
+    out o: list[?]  [exactly once]
+
+filter_list `fl` (@fl); d.call returns o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  E: num  [0..1, default 0]
+    in  tail: list[num]  [0..1, default (0 *)]
+    out o: list[num]  [exactly once]
+
+scatter `sc` via update `hadd` (act add) (@sc); d.call returns H2:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  Lh: depth  [exactly once]
+    in  E: num  [0..1, default 0]
+    in  H: trie[num]  [exactly once]
+    out H2: trie[num]  [exactly once]
+
+zip2 `z2` (@z2); d.call returns o:
+    in  a: trie[num]  [exactly once]
+    in  c: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    out o: trie[num]  [exactly once]
+
+mapreduce `mr` (min) (@mr); d.call returns t2, o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  base: num  [0..1, default 0]
+    out t2: trie[num]  [exactly once]
+    out o: num  [exactly once]
+
+mc_empty `zq` (@zq); d.call returns q:
+    in  L: depth  [exactly once]
+    out q: request-trie  [exactly once]
+
+mc_request `rq` (@rq); d.call returns r, q2:
+    in  q: request-trie  [exactly once]
+    in  k: num  [exactly once]
+    in  L: depth  [exactly once]
+    out r: num  [exactly once]  -- the value at key k, after delivery
+    out q2: request-trie  [exactly once]
+
+mc_deliver `dv` (@dv); d.call returns nothing:
+    in  v: trie[num]  [exactly once]
+    in  q: request-trie  [exactly once]
+    in  L: depth  [exactly once]
+
+mc_deliver_keep `dvk` (@dvk); d.call returns v2:
+    in  v: trie[num]  [exactly once]
+    in  q: request-trie  [exactly once]
+    in  L: depth  [exactly once]
+    out v2: trie[num]  [exactly once]
+
+relax `cc` (@cc_loop); d.call returns D2:
+    in  G: adj (trie[list[(num num)]])  [exactly once]
+    in  D: trie[num]  [exactly once]
+    in  C: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  X: num  [0..1, default 16777215]  -- budget (min only)
+    out D2: trie[num]  [exactly once]
+
+sssp `sp` (@sp_sssp); d.call returns D:
+    in  n: num  [exactly once]
+    in  s: num  [exactly once]
+    in  L: depth  [exactly once]
+    in  budget: num  [0..1, default 16777215]
+    in  G: adj (trie[list[(num num)]])  [exactly once]
+    out D: trie[num]  [exactly once]
+
+frontier `fr` (@fr_loop); d.call returns D2:
+    in  G: adj (trie[list[(num num)]])  [exactly once]
+    in  D: trie[num]  [exactly once]
+    in  C: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  X: num  [0..1, default 0]
+    out D2: trie[num]  [exactly once]
+

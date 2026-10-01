@@ -1,0 +1,137 @@
+// Parse an expression and discard its remainder.
+@prog = (input output)
+  & @expr ~ (input (ast rem))
+  & output ~ ast
+  & rem ~ *
+
+// expr := term ('+' term)*
+// The loop handles spaces and the next operator in one scan.
+@expr = (input out)
+  & @term ~ (input (a rem))
+  & @expr_loop ~ ((a rem) out)
+
+@expr_loop = ((?((@el_nil @el_cons) (pl (acc out))) pl) (acc out))
+
+@el_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@el_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@el_nonspace @el_space) (hr (t (acc out))))
+
+@el_space = (* (* (t (acc out))))
+  & @expr_loop ~ ((acc t) out)
+
+@el_nonspace = (h (t (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(43 z))
+  & z ~ ?((@el_stop @el_plus) (hr (t (acc out))))
+
+@el_stop = (h (t (acc out)))
+  & out ~ (acc (1 (h t)))
+
+@el_plus = (* (* (t (acc out))))
+  & @term ~ (t (rhs rem))
+  & @expr_loop ~ (((1 (acc rhs)) rem) out)
+
+// term := factor ('*' factor)*
+// The loop handles spaces and the next operator in one scan.
+@term = (input out)
+  & @factor ~ (input (a rem))
+  & @term_loop ~ ((a rem) out)
+
+@term_loop = ((?((@tl_nil @tl_cons) (pl (acc out))) pl) (acc out))
+
+@tl_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@tl_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@tl_nonspace @tl_space) (hr (t (acc out))))
+
+@tl_space = (* (* (t (acc out))))
+  & @term_loop ~ ((acc t) out)
+
+@tl_nonspace = (h (t (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(42 z))
+  & z ~ ?((@tl_stop @tl_mul) (hr (t (acc out))))
+
+@tl_stop = (h (t (acc out)))
+  & out ~ (acc (1 (h t)))
+
+@tl_mul = (* (* (t (acc out))))
+  & @factor ~ (t (rhs rem))
+  & @term_loop ~ (((2 (acc rhs)) rem) out)
+
+// factor := number | '(' expr ')'; leading spaces are skipped here.
+@factor = (input out)
+  & @factor_head ~ (input out)
+
+@factor_head = ((?((@fh_nil @fh_cons) (pl out)) pl) out)
+
+@fh_nil = (* out)
+  & out ~ ((0 0) (0 *))
+
+@fh_cons = (* ((h t) out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@fh_nonspace @fh_space) (hr (t out)))
+
+@fh_space = (* (* (t out)))
+  & @factor_head ~ (t out)
+
+@fh_nonspace = (h (t out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(40 z))
+  & z ~ ?((@fh_number @fh_paren) (hr (t out)))
+
+@fh_number = (h (t out))
+  & h ~ $([-] $(48 first))
+  & @num_loop ~ (t (first (number rem)))
+  & out ~ ((0 number) rem)
+
+@fh_paren = (* (* (t out)))
+  & @expr ~ (t (ast rem1))
+  & @close ~ (rem1 rem3)
+  & out ~ (ast rem3)
+
+// Read decimal digits into an accumulator, leaving the first non-digit unconsumed.
+@num_loop = ((?((@nl_nil @nl_cons) (pl (acc out))) pl) (acc out))
+
+@nl_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@nl_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([>] $(47 z))
+  & z ~ ?((@nl_end @nl_digit) (hr (t (acc out))))
+
+@nl_end = (h (t (acc out)))
+  & out ~ (acc (1 (h t)))
+
+@nl_digit = (* (h (t (acc out))))
+  & h ~ $([-] $(48 d))
+  & acc ~ $([*] $(10 m))
+  & m ~ $([+] $(d next))
+  & @num_loop ~ (t (next out))
+
+// Consume spaces before the closing parenthesis, then consume it.
+@close = ((?((@cl_nil @cl_cons) (pl out)) pl) out)
+
+@cl_nil = (* out)
+  & out ~ (0 *)
+
+@cl_cons = (* ((h t) out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@cl_take @cl_space) (hr (t out)))
+
+@cl_take = (h (t out))
+  & h ~ *
+  & out ~ t
+
+@cl_space = (* (* (t out)))
+  & @close ~ (t out)

@@ -1,0 +1,108 @@
+// Count the list while rebuilding it, producing its length and a copy.
+@prog = (input out)
+  & @len ~ (input (n full))
+  & @scan ~ (full (0 (n out)))
+
+@len = ((?((@len_nil @len_cons) (pl (out listout))) pl) (out listout))
+
+@len_nil = (pl (out listout))
+  & pl ~ *
+  & out ~ 0
+  & listout ~ (0 *)
+
+@len_cons = (* ((h t) (out listout)))
+  & @len ~ (t (k tailout))
+  & k ~ $([+1] out)
+  & listout ~ (1 (h tailout))
+
+// Test indices in increasing order. A walk that reaches a smaller index
+// has reached a start already checked to lead to a root.
+@scan = (full (i (n out)))
+  & i ~ {i_test i_ctx}
+  & n ~ {n_test n_ctx}
+  & i_test ~ $([<] $(n_test z))
+  & z ~ ?((@scan_end @scan_step) (full (i_ctx (n_ctx out))))
+
+@scan_end = (full (i (n out)))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 0
+
+@scan_step = (* (full (i (n out))))
+  & full ~ {f_walk f_recur}
+  & i ~ {i_pair i_recur}
+  & i_pair ~ {i_walk i_start}
+  & n ~ {n_walk n_recur}
+  & i_recur ~ $([+1] inext)
+  & @walk ~ (f_walk (i_walk (i_start (n_walk cyc))))
+  & cyc ~ ?((@scan_no @scan_yes) (f_recur (inext (n_recur out))))
+
+@scan_no = (full (i (n out)))
+  & @scan ~ (full (i (n out)))
+
+@scan_yes = (* (full (i (n out))))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 1
+
+// Follow pointers for at most n steps. If the current index is smaller than
+// the start, it was already checked and the walk is known to reach a root.
+@walk = (pl (x (start (?( (@walk_zero @walk_succ) (pl (x (start out))) ) out)))
+
+@walk_zero = (pl (x (start out)))
+  & pl ~ *
+  & x ~ *
+  & start ~ *
+  & out ~ 1
+
+@walk_succ = (rem (pl (x (start out))))
+  & x ~ {x_cmp x_at}
+  & start ~ {start_cmp start_ctx}
+  & x_cmp ~ $([<] $(start_cmp z))
+  & z ~ ?((@walk_do @walk_cut) (pl (x_at (start_ctx (rem out))))
+
+@walk_cut = (* (pl (x (start (rem out)))))
+  & pl ~ *
+  & x ~ *
+  & start ~ *
+  & rem ~ *
+  & out ~ 0
+
+@walk_do = (pl (x (start (rem out))))
+  & pl ~ {pl_at pl_rec}
+  & x ~ {x_at x_cmp}
+  & @at ~ (pl_at (x_at p))
+  & p ~ {p_test p_next}
+  & x_cmp ~ $([=] $(p_test z))
+  & z ~ ?((@walk_more @walk_root) (pl_rec (p_next (start (rem out))))
+
+@walk_more = (pl (x (start (rem out))))
+  & @walk ~ (pl (x (start (rem out))))
+
+@walk_root = (* (pl (x (start (rem out)))))
+  & pl ~ *
+  & x ~ *
+  & start ~ *
+  & rem ~ *
+  & out ~ 0
+
+// Look up an index in a list.
+@at = ((?((@at_nil @at_cons) (pl (idx val))) pl) (idx val))
+
+@at_nil = (pl (idx val))
+  & pl ~ *
+  & idx ~ *
+  & val ~ 0
+
+@at_cons = (* ((h t) (idx val)))
+  & idx ~ ?((@at_zero @at_more) (h (t val)))
+
+@at_zero = (h (t val))
+  & h ~ val
+  & t ~ *
+
+@at_more = (idx (h (t val)))
+  & h ~ *
+  & @at ~ (t (idx val))

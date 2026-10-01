@@ -1,0 +1,80 @@
+// Count sources and sinks by scanning the edge list once for each vertex.
+@prog = (input output)
+  & input ~ (n edges)
+  & @vloop ~ (n (0 (edges (0 (0 output)))))
+
+@vloop =
+  (
+    ?(
+      (@v_done @v_iter)
+      (idx
+        (edges
+          (src (sink out))))
+    )
+    (idx
+      (edges
+        (src (sink out))))
+  )
+
+@v_done = (* (* (src (sink out))))
+  & out ~ (src sink)
+
+@v_iter = (* (idx (edges (src (sink out)))))
+  & idx ~ {target idx_keep}
+  & edges ~ {scan_edges edges_keep}
+  & @scan ~
+    (scan_edges
+      (target
+        (0
+          (0
+            (rem
+              (idx_keep
+                (edges_keep
+                  (src (sink out)))))))))
+
+@scan =
+  (
+    (
+      ?(
+        (@scan_nil @scan_cons)
+        (payload
+          (target
+            (inflag
+              (outflag
+                (rem
+                  (idx
+                    (edges
+                      (src (sink out)))))))))
+      )
+      payload
+    )
+    (target
+      (inflag
+        (outflag
+          (rem
+            (idx
+              (edges
+                (src (sink out)))))))
+  )
+
+@scan_nil = (* (target (inflag (outflag (rem (idx (edges (src (sink out)))))))))
+  & @vfinish ~ (target (inflag (outflag (rem (idx (edges (src (sink out))))))))
+
+@scan_cons = (* ((head tail) (target (inflag (outflag (rem (idx (edges (src (sink out)))))))))
+  & head ~ (u v)
+  & target ~ {target_u target_rest}
+  & target_rest ~ {target_v target_keep}
+  & u ~ $([=] $(target_u eq_u))
+  & v ~ $([=] $(target_v eq_v))
+  & inflag ~ $([|] $(eq_v new_in))
+  & outflag ~ $([|] $(eq_u new_out))
+  & @scan ~ (tail (target_keep (new_in (new_out (rem (idx (edges (src (sink out)))))))))
+
+@vfinish = (target (inflag (outflag (rem (idx (edges (src (sink out))))))))
+  & target ~ *
+  & inflag ~ $([=] $(0 no_in))
+  & outflag ~ $([=] $(0 no_out))
+  & src ~ $([+] $(no_in src_next))
+  & sink ~ $([+] $(no_out sink_next))
+  & idx ~ $([+1] idx_next)
+  & @vloop ~ (rem (idx_next (edges (src_next (sink_next out)))))

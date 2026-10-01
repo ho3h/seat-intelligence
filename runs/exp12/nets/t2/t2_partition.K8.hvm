@@ -1,0 +1,35 @@
+@prog = (input out)
+  & input ~ (p xs)
+  & @part ~ (p (xs out))
+
+@part = (p (xs out))
+  & xs ~ lv1
+  & @part_cons_lw ~ (lv1 (p out))
+
+@part_nil = (body (p out))
+  & body ~ *
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* (({$([<] $(p_cmp ?((@part_ge @part_lt) (h_keep (lo (hi out)))))) h_keep} t) ({p_rec p_cmp} out)))
+  & @part_cons_lw ~ (t (p_rec (lo hi)))
+
+@part_ge = (h (lo (hi out)))
+  & out ~ (lo (1 (h hi)))
+
+@part_lt = (ignored (h (lo (hi out))))
+  & ignored ~ *
+  & out ~ ((1 (h lo)) hi)
+
+@part_cons_lw = (ls51 (q11 q12))
+  & ls51 ~ (g42 (e34 (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 (g48 (e40 (g49 (e41 tk50))))))))))))))))
+  & g42 ~ ?((@part_nil @part_cons_la) ((e34 (q14 q15)) (q11 q12)))
+  & g43 ~ ?((@part_nil @part_cons_la) ((e35 (q17 q18)) (q14 q15)))
+  & g44 ~ ?((@part_nil @part_cons_la) ((e36 (q20 q21)) (q17 q18)))
+  & g45 ~ ?((@part_nil @part_cons_la) ((e37 (q23 q24)) (q20 q21)))
+  & g46 ~ ?((@part_nil @part_cons_la) ((e38 (q26 q27)) (q23 q24)))
+  & g47 ~ ?((@part_nil @part_cons_la) ((e39 (q29 q30)) (q26 q27)))
+  & g48 ~ ?((@part_nil @part_cons_la) ((e40 (q32 q33)) (q29 q30)))
+  & g49 ~ ?((@part_nil @part_cons) ((e41 tk50) (q32 q33)))
+
+@part_cons_la = (* (({$([<] $(p_cmp ?((@part_ge @part_lt) (h_keep (lo (hi out)))))) h_keep} (p_rec (lo hi))) ({p_rec p_cmp} out)))

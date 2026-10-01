@@ -1,0 +1,7 @@
+executor A (five contains a DUP): ok=False result='' error='ERROR: attempt to clone a non-affine global reference.'
+executor B (five statically reduced): ok=True result='10' error=''
+tier S   : equal=False not normalized cleanly: flags=['abort'] stuck=1/0
+tier S~a : equal=False not normalized cleanly: flags=['abort'] stuck=1/0
+tier U   : equal=False not normalized cleanly: flags=['abort'] stuck=1/0
+tier U~a : equal=False not normalized cleanly: flags=['abort'] stuck=1/0
+tier D   : equal=False not normalized cleanly: flags=['abort'] stuck=1/0

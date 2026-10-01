@@ -1,0 +1,20 @@
+@prog = (input output)
+  & input ~ (tau cands)
+  & @filter ~ (cands (tau output))
+
+@filter = ((?((@filter_nil @filter_cons) (pl (tau out))) pl) (tau out))
+
+@filter_nil = (* (tau out))
+  & tau ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (((u (v {score_cmp score_keep})) tail) ({tau_cmp tau_rec} out)))
+  & tail ~ (?((@filter_nil @filter_cons) (pl (tau_rec rest))) pl)
+  & tau_cmp ~ $([>] $(score_cmp gt))
+  & gt ~ ?((@filter_keep @filter_drop) ((u (v score_keep)) (rest out)))
+
+@filter_keep = ((u (v score)) (rest out))
+  & out ~ (1 ((u (v score)) rest))
+
+@filter_drop = (* (* (rest out)))
+  & out ~ rest

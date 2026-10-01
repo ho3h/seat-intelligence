@@ -1,0 +1,135 @@
+@prog = ((n edges) out)
+  & @build ~ (n (0 (edges ((0 *) out))))
+
+@build = (n (i (edges (rev out))))
+  & n ~ ?((@build_nil @build_cons) (i (edges (rev out))))
+
+@build_nil = (i (edges (rev out)))
+  & i ~ *
+  & edges ~ *
+  & @reverse ~ (rev ((0 *) out))
+
+@build_cons = (n (i (edges (rev out))))
+  & edges ~ {enow elater}
+  & i ~ {ic ilater}
+  & rev ~ {rnow rlater}
+  & @collect ~ (enow (ic (rnow ((0 *) used))))
+  & @choose ~ (0 (used color))
+  & ilater ~ $([+1] inext)
+  & @build ~ (n (inext (elater ((1 (color rlater)) out))))
+
+@collect = ((?((@collect_nil @collect_cons) (pl (i (rev (used out))))) pl) (i (rev (used out))))
+
+@collect_nil = (pl (i (rev (used out))))
+  & pl ~ *
+  & i ~ *
+  & rev ~ *
+  & used ~ out
+
+@collect_cons = (* (((u v) tail) (i (rev (used out)))))
+  & i ~ {ic ir}
+  & rev ~ {rc rr}
+  & used ~ {uc ur}
+  & @edgecheck ~ (u (v (ic (rc (uc tmp)))))
+  & @collect ~ (tail (ir (rr (tmp out))))
+
+@edgecheck = (u (v (i (rev (used out)))))
+  & u ~ {uc us}
+  & i ~ {ic ir}
+  & uc ~ $([=] $(ic eq))
+  & eq ~ ?((@ec_u_no @ec_u_yes) (us (v (ir (rev (used out))))))
+
+@ec_u_no = (u (v (i (rev (used out)))))
+  & v ~ $([=] $(i eq))
+  & eq ~ ?((@ec_v_no @ec_v_yes) (u (i (rev (used out)))))
+
+@ec_u_yes = (* (v (i (rev (used out)))))
+  & @maybe ~ (v (i (rev (used out))))
+
+@ec_v_no = (u (i (rev (used out))))
+  & u ~ *
+  & i ~ *
+  & rev ~ *
+  & used ~ out
+
+@ec_v_yes = (* (u (i (rev (used out)))))
+  & @maybe ~ (u (i (rev (used out))))
+
+@maybe = (neighbor (i (rev (used out))))
+  & neighbor ~ {nc ns}
+  & i ~ {ic is}
+  & nc ~ $([<] $(ic lt))
+  & lt ~ ?((@maybe_not @maybe_yes) (ns (is (rev (used out)))))
+
+@maybe_not = (neighbor (i (rev (used out))))
+  & neighbor ~ *
+  & i ~ *
+  & rev ~ *
+  & used ~ out
+
+@maybe_yes = (* (neighbor (i (rev (used out)))))
+  & i ~ $([-] $(neighbor tmp))
+  & tmp ~ $([-] $(1 idx))
+  & @at ~ (rev (idx color))
+  & out ~ (1 (color used))
+
+@at = ((?((@at_nil @at_cons) (pl (idx out))) pl) (idx out))
+
+@at_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@at_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@at_zero @at_succ) (h (t out)))
+
+@at_zero = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@at_succ = (idx (h (t out)))
+  & h ~ *
+  & @at ~ (t (idx out))
+
+@choose = (cand (used out))
+  & cand ~ {cm cr}
+  & used ~ {um ur}
+  & @mem ~ (um (cm present))
+  & present ~ ?((@choose_free @choose_used) (cr (ur out)))
+
+@choose_free = (cand (used out))
+  & cand ~ out
+  & used ~ *
+
+@choose_used = (* (cand (used out)))
+  & cand ~ $([+1] next)
+  & @choose ~ (next (used out))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (cand out))) pl) (cand out))
+
+@mem_nil = (pl (cand out))
+  & pl ~ *
+  & cand ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (cand out)))
+  & cand ~ {cc cr}
+  & h ~ $([=] $(cc eq))
+  & eq ~ ?((@mem_no @mem_yes) (cr (t out)))
+
+@mem_no = (cand (t out))
+  & @mem ~ (t (cand out))
+
+@mem_yes = (* (cand (t out)))
+  & cand ~ *
+  & t ~ *
+  & out ~ 1
+
+@reverse = ((?((@rv_nil @rv_cons) (pl (acc out))) pl) (acc out))
+
+@rv_nil = (pl (acc out))
+  & pl ~ *
+  & acc ~ out
+
+@rv_cons = (* ((h t) (acc out)))
+  & @reverse ~ (t ((1 (h acc)) out))

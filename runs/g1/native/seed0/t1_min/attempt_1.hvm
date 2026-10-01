@@ -1,0 +1,21 @@
+// @prog: initialize the minimum to the largest u24 value.
+@prog = (l out)
+  & @mn ~ (l (16777215 out))
+
+@mn = ((?((@mn_nil @mn_cons) (pl (acc out))) pl) (acc out))
+
+@mn_nil = (* (a a))
+
+@mn_cons = (* ((h t) (acc out)))
+  & acc ~ {acmp actx}
+  & h ~ {hcmp hctx}
+  & hcmp ~ $([<] $(acmp cmp))
+  & cmp ~ ?((@mn_keep @mn_take) (t (hctx (actx out))))
+
+@mn_keep = (t (h (acc out)))
+  & @mn ~ (t (acc out))
+  & h ~ *
+
+@mn_take = (* (t (h (acc out))))
+  & acc ~ *
+  & @mn ~ (t (h out))

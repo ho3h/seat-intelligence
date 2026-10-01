@@ -1,0 +1,36 @@
+// t3_apsp_matrix (GRAPH-SWING-2, runs/exp9): all-sources distance vectors by frontier rounds (vfront template):
+// D_v[t] = dist(v -> t); an improved vertex pushes D_v + w to its predecessors. Rows are D_v, flattened by tl.
+@prog = ((n es) out)
+  & n ~ ?((@ap_zero @ap_pos) (es out))
+@ap_zero = (* (0 *))
+@ap_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 R0)
+  & @w_blk ~ (es ((L2 R0) R))
+  & @zv ~ (L3 (0 S0))
+  & @zr ~ (L4 (L5 (0 G0)))
+  & @vl ~ ((R (S0 (G0 (L6 16777215)))) Sf)
+  & @rows ~ (Sf (L7 (0 (n1 (n2 ((0 *) out))))))
+@ap_step = ((L g) ((u (v w)) (L2 g2)))
+  & L ~ {L1 L2}
+  & @gp ~ (g (v (L1 ((u w) g2))))
+@ap_fin = ((* g) g)
+// rows(S, L, base, n, n, tail): the first n row vectors, each flattened to its first n entries
+@rows = (t (L (base (n (m (tail o))))))
+  & L ~ {L1 {L2 L3}}
+  & @rmap ~ (t (L1 (m (L2 t2))))
+  & @tl ~ (t2 (L3 (base (n (tail o)))))
+@rmap = (t (L (m (Lw o))))
+  & L ~ ?((@rmap_leaf @rmap_node) (t (m (Lw o))))
+@rmap_leaf = (v (m (Lw o)))
+  & @tl ~ (v (Lw (0 (m ((0 *) o)))))
+@rmap_node = (lm ((a b) (m (Lw (x y)))))
+  & lm ~ {l1 l2}
+  & m ~ {m1 m2}
+  & Lw ~ {w1 w2}
+  & @rmap ~ (a (l1 (m1 (w1 x))))
+  & @rmap ~ (b (l2 (m2 (w2 y))))

@@ -1,0 +1,22 @@
+// Process two list elements per recursive step so their comparisons can be
+// combined while the remaining tail is counted.
+@prog = ((x xs) out)
+  & @rank ~ (xs (x out))
+
+@rank = ((?((@rank_nil @rank_cons) (pl (x out))) pl) (x out))
+
+@rank_nil = (* (* 0))
+
+@rank_cons = (* ((h t) ({x1 x_tail} out)))
+  & h ~ $([<] $(x1 z1))
+  & @rank_tail ~ (t (x_tail (z1 out)))
+
+@rank_tail = ((?((@rank_tail_nil @rank_tail_cons) (pl (x (z1 out)))) pl) (x (z1 out)))
+
+@rank_tail_nil = (* (* (a a)))
+
+@rank_tail_cons = (* ((h t) ({x2 x_rec} (z1 out))))
+  & h ~ $([<] $(x2 z2))
+  & z1 ~ $([+] $(z2 pair))
+  & @rank ~ (t (x_rec tail_count))
+  & tail_count ~ $([+] $(pair out))

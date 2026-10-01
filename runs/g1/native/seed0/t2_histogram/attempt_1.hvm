@@ -1,0 +1,55 @@
+@prog = (l out)
+  & @hist ~ (l (
+    (1 (0
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (1 (0
+                    (1 (0
+                      (1 (0
+                        (1 (0
+                          (1 (0
+                            (1 (0
+                              (1 (0
+                                (1 (0
+                                  (1 (0
+                                    (0 *)
+                                  ))
+                                ))
+                              ))
+                            ))
+                          ))
+                        ))
+                      ))
+                    ))
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+    out
+  ))
+
+@hist = ((?((@hist_nil @hist_cons) (pl (acc out))) pl) (acc out))
+
+@hist_nil = (* (acc acc))
+
+@hist_cons = (* ((h t) (acc out)))
+  & @inc ~ (h (acc acc2))
+  & @hist ~ (t (acc2 out))
+
+@inc = (?((@inc0 @incS) (acc out)) (acc out))
+
+@inc0 = ((* (head tail)) out)
+  & head ~ $([+] $(1 head2))
+  & out ~ (1 (head2 tail))
+
+@incS = (n ((* (head tail)) out))
+  & @inc ~ (n (tail tail2))
+  & out ~ (1 (head tail2))

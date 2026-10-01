@@ -1,0 +1,120 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@best_incoming = ((@best_incoming__C7 a) a)
+
+@best_incoming__C0 = (b (c (d (a (* e)))))
+  & @best_incoming ~ (a (b (c (d e))))
+
+@best_incoming__C1 = (* (b (c (* (a d)))))
+  & @best_incoming ~ (a (b (c d)))
+
+@best_incoming__C2 = (c (d ({b e} (f (a ($([+] $(a {$([<] $(b ?((@best_incoming__C0 @best_incoming__C1) (c (d (e (f (g h)))))))) g})) h))))))
+
+@best_incoming__C3 = (* (b (c (d (a (* (* e)))))))
+  & @best_incoming ~ (a (b (c (d e))))
+
+@best_incoming__C4 = (d (e (f (g ({$([<] $(b c)) h} ({i a} j))))))
+  & $(a b) ~ [-0x0FFFFFF]
+  & $(c ?((@best_incoming__C2 @best_incoming__C3) (d (e (f (g (h (i j)))))))) ~ [=0x0000000]
+
+@best_incoming__C5 = (* (b (c (d (a (* (* e)))))))
+  & @best_incoming ~ (a (b (c (d e))))
+
+@best_incoming__C6 = (* ((c h) (g ({d a} ({e b} (f j))))))
+  & @tree_get ~ (a (0 (b (c {$([=0x0FFFFFF] ?((@best_incoming__C4 @best_incoming__C5) (d (e (f (g (h (i j)))))))) i}))))
+
+@best_incoming__C7 = (?(((* (* (a a))) @best_incoming__C6) b) b)
+
+@build_incoming = ((@build_incoming__C5 a) a)
+
+@build_incoming__C0 = ({b g} ({m {c h}} (a (e ({d i} (f n))))))
+  & @build_incoming ~ (a (l (m n)))
+  & @tree_set ~ (b (0 (c (d (k l)))))
+  & @List/Cons ~ ((e f) (j k))
+  & @tree_get ~ (g (0 (h (i j))))
+
+@build_incoming__C1 = (* (b (c (a (* (* (* d)))))))
+  & @build_incoming ~ (a (b (c d)))
+
+@build_incoming__C2 = (c ({a d} (e (f ({$([<] $(a b)) g} h)))))
+  & $(b ?((@build_incoming__C0 @build_incoming__C1) (c (d (e (f (g h))))))) ~ [=0x0000000]
+
+@build_incoming__C3 = (* (b (c (a (* (* (* d)))))))
+  & @build_incoming ~ (a (b (c d)))
+
+@build_incoming__C4 = (* (({$([<] $(a b)) f} (g h)) (e (c ({a d} i)))))
+  & $(b ?((@build_incoming__C2 @build_incoming__C3) (c (d (e (f (g (h i)))))))) ~ [=0x0000000]
+
+@build_incoming__C5 = (?(((a (* a)) @build_incoming__C4) b) b)
+
+@empty_tree = ({a b} ({$([-] $(a $([=0x0000001] ?((@empty_tree__C0 (* (* (* @List/Nil)))) (b (c d)))))) c} d))
+
+@empty_tree__C0 = ({b $([+] $(a $([:/0x0000002] {e c})))} ({f a} (d g)))
+  &!@empty_tree ~ (b (c d))
+  &!@empty_tree ~ (e (f g))
+
+@init_dist_tree = ({a b} ({$([-] $(a $([=0x0000001] ?((@init_dist_tree__C0 @init_dist_tree__C1) (b (c d)))))) c} d))
+
+@init_dist_tree__C0 = ({b $([+] $(a $([:/0x0000002] {f c})))} ({g a} ({h d} (e i))))
+  &!@init_dist_tree ~ (b (c (d e)))
+  &!@init_dist_tree ~ (f (g (h i)))
+
+@init_dist_tree__C1 = (* ($([=] $(a ?((16777215 (* 0)) b))) (* (a b))))
+
+@make_next = (b (c (d ({a e} ({$([-] $(a $([=0x0000001] ?((@make_next__C0 @make_next__C1) (b (c (d (e (f g))))))))) f} g)))))
+
+@make_next__C0 = ({i b} ((c j) ((d k) ({e $([+] $(a $([:/0x0000002] {l f})))} ({m a} ({n g} (h o)))))))
+  &!@make_next ~ (b (c (d (e (f (g h))))))
+  &!@make_next ~ (i (j (k (l (m (n o))))))
+
+@make_next__C1 = (* (b (* (a (* (* (c d)))))))
+  & @best_incoming ~ (a (b (c (16777215 d))))
+
+@prog = (({a c} ({$([<] $(a b)) d} (e (f g)))) h)
+  & $(b ?((@prog__C3 (* (* (* (* (* (* 16777215))))))) (c (d (e (f (g h))))))) ~ [=0x0000000]
+
+@prog__C0 = ({b {g {e i}}} (j (c (a (d l)))))
+  & @solve ~ (a (b (c (h (k l)))))
+  & @build_incoming ~ (d (f (g h)))
+  & @empty_tree ~ (0 (e f))
+  & @init_dist_tree ~ (0 (i (j k)))
+
+@prog__C1 = (* (* ($([=] $(a ?((16777215 (* 0)) b))) (a (* (* b))))))
+
+@prog__C2 = (a (b (c ({$([=0x0000000] ?((@prog__C0 @prog__C1) (a (b (c (d e)))))) d} e))))
+
+@prog__C3 = ({a c} (d ({$([<] $(a b)) e} f)))
+  & $(b ?((@prog__C2 (* (* (* (* (* (* 16777215))))))) (c (d (e f))))) ~ [=0x0000000]
+
+@solve = ({$([=0x0000000] ?((@solve__C0 @solve__C1) (a b))) a} b)
+
+@solve__C0 = ($([:-0x0000001] a) ({b {h i}} (c ({d g} ({e f} k)))))
+  & @solve ~ (a (b (c (d (j k)))))
+  & @make_next ~ (e (f (g (0 (h (i j))))))
+
+@solve__C1 = (* (* (b (c (* (a d))))))
+  & @tree_get ~ (a (0 (b (c d))))
+
+@tree_get = (c ({a d} ({$([-] $(a $([=0x0000001] ?((@tree_get__C2 (* (b (* (* (* b)))))) (c (d (e f))))))) e} f)))
+
+@tree_get__C0 = (* (c (d (* (a (b e))))))
+  & @tree_get ~ (a (b (c (d e))))
+
+@tree_get__C1 = (* (b (* (d (a (* (c e)))))))
+  & @tree_get ~ (a (b (c (d e))))
+
+@tree_get__C2 = ((f g) ({c $([+] $(a $([:/0x0000002] {b h})))} ({d a} ({$([<] $(b ?((@tree_get__C0 @tree_get__C1) (c (d (e (f (g (h i))))))))) e} i))))
+
+@tree_set = (c ({a d} ({$([-] $(a $([=0x0000001] ?((@tree_set__C2 (* (* (* (* (* (b b))))))) (c (d (e f))))))) e} f)))
+
+@tree_set__C0 = (* (d (e (f (a (b (c (a g))))))))
+  & @tree_set ~ (b (c (d (e (f g)))))
+
+@tree_set__C1 = (* (b (* (d (e (a (g (c (f g)))))))))
+  & @tree_set ~ (a (b (c (d (e f)))))
+
+@tree_set__C2 = ((g h) ({c $([+] $(a $([:/0x0000002] {b i})))} ({d a} ({$([<] $(b ?((@tree_set__C0 @tree_set__C1) (c (d (e (f (g (h (i j)))))))))) e} (f j)))))
+
+

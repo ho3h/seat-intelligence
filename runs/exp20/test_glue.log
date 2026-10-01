@@ -1,0 +1,25 @@
+PASS  unconnected input port             GlueError: test_glue.py:71: input port `k` is not connected in this call of update `u` (act inc) (@u); d.call returns t2:
+PASS  unknown port name                  GlueError: test_glue.py:78: port `n` does not exist on lg (@lg); d.call returns L:
+PASS  output passed as input             GlueError: test_glue.py:85: port `L` is an OUTPUT (it is returned by d.call, not passed in) on lg (@lg); d.call returns L:
+PASS  wire used twice                    GlueError: test_glue.py:93: wire `L1` (depth, copy 1 of `L`, made at test_glue.py:91) is used a second time (update `dinc` (act inc) port `L`); it was already us
+PASS  value needed twice, no DUP         GlueError: test_glue.py:52: wire `L` (depth, argument `L` of step of stream `w`, made at test_glue.py:52) is used a second time (returned as `L`); it was already
+PASS  trie used twice                    GlueError: test_glue.py:110: wire `t` (trie[num], output `t` of const_trie `z0` (leaf 0), made at test_glue.py:107) is used a second time (to_list `tl` port `t`)
+PASS  fanout of a trie                   GlueError: test_glue.py:117: cannot fanout wire `t` (trie[num], output `t` of const_trie `z0` (leaf 0), made at test_glue.py:117): a trie[num] cannot be duplicat
+PASS  unused value (no erase)            GlueError: fin of stream `w` (@w_fin): 1 value(s) never used:
+PASS  kind mismatch (list for trie)      GlueError: test_glue.py:132: kind mismatch at to_list `tl` port `t`: expected trie[?], got list[(num num)] `es` from argument `in1` of @prog (t3_degrees) (made a
+PASS  number where a depth is expected   GlueError: test_glue.py:140: kind mismatch at const_trie `z0` (leaf 0) port `L`: expected depth, got num `n1` from copy 1 of `n` (made at test_glue.py:139). Dept
+PASS  wrong output kind for contract     GlueError: test_glue.py:148: kind mismatch at @prog (t3_degrees) result `out`: expected list[num], got num `n` from argument `in0` of @prog (t3_degrees) (made at
+PASS  wrong arity (arguments)            GlueError: wrong arity: step of stream `w` is called as f(d, L:depth, h:trie[num], e0:num, e1:num), i.e. d plus 4 value(s); your function `step` takes 4 paramete
+PASS  wrong arity (returns)              GlueError: wrong arity: step of stream `w` must return 2 value(s) (L, h); `step` returned 1.
+PASS  forgot return                      GlueError: fin of stream `w` must return exactly one value (the result); returned 0
+PASS  wire captured from another def     GlueError: test_glue.py:173: wire `L` (depth, output `L` of lg, made at test_glue.py:176) belongs to @prog (t3_degrees) (@prog), but is used in step of stream `w
+PASS  python arithmetic on a wire        GlueError: test_glue.py:184: wires are not Python numbers; use d.op(h, '<op>', other) for arithmetic on `h` (trie[num]).
+PASS  python `if` on a wire              GlueError: test_glue.py:190: a wire has no Python truth value (its number is only known when the net runs); use d.select(c, a, b) or d.branch(c, ...) to decide o
+PASS  non-copyable environment           GlueError: test_glue.py:196: the environment of reduce `r` (+) is copied to every leaf by DUPs, so it must be numbers or a tuple of numbers; got trie[num]
+PASS  primitive name clash               GlueError: test_glue.py:200: name clash: `a` is already update `a` (act inc); give const_trie `a` (leaf 0) another name
+PASS  branches return different kinds    GlueError: test_glue.py:206: kind mismatch at branch nonzero case of @prog (t3_degrees) result `out0`: expected list[any], got num 0.
+PASS  degrees (fanout, branch, stream)   4/4 cases
+PASS  select + cons + erase              2/2 cases
+PASS  hole (list in input order)         2/2 cases
+
+23/23 pass

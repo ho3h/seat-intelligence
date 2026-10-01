@@ -1,0 +1,158 @@
+{
+ "A/t5_prop_majority/1": {
+  "orig": "FAIL: 1 of 9 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, 0, [], [])\n  expected: 16777215\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "(0, 0, [], [])",
+    "ran": true,
+    "correct": false,
+    "secs": 36.69,
+    "err": null
+   }
+  ],
+  "verdict": "ran but wrong"
+ },
+ "A/t5_prop_majority/3": {
+  "orig": "FAIL: 1 of 9 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, 0, [], [])\n  expected: 16777215\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "(0, 0, [], [])",
+    "ran": true,
+    "correct": false,
+    "secs": 37.09,
+    "err": null
+   }
+  ],
+  "verdict": "ran but wrong"
+ },
+ "A/t5_rewrite_sameas_cycle/1": {
+  "orig": "FAIL: 71 of 71 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    []\n  expected: 0\n  got:      'timeout after 10s'",
+  "recheck_edges_120s": [
+   {
+    "input": "[]",
+    "ran": false,
+    "correct": false,
+    "secs": 0.0,
+    "err": "timeout after 120s"
+   }
+  ],
+  "verdict": "genuine hang/crash"
+ },
+ "A/t5_rewrite_sameas_cycle/2": {
+  "orig": "FAIL: 71 of 71 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    []\n  expected: 0\n  got:      'timeout after 10s'",
+  "recheck_edges_120s": [
+   {
+    "input": "[]",
+    "ran": false,
+    "correct": false,
+    "secs": 0.0,
+    "err": "timeout after 120s"
+   }
+  ],
+  "verdict": "genuine hang/crash"
+ },
+ "A/t5_rewrite_sameas_cycle/3": {
+  "orig": "FAIL: 1 of 8 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    []\n  expected: 0\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "[]",
+    "ran": true,
+    "correct": false,
+    "secs": 5.26,
+    "err": null
+   }
+  ],
+  "verdict": "ran but wrong"
+ },
+ "A/t5_rewrite_sameas_cycle/4": {
+  "orig": "FAIL: 1 of 8 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    [0]\n  expected: 0\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "[]",
+    "ran": true,
+    "correct": true,
+    "secs": 0.55,
+    "err": null
+   }
+  ],
+  "verdict": "ran and correct on edges: RE-VERIFY"
+ },
+ "A/t5_rewrite_weighted/1": {
+  "orig": "FAIL: 97 of 97 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    ([], [])\n  expected: []\n  got:      \"thread 'main' (11222057) has overfl",
+  "recheck_edges_120s": [
+   {
+    "input": "([], [])",
+    "ran": false,
+    "correct": false,
+    "secs": 0.0,
+    "err": "thread 'main' (11610266) has overflowed its stack\nfatal runtime error: stack ove"
+   }
+  ],
+  "verdict": "genuine hang/crash"
+ },
+ "B/t5_decide_drop_known/3": {
+  "orig": "FAIL: 35 of 51 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    ([], [])\n  expected: []\n  got:      'timeout after 10s'",
+  "recheck_edges_120s": [
+   {
+    "input": "([], [])",
+    "ran": true,
+    "correct": true,
+    "secs": 4.08,
+    "err": null
+   }
+  ],
+  "verdict": "ran and correct on edges: RE-VERIFY"
+ },
+ "B/t5_prop_majority/1": {
+  "orig": "FAIL: 1 of 9 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, 0, [0], [])\n  expected: 16777215\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "(0, 0, [], [])",
+    "ran": true,
+    "correct": true,
+    "secs": 0.0,
+    "err": null
+   }
+  ],
+  "verdict": "ran and correct on edges: RE-VERIFY"
+ },
+ "B/t5_prop_majority/2": {
+  "orig": "FAIL: 1 of 9 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, 0, [0], [])\n  expected: 16777215\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "(0, 0, [], [])",
+    "ran": true,
+    "correct": true,
+    "secs": 0.0,
+    "err": null
+   }
+  ],
+  "verdict": "ran and correct on edges: RE-VERIFY"
+ },
+ "B/t5_prop_majority/3": {
+  "orig": "FAIL: 1 of 9 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, 0, [0], [])\n  expected: 16777215\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "(0, 0, [], [])",
+    "ran": true,
+    "correct": true,
+    "secs": 0.0,
+    "err": null
+   }
+  ],
+  "verdict": "ran and correct on edges: RE-VERIFY"
+ },
+ "B/t5_prop_majority/4": {
+  "orig": "FAIL: 1 of 9 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, 0, [0], [])\n  expected: 16777215\n  got:      'timeout after 5s'",
+  "recheck_edges_120s": [
+   {
+    "input": "(0, 0, [], [])",
+    "ran": true,
+    "correct": true,
+    "secs": 0.0,
+    "err": null
+   }
+  ],
+  "verdict": "ran and correct on edges: RE-VERIFY"
+ }
+}

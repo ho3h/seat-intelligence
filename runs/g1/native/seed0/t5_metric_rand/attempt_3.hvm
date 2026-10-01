@@ -1,0 +1,55 @@
+// Count agreements between each node and all later nodes.
+@prog = ((pred truth) out)
+  & @outer ~ (pred (truth out))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (truth out))) pl) (truth out))
+
+@outer_nil = (* (truth out))
+  & truth ~ *
+  & out ~ 0
+
+@outer_cons = (* ((ph pt) (truth out)))
+  & @truth_count ~ (truth (ph (pt out)))
+
+@truth_count = ((?((@truth_nil @truth_cons) (pl (ph (pt out)))) pl) (ph (pt out)))
+
+@truth_nil = (* (ph (pt out)))
+  & ph ~ *
+  & pt ~ *
+  & out ~ 0
+
+@truth_cons = (* ((th tt) (ph (pt out))))
+  & pt ~ {pt_inner pt_outer}
+  & tt ~ {tt_inner tt_outer}
+  & @inner ~ (pt_inner (tt_inner (ph (th row))))
+  & @outer ~ (pt_outer (tt_outer outer_count))
+  & row ~ $([+] $(outer_count out))
+
+@inner = ((?((@inner_nil @inner_cons) (pl (truth (p0 (t0 out))))) pl) (truth (p0 (t0 out))))
+
+@inner_nil = (* (truth (p0 (t0 out))))
+  & truth ~ *
+  & p0 ~ *
+  & t0 ~ *
+  & out ~ 0
+
+@inner_cons = (* ((xh xt) (truth (p0 (t0 out)))))
+  & @inner_truth ~ (truth (xh (xt (p0 (t0 out)))))
+
+@inner_truth = ((?((@inner_truth_nil @inner_truth_cons) (ql (xh (xt (p0 (t0 out)))))) ql) (xh (xt (p0 (t0 out)))))
+
+@inner_truth_nil = (* (xh (xt (p0 (t0 out)))))
+  & xh ~ *
+  & xt ~ *
+  & p0 ~ *
+  & t0 ~ *
+  & out ~ 0
+
+@inner_truth_cons = (* ((yh yt) (xh (xt (p0 (t0 out))))))
+  & p0 ~ {pcomp prec}
+  & t0 ~ {tcomp trec}
+  & xh ~ $([=] $(pcomp ep))
+  & yh ~ $([=] $(tcomp et))
+  & ep ~ $([=] $(et agree))
+  & @inner ~ (xt (yt (prec (trec next))))
+  & next ~ $([+] $(agree out))

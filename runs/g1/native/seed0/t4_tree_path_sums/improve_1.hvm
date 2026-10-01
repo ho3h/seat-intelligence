@@ -1,0 +1,38 @@
+// Each subtree returns (is-Leaf, (open-list-head, open-list-tail)).
+// Joining open list segments connects the left tail directly to the right head.
+@prog = (tree out)
+  & @walk ~ (tree (0 (walk_flag (head hole))))
+  & walk_flag ~ *
+  & hole ~ (0 *)
+  & out ~ head
+
+@walk = ((?((@walk_leaf @walk_node) (payload (acc (flag (head hole))))) payload) (acc (flag (head hole))))
+
+@walk_leaf = (* (acc (flag (head hole))))
+  & acc ~ *
+  & flag ~ 1
+  & head ~ hole
+
+@walk_node = (* ((left (value right)) (acc (flag (head hole)))))
+  & value ~ $([+] $(acc total))
+  & total ~ {total_left extra}
+  & extra ~ {total_right total_emit}
+  & @walk ~ (right (total_right (right_flag (right_head right_tail))))
+  & @walk ~ (left (total_left (left_flag (left_head left_tail))))
+  & right_flag ~ $([*] $(left_flag both))
+  & both ~ ?((@walk_join @walk_emit) ((left_head (left_tail (right_head (right_tail total_emit)))) (flag (head hole))))
+
+@walk_join = ((left_head (left_tail (right_head (right_tail total)))) (flag (head hole)))
+  & total ~ *
+  & flag ~ 0
+  & left_tail ~ right_head
+  & head ~ left_head
+  & hole ~ right_tail
+
+@walk_emit = (* ((left_head (left_tail (right_head (right_tail total)))) (flag (head hole))))
+  & left_head ~ *
+  & left_tail ~ *
+  & right_head ~ *
+  & right_tail ~ *
+  & flag ~ 0
+  & head ~ (1 (total hole))

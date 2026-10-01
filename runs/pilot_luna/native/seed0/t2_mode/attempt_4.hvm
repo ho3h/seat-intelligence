@@ -1,0 +1,68 @@
+// Most frequent value; ties go to the smallest value.
+
+@prog = (input out)
+  & {remaining full} ~ input
+  & @mode ~ (remaining (full (0 (0 out))))
+
+// mode(remaining, full, best_value, best_count, out)
+@mode = ((?((@mode_nil @mode_cons) (pl (full (best (bc out))))) pl) (full (best (bc out))))
+
+@mode_nil = (pl (full (best (bc out))))
+  & pl ~ *
+  & full ~ *
+  & bc ~ *
+  & best ~ out
+
+@mode_cons = (* ((h t) (full (best (bc out)))))
+  & {scan full_keep} ~ full
+  & {candidate count_candidate} ~ h
+  & @cnt ~ (scan (count_candidate (0 count)))
+  & @decide ~ (candidate (count (full_keep (best (bc (t out))))))
+
+// cnt(list, candidate, accumulator, out)
+@cnt = ((?((@cnt_nil @cnt_cons) (pl (candidate (acc out)))) pl) (candidate (acc out)))
+
+@cnt_nil = (pl (candidate (acc out)))
+  & pl ~ *
+  & candidate ~ *
+  & acc ~ out
+
+@cnt_cons = (* ((h t) (candidate (acc out))))
+  & {cmp next_candidate} ~ candidate
+  & h ~ $([=] $(cmp eq))
+  & eq ~ ?((@cnt_no @cnt_yes) (t (next_candidate (acc out))))
+
+@cnt_no = (t (candidate (acc out)))
+  & @cnt ~ (t (candidate (acc out)))
+
+@cnt_yes = (* (t (candidate (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @cnt ~ (t (candidate (acc2 out)))
+
+// decide(candidate, count, full, best_value, best_count, tail, out)
+@decide = (candidate (count (full (best (bc (t out))))))
+  & {count_cmp count_ctx} ~ count
+  & {bc_cmp bc_ctx} ~ bc
+  & count_cmp ~ $([>] $(bc_cmp gt))
+  & gt ~ ?((@dec_low @dec_high) (candidate (count_ctx (full (best (bc_ctx (t out))))))
+
+@dec_high = (* (candidate (count (full (best (bc (t out)))))))
+  & best ~ *
+  & bc ~ *
+  & @mode ~ (t (full (candidate (count out))))
+
+@dec_low = (candidate (count (full (best (bc (t out))))))
+  & {candidate_cmp candidate_ctx} ~ candidate
+  & {best_cmp best_ctx} ~ best
+  & candidate_cmp ~ $([<] $(best_cmp smaller))
+  & smaller ~ ?((@dec_keep @dec_tie) (candidate_ctx (count (full (best_ctx (bc (t out))))))
+
+@dec_keep = (candidate (count (full (best (bc (t out))))))
+  & candidate ~ *
+  & count ~ *
+  & @mode ~ (t (full (best (bc out))))
+
+@dec_tie = (* (candidate (count (full (best (bc (t out)))))))
+  & best ~ *
+  & bc ~ *
+  & @mode ~ (t (full (candidate (count out))))

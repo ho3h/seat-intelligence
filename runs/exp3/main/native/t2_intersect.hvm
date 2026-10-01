@@ -1,0 +1,30 @@
+@prog = (((?((@ix_nil (* ((xh_q39 xt_q39) ((?((@iy_nil @iy_cons) (py_q35_q39 (xh_q39 (xt_q39 out_q39)))) py_q35_q39) out_q39)))) (px_q34 (ys output))) px_q34) ys) output)
+
+@ix_nil = (px (ys out))
+  & px ~ *
+  & ys ~ *
+  & out ~ (0 *)
+
+@iy_nil = (py (x (xt out)))
+  & py ~ *
+  & x ~ *
+  & xt ~ *
+  & out ~ (0 *)
+
+@iy_cons = (* ((yh yt) (x (xt out))))
+  & x ~ {xlt xrest}
+  & yh ~ {ylt yrest}
+  & xlt ~ $([<] $(ylt lt))
+  & lt ~ ?((@ix_nlt @ix_lt) (xrest (yrest (xt (yt out)))))
+
+@ix_nlt = (xrest (yrest (xt (yt out))))
+  & xrest ~ {xeq xkeep}
+  & yrest ~ {yeq ykeep}
+  & xeq ~ $([=] $(yeq eq))
+  & eq ~ ?((@ix_ne @ix_eq) (xkeep (ykeep (xt (yt out)))))
+
+@ix_lt = (* (* (yrest ((?((@ix_nil (* ((xh_q43 xt_q43) ((?((@iy_nil @iy_cons) (py_q35_q43 (xh_q43 (xt_q43 out_q43)))) py_q35_q43) out_q43)))) (px_q36 ((1 (yrest yt)) out))) px_q36) (yt out)))))
+
+@ix_ne = (xkeep (* (xt ((?((@iy_nil @iy_cons) (py_q37 (xkeep (xt out)))) py_q37) out))))
+
+@ix_eq = (* (xkeep (* ((?((@ix_nil (* ((xh_q46 xt_q46) ((?((@iy_nil @iy_cons) (py_q35_q46 (xh_q46 (xt_q46 out_q46)))) py_q35_q46) out_q46)))) (px_q38 (yt rest))) px_q38) (yt (1 (xkeep rest)))))))

@@ -1,0 +1,60 @@
+// Build the output list in index order, resolving each index to its root.
+@prog = (input out)
+  & input ~ {scan orig}
+  & @build ~ (scan (0 (orig out)))
+
+@build = (list (i (orig out)))
+  & list ~ ((?((@build_nil @build_cons) (payload (i (orig out))))) payload)
+
+@build_nil = (payload (i (orig out)))
+  & payload ~ *
+  & i ~ *
+  & orig ~ *
+  & out ~ (0 *)
+
+@build_cons = (* (payload (i (orig out))))
+  & payload ~ (h t)
+  & h ~ *
+  & i ~ {i_find i_inc}
+  & orig ~ {orig_find orig_next}
+  & @resolve ~ (i_find (orig_find root))
+  & i_inc ~ $([+1] i_next)
+  & @build ~ (t (i_next (orig_next rest)))
+  & out ~ (1 (root rest))
+
+// Follow parent pointers until the current index points to itself.
+@resolve = (cur (orig out))
+  & cur ~ {idx_cur {cmp_cur root_cur}}
+  & orig ~ {orig_nth orig_rec}
+  & @nth ~ (idx_cur (orig_nth parent))
+  & parent ~ {parent_cmp parent_rec}
+  & cmp_cur ~ $([=] $(parent_cmp eq))
+  & eq ~ ?((@resolve_more @resolve_root) (parent_rec (orig_rec (root_cur out))))
+
+@resolve_more = (parent (orig (root out)))
+  & root ~ *
+  & @resolve ~ (parent (orig out))
+
+@resolve_root = (* (parent (orig (root out))))
+  & parent ~ *
+  & orig ~ *
+  & root ~ out
+
+// Look up a list element at a zero-based index.
+@nth = (idx (list out))
+  & idx ~ ?((@nth_zero @nth_succ) (list out))
+
+@nth_zero = (list out)
+  & list ~ ((?((@nth_nil @nth_cons) (payload out))) payload)
+
+@nth_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@nth_cons = (* (payload out))
+  & payload ~ (h t)
+  & h ~ out
+  & t ~ *
+
+@nth_succ = (idx (list out))
+  & @nth ~ (idx (list out))

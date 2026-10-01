@@ -1,0 +1,51 @@
+// t3_dag_longest (GRAPH-SWING, runs/exp5): the DAG recursion  len(u) = max(0, max over u->v of len(v)+1)  is built
+// directly as a dataflow net. Each vertex value is a wire; its consumers are reached by a DUP multicast chain
+// (request trie Q, one reply wire per edge), each vertex's max-accumulator is a leaf of trie A. Streaming the edge
+// list builds both by pre-expanded keyed updates; fin wires A's leaf u into Q's chain u (value -> its consumers) and
+// the end of every chain into a max-reduction. No rounds and no global synchronisation: values ripple along the DAG.
+@prog = ((n es) out)
+  & n ~ ?((@dl_zero @dl_pos) (es out))
+@dl_zero = (* 0)
+@dl_pos = (nm1 (es out))
+  & @lg ~ (nm1 L)
+  & L ~ {L1 {L2 L3}}
+  & @zt ~ (L1 A0)
+  & @zq ~ (L2 Q0)
+  & @w_blk ~ (es ((L3 (A0 Q0)) out))
+@dl_step = ((L (A Q)) ((u v) (L3 (A2 Q2))))
+  & L ~ {L1 {L2 L3}}
+  & @pu ~ (Q (v (L1 (x Q2))))
+  & x ~ $([+1] x1)
+  & @mx ~ (A (u (L2 (x1 A2))))
+@dl_fin = ((L (A Q)) o)
+  & @zx ~ (A (Q (L o)))
+// max-update act
+@mx_act = (old (c o))
+  & old ~ {o1 o2}
+  & c ~ {k1 k2}
+  & k1 ~ $([<] $(o1 lt))
+  & lt ~ ?((@sel2 @sel1s) (o2 (k2 o)))
+// selectors on a switch context (a (b o)): Z-branch forms and S-branch forms
+@sel1 = (x (* x))
+@sel2 = (* (y y))
+@sel1s = (* (x (* x)))
+@sel2s = (* (* (y y)))
+@pu_act = ((i o) (x (i o2)))
+  & o ~ {x o2}
+// zx(A, Q, L): wire each accumulator into its multicast chain; max-reduce the chain ends
+@zx = (a (q (L o)))
+  & L ~ ?((@zx_leaf @zx_node) (a (q o)))
+@zx_leaf = (a ((a o) o))
+@zx_node = (lm ((a1 a2) ((q1 q2) o)))
+  & lm ~ {l1 l2}
+  & @zx ~ (a1 (q1 (l1 x)))
+  & @zx ~ (a2 (q2 (l2 y)))
+  & x ~ {x1 x2}
+  & y ~ {y1 y2}
+  & x1 ~ $([<] $(y1 lt))
+  & lt ~ ?((@sel1 @sel2s) (x2 (y2 o)))
+@zq = (?(((y y) @zq_node) o) o)
+@zq_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zq ~ (l1 a)
+  & @zq ~ (l2 b)

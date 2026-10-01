@@ -1,0 +1,220 @@
+// t3_cyclic_vertices (exp8): composed from genome/lib/graphprims.py by runs/exp8/build.py
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+@gl_zl = (?(((0 *) @gl_zl_n) o) o)
+@gl_zl_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @gl_zl ~ (l1 a)
+  & @gl_zl ~ (l2 c)
+@gl_adj = (t (k (L (P o))))
+  & L ~ ?((@gl_adj_leaf @gl_adj_node) (t (k (P o))))
+@gl_adj_leaf = (t (* (P o)))
+  & @gl_adj_act ~ (t (P o))
+@gl_adj_act = (l (x (1 (x l))))
+@gl_adj_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@gl_adj_L @gl_adj_R) (t (k2 (l2 (P o)))))
+@gl_adj_L = ((l r) (k (L (P (l2 r)))))
+  & @gl_adj ~ (l (k (L (P l2))))
+@gl_adj_R = (* ((l r) (k (L (P (l r2))))))
+  & @gl_adj ~ (r (k (L (P r2))))
+@z0 = (?((0 @z0_n) o) o)
+@z0_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @z0 ~ (l1 a)
+  & @z0 ~ (l2 c)
+@cor = (t (k (L (P o))))
+  & L ~ ?((@cor_leaf @cor_node) (t (k (P o))))
+@cor_leaf = (t (* (P o)))
+  & @cor_act ~ (t (P o))
+@cor_act = (x (c o))
+  & x ~ $([|] $(c o))
+@cor_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@cor_L @cor_R) (t (k2 (l2 (P o)))))
+@cor_L = ((l r) (k (L (P (l2 r)))))
+  & @cor ~ (l (k (L (P l2))))
+@cor_R = (* ((l r) (k (L (P (l r2))))))
+  & @cor ~ (r (k (L (P r2))))
+@bc = (t (Lo (E o)))
+  & Lo ~ ?((@bc_leaf @bc_node) (t (E o)))
+@bc_leaf = (t ((Li (k P)) o))
+  & @gl_adj ~ (t (k (Li (P o))))
+@bc_node = (lm ((a c) (E (o1 o2))))
+  & lm ~ {l1 l2}
+  & E ~ {E1 E2}
+  & @bc ~ (a (l1 (E1 o1)))
+  & @bc ~ (c (l2 (E2 o2)))
+@rb_zc = (?((0 @rb_zc_n) o) o)
+@rb_zc_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @rb_zc ~ (l1 a)
+  & @rb_zc ~ (l2 c)
+@rb_cu = (t (k (L (P o))))
+  & L ~ ?((@rb_cu_leaf @rb_cu_node) (t (k (P o))))
+@rb_cu_leaf = (t (* (P o)))
+  & @rb_cu_act ~ (t (P o))
+@rb_cu_act = (x (c o))
+  & x ~ $([|] $(c o))
+@rb_cu_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@rb_cu_L @rb_cu_R) (t (k2 (l2 (P o)))))
+@rb_cu_L = ((l r) (k (L (P (l2 r)))))
+  & @rb_cu ~ (l (k (L (P l2))))
+@rb_cu_R = (* ((l r) (k (L (P (l r2))))))
+  & @rb_cu ~ (r (k (L (P r2))))
+@rb_act = (* (d (c (d2 (f m)))))
+  & d ~ {dA dB}
+  & dA ~ $([|] $(c nw))
+  & nw ~ {nw1 {d2 m}}
+  & nw1 ~ $([!] $(dB f))
+@rb_msg = (m (* m))
+@rb_loop = ((g (dt (c E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 *)
+  & @rb_zc ~ (L1 ci)
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @rb_rd ~ (Lr (Eb (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & any ~ ?((@rb_done @rb_again) (g2 (dt2 (co (E3 o)))))
+@rb_done = (* (dt (* (* dt))))
+@rb_again = (* (g (dt (c (E o)))))
+  & @rb_loop ~ ((g (dt (c E))) o)
+@rb_rd = (L (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & L ~ ?((@rb_leaf @rb_node) (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+@rb_node = (lm (E ((g1 gr) ((d1 dr) ((c1 cr) (ci ((h1 hr) ((e1 er) (co any)))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @rb_rd ~ (l1 (Ea (g1 (d1 (c1 (ci (h1 (e1 (cm a1)))))))))
+  & @rb_rd ~ (l2 (Eb (gr (dr (cr (cm (hr (er (co a2)))))))))
+  & a1 ~ $([|] $(a2 any))
+@rb_leaf = (E (g (d (c (ci (g2 (d2 (co any))))))))
+  & E ~ {Ex Ey}
+  & Ey ~ (* X)
+  & @rb_act ~ (X (d (c (d2 (f m)))))
+  & f ~ {any f3}
+  & f3 ~ ?((@rb_quiet @rb_emit) (g (m (ci (g2 (co Ex))))))
+@rb_quiet = (g (* (ci (g (ci *)))))
+@rb_emit = (* (g (nd (ci (g2 (co E))))))
+  & E ~ (L *)
+  & @rb_em ~ (g (nd (ci (g2 (co L)))))
+@rb_em = ((?((@rb_em_nil @rb_em_cons) (q (nd (ci (g2 (co L)))))) q) (nd (ci (g2 (co L)))))
+@rb_em_nil = (* (* (ci ((0 *) (ci *)))))
+@rb_em_cons = (* (((v w) rest) (nd (ci ((1 ((v2 w2) rest2)) (co L))))))
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & nd ~ {n1 n2}
+  & L ~ {La Lb}
+  & @rb_msg ~ (n1 (w1 cand))
+  & @rb_cu ~ (ci (v1 (La (cand cm))))
+  & @rb_em ~ (rest (n2 (cm (rest2 (co Lb)))))
+@pb = (a (c (L (E o))))
+  & L ~ ?((@pb_leaf @pb_node) (a (c (E o))))
+@pb_leaf = (g (c (Li o)))
+  & Li ~ {L1 L2}
+  & @z0 ~ (L1 D0)
+  & @rb_loop ~ ((g (D0 (c (L2 0)))) o)
+@pb_node = (lm ((a1 a2) ((c1 c2) (E (o1 o2)))))
+  & lm ~ {l1 l2}
+  & E ~ {E1 E2}
+  & @pb ~ (a1 (c1 (l1 (E1 o1))))
+  & @pb ~ (a2 (c2 (l2 (E2 o2))))
+@w_step = ((A (Bw (Cw (G C)))) ((s w) (A2 (Bw2 (Cw2 (G2 C2))))))
+  & A ~ {A1 A2}
+  & Bw ~ {B1 {B2 Bw2}}
+  & Cw ~ {C1 Cw2}
+  & s ~ {s1 {s2 s3}}
+  & w ~ {w1 w2}
+  & @bc ~ (G (A1 ((B1 (s1 (w1 0))) G2)))
+  & s2 ~ $([/] $(24 sb))
+  & sb ~ $([<<] $(B2 sbs))
+  & sbs ~ $([|] $(w2 key))
+  & s3 ~ $([%] $(24 sm))
+  & 1 ~ $([<<] $(sm bit))
+  & @cor ~ (C (key (C1 (bit C2))))
+@w_fin = ((* (* (* gc))) gc)
+@w_blk = (t (S0 o0))
+  & t ~ (T1 (E1 (T2 (E2 (T3 (E3 (T4 (E4 (T5 (E5 (T6 (E6 (T7 (E7 (T8 (E8 (T9 (E9 (T10 (E10 (T11 (E11 (T12 (E12 (T13 (E13 (T14 (E14 (T15 (E15 (T16 (E16 t16))))))))))))))))))))))))))))))))
+  & T1 ~ ?((@w_nil @w_cons) (S0 (o0 (E1 (S1 o1)))))
+  & T2 ~ ?((@w_nil @w_cons) (S1 (o1 (E2 (S2 o2)))))
+  & T3 ~ ?((@w_nil @w_cons) (S2 (o2 (E3 (S3 o3)))))
+  & T4 ~ ?((@w_nil @w_cons) (S3 (o3 (E4 (S4 o4)))))
+  & T5 ~ ?((@w_nil @w_cons) (S4 (o4 (E5 (S5 o5)))))
+  & T6 ~ ?((@w_nil @w_cons) (S5 (o5 (E6 (S6 o6)))))
+  & T7 ~ ?((@w_nil @w_cons) (S6 (o6 (E7 (S7 o7)))))
+  & T8 ~ ?((@w_nil @w_cons) (S7 (o7 (E8 (S8 o8)))))
+  & T9 ~ ?((@w_nil @w_cons) (S8 (o8 (E9 (S9 o9)))))
+  & T10 ~ ?((@w_nil @w_cons) (S9 (o9 (E10 (S10 o10)))))
+  & T11 ~ ?((@w_nil @w_cons) (S10 (o10 (E11 (S11 o11)))))
+  & T12 ~ ?((@w_nil @w_cons) (S11 (o11 (E12 (S12 o12)))))
+  & T13 ~ ?((@w_nil @w_cons) (S12 (o12 (E13 (S13 o13)))))
+  & T14 ~ ?((@w_nil @w_cons) (S13 (o13 (E14 (S14 o14)))))
+  & T15 ~ ?((@w_nil @w_cons) (S14 (o14 (E15 (S15 o15)))))
+  & T16 ~ ?((@w_nil @w_last) (S15 (o15 (E16 t16))))
+@w_nil = (S (o *))
+  & @w_fin ~ (S o)
+@w_cons = (* (S (o (E (S2 o)))))
+  & @w_step ~ (S (E S2))
+@w_last = (* (S (o (E t))))
+  & @w_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+@cy = (t (L (base (E o))))
+  & L ~ ?((@cy_leaf @cy_node) (t (base (E o))))
+@cy_leaf = (xs (j ((n L) cyc)))
+  & j ~ {j1 j2}
+  & L ~ {La Lb}
+  & j1 ~ $([>>] $(La bb))
+  & bb ~ {b1 b2}
+  & b1 ~ $([<<] $(Lb bs))
+  & j2 ~ $([-] $(bs v))
+  & v ~ {v1 {v2 v3}}
+  & v1 ~ $([<] $(n inr))
+  & v2 ~ $([/] $(24 vb))
+  & vb ~ $([=] $(b2 same))
+  & v3 ~ $([%] $(24 vm))
+  & xs ~ $([>>] $(vm xt))
+  & xt ~ $([&] $(1 bit))
+  & inr ~ $([&] $(same t1))
+  & t1 ~ $([&] $(bit cyc))
+@cy_node = (lm ((a c) (base (E o))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & E ~ {E1 E2}
+  & @cy ~ (a (l1 (b1 (E1 x))))
+  & @cy ~ (c (l2 (bR (E2 y))))
+  & x ~ $([+] $(y o))
+@prog = ((n es) out)
+  & n ~ ?(((* 0) @p_pos) (es out))
+@p_pos = (nm1 (es out))
+  & nm1 ~ {a c}
+  & a ~ $([+1] n)
+  & n ~ {n1 n2}
+  & @lg ~ (c L)
+  & n1 ~ $([+] $(23 nb))
+  & nb ~ $([/] $(24 B))
+  & B ~ $([-] $(1 Bm1))
+  & @lg ~ (Bm1 Lb)
+  & Lb ~ {Lb1 {Lb2 Lb4}}
+  & L ~ {L1 {L2 {L3 L4}}}
+  & Lb4 ~ $([+] $(L4 Lc))
+  & Lc ~ {Lc1 {Lc2 {Lc3 Lc4}}}
+  & @gl_zl ~ (Lc1 G0)
+  & @z0 ~ (Lc2 C0)
+  & @w_blk ~ (es ((Lb1 (L1 (Lc3 (G0 C0)))) (G C)))
+  & @pb ~ (G (C (Lb2 (L2 D))))
+  & @cy ~ (D (Lc4 (0 ((n2 L3) out))))

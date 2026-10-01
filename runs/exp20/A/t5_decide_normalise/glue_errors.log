@@ -1,0 +1,36 @@
+--- 05:00:06
+build.py:39: fanout(w, n) needs n >= 2 (got 1); a single use needs no fanout
+--- 05:00:58
+build.py:47: wire `v2` (num, copy 2 of `v`, made at build.py:36) is used a second time (select if_false); it was already used at build.py:47 (select if_true). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(v2, 2)  and use each once.
+--- 05:01:08
+build.py:47: cannot unpack wire `sel` ((num num)) with Python; use d.split(w) for a tuple wire, or check the primitive's outputs with prim.help().
+--- 05:01:16
+step of stream `w` (@w_step): 1 value(s) never used:
+    `L2` (depth, copy 2 of `L`, made at build.py:34)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:01:26
+build.py:77: wire `i` (num, argument `i` of leaf of fold `fold`, made at build.py:91) is used a second time (left operand of `>>`); it was already used at build.py:76 (left operand of `&`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:01:35
+build.py:85: wire `score` (num, argument `x` of leaf of fold `fold`, made at build.py:92) is used a second time (cons head); it was already used at build.py:81 (left operand of `!`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(score, 2)  and use each once.
+--- 05:01:51
+build.py:93: kind mismatch at select if_false (must match if_true): expected list[(num (num num))], got list[(num num num)] `acc` from argument `acc` of leaf of fold `fold` (made at build.py:95).
+--- 05:03:48
+build.py:71: kind mismatch at select if_false (must match if_true): expected list[(num (num num))], got list[(num num num)] `acc` from argument `acc` of leaf of fold `fold` (made at build.py:73).
+--- 05:03:56
+build.py:71: kind mismatch at select if_false (must match if_true): expected list[(num (num num))], got list[(num num num)] `acc` from argument `acc` of leaf of fold `fold` (made at build.py:73).
+--- 05:04:20
+build.py:72: wire `acc` (list[(num num num)], argument `acc` of leaf of fold `fold`, made at build.py:74) is used a second time (select if_false); it was already used at build.py:67 (cons tail). A wire has exactly two ends. A list[(num num num)] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:04:43
+wrong arity: branch zero case of leaf of fold `fold` is called as f(d, passed[0]:list[(num num num)]), i.e. d plus 1 value(s); your function `zero_branch` takes 1 parameter(s) (b).
+--- 05:04:50
+build.py:69: wire `r` (num, result of `>>`, made at build.py:60) belongs to leaf of fold `fold` (@fold_leaf), but is used in branch nonzero case of leaf of fold `fold` (@fold_leaf_b1s) (cons head). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:04:59
+branch nonzero case of leaf of fold `fold` (@fold_leaf_b1s): 1 value(s) never used:
+    `s_minus_1` (num, argument `cm1` of branch nonzero case of leaf of fold `fold`, made at build.py:75)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:05:05
+wrong arity: @prog (t5_decide_normalise) is called as f(d, input:list[(num num num)]), i.e. d plus 1 value(s); your function `prog` takes 3 parameter(s) (d, n, es).
+--- 05:05:31
+build.py:97: split needs a tuple wire or an explicit n; `out` is trie[num]
+--- 05:26:22
+wrong arity: step of stream `rev` is called as f(d, S:None, e0:num, e1:num, e2:num), i.e. d plus 4 value(s); your function `reverse_step` takes 3 parameter(s) (d, reversed_list, triple).

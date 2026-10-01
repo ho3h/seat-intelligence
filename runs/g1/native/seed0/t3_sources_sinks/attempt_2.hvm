@@ -1,0 +1,36 @@
+// Count vertices with no incoming and no outgoing edges by scanning the edge list
+// once for each vertex.
+
+@prog = ((n edges) out)
+  & @verts ~ (n (0 (edges (0 (0 out)))))
+
+@verts = ((?((@vzero @vstep) (i (edges (src (sink out))))) *) (i (edges (src (sink out)))))
+
+@vzero = (* (* (src (sink out))))
+  & out ~ (src sink)
+
+@vstep = (* (i (edges (src (sink out)))))
+  & edges ~ {scan_edges master}
+  & @scan ~ (scan_edges (i (0 (0 (master (rem (src (sink out))))))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (i (fi (fo (master (rem (src (sink out))))))))) payload) (i (fi (fo (master (rem (src (sink out))))))))
+
+@scan_nil = (* (i (fi (fo (master (rem (src (sink out))))))))
+  & @after ~ (i (fi (fo (master (rem (src (sink out)))))))
+
+@scan_cons = (* (((u v) tail) (i (fi (fo (master (rem (src (sink out)))))))))
+  & i ~ {i_u i_rest}
+  & i_rest ~ {i_v i_next}
+  & u ~ $([=] $(i_u z_out))
+  & v ~ $([=] $(i_v z_in))
+  & fo ~ $([|] $(z_out fo_next))
+  & fi ~ $([|] $(z_in fi_next))
+  & @scan ~ (tail (i_next (fi_next (fo_next (master (rem (src (sink out))))))))
+
+@after = (i (fi (fo (master (rem (src (sink out)))))))
+  & fi ~ $([=] $(0 no_in))
+  & fo ~ $([=] $(0 no_out))
+  & src ~ $([+] $(no_in src_next))
+  & sink ~ $([+] $(no_out sink_next))
+  & i ~ $([+1] i_next)
+  & @verts ~ (rem (i_next (master (src_next (sink_next out)))))

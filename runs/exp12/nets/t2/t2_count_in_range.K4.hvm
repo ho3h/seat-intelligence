@@ -1,0 +1,21 @@
+@prog = (input out)
+  & input ~ (lo (hi xs))
+  & @count ~ (xs (lo (hi out)))
+
+@count = (lv1 (lo (hi out)))
+  & @count_cons_lw ~ (lv1 (lo (hi out)))
+
+@count_nil = (* (* (* out)))
+  & out ~ 0
+
+@count_cons = (* (({$([<] $(lo_cmp $([|] $(hi_bad $([=] $(0 valid)))))) $([>] $(hi_cmp hi_bad))} t) ({lo_cmp lo_rec} ({hi_cmp hi_rec} out))))
+  & @count_cons_lw ~ (t (lo_rec (hi_rec $([+] $(valid out)))))
+
+@count_cons_lw = (ls36 (q12 (q13 q14)))
+  & ls36 ~ (g31 (e27 (g32 (e28 (g33 (e29 (g34 (e30 tk35))))))))
+  & g31 ~ ?((@count_nil @count_cons_la) ((e27 (q16 (q17 q18))) (q12 (q13 q14))))
+  & g32 ~ ?((@count_nil @count_cons_la) ((e28 (q20 (q21 q22))) (q16 (q17 q18))))
+  & g33 ~ ?((@count_nil @count_cons_la) ((e29 (q24 (q25 q26))) (q20 (q21 q22))))
+  & g34 ~ ?((@count_nil @count_cons) ((e30 tk35) (q24 (q25 q26))))
+
+@count_cons_la = (* (({$([<] $(lo_cmp $([|] $(hi_bad $([=] $(0 valid)))))) $([>] $(hi_cmp hi_bad))} (lo_rec (hi_rec $([+] $(valid out))))) ({lo_cmp lo_rec} ({hi_cmp hi_rec} out))))

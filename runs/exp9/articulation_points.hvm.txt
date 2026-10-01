@@ -1,0 +1,93 @@
+// t3_articulation_points (GRAPH-SWING-2, runs/exp9). v (degree >= 2) is a cut vertex iff some neighbour of v is not
+// reachable from a0(v) = min neighbour of v in G - v. All n of these searches run at once as ONE bitset BFS
+// (msbfs template): search v is bit v, seeded at a0(v), and vertex u starts with R_u = {u}, so bit u never enters or
+// leaves u (u is deleted from its own search). At the end the cut set is OR_u (Nb_u & ~R_u) (Nb_u = u's neighbour
+// bitset row), listed in ascending order.
+@prog = ((n es) out)
+  & n ~ ?((@ap_zero @ap_pos) (es out))
+@ap_zero = (* (0 *))
+@ap_pos = (nm1 (es out))
+  & nm1 ~ {b1 b2}
+  & @lg ~ (b1 L)
+  & b2 ~ $([>>] $(4 bw))
+  & @lg ~ (bw W)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 {L7 {L8 L9}}}}}}}}
+  & W ~ {W1 {W2 {W3 {W4 {W5 W6}}}}}
+  & @zl ~ (L1 G0)
+  & @zi ~ (L2 A0)
+  & @zm ~ (L3 (W1 M0))
+  & @w_blk ~ (es (((L4 W2) (G0 (A0 M0))) (G (A M))))
+  & @zs1 ~ (L5 (W3 (0 (S0 T0))))
+  & @seed ~ (A (L6 ((L9 W4) (0 (T0 T1)))))
+  & @ml ~ ((G (S0 (T1 (L7 (W5 0))))) (Sf *))
+  & W6 ~ {Wa Wb}
+  & @ac ~ (Sf (M (L8 (Wa C))))
+  & @wbits ~ (C (Wb (0 ((0 *) out))))
+@ap_step = (((L W) (g (a m))) ((u v) ((L9 W3) (g3 (a3 m3)))))
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L9}}}}}}
+  & W ~ {W1 {W2 W3}}
+  & u ~ {u1 {u2 {u3 {u4 {u5 u6}}}}}
+  & v ~ {v1 {v2 {v3 {v4 {v5 v6}}}}}
+  & @pn ~ (g (u1 (L1 (v1 g2))))
+  & @pn ~ (g2 (v2 (L2 (u2 g3))))
+  & @mu ~ (a (u3 (L3 (v3 a2))))
+  & @mu ~ (a2 (v4 (L4 (u4 a3))))
+  & @sb ~ (m (u5 (L5 ((v5 W1) m2))))
+  & @sb ~ (m2 (v6 (L6 ((u6 W2) m3))))
+@ap_fin = ((* s) s)
+@xl = (* (* (* (* (* (X (X 16777215)))))))
+// zs1(L, W, base) -> (state trie of ({u} (0 0)), gather trie of (0 0))
+@zs1 = (L (W (base (s g))))
+  & L ~ ?((@zs1_leaf @zs1_node) (W (base (s g))))
+@zs1_leaf = (W (v ((u (z1 0)) (z2 z3))))
+  & W ~ {w1 {w2 {w3 w4}}}
+  & @zt ~ (w1 z1)
+  & @zt ~ (w2 z2)
+  & @zt ~ (w3 z3)
+  & v ~ {v1 v2}
+  & v1 ~ $([>>] $(4 j))
+  & v2 ~ $([&] $(15 b))
+  & @un ~ (w4 (j (b u)))
+@zs1_node = (lm (W (base ((sa sb) (ga gb)))))
+  & lm ~ {l1 {l2 l3}}
+  & W ~ {w1 w2}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @zs1 ~ (l1 (w1 (b1 (sa ga))))
+  & @zs1 ~ (l2 (w2 (bR (sb gb))))
+// seed(A, L, E = (Lf W), base, T -> T'): for every v with a0 = A[v] < INF, OR {v} into ONES of gather leaf a0
+@seed = (A (L (E (base (t o)))))
+  & L ~ ?((@seed_leaf @seed_node) (A (E (base (t o)))))
+@seed_node = (lm ((a b) (E (base (t o)))))
+  & lm ~ {l1 {l2 l3}}
+  & E ~ {e1 e2}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @seed ~ (a (l1 (e1 (b1 (t tm)))))
+  & @seed ~ (b (l2 (e2 (bR (tm o)))))
+@seed_leaf = (a0 (E (v (t o))))
+  & a0 ~ {x1 x2}
+  & x1 ~ $([<] $(16777215 has))
+  & has ~ ?((@sd_no @sd_yes) (x2 (E (v (t o)))))
+@sd_no = (* (* (* (t t))))
+@sd_yes = (* (a0 ((Lf W) (v (t o)))))
+  & W ~ {w1 {w2 w3}}
+  & w2 ~ *
+  & v ~ {v1 v2}
+  & v1 ~ $([>>] $(4 j))
+  & v2 ~ $([&] $(15 b))
+  & @un ~ (w1 (j (b u)))
+  & @ga ~ (t (a0 (Lf ((w3 u) o))))
+// ac(S, M, L, W) -> OR over u of (row_u & ~R_u)
+@ac = (s (m (L (W o))))
+  & L ~ ?((@ac_leaf @ac_node) (s (m (W o))))
+@ac_leaf = ((R (* *)) (row (W o)))
+  & @wan ~ (W (row (R o)))
+@ac_node = (lm ((sa sb) ((ma mb) (W o))))
+  & lm ~ {l1 l2}
+  & W ~ {w1 {w2 w3}}
+  & @ac ~ (sa (ma (l1 (w1 x))))
+  & @ac ~ (sb (mb (l2 (w2 y))))
+  & @wor ~ (w3 (x (y o)))

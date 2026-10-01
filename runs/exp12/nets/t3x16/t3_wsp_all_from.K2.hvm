@@ -1,0 +1,234 @@
+@prog = ((?((@wsp_zero @wsp_pos) (s (es out))) (s es)) out)
+
+@wsp_zero = (* (* (0 *)))
+
+@wsp_pos = (nm1 (s (es out)))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sssp_start ~ (n1 (s (L3 (16777215 (G Df)))))
+  & @tl ~ (Df (L4 (0 (n2 ((0 *) out)))))
+
+@wsp_step = ((L g) ((u (v w)) (L3 g2)))
+  & L ~ {L1 L3}
+  & @gp ~ (g (u (L1 ((v w) g2))))
+
+@wsp_fin = ((* g) g)
+
+@tl = (t (L (base (n (tail o)))))
+  & L ~ ?((@tl_leaf @tl_node) (t (base (n (tail o)))))
+
+@tl_leaf = (x (base (n (tail o))))
+  & base ~ $([<] $(n keep))
+  & keep ~ ?((@tl_drop @tl_keep) (x (tail o)))
+
+@tl_drop = (* (t t))
+
+@tl_keep = (* (x (t (1 (x t)))))
+
+@tl_node = (lm ((a b) (base (n (tail o)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @tl ~ (a (l1 (b1 (n1 (mid o)))))
+  & @tl ~ (b (l2 (bR (n2 (tail mid)))))
+
+@w_blk = ((?((@w_nil @w_cons) (S0 (o0 (E1 (S1 o1))))) (E1 (?((@w_nil @w_cons) (S1 (o1 (E2 (S2 o2))))) (E2 (?((@w_nil @w_cons) (S2 (o2 (E3 (S3 o3))))) (E3 (?((@w_nil @w_cons) (S3 (o3 (E4 (S4 o4))))) (E4 (?((@w_nil @w_cons) (S4 (o4 (E5 (S5 o5))))) (E5 (?((@w_nil @w_cons) (S5 (o5 (E6 (S6 o6))))) (E6 (?((@w_nil @w_cons) (S6 (o6 (E7 (S7 o7))))) (E7 (?((@w_nil @w_cons) (S7 (o7 (E8 (S8 o8))))) (E8 (?((@w_nil @w_cons) (S8 (o8 (E9 (S9 o9))))) (E9 (?((@w_nil @w_cons) (S9 (o9 (E10 (S10 o10))))) (E10 (?((@w_nil @w_cons) (S10 (o10 (E11 (S11 o11))))) (E11 (?((@w_nil @w_cons) (S11 (o11 (E12 (S12 o12))))) (E12 (?((@w_nil @w_cons) (S12 (o12 (E13 (S13 o13))))) (E13 (?((@w_nil @w_cons) (S13 (o13 (E14 (S14 o14))))) (E14 (?((@w_nil @w_cons) (S14 (o14 (E15 (S15 o15))))) (E15 (?((@w_nil @w_last) (S15 (o15 (E16 t16)))) (E16 t16)))))))))))))))))))))))))))))))) (S0 o0))
+
+@w_nil = (S (o *))
+  & @wsp_fin ~ (S o)
+
+@w_cons = (* (S (o (E (S2 o)))))
+  & @wsp_step ~ (S (E S2))
+
+@w_last = (* (S (o (E t))))
+  & @wsp_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+
+@loop = ((g (dt (c E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 *)
+  & @zi ~ (L1 ci)
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @rd ~ (Lr (Eb (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & any ~ ?((@lp_done @lp_again) (g2 (dt2 (co (E3 o)))))
+
+@lp_done = (* (dt (* (* dt))))
+
+@lp_again = (* (g (dt (c (E o)))))
+  & @loop ~ ((g (dt (c E))) o)
+
+@rd = (L (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & L ~ ?((@rd_leaf @rd_node) (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+
+@rd_node = (lm (E ((g1 gr) ((d1 dr) ((c1 cr) (ci ((h1 hr) ((e1 er) (co any)))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @rd ~ (l1 (Ea (g1 (d1 (c1 (ci (h1 (e1 (cm a1)))))))))
+  & @rd ~ (l2 (Eb (gr (dr (cr (cm (hr (er (co a2)))))))))
+  & a1 ~ $([|] $(a2 any))
+
+@rd_leaf = (E (g (d (c (ci (g2 (d2 (co any))))))))
+  & c ~ {c1 {c2 c3}}
+  & d ~ {dA dB}
+  & E ~ {Ex Ey}
+  & Ey ~ (* b)
+  & c1 ~ $([<] $(dA lt))
+  & c2 ~ $([>] $(b gt))
+  & lt ~ $([>] $(gt f))
+  & f ~ {f1 {any f3}}
+  & f1 ~ ?((@rl_keep @rl_take) (dB (c3 nd)))
+  & nd ~ {nd1 d2}
+  & f3 ~ ?((@rl_quiet @rl_emit) (g (nd1 (ci (g2 (co Ex))))))
+
+@rl_keep = (d (* d))
+
+@rl_take = (* (* (c c)))
+
+@rl_quiet = (g (* (ci (g (ci *)))))
+
+@rl_emit = (* (g (nd (ci (g2 (co E))))))
+  & E ~ (L *)
+  & @em ~ (g (nd (ci (g2 (co L)))))
+
+@em = (lv1 (nd (ci (g2 (co L)))))
+  & @em_cons_lw ~ (lv1 (nd (ci (g2 (co L)))))
+
+@em_nil = (* (* (ci ((0 *) (ci *)))))
+
+@em_cons = (* ((({v1 v2} {w1 w2}) rest) ({$([+] $(w1 cand)) n2} (ci ((1 ((v2 w2) rest2)) (co {La Lb}))))))
+  & @mu ~ (ci (v1 (La (cand cm))))
+  & @em_cons_lw ~ (rest (n2 (cm (rest2 (co Lb)))))
+
+@mu_act = (old (cand o))
+  & old ~ {o1 o2}
+  & cand ~ {k1 k2}
+  & k1 ~ $([<] $(o1 lt))
+  & lt ~ ?((@mu_keep @mu_take) (o2 (k2 o)))
+
+@mu_keep = (x (* x))
+
+@mu_take = (* (* (y y)))
+
+@gp_act = (lst ((v w) (1 ((v w) lst))))
+
+@zi = (?((16777215 @zi_node) o) o)
+
+@zi_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zi ~ (l1 a)
+  & @zi ~ (l2 b)
+
+@zl = (?(((0 *) @zl_node) o) o)
+
+@zl_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zl ~ (l1 a)
+  & @zl ~ (l2 b)
+
+@sssp_start = (n (s (L (b (g o)))))
+  & s ~ {s1 s2}
+  & n ~ {n1 n2}
+  & n1 ~ *
+  & s1 ~ $([<] $(n2 inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & i2 ~ ?((16777215 (* 0)) val)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @zi ~ (L1 D0)
+  & @zi ~ (L2 Ci)
+  & @mu ~ (Ci (key (L3 (val C0))))
+  & @loop ~ ((g (D0 (C0 (L4 b)))) o)
+
+@mu = (t (k (?((@mu_leaf @mu_node) (t (k (P o)))) (P o))))
+
+@mu_leaf = (t (* (P o)))
+  & @mu_act ~ (t (P o))
+
+@mu_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@mu_L @mu_R) (t (k2 (l2 (P o)))))
+
+@mu_L = ((l r) (k (L (P (l2 r)))))
+  & @mu ~ (l (k (L (P l2))))
+
+@mu_R = (* ((l r) (k (L (P (l r2))))))
+  & @mu ~ (r (k (L (P r2))))
+
+@gp = (t (k (?((@gp_leaf @gp_node) (t (k (P o)))) (P o))))
+
+@gp_leaf = (t (* (P o)))
+  & @gp_act ~ (t (P o))
+
+@gp_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@gp_L @gp_R) (t (k2 (l2 (P o)))))
+
+@gp_L = ((l r) (k (L (P (l2 r)))))
+  & @gp ~ (l (k (L (P l2))))
+
+@gp_R = (* ((l r) (k (L (P (l r2))))))
+  & @gp ~ (r (k (L (P r2))))
+
+@lg = (?((0 @lg_s) o) o)
+
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+@zt = (?((0 @zt_node) o) o)
+
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+@cnt = (t (?((@cnt_leaf @cnt_node) (t o)) o))
+
+@cnt_leaf = (x x)
+
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+@ins = (t (k (?((@ins_leaf @ins_node) (t (k o))) o)))
+
+@ins_leaf = (* (* 1))
+
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))
+
+@em_cons_lw = (ls32 (q16 (q17 (q18 (q19 q20)))))
+  & ls32 ~ (g29 (e27 (g30 (e28 tk31))))
+  & g29 ~ ?((@em_nil @em_cons_la) ((e27 (q22 (q23 (q24 (q25 q26))))) (q16 (q17 (q18 (q19 q20))))))
+  & g30 ~ ?((@em_nil @em_cons) ((e28 tk31) (q22 (q23 (q24 (q25 q26))))))
+
+@em_cons_la = (* ((({v1 v2} {w1 w2}) (n2 (cm (rest2 (co Lb))))) ({$([+] $(w1 cand)) n2} (ci ((1 ((v2 w2) rest2)) (co {La Lb}))))))
+  & @mu ~ (ci (v1 (La (cand cm))))

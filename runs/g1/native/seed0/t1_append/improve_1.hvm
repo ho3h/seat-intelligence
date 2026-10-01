@@ -1,0 +1,17 @@
+@prog = ((xs ys) out)
+  & @append ~ (xs (ys out))
+
+@append = ((?((@append_nil @append_cons) (payload (ys out))) payload) (ys out))
+
+@append_nil = (* (a a))
+
+@append_cons = (* ((head tail) ctx))
+  & tail ~ ((?((@append_end @append_pair) r)) payload2)
+  & r ~ (payload2 (head ctx))
+
+@append_end = (* (head (ys out)))
+  & out ~ (1 (head ys))
+
+@append_pair = (* ((head2 tail2) (head1 (ys out))))
+  & @append ~ (tail2 (ys rest))
+  & out ~ (1 (head1 (1 (head2 rest))))

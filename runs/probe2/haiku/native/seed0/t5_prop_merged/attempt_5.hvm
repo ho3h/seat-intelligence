@@ -1,0 +1,81 @@
+@prog = (input output)
+  & input ~ ((c attrs) *)
+  & @collect ~ (c (attrs output))
+
+@collect = (c (attrs out))
+  & attrs ~ (?((@coll_nil @coll_cons) (c out)) *)
+
+@coll_nil = (c out)
+  & * ~ c
+  & out ~ (0 *)
+
+@coll_cons = (* (((n (k v)) tail) (c out)))
+  & {c1 c2} ~ c
+  & @get_cid ~ (n (c1 cid))
+  & cid ~ (cid_val *)
+  & @collect ~ (c2 (tail rec_out))
+  & @insert_sorted ~ ((cid_val (k v)) (rec_out out))
+
+@get_cid = (n (c out))
+  & n ~ ?((@gc_z @gc_s) (c out))
+
+@gc_z = (c out)
+  & c ~ (h t)
+  & * ~ t
+  & out ~ h
+
+@gc_s = (((n_p out) c) *)
+  & @get_cid ~ (n_p (c out))
+
+@insert_sorted = ((cid (k v)) (list out))
+  & list ~ (?((@ins_nil @ins_cons) out) *)
+
+@ins_nil = (out)
+  & out ~ (1 (((cid (k v)) (0 *)) *))
+
+@ins_cons = (* (((cid2 (k2 v2)) rest) out))
+  & cid ~ $([<] $(cid2 cmp_c))
+  & cmp_c ~ (?((@ins_c_lt @ins_c_ge) ((cid (k v)) (cid2 (k2 v2)) rest out)) *)
+
+@ins_c_lt = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_sorted ~ (((cid2 (k2 v2)) rest) cont)
+
+@ins_c_ge = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & cid ~ $([=] $(cid2 cmp_eq))
+  & cmp_eq ~ (?((@ins_eq @ins_gt) ((cid (k v)) (cid2 (k2 v2)) rest out)) *)
+
+@ins_eq = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & k ~ $([<] $(k2 cmp_k))
+  & cmp_k ~ (?((@ins_k_lt @ins_k_ge) ((cid (k v)) (k2 v2) rest out))) *)
+
+@ins_k_lt = ((cid (k v)) (k2 v2) rest out)
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_sorted ~ (((cid (k2 v2)) rest) cont)
+
+@ins_k_ge = ((cid (k v)) (k2 v2) rest out)
+  & k ~ $([=] $(k2 eq_k))
+  & eq_k ~ (?((@ins_merge @ins_after) ((cid (k v)) (v2 rest out))) *)
+
+@ins_merge = ((cid (k v)) (v2 rest out))
+  & v ~ $([<] $(v2 cmp_v))
+  & cmp_v ~ (?((@use_v @use_v2) ((cid (k v)) (v2 rest out))) *)
+
+@use_v = ((cid (k v)) (v2 rest out))
+  & * ~ v2
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_sorted ~ (rest cont)
+
+@use_v2 = ((cid (k v)) (v2 rest out))
+  & * ~ v
+  & out ~ (1 (((cid (k v2)) cont) *))
+  & @insert_sorted ~ (rest cont)
+
+@ins_after = ((cid (k v)) (v2 rest out))
+  & * ~ v2
+  & out ~ (1 (((cid (k v)) cont) *))
+  & @insert_sorted ~ (rest cont)
+
+@ins_gt = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & out ~ (1 (((cid2 (k2 v2)) cont) *))
+  & @insert_sorted ~ (((cid (k v)) rest) cont)

@@ -1,0 +1,250 @@
+@prog = ((n (s (b es))) out)
+  & n ~ ?((@br_zero @br_pos) (s (b (es out))))
+
+@br_zero = (* (* (* 0)))
+
+@br_pos = (nm1 (s (b (es out))))
+  & nm1 ~ {a c}
+  & a ~ $([+1] n)
+  & @lg ~ (c L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sssp_start ~ (n (s (L3 (b (G Df)))))
+  & @cf ~ (Df (L4 out))
+
+@br_step = ((L g) ((u (v w)) (L3 g3)))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @gp ~ (g (u1 (L1 ((v1 w1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 w2) g3))))
+
+@br_fin = ((* g) g)
+
+@cf = (t (?((@cf_leaf @cf_node) (t o)) o))
+
+@cf_leaf = (x o)
+  & x ~ $([<] $(16777215 o))
+
+@cf_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cf ~ (a (l1 x))
+  & @cf ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+@w_blk = (lv1 (S0 o0))
+  & @w_last_lw ~ (lv1 (S0 o0))
+
+@w_nil = (S (o *))
+  & @br_fin ~ (S o)
+
+@w_cons = (* (S (o (E (S2 o)))))
+  & @br_step ~ (S (E S2))
+
+@w_last = (* (S (o (E t))))
+  & @br_step ~ (S (E S2))
+  & @w_last_lw ~ (t (S2 o))
+
+@loop = ((g (dt (c E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 *)
+  & @zi ~ (L1 ci)
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @rd ~ (Lr (Eb (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & any ~ ?((@lp_done @lp_again) (g2 (dt2 (co (E3 o)))))
+
+@lp_done = (* (dt (* (* dt))))
+
+@lp_again = (* (g (dt (c (E o)))))
+  & @loop ~ ((g (dt (c E))) o)
+
+@rd = (L (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & L ~ ?((@rd_leaf @rd_node) (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+
+@rd_node = (lm (E ((g1 gr) ((d1 dr) ((c1 cr) (ci ((h1 hr) ((e1 er) (co any)))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @rd ~ (l1 (Ea (g1 (d1 (c1 (ci (h1 (e1 (cm a1)))))))))
+  & @rd ~ (l2 (Eb (gr (dr (cr (cm (hr (er (co a2)))))))))
+  & a1 ~ $([|] $(a2 any))
+
+@rd_leaf = (E (g (d (c (ci (g2 (d2 (co any))))))))
+  & c ~ {c1 {c2 c3}}
+  & d ~ {dA dB}
+  & E ~ {Ex Ey}
+  & Ey ~ (* b)
+  & c1 ~ $([<] $(dA lt))
+  & c2 ~ $([>] $(b gt))
+  & lt ~ $([>] $(gt f))
+  & f ~ {f1 {any f3}}
+  & f1 ~ ?((@rl_keep @rl_take) (dB (c3 nd)))
+  & nd ~ {nd1 d2}
+  & f3 ~ ?((@rl_quiet @rl_emit) (g (nd1 (ci (g2 (co Ex))))))
+
+@rl_keep = (d (* d))
+
+@rl_take = (* (* (c c)))
+
+@rl_quiet = (g (* (ci (g (ci *)))))
+
+@rl_emit = (* (g (nd (ci (g2 (co E))))))
+  & E ~ (L *)
+  & @em ~ (g (nd (ci (g2 (co L)))))
+
+@em = (lv2 (nd (ci (g2 (co L)))))
+  & @em_cons_lw ~ (lv2 (nd (ci (g2 (co L)))))
+
+@em_nil = (* (* (ci ((0 *) (ci *)))))
+
+@em_cons = (* ((({v1 v2} {w1 w2}) rest) ({$([+] $(w1 cand)) n2} (ci ((1 ((v2 w2) rest2)) (co {La Lb}))))))
+  & @mu ~ (ci (v1 (La (cand cm))))
+  & @em_cons_lw ~ (rest (n2 (cm (rest2 (co Lb)))))
+
+@mu_act = (old (cand o))
+  & old ~ {o1 o2}
+  & cand ~ {k1 k2}
+  & k1 ~ $([<] $(o1 lt))
+  & lt ~ ?((@mu_keep @mu_take) (o2 (k2 o)))
+
+@mu_keep = (x (* x))
+
+@mu_take = (* (* (y y)))
+
+@gp_act = (lst ((v w) (1 ((v w) lst))))
+
+@zi = (?((16777215 @zi_node) o) o)
+
+@zi_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zi ~ (l1 a)
+  & @zi ~ (l2 b)
+
+@zl = (?(((0 *) @zl_node) o) o)
+
+@zl_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zl ~ (l1 a)
+  & @zl ~ (l2 b)
+
+@sssp_start = (n (s (L (b (g o)))))
+  & s ~ {s1 s2}
+  & n ~ {n1 n2}
+  & n1 ~ *
+  & s1 ~ $([<] $(n2 inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & i2 ~ ?((16777215 (* 0)) val)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @zi ~ (L1 D0)
+  & @zi ~ (L2 Ci)
+  & @mu ~ (Ci (key (L3 (val C0))))
+  & @loop ~ ((g (D0 (C0 (L4 b)))) o)
+
+@mu = (t (k (?((@mu_leaf @mu_node) (t (k (P o)))) (P o))))
+
+@mu_leaf = (t (* (P o)))
+  & @mu_act ~ (t (P o))
+
+@mu_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@mu_L @mu_R) (t (k2 (l2 (P o)))))
+
+@mu_L = ((l r) (k (L (P (l2 r)))))
+  & @mu ~ (l (k (L (P l2))))
+
+@mu_R = (* ((l r) (k (L (P (l r2))))))
+  & @mu ~ (r (k (L (P r2))))
+
+@gp = (t (k (?((@gp_leaf @gp_node) (t (k (P o)))) (P o))))
+
+@gp_leaf = (t (* (P o)))
+  & @gp_act ~ (t (P o))
+
+@gp_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@gp_L @gp_R) (t (k2 (l2 (P o)))))
+
+@gp_L = ((l r) (k (L (P (l2 r)))))
+  & @gp ~ (l (k (L (P l2))))
+
+@gp_R = (* ((l r) (k (L (P (l r2))))))
+  & @gp ~ (r (k (L (P r2))))
+
+@lg = (?((0 @lg_s) o) o)
+
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+@zt = (?((0 @zt_node) o) o)
+
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+@cnt = (t (?((@cnt_leaf @cnt_node) (t o)) o))
+
+@cnt_leaf = (x x)
+
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+@ins = (t (k (?((@ins_leaf @ins_node) (t (k o))) o)))
+
+@ins_leaf = (* (* 1))
+
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))
+
+@w_last_lw = (ls73 (q24 q25))
+  & ls73 ~ (g64 (e56 (g65 (e57 (g66 (e58 (g67 (e59 (g68 (e60 (g69 (e61 (g70 (e62 (g71 (e63 tk72))))))))))))))))
+  & g64 ~ ?((@w_nil @w_last_la) (q24 (q25 (e56 (q28 q29)))))
+  & g65 ~ ?((@w_nil @w_last_la) (q28 (q29 (e57 (q32 q33)))))
+  & g66 ~ ?((@w_nil @w_last_la) (q32 (q33 (e58 (q36 q37)))))
+  & g67 ~ ?((@w_nil @w_last_la) (q36 (q37 (e59 (q40 q41)))))
+  & g68 ~ ?((@w_nil @w_last_la) (q40 (q41 (e60 (q44 q45)))))
+  & g69 ~ ?((@w_nil @w_last_la) (q44 (q45 (e61 (q48 q49)))))
+  & g70 ~ ?((@w_nil @w_last_la) (q48 (q49 (e62 (q52 q53)))))
+  & g71 ~ ?((@w_nil @w_last) (q52 (q53 (e63 tk72))))
+
+@em_cons_lw = (ls139 (q75 (q76 (q77 (q78 q79)))))
+  & ls139 ~ (g130 (e122 (g131 (e123 (g132 (e124 (g133 (e125 (g134 (e126 (g135 (e127 (g136 (e128 (g137 (e129 tk138))))))))))))))))
+  & g130 ~ ?((@em_nil @em_cons_la) ((e122 (q81 (q82 (q83 (q84 q85))))) (q75 (q76 (q77 (q78 q79))))))
+  & g131 ~ ?((@em_nil @em_cons_la) ((e123 (q87 (q88 (q89 (q90 q91))))) (q81 (q82 (q83 (q84 q85))))))
+  & g132 ~ ?((@em_nil @em_cons_la) ((e124 (q93 (q94 (q95 (q96 q97))))) (q87 (q88 (q89 (q90 q91))))))
+  & g133 ~ ?((@em_nil @em_cons_la) ((e125 (q99 (q100 (q101 (q102 q103))))) (q93 (q94 (q95 (q96 q97))))))
+  & g134 ~ ?((@em_nil @em_cons_la) ((e126 (q105 (q106 (q107 (q108 q109))))) (q99 (q100 (q101 (q102 q103))))))
+  & g135 ~ ?((@em_nil @em_cons_la) ((e127 (q111 (q112 (q113 (q114 q115))))) (q105 (q106 (q107 (q108 q109))))))
+  & g136 ~ ?((@em_nil @em_cons_la) ((e128 (q117 (q118 (q119 (q120 q121))))) (q111 (q112 (q113 (q114 q115))))))
+  & g137 ~ ?((@em_nil @em_cons) ((e129 tk138) (q117 (q118 (q119 (q120 q121))))))
+
+@w_last_la = (* (S (o (E (S2 o)))))
+  & @br_step ~ (S (E S2))
+
+@em_cons_la = (* ((({v1 v2} {w1 w2}) (n2 (cm (rest2 (co Lb))))) ({$([+] $(w1 cand)) n2} (ci ((1 ((v2 w2) rest2)) (co {La Lb}))))))
+  & @mu ~ (ci (v1 (La (cand cm))))

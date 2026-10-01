@@ -1,0 +1,56 @@
+// Count agreements between each node and all later nodes, then recurse on the tail.
+@prog = ((pred truth) out)
+  & @outer ~ (pred (truth out))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (tl out))) pl) (tl out))
+
+@outer_nil = (* (tl out))
+  & tl ~ *
+  & out ~ 0
+
+@outer_cons = (* ((ph pt) (tl out)))
+  & @outer_truth ~ (tl (ph (pt out)))
+
+@outer_truth = ((?((@outer_truth_nil @outer_truth_cons) (pl (ph (pt out)))) pl) (ph (pt out)))
+
+@outer_truth_nil = (* (ph (pt out)))
+  & ph ~ *
+  & pt ~ *
+  & out ~ 0
+
+@outer_truth_cons = (* ((th tt) (ph (pt out))))
+  & pt ~ {pti pto}
+  & tt ~ {tti tto}
+  & @inner ~ (pti (tti (ph (th icount)))
+  & @outer ~ (pto (tto ocount))
+  & icount ~ $([+] $(ocount out))
+
+// Count how many remaining pairs agree with the anchor pair.
+@inner = ((?((@inner_nil @inner_cons) (pl (tl (p0 (t0 out))))) pl) (tl (p0 (t0 out))))
+
+@inner_nil = (* (tl (p0 (t0 out))))
+  & tl ~ *
+  & p0 ~ *
+  & t0 ~ *
+  & out ~ 0
+
+@inner_cons = (* ((ph pt) (tl (p0 (t0 out)))))
+  & @inner_truth ~ (tl (ph (pt (p0 (t0 out)))))
+
+@inner_truth = ((?((@inner_truth_nil @inner_truth_cons) (pl (ph (pt (p0 (t0 out)))))) pl) (ph (pt (p0 (t0 out))))
+
+@inner_truth_nil = (* (ph (pt (p0 (t0 out)))))
+  & ph ~ *
+  & pt ~ *
+  & p0 ~ *
+  & t0 ~ *
+  & out ~ 0
+
+@inner_truth_cons = (* ((th tt) (ph (pt (p0 (t0 out))))))
+  & p0 ~ {p0cmp p0rec}
+  & t0 ~ {t0cmp t0rec}
+  & ph ~ $([=] $(p0cmp ep))
+  & th ~ $([=] $(t0cmp et))
+  & ep ~ $([=] $(et agree))
+  & @inner ~ (pt (tt (p0rec (t0rec next))))
+  & next ~ $([+] $(agree out))

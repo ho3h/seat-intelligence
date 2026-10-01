@@ -1,0 +1,51 @@
+@prog = (l out)
+  & @scan ~ (l ((0 0) out))
+
+@scan = (lv1 (a out))
+  & @scan_cons_lw ~ (lv1 (a out))
+
+@scan_nil = (* (a a))
+
+@scan_cons = (* (($([-40] z5) t) ((u v) out)))
+  & z5 ~ ?((@scan_open_char_hz @scan_close_char_hz) (xw38 ((u v) out)))
+  & @scan_cons_lw ~ (t xw38)
+
+@scan_open_char = (t ((u v) out))
+  & v ~ $([+1] vv)
+  & @scan ~ (t ((u vv) out))
+
+@scan_close_char = (* (t ((u v) out)))
+  & v ~ ?((@scan_zero_open @scan_positive_open) (u (t out)))
+
+@scan_zero_open = (u (t out))
+  & u ~ $([+1] uu)
+  & @scan ~ (t ((uu 0) out))
+
+@scan_positive_open = (vminus (u (t out)))
+  & @scan ~ (t ((u vminus) out))
+
+@scan_cons_lw = (ls81 (q41 q42))
+  & ls81 ~ (g72 (e64 (g73 (e65 (g74 (e66 (g75 (e67 (g76 (e68 (g77 (e69 (g78 (e70 (g79 (e71 tk80))))))))))))))))
+  & g72 ~ ?((@scan_nil @scan_cons_la) ((e64 (q44 q45)) (q41 q42)))
+  & g73 ~ ?((@scan_nil @scan_cons_la) ((e65 (q47 q48)) (q44 q45)))
+  & g74 ~ ?((@scan_nil @scan_cons_la) ((e66 (q50 q51)) (q47 q48)))
+  & g75 ~ ?((@scan_nil @scan_cons_la) ((e67 (q53 q54)) (q50 q51)))
+  & g76 ~ ?((@scan_nil @scan_cons_la) ((e68 (q56 q57)) (q53 q54)))
+  & g77 ~ ?((@scan_nil @scan_cons_la) ((e69 (q59 q60)) (q56 q57)))
+  & g78 ~ ?((@scan_nil @scan_cons_la) ((e70 (q62 q63)) (q59 q60)))
+  & g79 ~ ?((@scan_nil @scan_cons) ((e71 tk80) (q62 q63)))
+
+@scan_open_char_hz = (hw14 ((q7 $([+1] q10)) q9))
+  & hw14 ~ ((q7 q10) q9)
+
+@scan_zero_open_hz = ($([+1] q23) (hw27 q22))
+  & hw27 ~ ((q23 0) q22)
+
+@scan_positive_open_hz = (q28 (q29 (hw35 q31)))
+  & hw35 ~ ((q29 q28) q31)
+
+@scan_close_char_hz = (* (hw37 ((q16 z19) q18)))
+  & z19 ~ ?((@scan_zero_open_hz @scan_positive_open_hz) (q16 (xw36 q18)))
+  & hw37 ~ xw36
+
+@scan_cons_la = (* (($([-40] ?((@scan_open_char_hz @scan_close_char_hz) (xw38 ((u v) out)))) xw38) ((u v) out)))

@@ -1,0 +1,43 @@
+// State: (previous (current_run (best_run output)))
+
+@prog = (input output)
+  & @start ~ (input output)
+
+@start = ((?((@start_nil @start_cons) (payload out)) payload) out)
+
+@start_nil = (* out)
+  & out ~ 0
+
+@start_cons = (* ((head tail) out))
+  & @worker ~ (tail (head (1 (1 out))))
+
+@worker = ((?((@worker_nil @worker_cons) (payload (prev (run (best out))))) payload) (prev (run (best out))))
+
+@worker_nil = (* (prev (run (best out))))
+  & prev ~ *
+  & run ~ *
+  & best ~ out
+
+@worker_cons = (* ((head tail) (prev (run (best out)))))
+  & head ~ {head_next head_cmp}
+  & head_cmp ~ $([=] $(prev equal))
+  & equal ~ ?((@worker_different @worker_same) (tail (head_next (run (best out)))))
+
+@worker_different = (tail (head (run (best out))))
+  & run ~ *
+  & @worker ~ (tail (head (1 (best out))))
+
+@worker_same = (* (tail (head (run (best out)))))
+  & run ~ {run_inc run_cmp}
+  & run_inc ~ $([+1] incremented)
+  & best ~ {best_keep best_cmp}
+  & best_cmp ~ $([>] $(run_cmp greater))
+  & greater ~ ?((@worker_update @worker_keep) (tail (head (incremented (best_keep out)))))
+
+@worker_update = (tail (head (incremented (best_keep out))))
+  & best_keep ~ *
+  & incremented ~ {run_next best_next}
+  & @worker ~ (tail (head (run_next (best_next out))))
+
+@worker_keep = (* (tail (head (incremented (best_keep out)))))
+  & @worker ~ (tail (head (incremented (best_keep out))))

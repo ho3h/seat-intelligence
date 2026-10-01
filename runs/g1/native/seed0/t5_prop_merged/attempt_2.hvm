@@ -1,0 +1,178 @@
+// Build a histogram of (cluster, key, value, count) records, then emit
+// the winning value for each present cluster/key pair.
+@prog = ((c attrs) out)
+  & @build ~ (attrs (c ((0 *) out)))
+
+@build = ((?((@build_nil @build_cons) (p (c (hist out)))) p) (c (hist out)))
+
+@build_nil = (* (c (hist out)))
+  & @walk ~ (c (0 (hist out)))
+
+@build_cons = (* ((h t) (c (hist out))))
+  & h ~ (node (key val))
+  & c ~ {ca cr}
+  & @at ~ (ca (node cl))
+  & @hadd ~ (hist (cl (key (val hist2))))
+  & @build ~ (t (cr (hist2 out)))
+
+// Return the element at index i in list l.
+@at = ((?((@at_nil @at_cons) (p (i out))) p) (i out))
+
+@at_nil = (* (i out))
+  & i ~ *
+  & out ~ *
+
+@at_cons = (* ((h t) (i out)))
+  & i ~ ?((@at_here @at_step) (h (t out)))
+
+@at_here = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@at_step = (i (h (t out)))
+  & h ~ *
+  & @at ~ (t (i out))
+
+// Increment an existing histogram record, or add a new one.
+@hadd = ((?((@hadd_nil @hadd_cons) (p (cl (key (val out))))) p) (cl (key (val out))))
+
+@hadd_nil = (* (cl (key (val out))))
+  & out ~ (1 ((cl (key (val 1))) (0 *)))
+
+@hadd_cons = (* ((entry tail) (cl (key (val out)))))
+  & entry ~ (oc (ok (ov cnt)))
+  & oc ~ {oc_cmp oc_old}
+  & ok ~ {ok_cmp ok_old}
+  & ov ~ {ov_cmp ov_old}
+  & cl ~ {cl_cmp cl_next}
+  & key ~ {key_cmp key_next}
+  & val ~ {val_cmp val_next}
+  & oc_cmp ~ $([=] $(cl_cmp ecl))
+  & ok_cmp ~ $([=] $(key_cmp ekey))
+  & ov_cmp ~ $([=] $(val_cmp eval))
+  & ecl ~ $([&] $(ekey eclv))
+  & eclv ~ $([&] $(eval all))
+  & all ~ ?((@hadd_miss @hadd_hit) (oc_old (ok_old (ov_old (cnt (tail (cl_next (key_next (val_next out))))))))
+
+@hadd_miss = (oc (ok (ov (cnt (tail (cl (key (val out)))))))
+  & @hadd ~ (tail (cl (key (val newtail))))
+  & out ~ (1 ((oc (ok (ov cnt))) newtail))
+
+@hadd_hit = (* (oc (ok (ov (cnt (tail (cl (key (val out))))))))
+  & cl ~ *
+  & key ~ *
+  & val ~ *
+  & cnt ~ $([+1] cnt2)
+  & out ~ (1 ((oc (ok (ov cnt2))) tail))
+
+// Visit nodes in increasing order. Only canonical cluster ids emit records.
+@walk = ((?((@walk_nil @walk_cons) (p (i (hist out)))) p) (i (hist out)))
+
+@walk_nil = (* (i (hist out)))
+  & i ~ *
+  & hist ~ *
+  & out ~ (0 *)
+
+@walk_cons = (* ((cv tail) (i (hist out))))
+  & i ~ {ibase itest}
+  & hist ~ {histrec histkeys}
+  & cv ~ {cvtest cvemit}
+  & ibase ~ $([+1] inext)
+  & @walk ~ (tail (inext (histrec rest)))
+  & cvtest ~ $([=] $(itest eq))
+  & eq ~ ?((@walk_notcanon @walk_canon) (histkeys (cvemit (rest out))))
+
+@walk_notcanon = (hist (cv (rest out)))
+  & hist ~ *
+  & cv ~ *
+  & out ~ rest
+
+@walk_canon = (* (hist (cv (rest out))))
+  & @keys ~ (hist (cv (rest out)))
+
+// Emit keys in descending call order so the resulting list is ascending.
+@keys = (hist (cl (tailout out)))
+  & hist ~ {h0 h123}
+  & h123 ~ {h1 h23}
+  & h23 ~ {h2 h3}
+  & cl ~ {c0 c123}
+  & c123 ~ {c1 c23}
+  & c23 ~ {c2 c3}
+  & @onekey ~ (h3 (c3 (3 (tailout r3))))
+  & @onekey ~ (h2 (c2 (2 (r3 r2))))
+  & @onekey ~ (h1 (c1 (1 (r2 r1))))
+  & @onekey ~ (h0 (c0 (0 (r1 out))))
+
+// Find the most frequent value for one cluster/key and prepend it if present.
+@onekey = (hist (cl (key (tailout out))))
+  & cl ~ {cl_best cl_emit}
+  & key ~ {key_best key_emit}
+  & @best ~ (hist (cl_best (key_best ((0 (0 0)) state))))
+  & state ~ (found (bv bc))
+  & bc ~ *
+  & found ~ ?((@onekey_no @onekey_yes) (cl_emit (key_emit (bv (tailout out))))
+
+@onekey_no = (cl (key (bv (tailout out))))
+  & cl ~ *
+  & key ~ *
+  & bv ~ *
+  & out ~ tailout
+
+@onekey_yes = (* (cl (key (bv (tailout out)))))
+  & out ~ (1 ((cl (key bv)) tailout))
+
+// Scan the histogram while maintaining (found, best_value, best_count).
+@best = ((?((@best_nil @best_cons) (p (cl (key (state out))))) p) (cl (key (state out))))
+
+@best_nil = (* (cl (key (state out))))
+  & out ~ state
+
+@best_cons = (* ((entry tail) (cl (key (state out)))))
+  & entry ~ (oc (ok (ov cnt)))
+  & cl ~ {cl_cmp cl_rec}
+  & key ~ {key_cmp key_rec}
+  & oc ~ $([=] $(cl_cmp ecl))
+  & ok ~ $([=] $(key_cmp ekey))
+  & ecl ~ $([&] $(ekey both))
+  & both ~ ?((@best_miss @best_match) (ov (cnt (tail (cl_rec (key_rec (state out))))))
+
+@best_miss = (ov (cnt (tail (cl (key (state out))))))
+  & ov ~ *
+  & cnt ~ *
+  & @best ~ (tail (cl (key (state out))))
+
+@best_match = (* (ov (cnt (tail (cl (key (state out)))))))
+  & @consider ~ (ov (cnt (state state2)))
+  & @best ~ (tail (cl (key (state2 out))))
+
+@consider = (cand (cnt (state out)))
+  & state ~ (found (bv bc))
+  & found ~ ?((@consider_empty @consider_has) (cand (cnt (bv (bc out))))
+
+@consider_empty = (cand (cnt (bv (bc out))))
+  & bv ~ *
+  & bc ~ *
+  & out ~ (1 (cand cnt))
+
+@consider_has = (* (cand (cnt (bv (bc out)))))
+  & cnt ~ $([>] $(bc gt))
+  & gt ~ ?((@consider_tie @consider_replace) (cand (cnt (bv (bc out))))
+
+@consider_replace = (* (cand (cnt (bv (bc out)))))
+  & bv ~ *
+  & bc ~ *
+  & out ~ (1 (cand cnt))
+
+@consider_tie = (cand (cnt (bv (bc out))))
+  & cand ~ $([<] $(bv lt))
+  & lt ~ ?((@consider_keep @consider_tie_replace) (cand (cnt (bv (bc out))))
+
+@consider_keep = (cand (cnt (bv (bc out))))
+  & cand ~ *
+  & cnt ~ *
+  & out ~ (1 (bv bc))
+
+@consider_tie_replace = (* (cand (cnt (bv (bc out)))))
+  & bv ~ *
+  & bc ~ *
+  & out ~ (1 (cand cnt))

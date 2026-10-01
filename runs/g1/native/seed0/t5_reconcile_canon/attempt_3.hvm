@@ -1,0 +1,114 @@
+// Initialize labels to node ids, then relax every accepted edge for n rounds.
+@prog = ((n (tau cands)) out)
+  & n ~ {n_init n_round}
+  & @init ~ (n_init (0 labs))
+  & @rounds ~ (n_round (cands (tau (labs out))))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (k (i out))
+  & i ~ {ih ii}
+  & ii ~ $([+1] inext)
+  & @init ~ (k (inext tail))
+  & out ~ (1 (ih tail))
+
+@rounds = (k (cands (tau (labs out))))
+  & k ~ ?((@round_nil @round_more) (cands (tau (labs out))))
+
+@round_nil = (cands (tau (labs out)))
+  & cands ~ *
+  & tau ~ *
+  & out ~ labs
+
+@round_more = (k (cands (tau (labs out))))
+  & cands ~ {cscan crecur}
+  & tau ~ {tscan trecur}
+  & @scan ~ (cscan (tscan (labs labs2)))
+  & @rounds ~ (k (crecur (trecur (labs2 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (tau (labs out)))) pl) (tau (labs out)))
+
+@scan_nil = (pl (tau (labs out)))
+  & pl ~ *
+  & tau ~ *
+  & out ~ labs
+
+@scan_cons = (* ((edge tail) (tau (labs out))))
+  & tau ~ {te tr}
+  & @edge ~ (edge (te (labs labs2)))
+  & @scan ~ (tail (tr (labs2 out)))
+
+@edge = ((u (v score)) (tau (labs out)))
+  & score ~ $([<] $(tau lt))
+  & lt ~ ?((@edge_accept @edge_reject) (u (v (labs out))))
+
+@edge_reject = (u (v (labs out)))
+  & u ~ *
+  & v ~ *
+  & out ~ labs
+
+@edge_accept = (u (v (labs out)))
+  & u ~ {uget uset}
+  & v ~ {vget vset}
+  & labs ~ {lookupbase setlist}
+  & lookupbase ~ {lulist lvlist}
+  & @lookup ~ (lulist (uget lu))
+  & @lookup ~ (lvlist (vget lv))
+  & lu ~ {lucmp lkeep}
+  & lv ~ {lvcmp vkeep}
+  & lucmp ~ $([>] $(lvcmp gt))
+  & gt ~ ?((@take_v @take_u) (uset (vset (lkeep (vkeep (setlist out))))))
+
+@take_v = (uset (vset (lkeep (vkeep (setlist out)))))
+  & lkeep ~ *
+  & vkeep ~ {val1 val2}
+  & @set ~ (setlist (uset (val1 mid)))
+  & @set ~ (mid (vset (val2 out)))
+
+@take_u = (uset (vset (lkeep (vkeep (setlist out)))))
+  & vkeep ~ *
+  & lkeep ~ {val1 val2}
+  & @set ~ (setlist (uset (val1 mid)))
+  & @set ~ (mid (vset (val2 out)))
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_here @lookup_next) (h (t out)))
+
+@lookup_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@lookup_next = (k (h (t out)))
+  & h ~ *
+  & @lookup ~ (t (k out))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (pl (idx (val out)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (k (h (t (val out))))
+  & @set ~ (t (k (val tailout)))
+  & out ~ (1 (h tailout))

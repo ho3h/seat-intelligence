@@ -1,0 +1,136 @@
+@prog = (inp out)
+  & inp ~ (n edges)
+  & n ~ *
+  & edges ~ {remaining all}
+  & @loop ~ (remaining (all (0 out)))
+
+@loop = ((?((@loop_nil @loop_cons) (pl (all (acc out)))) pl) (all (acc out)))
+
+@loop_nil = (* (all (acc out)))
+  & all ~ *
+  & out ~ acc
+
+@loop_cons = (* ((edge tail) (all (acc out))))
+  & edge ~ (u v)
+  & all ~ {g_scan g_next}
+  & @reach ~ (g_scan (u (v reachable)))
+  & reachable ~ ?((@is_bridge @not_bridge) (tail (g_next (acc out))))
+
+@is_bridge = (tail (g_next (acc out)))
+  & acc ~ $([+] $(1 acc2))
+  & @loop ~ (tail (g_next (acc2 out)))
+
+@not_bridge = (* (tail (g_next (acc out))))
+  & @loop ~ (tail (g_next (acc out)))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xk}
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_no @mem_yes) (t (xk out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@reach = (graph (src (target out)))
+  & src ~ {s1 sx}
+  & sx ~ {s2 s3}
+  & @dfs ~ ((1 (s1 (0 *))) (graph (s3 (target ((1 (s2 (0 *))) out)))))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (pl (graph (bu (bv (visited out)))))) pl) (graph (bu (bv (visited out)))))
+
+@dfs_nil = (* (graph (bu (bv (visited out)))))
+  & graph ~ *
+  & bu ~ *
+  & @mem ~ (visited (bv out))
+
+@dfs_cons = (* ((cur tail) (graph (bu (bv (visited out))))))
+  & graph ~ {g_scan g_next}
+  & bu ~ {u_scan u_next}
+  & bv ~ {v_scan v_next}
+  & @scan ~ (g_scan (cur (u_scan (v_scan (tail (visited r))))))
+  & r ~ (stack2 visited2)
+  & @dfs ~ (stack2 (g_next (u_next (v_next (visited2 out)))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cur (bu (bv (stack (visited out))))))) pl) (cur (bu (bv (stack (visited out))))))
+
+@scan_nil = (* (cur (bu (bv (stack (visited out))))))
+  & cur ~ *
+  & bu ~ *
+  & bv ~ *
+  & out ~ (stack visited)
+
+@scan_cons = (* ((edge tail) (cur (bu (bv (stack (visited out)))))))
+  & edge ~ (a b)
+  & cur ~ {c_edge c_next}
+  & bu ~ {u_edge u_next}
+  & bv ~ {v_edge v_next}
+  & @edgeproc ~ (a (b (c_edge (u_edge (v_edge (stack (visited r)))))))
+  & r ~ (s2 v2)
+  & @scan ~ (tail (c_next (u_next (v_next (s2 (v2 out))))))
+
+@edgeproc = (a (b (cur (bu (bv (stack (visited out)))))))
+  & a ~ {at ap}
+  & at ~ {a1 a2}
+  & b ~ {bt bp}
+  & bt ~ {b1 b2}
+  & bu ~ {ut uu}
+  & ut ~ {u1 u2}
+  & uu ~ *
+  & bv ~ {vt vv}
+  & vt ~ {v1 v2}
+  & vv ~ *
+  & a1 ~ $([=] $(u1 x))
+  & b1 ~ $([=] $(v1 y))
+  & a2 ~ $([=] $(v2 z))
+  & b2 ~ $([=] $(u2 w))
+  & x ~ $([*] $(y p))
+  & z ~ $([*] $(w q))
+  & p ~ $([+] $(q m))
+  & m ~ ?((@edge_nonmatch @edge_match) (ap (bp (cur (stack (visited out))))))
+
+@edge_match = (* (a (b (cur (stack (visited out))))))
+  & a ~ *
+  & b ~ *
+  & cur ~ *
+  & out ~ (stack visited)
+
+@edge_nonmatch = (a (b (cur (stack (visited out)))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & cur ~ {c1 c2}
+  & @try ~ (a1 (b1 (c1 (stack (visited r)))))
+  & r ~ (s v)
+  & @try ~ (b2 (a2 (c2 (s (v out)))))
+
+@try = (endpoint (neighbor (cur (stack (visited out)))))
+  & endpoint ~ $([=] $(cur eq))
+  & eq ~ ?((@try_no @try_yes) (neighbor (stack (visited out))))
+
+@try_no = (neighbor (stack (visited out)))
+  & neighbor ~ *
+  & out ~ (stack visited)
+
+@try_yes = (* (neighbor (stack (visited out))))
+  & neighbor ~ {n_mem n_after}
+  & visited ~ {v_mem v_after}
+  & @mem ~ (v_mem (n_mem found))
+  & found ~ ?((@try_add @try_seen) (n_after (stack (v_after out))))
+
+@try_add = (n (stack (visited out)))
+  & n ~ {n_stack n_visit}
+  & out ~ ((1 (n_stack stack)) (1 (n_visit visited)))
+
+@try_seen = (* (n (stack (visited out))))
+  & n ~ *
+  & out ~ (stack visited)

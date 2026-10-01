@@ -1,0 +1,45 @@
+@prog = ((?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil @mk_succ) (i2_q308 tail_q308)) ({head_q308 $([+1] i2_q308)} (1 (head_q308 tail_q308))))) (i2_q302 tail_q302)) ({head_q302 $([+1] i2_q302)} (1 (head_q302 tail_q302))))) (i2_q297 tail_q297)) ({head_q297 $([+1] i2_q297)} (1 (head_q297 tail_q297))))) (i2_q293 tail_q293)) ({head_q293 $([+1] i2_q293)} (1 (head_q293 tail_q293))))) (i2_q290 tail_q290)) ({head_q290 $([+1] i2_q290)} (1 (head_q290 tail_q290))))) (0 labels)) (?((@edges_nil @edges_cons) (p_q276 (labels out))) p_q276)) out)
+
+@mk_nil = (* (0 *))
+
+@mk_succ = (?((@mk_nil @mk_succ) (i2 tail)) ({head $([+1] i2)} (1 (head tail))))
+
+@edges_nil = (* ((?((@count_nil @count_cons) (p_q278 (0 (0 out)))) p_q278) out))
+
+@edges_cons = (* (((u_q279 v_q279) (?((@edges_nil @edges_cons) (p_q280 (labels2 out))) p_q280)) ((?((@p2_nil @p2_cons) (p_i6_q279 (u_q279 (v_q279 ({$([=] $(bc_q279 ?((@merge_diff @merge_same) (lsm_q279 (lsd_q279 (ar_q279 (br_q279 labels2))))))) ar_q279} ({bc_q279 br_q279} {lsm_q279 lsd_q279})))))) p_i6_q279) out)))
+
+@merge_diff = (* ((?((@rep_nil @rep_cons) (p_q281 (b (a out)))) p_q281) (a (b out))))
+
+@merge_same = (* (out (* (* (* out)))))
+
+@p2_nil = (* (* (* (0 (0 (0 *))))))
+
+@p2_cons = (* ((h t) (?((@p2_at @p2_more) (h (t (j out)))) (j out))))
+
+@p2_at = ({a hc} ((?((@lk_nil @lk_cons) (p_q282 (jm (b tail)))) p_q282) ($([:-1] jm) (a (b (1 (hc tail)))))))
+
+@p2_more = (ip (h ((?((@p2_nil @p2_cons) (p_q283 (ip (jm (a (b tail)))))) p_q283) ($([:-1] jm) (a (b (1 (h tail))))))))
+
+@lk_nil = (* (* (0 (0 *))))
+
+@lk_cons = (* ((h t) (?((@lk_at @lk_more) (h (t out))) out)))
+
+@lk_at = ({v h2} (t (v (1 (h2 t)))))
+
+@lk_more = (pred (h ((?((@lk_nil @lk_cons) (p_q284 (pred (v rest)))) p_q284) (v (1 (h rest))))))
+
+@rep_nil = (* (* (* (0 *))))
+
+@rep_cons = (* (({$([=] $(oc ?((@rep_no @rep_yes) (hkeep (t (oldr (newr (newc out)))))))) hkeep} t) ({oc oldr} ({newr newc} out))))
+
+@rep_no = (h ((?((@rep_nil @rep_cons) (p_q285 (old (newr rest)))) p_q285) (old (newr (* (1 (h rest)))))))
+
+@rep_yes = (* (* ((?((@rep_nil @rep_cons) (p_q286 (old (newr rest)))) p_q286) (old (newr (newc (1 (newc rest))))))))
+
+@count_nil = (* (* (out out)))
+
+@count_cons = (* (($([=] $(ixc ?((@count_no @count_yes) (t (ixnext (acc out)))))) t) ({ixc $([+1] ixnext)} (acc out))))
+
+@count_no = ((?((@count_nil @count_cons) (p_q287 (idx (acc out)))) p_q287) (idx (acc out)))
+
+@count_yes = (* ((?((@count_nil (* (($([=] $(ixc_q314 ?((@count_no @count_yes) (t_q314 (ixnext_q314 (acc_q314 out_q314)))))) t_q314) ({ixc_q314 $([+1] ixnext_q314)} (acc_q314 out_q314))))) (p_q288 (idx (acc2 out)))) p_q288) (idx ($([+1] acc2) out))))

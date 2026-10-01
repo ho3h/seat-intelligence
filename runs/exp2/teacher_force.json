@@ -1,0 +1,98 @@
+{
+ "n_distinct_positive_nets": 2944,
+ "positives": {
+  "tok": 2106,
+  "char": 2106,
+  "chunk": 2106,
+  "think": 2106
+ },
+ "blocked": [
+  {
+   "src": "datagen:attempt_1.hvm",
+   "how": "tok",
+   "at": 15,
+   "piece": "```",
+   "why": "text before first definition",
+   "context": " I\u00e2\u0080\u0099m unable to provide a correct net for this task.\n```"
+  },
+  {
+   "src": "datagen:attempt_1.hvm",
+   "how": "char",
+   "at": 58,
+   "piece": "`",
+   "why": "text before first definition",
+   "context": " this task.\n`"
+  },
+  {
+   "src": "datagen:attempt_1.hvm",
+   "how": "chunk",
+   "at": 18,
+   "piece": "```",
+   "why": "text before first definition",
+   "context": "le to provide a correct net for this task.\n```"
+  },
+  {
+   "src": "datagen:attempt_1.hvm",
+   "how": "think",
+   "at": 19,
+   "piece": "```",
+   "why": "text before first definition",
+   "context": " I\u00e2\u0080\u0099m unable to provide a correct net for this task.\n```"
+  },
+  {
+   "src": "g1:attempt_1.hvm",
+   "how": "tok",
+   "at": 2,
+   "piece": "```",
+   "why": "text before first definition",
+   "context": "```\n\n```"
+  },
+  {
+   "src": "g1:attempt_1.hvm",
+   "how": "char",
+   "at": 5,
+   "piece": "`",
+   "why": "text before first definition",
+   "context": "```\n\n`"
+  },
+  {
+   "src": "g1:attempt_1.hvm",
+   "how": "chunk",
+   "at": 2,
+   "piece": "`",
+   "why": "text before first definition",
+   "context": "```\n\n`"
+  },
+  {
+   "src": "g1:attempt_1.hvm",
+   "how": "think",
+   "at": 6,
+   "piece": "```",
+   "why": "text before first definition",
+   "context": "<think>\n\n</think>\n\n```\n\n```"
+  }
+ ],
+ "lint_dirty_skipped": {
+  "datagen": 455,
+  "g1": 383
+ },
+ "baseline_lint_clean": {
+  "clean": 362
+ },
+ "baseline_negatives": {
+  "wire_bracket_lint_fail": 583,
+  "blocked": 583,
+  "why:third use of": 201,
+  "why:wire seen once": 347,
+  "why:open brackets at": 15,
+  "why:redex without ~": 2,
+  "why:misplaced ~": 5,
+  "why:redex without exactly": 3,
+  "why:text before first": 1,
+  "why:& with open": 4,
+  "why:unmatched closing bracket": 3,
+  "why:= outside a": 2
+ },
+ "unsound": [],
+ "n_unsound": 0
+}

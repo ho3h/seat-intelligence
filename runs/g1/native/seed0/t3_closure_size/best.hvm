@@ -1,0 +1,89 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & @srcs ~ (n (0 (edges (0 out))))
+
+@srcs = (remaining (i (edges (acc out))))
+  & remaining ~ ?((@src_nil @src_succ) (i (edges (acc out))))
+
+@src_nil = (i (edges (acc out)))
+  & i ~ *
+  & edges ~ *
+  & acc ~ out
+
+@src_succ = (prev (i (edges (acc out))))
+  & i ~ {i_pair i_next}
+  & i_pair ~ {i_stack i_visit}
+  & edges ~ {ed_dfs ed_next}
+  & @dfs ~ ((1 (i_stack (0 *))) (ed_dfs ((1 (i_visit (0 *))) (0 cnt))))
+  & cnt ~ $([+] $(acc acc2))
+  & i_next ~ $([+1] i2)
+  & @srcs ~ (prev (i2 (ed_next (acc2 out))))
+
+@dfs = (stack (edges (visited (count out))))
+  & stack ~ (?( (@dfs_nil @dfs_cons) (pl (edges (visited (count out)))) ) pl)
+
+@dfs_nil = (pl (edges (visited (count out))))
+  & pl ~ *
+  & edges ~ *
+  & visited ~ *
+  & count ~ out
+
+@dfs_cons = (* ((x rest) (edges (visited (count out)))))
+  & edges ~ {ed_scan ed_rec}
+  & @scan ~ (ed_scan (x (rest (visited (count res)))))
+  & res ~ (rest2 (vis2 count2))
+  & @dfs ~ (rest2 (ed_rec (vis2 (count2 out))))
+
+@scan = (edges (x (stack (visited (count result)))))
+  & edges ~ (?( (@scan_nil @scan_cons) (pl (x (stack (visited (count result))))) ) pl)
+
+@scan_nil = (pl (x (stack (visited (count result)))))
+  & pl ~ *
+  & x ~ *
+  & result ~ (stack (visited count))
+
+@scan_cons = (* ((edge tail) (x (stack (visited (count result))))))
+  & edge ~ (u v)
+  & x ~ {x_cmp x_next}
+  & u ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@scan_no @scan_yes) (tail (v (x_next (stack (visited (count result)))))))
+
+@scan_no = (tail (v (x (stack (visited (count result))))))
+  & v ~ *
+  & @scan ~ (tail (x (stack (visited (count result)))))
+
+@scan_yes = (* (tail (v (x (stack (visited (count result)))))))
+  & visited ~ {vis_lookup vis_keep}
+  & v ~ {v_lookup v_keep}
+  & @mem ~ (vis_lookup (v_lookup present))
+  & present ~ ?((@scan_new @scan_seen) (tail (v_keep (x (stack (vis_keep (count result)))))))
+
+@scan_new = (tail (v (x (stack (visited (count result))))))
+  & v ~ {v_stack v_visited}
+  & count ~ $([+1] count2)
+  & @scan ~ (tail (x ((1 (v_stack stack)) ((1 (v_visited visited)) (count2 result)))))
+
+@scan_seen = (* (tail (v (x (stack (visited (count result)))))))
+  & v ~ *
+  & @scan ~ (tail (x (stack (visited (count result)))))
+
+@mem = (list (target out))
+  & list ~ (?( (@mem_nil @mem_cons) (pl (target out)) ) pl)
+
+@mem_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (target out)))
+  & target ~ {target_cmp target_next}
+  & h ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (target_next out)))
+
+@mem_no = (t (target out))
+  & @mem ~ (t (target out))
+
+@mem_yes = (* (t (target out)))
+  & t ~ *
+  & target ~ *
+  & out ~ 1

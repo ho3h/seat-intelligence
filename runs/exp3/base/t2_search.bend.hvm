@@ -1,0 +1,15 @@
+@prog = ((a b) c)
+  & @search ~ (a (b (0 c)))
+
+@search = ((@search__C3 a) a)
+
+@search__C0 = (b ($([+0x0000001] c) (a d)))
+  & @search ~ (a (b (c d)))
+
+@search__C1 = ({a b} (c ($([>] $(a ?((@search__C0 (* (* (* (* 16777215))))) (b (c d))))) d)))
+
+@search__C2 = (* ({$([=] $(a ?((@search__C1 (* (* (b (* (* b)))))) (c (d (e (f g))))))) e} (f ({a c} (d g)))))
+
+@search__C3 = (?(((* (* 16777215)) @search__C2) a) a)
+
+

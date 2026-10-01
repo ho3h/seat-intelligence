@@ -1,0 +1,111 @@
+// Initialize labels to 0..n-1, then relax every edge for n rounds.
+@prog = ((n edges) out)
+  & n ~ {n_init n_round}
+  & @init ~ (n_init ((0 *) labs))
+  & @round ~ (n_round (edges (labs out)))
+
+@init = (n (acc out))
+  & n ~ ?((@init_zero @init_succ) (acc out))
+
+@init_zero = (a a)
+
+@init_succ = (k (acc out))
+  & k ~ {k1 k2}
+  & @init ~ (k1 ((1 (k2 acc)) out))
+
+// Read the value at index i in a list.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (i 0))
+  & i ~ *
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_next = (k (h (t out)))
+  & h ~ *
+  & @get ~ (t (k out))
+
+// Replace the value at index i with v.
+@set = ((?((@set_nil @set_cons) (pl (i (v out)))) pl) (i (v out)))
+
+@set_nil = (* (i (* (0 *))))
+  & i ~ *
+
+@set_cons = (* ((h t) (i (v out))))
+  & i ~ ?((@set_here @set_next) (h (t (v out))))
+
+@set_here = (h (t (v out)))
+  & h ~ *
+  & out ~ (1 (v t))
+
+@set_next = (k (h (t (v out))))
+  & @set ~ (t (k (v mid)))
+  & out ~ (1 (h mid))
+
+// Lower the larger endpoint label to the smaller endpoint label.
+@relax = (u (v (labs out)))
+  & u ~ {uget uset}
+  & v ~ {vget vset}
+  & labs ~ {l1 lr}
+  & lr ~ {l2 lset}
+  & @get ~ (l1 (uget lu))
+  & @get ~ (l2 (vget lv))
+  & lu ~ {luc lukeep}
+  & lv ~ {lvc lvkeep}
+  & luc ~ $([<] $(lvc z))
+  & z ~ ?((@relax_ge @relax_lt) (lukeep (lvkeep (uset (vset (lset out)))))
+
+@relax_ge = (lu (lv (u (v (ls out)))))
+  & lu ~ *
+  & v ~ *
+  & @set ~ (ls (u (lv out)))
+
+@relax_lt = (* (lu (lv (u (v (ls out))))))
+  & lv ~ *
+  & u ~ *
+  & @set ~ (ls (v (lu out)))
+
+// Sweep the edges, updating labels along each edge.
+@sweep = ((?((@sweep_nil @sweep_cons) (pl (labs out))) pl) (labs out))
+
+@sweep_nil = (* (labs labs))
+
+@sweep_cons = (* (((u v) tail) (labs out)))
+  & @relax ~ (u (v (labs mid)))
+  & @sweep ~ (tail (mid out))
+
+// Run n sweeps, then count labels equal to their vertex indices.
+@round = (n (edges (labs out)))
+  & n ~ ?((@round_zero @round_succ) (edges (labs out)))
+
+@round_zero = (* (labs out))
+  & @count ~ (labs (0 (0 out)))
+
+@round_succ = (k (edges (labs out)))
+  & edges ~ {edges1 edges2}
+  & @sweep ~ (edges1 (labs mid))
+  & @round ~ (k (edges2 (mid out)))
+
+@count = ((?((@count_nil @count_cons) (pl (i (acc out)))) pl) (i (acc out)))
+
+@count_nil = (* (i (acc acc)))
+  & i ~ *
+
+@count_cons = (* ((h t) (i (acc out))))
+  & i ~ {it ir}
+  & h ~ $([=] $(it z))
+  & z ~ ?((@count_no @count_yes) (ir (acc (t out))))
+
+@count_no = (i (acc (t out)))
+  & i ~ $([+1] i2)
+  & @count ~ (t (i2 (acc out)))
+
+@count_yes = (* (i (acc (t out))))
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (i2 (acc2 out)))

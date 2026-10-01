@@ -1,0 +1,29 @@
+// Stable partition: elements below p go to lo; the rest go to hi.
+@prog = (input out)
+  & input ~ (p xs)
+  & @part ~ (p (xs out))
+
+@part = (p (xs out))
+  & xs ~ (?( (@part_nil @part_cons) (body (p out))) body)
+
+@part_nil = (body (p out))
+  & body ~ *
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (ignored (body (p out)))
+  & ignored ~ *
+  & body ~ (h t)
+  & p ~ {p_rec p_cmp}
+  & h ~ {h_cmp h_keep}
+  & @part ~ (p_rec (t res))
+  & res ~ (lo hi)
+  & h_cmp ~ $([<] $(p_cmp cmp))
+  & cmp ~ ?((@part_ge @part_lt) (h_keep (lo (hi out))))
+
+@part_ge = (h (lo (hi out)))
+  & out ~ (lo (1 (h hi)))
+
+@part_lt = (ignored (h (lo (hi out))))
+  & ignored ~ *
+  & out ~ ((1 (h lo)) hi)

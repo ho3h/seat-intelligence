@@ -1,0 +1,17 @@
+@prog = (l out)
+  & @sum ~ (l (0 out))
+
+@sum = (lv1 (acc out))
+  & @sum_cons_lw ~ (lv1 (acc out))
+
+@sum_nil = (* (a a))
+
+@sum_cons = (* (($([+] $(acc acc2)) t) (acc out)))
+  & @sum_cons_lw ~ (t (acc2 out))
+
+@sum_cons_lw = (ls20 (q10 q11))
+  & ls20 ~ (g17 (e15 (g18 (e16 tk19))))
+  & g17 ~ ?((@sum_nil @sum_cons_la) ((e15 (q13 q14)) (q10 q11)))
+  & g18 ~ ?((@sum_nil @sum_cons) ((e16 tk19) (q13 q14)))
+
+@sum_cons_la = (* (($([+] $(acc acc2)) (acc2 out)) (acc out)))

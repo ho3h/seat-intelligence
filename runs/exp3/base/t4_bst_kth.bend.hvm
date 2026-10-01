@@ -1,0 +1,22 @@
+@inorder = (a ((@inorder__C6 (a b)) b))
+
+@inorder__C0 = (* (b ($([:-0x0000001] a) c)))
+  & @inorder ~ (a (b c))
+
+@inorder__C1 = (* (a (* (* (0 (1 a))))))
+
+@inorder__C2 = (a (b ({$([=0x0000000] ?((@inorder__C0 @inorder__C1) (a (b (c d))))) c} (* (* d)))))
+
+@inorder__C3 = (* (* (* (a (b (c (a (b c))))))))
+
+@inorder__C4 = (a (a (0 16777215)))
+
+@inorder__C5 = (* (b (c (d (a h)))))
+  & @inorder ~ (a (b (e ({$([=0x0000001] ?((@inorder__C2 @inorder__C3) (c (d (e (f (g h))))))) f} g))))
+
+@inorder__C6 = (?((@inorder__C4 @inorder__C5) a) a)
+
+@prog = ((a b) c)
+  & @inorder ~ (a (b (* (* c))))
+
+

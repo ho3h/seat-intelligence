@@ -1,0 +1,89 @@
+// Count the list while rebuilding it, producing both its length and a copy.
+@prog = (input out)
+  & @len ~ (input (n full))
+  & @scan ~ (full (0 (n out)))
+
+@len = ((?((@len_nil @len_cons) (pl (out listout))) pl) (out listout))
+
+@len_nil = (pl (out listout))
+  & pl ~ *
+  & out ~ 0
+  & listout ~ (0 *)
+
+@len_cons = (* ((h t) (out listout)))
+  & @len ~ (t (k tailout))
+  & k ~ $([+1] out)
+  & listout ~ (1 (h tailout))
+
+// Scan each index. For each one, walk its pointers for at most the list length.
+@scan = (full (i (n out)))
+  & i ~ {ic ir}
+  & n ~ {nc nr}
+  & ic ~ $([<] $(nc z))
+  & z ~ ?((@scan_end @scan_step) (full (ir (nr out))))
+
+@scan_end = (full (i (n out)))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 0
+
+@scan_step = (* (full (i (n out))))
+  & full ~ {fscan fwalk}
+  & i ~ {iwalk ibase}
+  & n ~ {nscan nwalk}
+  & ibase ~ $([+1] inext)
+  & @walk ~ (nwalk (fwalk (iwalk cyc)))
+  & cyc ~ ?((@scan_no @scan_yes) (fscan (inext (nscan out))))
+
+@scan_no = (full (i (n out)))
+  & @scan ~ (full (i (n out)))
+
+@scan_yes = (* (full (i (n out))))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 1
+
+// A zero remaining-step count means no root was reached: a cycle exists.
+@walk = (?((@walk_zero @walk_succ) (pl (x out))) (pl (x out)))
+
+@walk_zero = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 1
+
+@walk_succ = (rem (pl (x out)))
+  & pl ~ {pl_lookup pl_next}
+  & x ~ {x_lookup x_next}
+  & @at ~ (pl_lookup (x_lookup v))
+  & v ~ $([=] $(x_next z))
+  & z ~ ?((@walk_more @walk_root) (pl_next (x_next (rem out))))
+
+@walk_more = (pl (x (rem out)))
+  & @walk ~ (rem (pl (x out)))
+
+@walk_root = (* (pl (x (rem out))))
+  & pl ~ *
+  & x ~ *
+  & rem ~ *
+  & out ~ 0
+
+// Look up an index in a list.
+@at = ((?((@at_nil @at_cons) (pl (idx val))) pl) (idx val))
+
+@at_nil = (pl (idx val))
+  & pl ~ *
+  & idx ~ *
+  & val ~ 0
+
+@at_cons = (* ((h t) (idx val)))
+  & idx ~ ?((@at_zero @at_more) (h (t val)))
+
+@at_zero = (h (t val))
+  & h ~ val
+  & t ~ *
+
+@at_more = (idx (h (t val)))
+  & h ~ *
+  & @at ~ (t (idx val))

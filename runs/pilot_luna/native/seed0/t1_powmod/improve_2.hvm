@@ -1,0 +1,38 @@
+// Binary modular exponentiation.
+
+@prog = ((b (e m)) out)
+  & m ~ {m_b {m_a m_loop}}
+  & b ~ $([%] $(m_b b0))
+  & 1 ~ $([%] $(m_a acc0))
+  & @pow ~ (e (b0 (m_loop (acc0 out))))
+
+@pow = (e (b (m (acc out))))
+  & e ~ ?((@zero @more) (b (m (acc out))))
+
+@zero = (b (m (acc out)))
+  & b ~ *
+  & m ~ *
+  & acc ~ out
+
+@more = (em1 (b (m (acc out))))
+  & em1 ~ $([+1] e)
+  & e ~ {e_div e_mod}
+  & e_div ~ $([>>1] half)
+  & e_mod ~ $([&1] parity)
+  & b ~ {b1 b_rest}
+  & b_rest ~ {b2 b3}
+  & b1 ~ $([*] $(b2 square_raw))
+  & square_raw ~ $([%] $(m_sq square))
+  & m ~ {m_rest {m_sq m_acc}}
+  & acc ~ {acc_mul acc_keep}
+  & acc_mul ~ $([*] $(b3 acc_raw))
+  & acc_raw ~ $([%] $(m_acc product))
+  & parity ~ ?((@even @odd) (acc_keep (product (square (half (m_rest out))))))
+
+@even = (acc_keep (product (square (half (m out)))))
+  & product ~ *
+  & @pow ~ (half (square (m (acc_keep out))))
+
+@odd = (* (acc_keep (product (square (half (m out))))))
+  & acc_keep ~ *
+  & @pow ~ (half (square (m (product out))))

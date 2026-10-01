@@ -1,0 +1,60 @@
+@prog = (input out)
+  & @sl ~ (input res)
+  & res ~ (sorted len)
+  & len ~ $([/] $(2 idx))
+  & @sel ~ (sorted (idx out))
+
+@sl = (lv1 out)
+  & @sl_cons_lw ~ (lv1 out)
+
+@sl_nil = (* out)
+  & out ~ ((0 *) 0)
+
+@sl_cons = (* ((head tail) (sorted2 len1)))
+  & @ins ~ (head (sorted sorted2))
+  & @sl_cons_lw ~ (tail (sorted $([+1] len1)))
+
+@ins = (x ((?((@ins_nil @ins_cons) (payload (x out))) payload) out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((head tail) (x out)))
+  & x ~ {xcmp xctx}
+  & head ~ {hcmp hctx}
+  & xcmp ~ $([<] $(hcmp cmp))
+  & cmp ~ ?((@ins_ge @ins_lt) (hctx (tail (xctx out))))
+
+@ins_ge = (head (tail (x out)))
+  & @ins ~ (x (tail rec))
+  & out ~ (1 (head rec))
+
+@ins_lt = (* (head (tail (x out))))
+  & out ~ (1 (x (1 (head tail))))
+
+@sel = ((?((@sel_nil @sel_cons) (payload (idx out))) payload) (idx out))
+
+@sel_nil = (* (* out))
+  & out ~ 0
+
+@sel_cons = (* ((head tail) (?((@sel_here @sel_next) (head (tail out))) out)))
+
+@sel_here = (head (* out))
+  & out ~ head
+
+@sel_next = (idx (* (tail out)))
+  & @sel ~ (tail (idx out))
+
+@sl_cons_lw = (ls40 q8)
+  & ls40 ~ (g31 (e23 (g32 (e24 (g33 (e25 (g34 (e26 (g35 (e27 (g36 (e28 (g37 (e29 (g38 (e30 tk39))))))))))))))))
+  & g31 ~ ?((@sl_nil @sl_cons_la) ((e23 q10) q8))
+  & g32 ~ ?((@sl_nil @sl_cons_la) ((e24 q12) q10))
+  & g33 ~ ?((@sl_nil @sl_cons_la) ((e25 q14) q12))
+  & g34 ~ ?((@sl_nil @sl_cons_la) ((e26 q16) q14))
+  & g35 ~ ?((@sl_nil @sl_cons_la) ((e27 q18) q16))
+  & g36 ~ ?((@sl_nil @sl_cons_la) ((e28 q20) q18))
+  & g37 ~ ?((@sl_nil @sl_cons_la) ((e29 q22) q20))
+  & g38 ~ ?((@sl_nil @sl_cons) ((e30 tk39) q22))
+
+@sl_cons_la = (* ((head (sorted $([+1] len1))) (sorted2 len1)))
+  & @ins ~ (head (sorted sorted2))

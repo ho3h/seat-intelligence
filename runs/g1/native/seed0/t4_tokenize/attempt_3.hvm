@@ -1,0 +1,67 @@
+@prog = (input output)
+  & @tok ~ (input (0 (0 output)))
+
+@tok = ((?((@tok_nil @tok_cons) (pl (flag (val out)))) pl) (flag (val out)))
+
+@tok_nil = (* (flag (val out)))
+  & flag ~ ?((@nil_no @nil_yes) (val out))
+
+@nil_no = (* (0 *))
+
+@nil_yes = (* (val (1 ((0 val) (0 *)))))
+
+@tok_cons = (* ((h t) (flag (val out))))
+  & h ~ {hc hr}
+  & hc ~ $([>] $(47 gt))
+  & gt ~ ?((@not_digit @digit_check_hi) (hr (t (flag (val out)))))
+
+@digit_check_hi = (* (h (t (flag (val out)))))
+  & h ~ {hc hs}
+  & hc ~ $([<] $(58 lt))
+  & lt ~ ?((@not_digit @digit_yes) (hs (t (flag (val out)))))
+
+@digit_yes = (* (h (t (flag (val out)))))
+  & h ~ $([-] $(48 digit))
+  & val ~ $([*] $(10 ten))
+  & ten ~ $([+] $(digit newval))
+  & flag ~ *
+  & @tok ~ (t (1 (newval out)))
+
+@not_digit = (h (t (flag (val out))))
+  & h ~ {hc hs}
+  & hc ~ $([=] $(32 eq))
+  & eq ~ ?((@not_space @space_yes) (hs (t (flag (val out)))))
+
+@space_yes = (* (h (t (flag (val out)))))
+  & @space_decide ~ (flag (h (t (val out))))
+
+@space_decide = ((?((@space_no_num @space_yes_num) (h (t (val out)))) flag) (h (t (val out))))
+
+@space_no_num = (h (t (val out)))
+  & h ~ *
+  & val ~ *
+  & @tok ~ (t (0 (0 out)))
+
+@space_yes_num = (* (h (t (val (1 ((0 val) rest))))))
+  & h ~ *
+  & @tok ~ (t (0 (0 rest)))
+
+@not_space = (h (t (flag (val out))))
+  & h ~ {hc hs}
+  & hc ~ $([<] $(42 lt))
+  & lt ~ ?((@op_case @paren_case) (hs (t (flag (val out)))))
+
+@op_case = (h (t (flag (val out))))
+  & @emit ~ (flag (1 (h (t (val out)))))
+
+@paren_case = (* (h (t (flag (val out)))))
+  & @emit ~ (flag (2 (h (t (val out)))))
+
+@emit = ((?((@emit_no @emit_yes) (kind (h (t (val out))))) flag) (kind (h (t (val out)))))
+
+@emit_no = (kind (h (t (val (1 ((kind h) rest))))))
+  & val ~ *
+  & @tok ~ (t (0 (0 rest)))
+
+@emit_yes = (* (kind (h (t (val (1 ((0 val) (1 ((kind h) rest)))))))))
+  & @tok ~ (t (0 (0 rest)))

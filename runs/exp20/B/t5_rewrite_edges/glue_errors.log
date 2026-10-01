@@ -1,0 +1,2 @@
+--- 05:38:23
+build.py:62: wire `r` (depth, as_depth(r), made at build.py:58) is used a second time (recipe select_sorted `sel` port `L`); it was already used at build.py:59 (recipe reduce_by_key `rk` (set1) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.

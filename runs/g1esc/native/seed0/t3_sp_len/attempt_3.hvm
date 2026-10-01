@@ -1,0 +1,144 @@
+@prog = (n (s (t edges)))
+  & n ~ {n1 n2}
+  & @initdist ~ (n1 s dist0)
+  & @bf ~ (n2 edges dist0 t out)
+
+@initdist = (n s out)
+  & @initdist_rec ~ (0 n s out)
+
+@initdist_rec = (i n s out)
+  & i ~ {i_cmp i_ctx}
+  & n ~ {n_cmp n_ctx}
+  & i_cmp ~ $([<] $(n_cmp lt))
+  & lt ~ ?((@id_nil @id_cons) (i_ctx n_ctx s out))
+
+@id_nil = (* (i n s out))
+  & i ~ *
+  & n ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@id_cons = (* (i n s out))
+  & i ~ {i_rec i_val}
+  & i_rec ~ $([+1] i1)
+  & @initdist_rec ~ (i1 n s tail)
+  & @make_val ~ (i_val s val)
+  & out ~ (1 (val tail))
+
+@make_val = (i s out)
+  & i ~ $([=] $(s eq))
+  & eq ~ ?((@mv_no @mv_yes) out)
+
+@mv_yes = (* out)
+  & out ~ 0
+
+@mv_no = (* out)
+  & out ~ 16777215
+
+@bf = (n edges dist t out)
+  & @repeat ~ (n edges dist t out)
+
+@repeat = (k edges dist t out)
+  & k ~ ?((@rep_zero @rep_succ) (edges dist t out))
+
+@rep_zero = (* (edges dist t out))
+  & edges ~ *
+  & @nth ~ (dist t (val final_dist))
+  & final_dist ~ *
+  & out ~ val
+
+@rep_succ = (k_minus (edges dist t out))
+  & edges ~ {edges_use edges_next}
+  & @process_edges ~ (edges_use dist dist2)
+  & @repeat ~ (k_minus edges_next dist2 t out)
+
+@process_edges = (edges dist out)
+  & @pe_aux ~ (edges dist out)
+
+@pe_aux = ((?((@pe_nil @pe_cons) (payload (dist out))) payload) (dist out))
+
+@pe_nil = (* (dist out))
+  & out ~ dist
+
+@pe_cons = (* ((edge tail) (dist out)))
+  & @process_edge ~ (edge dist dist2)
+  & @process_edges ~ (tail dist2 out)
+
+@process_edge = ((u v) dist out)
+  & @nth ~ (dist u (du dist2))
+  & @nth ~ (dist2 v (dv dist3))
+  & du ~ {du1 du2}
+  & dv ~ {dv1 dv2}
+  & @safe_inc ~ (du1 cand_dv)
+  & @min ~ (dv1 cand_dv new_dv)
+  & @set ~ (dist3 v new_dv dist4)
+  & @safe_inc ~ (dv2 cand_du)
+  & @min ~ (du2 cand_du new_du)
+  & @set ~ (dist4 u new_du out)
+
+@nth = (list index out)
+  & @nth_go ~ (list index out)
+
+@nth_go = ((?((@nth_nil @nth_cons) (payload (index out))) payload) (index out))
+
+@nth_nil = (* (index out))
+  & index ~ *
+  & out ~ (16777215 (0 *))
+
+@nth_cons = (* ((head tail) (index out)))
+  & index ~ ?((@nth_zero @nth_succ) (head tail out))
+
+@nth_zero = (head tail out)
+  & head ~ {head_val head_list}
+  & out ~ (head_val (1 (head_list tail)))
+
+@nth_succ = (index_minus (head tail out))
+  & @nth ~ (tail index_minus (value newtail))
+  & out ~ (value (1 (head newtail)))
+
+@set = (list index value out)
+  & @set_go ~ (list index value out)
+
+@set_go = ((?((@set_nil @set_cons) (payload (index value out))) payload) (index value out))
+
+@set_nil = (* (index value out))
+  & index ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (index value out)))
+  & index ~ ?((@set_zero @set_succ) (head tail value out))
+
+@set_zero = (head tail value out)
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@set_succ = (index_minus (head tail value out))
+  & @set ~ (tail index_minus value newtail)
+  & out ~ (1 (head newtail))
+
+@safe_inc = (x out)
+  & x ~ {x1 x2}
+  & x1 ~ $([<] $(16777215 lt))
+  & lt ~ ?((@si_inf @si_inc) (x2 out))
+
+@si_inf = (* (x2 out))
+  & x2 ~ *
+  & out ~ 16777215
+
+@si_inc = (* (x2 out))
+  & x2 ~ $([+1] out)
+
+@min = (a b out)
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@min_yes @min_no) (a2 b2 out))
+
+@min_yes = (* (a2 b2 out))
+  & b2 ~ *
+  & out ~ a2
+
+@min_no = (* (a2 b2 out))
+  & a2 ~ *
+  & out ~ b2

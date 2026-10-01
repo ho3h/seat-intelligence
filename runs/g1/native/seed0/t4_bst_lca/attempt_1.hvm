@@ -1,0 +1,69 @@
+// Entry point
+@prog = (inp out)
+  & inp ~ (x (y t))
+  & @lca ~ (x (y (t out)))
+
+// Match the tree tag and carry x, y, payload, and output through the switch.
+@lca = (x (y ((?((@lca_leaf @lca_node) (x (y (p out)))) p) out))
+
+@lca_leaf = (x (y (p out)))
+  & x ~ *
+  & y ~ *
+  & p ~ *
+  & out ~ 0
+
+// The successor branch receives the decremented tag as its first argument.
+@lca_node = (* (x (y ((l (v r)) out))))
+  & x ~ {xt xs}
+  & v ~ {vt vs}
+  & xt ~ $([<] $(vt b))
+  & b ~ ?((@x_ge @x_lt) (xs (y (vs (l (r out)))))
+
+@x_ge = (x (y (v (l (r out)))))
+  & x ~ {xt xs}
+  & v ~ {vt vs}
+  & xt ~ $([>] $(vt b))
+  & b ~ ?((@x_notgt @x_gt) (xs (y (vs (l (r out)))))
+
+@x_lt = (* (xs (y (v (l (r out))))))
+  & y ~ {yt ys}
+  & v ~ {vt vs}
+  & yt ~ $([<] $(vt b))
+  & b ~ ?((@yl_no @yl_yes) (xs (ys (vs (l (r out)))))
+
+@yl_no = (xs (ys (v (l (r out)))))
+  & xs ~ *
+  & ys ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@yl_yes = (* (xs (ys (v (l (r out))))))
+  & v ~ *
+  & r ~ *
+  & @lca ~ (xs (ys (l out)))
+
+@x_notgt = (x (y (v (l (r out)))))
+  & x ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@x_gt = (* (x (y (v (l (r out))))))
+  & y ~ {yt ys}
+  & v ~ {vt vs}
+  & yt ~ $([>] $(vt b))
+  & b ~ ?((@yg_no @yg_yes) (x (ys (vs (l (r out)))))
+
+@yg_no = (x (ys (v (l (r out)))))
+  & x ~ *
+  & ys ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@yg_yes = (* (x (ys (v (l (r out))))))
+  & v ~ *
+  & l ~ *
+  & @lca ~ (x (ys (r out)))

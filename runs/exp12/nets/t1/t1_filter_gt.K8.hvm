@@ -1,0 +1,34 @@
+@prog = ((k xs) out)
+  & @filter_gt ~ (k (xs out))
+
+@filter_gt = (k (lv1 o))
+  & k ~ {ka kr}
+  & @filter_cons_lw ~ (lv1 (ka (kr o)))
+
+@filter_nil = (pl (ka (kr out)))
+  & pl ~ *
+  & ka ~ *
+  & kr ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (({$([>] $(ka ?((@filter_drop @filter_keep) (hk (ft out))))) hk} t) (ka ({q9 q10} out))))
+  & @filter_cons_lw ~ (t (q9 (q10 ft)))
+
+@filter_drop = (hk (ft ft))
+  & hk ~ *
+
+@filter_keep = (* (hk (ft out)))
+  & out ~ (1 (hk ft))
+
+@filter_cons_lw = (ls61 (q13 (q14 q15)))
+  & ls61 ~ (g52 (e44 (g53 (e45 (g54 (e46 (g55 (e47 (g56 (e48 (g57 (e49 (g58 (e50 (g59 (e51 tk60))))))))))))))))
+  & g52 ~ ?((@filter_nil @filter_cons_la) ((e44 (q17 (q18 q19))) (q13 (q14 q15))))
+  & g53 ~ ?((@filter_nil @filter_cons_la) ((e45 (q21 (q22 q23))) (q17 (q18 q19))))
+  & g54 ~ ?((@filter_nil @filter_cons_la) ((e46 (q25 (q26 q27))) (q21 (q22 q23))))
+  & g55 ~ ?((@filter_nil @filter_cons_la) ((e47 (q29 (q30 q31))) (q25 (q26 q27))))
+  & g56 ~ ?((@filter_nil @filter_cons_la) ((e48 (q33 (q34 q35))) (q29 (q30 q31))))
+  & g57 ~ ?((@filter_nil @filter_cons_la) ((e49 (q37 (q38 q39))) (q33 (q34 q35))))
+  & g58 ~ ?((@filter_nil @filter_cons_la) ((e50 (q41 (q42 q43))) (q37 (q38 q39))))
+  & g59 ~ ?((@filter_nil @filter_cons) ((e51 tk60) (q41 (q42 q43))))
+
+@filter_cons_la = (* (({$([>] $(ka ?((@filter_drop @filter_keep) (hk (ft out))))) hk} (q9 (q10 ft))) (ka ({q9 q10} out))))

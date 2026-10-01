@@ -1,0 +1,186 @@
+// Entry point: compute the original component count, then test vertices.
+@prog = (input out)
+  & input ~ (n edges)
+  & @solve ~ (n (edges out))
+
+@solve = (n (edges out))
+  & n ~ {n_a n_b}
+  & n_b ~ {n_c n_d}
+  & n_d ~ {n_e n_f}
+  & edges ~ {edges_a edges_b}
+  & @count ~ (n_a (edges_a (n_c base)))
+  & @cand ~ (n_e (n_f (edges_b (base out))))
+
+// Count components after omitting the given vertex.
+@count = (n (edges (omit out)))
+  & @cc_scan ~ (n (0 (edges (omit ((0 *) (0 out)))))
+
+@cc_scan = (rem (idx (edges (omit (vis (cnt out)))))
+  & rem ~ ?((@cc_done @cc_step) (idx (edges (omit (vis (cnt out))))))
+
+@cc_done = (idx (edges (omit (vis (cnt out)))))
+  & idx ~ *
+  & edges ~ *
+  & omit ~ *
+  & vis ~ *
+  & out ~ cnt
+
+@cc_step = (rem (idx (edges (omit (vis (cnt out)))))
+  & idx ~ {idx_cmp idx_keep}
+  & omit ~ {omit_cmp omit_keep}
+  & idx_cmp ~ $([=] $(omit_cmp z))
+  & z ~ ?((@cc_check @cc_skip) (rem (idx_keep (edges (omit_keep (vis (cnt out)))))))
+
+@cc_check = (rem (idx (edges (omit (vis (cnt out)))))
+  & idx ~ {idx_mem idx_keep}
+  & vis ~ {vis_mem vis_keep}
+  & @mem ~ (idx_mem (vis_mem found))
+  & found ~ ?((@cc_new @cc_seen) (rem (idx_keep (edges (omit (vis_keep (cnt out)))))))
+
+@cc_skip = (* (rem (idx (edges (omit (vis (cnt out)))))))
+  & @cc_advance ~ (rem (idx (edges (omit (vis (cnt out))))))
+
+@cc_seen = (* (rem (idx (edges (omit (vis (cnt out)))))))
+  & @cc_advance ~ (rem (idx (edges (omit (vis (cnt out))))))
+
+@cc_advance = (rem (idx (edges (omit (vis (cnt out)))))
+  & idx ~ $([+1] idx_next)
+  & @cc_scan ~ (rem (idx_next (edges (omit (vis (cnt out))))))
+
+@cc_new = (rem (idx (edges (omit (vis (cnt out)))))
+  & idx ~ {idx_front idx_rest}
+  & idx_rest ~ {idx_vis idx_next0}
+  & edges ~ {edges_bfs edges_scan}
+  & @bfs ~ (edges_bfs ((1 (idx_front (0 *))) ((1 (idx_vis vis)) vis_new)))
+  & idx_next0 ~ $([+1] idx_next)
+  & cnt ~ $([+1] cnt_next)
+  & @cc_scan ~ (rem (idx_next (edges_scan (omit (vis_new (cnt_next out)))))
+
+// Check membership in a list of numbers.
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (* (q out))
+  & q ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (q out)))
+  & q ~ {q_cmp q_rec}
+  & h ~ $([=] $(q_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (q_rec (t out)))
+
+@mem_no = (q (t out))
+  & @mem ~ (q (t out))
+
+@mem_yes = (* (q (t out)))
+  & q ~ *
+  & t ~ *
+  & out ~ 1
+
+// Add q to the frontier and visited list if it is not already visited.
+// The result is the pair (frontier, visited).
+@add = (q (front (vis out)))
+  & q ~ {q_mem q_keep}
+  & vis ~ {vis_mem vis_keep}
+  & @mem ~ (q_mem (vis_mem found))
+  & found ~ ?((@add_new @add_old) (q_keep (front (vis_keep out))))
+
+@add_new = (q (front (vis out)))
+  & q ~ {q_front q_vis}
+  & out ~ ((1 (q_front front)) (1 (q_vis vis)))
+
+@add_old = (* (q (front (vis out))))
+  & q ~ *
+  & out ~ (front vis)
+
+// Breadth-first search, returning the visited list.
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (edges (vis out)))) pl) (edges (vis out)))
+
+@bfs_nil = (* (edges (vis out)))
+  & edges ~ *
+  & out ~ vis
+
+@bfs_cons = (* ((x rest) (edges (vis out))))
+  & edges ~ {edges_scan edges_rec}
+  & @scan_edges ~ (edges_scan (x (rest (vis pair))))
+  & pair ~ (front_next vis_next)
+  & @bfs ~ (edges_rec (front_next (vis_next out)))
+
+// Scan all edges for neighbors of x; return (frontier, visited).
+@scan_edges = ((?((@se_nil @se_cons) (pl (x (front (vis out))))) pl) (x (front (vis out))))
+
+@se_nil = (* (x (front (vis out))))
+  & x ~ *
+  & out ~ (front vis)
+
+@se_cons = (* ((u v) (x (front (vis out)))))
+  & @scan_edge ~ (u (v (x (front (vis pair))))
+  & pair ~ (front_next vis_next)
+  & @scan_edges ~ (tail (x (front_next (vis_next out))))
+
+// For edge (u,v), add v if u=x and add u if v=x.
+@scan_edge = (u (v (x (front (vis out)))))
+  & x ~ {x_a x_rest}
+  & x_rest ~ {x_b x_c}
+  & u ~ {u_cmp u_keep}
+  & v ~ {v_cmp v_keep}
+  & u_cmp ~ $([=] $(x_a z_u))
+  & v_cmp ~ $([=] $(x_b z_v))
+  & z_u ~ ?((@se_first_no @se_first_yes) (v_keep (z_v (x_c (u_keep (front (vis out))))))
+
+@se_first_no = (v (z (x (u (front (vis out))))))
+  & v ~ *
+  & @edge_second ~ (u (z (x (front (vis out)))))
+
+@se_first_yes = (* (v (z (x (u (front (vis out)))))))
+  & @add ~ (v (front (vis pair)))
+  & pair ~ (front_next vis_next)
+  & @edge_second ~ (u (z (x (front_next (vis_next out))))
+
+@edge_second = (u (z (x (front (vis out)))))
+  & z ~ ?((@se_second_no @se_second_yes) (u (x (front (vis out)))))
+
+@se_second_no = (u (x (front (vis out))))
+  & u ~ *
+  & x ~ *
+  & out ~ (front vis)
+
+@se_second_yes = (* (u (x (front (vis out)))))
+  & x ~ *
+  & @add ~ (u (front (vis out)))
+
+// Test each vertex from high to low. Append selected vertices to keep output ascending.
+@cand = (n (i (edges (base out))))
+  & i ~ ?((@cand_nil @cand_step) (n (edges (base out))))
+
+@cand_nil = (n (edges (base out)))
+  & n ~ *
+  & edges ~ *
+  & base ~ *
+  & out ~ (0 *)
+
+@cand_step = (v (n (edges (base out))))
+  & v ~ {v_count v_rec}
+  & n ~ {n_count n_rec}
+  & edges ~ {edges_count edges_rec}
+  & base ~ {base_cmp base_rec}
+  & @count ~ (n_count (edges_count (v_count count_after)))
+  & count_after ~ $([>] $(base_cmp is_cut))
+  & is_cut ~ ?((@cand_no @cand_yes) (v_rec (n_rec (edges_rec (base_rec out))))
+
+@cand_no = (v (n (edges (base out))))
+  & @cand ~ (n (v (edges (base out))))
+
+@cand_yes = (* (v (n (edges (base out)))))
+  & v ~ {v_rec v_snoc}
+  & @cand ~ (n (v_rec (edges (base tail))))
+  & @snoc ~ (tail (v_snoc out))
+
+// Append a number to the end of a list.
+@snoc = ((?((@snoc_nil @snoc_cons) (pl (v out))) pl) (v out))
+
+@snoc_nil = (* (v out))
+  & out ~ (1 (v (0 *)))
+
+@snoc_cons = (* ((h t) (v out)))
+  & @snoc ~ (t (v tail))
+  & out ~ (1 (h tail))

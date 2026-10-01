@@ -1,0 +1,106 @@
+// Top-level: build one reachability set per vertex, then label each vertex.
+@prog = ((n edges) out)
+  & {nb nl} ~ n
+  & @build ~ ((nb (nl (edges 0))) map)
+  & {m1 m2} ~ map
+  & @labels ~ ((m1 m2) out)
+
+// Build the reachability map in vertex order.
+@build = ((?((@build_nil @build_step) (p out)) p) out)
+
+@build_nil = (* (0 *))
+
+@build_step = (* ((limit (edges id)) out))
+  & {er ec} ~ edges
+  & {pr pa} ~ pred
+  & {ir ia} ~ id
+  & {lr la} ~ limit
+  & @reach ~ ((lr (er ir)) rr)
+  & @build_after ~ (((pa (la (ec ia))) rr) out)
+
+@build_after = (((pred (limit (edges id))) rr) out)
+  & {ih ii} ~ id
+  & ii ~ $([+1] next)
+  & @build ~ ((pred (limit (edges next))) rest)
+  & out ~ (1 ((ih rr) rest))
+
+// Reachability by repeated edge-list sweeps.
+@reach = ((count (edges source)) out)
+  & @rounds ~ ((count (edges (1 (source (0 *))))) out)
+
+@rounds = ((?((@rounds_zero @rounds_step) (p out)) p) out)
+
+@rounds_zero = ((* set) set)
+
+@rounds_step = (* ((edges set) out))
+  & {escan erec} ~ edges
+  & @scan ~ ((escan set) s2)
+  & @rounds ~ ((pred (erec s2)) out)
+
+// Scan edges, adding destinations whose source is reachable and whose
+// destination has not yet been added.
+@scan = (((?((@scan_nil @scan_cons) (pl (set out))) pl) set) out)
+
+@scan_nil = (* (set set))
+
+@scan_cons = (* ((u v) (set out)))
+  & {sm sr} ~ set
+  & @mem ~ ((sm u) z)
+  & z ~ ?((@scan_no @scan_check) (v (pl (sr out))))
+
+@scan_check = (* (v (pl (sr out))))
+  & {sd sr2} ~ sr
+  & @mem ~ ((sd v) z2)
+  & z2 ~ ?((@scan_yes @scan_no) (v (pl (sr2 out))))
+
+@scan_no = (v (pl (sr out)))
+  & @scan ~ ((pl sr) out)
+
+@scan_yes = (v (pl (sr out)))
+  & @scan ~ ((pl (1 (v sr))) out)
+
+// Membership of target x in list set, returning a boolean.
+@mem = (((?((@mem_nil @mem_cons) (pl (x out))) pl) x) out)
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & h ~ $([=] $(x z))
+  & z ~ ?((@mem_more @mem_yes) (t (x out)))
+
+@mem_more = (t (x out))
+  & @mem ~ ((t x) out)
+
+@mem_yes = (* (* (* 1)))
+
+// Produce labels by searching the complete reachability map in vertex order.
+@labels = (((?((@labels_nil @labels_cons) (pl (full out))) pl) full) out)
+
+@labels_nil = (* (* (0 *)))
+
+@labels_cons = (* ((id reach) (tail (full out))))
+  & {fc fr} ~ full
+  & @find ~ ((fc (id reach)) label)
+  & @labels ~ ((tail fr) rest)
+  & out ~ (1 (label rest))
+
+// Find the smallest candidate mutually reachable with source.
+@find = (((?((@find_nil @find_cons) (pl (source (reach out)))) pl) (source reach)) out)
+
+@find_nil = (* (source (* source)))
+
+@find_cons = (* ((u ru) (tail (source (reach out)))))
+  & @mem ~ ((reach u) z)
+  & z ~ ?((@find_skip @find_check) (u (ru (tail (source (reach out))))))
+
+@find_skip = (* (* (tail (source (reach out)))))
+  & @find ~ ((tail (source reach)) out)
+
+@find_check = (* (u (ru (tail (source (reach out))))))
+  & @mem ~ ((ru source) z2)
+  & z2 ~ ?((@find_not_mutual @find_found) (u (tail (source (reach out)))))
+
+@find_not_mutual = (* (tail (source (reach out))))
+  & @find ~ ((tail (source reach)) out)
+
+@find_found = (* (u (* (* (* u)))))

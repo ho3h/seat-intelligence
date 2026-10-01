@@ -1,0 +1,26 @@
+@prog = (lst out)
+  & @resolve ~ (lst (out *))
+@resolve = (lst out)
+  & lst ~ (?((@res_empty @res_cons) out) *)
+@res_empty = (* out)
+  & out ~ (0 *)
+@res_cons = ((h t) out)
+  & @find_root ~ (h (t (root out_rest)))
+  & out ~ (1 (root out_rest))
+@find_root = (p (lst (out *)))
+  & @reach_root ~ (p lst (out *))
+@reach_root = (p lst (out *))
+  & lst ~ (?((@r_empty @r_cons) (out *)) *)
+@r_empty = (* (out *))
+  & out ~ p
+  & lst ~ *
+  & p ~ *
+@r_cons = ((h t) (out *))
+  & p ~ ?((@p_is_zero @p_nonzero) (h (t (out *))))
+@p_is_zero = (* (h (t (out *))))
+  & @reach_root ~ (h t (out *))
+  & lst ~ *
+@p_nonzero = ((p_minus_1 *) (h (t (out *))))
+  & @reach_root ~ (p_minus_1 t (out *))
+  & h ~ *
+  & lst ~ *

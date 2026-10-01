@@ -1,0 +1,199 @@
+@prog = ((n (s (t edges))) out)
+  & s ~ {s_cmp s_keep}
+  & n ~ {n_cmp n_keep}
+  & s_cmp ~ $([<] $(n_cmp bs))
+  & bs ~ ?((@ret_ctx @check_t) (t (edges (n_keep (s_keep out)))))
+
+@ret_ctx = (* (* (* (* out))))
+  & out ~ 0
+
+@check_t = (* (t (edges (n (s out)))))
+  & t ~ {t_cmp t_keep}
+  & n ~ {n_cmp n_keep}
+  & t_cmp ~ $([<] $(n_cmp bt))
+  & bt ~ ?((@ret_ctx @start) (t_keep (edges (n_keep (s out)))))
+
+@start = (* (t (edges (n (s out)))))
+  & s ~ {s_cmp s_keep}
+  & t ~ {t_cmp t_keep}
+  & s_cmp ~ $([=] $(t_cmp beq))
+  & beq ~ ?((@not_equal @same_yes) (t_keep (edges (n (s_keep out)))))
+
+@same_yes = (* (t (edges (n (s out)))))
+  & t ~ *
+  & edges ~ *
+  & n ~ *
+  & s ~ *
+  & out ~ 1
+
+@not_equal = (* (* (* (* out))))
+  & n ~ {n_build n_rest}
+  & n_rest ~ {budget n_real}
+  & @build ~ (n_build arr)
+  & @set ~ (arr (s (1 (1 (1 (0 0))) arr2)))
+  & @bfs ~ (budget (n_real (t (edges (arr2 out)))))
+
+@build = (n out)
+  & n ~ ?((@build_nil @build_cons) out)
+
+@build_nil = out
+  & out ~ (0 *)
+
+@build_cons = (n out)
+  & @build ~ (n tail)
+  & out ~ (1 (0 (0 (0 (0 0))) tail))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (head (tail out)))
+
+@get_zero = (x (* x))
+
+@get_more = (i (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (i out))
+
+@set = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_zero @set_more) (head (tail (val out))))
+
+@set_zero = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_more = (i (head (tail (val out))))
+  & @set ~ (tail (i (val upd_tail)))
+  & out ~ (1 (head upd_tail))
+
+@bfs = (budget (n (target (edges (arr out)))))
+  & budget ~ ?((@bfs_done @bfs_more) (n (target (edges (arr out)))))
+
+@bfs_done = (* (* (* (* out))))
+  & out ~ 0
+
+@bfs_more = (b (n (target (edges (arr out)))))
+  & n ~ {n_scan n_keep}
+  & edges ~ {edges_scan edges_keep}
+  & @scan ~ (edges_scan (n_scan (arr arr2)))
+  & @finish ~ (b (n_keep (target (edges_keep (arr2 out)))))
+
+@finish = (b (n (target (edges (arr out)))))
+  & arr ~ {arr_get arr_keep}
+  & target ~ {target_get target_keep}
+  & @get ~ (arr_get (target_get rec))
+  & @finish_check ~ (rec (b (n (target_keep (edges (arr_keep out))))))
+
+@finish_check = ((seen (ca (cc (na nc)))) (b (n (target (edges (arr out))))))
+  & seen ~ ?((@finish_none @finish_yes) (nc (b (n (target (edges (arr out)))))))
+
+@finish_yes = (* (nc (b (n (target (edges (arr out)))))))
+  & b ~ *
+  & n ~ *
+  & target ~ *
+  & edges ~ *
+  & arr ~ *
+  & out ~ nc
+
+@finish_none = (nc (b (n (target (edges (arr out))))))
+  & nc ~ *
+  & @promote ~ (arr arr2)
+  & @bfs ~ (b (n (target (arr2 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (n (arr out)))) payload) (n (arr out)))
+
+@scan_nil = (* (n (arr out)))
+  & n ~ *
+  & arr ~ out
+
+@scan_cons = (* ((edge tail) (n (arr out))))
+  & n ~ {n_edge n_tail}
+  & @edge ~ (edge (n_edge (arr arr2)))
+  & @scan ~ (tail (n_tail (arr2 out)))
+
+@edge = ((u v) (n (arr out)))
+  & u ~ {u_cmp u_keep}
+  & n ~ {n_cmp n_keep}
+  & u_cmp ~ $([<] $(n_cmp bu))
+  & bu ~ ?((@edge_skip1 @edge_check_v) (u_keep (v (n_keep (arr out)))))
+
+@edge_skip1 = (* (* (* (arr out))))
+  & u_keep ~ *
+  & v ~ *
+  & n_keep ~ *
+  & arr ~ out
+
+@edge_check_v = (* (u (v (n (arr out)))))
+  & v ~ {v_cmp v_keep}
+  & v_cmp ~ $([<] $(n bu2))
+  & bu2 ~ ?((@edge_skip2 @edge_do) (u (v_keep (arr out))))
+
+@edge_skip2 = (* (* (arr out)))
+  & u ~ *
+  & v_keep ~ *
+  & arr ~ out
+
+@edge_do = (* (u (v (arr out))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @prop ~ (u1 (v1 (arr arr1)))
+  & @prop ~ (v2 (u2 (arr1 out)))
+
+@prop = (src (dst (arr out)))
+  & arr ~ {arr_get arr_keep}
+  & @get ~ (arr_get (src sr))
+  & @prop_src ~ (sr (dst (arr_keep out)))
+
+@prop_src = ((seen (active (count (na nc)))) (dst (arr out)))
+  & seen ~ *
+  & na ~ *
+  & nc ~ *
+  & active ~ ?((@prop_inactive @prop_active) (count (dst (arr out))))
+
+@prop_inactive = (* (* (arr out)))
+  & arr ~ out
+
+@prop_active = (* (count (dst (arr out))))
+  & arr ~ {arr_get arr_keep}
+  & dst ~ {dst_get dst_keep}
+  & @get ~ (arr_get (dst_get dr))
+  & @prop_dst ~ (dr (dst_keep (count (arr_keep out))))
+
+@prop_dst = ((seen (ca (cc (na nc)))) (dst (count (arr out))))
+  & seen ~ ?((@prop_unseen @prop_seen) (dst (ca (cc (na (nc (count (arr out))))))))
+
+@prop_unseen = (dst (ca (cc (na (nc (count (arr out)))))))
+  & na ~ *
+  & nc ~ $([+] $(count sum))
+  & @set ~ (arr (dst (0 (ca (cc (1 sum))) arr2)))
+  & out ~ arr2
+
+@prop_seen = (* (* (* (* (* (* (* (arr out))))))))
+  & arr ~ out
+
+@promote = ((?((@prom_nil @prom_cons) (payload out)) payload) out)
+
+@prom_nil = (* out)
+  & out ~ (0 *)
+
+@prom_cons = (* ((h tail) out))
+  & @prom_rec ~ (h rh)
+  & @promote ~ (tail rt)
+  & out ~ (1 (rh rt))
+
+@prom_rec = ((seen (ca (cc (na nc)))) out)
+  & ca ~ *
+  & cc ~ *
+  & na ~ {na_or na_cur}
+  & seen ~ $([|] $(na_or ns))
+  & out ~ (ns (na_cur (nc (0 0))))

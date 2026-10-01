@@ -1,0 +1,72 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@count_marked = ((@count_marked__C3 a) a)
+
+@count_marked__C0 = (b (a (* c)))
+  & @popcount ~ (a (b c))
+
+@count_marked__C1 = (* ($([:-0x0000018] c) (a (b e))))
+  & @popcount ~ (a (24 $([+] $(d e))))
+  & @count_marked ~ (b (c d))
+
+@count_marked__C2 = (* (c (d ({$([>0x0000018] a) b} e))))
+  & $(a ?((@count_marked__C0 @count_marked__C1) (b (c (d e))))) ~ [=0x0000000]
+
+@count_marked__C3 = (?(((* 0) @count_marked__C2) a) a)
+
+@make_words = ({$([=0x0000000] ?((@make_words__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@make_words__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (0 (b c))
+  & @make_words ~ (a b)
+
+@mark_edges = ((@mark_edges__C1 a) a)
+
+@mark_edges__C0 = (* ((c d) (a (b f))))
+  & @mark_edges ~ (a (e f))
+  & @mark_pair ~ (b (c (d e)))
+
+@mark_edges__C1 = (?(((a a) @mark_edges__C0) b) b)
+
+@mark_pair = (b ({$([:%0x0000018] e) $([:/0x0000018] {$([=] $(a ?((@mark_pair__C0 @mark_pair__C1) (b (c (d (f (h i)))))))) c})} ({$([:%0x0000018] g) $([:/0x0000018] {a d})} i)))
+  & $(e f) ~ [<<0x0000001]
+  & $(g h) ~ [<<0x0000001]
+
+@mark_pair__C0 = (a (b (e (c f))))
+  & @set_word ~ (d (e f))
+  & @set_word ~ (a (b (c d)))
+
+@mark_pair__C1 = (* (a (b (* ($([|] $(c d)) (c e))))))
+  & @set_word ~ (a (b (d e)))
+
+@popcount = (a ({$([=0x0000000] ?((@popcount__C0 (* (* (* 0)))) (a (b c)))) b} c))
+
+@popcount__C0 = ({$([&0x0000001] $([+] $(c d))) $([:>>0x0000001] a)} ($([:-0x0000001] b) d))
+  & @popcount ~ (a (b c))
+
+@prog = (({$([-] $(f g)) {e {$([:%0x0000018] $([=0x0000000] ?((@prog__C0 @prog__C1) (b c)))) $([:/0x0000018] b)}}} a) g)
+  & @count_marked ~ (d (e f))
+  & @mark_edges ~ (a (c d))
+
+@prog__C0 = ($([+0x0000001] a) b)
+  & @make_words ~ (a b)
+
+@prog__C1 = (* a)
+  & @make_words ~ a
+
+@set_word = ((@set_word__C3 a) a)
+
+@set_word__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_word ~ (b (c (d e)))
+
+@set_word__C1 = (* (* (a ($([|] $(a b)) c))))
+  & @List/Cons ~ (b c)
+
+@set_word__C2 = (* (c (d ({$([=0x0000000] ?((@set_word__C0 @set_word__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_word__C3 = (?(((* (* @List/Nil)) @set_word__C2) a) a)
+
+

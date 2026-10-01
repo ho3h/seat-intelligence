@@ -1,0 +1,83 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@best_degree = (a ({$([=0x0000018] ?((@best_degree__C8 @best_degree__C9) (a (b c)))) b} c))
+
+@best_degree__C0 = (* (* (a (b (a b)))))
+
+@best_degree__C1 = (* (a (b (* (* (a b))))))
+
+@best_degree__C2 = ($([+0x0000001] d) ($([*0x0000002] e) (a (b f))))
+  & @best_degree ~ (c (d (e f)))
+  & @List/Cons ~ (a (b c))
+
+@best_degree__C3 = (* (f (g ({$([+0x0000001] d) $([+0x0000001] i)} ({$([*0x0000002] e) $([*0x0000002] $([+0x0000001] j))} (a (b q)))))))
+  &!@best_degree ~ (h (i (j (o {k p}))))
+  &!@best_degree ~ (c (d (e (m {$([<] $(k l)) n}))))
+  & @List/Cons ~ (a (b c))
+  & @List/Cons ~ (f (g h))
+  & $(l ?((@best_degree__C0 @best_degree__C1) (m (n (o (p q)))))) ~ [=0x0000000]
+
+@best_degree__C4 = (?((@best_degree__C2 @best_degree__C3) a) a)
+
+@best_degree__C5 = ($([+0x0000001] b) ($([*0x0000002] $([+0x0000001] c)) (a d)))
+  & @best_degree ~ (a (b (c d)))
+
+@best_degree__C6 = (* (c (d (a (b ((@best_degree__C4 (a (b (c (d e))))) e))))))
+
+@best_degree__C7 = (?((@best_degree__C5 @best_degree__C6) a) a)
+
+@best_degree__C8 = (a ({e b} (f h)))
+  & @split_bit ~ (a (d ((@best_degree__C7 (e (f (g h)))) g)))
+  & $(c d) ~ [<<0x0000001]
+  & $(b c) ~ [-0x0000017]
+
+@best_degree__C9 = (* (b (* (a (a c)))))
+  & @count_list ~ (b c)
+
+@collect_endpoints = ((@collect_endpoints__C3 a) a)
+
+@collect_endpoints__C0 = (* a)
+  & @List/Cons ~ a
+
+@collect_endpoints__C1 = (* a)
+  & @List/Cons ~ a
+
+@collect_endpoints__C2 = (* (({$([<] $(a ?(((* (b b)) @collect_endpoints__C1) (c (j k))))) c} {$([<] $(d ?(((* (e e)) @collect_endpoints__C0) (f (i j))))) f}) (g ({a {d h}} k))))
+  & @collect_endpoints ~ (g (h i))
+
+@collect_endpoints__C3 = (?(((* @List/Nil) @collect_endpoints__C2) a) a)
+
+@count_list = ((@count_list__C1 a) a)
+
+@count_list__C0 = (* (* (a b)))
+  & @count_list ~ (a $([+0x0000001] b))
+
+@count_list__C1 = (?((0 @count_list__C0) a) a)
+
+@prog = (({$([=0x0000000] ?((@prog__C2 (* (* (* 16777215)))) (a (b c)))) a} b) c)
+
+@prog__C0 = (* (a (b d)))
+  & @best_degree ~ (c (0 (0 (d *))))
+  & @List/Cons ~ (a (b c))
+
+@prog__C1 = (?((0 @prog__C0) a) a)
+
+@prog__C2 = (b (a c))
+  & @collect_endpoints ~ (a (b (@prog__C1 c)))
+
+@split_bit = ((@split_bit__C3 a) a)
+
+@split_bit__C0 = (b (a (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@split_bit__C1 = (* (a (b (d (c d)))))
+  & @List/Cons ~ (a (b c))
+
+@split_bit__C2 = (* ({$([&] $(c $([=0x0000000] ?((@split_bit__C0 @split_bit__C1) (d (e (f g))))))) d} (a ({b c} g))))
+  & @split_bit ~ (a (b (e f)))
+
+@split_bit__C3 = (?(((* (@List/Nil @List/Nil)) @split_bit__C2) a) a)
+
+

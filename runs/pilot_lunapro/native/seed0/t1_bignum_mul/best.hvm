@@ -1,0 +1,107 @@
+// Process the multiplier from least-significant digit to most-significant.
+@prog = ((a b) out)
+  & @loop ~ (b (a ((0 *) raw)))
+  & @trim ~ (raw (result flag))
+  & flag ~ *
+  & out ~ result
+
+@loop = ((?((@loop_nil @loop_cons) (pl (a (acc out)))) pl) (a (acc out)))
+
+@loop_nil = (* (a (acc out)))
+  & a ~ *
+  & acc ~ out
+
+@loop_cons = (* ((h t) (a (acc out))))
+  & a ~ {aa ar}
+  & @scale ~ (aa (h (0 scaled)))
+  & @add ~ (acc (scaled (0 sum)))
+  & @loop ~ (t ((1 (0 ar)) (sum out)))
+
+// Prepend a zero digit.
+@shift = (p out)
+  & out ~ (1 (0 p))
+
+// Multiply a list by one digit, carrying in base 4096.
+@scale = ((?((@scale_nil @scale_cons) (pl (factor (carry out)))) pl) (factor (carry out)))
+
+@scale_nil = (* (factor (carry out)))
+  & factor ~ *
+  & out ~ (1 (carry (0 *)))
+
+@scale_cons = (* ((h t) (factor (carry out))))
+  & factor ~ {f1 f2}
+  & h ~ $([*] $(f1 prod))
+  & prod ~ $([+] $(carry total))
+  & total ~ {td tm}
+  & td ~ $([/] $(4096 carry2))
+  & tm ~ $([%] $(4096 digit))
+  & @scale ~ (t (f2 (carry2 rest)))
+  & out ~ (1 (digit rest))
+
+// Add two lists with an incoming carry.
+@add = ((?((@add_anil @add_acon) (pa (b (carry out)))) pa) (b (carry out)))
+
+@add_anil = (* (b (carry out)))
+  & @add_bonly ~ (b (carry out))
+
+@add_acon = (* ((h ta) (b (carry out))))
+  & @add_b ~ (b (h (ta (carry out))))
+
+@add_b = ((?((@add_bnil @add_bcon) (pb (h (ta (carry out))))) pb) (h (ta (carry out))))
+
+@add_bnil = (* (h (ta (carry out))))
+  & h ~ $([+] $(carry total))
+  & total ~ {td tm}
+  & td ~ $([/] $(4096 carry2))
+  & tm ~ $([%] $(4096 digit))
+  & @add ~ (ta ((0 *) (carry2 rest)))
+  & out ~ (1 (digit rest))
+
+@add_bcon = (* ((d tb) (h (ta (carry out)))))
+  & h ~ $([+] $(d sum1))
+  & sum1 ~ $([+] $(carry total))
+  & total ~ {td tm}
+  & td ~ $([/] $(4096 carry2))
+  & tm ~ $([%] $(4096 digit))
+  & @add ~ (ta (tb (carry2 rest)))
+  & out ~ (1 (digit rest))
+
+@add_bonly = ((?((@add_bonly_nil @add_bonly_cons) (pb (carry out))) pb) (carry out))
+
+@add_bonly_nil = (* (carry out))
+  & out ~ (1 (carry (0 *)))
+
+@add_bonly_cons = (* ((d t) (carry out)))
+  & d ~ $([+] $(carry total))
+  & total ~ {td tm}
+  & td ~ $([/] $(4096 carry2))
+  & tm ~ $([%] $(4096 digit))
+  & @add_bonly ~ (t (carry2 rest))
+  & out ~ (1 (digit rest))
+
+// Remove most-significant zero digits and report whether the result is zero.
+@trim = ((?((@trim_nil @trim_cons) (pl out)) pl) out)
+
+@trim_nil = (* out)
+  & out ~ ((0 *) 1)
+
+@trim_cons = (* ((h t) out))
+  & @trim ~ (t (nt zt))
+  & zt ~ ?((@trim_tail_nonzero @trim_tail_zero) (h (nt out)))
+
+@trim_tail_nonzero = (h (nt out))
+  & out ~ ((1 (h nt)) 0)
+
+@trim_tail_zero = (* (h (nt out)))
+  & h ~ {hc hv}
+  & hc ~ $([=] $(0 z))
+  & z ~ ?((@trim_h_nonzero @trim_h_zero) (hv (nt out)))
+
+@trim_h_nonzero = (hv (nt out))
+  & nt ~ *
+  & out ~ ((1 (hv (0 *))) 0)
+
+@trim_h_zero = (* (hv (nt out)))
+  & hv ~ *
+  & nt ~ *
+  & out ~ ((0 *) 1)

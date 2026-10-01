@@ -1,0 +1,159 @@
+// Construct the identity list [0, 1, ..., n-1].
+@init = (n (id out))
+  & n ~ ?((@init_nil @init_cons) (id out))
+
+@init_nil = (id out)
+  & id ~ *
+  & out ~ (0 *)
+
+@init_cons = (* (remaining (id out)))
+  & id ~ {id_head id_inc}
+  & id_inc ~ $([+1] nextid)
+  & @init ~ (remaining (nextid tail))
+  & out ~ (1 (id_head tail))
+
+// Look up the list element at a valid index.
+@get = (idx (list out))
+  & idx ~ ?((@get_zero @get_succ) (list out))
+
+@get_zero = (list out)
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & tail ~ *
+  & head ~ out
+
+@get_succ = (* (idx (list out)))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @get ~ (idx (tail out))
+
+// Replace every occurrence of old with new in a list.
+@replace = (old (new ((?((@replace_nil @replace_cons) (old (new (pl out)))) pl) out))
+
+@replace_nil = (old (new (pl out)))
+  & old ~ *
+  & new ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* (old (new (pl out))))
+  & pl ~ (h tail)
+  & old ~ {old_test old_rec}
+  & new ~ {new_pick new_rec}
+  & h ~ {h_test h_keep}
+  & h_test ~ $([=] $(old_test eq))
+  & eq ~ ?((@rep_not @rep_yes) (h_keep (new_pick (old_rec (new_rec (tail out))))))
+
+@rep_not = (h (new_pick (old_rec (new_rec (tail out)))))
+  & new_pick ~ *
+  & @replace ~ (old_rec (new_rec (tail tailout)))
+  & out ~ (1 (h tailout))
+
+@rep_yes = (* (h (new_pick (old_rec (new_rec (tail out))))))
+  & h ~ *
+  & @replace ~ (old_rec (new_rec (tail tailout)))
+  & out ~ (1 (new_pick tailout))
+
+// Scan an edge list, merging endpoint labels by retaining the larger label.
+@scan = ((?((@scan_nil @scan_cons) (pl (labels out))) pl) (labels out))
+
+@scan_nil = (pl (labels out))
+  & pl ~ *
+  & labels ~ out
+
+@scan_cons = (* (pl (labels out)))
+  & pl ~ (edge tail)
+  & edge ~ (u v)
+  & labels ~ {labels_u labels_tmp}
+  & labels_tmp ~ {labels_v labels_rest}
+  & @get ~ (u (labels_u a))
+  & @get ~ (v (labels_v b))
+  & a ~ {a_cmp a_data}
+  & b ~ {b_cmp b_data}
+  & a_cmp ~ $([=] $(b_cmp eq))
+  & eq ~ ?((@scan_diff @scan_same) (a_data (b_data (labels_rest (tail out)))))
+
+@scan_same = (* (a (b (labels (tail out)))))
+  & a ~ *
+  & b ~ *
+  & @scan ~ (tail (labels out))
+
+@scan_diff = (a (b (labels (tail out))))
+  & a ~ {a_cmp a_saved}
+  & b ~ {b_cmp b_saved}
+  & a_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@scan_low @scan_high) (a_saved (b_saved (labels (tail out)))))
+
+@scan_low = (a (b (labels (tail out))))
+  & @replace ~ (a (b (labels updated)))
+  & @scan ~ (tail (updated out))
+
+@scan_high = (* (a (b (labels (tail out)))))
+  & @replace ~ (b (a (labels updated)))
+  & @scan ~ (tail (updated out))
+
+// Count occurrences of target in a list.
+@freq = (target ((?((@freq_nil @freq_cons) (target (pl (acc out)))) pl) (acc out)))
+
+@freq_nil = (target (pl (acc out)))
+  & target ~ *
+  & pl ~ *
+  & acc ~ out
+
+@freq_cons = (* (target (pl (acc out))))
+  & pl ~ (h tail)
+  & target ~ {target_test target_rec}
+  & h ~ $([=] $(target_test eq))
+  & eq ~ ?((@freq_no @freq_yes) (target_rec (tail (acc out))))
+
+@freq_no = (target (tail (acc out)))
+  & @freq ~ (target (tail (acc out)))
+
+@freq_yes = (* (target (tail (acc out))))
+  & acc ~ $([+1] acc_next)
+  & @freq ~ (target (tail (acc_next out)))
+
+// Visit candidate ids in ascending order. Prepending during recursion unwind
+// gives output sizes in ascending canonical-id order.
+@emit = ((?((@emit_nil @emit_cons) (pl (labels out))) pl) (labels out))
+
+@emit_nil = (pl (labels out))
+  & pl ~ *
+  & labels ~ *
+  & out ~ (0 *)
+
+@emit_cons = (* (pl (labels out)))
+  & pl ~ (id tail)
+  & labels ~ {labels_freq labels_next}
+  & @freq ~ (id (labels_freq (0 count)))
+  & @emit ~ (tail (labels_next rest))
+  & count ~ {count_sel count_data}
+  & count_sel ~ ?((@emit_skip @emit_add) (count_data (rest out)))
+
+@emit_skip = (count_data (rest out))
+  & count_data ~ *
+  & rest ~ out
+
+@emit_add = (* (count_data (rest out)))
+  & out ~ (1 (count_data rest))
+
+// Run one full edge scan per node.
+@round = ((?((@round_zero @round_succ) (ids (edges (labels out)))) steps) (ids (edges (labels out))))
+
+@round_zero = (ids (edges (labels out)))
+  & edges ~ *
+  & @emit ~ (ids (labels out))
+
+@round_succ = (steps (ids (edges (labels out))))
+  & edges ~ {edges_scan edges_next}
+  & @scan ~ (edges_scan (labels updated))
+  & @round ~ (steps (ids (edges_next (updated out))))
+
+@prog = (n (edges out))
+  & n ~ {n_init n_round}
+  & @init ~ (n_init (0 initial))
+  & initial ~ {labels ids}
+  & @round ~ (n_round (ids (edges (labels out))))

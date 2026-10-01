@@ -1,0 +1,61 @@
+@prog = (l out)
+  & @scan ~ (l (0 (0 (0 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (c (hi (lo out))))) pl) (c (hi (lo out))))
+
+@scan_nil = (* (c (hi (lo out))))
+  & c ~ $([=] $(2 z))
+  & z ~ ?((@nil_no @nil_yes) (hi (lo out)))
+
+@nil_no = (* (* 0))
+
+@nil_yes = (* (* (x x)))
+
+@scan_cons = (* ((h t) (c (hi (lo out)))))
+  & @step ~ (c (h (t (hi (lo out)))))
+
+@step = (?((@zero @positive) k) k)
+
+@zero = (h (t (hi (lo out))))
+  & hi ~ *
+  & lo ~ *
+  & @scan ~ (t (1 (h (0 out))))
+
+@positive = (?((@one @two) k) k)
+
+@one = (h (t (hi (lo out))))
+  & h ~ {hc hk}
+  & hi ~ {hic hik}
+  & hc ~ $([>] $(hic z))
+  & z ~ ?((@one_no @one_yes) (hk (hik (t out))))
+  & lo ~ *
+
+@one_no = (hk (hik (t out)))
+  & @scan ~ (t (2 (hik (hk out))))
+
+@one_yes = (* (hk (hik (t out))))
+  & @scan ~ (t (2 (hk (hik out))))
+
+@two = (* (h (t (hi (lo out)))))
+  & h ~ {hc hk}
+  & hi ~ {hic hik}
+  & hc ~ $([>] $(hic z))
+  & z ~ ?((@two_no @two_yes) (hk (hik (lo (t out)))))
+
+@two_yes = (* (hk (hik (lo (t out)))))
+  & lo ~ *
+  & @scan ~ (t (2 (hk (hik out))))
+
+@two_no = (hk (hik (lo (t out))))
+  & hk ~ {hc2 hk2}
+  & lo ~ {loc2 lok2}
+  & hc2 ~ $([>] $(loc2 z2))
+  & z2 ~ ?((@second_no @second_yes) (hk2 (lok2 (hik (t out)))))
+
+@second_yes = (* (hk2 (lok2 (hik (t out)))))
+  & lok2 ~ *
+  & @scan ~ (t (2 (hik (hk2 out))))
+
+@second_no = (hk2 (lok2 (hik (t out))))
+  & hk2 ~ *
+  & @scan ~ (t (2 (hik (lok2 out))))

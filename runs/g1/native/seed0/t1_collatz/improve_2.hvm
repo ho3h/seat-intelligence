@@ -1,0 +1,47 @@
+// Consume two Collatz steps at a time where possible:
+// n mod 4 = 0: divide by 4; 2: divide by 2;
+// 1: apply (3n+1)/4; 3: apply (3n+1)/2.
+// The n == 1 check is only needed in the residue-1 case.
+
+@prog = (n out)
+  & @collatz ~ (n (0 out))
+
+@collatz = (n (acc out))
+  & n ~ {n_mod n_next}
+  & n_mod ~ $([%] $(4 rem))
+  & rem ~ ?((@case0 @case12) (n_next (acc out)))
+
+@case12 = (r (n (acc out)))
+  & r ~ ?((@case1 @case23) (n (acc out)))
+
+@case23 = (r (n (acc out)))
+  & r ~ ?((@case2 @case3) (n (acc out)))
+
+@case0 = (n (acc out))
+  & n ~ $([/4] next_n)
+  & acc ~ $([+2] next_acc)
+  & @collatz ~ (next_n (next_acc out))
+
+@case1 = (n (acc out))
+  & n ~ {n_test n_next}
+  & n_test ~ $([=] $(1 is_one))
+  & is_one ~ ?((@odd1 @done) (n_next (acc out)))
+
+@odd1 = (n (acc out))
+  & n ~ $([*3] $([+1] $([/4] next_n)))
+  & acc ~ $([+3] next_acc)
+  & @collatz ~ (next_n (next_acc out))
+
+@case2 = (n (acc out))
+  & n ~ $([/2] next_n)
+  & acc ~ $([+1] next_acc)
+  & @collatz ~ (next_n (next_acc out))
+
+@case3 = (n (acc out))
+  & n ~ $([*3] $([+1] $([/2] next_n)))
+  & acc ~ $([+2] next_acc)
+  & @collatz ~ (next_n (next_acc out))
+
+@done = (* (n (acc out)))
+  & n ~ *
+  & acc ~ out

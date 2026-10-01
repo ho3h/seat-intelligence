@@ -1,0 +1,106 @@
+// Reconcile identity clusters, normalize and sort edges, drop self-loops,
+// and collapse duplicate edges.
+@prog = ((n (tau (mnl (cands edges)))) out)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & @ids ~ (n (0 c))
+  & @walk ~ (edges ((0 *) e))
+  & out ~ (c e)
+
+@ids = (n (i out))
+  & n ~ ?((@ids_nil @ids_succ) (i out))
+
+@ids_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@ids_succ = (n (i out))
+  & i ~ {j k}
+  & j ~ $([+1] j1)
+  & @ids ~ (n (j1 tail))
+  & out ~ (1 (k tail))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (acc out))) pl) (acc out))
+
+@walk_nil = (pl (acc out))
+  & pl ~ *
+  & out ~ acc
+
+@walk_cons = (* (pl (acc out)))
+  & pl ~ (edge tail)
+  & edge ~ (u v)
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([=] $(v1 eq))
+  & eq ~ ?((@walk_keep @walk_drop) (u2 (v2 (tail (acc out)))))
+
+@walk_drop = (* (u (v (tail (acc out)))))
+  & u ~ *
+  & v ~ *
+  & @walk ~ (tail (acc out))
+
+@walk_keep = (u (v (tail (acc out))))
+  & u ~ {a b}
+  & v ~ {c d}
+  & a ~ $([<] $(c less))
+  & less ~ ?((@walk_rev @walk_fwd) (b (d (tail (acc out)))))
+
+@walk_rev = (u (v (tail (acc out))))
+  & @insert ~ (acc ((v u) acc2))
+  & @walk ~ (tail (acc2 out))
+
+@walk_fwd = (* (u (v (tail (acc out)))))
+  & @insert ~ (acc ((u v) acc2))
+  & @walk ~ (tail (acc2 out))
+
+@insert = ((?((@ins_nil @ins_cons) (pl (pair out))) pl) (pair out))
+
+@ins_nil = (pl (pair out))
+  & pl ~ *
+  & out ~ (1 (pair (0 *)))
+
+@ins_cons = (* (pl (pair out)))
+  & pl ~ (head tail)
+  & pair ~ (u v)
+  & head ~ (x y)
+  & u ~ {u_eq u_cmp}
+  & v ~ {v_eq v_cmp}
+  & x ~ {x_eq x_cmp}
+  & y ~ {y_eq y_cmp}
+  & @eqedge ~ ((u_eq (v_eq (x_eq y_eq))) same)
+  & same ~ ?((@ins_diff @ins_same) (u_cmp (v_cmp (x_cmp (y_cmp (tail out))))))
+
+@ins_same = (* (u (v (x (y (tail out))))))
+  & u ~ *
+  & v ~ *
+  & out ~ (1 ((x y) tail))
+
+@ins_diff = (u (v (x (y (tail out)))))
+  & u ~ {u_ord u_keep}
+  & v ~ {v_ord v_keep}
+  & x ~ {x_ord x_keep}
+  & y ~ {y_ord y_keep}
+  & @leq ~ ((u_ord (v_ord (x_ord y_ord))) order)
+  & order ~ ?((@ins_after @ins_before) (u_keep (v_keep (x_keep (y_keep (tail out))))))
+
+@ins_before = (* (u (v (x (y (tail out))))))
+  & out ~ (1 ((u v) (1 ((x y) tail))))
+
+@ins_after = (u (v (x (y (tail out)))))
+  & @insert ~ (tail ((u v) rest))
+  & out ~ (1 ((x y) rest))
+
+@eqedge = ((u (v (x y))) out)
+  & u ~ $([=] $(x a))
+  & v ~ $([=] $(y b))
+  & a ~ $([&] $(b out))
+
+@leq = ((u (v (x y))) out)
+  & u ~ {u1 u2}
+  & x ~ {x1 x2}
+  & u1 ~ $([<] $(x1 a))
+  & u2 ~ $([=] $(x2 b))
+  & v ~ $([<] $(y c))
+  & b ~ $([&] $(c d))
+  & a ~ $([|] $(d out))

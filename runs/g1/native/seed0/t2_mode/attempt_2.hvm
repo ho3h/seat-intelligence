@@ -1,0 +1,58 @@
+@prog = (input output)
+  & input ~ {scan all}
+  & @mode ~ (scan (all (0 (0 output))))
+
+@mode = ((?((@mn @mc) (pl (all (best (bc out))))) pl) (all (best (bc out))))
+
+@mn = (pl (all (best (bc out))))
+  & pl ~ *
+  & all ~ *
+  & bc ~ *
+  & out ~ best
+
+@mc = (* ((h t) (all (best (bc out)))))
+  & all ~ {cscan nextall}
+  & h ~ {target hkeep}
+  & @freq ~ (cscan (target cnt))
+  & @consider ~ (hkeep (t (nextall (best (bc (cnt out)))))
+
+@freq = ((?((@fn @fc) (pl (target out))) pl) (target out))
+
+@fn = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ 0
+
+@fc = (* ((h t) (target out)))
+  & target ~ {tc tr}
+  & h ~ $([=] $(tc eq))
+  & @freq ~ (t (tr rest))
+  & rest ~ $([+] $(eq out))
+
+@consider = (h (t (all (best (bc (cnt out))))))
+  & cnt ~ {cm cc}
+  & bc ~ {bm bcc}
+  & cm ~ $([>] $(bm gt))
+  & gt ~ ?((@notgt @take) (h (t (all (best (bcc (cc out)))))))
+
+@notgt = (h (t (all (best (bc (cnt out))))))
+  & cnt ~ {cm cc}
+  & bc ~ {bm bcc}
+  & cm ~ $([=] $(bm eq))
+  & eq ~ ?((@keep @tie) (h (t (all (best (bcc (cc out)))))))
+
+@tie = (h (t (all (best (bc (cnt out))))))
+  & h ~ {hm hc}
+  & best ~ {bm bcand}
+  & hm ~ $([<] $(bm lt))
+  & lt ~ ?((@keep @take) (hc (t (all (bcand (bc (cnt out)))))))
+
+@take = (h (t (all (best (bc (cnt out))))))
+  & best ~ *
+  & bc ~ *
+  & @mode ~ (t (all (h (cnt out))))
+
+@keep = (h (t (all (best (bc (cnt out))))))
+  & h ~ *
+  & cnt ~ *
+  & @mode ~ (t (all (best (bc out))))

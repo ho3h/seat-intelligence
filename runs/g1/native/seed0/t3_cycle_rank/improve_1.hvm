@@ -1,0 +1,189 @@
+// Build a balanced component table. Each leaf stores (parent, size).
+@prog = ((n edges) out)
+  & @build ~ (n (0 tree))
+  & @go ~ (edges (n (tree (0 out))))
+
+@build = (k (start out))
+  & k ~ ?((@build_zero @build_succ) (start out))
+
+@build_zero = (start out)
+  & start ~ *
+  & out ~ (0 (0 0))
+
+@build_succ = (pred (start out))
+  & pred ~ ?((@build_one @build_node) (start out))
+
+@build_one = (start out)
+  & out ~ (0 (start 1))
+
+@build_node = (pred (start out))
+  & pred ~ $([+1] k)
+  & k ~ {kleft kright}
+  & kleft ~ $([/] $(2 leftsize))
+  & leftsize ~ {ls_build ls_sub}
+  & kright ~ $([-] $(ls_sub rightsize))
+  & start ~ {start_left start_right}
+  & start_right ~ $([+] $(ls_build rightstart))
+  & @build ~ (ls_build (start_left lefttree))
+  & @build ~ (rightsize (rightstart righttree))
+  & out ~ (1 (lefttree righttree))
+
+// Get the leaf value at index idx from a tree covering size entries.
+@tget = (idx (size (tree out)))
+  & size ~ {size_test size_keep}
+  & size_test ~ $([=] $(1 z))
+  & z ~ ?((@tget_node @tget_leaf) (idx (size_keep (tree out))))
+
+@tget_leaf = (pred (idx (size (tree out))))
+  & pred ~ *
+  & idx ~ *
+  & size ~ *
+  & tree ~ (tag value)
+  & tag ~ *
+  & out ~ value
+
+@tget_node = (idx (size (tree out)))
+  & tree ~ (tag payload)
+  & tag ~ *
+  & payload ~ (left right)
+  & size ~ {size_div size_keep}
+  & size_div ~ $([/] $(2 leftsize))
+  & leftsize ~ {ls_idx ls_right}
+  & idx ~ {idx_cmp idx_keep}
+  & idx_cmp ~ $([<] $(ls_idx z))
+  & z ~ ?((@tget_right @tget_left) (left (right (idx_keep (ls_right (size_keep out)))))
+
+@tget_left = (pred (left (right (idx (leftsize (size out)))))
+  & pred ~ *
+  & right ~ *
+  & @tget ~ (idx (leftsize (left out)))
+
+@tget_right = (left (right (idx (leftsize (size out)))))
+  & left ~ *
+  & leftsize ~ {ls_idx ls_size}
+  & idx ~ {idx_sub idx_keep}
+  & idx_sub ~ $([-] $(ls_idx right_idx))
+  & size ~ $([-] $(ls_size right_size))
+  & @tget ~ (right_idx (right_size (right out)))
+
+// Set the leaf at index idx, returning a new tree.
+@tset = (idx (size (tree (new out))))
+  & size ~ {size_test size_keep}
+  & size_test ~ $([=] $(1 z))
+  & z ~ ?((@tset_node @tset_leaf) (idx (size_keep (tree (new out)))))
+
+@tset_leaf = (pred (idx (size (tree (new out)))))
+  & pred ~ *
+  & idx ~ *
+  & size ~ *
+  & tree ~ (tag old)
+  & tag ~ *
+  & old ~ *
+  & out ~ (0 new)
+
+@tset_node = (idx (size (tree (new out))))
+  & tree ~ (tag payload)
+  & tag ~ *
+  & payload ~ (left right)
+  & size ~ {size_div size_keep}
+  & size_div ~ $([/] $(2 leftsize))
+  & leftsize ~ {ls_idx ls_right}
+  & idx ~ {idx_cmp idx_keep}
+  & idx_cmp ~ $([<] $(ls_idx z))
+  & z ~ ?((@tset_right @tset_left) (left (right (idx_keep (ls_right (size_keep (new out)))))))
+
+@tset_left = (pred (left (right (idx (leftsize (size (new out))))))
+  & pred ~ *
+  & @tset ~ (idx (leftsize (left (new updated))))
+  & out ~ (1 (updated right))
+
+@tset_right = (left (right (idx (leftsize (size (new out))))))
+  & leftsize ~ {ls_idx ls_size}
+  & idx ~ {idx_sub idx_keep}
+  & idx_sub ~ $([-] $(ls_idx right_idx))
+  & size ~ $([-] $(ls_size right_size))
+  & @tset ~ (right_idx (right_size (right (new updated))))
+  & out ~ (1 (left updated))
+
+// Find the root and its component size.
+@find = (idx (n (tree out)))
+  & idx ~ {idx_get idx_cmp}
+  & n ~ {n_get n_keep}
+  & tree ~ {tree_get tree_keep}
+  & @tget ~ (idx_get (n_get (tree_get record)))
+  & record ~ (parent size)
+  & parent ~ {parent_cmp parent_keep}
+  & parent_cmp ~ $([=] $(idx_cmp z))
+  & z ~ ?((@find_recur @find_root) (parent_keep (size (n_keep (tree_keep out)))))
+
+@find_recur = (parent (size (n (tree out))))
+  & size ~ *
+  & @find ~ (parent (n (tree out)))
+
+@find_root = (pred (parent (size (n (tree out)))))
+  & pred ~ *
+  & n ~ *
+  & tree ~ *
+  & out ~ (parent size)
+
+// Process edges, counting those whose endpoints already have the same root.
+@go = ((?((@go_nil @go_cons) (pl (n (tree (acc out))))) pl) (n (tree (acc out))))
+
+@go_nil = (* (n (tree (acc out))))
+  & n ~ *
+  & tree ~ *
+  & out ~ acc
+
+@go_cons = (* ((u v) (tail (n (tree (acc out))))))
+  & n ~ {nu nrest}
+  & nrest ~ {nv nnext}
+  & tree ~ {treeu trest}
+  & trest ~ {treev treenext}
+  & @find ~ (u (nu (treeu infou)))
+  & @find ~ (v (nv (treev infov)))
+  & infou ~ (ru su)
+  & infov ~ (rv sv)
+  & ru ~ {ruc rukeep}
+  & rv ~ {rvc rvkeep}
+  & ruc ~ $([=] $(rvc z))
+  & z ~ ?((@go_diff @go_same) (tail (nnext (treenext (acc (rukeep (su (rvkeep (sv out))))))))
+
+@go_same = (tail (n (tree (acc (ru (su (rv (sv out)))))))
+  & ru ~ *
+  & su ~ *
+  & rv ~ *
+  & sv ~ *
+  & acc ~ $([+] $(1 nextacc))
+  & @go ~ (tail (n (tree (nextacc out))))
+
+@go_diff = (tail (n (tree (acc (ru (su (rv (sv out)))))))
+  & su ~ {suc sukeep}
+  & sv ~ {svc svkeep}
+  & suc ~ $([<] $(svc z))
+  & z ~ ?((@union_v_under_u @union_u_wrap) (tail (n (tree (acc (ru (sukeep (rv (svkeep out))))))))
+
+@union_u_wrap = (pred (tail (n (tree (acc (ru (su (rv (sv out))))))))
+  & pred ~ *
+  & @attach_u_under_v ~ (tail (n (tree (acc (ru (su (rv (sv out))))))))
+
+@union_v_under_u = (tail (n (tree (acc (ru (su (rv (sv out)))))))
+  & n ~ {n1 nrest}
+  & nrest ~ {n2 n3}
+  & ru ~ {ru_child rurem}
+  & rurem ~ {ru_idx ru_parent}
+  & sv ~ {sv_child sv_sum}
+  & su ~ $([+] $(sv_sum sum))
+  & @tset ~ (rv (n1 (tree ((ru_child sv_child) tree1))))
+  & @tset ~ (ru_idx (n2 (tree1 ((ru_parent sum) updated))))
+  & @go ~ (tail (n3 (updated (acc out))))
+
+@attach_u_under_v = (tail (n (tree (acc (ru (su (rv (sv out)))))))
+  & n ~ {n1 nrest}
+  & nrest ~ {n2 n3}
+  & rv ~ {rv_child rvrest}
+  & rvrest ~ {rv_idx rv_parent}
+  & su ~ {su_child su_sum}
+  & sv ~ $([+] $(su_sum sum))
+  & @tset ~ (ru (n1 (tree ((rv_child su_child) tree1))))
+  & @tset ~ (rv_idx (n2 (tree1 ((rv_parent sum) updated))))
+  & @go ~ (tail (n3 (updated (acc out))))

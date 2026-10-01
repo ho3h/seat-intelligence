@@ -1,0 +1,42 @@
+@prog = ((k xs) out)
+  & @filter_gt ~ (k (xs out))
+
+@filter_gt = (k (lv1 o))
+  & k ~ {ka kr}
+  & @filter_cons_lw ~ (lv1 (ka (kr o)))
+
+@filter_nil = (pl (ka (kr out)))
+  & pl ~ *
+  & ka ~ *
+  & kr ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (({$([>] $(ka ?((@filter_drop @filter_keep) (hk (ft out))))) hk} t) (ka ({q9 q10} out))))
+  & @filter_cons_lw ~ (t (q9 (q10 ft)))
+
+@filter_drop = (hk (ft ft))
+  & hk ~ *
+
+@filter_keep = (* (hk (ft out)))
+  & out ~ (1 (hk ft))
+
+@filter_cons_lw = (ls109 (q13 (q14 q15)))
+  & ls109 ~ (g92 (e76 (g93 (e77 (g94 (e78 (g95 (e79 (g96 (e80 (g97 (e81 (g98 (e82 (g99 (e83 (g100 (e84 (g101 (e85 (g102 (e86 (g103 (e87 (g104 (e88 (g105 (e89 (g106 (e90 (g107 (e91 tk108))))))))))))))))))))))))))))))))
+  & g92 ~ ?((@filter_nil @filter_cons_la) ((e76 (q17 (q18 q19))) (q13 (q14 q15))))
+  & g93 ~ ?((@filter_nil @filter_cons_la) ((e77 (q21 (q22 q23))) (q17 (q18 q19))))
+  & g94 ~ ?((@filter_nil @filter_cons_la) ((e78 (q25 (q26 q27))) (q21 (q22 q23))))
+  & g95 ~ ?((@filter_nil @filter_cons_la) ((e79 (q29 (q30 q31))) (q25 (q26 q27))))
+  & g96 ~ ?((@filter_nil @filter_cons_la) ((e80 (q33 (q34 q35))) (q29 (q30 q31))))
+  & g97 ~ ?((@filter_nil @filter_cons_la) ((e81 (q37 (q38 q39))) (q33 (q34 q35))))
+  & g98 ~ ?((@filter_nil @filter_cons_la) ((e82 (q41 (q42 q43))) (q37 (q38 q39))))
+  & g99 ~ ?((@filter_nil @filter_cons_la) ((e83 (q45 (q46 q47))) (q41 (q42 q43))))
+  & g100 ~ ?((@filter_nil @filter_cons_la) ((e84 (q49 (q50 q51))) (q45 (q46 q47))))
+  & g101 ~ ?((@filter_nil @filter_cons_la) ((e85 (q53 (q54 q55))) (q49 (q50 q51))))
+  & g102 ~ ?((@filter_nil @filter_cons_la) ((e86 (q57 (q58 q59))) (q53 (q54 q55))))
+  & g103 ~ ?((@filter_nil @filter_cons_la) ((e87 (q61 (q62 q63))) (q57 (q58 q59))))
+  & g104 ~ ?((@filter_nil @filter_cons_la) ((e88 (q65 (q66 q67))) (q61 (q62 q63))))
+  & g105 ~ ?((@filter_nil @filter_cons_la) ((e89 (q69 (q70 q71))) (q65 (q66 q67))))
+  & g106 ~ ?((@filter_nil @filter_cons_la) ((e90 (q73 (q74 q75))) (q69 (q70 q71))))
+  & g107 ~ ?((@filter_nil @filter_cons) ((e91 tk108) (q73 (q74 q75))))
+
+@filter_cons_la = (* (({$([>] $(ka ?((@filter_drop @filter_keep) (hk (ft out))))) hk} (q9 (q10 ft))) (ka ({q9 q10} out))))

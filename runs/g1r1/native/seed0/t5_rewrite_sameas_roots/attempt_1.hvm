@@ -1,0 +1,53 @@
+// Resolve each pointer by repeatedly looking it up in the original list.
+@prog = (input out)
+  & input ~ {a b}
+  & @walk ~ (a (b (0 out)))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (full (idx out)))) pl) (full (idx out)))
+
+@walk_nil = (pl (full (idx out)))
+  & pl ~ *
+  & full ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@walk_cons = (* (pl (full (idx out))))
+  & pl ~ (head tail)
+  & full ~ {f_find f_walk}
+  & @find ~ (f_find (head root))
+  & idx ~ $([+1] idx2)
+  & @walk ~ (tail (f_walk (idx2 rest)))
+  & out ~ (1 (root rest))
+
+@find = (full (idx out))
+  & full ~ {lookup keep}
+  & idx ~ {idx_nth idx_cmp}
+  & @nth ~ (lookup (idx_nth val))
+  & val ~ {test next}
+  & test ~ $([=] $(idx_cmp z))
+  & z ~ ?((@find_more @find_done) (keep (next out)))
+
+@find_more = (keep (next out))
+  & @find ~ (keep (next out))
+
+@find_done = (* (keep (next out)))
+  & keep ~ *
+  & out ~ next
+
+@nth = ((?((@nth_nil @nth_cons) (pl (idx out))) pl) (idx out))
+
+@nth_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* (pl (idx out)))
+  & pl ~ (head tail)
+  & idx ~ ?((@nth_hit @nth_more) (head (tail out)))
+
+@nth_hit = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@nth_more = (idx (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idx out))

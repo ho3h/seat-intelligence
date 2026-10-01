@@ -1,0 +1,65 @@
+// Entry point.
+@prog = (input output)
+  & input ~ (xs ys)
+  & @go ~ (xs (ys output))
+
+// Start by inspecting xs.
+@go = ((?((@go_nil @go_cons) (px (ys out))) px) (ys out))
+
+@go_nil = (px (ys out))
+  & px ~ *
+  & ys ~ *
+  & out ~ (0 *)
+
+@go_cons = (* ((x xt) (ys out)))
+  & @scan_y ~ (ys (x (xt out)))
+
+// Scan ys while retaining the current x.
+@scan_y = ((?((@sy_nil @sy_cons) (py (x (xt out)))) py) (x (xt out)))
+
+@sy_nil = (py (x (xt out)))
+  & py ~ *
+  & x ~ *
+  & xt ~ *
+  & out ~ (0 *)
+
+@sy_cons = (* ((y yt) (x (xt out))))
+  & @cmp ~ (x (xt (y (yt out))))
+
+// Scan xs while retaining the current y.
+@scan_x = ((?((@sx_nil @sx_cons) (px (y (yt out)))) px) (y (yt out)))
+
+@sx_nil = (px (y (yt out)))
+  & px ~ *
+  & y ~ *
+  & yt ~ *
+  & out ~ (0 *)
+
+@sx_cons = (* ((x xt) (y (yt out))))
+  & @cmp ~ (x (xt (y (yt out))))
+
+// Compare the current heads.
+@cmp = (x (xt (y (yt out))))
+  & x ~ {xa xb}
+  & y ~ {ya yb}
+  & xa ~ $([<] $(ya lt))
+  & lt ~ ?((@cmp_ge @cmp_lt) (xb (yb (xt (yt out)))))
+
+@cmp_lt = (xb (yb (xt (yt out))))
+  & xb ~ *
+  & @scan_x ~ (xt (yb (yt out)))
+
+@cmp_ge = (xb (yb (xt (yt out))))
+  & xb ~ {xeq xhold}
+  & yb ~ {yeq yhold}
+  & xeq ~ $([=] $(yeq eq))
+  & eq ~ ?((@cmp_gt @cmp_eq) (xhold (yhold (xt (yt out)))))
+
+@cmp_gt = (xhold (yhold (xt (yt out))))
+  & yhold ~ *
+  & @scan_y ~ (yt (xhold (xt out)))
+
+@cmp_eq = (xhold (yhold (xt (yt out))))
+  & yhold ~ *
+  & @go ~ (xt (yt rest))
+  & out ~ (1 (xhold rest))

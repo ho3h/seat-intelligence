@@ -1,0 +1,112 @@
+// Build the initial component labels, one distinct label per node.
+@prog = ((n pairs) out)
+  & n ~ {nb nc}
+  & @build ~ (nb labels)
+  & @edges ~ (pairs (labels (nc out)))
+
+@build = (?((@build_zero @build_succ) out) out)
+
+@build_zero = out
+  & out ~ (0 *)
+
+@build_succ = (k out)
+  & k ~ {k1 k2}
+  & @build ~ (k1 tail)
+  & out ~ (1 (k2 tail))
+
+// Process each merge edge.
+@edges = ((?((@edges_nil @edges_cons) (pl (labels (count out)))) pl) (labels (count out)))
+
+@edges_nil = (* (* (c c)))
+
+@edges_cons = (* ((u v) (tail (labels (count out)))))
+  & @scan_u ~ (labels (u (v got)))
+  & @edge_got ~ (got (tail (labels (count out))))
+
+@edge_got = ((a (b labels)) (tail (count out)))
+  & a ~ {a_test a_ctx}
+  & b ~ {b_test b_ctx}
+  & a_test ~ $([=] $(b_test eq))
+  & eq ~ ?((@different @same) (b_ctx (a_ctx (labels (tail (count out))))))
+
+@same = (* (* (* (tail (labels (count out))))))
+  & @edges ~ (tail (labels (count out)))
+
+@different = (b (a (labels (tail (count out)))))
+  & @replace ~ (labels (b (a mapped)))
+  & count ~ $([-1] count1)
+  & @edges ~ (tail (mapped (count1 out)))
+
+// Replace every occurrence of one component label with another.
+@replace = ((?((@rep_nil @rep_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@rep_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@rep_cons = (* ((h t) (old (new out))))
+  & @rep_step ~ (h (t (old (new out))))
+
+@rep_step = (h (t (old (new out))))
+  & h ~ {h_test h_keep}
+  & old ~ {old_test old_keep}
+  & h_test ~ $([=] $(old_test eq))
+  & eq ~ ?((@rep_no @rep_yes) (h_keep (t (old_keep (new out)))))
+
+@rep_no = (h_keep (t (old (new out))))
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h_keep rest))
+
+@rep_yes = (* (h_keep (t (old (new out)))))
+  & new ~ {new_head new_next}
+  & @replace ~ (t (old (new_next rest)))
+  & out ~ (1 (new_head rest))
+
+// Find the labels at positions u and v while rebuilding the label list.
+@scan_u = ((?((@su_nil @su_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@su_nil = (* (* (* out)))
+  & out ~ (0 (0 (0 *)))
+
+@su_cons = (* ((h t) (u (v out))))
+  & @su_more ~ (u (t (v (h out))))
+
+@su_more = (?((@su_found @su_next) (t (v (h out)))) (t (v (h out))))
+
+@su_found = (t (v (h out)))
+  & v ~ $([-1] vm)
+  & @sv ~ (t (vm got))
+  & @su_found_done ~ (got (h out))
+
+@su_found_done = ((b rest) (h out))
+  & h ~ {ha hh}
+  & out ~ (ha (b (1 (hh rest))))
+
+@su_next = (k (t (v (h out))))
+  & v ~ $([-1] vm)
+  & @su_more ~ (k (t (vm (h got))))
+  & @su_next_done ~ (got (h out))
+
+@su_next_done = ((a (b rest)) (h out))
+  & out ~ (a (b (1 (h rest))))
+
+// Find the label at a position in a list, rebuilding the list as it goes.
+@sv = ((?((@sv_nil @sv_cons) (pl (k out))) pl) (k out))
+
+@sv_nil = (* (* out))
+  & out ~ (0 (0 *))
+
+@sv_cons = (* ((h t) (k out)))
+  & @sv_more ~ (k (h (t out)))
+
+@sv_more = (?((@sv_found @sv_next) (h (t out))) (h (t out)))
+
+@sv_found = (h (t out))
+  & h ~ {ha hb}
+  & out ~ (ha (1 (hb t)))
+
+@sv_next = (k (h (t out)))
+  & @sv ~ (t (k got))
+  & @sv_rebuild ~ (got (h out))
+
+@sv_rebuild = ((b rest) (h out))
+  & out ~ (b (1 (h rest)))

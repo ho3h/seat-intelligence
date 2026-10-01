@@ -1,0 +1,27 @@
+// Deduplicate a sorted list by recursively deduplicating its tail and
+// comparing the head with the first value of the resulting list.
+@prog = (input output)
+  & @u ~ (input output)
+
+@u = ((?((@u_nil @u_cons) (pl out)) pl) out)
+
+@u_nil = (* out)
+  & out ~ (0 *)
+
+@u_cons = (* ((h t) out))
+  & @u ~ (t res)
+  & res ~ (?((@r_nil @r_cons) (payload (h out))) payload)
+
+@r_nil = (* (h out))
+  & out ~ (1 (h (0 *)))
+
+@r_cons = (* ((rh rt) (h out)))
+  & h ~ $([=] $(rh eq))
+  & eq ~ ?((@prepend @keep) (rh (rt (h out))))
+
+@prepend = (rh (rt (h out)))
+  & out ~ (1 (h (1 (rh rt))))
+
+@keep = (* (rh (rt (h out))))
+  & h ~ *
+  & out ~ (1 (rh rt))

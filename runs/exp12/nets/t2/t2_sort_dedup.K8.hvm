@@ -1,0 +1,48 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (* (0 *))
+
+@sort_cons = (* ((h t) out))
+  & @insert ~ (h (s out))
+  & @sort_cons_lw ~ (t s)
+
+@insert = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* (1 (x (0 *)))))
+
+@ins_cons = (* (x ((h t) out)))
+  & {xc xr} ~ x
+  & {hc hr} ~ h
+  & xc ~ $([<] $(hc z))
+  & z ~ ?((@ins_ge @ins_lt) (xr ((hr t) out)))
+
+@ins_lt = (* (x ((h t) (1 (x (1 (h t)))))))
+
+@ins_ge = (x ((h t) out))
+  & {xc xd} ~ x
+  & {hc hd} ~ h
+  & xc ~ $([=] $(hc z))
+  & z ~ ?((@ins_gt @ins_eq) (xd ((hd t) out)))
+
+@ins_eq = (* (* ((h t) (1 (h t)))))
+
+@ins_gt = (x ((h t) (1 (h r))))
+  & @insert ~ (x (t r))
+
+@sort_cons_lw = (ls40 q8)
+  & ls40 ~ (g31 (e23 (g32 (e24 (g33 (e25 (g34 (e26 (g35 (e27 (g36 (e28 (g37 (e29 (g38 (e30 tk39))))))))))))))))
+  & g31 ~ ?((@sort_nil @sort_cons_la) ((e23 q10) q8))
+  & g32 ~ ?((@sort_nil @sort_cons_la) ((e24 q12) q10))
+  & g33 ~ ?((@sort_nil @sort_cons_la) ((e25 q14) q12))
+  & g34 ~ ?((@sort_nil @sort_cons_la) ((e26 q16) q14))
+  & g35 ~ ?((@sort_nil @sort_cons_la) ((e27 q18) q16))
+  & g36 ~ ?((@sort_nil @sort_cons_la) ((e28 q20) q18))
+  & g37 ~ ?((@sort_nil @sort_cons_la) ((e29 q22) q20))
+  & g38 ~ ?((@sort_nil @sort_cons) ((e30 tk39) q22))
+
+@sort_cons_la = (* ((h s) out))
+  & @insert ~ (h (s out))

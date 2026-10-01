@@ -1,0 +1,29 @@
+@count_list = (lst cnt)
+  & lst ~ (?((@count_nil @count_cons) cnt) *)
+@count_nil = (* cnt)
+  & cnt ~ 0
+@count_cons = ((h t) cnt)
+  & @count_list ~ (t cnt_tail)
+  & cnt ~ $([+] $(cnt_tail 1))
+  & h ~ *
+@lg = (x L)
+  & x ~ ?((@lg_z @lg_s) L)
+@lg_z = (* L)
+  & L ~ 0
+@lg_s = ((xm *) L)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] L)
+  & L ~ L
+@z0 = (L t)
+  & L ~ ?((@z0_l @z0_n) t)
+@z0_l = (* t)
+  & t ~ 0
+@z0_n = ((lm *) t)
+  & lm ~ {l1 l2}
+  & @z0 ~ (l1 a)
+  & @z0 ~ (l2 c)
+  & t ~ (a c)
+@prog = (lst out)
+  & out ~ lst

@@ -1,0 +1,53 @@
+{
+ "pid": "t3_wiener_index",
+ "arm": "b1",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 27824,
+    "itrs_median_big": 62132281,
+    "itrs_max": 464104306,
+    "depth_median_big": 147567,
+    "depth_max": 502331
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 17155,
+    "itrs_median_big": 168185512,
+    "itrs_max": 193302978,
+    "depth_median_big": 61111,
+    "depth_max": 69032
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 117920,
+ "best": {
+  "itrs_median_small": 17155,
+  "itrs_median_big": 168185512,
+  "itrs_max": 193302978,
+  "depth_median_big": 61111,
+  "depth_max": 69032
+ },
+ "usd": 0.027812359999999998,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

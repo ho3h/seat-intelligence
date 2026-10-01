@@ -1,0 +1,145 @@
+// Generate vertices, merge endpoint labels for every edge, then count each component.
+@prog = (input out)
+  & input ~ (n edges)
+  & @range ~ (n (0 candidates))
+  & candidates ~ {cscan linit}
+  & @union ~ (edges (linit labels))
+  & @largest ~ (cscan (labels (0 out)))
+
+// Generate the list 0, 1, ..., n-1.
+@range = (n (i out))
+  & n ~ ?((@range_zero @range_more) (i out))
+
+@range_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@range_more = (m (i out))
+  & i ~ {head inc}
+  & inc ~ $([+1] i2)
+  & @range ~ (m (i2 tail))
+  & out ~ (1 (head tail))
+
+// For each edge, merge the labels of its endpoints.
+@union = ((?((@union_nil @union_cons) (pl (labs out))) pl) (labs out))
+
+@union_nil = (* (labs out))
+  & out ~ labs
+
+@union_cons = (* ((edge tail) (labs out)))
+  & edge ~ (u v)
+  & labs ~ {lpair lr}
+  & lpair ~ {lg1 lg2}
+  & @get ~ (u (lg1 lu))
+  & @get ~ (v (lg2 lv))
+  & lu ~ {lcmp lkeep}
+  & lv ~ {vcmp vkeep}
+  & lcmp ~ $([=] $(vcmp eq))
+  & eq ~ ?((@union_diff @union_same) (tail (lr (lkeep (vkeep out))))
+
+@union_diff = (tail (labs (old (new out))))
+  & @replace ~ (labs (old (new labs2)))
+  & @union ~ (tail (labs2 out))
+
+@union_same = (* (tail (labs (old (new out)))))
+  & old ~ *
+  & new ~ *
+  & @union ~ (tail (labs out))
+
+// Look up an index in a list.
+@get = (idx (list out))
+  & @get_list ~ (list (idx out))
+
+@get_list = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ *
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_succ = (rem (head (tail out)))
+  & head ~ *
+  & @get ~ (rem (tail out))
+
+// Replace every occurrence of old with new in a list.
+@replace = ((?((@replace_nil @replace_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@replace_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* ((head tail) (old (new out))))
+  & old ~ {ocmp orec}
+  & new ~ {nrec nsel}
+  & head ~ {hcmp hkeep}
+  & hcmp ~ $([=] $(ocmp eq))
+  & eq ~ ?((@replace_keep @replace_hit) (tail (orec (nrec (nsel (hkeep out)))))
+
+@replace_keep = (tail (old (new (discard (head out)))))
+  & discard ~ *
+  & @replace ~ (tail (old (new rest)))
+  & out ~ (1 (head rest))
+
+@replace_hit = (* (tail (old (new (chosen (head out))))))
+  & head ~ *
+  & @replace ~ (tail (old (new rest)))
+  & out ~ (1 (chosen rest))
+
+// Visit each vertex, count its final label, and retain the largest count.
+@largest = ((?((@largest_nil @largest_cons) (pl (labs (best out)))) pl) (labs (best out)))
+
+@largest_nil = (* (labs (best out)))
+  & labs ~ *
+  & out ~ best
+
+@largest_cons = (* ((idx tail) (labs (best out))))
+  & labs ~ {lpair lr}
+  & lpair ~ {lg lf}
+  & @get ~ (idx (lg label))
+  & @freq ~ (label (lf size))
+  & @max ~ (size (best best2))
+  & @largest ~ (tail (lr (best2 out)))
+
+// Count the occurrences of target in a list.
+@freq = (target (list out))
+  & @freq_go ~ (list (target (0 out)))
+
+@freq_go = ((?((@freq_nil @freq_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@freq_nil = (* (target (acc out)))
+  & target ~ *
+  & out ~ acc
+
+@freq_cons = (* ((head tail) (target (acc out))))
+  & target ~ {tcmp trec}
+  & head ~ $([=] $(tcmp eq))
+  & eq ~ ?((@freq_no @freq_yes) (tail (trec (acc out))))
+
+@freq_no = (tail (target (acc out)))
+  & @freq_go ~ (tail (target (acc out)))
+
+@freq_yes = (* (tail (target (acc out))))
+  & acc ~ $([+1] acc2)
+  & @freq_go ~ (tail (target (acc2 out)))
+
+// Return the larger of size and best.
+@max = (size (best out))
+  & size ~ {scmp stake}
+  & best ~ {bcmp bkeep}
+  & scmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (stake (bkeep out)))
+
+@max_no = (size (best out))
+  & size ~ *
+  & out ~ best
+
+@max_yes = (* (size (best out)))
+  & best ~ *
+  & out ~ size

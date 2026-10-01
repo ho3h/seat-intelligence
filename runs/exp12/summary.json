@@ -1,0 +1,5368 @@
+{
+ "primary": {
+  "set": "T1+T2+T3(exp5, shipped + K=1 rebuild)",
+  "nets": 76,
+  "applies": 51,
+  "applies_frac": 0.6710526315789473,
+  "pass_any": 51,
+  "pass_all_K": 51,
+  "median_depth_gain_bestK": 0.43535427319211106,
+  "median_itrs_change_bestK": -0.0012999491324252599,
+  "median_size_growth_bestK": 2.314917127071823,
+  "bestK_hist": {
+   "2": 4,
+   "4": 7,
+   "8": 5,
+   "16": 35
+  },
+  "depth_gain_ge10": 43,
+  "K2": {
+   "pass": 51,
+   "of": 51,
+   "median_depth_gain": 0.294912559618442,
+   "median_itrs_change": 0.0027238060650081053,
+   "median_small_itrs_change": 0.02678571428571419
+  },
+  "K4": {
+   "pass": 51,
+   "of": 51,
+   "median_depth_gain": 0.4184345281638625,
+   "median_itrs_change": -0.0027039511486158796,
+   "median_small_itrs_change": 0.051926298157453976
+  },
+  "K8": {
+   "pass": 51,
+   "of": 51,
+   "median_depth_gain": 0.43535427319211106,
+   "median_itrs_change": -0.0019911504424778848,
+   "median_small_itrs_change": 0.11557788944723613
+  },
+  "K16": {
+   "pass": 51,
+   "of": 51,
+   "median_depth_gain": 0.43535427319211106,
+   "median_itrs_change": -0.00015802166041833932,
+   "median_small_itrs_change": 0.3107142857142857
+  }
+ },
+ "t1t2": {
+  "set": "T1+T2",
+  "nets": 60,
+  "applies": 40,
+  "applies_frac": 0.6666666666666666,
+  "pass_any": 40,
+  "pass_all_K": 40,
+  "median_depth_gain_bestK": 0.45103642036405867,
+  "median_itrs_change_bestK": -0.0015021809635976657,
+  "median_size_growth_bestK": 3.32793596826746,
+  "bestK_hist": {
+   "2": 2,
+   "4": 6,
+   "8": 5,
+   "16": 27
+  },
+  "depth_gain_ge10": 35,
+  "K2": {
+   "pass": 40,
+   "of": 40,
+   "median_depth_gain": 0.34018540918569606,
+   "median_itrs_change": 0.002886609189130196,
+   "median_small_itrs_change": 0.030384828349944604
+  },
+  "K4": {
+   "pass": 40,
+   "of": 40,
+   "median_depth_gain": 0.4305886306153554,
+   "median_itrs_change": -0.006505056234056561,
+   "median_small_itrs_change": 0.07600366483424947
+  },
+  "K8": {
+   "pass": 40,
+   "of": 40,
+   "median_depth_gain": 0.4354661595621902,
+   "median_itrs_change": -0.004210112250032372,
+   "median_small_itrs_change": 0.15921052631578947
+  },
+  "K16": {
+   "pass": 40,
+   "of": 40,
+   "median_depth_gain": 0.45103642036405867,
+   "median_itrs_change": -0.00016032620659328645,
+   "median_small_itrs_change": 0.3442371280113369
+  }
+ },
+ "t3x16": {
+  "set": "T3 exp5 as shipped (K=16 stream)",
+  "nets": 8,
+  "applies": 3,
+  "applies_frac": 0.375,
+  "pass_any": 3,
+  "pass_all_K": 3,
+  "median_depth_gain_bestK": 0.008154943934760461,
+  "median_itrs_change_bestK": 0.000605908473197303,
+  "median_size_growth_bestK": 1.0365853658536586,
+  "bestK_hist": {
+   "2": 2,
+   "4": 1,
+   "8": 0,
+   "16": 0
+  },
+  "depth_gain_ge10": 0,
+  "K2": {
+   "pass": 3,
+   "of": 3,
+   "median_depth_gain": 0.008154943934760461,
+   "median_itrs_change": 0.000605908473197303,
+   "median_small_itrs_change": 0.013820775746767655
+  },
+  "K4": {
+   "pass": 3,
+   "of": 3,
+   "median_depth_gain": 0.008154943934760461,
+   "median_itrs_change": 0.0012320935733998173,
+   "median_small_itrs_change": 0.012929112795363462
+  },
+  "K8": {
+   "pass": 3,
+   "of": 3,
+   "median_depth_gain": 0.008154943934760461,
+   "median_itrs_change": 0.0032372824139392797,
+   "median_small_itrs_change": 0.0521622826571555
+  },
+  "K16": {
+   "pass": 3,
+   "of": 3,
+   "median_depth_gain": 0.008154943934760461,
+   "median_itrs_change": 0.007807563468912537,
+   "median_small_itrs_change": 0.13062862238074002
+  }
+ },
+ "t3x1": {
+  "set": "T3 exp5 rebuilt with K=1 stream",
+  "nets": 8,
+  "applies": 8,
+  "applies_frac": 1.0,
+  "pass_any": 8,
+  "pass_all_K": 8,
+  "median_depth_gain_bestK": 0.5206352622839924,
+  "median_itrs_change_bestK": -0.0014032752884193256,
+  "median_size_growth_bestK": 1.547012987012987,
+  "bestK_hist": {
+   "2": 0,
+   "4": 0,
+   "8": 0,
+   "16": 8
+  },
+  "depth_gain_ge10": 8,
+  "K2": {
+   "pass": 8,
+   "of": 8,
+   "median_depth_gain": 0.2952823667657427,
+   "median_itrs_change": -0.0011031026399098143,
+   "median_small_itrs_change": 0.010538115591786856
+  },
+  "K4": {
+   "pass": 8,
+   "of": 8,
+   "median_depth_gain": 0.4207244326917164,
+   "median_itrs_change": -0.0014263654128895409,
+   "median_small_itrs_change": 0.013528253294955328
+  },
+  "K8": {
+   "pass": 8,
+   "of": 8,
+   "median_depth_gain": 0.4882110571305578,
+   "median_itrs_change": -0.0012358917514637136,
+   "median_small_itrs_change": 0.05819496927363643
+  },
+  "K16": {
+   "pass": 8,
+   "of": 8,
+   "median_depth_gain": 0.5206352622839924,
+   "median_itrs_change": -0.0014032752884193256,
+   "median_small_itrs_change": 0.16260499949397833
+  }
+ },
+ "t4": {
+  "set": "T4",
+  "nets": 40,
+  "applies": 7,
+  "applies_frac": 0.175,
+  "pass_any": 7,
+  "pass_all_K": 7,
+  "median_depth_gain_bestK": 0.646031746031746,
+  "median_itrs_change_bestK": 5.09009467575261e-05,
+  "median_size_growth_bestK": 2.6432432432432433,
+  "bestK_hist": {
+   "2": 1,
+   "4": 1,
+   "8": 1,
+   "16": 4
+  },
+  "depth_gain_ge10": 6,
+  "K2": {
+   "pass": 7,
+   "of": 7,
+   "median_depth_gain": 0.34365079365079365,
+   "median_itrs_change": 0.003986571548468376,
+   "median_small_itrs_change": 0.10795454545454541
+  },
+  "K4": {
+   "pass": 7,
+   "of": 7,
+   "median_depth_gain": 0.5158730158730158,
+   "median_itrs_change": -0.005245366592843026,
+   "median_small_itrs_change": 0.10861423220973787
+  },
+  "K8": {
+   "pass": 7,
+   "of": 7,
+   "median_depth_gain": 0.6031746031746033,
+   "median_itrs_change": -0.0029013539651837617,
+   "median_small_itrs_change": 0.22916666666666674
+  },
+  "K16": {
+   "pass": 7,
+   "of": 7,
+   "median_depth_gain": 0.646031746031746,
+   "median_itrs_change": 0.009861519093579574,
+   "median_small_itrs_change": 0.6647727272727273
+  }
+ },
+ "all": {
+  "set": "all",
+  "nets": 116,
+  "applies": 58,
+  "applies_frac": 0.5,
+  "pass_any": 58,
+  "pass_all_K": 58,
+  "median_depth_gain_bestK": 0.46673151247278727,
+  "median_itrs_change_bestK": -0.001111670764117556,
+  "median_size_growth_bestK": 2.3996807857581337,
+  "bestK_hist": {
+   "2": 5,
+   "4": 8,
+   "8": 6,
+   "16": 39
+  },
+  "depth_gain_ge10": 49,
+  "K2": {
+   "pass": 58,
+   "of": 58,
+   "median_depth_gain": 0.2952823667657427,
+   "median_itrs_change": 0.0027622927061523583,
+   "median_small_itrs_change": 0.027185960591132985
+  },
+  "K4": {
+   "pass": 58,
+   "of": 58,
+   "median_depth_gain": 0.42231382346039964,
+   "median_itrs_change": -0.0027476660738182113,
+   "median_small_itrs_change": 0.07600366483424947
+  },
+  "K8": {
+   "pass": 58,
+   "of": 58,
+   "median_depth_gain": 0.43560310309059985,
+   "median_itrs_change": -0.00257895332350494,
+   "median_small_itrs_change": 0.12091663482404846
+  },
+  "K16": {
+   "pass": 58,
+   "of": 58,
+   "median_depth_gain": 0.46673151247278727,
+   "median_itrs_change": -4.848359029452354e-05,
+   "median_small_itrs_change": 0.33119165959510244
+  }
+ },
+ "not_applied_reasons": {
+  "no list walker found": [
+   "t1_collatz",
+   "t1_drop",
+   "t1_factorial",
+   "t1_fibonacci",
+   "t1_gcd",
+   "t1_popcount",
+   "t1_powmod",
+   "t1_range",
+   "t1_replicate",
+   "t1_take",
+   "t1_zip_add",
+   "t4_eval_ast",
+   "t4_expr_depth",
+   "t4_fold",
+   "t4_print"
+  ],
+  "no walker continues on its own tail: ('ins_leaf', 'ins_node'": [
+   "t4_bst_insert",
+   "t3_dag_longest",
+   "t3_in_out_degrees",
+   "t3_line_graph_edges",
+   "t3_sources_sinks",
+   "t3_triangle_count"
+  ],
+  "no walker continues on its own tail: ('scan_nil', 'scan_cons": [
+   "t4_brackets3",
+   "t4_paren_prefix",
+   "t4_tokenize"
+  ],
+  "no walker continues on its own tail: ('walk_leaf', 'walk_nod": [
+   "t4_tree_inorder",
+   "t4_tree_path_sums"
+  ],
+  "no walker continues on its own tail: ('dot_xnil', 'dot_xcons": [
+   "t1_dot"
+  ],
+  "no walker continues on its own tail: ('nth_found', 'nth_more": [
+   "t1_nth"
+  ],
+  "no walker continues on its own tail: ('ix_nil', 'ix_cons'): ": [
+   "t2_intersect"
+  ],
+  "no walker continues on its own tail: ('m_nil_x', 'm_cons_x')": [
+   "t2_merge"
+  ],
+  "no walker continues on its own tail: ('ma_nil', 'ma_cons'): ": [
+   "t2_merge3"
+  ],
+  "no walker continues on its own tail: ('bs_nil', 'bs_cons'): ": [
+   "t2_search"
+  ],
+  "no walker continues on its own tail: ('zero', 'positive'): n": [
+   "t2_second_largest"
+  ],
+  "no walker continues on its own tail: ('merge_nil', 'merge_co": [
+   "t2_union"
+  ],
+  "no walker continues on its own tail: ('ub13_nil', 'ub13_cons": [
+   "t2_upper_bound"
+  ],
+  "no walker continues on its own tail: ('dm_leaf', 'dm_node'):": [
+   "t4_bst_delete_min"
+  ],
+  "no walker continues on its own tail: ('scan_missing_left', '": [
+   "t4_bst_kth"
+  ],
+  "no walker continues on its own tail: ('lca_leaf', 'lca_node'": [
+   "t4_bst_lca"
+  ],
+  "no walker continues on its own tail: ('der_add', 'der_rest2'": [
+   "t4_deriv"
+  ],
+  "no walker continues on its own tail: ('f_nil', 'f_cons'): ta": [
+   "t4_eval_str"
+  ],
+  "no walker continues on its own tail: ('Q4c', 'Q5'): nil bran": [
+   "t4_nnf"
+  ],
+  "no walker continues on its own tail: ('nl_nil', 'nl_cons'): ": [
+   "t4_parse"
+  ],
+  "no walker continues on its own tail: ('start_nil', 'start_co": [
+   "t4_rle_encode"
+  ],
+  "no walker continues on its own tail: ('m_and', 'm_ge5'): nil": [
+   "t4_sat_count"
+  ],
+  "no walker continues on its own tail: ('skip_done', 'skip_mor": [
+   "t4_stack_vm"
+  ],
+  "no walker continues on its own tail: ('fd_nil', 'fd_cons'): ": [
+   "t4_to_rpn"
+  ],
+  "no walker continues on its own tail: ('at_zero', 'at_pos'): ": [
+   "t4_tree_depth_count"
+  ],
+  "no walker continues on its own tail: ('td_leaf', 'td_node'):": [
+   "t4_tree_diameter"
+  ],
+  "no walker continues on its own tail: ('fold_leaf', 'fold_nod": [
+   "t4_tree_fold_hash"
+  ],
+  "no walker continues on its own tail: ('h_leaf', 'h_node'): t": [
+   "t4_tree_height"
+  ],
+  "no walker continues on its own tail: ('map_leaf', 'map_node'": [
+   "t4_tree_map_add"
+  ],
+  "no walker continues on its own tail: ('pick_y_none', 'pick_y": [
+   "t4_tree_max_path_sum"
+  ],
+  "no walker continues on its own tail: ('ma_leaf', 'ma_node'):": [
+   "t4_tree_merge_add"
+  ],
+  "no walker continues on its own tail: ('tm_leaf', 'tm_node'):": [
+   "t4_tree_min_max"
+  ],
+  "no walker continues on its own tail: ('m_leaf', 'm_node'): t": [
+   "t4_tree_mirror"
+  ],
+  "no walker continues on its own tail: ('post_leaf', 'post_nod": [
+   "t4_tree_postorder"
+  ],
+  "no walker continues on its own tail: ('pre_leaf', 'pre_node'": [
+   "t4_tree_preorder"
+  ],
+  "no walker continues on its own tail: ('root_leaf', 'root_nod": [
+   "t4_tree_size"
+  ]
+ },
+ "failures": [],
+ "vs_bend": {
+  "t1": {
+   "tag": "t1",
+   "programs": 30,
+   "transformed": 17,
+   "native_wins_orig": 23,
+   "native_wins_lookahead": 24,
+   "median_gain_orig": 0.22164595695875305,
+   "median_gain_lookahead": 0.5472938843400069,
+   "depth_wins_orig": 20,
+   "depth_wins_lookahead": 21,
+   "median_depth_ratio_bend_over_native_orig": 1.2680233781508978,
+   "median_depth_ratio_bend_over_native_lookahead": 2.2089417555373254
+  },
+  "t2": {
+   "tag": "t2",
+   "programs": 30,
+   "transformed": 23,
+   "native_wins_orig": 24,
+   "native_wins_lookahead": 27,
+   "median_gain_orig": 0.22405904183012615,
+   "median_gain_lookahead": 0.38426476086819705,
+   "depth_wins_orig": 21,
+   "depth_wins_lookahead": 26,
+   "median_depth_ratio_bend_over_native_orig": 1.2887590119679242,
+   "median_depth_ratio_bend_over_native_lookahead": 1.6320539490339612
+  },
+  "t4": {
+   "tag": "t4",
+   "programs": 31,
+   "transformed": 6,
+   "native_wins_orig": 29,
+   "native_wins_lookahead": 29,
+   "median_gain_orig": 0.2532267977873387,
+   "median_gain_lookahead": 0.3060333761232349,
+   "depth_wins_orig": 28,
+   "depth_wins_lookahead": 28,
+   "median_depth_ratio_bend_over_native_orig": 1.2876712328767124,
+   "median_depth_ratio_bend_over_native_lookahead": 1.3390946502057612
+  },
+  "t1+t2+t4": {
+   "tag": "t1+t2+t4",
+   "programs": 91,
+   "transformed": 46,
+   "native_wins_orig": 76,
+   "native_wins_lookahead": 80,
+   "median_gain_orig": 0.22418244406196208,
+   "median_gain_lookahead": 0.3412112259970458,
+   "depth_wins_orig": 69,
+   "depth_wins_lookahead": 75,
+   "median_depth_ratio_bend_over_native_orig": 1.2831016825164594,
+   "median_depth_ratio_bend_over_native_lookahead": 1.4661354581673307
+  }
+ },
+ "vs_bend_rows": [
+  {
+   "pid": "t1_append",
+   "tier": "t1",
+   "bend_d": 1161,
+   "bend_i": 2221,
+   "nat_d": 905,
+   "nat_i": 1487,
+   "la_d": 335,
+   "la_i": 1768,
+   "transformed": true
+  },
+  {
+   "pid": "t1_bignum_add",
+   "tier": "t1",
+   "bend_d": 3943,
+   "bend_i": 6986,
+   "nat_d": 1716,
+   "nat_i": 4964,
+   "la_d": 1443,
+   "la_i": 4927,
+   "transformed": true
+  },
+  {
+   "pid": "t1_bignum_mul",
+   "tier": "t1",
+   "bend_d": 6944,
+   "bend_i": 574429,
+   "nat_d": 6536,
+   "nat_i": 1008847,
+   "la_d": 5568,
+   "la_i": 1028248,
+   "transformed": true
+  },
+  {
+   "pid": "t1_bignum_mul_small",
+   "tier": "t1",
+   "bend_d": 1754,
+   "bend_i": 5420,
+   "nat_d": 1367,
+   "nat_i": 5219,
+   "la_d": 795,
+   "la_i": 5178,
+   "transformed": true
+  },
+  {
+   "pid": "t1_collatz",
+   "tier": "t1",
+   "bend_d": 2121,
+   "bend_i": 5184,
+   "nat_d": 2300,
+   "nat_i": 3474,
+   "la_d": 2300,
+   "la_i": 3474,
+   "transformed": false
+  },
+  {
+   "pid": "t1_count_even",
+   "tier": "t1",
+   "bend_d": 2313,
+   "bend_i": 4906,
+   "nat_d": 2184,
+   "nat_i": 4492,
+   "la_d": 985,
+   "la_i": 4831,
+   "transformed": true
+  },
+  {
+   "pid": "t1_dot",
+   "tier": "t1",
+   "bend_d": 4162,
+   "bend_i": 6500,
+   "nat_d": 2735,
+   "nat_i": 5432,
+   "la_d": 2735,
+   "la_i": 5432,
+   "transformed": false
+  },
+  {
+   "pid": "t1_drop",
+   "tier": "t1",
+   "bend_d": 743,
+   "bend_i": 1028,
+   "nat_d": 793,
+   "nat_i": 1159,
+   "la_d": 793,
+   "la_i": 1159,
+   "transformed": false
+  },
+  {
+   "pid": "t1_factorial",
+   "tier": "t1",
+   "bend_d": 10,
+   "bend_i": 14,
+   "nat_d": 10,
+   "nat_i": 13,
+   "la_d": 10,
+   "la_i": 13,
+   "transformed": false
+  },
+  {
+   "pid": "t1_fibonacci",
+   "tier": "t1",
+   "bend_d": 178,
+   "bend_i": 492,
+   "nat_d": 178,
+   "nat_i": 478,
+   "la_d": 178,
+   "la_i": 478,
+   "transformed": false
+  },
+  {
+   "pid": "t1_filter_even",
+   "tier": "t1",
+   "bend_d": 2324,
+   "bend_i": 6186,
+   "nat_d": 1803,
+   "nat_i": 5507,
+   "la_d": 631,
+   "la_i": 5438,
+   "transformed": true
+  },
+  {
+   "pid": "t1_filter_gt",
+   "tier": "t1",
+   "bend_d": 2329,
+   "bend_i": 7195,
+   "nat_d": 1805,
+   "nat_i": 6720,
+   "la_d": 632,
+   "la_i": 6999,
+   "transformed": true
+  },
+  {
+   "pid": "t1_gcd",
+   "tier": "t1",
+   "bend_d": 136,
+   "bend_i": 249,
+   "nat_d": 104,
+   "nat_i": 180,
+   "la_d": 104,
+   "la_i": 180,
+   "transformed": false
+  },
+  {
+   "pid": "t1_last",
+   "tier": "t1",
+   "bend_d": 2313,
+   "bend_i": 3612,
+   "nat_d": 1801,
+   "nat_i": 3598,
+   "la_d": 631,
+   "la_i": 3575,
+   "transformed": true
+  },
+  {
+   "pid": "t1_length",
+   "tier": "t1",
+   "bend_d": 2344,
+   "bend_i": 3210,
+   "nat_d": 1801,
+   "nat_i": 2958,
+   "la_d": 631,
+   "la_i": 3607,
+   "transformed": true
+  },
+  {
+   "pid": "t1_map_double",
+   "tier": "t1",
+   "bend_d": 2313,
+   "bend_i": 4362,
+   "nat_d": 1800,
+   "nat_i": 2570,
+   "la_d": 630,
+   "la_i": 3013,
+   "transformed": true
+  },
+  {
+   "pid": "t1_map_inc",
+   "tier": "t1",
+   "bend_d": 2313,
+   "bend_i": 4362,
+   "nat_d": 1801,
+   "nat_i": 2572,
+   "la_d": 631,
+   "la_i": 3015,
+   "transformed": true
+  },
+  {
+   "pid": "t1_max",
+   "tier": "t1",
+   "bend_d": 4621,
+   "bend_i": 7188,
+   "nat_d": 4098,
+   "nat_i": 6659,
+   "la_d": 2057,
+   "la_i": 6563,
+   "transformed": true
+  },
+  {
+   "pid": "t1_min",
+   "tier": "t1",
+   "bend_d": 5133,
+   "bend_i": 7052,
+   "nat_d": 4096,
+   "nat_i": 6664,
+   "la_d": 2055,
+   "la_i": 6569,
+   "transformed": true
+  },
+  {
+   "pid": "t1_nth",
+   "tier": "t1",
+   "bend_d": 1780,
+   "bend_i": 2833,
+   "nat_d": 1781,
+   "nat_i": 2984,
+   "la_d": 1781,
+   "la_i": 2984,
+   "transformed": false
+  },
+  {
+   "pid": "t1_popcount",
+   "tier": "t1",
+   "bend_d": 17,
+   "bend_i": 23,
+   "nat_d": 24,
+   "nat_i": 33,
+   "la_d": 24,
+   "la_i": 33,
+   "transformed": false
+  },
+  {
+   "pid": "t1_powmod",
+   "tier": "t1",
+   "bend_d": 214,
+   "bend_i": 722,
+   "nat_d": 358,
+   "nat_i": 749,
+   "la_d": 358,
+   "la_i": 749,
+   "transformed": false
+  },
+  {
+   "pid": "t1_prefix_sums",
+   "tier": "t1",
+   "bend_d": 2316,
+   "bend_i": 5325,
+   "nat_d": 1802,
+   "nat_i": 4362,
+   "la_d": 1034,
+   "la_i": 4266,
+   "transformed": true
+  },
+  {
+   "pid": "t1_product",
+   "tier": "t1",
+   "bend_d": 1185,
+   "bend_i": 2055,
+   "nat_d": 1928,
+   "nat_i": 3852,
+   "la_d": 729,
+   "la_i": 3807,
+   "transformed": true
+  },
+  {
+   "pid": "t1_range",
+   "tier": "t1",
+   "bend_d": 361,
+   "bend_i": 1466,
+   "nat_d": 1288,
+   "nat_i": 2828,
+   "la_d": 1288,
+   "la_i": 2828,
+   "transformed": false
+  },
+  {
+   "pid": "t1_replicate",
+   "tier": "t1",
+   "bend_d": 58,
+   "bend_i": 1174,
+   "nat_d": 1288,
+   "nat_i": 2573,
+   "la_d": 1288,
+   "la_i": 2573,
+   "transformed": false
+  },
+  {
+   "pid": "t1_reverse",
+   "tier": "t1",
+   "bend_d": 2313,
+   "bend_i": 4428,
+   "nat_d": 1801,
+   "nat_i": 3342,
+   "la_d": 631,
+   "la_i": 3319,
+   "transformed": true
+  },
+  {
+   "pid": "t1_sum",
+   "tier": "t1",
+   "bend_d": 2364,
+   "bend_i": 4298,
+   "nat_d": 1801,
+   "nat_i": 4110,
+   "la_d": 631,
+   "la_i": 4087,
+   "transformed": true
+  },
+  {
+   "pid": "t1_take",
+   "tier": "t1",
+   "bend_d": 1905,
+   "bend_i": 3652,
+   "nat_d": 1565,
+   "nat_i": 2146,
+   "la_d": 1565,
+   "la_i": 2146,
+   "transformed": false
+  },
+  {
+   "pid": "t1_zip_add",
+   "tier": "t1",
+   "bend_d": 3052,
+   "bend_i": 4842,
+   "nat_d": 1380,
+   "nat_i": 2860,
+   "la_d": 1380,
+   "la_i": 2860,
+   "transformed": false
+  },
+  {
+   "pid": "t2_argmax",
+   "tier": "t2",
+   "bend_d": 5880,
+   "bend_i": 8568,
+   "nat_d": 4107,
+   "nat_i": 9240,
+   "la_d": 2319,
+   "la_i": 9177,
+   "transformed": true
+  },
+  {
+   "pid": "t2_argmin",
+   "tier": "t2",
+   "bend_d": 6009,
+   "bend_i": 8954,
+   "nat_d": 4099,
+   "nat_i": 8454,
+   "la_d": 2316,
+   "la_i": 8237,
+   "transformed": true
+  },
+  {
+   "pid": "t2_closest",
+   "tier": "t2",
+   "bend_d": 5369,
+   "bend_i": 18968,
+   "nat_d": 9474,
+   "nat_i": 19964,
+   "la_d": 7940,
+   "la_i": 18109,
+   "transformed": true
+  },
+  {
+   "pid": "t2_count_in_range",
+   "tier": "t2",
+   "bend_d": 2394,
+   "bend_i": 9428,
+   "nat_d": 2571,
+   "nat_i": 8212,
+   "la_d": 1371,
+   "la_i": 8235,
+   "transformed": true
+  },
+  {
+   "pid": "t2_dedup_sorted",
+   "tier": "t2",
+   "bend_d": 2324,
+   "bend_i": 6943,
+   "nat_d": 1805,
+   "nat_i": 6885,
+   "la_d": 631,
+   "la_i": 6861,
+   "transformed": true
+  },
+  {
+   "pid": "t2_distinct_count",
+   "tier": "t2",
+   "bend_d": 80796,
+   "bend_i": 144656,
+   "nat_d": 21763,
+   "nat_i": 42830,
+   "la_d": 19983,
+   "la_i": 42757,
+   "transformed": true
+  },
+  {
+   "pid": "t2_histogram",
+   "tier": "t2",
+   "bend_d": 2361,
+   "bend_i": 18883,
+   "nat_d": 1828,
+   "nat_i": 17693,
+   "la_d": 631,
+   "la_i": 17670,
+   "transformed": true
+  },
+  {
+   "pid": "t2_intersect",
+   "tier": "t2",
+   "bend_d": 7322,
+   "bend_i": 11721,
+   "nat_d": 5975,
+   "nat_i": 10118,
+   "la_d": 5975,
+   "la_i": 10118,
+   "transformed": false
+  },
+  {
+   "pid": "t2_inversions",
+   "tier": "t2",
+   "bend_d": 18658,
+   "bend_i": 204531,
+   "nat_d": 5886,
+   "nat_i": 1049695,
+   "la_d": 2821,
+   "la_i": 1053430,
+   "transformed": true
+  },
+  {
+   "pid": "t2_is_sorted",
+   "tier": "t2",
+   "bend_d": 4889,
+   "bend_i": 6939,
+   "nat_d": 3586,
+   "nat_i": 5124,
+   "la_d": 3837,
+   "la_i": 5891,
+   "transformed": true
+  },
+  {
+   "pid": "t2_kth_smallest",
+   "tier": "t2",
+   "bend_d": 12685,
+   "bend_i": 505120,
+   "nat_d": 10167,
+   "nat_i": 424274,
+   "la_d": 8968,
+   "la_i": 424205,
+   "transformed": true
+  },
+  {
+   "pid": "t2_lis",
+   "tier": "t2",
+   "bend_d": 5771,
+   "bend_i": 76774,
+   "nat_d": 5169,
+   "nat_i": 66412,
+   "la_d": 5150,
+   "la_i": 66346,
+   "transformed": true
+  },
+  {
+   "pid": "t2_longest_run",
+   "tier": "t2",
+   "bend_d": 4893,
+   "bend_i": 9759,
+   "nat_d": 5034,
+   "nat_i": 9007,
+   "la_d": 2557,
+   "la_i": 8941,
+   "transformed": true
+  },
+  {
+   "pid": "t2_lower_bound",
+   "tier": "t2",
+   "bend_d": 1986,
+   "bend_i": 3211,
+   "nat_d": 1325,
+   "nat_i": 2644,
+   "la_d": 1061,
+   "la_i": 2856,
+   "transformed": true
+  },
+  {
+   "pid": "t2_median",
+   "tier": "t2",
+   "bend_d": 95017,
+   "bend_i": 168683,
+   "nat_d": 10002,
+   "nat_i": 411902,
+   "la_d": 8803,
+   "la_i": 411833,
+   "transformed": true
+  },
+  {
+   "pid": "t2_merge",
+   "tier": "t2",
+   "bend_d": 6470,
+   "bend_i": 10385,
+   "nat_d": 4557,
+   "nat_i": 7342,
+   "la_d": 4557,
+   "la_i": 7342,
+   "transformed": false
+  },
+  {
+   "pid": "t2_merge3",
+   "tier": "t2",
+   "bend_d": 7867,
+   "bend_i": 21031,
+   "nat_d": 5839,
+   "nat_i": 17537,
+   "la_d": 5839,
+   "la_i": 17537,
+   "transformed": false
+  },
+  {
+   "pid": "t2_merge_dedup",
+   "tier": "t2",
+   "bend_d": 3154,
+   "bend_i": 8567,
+   "nat_d": 6150,
+   "nat_i": 20110,
+   "la_d": 6055,
+   "la_i": 20037,
+   "transformed": true
+  },
+  {
+   "pid": "t2_mode",
+   "tier": "t2",
+   "bend_d": 18700,
+   "bend_i": 196965,
+   "nat_d": 6546,
+   "nat_i": 798734,
+   "la_d": 6546,
+   "la_i": 787214,
+   "transformed": true
+  },
+  {
+   "pid": "t2_partition",
+   "tier": "t2",
+   "bend_d": 2331,
+   "bend_i": 8094,
+   "nat_d": 1807,
+   "nat_i": 6688,
+   "la_d": 631,
+   "la_i": 6665,
+   "transformed": true
+  },
+  {
+   "pid": "t2_rank",
+   "tier": "t2",
+   "bend_d": 2446,
+   "bend_i": 5647,
+   "nat_d": 2569,
+   "nat_i": 5136,
+   "la_d": 1370,
+   "la_i": 5113,
+   "transformed": true
+  },
+  {
+   "pid": "t2_search",
+   "tier": "t2",
+   "bend_d": 2816,
+   "bend_i": 5909,
+   "nat_d": 1531,
+   "nat_i": 2827,
+   "la_d": 1531,
+   "la_i": 2827,
+   "transformed": false
+  },
+  {
+   "pid": "t2_second_largest",
+   "tier": "t2",
+   "bend_d": 5199,
+   "bend_i": 8302,
+   "nat_d": 8929,
+   "nat_i": 15576,
+   "la_d": 8929,
+   "la_i": 15576,
+   "transformed": false
+  },
+  {
+   "pid": "t2_sort",
+   "tier": "t2",
+   "bend_d": 10485,
+   "bend_i": 201265,
+   "nat_d": 10110,
+   "nat_i": 436649,
+   "la_d": 8911,
+   "la_i": 436580,
+   "transformed": true
+  },
+  {
+   "pid": "t2_sort_dedup",
+   "tier": "t2",
+   "bend_d": 9624,
+   "bend_i": 64806,
+   "nat_d": 7787,
+   "nat_i": 58760,
+   "la_d": 6588,
+   "la_i": 58691,
+   "transformed": true
+  },
+  {
+   "pid": "t2_sort_desc",
+   "tier": "t2",
+   "bend_d": 10538,
+   "bend_i": 165619,
+   "nat_d": 10828,
+   "nat_i": 438283,
+   "la_d": 9629,
+   "la_i": 438214,
+   "transformed": true
+  },
+  {
+   "pid": "t2_sort_pairs",
+   "tier": "t2",
+   "bend_d": 14722,
+   "bend_i": 153516,
+   "nat_d": 8997,
+   "nat_i": 466632,
+   "la_d": 7798,
+   "la_i": 466563,
+   "transformed": true
+  },
+  {
+   "pid": "t2_top_k",
+   "tier": "t2",
+   "bend_d": 9246,
+   "bend_i": 227776,
+   "nat_d": 9466,
+   "nat_i": 398411,
+   "la_d": 8267,
+   "la_i": 398342,
+   "transformed": true
+  },
+  {
+   "pid": "t2_union",
+   "tier": "t2",
+   "bend_d": 5923,
+   "bend_i": 9320,
+   "nat_d": 6250,
+   "nat_i": 10152,
+   "la_d": 6250,
+   "la_i": 10152,
+   "transformed": false
+  },
+  {
+   "pid": "t2_upper_bound",
+   "tier": "t2",
+   "bend_d": 2708,
+   "bend_i": 4294,
+   "nat_d": 1784,
+   "nat_i": 2959,
+   "la_d": 1784,
+   "la_i": 2959,
+   "transformed": false
+  },
+  {
+   "pid": "t4_brackets3",
+   "tier": "t4",
+   "bend_d": 3274,
+   "bend_i": 4906,
+   "nat_d": 3900,
+   "nat_i": 7796,
+   "la_d": 3900,
+   "la_i": 7796,
+   "transformed": false
+  },
+  {
+   "pid": "t4_bst_kth",
+   "tier": "t4",
+   "bend_d": 1627,
+   "bend_i": 3986,
+   "nat_d": 1215,
+   "nat_i": 3217,
+   "la_d": 1215,
+   "la_i": 3217,
+   "transformed": false
+  },
+  {
+   "pid": "t4_bst_lca",
+   "tier": "t4",
+   "bend_d": 94,
+   "bend_i": 2214,
+   "nat_d": 73,
+   "nat_i": 1491,
+   "la_d": 73,
+   "la_i": 1491,
+   "transformed": false
+  },
+  {
+   "pid": "t4_eval_ast",
+   "tier": "t4",
+   "bend_d": 436,
+   "bend_i": 2544,
+   "nat_d": 272,
+   "nat_i": 2387,
+   "la_d": 272,
+   "la_i": 2387,
+   "transformed": false
+  },
+  {
+   "pid": "t4_eval_rpn",
+   "tier": "t4",
+   "bend_d": 5351,
+   "bend_i": 9570,
+   "nat_d": 3590,
+   "nat_i": 6415,
+   "la_d": 446,
+   "la_i": 6448,
+   "transformed": true
+  },
+  {
+   "pid": "t4_eval_str",
+   "tier": "t4",
+   "bend_d": 12332,
+   "bend_i": 18483,
+   "nat_d": 14168,
+   "nat_i": 22866,
+   "la_d": 14168,
+   "la_i": 22866,
+   "transformed": false
+  },
+  {
+   "pid": "t4_expr_depth",
+   "tier": "t4",
+   "bend_d": 368,
+   "bend_i": 3357,
+   "nat_d": 251,
+   "nat_i": 3233,
+   "la_d": 251,
+   "la_i": 3233,
+   "transformed": false
+  },
+  {
+   "pid": "t4_paren_depth",
+   "tier": "t4",
+   "bend_d": 3448,
+   "bend_i": 6022,
+   "nat_d": 3442,
+   "nat_i": 5761,
+   "la_d": 1088,
+   "la_i": 5728,
+   "transformed": true
+  },
+  {
+   "pid": "t4_paren_match",
+   "tier": "t4",
+   "bend_d": 2824,
+   "bend_i": 467823,
+   "nat_d": 2742,
+   "nat_i": 12320,
+   "la_d": 2742,
+   "la_i": 13156,
+   "transformed": true
+  },
+  {
+   "pid": "t4_paren_prefix",
+   "tier": "t4",
+   "bend_d": 1519,
+   "bend_i": 2281,
+   "nat_d": 1154,
+   "nat_i": 2361,
+   "la_d": 1154,
+   "la_i": 2361,
+   "transformed": false
+  },
+  {
+   "pid": "t4_paren_unmatched",
+   "tier": "t4",
+   "bend_d": 3531,
+   "bend_i": 4634,
+   "nat_d": 3001,
+   "nat_i": 4766,
+   "la_d": 811,
+   "la_i": 4731,
+   "transformed": true
+  },
+  {
+   "pid": "t4_parse",
+   "tier": "t4",
+   "bend_d": 10730,
+   "bend_i": 19152,
+   "nat_d": 9939,
+   "nat_i": 15474,
+   "la_d": 9939,
+   "la_i": 15474,
+   "transformed": false
+  },
+  {
+   "pid": "t4_print",
+   "tier": "t4",
+   "bend_d": 182,
+   "bend_i": 4730,
+   "nat_d": 170,
+   "nat_i": 4822,
+   "la_d": 170,
+   "la_i": 4822,
+   "transformed": false
+  },
+  {
+   "pid": "t4_regmachine",
+   "tier": "t4",
+   "bend_d": 11151,
+   "bend_i": 20791,
+   "nat_d": 1260,
+   "nat_i": 19646,
+   "la_d": 446,
+   "la_i": 19647,
+   "transformed": true
+  },
+  {
+   "pid": "t4_rle_encode",
+   "tier": "t4",
+   "bend_d": 3895,
+   "bend_i": 5451,
+   "nat_d": 2703,
+   "nat_i": 4990,
+   "la_d": 2703,
+   "la_i": 4990,
+   "transformed": false
+  },
+  {
+   "pid": "t4_sat_count",
+   "tier": "t4",
+   "bend_d": 395,
+   "bend_i": 5119,
+   "nat_d": 386,
+   "nat_i": 4535,
+   "la_d": 386,
+   "la_i": 4535,
+   "transformed": false
+  },
+  {
+   "pid": "t4_stack_vm",
+   "tier": "t4",
+   "bend_d": 4099,
+   "bend_i": 6982,
+   "nat_d": 2256,
+   "nat_i": 4882,
+   "la_d": 2256,
+   "la_i": 4882,
+   "transformed": false
+  },
+  {
+   "pid": "t4_to_rpn",
+   "tier": "t4",
+   "bend_d": 13869,
+   "bend_i": 21530,
+   "nat_d": 10900,
+   "nat_i": 17482,
+   "la_d": 10900,
+   "la_i": 17482,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tokenize",
+   "tier": "t4",
+   "bend_d": 5596,
+   "bend_i": 8487,
+   "nat_d": 3518,
+   "nat_i": 5929,
+   "la_d": 3518,
+   "la_i": 5929,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_depth_count",
+   "tier": "t4",
+   "bend_d": 190,
+   "bend_i": 2759,
+   "nat_d": 116,
+   "nat_i": 2049,
+   "la_d": 116,
+   "la_i": 2049,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_diameter",
+   "tier": "t4",
+   "bend_d": 347,
+   "bend_i": 14285,
+   "nat_d": 411,
+   "nat_i": 11894,
+   "la_d": 411,
+   "la_i": 11894,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_fold_hash",
+   "tier": "t4",
+   "bend_d": 334,
+   "bend_i": 5818,
+   "nat_d": 231,
+   "nat_i": 5592,
+   "la_d": 231,
+   "la_i": 5592,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_height",
+   "tier": "t4",
+   "bend_d": 314,
+   "bend_i": 6599,
+   "nat_d": 292,
+   "nat_i": 6422,
+   "la_d": 292,
+   "la_i": 6422,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_inorder",
+   "tier": "t4",
+   "bend_d": 249,
+   "bend_i": 5038,
+   "nat_d": 122,
+   "nat_i": 4514,
+   "la_d": 122,
+   "la_i": 4514,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_level_order",
+   "tier": "t4",
+   "bend_d": 11947,
+   "bend_i": 20706,
+   "nat_d": 7552,
+   "nat_i": 13431,
+   "la_d": 5865,
+   "la_i": 14409,
+   "transformed": true
+  },
+  {
+   "pid": "t4_tree_max_path_sum",
+   "tier": "t4",
+   "bend_d": 395,
+   "bend_i": 8573,
+   "nat_d": 317,
+   "nat_i": 9728,
+   "la_d": 317,
+   "la_i": 9728,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_min_max",
+   "tier": "t4",
+   "bend_d": 895,
+   "bend_i": 16390,
+   "nat_d": 594,
+   "nat_i": 15852,
+   "la_d": 594,
+   "la_i": 15852,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_path_sums",
+   "tier": "t4",
+   "bend_d": 617,
+   "bend_i": 8644,
+   "nat_d": 456,
+   "nat_i": 9785,
+   "la_d": 456,
+   "la_i": 9785,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_postorder",
+   "tier": "t4",
+   "bend_d": 146,
+   "bend_i": 5048,
+   "nat_d": 123,
+   "nat_i": 4514,
+   "la_d": 123,
+   "la_i": 4514,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_preorder",
+   "tier": "t4",
+   "bend_d": 151,
+   "bend_i": 5052,
+   "nat_d": 128,
+   "nat_i": 4514,
+   "la_d": 128,
+   "la_i": 4514,
+   "transformed": false
+  },
+  {
+   "pid": "t4_tree_size",
+   "tier": "t4",
+   "bend_d": 172,
+   "bend_i": 4689,
+   "nat_d": 155,
+   "nat_i": 4512,
+   "la_d": 155,
+   "la_i": 4512,
+   "transformed": false
+  }
+ ],
+ "vs_strong_bend": [
+  {
+   "set": "t3x16",
+   "pid": "t3_budget_reach",
+   "bend_d": 1582,
+   "bend_i": 145263,
+   "nat_d": 981,
+   "nat_i": 115529,
+   "la_d": 973,
+   "la_i": 115599,
+   "bestK": 2
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_cc_count",
+   "bend_d": 2121,
+   "bend_i": 301103,
+   "nat_d": 1536,
+   "nat_i": 256254,
+   "la_d": 1495,
+   "la_i": 264666,
+   "bestK": 4
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_dag_longest",
+   "bend_d": 1544,
+   "bend_i": 64600,
+   "nat_d": 711,
+   "nat_i": 51330,
+   "la_d": 711,
+   "la_i": 51330,
+   "bestK": null
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_in_out_degrees",
+   "bend_d": 1845,
+   "bend_i": 84241,
+   "nat_d": 586,
+   "nat_i": 79143,
+   "la_d": 586,
+   "la_i": 79143,
+   "bestK": null
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_line_graph_edges",
+   "bend_d": 1778,
+   "bend_i": 88156,
+   "nat_d": 607,
+   "nat_i": 81485,
+   "la_d": 607,
+   "la_i": 81485,
+   "bestK": null
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_sources_sinks",
+   "bend_d": 1843,
+   "bend_i": 110261,
+   "nat_d": 615,
+   "nat_i": 88444,
+   "la_d": 615,
+   "la_i": 88444,
+   "bestK": null
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_triangle_count",
+   "bend_d": 1401,
+   "bend_i": 194791,
+   "nat_d": 802,
+   "nat_i": 157680,
+   "la_d": 802,
+   "la_i": 157680,
+   "bestK": null
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_wsp_all_from",
+   "bend_d": 891,
+   "bend_i": 63262,
+   "nat_d": 371,
+   "nat_i": 60872,
+   "la_d": 371,
+   "la_i": 60903,
+   "bestK": 2
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_budget_reach",
+   "bend_d": 1582,
+   "bend_i": 145263,
+   "nat_d": 1501,
+   "nat_i": 115589,
+   "la_d": 973,
+   "la_i": 116434,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_cc_count",
+   "bend_d": 2121,
+   "bend_i": 301103,
+   "nat_d": 2083,
+   "nat_i": 256314,
+   "la_d": 1495,
+   "la_i": 310779,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_dag_longest",
+   "bend_d": 1544,
+   "bend_i": 64600,
+   "nat_d": 1414,
+   "nat_i": 51405,
+   "la_d": 711,
+   "la_i": 51333,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_in_out_degrees",
+   "bend_d": 1845,
+   "bend_i": 84241,
+   "nat_d": 1665,
+   "nat_i": 79308,
+   "la_d": 587,
+   "la_i": 79146,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_line_graph_edges",
+   "bend_d": 1778,
+   "bend_i": 88156,
+   "nat_d": 1614,
+   "nat_i": 81680,
+   "la_d": 608,
+   "la_i": 81488,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_sources_sinks",
+   "bend_d": 1843,
+   "bend_i": 110261,
+   "nat_d": 1671,
+   "nat_i": 88759,
+   "la_d": 616,
+   "la_i": 88447,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_triangle_count",
+   "bend_d": 1401,
+   "bend_i": 194791,
+   "nat_d": 1258,
+   "nat_i": 157905,
+   "la_d": 802,
+   "la_i": 157683,
+   "bestK": 16
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_wsp_all_from",
+   "bend_d": 891,
+   "bend_i": 63262,
+   "nat_d": 805,
+   "nat_i": 60827,
+   "la_d": 367,
+   "la_i": 61198,
+   "bestK": 16
+  }
+ ],
+ "vs_strong_bend_t3x1": {
+  "geomean_bend_over_native_orig": 1.086698841977784,
+  "geomean_bend_over_native_lookahead": 2.21728827678499
+ },
+ "vs_strong_bend_t3x16": {
+  "geomean_bend_over_native_orig": 2.2059239077853547,
+  "geomean_bend_over_native_lookahead": 2.2156634898575516
+ },
+ "rows": [
+  {
+   "set": "t1",
+   "pid": "t1_append",
+   "applies": true,
+   "why": null,
+   "d0": 905,
+   "i0": 1487,
+   "is0": 61,
+   "size0": 84,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 588,
+     "i": 1698,
+     "is": 85,
+     "size": 182,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 431,
+     "i": 1660,
+     "is": 107,
+     "size": 254,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 359,
+     "i": 1680,
+     "is": 109,
+     "size": 398,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 335,
+     "i": 1768,
+     "is": 213,
+     "size": 686,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6298342541436464,
+   "igain": -0.18897108271687957,
+   "sgrow": 8.166666666666666,
+   "d_best": 335,
+   "i_best": 1768
+  },
+  {
+   "set": "t1",
+   "pid": "t1_bignum_add",
+   "applies": true,
+   "why": null,
+   "d0": 1716,
+   "i0": 4964,
+   "is0": 209,
+   "size0": 285,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1447,
+     "i": 4983,
+     "is": 214,
+     "size": 339,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1443,
+     "i": 4933,
+     "is": 240,
+     "size": 375,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1443,
+     "i": 4947,
+     "is": 283,
+     "size": 447,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1443,
+     "i": 4927,
+     "is": 387,
+     "size": 591,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.15909090909090906,
+   "igain": 0.0074536663980661055,
+   "sgrow": 2.0736842105263156,
+   "d_best": 1443,
+   "i_best": 4927
+  },
+  {
+   "set": "t1",
+   "pid": "t1_bignum_mul",
+   "applies": true,
+   "why": null,
+   "d0": 6536,
+   "i0": 1008847,
+   "is0": 1447,
+   "size0": 543,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 6212,
+     "i": 1012070,
+     "is": 1677,
+     "size": 785,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 5790,
+     "i": 1002022,
+     "is": 1921,
+     "size": 929,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 5638,
+     "i": 1007894,
+     "is": 2349,
+     "size": 1217,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 5568,
+     "i": 1028248,
+     "is": 3379,
+     "size": 1793,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.1481028151774786,
+   "igain": -0.019230864541402104,
+   "sgrow": 3.3020257826887662,
+   "d_best": 5568,
+   "i_best": 1028248
+  },
+  {
+   "set": "t1",
+   "pid": "t1_bignum_mul_small",
+   "applies": true,
+   "why": null,
+   "d0": 1367,
+   "i0": 5219,
+   "is0": 224,
+   "size0": 163,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 890,
+     "i": 5242,
+     "is": 230,
+     "size": 231,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 795,
+     "i": 5178,
+     "is": 226,
+     "size": 275,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 795,
+     "i": 5194,
+     "is": 224,
+     "size": 363,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 795,
+     "i": 5298,
+     "is": 352,
+     "size": 539,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.4184345281638625,
+   "igain": 0.007855911094079349,
+   "sgrow": 1.687116564417178,
+   "d_best": 795,
+   "i_best": 5178
+  },
+  {
+   "set": "t1",
+   "pid": "t1_collatz",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 2300,
+   "i0": 3474,
+   "is0": 286,
+   "size0": 114,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_count_even",
+   "applies": true,
+   "why": null,
+   "d0": 2184,
+   "i0": 4492,
+   "is0": 201,
+   "size0": 108,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1545,
+     "i": 4894,
+     "is": 223,
+     "size": 202,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1225,
+     "i": 4789,
+     "is": 217,
+     "size": 266,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1065,
+     "i": 4771,
+     "is": 261,
+     "size": 394,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 985,
+     "i": 4831,
+     "is": 259,
+     "size": 650,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.548992673992674,
+   "igain": -0.07546749777382011,
+   "sgrow": 6.018518518518518,
+   "d_best": 985,
+   "i_best": 4831
+  },
+  {
+   "set": "t1",
+   "pid": "t1_dot",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('dot_xnil', 'dot_xcons'): tail passed to a walker in a non-list slot (zip/merge shape); ('dot_ynil', 'dot_ycons'): tail passed to a walker in a non-list slot (zip/merge shape)",
+   "d0": 2735,
+   "i0": 5432,
+   "is0": 198,
+   "size0": 102,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_drop",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 793,
+   "i0": 1159,
+   "is0": 55,
+   "size0": 87,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_factorial",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 10,
+   "i0": 13,
+   "is0": 173,
+   "size0": 71,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_fibonacci",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 178,
+   "i0": 478,
+   "is0": 270,
+   "size0": 168,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_filter_even",
+   "applies": true,
+   "why": null,
+   "d0": 1803,
+   "i0": 5507,
+   "is0": 135,
+   "size0": 76,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1164,
+     "i": 5522,
+     "is": 150,
+     "size": 120,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 5414,
+     "is": 146,
+     "size": 148,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 5390,
+     "is": 144,
+     "size": 204,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 5438,
+     "is": 224,
+     "size": 316,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6500277315585136,
+   "igain": 0.012529507899037617,
+   "sgrow": 4.157894736842105,
+   "d_best": 631,
+   "i_best": 5438
+  },
+  {
+   "set": "t1",
+   "pid": "t1_filter_gt",
+   "applies": true,
+   "why": null,
+   "d0": 1805,
+   "i0": 6720,
+   "is0": 280,
+   "size0": 106,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1165,
+     "i": 6999,
+     "is": 313,
+     "size": 180,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 848,
+     "i": 6903,
+     "is": 307,
+     "size": 224,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 696,
+     "i": 6903,
+     "is": 369,
+     "size": 312,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 632,
+     "i": 6999,
+     "is": 367,
+     "size": 488,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6498614958448754,
+   "igain": -0.04151785714285716,
+   "sgrow": 4.60377358490566,
+   "d_best": 632,
+   "i_best": 6999
+  },
+  {
+   "set": "t1",
+   "pid": "t1_gcd",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 104,
+   "i0": 180,
+   "is0": 96,
+   "size0": 54,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_last",
+   "applies": true,
+   "why": null,
+   "d0": 1801,
+   "i0": 3598,
+   "is0": 168,
+   "size0": 46,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1164,
+     "i": 3617,
+     "is": 173,
+     "size": 92,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 3515,
+     "is": 167,
+     "size": 128,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 3503,
+     "is": 217,
+     "size": 200,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 3575,
+     "is": 215,
+     "size": 344,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6496390893947807,
+   "igain": 0.0063924402445803,
+   "sgrow": 7.478260869565218,
+   "d_best": 631,
+   "i_best": 3575
+  },
+  {
+   "set": "t1",
+   "pid": "t1_length",
+   "applies": true,
+   "why": null,
+   "d0": 1801,
+   "i0": 2958,
+   "is0": 92,
+   "size0": 274,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1164,
+     "i": 3649,
+     "is": 118,
+     "size": 628,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 3547,
+     "is": 114,
+     "size": 916,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 3535,
+     "is": 112,
+     "size": 1492,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 3607,
+     "is": 216,
+     "size": 2644,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6496390893947807,
+   "igain": -0.2194050033806627,
+   "sgrow": 9.64963503649635,
+   "d_best": 631,
+   "i_best": 3607
+  },
+  {
+   "set": "t1",
+   "pid": "t1_map_double",
+   "applies": true,
+   "why": null,
+   "d0": 1800,
+   "i0": 2570,
+   "is0": 80,
+   "size0": 43,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1162,
+     "i": 3097,
+     "is": 98,
+     "size": 75,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 846,
+     "i": 2989,
+     "is": 94,
+     "size": 103,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 694,
+     "i": 2965,
+     "is": 92,
+     "size": 159,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 630,
+     "i": 3013,
+     "is": 172,
+     "size": 271,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.65,
+   "igain": -0.17237354085603118,
+   "sgrow": 6.3023255813953485,
+   "d_best": 630,
+   "i_best": 3013
+  },
+  {
+   "set": "t1",
+   "pid": "t1_map_inc",
+   "applies": true,
+   "why": null,
+   "d0": 1801,
+   "i0": 2572,
+   "is0": 52,
+   "size0": 46,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1163,
+     "i": 3099,
+     "is": 75,
+     "size": 82,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 2991,
+     "is": 93,
+     "size": 110,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 2967,
+     "is": 91,
+     "size": 166,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 3015,
+     "is": 171,
+     "size": 278,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6496390893947807,
+   "igain": -0.17223950233281493,
+   "sgrow": 6.043478260869565,
+   "d_best": 631,
+   "i_best": 3015
+  },
+  {
+   "set": "t1",
+   "pid": "t1_max",
+   "applies": true,
+   "why": null,
+   "d0": 4098,
+   "i0": 6659,
+   "is0": 285,
+   "size0": 114,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 2057,
+     "i": 6677,
+     "is": 289,
+     "size": 242,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 2057,
+     "i": 6575,
+     "is": 283,
+     "size": 314,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2057,
+     "i": 6563,
+     "is": 333,
+     "size": 458,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2057,
+     "i": 6635,
+     "is": 331,
+     "size": 746,
+     "fail": null
+    }
+   },
+   "bestK": 8,
+   "dgain": 0.4980478282088824,
+   "igain": 0.01441657906592586,
+   "sgrow": 4.017543859649122,
+   "d_best": 2057,
+   "i_best": 6563
+  },
+  {
+   "set": "t1",
+   "pid": "t1_min",
+   "applies": true,
+   "why": null,
+   "d0": 4096,
+   "i0": 6664,
+   "is0": 140,
+   "size0": 133,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 2055,
+     "i": 6683,
+     "is": 145,
+     "size": 265,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 2055,
+     "i": 6581,
+     "is": 169,
+     "size": 337,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2055,
+     "i": 6569,
+     "is": 167,
+     "size": 481,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2055,
+     "i": 6641,
+     "is": 271,
+     "size": 769,
+     "fail": null
+    }
+   },
+   "bestK": 8,
+   "dgain": 0.498291015625,
+   "igain": 0.01425570228091233,
+   "sgrow": 3.6165413533834587,
+   "d_best": 2055,
+   "i_best": 6569
+  },
+  {
+   "set": "t1",
+   "pid": "t1_nth",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('nth_found', 'nth_more'): nil branch does not erase the payload; ('nth_nil', 'nth_cons'): branch @nth_found does not keep the tail (early exit)",
+   "d0": 1781,
+   "i0": 2984,
+   "is0": 117,
+   "size0": 72,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_popcount",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 24,
+   "i0": 33,
+   "is0": 33,
+   "size0": 87,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_powmod",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 358,
+   "i0": 749,
+   "is0": 305,
+   "size0": 166,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_prefix_sums",
+   "applies": true,
+   "why": null,
+   "d0": 1802,
+   "i0": 4362,
+   "is0": 129,
+   "size0": 99,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1164,
+     "i": 4380,
+     "is": 133,
+     "size": 195,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1034,
+     "i": 4278,
+     "is": 129,
+     "size": 267,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1034,
+     "i": 4266,
+     "is": 127,
+     "size": 411,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1034,
+     "i": 4338,
+     "is": 231,
+     "size": 699,
+     "fail": null
+    }
+   },
+   "bestK": 8,
+   "dgain": 0.4261931187569368,
+   "igain": 0.022008253094910613,
+   "sgrow": 4.151515151515151,
+   "d_best": 1034,
+   "i_best": 4266
+  },
+  {
+   "set": "t1",
+   "pid": "t1_product",
+   "applies": true,
+   "why": null,
+   "d0": 1928,
+   "i0": 3852,
+   "is0": 145,
+   "size0": 79,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1289,
+     "i": 3870,
+     "is": 149,
+     "size": 167,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 969,
+     "i": 3765,
+     "is": 168,
+     "size": 231,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 809,
+     "i": 3747,
+     "is": 212,
+     "size": 359,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 729,
+     "i": 3807,
+     "is": 210,
+     "size": 615,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6218879668049793,
+   "igain": 0.011682242990654235,
+   "sgrow": 7.784810126582278,
+   "d_best": 729,
+   "i_best": 3807
+  },
+  {
+   "set": "t1",
+   "pid": "t1_range",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 1288,
+   "i0": 2828,
+   "is0": 133,
+   "size0": 56,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_replicate",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 1288,
+   "i0": 2573,
+   "is0": 83,
+   "size0": 56,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_reverse",
+   "applies": true,
+   "why": null,
+   "d0": 1801,
+   "i0": 3342,
+   "is0": 92,
+   "size0": 50,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1164,
+     "i": 3361,
+     "is": 110,
+     "size": 102,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 3259,
+     "is": 107,
+     "size": 138,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 3247,
+     "is": 110,
+     "size": 210,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 3319,
+     "is": 210,
+     "size": 354,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6496390893947807,
+   "igain": 0.00688210652304011,
+   "sgrow": 7.08,
+   "d_best": 631,
+   "i_best": 3319
+  },
+  {
+   "set": "t1",
+   "pid": "t1_sum",
+   "applies": true,
+   "why": null,
+   "d0": 1801,
+   "i0": 4110,
+   "is0": 174,
+   "size0": 50,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1164,
+     "i": 4129,
+     "is": 193,
+     "size": 100,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 4027,
+     "is": 187,
+     "size": 136,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 4015,
+     "is": 237,
+     "size": 208,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 4087,
+     "is": 235,
+     "size": 352,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6496390893947807,
+   "igain": 0.00559610705596103,
+   "sgrow": 7.04,
+   "d_best": 631,
+   "i_best": 4087
+  },
+  {
+   "set": "t1",
+   "pid": "t1_take",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 1565,
+   "i0": 2146,
+   "is0": 105,
+   "size0": 108,
+   "orig_pass": true
+  },
+  {
+   "set": "t1",
+   "pid": "t1_zip_add",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 1380,
+   "i0": 2860,
+   "is0": 101,
+   "size0": 88,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_argmax",
+   "applies": true,
+   "why": null,
+   "d0": 4107,
+   "i0": 9240,
+   "is0": 240,
+   "size0": 164,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 2319,
+     "i": 9267,
+     "is": 267,
+     "size": 300,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 2319,
+     "i": 9177,
+     "is": 263,
+     "size": 352,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2319,
+     "i": 9189,
+     "is": 261,
+     "size": 456,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2319,
+     "i": 9309,
+     "is": 413,
+     "size": 664,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.43535427319211106,
+   "igain": 0.006818181818181834,
+   "sgrow": 2.1463414634146343,
+   "d_best": 2319,
+   "i_best": 9177
+  },
+  {
+   "set": "t2",
+   "pid": "t2_argmin",
+   "applies": true,
+   "why": null,
+   "d0": 4099,
+   "i0": 8454,
+   "is0": 200,
+   "size0": 161,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 2316,
+     "i": 8461,
+     "is": 207,
+     "size": 293,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 2316,
+     "i": 8333,
+     "is": 243,
+     "size": 345,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2316,
+     "i": 8269,
+     "is": 241,
+     "size": 449,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2316,
+     "i": 8237,
+     "is": 393,
+     "size": 657,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.43498414247377404,
+   "igain": 0.0256683226874852,
+   "sgrow": 4.080745341614906,
+   "d_best": 2316,
+   "i_best": 8237
+  },
+  {
+   "set": "t2",
+   "pid": "t2_closest",
+   "applies": true,
+   "why": null,
+   "d0": 9474,
+   "i0": 19964,
+   "is0": 764,
+   "size0": 465,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 7940,
+     "i": 18199,
+     "is": 721,
+     "size": 909,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 7940,
+     "i": 18109,
+     "is": 715,
+     "size": 1013,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 7940,
+     "i": 18121,
+     "is": 789,
+     "size": 1221,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 7940,
+     "i": 18241,
+     "is": 787,
+     "size": 1637,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.16191682499472237,
+   "igain": 0.09291725105189341,
+   "sgrow": 2.178494623655914,
+   "d_best": 7940,
+   "i_best": 18109
+  },
+  {
+   "set": "t2",
+   "pid": "t2_count_in_range",
+   "applies": true,
+   "why": null,
+   "d0": 2571,
+   "i0": 8212,
+   "is0": 244,
+   "size0": 106,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1931,
+     "i": 8235,
+     "is": 250,
+     "size": 176,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1611,
+     "i": 8139,
+     "is": 246,
+     "size": 220,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1451,
+     "i": 8139,
+     "is": 244,
+     "size": 308,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1371,
+     "i": 8235,
+     "is": 372,
+     "size": 484,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.46674445740956827,
+   "igain": -0.0028007793472966114,
+   "sgrow": 4.566037735849057,
+   "d_best": 1371,
+   "i_best": 8235
+  },
+  {
+   "set": "t2",
+   "pid": "t2_dedup_sorted",
+   "applies": true,
+   "why": null,
+   "d0": 1805,
+   "i0": 6885,
+   "is0": 219,
+   "size0": 133,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1166,
+     "i": 6903,
+     "is": 223,
+     "size": 233,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 6801,
+     "is": 245,
+     "size": 305,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 6789,
+     "is": 295,
+     "size": 449,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 6861,
+     "is": 293,
+     "size": 737,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6504155124653739,
+   "igain": 0.0034858387799564516,
+   "sgrow": 5.541353383458647,
+   "d_best": 631,
+   "i_best": 6861
+  },
+  {
+   "set": "t2",
+   "pid": "t2_distinct_count",
+   "applies": true,
+   "why": null,
+   "d0": 21763,
+   "i0": 42830,
+   "is0": 980,
+   "size0": 342,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 19983,
+     "i": 42853,
+     "is": 986,
+     "size": 444,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 19983,
+     "i": 42757,
+     "is": 982,
+     "size": 488,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 19983,
+     "i": 42757,
+     "is": 980,
+     "size": 576,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 19983,
+     "i": 42853,
+     "is": 1108,
+     "size": 752,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.08179019436658552,
+   "igain": 0.0017044127947700716,
+   "sgrow": 1.4269005847953216,
+   "d_best": 19983,
+   "i_best": 42757
+  },
+  {
+   "set": "t2",
+   "pid": "t2_histogram",
+   "applies": true,
+   "why": null,
+   "d0": 1828,
+   "i0": 17693,
+   "is0": 729,
+   "size0": 796,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1189,
+     "i": 17712,
+     "is": 748,
+     "size": 850,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 869,
+     "i": 17610,
+     "is": 742,
+     "size": 886,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 709,
+     "i": 17598,
+     "is": 792,
+     "size": 958,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 17670,
+     "is": 790,
+     "size": 1102,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6548140043763676,
+   "igain": 0.0012999491324252599,
+   "sgrow": 1.3844221105527639,
+   "d_best": 631,
+   "i_best": 17670
+  },
+  {
+   "set": "t2",
+   "pid": "t2_intersect",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ix_nil', 'ix_cons'): tail passed to a walker in a non-list slot (zip/merge shape); ('iy_nil', 'iy_cons'): tail passed to a walker in a non-list slot (zip/merge shape)",
+   "d0": 5975,
+   "i0": 10118,
+   "is0": 362,
+   "size0": 237,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_inversions",
+   "applies": true,
+   "why": null,
+   "d0": 5886,
+   "i0": 1049695,
+   "is0": 1503,
+   "size0": 181,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 3376,
+     "i": 1053430,
+     "is": 1648,
+     "size": 359,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 3061,
+     "i": 1041046,
+     "is": 1816,
+     "size": 447,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2901,
+     "i": 1041046,
+     "is": 2188,
+     "size": 623,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2821,
+     "i": 1053430,
+     "is": 3208,
+     "size": 975,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.5207271491675161,
+   "igain": -0.0035581764226750856,
+   "sgrow": 5.386740331491713,
+   "d_best": 2821,
+   "i_best": 1053430
+  },
+  {
+   "set": "t2",
+   "pid": "t2_is_sorted",
+   "applies": true,
+   "why": null,
+   "d0": 3586,
+   "i0": 5124,
+   "is0": 105,
+   "size0": 83,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 3837,
+     "i": 5891,
+     "is": 110,
+     "size": 136,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 3837,
+     "i": 5891,
+     "is": 110,
+     "size": 136,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 3837,
+     "i": 5891,
+     "is": 110,
+     "size": 136,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 3837,
+     "i": 5891,
+     "is": 110,
+     "size": 136,
+     "fail": null
+    }
+   },
+   "bestK": 2,
+   "dgain": -0.06999442275515899,
+   "igain": -0.14968774395003903,
+   "sgrow": 1.6385542168674698,
+   "d_best": 3837,
+   "i_best": 5891
+  },
+  {
+   "set": "t2",
+   "pid": "t2_kth_smallest",
+   "applies": true,
+   "why": null,
+   "d0": 10167,
+   "i0": 424274,
+   "is0": 1766,
+   "size0": 210,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 9528,
+     "i": 424289,
+     "is": 1770,
+     "size": 252,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 9208,
+     "i": 424181,
+     "is": 1784,
+     "size": 280,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 9048,
+     "i": 424157,
+     "is": 1780,
+     "size": 336,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 8968,
+     "i": 424205,
+     "is": 1778,
+     "size": 448,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.11793055965378185,
+   "igain": 0.00016263075276823358,
+   "sgrow": 2.1333333333333333,
+   "d_best": 8968,
+   "i_best": 424205
+  },
+  {
+   "set": "t2",
+   "pid": "t2_lis",
+   "applies": true,
+   "why": null,
+   "d0": 5169,
+   "i0": 66412,
+   "is0": 418,
+   "size0": 194,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 5160,
+     "i": 66450,
+     "is": 456,
+     "size": 296,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 5155,
+     "i": 66364,
+     "is": 464,
+     "size": 368,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 5150,
+     "i": 66346,
+     "is": 514,
+     "size": 512,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 5164,
+     "i": 66520,
+     "is": 680,
+     "size": 800,
+     "fail": null
+    }
+   },
+   "bestK": 8,
+   "dgain": 0.0036757593344940442,
+   "igain": 0.0009937963018731288,
+   "sgrow": 2.6391752577319587,
+   "d_best": 5150,
+   "i_best": 66346
+  },
+  {
+   "set": "t2",
+   "pid": "t2_longest_run",
+   "applies": true,
+   "why": null,
+   "d0": 5034,
+   "i0": 9007,
+   "is0": 339,
+   "size0": 225,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 2558,
+     "i": 9031,
+     "is": 343,
+     "size": 455,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 2557,
+     "i": 8941,
+     "is": 377,
+     "size": 559,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2557,
+     "i": 8953,
+     "is": 451,
+     "size": 767,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2557,
+     "i": 9073,
+     "is": 449,
+     "size": 1183,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.49205403257846647,
+   "igain": 0.0073276340623958935,
+   "sgrow": 2.4844444444444442,
+   "d_best": 2557,
+   "i_best": 8941
+  },
+  {
+   "set": "t2",
+   "pid": "t2_lower_bound",
+   "applies": true,
+   "why": null,
+   "d0": 1325,
+   "i0": 2644,
+   "is0": 207,
+   "size0": 223,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1061,
+     "i": 2856,
+     "is": 223,
+     "size": 308,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1061,
+     "i": 2856,
+     "is": 223,
+     "size": 308,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1061,
+     "i": 2856,
+     "is": 223,
+     "size": 308,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1061,
+     "i": 2856,
+     "is": 223,
+     "size": 308,
+     "fail": null
+    }
+   },
+   "bestK": 2,
+   "dgain": 0.1992452830188679,
+   "igain": -0.08018154311649006,
+   "sgrow": 1.3811659192825112,
+   "d_best": 1061,
+   "i_best": 2856
+  },
+  {
+   "set": "t2",
+   "pid": "t2_median",
+   "applies": true,
+   "why": null,
+   "d0": 10002,
+   "i0": 411902,
+   "is0": 1104,
+   "size0": 234,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 9363,
+     "i": 411917,
+     "is": 1108,
+     "size": 274,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 9043,
+     "i": 411809,
+     "is": 1102,
+     "size": 302,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 8883,
+     "i": 411785,
+     "is": 1140,
+     "size": 358,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 8803,
+     "i": 411833,
+     "is": 1138,
+     "size": 470,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.119876024795041,
+   "igain": 0.0001675155740928913,
+   "sgrow": 2.0085470085470085,
+   "d_best": 8803,
+   "i_best": 411833
+  },
+  {
+   "set": "t2",
+   "pid": "t2_merge",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('m_nil_x', 'm_cons_x'): tail passed to a walker in a non-list slot (zip/merge shape); ('m_x_y_nil', 'm_x_y_cons'): tail passed to a walker in a non-list slot (zip/merge shape); ('m_nil_y', 'm_cons_y'): tail passed to a walker in a non-list slot (zip/merge shape)",
+   "d0": 4557,
+   "i0": 7342,
+   "is0": 148,
+   "size0": 266,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_merge3",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ma_nil', 'ma_cons'): tail passed to a walker in a non-list slot (zip/merge shape); ('mb_nil', 'mb_cons'): tail passed to a walker in a non-list slot (zip/merge shape)",
+   "d0": 5839,
+   "i0": 17537,
+   "is0": 568,
+   "size0": 181,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_merge_dedup",
+   "applies": true,
+   "why": null,
+   "d0": 6150,
+   "i0": 20110,
+   "is0": 697,
+   "size0": 346,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 6055,
+     "i": 20133,
+     "is": 703,
+     "size": 500,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 6055,
+     "i": 20037,
+     "is": 723,
+     "size": 544,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 6055,
+     "i": 20037,
+     "is": 785,
+     "size": 632,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 6055,
+     "i": 20133,
+     "is": 783,
+     "size": 808,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.015447154471544766,
+   "igain": 0.003630034808552951,
+   "sgrow": 1.5722543352601157,
+   "d_best": 6055,
+   "i_best": 20037
+  },
+  {
+   "set": "t2",
+   "pid": "t2_mode",
+   "applies": true,
+   "why": null,
+   "d0": 6546,
+   "i0": 798734,
+   "is0": 947,
+   "size0": 320,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 6546,
+     "i": 801806,
+     "is": 1038,
+     "size": 372,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 6546,
+     "i": 788750,
+     "is": 1130,
+     "size": 408,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 6546,
+     "i": 787214,
+     "is": 1332,
+     "size": 480,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 6546,
+     "i": 796430,
+     "is": 2060,
+     "size": 624,
+     "fail": null
+    }
+   },
+   "bestK": 8,
+   "dgain": 0.0,
+   "igain": 0.01442282411916862,
+   "sgrow": 1.5,
+   "d_best": 6546,
+   "i_best": 787214
+  },
+  {
+   "set": "t2",
+   "pid": "t2_partition",
+   "applies": true,
+   "why": null,
+   "d0": 1807,
+   "i0": 6688,
+   "is0": 210,
+   "size0": 130,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1167,
+     "i": 6707,
+     "is": 215,
+     "size": 184,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 847,
+     "i": 6605,
+     "is": 211,
+     "size": 220,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 695,
+     "i": 6593,
+     "is": 209,
+     "size": 292,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 631,
+     "i": 6665,
+     "is": 313,
+     "size": 436,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6508024349750968,
+   "igain": 0.0034389952153109915,
+   "sgrow": 3.353846153846154,
+   "d_best": 631,
+   "i_best": 6665
+  },
+  {
+   "set": "t2",
+   "pid": "t2_rank",
+   "applies": true,
+   "why": null,
+   "d0": 2569,
+   "i0": 5136,
+   "is0": 216,
+   "size0": 60,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1930,
+     "i": 5155,
+     "is": 235,
+     "size": 114,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1610,
+     "i": 5053,
+     "is": 229,
+     "size": 150,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1450,
+     "i": 5041,
+     "is": 279,
+     "size": 222,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1370,
+     "i": 5113,
+     "is": 277,
+     "size": 366,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.46671856753600627,
+   "igain": 0.004478193146417397,
+   "sgrow": 6.1,
+   "d_best": 1370,
+   "i_best": 5113
+  },
+  {
+   "set": "t2",
+   "pid": "t2_search",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('bs_nil', 'bs_cons'): tail slot is not a wire",
+   "d0": 1531,
+   "i0": 2827,
+   "is0": 138,
+   "size0": 112,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_second_largest",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('zero', 'positive'): nil branch does not erase the payload; ('one', 'two'): nil branch does not erase the payload; ('scan_nil', 'scan_cons'): branch @positive does not keep the tail (early exit)",
+   "d0": 8929,
+   "i0": 15576,
+   "is0": 525,
+   "size0": 351,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_sort",
+   "applies": true,
+   "why": null,
+   "d0": 10110,
+   "i0": 436649,
+   "is0": 667,
+   "size0": 143,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 9471,
+     "i": 436664,
+     "is": 671,
+     "size": 185,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 9151,
+     "i": 436556,
+     "is": 681,
+     "size": 213,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 8991,
+     "i": 436532,
+     "is": 719,
+     "size": 269,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 8911,
+     "i": 436580,
+     "is": 745,
+     "size": 381,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.11859545004945593,
+   "igain": 0.00015802166041833932,
+   "sgrow": 2.664335664335664,
+   "d_best": 8911,
+   "i_best": 436580
+  },
+  {
+   "set": "t2",
+   "pid": "t2_sort_dedup",
+   "applies": true,
+   "why": null,
+   "d0": 7787,
+   "i0": 58760,
+   "is0": 1049,
+   "size0": 181,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 7148,
+     "i": 58775,
+     "is": 1064,
+     "size": 223,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 6828,
+     "i": 58667,
+     "is": 1058,
+     "size": 251,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 6668,
+     "i": 58643,
+     "is": 1096,
+     "size": 307,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 6588,
+     "i": 58691,
+     "is": 1094,
+     "size": 419,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.15397457300629258,
+   "igain": 0.0011742682096664847,
+   "sgrow": 2.314917127071823,
+   "d_best": 6588,
+   "i_best": 58691
+  },
+  {
+   "set": "t2",
+   "pid": "t2_sort_desc",
+   "applies": true,
+   "why": null,
+   "d0": 10828,
+   "i0": 438283,
+   "is0": 586,
+   "size0": 145,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 10189,
+     "i": 438298,
+     "is": 590,
+     "size": 187,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 9869,
+     "i": 438190,
+     "is": 586,
+     "size": 215,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 9709,
+     "i": 438166,
+     "is": 584,
+     "size": 271,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 9629,
+     "i": 438214,
+     "is": 664,
+     "size": 383,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.11073143701514587,
+   "igain": 0.00015743252647260064,
+   "sgrow": 2.6413793103448278,
+   "d_best": 9629,
+   "i_best": 438214
+  },
+  {
+   "set": "t2",
+   "pid": "t2_sort_pairs",
+   "applies": true,
+   "why": null,
+   "d0": 8997,
+   "i0": 466632,
+   "is0": 564,
+   "size0": 181,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 8358,
+     "i": 466647,
+     "is": 579,
+     "size": 223,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 8038,
+     "i": 466539,
+     "is": 575,
+     "size": 251,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 7878,
+     "i": 466515,
+     "is": 573,
+     "size": 307,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 7798,
+     "i": 466563,
+     "is": 653,
+     "size": 419,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.13326664443703462,
+   "igain": 0.00014786812734657317,
+   "sgrow": 2.314917127071823,
+   "d_best": 7798,
+   "i_best": 466563
+  },
+  {
+   "set": "t2",
+   "pid": "t2_top_k",
+   "applies": true,
+   "why": null,
+   "d0": 9466,
+   "i0": 398411,
+   "is0": 597,
+   "size0": 222,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 8827,
+     "i": 398426,
+     "is": 612,
+     "size": 264,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 8507,
+     "i": 398318,
+     "is": 628,
+     "size": 292,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 8347,
+     "i": 398294,
+     "is": 666,
+     "size": 348,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 8267,
+     "i": 398342,
+     "is": 664,
+     "size": 460,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.12666384956687093,
+   "igain": 0.00017318798928744883,
+   "sgrow": 2.0720720720720722,
+   "d_best": 8267,
+   "i_best": 398342
+  },
+  {
+   "set": "t2",
+   "pid": "t2_union",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('merge_nil', 'merge_cons'): tail passed to a walker in a non-list slot (zip/merge shape); ('merge_y_nil', 'merge_y_cons'): tail passed to a walker in a non-list slot (zip/merge shape)",
+   "d0": 6250,
+   "i0": 10152,
+   "is0": 246,
+   "size0": 218,
+   "orig_pass": true
+  },
+  {
+   "set": "t2",
+   "pid": "t2_upper_bound",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ub13_nil', 'ub13_cons'): branch @ub13_stop does not keep the tail (early exit); ('ub14_nil', 'ub14_cons'): branch @ub14_stop does not keep the tail (early exit); ('ub15_nil', 'ub15_cons'): branch @ub15_stop does not keep the tail (early exit)",
+   "d0": 1784,
+   "i0": 2959,
+   "is0": 151,
+   "size0": 1240,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_brackets3",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('scan_nil', 'scan_cons'): tail does not reach a walker call; ('end_empty', 'end_nonempty'): cons branch does not split the payload; ('close_empty', 'close_nonempty'): tail slot is not a wire",
+   "d0": 3900,
+   "i0": 7796,
+   "is0": 247,
+   "size0": 678,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_bst_delete_min",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('dm_leaf', 'dm_node'): cons branch does not split the payload; ('walk_leaf', 'walk_node'): cons branch does not split the payload",
+   "d0": 53,
+   "i0": 96,
+   "is0": 40,
+   "size0": 73,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_bst_from_sorted",
+   "applies": true,
+   "why": null,
+   "d0": 1696,
+   "i0": 8579,
+   "is0": 267,
+   "size0": 192,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1247,
+     "i": 8598,
+     "is": 272,
+     "size": 282,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1022,
+     "i": 8534,
+     "is": 296,
+     "size": 354,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 907,
+     "i": 8488,
+     "is": 294,
+     "size": 498,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 852,
+     "i": 8570,
+     "is": 398,
+     "size": 786,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.49764150943396224,
+   "igain": 0.0010490733185686274,
+   "sgrow": 4.09375,
+   "d_best": 852,
+   "i_best": 8570
+  },
+  {
+   "set": "t4",
+   "pid": "t4_bst_insert",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ins_leaf', 'ins_node'): tail slot is not a wire",
+   "d0": 171,
+   "i0": 270,
+   "is0": 101,
+   "size0": 208,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_bst_kth",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('scan_missing_left', 'scan_found_left'): nil branch does not erase the payload; ('scan_leaf', 'scan_node'): tail slot is not a wire; ('finish_missing', 'finish_found'): tail consumed in the root",
+   "d0": 1215,
+   "i0": 3217,
+   "is0": 272,
+   "size0": 213,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_bst_lca",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('lca_leaf', 'lca_node'): tail slot is not a wire",
+   "d0": 73,
+   "i0": 1491,
+   "is0": 123,
+   "size0": 340,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_deriv",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('der_add', 'der_rest2'): nil branch does not erase the payload; ('der_mul', 'der_var'): nil branch does not erase the payload; ('der_lit', 'der_rest'): cons branch does not split the payload",
+   "d0": 179,
+   "i0": 4728,
+   "is0": 126,
+   "size0": 139,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_eval_ast",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 272,
+   "i0": 2387,
+   "is0": 65,
+   "size0": 82,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_eval_rpn",
+   "applies": true,
+   "why": null,
+   "d0": 3590,
+   "i0": 6415,
+   "is0": 336,
+   "size0": 230,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 830,
+     "i": 6420,
+     "is": 341,
+     "size": 450,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 610,
+     "i": 6358,
+     "is": 363,
+     "size": 486,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 500,
+     "i": 6366,
+     "is": 413,
+     "size": 558,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 446,
+     "i": 6448,
+     "is": 411,
+     "size": 702,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.875766016713092,
+   "igain": -0.005144193296960253,
+   "sgrow": 3.0521739130434784,
+   "d_best": 446,
+   "i_best": 6448
+  },
+  {
+   "set": "t4",
+   "pid": "t4_eval_str",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('f_nil', 'f_cons'): tail passed to a walker in a non-list slot (zip/merge shape); ('dg_nil', 'dg_cons'): tail consumed in the root; ('cl_nil', 'cl_cons'): tail consumed in the root",
+   "d0": 14168,
+   "i0": 22866,
+   "is0": 740,
+   "size0": 681,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_expr_depth",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 251,
+   "i0": 3233,
+   "is0": 121,
+   "size0": 87,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_fold",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 341,
+   "i0": 5124,
+   "is0": 91,
+   "size0": 504,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_nnf",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('Q4c', 'Q5'): nil branch does not erase the payload; ('P0', 'P1'): cons branch does not split the payload; ('Q0', 'Q1'): cons branch does not split the payload",
+   "d0": 366,
+   "i0": 3012,
+   "is0": 91,
+   "size0": 277,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_paren_depth",
+   "applies": true,
+   "why": null,
+   "d0": 3442,
+   "i0": 5761,
+   "is0": 155,
+   "size0": 158,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1088,
+     "i": 5784,
+     "is": 178,
+     "size": 310,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1088,
+     "i": 5728,
+     "is": 208,
+     "size": 354,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1088,
+     "i": 5748,
+     "is": 206,
+     "size": 442,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1088,
+     "i": 5854,
+     "is": 334,
+     "size": 618,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.68390470656595,
+   "igain": 0.005728172192327685,
+   "sgrow": 2.240506329113924,
+   "d_best": 1088,
+   "i_best": 5728
+  },
+  {
+   "set": "t4",
+   "pid": "t4_paren_match",
+   "applies": true,
+   "why": null,
+   "d0": 2742,
+   "i0": 12320,
+   "is0": 243,
+   "size0": 211,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 2742,
+     "i": 13156,
+     "is": 300,
+     "size": 261,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 2742,
+     "i": 13586,
+     "is": 352,
+     "size": 297,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 2744,
+     "i": 17106,
+     "is": 506,
+     "size": 369,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 2760,
+     "i": 25388,
+     "is": 818,
+     "size": 513,
+     "fail": null
+    }
+   },
+   "bestK": 2,
+   "dgain": 0.0,
+   "igain": -0.06785714285714284,
+   "sgrow": 1.2369668246445498,
+   "d_best": 2742,
+   "i_best": 13156
+  },
+  {
+   "set": "t4",
+   "pid": "t4_paren_prefix",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('scan_nil', 'scan_cons'): branch @scan_stop does not keep the tail (early exit)",
+   "d0": 1154,
+   "i0": 2361,
+   "is0": 113,
+   "size0": 206,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_paren_unmatched",
+   "applies": true,
+   "why": null,
+   "d0": 3001,
+   "i0": 4766,
+   "is0": 176,
+   "size0": 128,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 845,
+     "i": 4785,
+     "is": 195,
+     "size": 252,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 814,
+     "i": 4723,
+     "is": 191,
+     "size": 288,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 811,
+     "i": 4731,
+     "is": 189,
+     "size": 360,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 811,
+     "i": 4813,
+     "is": 293,
+     "size": 504,
+     "fail": null
+    }
+   },
+   "bestK": 8,
+   "dgain": 0.7297567477507497,
+   "igain": 0.007343684431388997,
+   "sgrow": 2.8125,
+   "d_best": 811,
+   "i_best": 4731
+  },
+  {
+   "set": "t4",
+   "pid": "t4_parse",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('nl_nil', 'nl_cons'): tail consumed in the root; ('sk_nil', 'sk_cons'): tail consumed in the root; ('cl_nil', 'cl_cons'): tail consumed in the root",
+   "d0": 9939,
+   "i0": 15474,
+   "is0": 511,
+   "size0": 576,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_print",
+   "applies": false,
+   "why": "no list walker found",
+   "d0": 170,
+   "i0": 4822,
+   "is0": 216,
+   "size0": 210,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_regmachine",
+   "applies": true,
+   "why": null,
+   "d0": 1260,
+   "i0": 19646,
+   "is0": 794,
+   "size0": 489,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 827,
+     "i": 19661,
+     "is": 798,
+     "size": 515,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 610,
+     "i": 19593,
+     "is": 814,
+     "size": 543,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 500,
+     "i": 19589,
+     "is": 852,
+     "size": 599,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 446,
+     "i": 19647,
+     "is": 850,
+     "size": 711,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.646031746031746,
+   "igain": -5.09009467575261e-05,
+   "sgrow": 1.4539877300613497,
+   "d_best": 446,
+   "i_best": 19647
+  },
+  {
+   "set": "t4",
+   "pid": "t4_rle_encode",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('start_nil', 'start_cons'): tail passed to recursive helper @loop",
+   "d0": 2703,
+   "i0": 4990,
+   "is0": 196,
+   "size0": 155,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_sat_count",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('m_and', 'm_ge5'): nil branch does not erase the payload; ('m_or', 'm_bad'): nil branch does not erase the payload; ('m_false', 'm_ge1'): cons branch does not split the payload",
+   "d0": 386,
+   "i0": 4535,
+   "is0": 257,
+   "size0": 245,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_stack_vm",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('skip_done', 'skip_more'): nil branch does not erase the payload; ('halt', 'step'): tail does not reach a walker call; ('top_empty', 'top_nonempty'): tail slot is not a wire",
+   "d0": 2256,
+   "i0": 4882,
+   "is0": 261,
+   "size0": 722,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_to_rpn",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('fd_nil', 'fd_cons'): tail passed to a walker in a non-list slot (zip/merge shape); ('drop_nil', 'drop_cons'): tail consumed in the root; ('dig_nil', 'dig_cons'): tail consumed in the root",
+   "d0": 10900,
+   "i0": 17482,
+   "is0": 439,
+   "size0": 626,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tokenize",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('scan_nil', 'scan_cons'): branches continue into different walkers; ('num_nil', 'num_cons'): branches continue into different walkers",
+   "d0": 3518,
+   "i0": 5929,
+   "is0": 298,
+   "size0": 294,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_depth_count",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('at_zero', 'at_pos'): nil branch does not erase the payload; ('count_leaf', 'count_node'): cons branch does not split the payload",
+   "d0": 116,
+   "i0": 2049,
+   "is0": 127,
+   "size0": 88,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_diameter",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('td_leaf', 'td_node'): tail slot is not a wire",
+   "d0": 411,
+   "i0": 11894,
+   "is0": 344,
+   "size0": 162,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_fold_hash",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('fold_leaf', 'fold_node'): tail slot is not a wire",
+   "d0": 231,
+   "i0": 5592,
+   "is0": 167,
+   "size0": 66,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_height",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('h_leaf', 'h_node'): tail slot is not a wire",
+   "d0": 292,
+   "i0": 6422,
+   "is0": 257,
+   "size0": 80,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_inorder",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('walk_leaf', 'walk_node'): tail slot is not a wire",
+   "d0": 122,
+   "i0": 4514,
+   "is0": 139,
+   "size0": 62,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_level_order",
+   "applies": true,
+   "why": null,
+   "d0": 7552,
+   "i0": 13431,
+   "is0": 605,
+   "size0": 185,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 6660,
+     "i": 13583,
+     "is": 681,
+     "size": 237,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 6205,
+     "i": 13557,
+     "is": 725,
+     "size": 273,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 5980,
+     "i": 13831,
+     "is": 825,
+     "size": 345,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 5865,
+     "i": 14409,
+     "is": 1241,
+     "size": 489,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.22338453389830504,
+   "igain": -0.07281661827116381,
+   "sgrow": 2.6432432432432433,
+   "d_best": 5865,
+   "i_best": 14409
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_map_add",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('map_leaf', 'map_node'): tail slot is not a wire",
+   "d0": 150,
+   "i0": 5596,
+   "is0": 171,
+   "size0": 90,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_max_path_sum",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('pick_y_none', 'pick_y_some'): cons branch does not split the payload; ('pick_y_with_none', 'pick_y_with_some'): cons branch does not split the payload; ('final_none', 'final_some'): cons branch does not split the payload",
+   "d0": 317,
+   "i0": 9728,
+   "is0": 411,
+   "size0": 298,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_merge_add",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ma_leaf', 'ma_node'): tail slot is not a wire; ('mb_leaf', 'mb_node'): tail slot is not a wire",
+   "d0": 130,
+   "i0": 1729,
+   "is0": 97,
+   "size0": 132,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_min_max",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('tm_leaf', 'tm_node'): tail slot is not a wire",
+   "d0": 594,
+   "i0": 15852,
+   "is0": 540,
+   "size0": 188,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_mirror",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('m_leaf', 'm_node'): tail slot is not a wire",
+   "d0": 413,
+   "i0": 3792,
+   "is0": 159,
+   "size0": 52,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_path_sums",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('walk_leaf', 'walk_node'): tail slot is not a wire",
+   "d0": 456,
+   "i0": 9785,
+   "is0": 404,
+   "size0": 192,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_postorder",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('post_leaf', 'post_node'): tail slot is not a wire",
+   "d0": 123,
+   "i0": 4514,
+   "is0": 164,
+   "size0": 58,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_preorder",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('pre_leaf', 'pre_node'): tail slot is not a wire",
+   "d0": 128,
+   "i0": 4514,
+   "is0": 164,
+   "size0": 70,
+   "orig_pass": true
+  },
+  {
+   "set": "t4",
+   "pid": "t4_tree_size",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('root_leaf', 'root_node'): tail slot is not a wire; ('lc_leaf', 'lc_node'): tail slot is not a wire",
+   "d0": 155,
+   "i0": 4512,
+   "is0": 112,
+   "size0": 84,
+   "orig_pass": true
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_budget_reach",
+   "applies": true,
+   "why": null,
+   "d0": 981,
+   "i0": 115529,
+   "is0": 2243,
+   "size0": 1640,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 973,
+     "i": 115599,
+     "is": 2274,
+     "size": 1700,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 973,
+     "i": 115639,
+     "is": 2272,
+     "size": 1760,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 973,
+     "i": 115903,
+     "is": 2360,
+     "size": 1880,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 973,
+     "i": 116431,
+     "is": 2536,
+     "size": 2120,
+     "fail": null
+    }
+   },
+   "bestK": 2,
+   "dgain": 0.008154943934760461,
+   "igain": -0.000605908473197303,
+   "sgrow": 1.0365853658536586,
+   "d_best": 973,
+   "i_best": 115599
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_cc_count",
+   "applies": true,
+   "why": null,
+   "d0": 1536,
+   "i0": 256254,
+   "is0": 5985,
+   "size0": 1755,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1510,
+     "i": 260148,
+     "is": 6295,
+     "size": 1813,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1495,
+     "i": 264666,
+     "is": 6505,
+     "size": 1873,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1495,
+     "i": 275230,
+     "is": 7385,
+     "size": 1993,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1495,
+     "i": 310776,
+     "is": 9145,
+     "size": 2233,
+     "fail": null
+    }
+   },
+   "bestK": 4,
+   "dgain": 0.02669270833333337,
+   "igain": -0.032826804654756625,
+   "sgrow": 1.0672364672364671,
+   "d_best": 1495,
+   "i_best": 264666
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_dag_longest",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ins_leaf', 'ins_node'): nil branch does not erase the payload; ('dl_zero', 'dl_pos'): cons branch does not split the payload; ('w_nil', 'w_last'): tail slot is not a wire",
+   "d0": 711,
+   "i0": 51330,
+   "is0": 1428,
+   "size0": 1068,
+   "orig_pass": true
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_in_out_degrees",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ins_leaf', 'ins_node'): nil branch does not erase the payload; ('io_zero', 'io_pos'): cons branch does not split the payload; ('w_nil', 'w_last'): tail slot is not a wire",
+   "d0": 586,
+   "i0": 79143,
+   "is0": 985,
+   "size0": 923,
+   "orig_pass": true
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_line_graph_edges",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ins_leaf', 'ins_node'): nil branch does not erase the payload; ('lg_zero', 'lg_pos'): cons branch does not split the payload; ('w_nil', 'w_last'): tail slot is not a wire",
+   "d0": 607,
+   "i0": 81485,
+   "is0": 583,
+   "size0": 795,
+   "orig_pass": true
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_sources_sinks",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ins_leaf', 'ins_node'): nil branch does not erase the payload; ('ss_zero', 'ss_pos'): cons branch does not split the payload; ('w_nil', 'w_last'): tail slot is not a wire",
+   "d0": 615,
+   "i0": 88444,
+   "is0": 1196,
+   "size0": 681,
+   "orig_pass": true
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_triangle_count",
+   "applies": false,
+   "why": "no walker continues on its own tail: ('ins_leaf', 'ins_node'): nil branch does not erase the payload; ('tc_zero', 'tc_pos'): cons branch does not split the payload; ('w_nil', 'w_last'): tail slot is not a wire",
+   "d0": 802,
+   "i0": 157680,
+   "is0": 2599,
+   "size0": 1643,
+   "orig_pass": true
+  },
+  {
+   "set": "t3x16",
+   "pid": "t3_wsp_all_from",
+   "applies": true,
+   "why": null,
+   "d0": 371,
+   "i0": 60872,
+   "is0": 2108,
+   "size0": 1698,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 371,
+     "i": 60903,
+     "is": 2108,
+     "size": 1758,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 371,
+     "i": 60947,
+     "is": 2108,
+     "size": 1818,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 371,
+     "i": 61035,
+     "is": 2108,
+     "size": 1938,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 371,
+     "i": 61211,
+     "is": 2173,
+     "size": 2178,
+     "fail": null
+    }
+   },
+   "bestK": 2,
+   "dgain": 0.0,
+   "igain": -0.0005092653436720163,
+   "sgrow": 1.0353356890459364,
+   "d_best": 371,
+   "i_best": 60903
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_budget_reach",
+   "applies": true,
+   "why": null,
+   "d0": 1501,
+   "i0": 115589,
+   "is0": 2093,
+   "size0": 1370,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1245,
+     "i": 115560,
+     "is": 2123,
+     "size": 1510,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1061,
+     "i": 115576,
+     "is": 2119,
+     "size": 1606,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 989,
+     "i": 115814,
+     "is": 2259,
+     "size": 1798,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 973,
+     "i": 116434,
+     "is": 2539,
+     "size": 2182,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.3517654896735509,
+   "igain": -0.0073103842061095214,
+   "sgrow": 1.5927007299270073,
+   "d_best": 973,
+   "i_best": 116434
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_cc_count",
+   "applies": true,
+   "why": null,
+   "d0": 2083,
+   "i0": 256314,
+   "is0": 5835,
+   "size0": 1485,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1756,
+     "i": 260109,
+     "is": 6144,
+     "size": 1623,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 1596,
+     "i": 264603,
+     "is": 6352,
+     "size": 1719,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 1524,
+     "i": 275141,
+     "is": 7284,
+     "size": 1911,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 1495,
+     "i": 310779,
+     "is": 9148,
+     "size": 2295,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.2822851656265002,
+   "igain": -0.212493269973548,
+   "sgrow": 1.5454545454545454,
+   "d_best": 1495,
+   "i_best": 310779
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_dag_longest",
+   "applies": true,
+   "why": null,
+   "d0": 1414,
+   "i0": 51405,
+   "is0": 1278,
+   "size0": 798,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1037,
+     "i": 51333,
+     "is": 1277,
+     "size": 832,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 846,
+     "i": 51315,
+     "is": 1275,
+     "size": 868,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 750,
+     "i": 51345,
+     "is": 1327,
+     "size": 940,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 711,
+     "i": 51333,
+     "is": 1431,
+     "size": 1084,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.4971711456859972,
+   "igain": 0.0014006419608987297,
+   "sgrow": 1.3583959899749374,
+   "d_best": 711,
+   "i_best": 51333
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_in_out_degrees",
+   "applies": true,
+   "why": null,
+   "d0": 1665,
+   "i0": 79308,
+   "is0": 820,
+   "size0": 653,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1091,
+     "i": 79132,
+     "is": 834,
+     "size": 691,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 803,
+     "i": 79062,
+     "is": 832,
+     "size": 727,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 659,
+     "i": 79066,
+     "is": 884,
+     "size": 799,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 587,
+     "i": 79146,
+     "is": 988,
+     "size": 943,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6474474474474474,
+   "igain": 0.0020426690876078624,
+   "sgrow": 1.444104134762634,
+   "d_best": 587,
+   "i_best": 79146
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_line_graph_edges",
+   "applies": true,
+   "why": null,
+   "d0": 1614,
+   "i0": 81680,
+   "is0": 388,
+   "size0": 525,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1076,
+     "i": 81516,
+     "is": 404,
+     "size": 561,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 806,
+     "i": 81452,
+     "is": 430,
+     "size": 597,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 674,
+     "i": 81406,
+     "is": 482,
+     "size": 669,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 608,
+     "i": 81488,
+     "is": 586,
+     "size": 813,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6232961586121437,
+   "igain": 0.002350636630754188,
+   "sgrow": 1.5485714285714285,
+   "d_best": 608,
+   "i_best": 81488
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_sources_sinks",
+   "applies": true,
+   "why": null,
+   "d0": 1671,
+   "i0": 88759,
+   "is0": 1076,
+   "size0": 411,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 1108,
+     "i": 88587,
+     "is": 1073,
+     "size": 451,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 826,
+     "i": 88519,
+     "is": 1097,
+     "size": 487,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 688,
+     "i": 88471,
+     "is": 1095,
+     "size": 559,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 616,
+     "i": 88447,
+     "is": 1199,
+     "size": 703,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.6313584679832436,
+   "igain": 0.0035151364932006768,
+   "sgrow": 1.710462287104623,
+   "d_best": 616,
+   "i_best": 88447
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_triangle_count",
+   "applies": true,
+   "why": null,
+   "d0": 1258,
+   "i0": 157905,
+   "is0": 2449,
+   "size0": 1373,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 887,
+     "i": 157795,
+     "is": 2448,
+     "size": 1401,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 802,
+     "i": 157731,
+     "is": 2446,
+     "size": 1437,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 802,
+     "i": 157699,
+     "is": 2498,
+     "size": 1509,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 802,
+     "i": 157683,
+     "is": 2602,
+     "size": 1653,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.3624801271860095,
+   "igain": 0.0014059086159399214,
+   "sgrow": 1.203932993445011,
+   "d_best": 802,
+   "i_best": 157683
+  },
+  {
+   "set": "t3x1",
+   "pid": "t3_wsp_all_from",
+   "applies": true,
+   "why": null,
+   "d0": 805,
+   "i0": 60827,
+   "is0": 1928,
+   "size0": 1428,
+   "orig_pass": true,
+   "pass_any": true,
+   "pass_all": true,
+   "perK": {
+    "2": {
+     "pass": true,
+     "d": 567,
+     "i": 60778,
+     "is": 1941,
+     "size": 1646,
+     "fail": null
+    },
+    "4": {
+     "pass": true,
+     "d": 451,
+     "i": 60808,
+     "is": 1939,
+     "size": 1778,
+     "fail": null
+    },
+    "8": {
+     "pass": true,
+     "d": 397,
+     "i": 60928,
+     "is": 1991,
+     "size": 2042,
+     "fail": null
+    },
+    "16": {
+     "pass": true,
+     "d": 367,
+     "i": 61198,
+     "is": 2160,
+     "size": 2570,
+     "fail": null
+    }
+   },
+   "bestK": 16,
+   "dgain": 0.5440993788819876,
+   "igain": -0.006099265128972409,
+   "sgrow": 1.7997198879551821,
+   "d_best": 367,
+   "i_best": 61198
+  }
+ ]
+}

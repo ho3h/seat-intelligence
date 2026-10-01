@@ -1,0 +1,177 @@
+// Input: (n, edge-list). Output: connected components in canonical order.
+@prog = (input out)
+  & input ~ (n edges)
+  & @clusters ~ (0 (n ((0 *) (edges out))))
+
+// Membership test: target x in list l, returning 0 or 1.
+@mem = (x (l out))
+  & l ~ (tag payload)
+  & tag ~ ?((@mem_nil @mem_cons) (payload (x out)))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* (payload (x out)))
+  & payload ~ (h t)
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_recur @mem_found) (x_rec (t out)))
+
+@mem_recur = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_found = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+// Add edge endpoints that touch the current component.
+@step = (u (v (comp out)))
+  & u ~ {u_test u_keep}
+  & comp ~ {comp_test comp_keep}
+  & @mem ~ (u_test (comp_test z))
+  & z ~ ?((@step_u_absent @step_u_present) (u_keep (v (comp_keep out))))
+
+@step_u_absent = (u (v (comp out)))
+  & v ~ {v_test v_keep}
+  & comp ~ {comp_test comp_keep}
+  & @mem ~ (v_test (comp_test z))
+  & z ~ ?((@step_absent_v_absent @step_absent_v_present) (u (v_keep (comp_keep out))))
+
+@step_u_present = (* (u (v (comp out))))
+  & u ~ *
+  & v ~ {v_test v_keep}
+  & comp ~ {comp_test comp_keep}
+  & @mem ~ (v_test (comp_test z))
+  & z ~ ?((@step_present_v_absent @step_present_v_present) (u (v_keep (comp_keep out))))
+
+@step_absent_v_absent = (u (v (comp out)))
+  & u ~ *
+  & v ~ *
+  & out ~ (comp 0)
+
+@step_absent_v_present = (* (u (v (comp out))))
+  & v ~ *
+  & out ~ (1 (u comp))
+
+@step_present_v_absent = (u (v (comp out)))
+  & u ~ *
+  & out ~ (1 (v comp))
+
+@step_present_v_present = (* (u (v (comp out))))
+  & u ~ *
+  & v ~ *
+  & out ~ (comp 0)
+
+// One pass over all edges, returning (updated-component, changed?).
+@sweep = (edges (comp out))
+  & edges ~ (tag payload)
+  & tag ~ ?((@sweep_nil @sweep_cons) (payload (comp out)))
+
+@sweep_nil = (payload (comp out))
+  & payload ~ *
+  & out ~ (comp 0)
+
+@sweep_cons = (* (payload (comp out)))
+  & payload ~ (edge rest)
+  & edge ~ (u v)
+  & @step ~ (u (v (comp stepout)))
+  & stepout ~ (comp2 changed1)
+  & @sweep ~ (rest (comp2 nextout))
+  & nextout ~ (comp3 changed2)
+  & changed1 ~ $([|] $(changed2 changed))
+  & out ~ (comp3 changed)
+
+// Repeat passes until a pass adds no nodes.
+@close = (comp (edges out))
+  & edges ~ {edge_sweep edge_next}
+  & @sweep ~ (edge_sweep (comp sweepout))
+  & sweepout ~ (comp2 changed)
+  & changed ~ ?((@close_done @close_more) (comp2 (edge_next out)))
+
+@close_done = (comp (edges out))
+  & edges ~ *
+  & out ~ comp
+
+@close_more = (* (comp (edges out)))
+  & @close ~ (comp (edges out))
+
+// Enumerate ids in ascending order, starting a closure for each unseen id.
+@clusters = (i (n (seen (edges out))))
+  & i ~ {i_cmp i_keep}
+  & n ~ {n_cmp n_keep}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@clusters_done @clusters_more) (i_keep (n_keep (seen (edges out)))))
+
+@clusters_done = (i (n (seen (edges out))))
+  & i ~ *
+  & n ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@clusters_more = (* (i (n (seen (edges out)))))
+  & i ~ {i_mem i_keep}
+  & seen ~ {s_mem s_keep}
+  & @mem ~ (i_mem (s_mem z))
+  & z ~ ?((@cluster_new @cluster_skip) (i_keep (n (s_keep (edges out)))))
+
+@cluster_skip = (* (i (n (seen (edges out)))))
+  & i ~ $([+1] i2)
+  & @clusters ~ (i2 (n (seen (edges out))))
+
+@cluster_new = (i (n (seen (edges out))))
+  & i ~ {i_comp i_next}
+  & edges ~ {e_close e_outer}
+  & @close ~ ((1 (i_comp (0 *))) (e_close comp))
+  & comp ~ {comp_filter comp_append}
+  & n ~ {n_filter n_next}
+  & @filter ~ (0 (n_filter (comp_filter sorted)))
+  & @append ~ (comp_append (seen seen2))
+  & @clusters ~ (i_next (n_next (seen2 (e_outer tail))))
+  & out ~ (1 (sorted tail))
+
+// Filter the component by ascending id to make its output canonical.
+@filter = (i (n (members out)))
+  & i ~ {i_cmp i_keep}
+  & n ~ {n_cmp n_keep}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@filter_done @filter_more) (i_keep (n_keep (members out))))
+
+@filter_done = (i (n (members out)))
+  & i ~ *
+  & n ~ *
+  & members ~ *
+  & out ~ (0 *)
+
+@filter_more = (* (i (n (members out))))
+  & i ~ {i_mem i_keep}
+  & members ~ {m_mem m_keep}
+  & @mem ~ (i_mem (m_mem z))
+  & z ~ ?((@filter_no @filter_yes) (i_keep (n (m_keep out))))
+
+@filter_no = (i (n (members out)))
+  & i ~ $([+1] i2)
+  & @filter ~ (i2 (n (members out)))
+
+@filter_yes = (* (i (n (members out))))
+  & i ~ {i_cons i_rec}
+  & i_rec ~ $([+1] i2)
+  & @filter ~ (i2 (n (members tail)))
+  & out ~ (1 (i_cons tail))
+
+// Append lists.
+@append = (a (b out))
+  & a ~ (tag payload)
+  & tag ~ ?((@append_nil @append_cons) (payload (b out)))
+
+@append_nil = (payload (b out))
+  & payload ~ *
+  & out ~ b
+
+@append_cons = (* (payload (b out)))
+  & payload ~ (h t)
+  & @append ~ (t (b tail))
+  & out ~ (1 (h tail))

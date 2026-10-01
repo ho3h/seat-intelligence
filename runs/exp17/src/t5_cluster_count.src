@@ -1,0 +1,18 @@
+# t5_cluster_count: components by label propagation over pre-wired channels (lib/chan), then count the
+# vertices that keep their own id (min label).
+#include base
+#include chan
+#include hooks_cc
+def prog(x):
+  (n, es) = x
+  (F, z, l, m) = chan_cc(n, es, 0, 3)
+  return z + roots(F, l, 0, n)
+
+def roots(t, l, base, n):
+  switch l:
+    case 0:
+      return (t == base) & (base < n)
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return roots(a, l-1, base, n) + roots(b, l-1, base + h, n)

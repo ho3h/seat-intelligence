@@ -1,0 +1,20 @@
+{
+ "limit": [
+  "{N} <cat> <k> <S>",
+  "NOT a closing word: the program must still end with a closing word line such as `sections S`. Seats at most k guests of the category <cat> in each section of S seats. Exactly three arguments after the name: a category token like investor or chips (never the word category), then k, then S.",
+  "No table of 7 may have more than 3 investors; tell me each guest's table.",
+  "{N} investor 3 7` then the closing line `sections 7"
+ ],
+ "snake": [
+  "{N} <S>",
+  "NOT a closing word: the program must still end with a closing word line such as `sections S`. Reverses the seat order inside every second section (the 2nd, 4th, ...) of S seats.",
+  "Every other table of 6 runs in the opposite direction; which table is each guest at?",
+  "{N} 6` then the closing line `sections 6"
+ ],
+ "sectionlead": [
+  "{N} <S>",
+  "NOT a closing word: the program must still end with a closing word line such as `sections S`. In each section of S seats, the guest with the lowest rank number moves to the section's first seat.",
+  "At each table of 5, the lowest-ranked guest takes the head seat; tell me each guest's table.",
+  "{N} 5` then the closing line `sections 5"
+ ]
+}

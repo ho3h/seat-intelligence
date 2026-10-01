@@ -1,0 +1,43 @@
+@count_even__C0 = (* ($([&0x0000001] $([-0x0000001] c)) (((?(((a_q2 a_q2) (* ($([&0x0000001] $([-0x0000001] b_q3)) (((?(((a_q4 a_q4) @count_even__C30) b_q4) b_q4) (c_q3 d_q3)) ($([+] $(b_q3 c_q3)) d_q3))))) b_q2) b_q2) (d e)) ($([+] $(c d)) e))))
+
+@count_even__C10 = (* ($([&0x0000001] $([-0x0000001] b)) (((?(((a_q6 a_q6) (* ($([&0x0000001] $([-0x0000001] b_q8)) (((?(((a_q10 a_q10) (* ($([&0x0000001] $([-0x0000001] b_q12)) (((?(((a_q14 a_q14) (* ($([&0x0000001] $([-0x0000001] b_q16)) (((?(((a_q18 a_q18) (* ($([&0x0000001] $([-0x0000001] b_q20)) (((?(((a_q22 a_q22) @count_even__C0) b_q22) b_q22) (c_q20 d_q20)) ($([+] $(b_q20 c_q20)) d_q20))))) b_q18) b_q18) (c_q16 d_q16)) ($([+] $(b_q16 c_q16)) d_q16))))) b_q14) b_q14) (c_q12 d_q12)) ($([+] $(b_q12 c_q12)) d_q12))))) b_q10) b_q10) (c_q8 d_q8)) ($([+] $(b_q8 c_q8)) d_q8))))) b_q6) b_q6) (c d)) ($([+] $(b c)) d))))
+
+@count_even__C13 = (?(((a a) (* ($([&0x0000001] $([-0x0000001] b_q26)) (((?(((a_q24_q26 a_q24_q26) @count_even__C10) b_q24_q26) b_q24_q26) (c_q26 d_q26)) ($([+] $(b_q26 c_q26)) d_q26))))) b) b)
+
+@count_even__C14 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C13 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C16 = (* ($([&0x0000001] $([-0x0000001] b)) (((?(((a_q28 a_q28) @count_even__C14) b_q28) b_q28) (c d)) ($([+] $(b c)) d))))
+
+@count_even__C18 = (* ($([&0x0000001] $([-0x0000001] b)) (((?(((a_q27 a_q27) @count_even__C16) b_q27) b_q27) (c d)) ($([+] $(b c)) d))))
+
+@count_even__C19 = (?(((a a) @count_even__C18) b) b)
+
+@count_even__C20 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C19 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C21 = (?(((a a) @count_even__C20) b) b)
+
+@count_even__C22 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C21 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C23 = (?(((a a) @count_even__C22) b) b)
+
+@count_even__C24 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C23 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C25 = (?(((a a) @count_even__C24) b) b)
+
+@count_even__C26 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C25 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C27 = (?(((a a) @count_even__C26) b) b)
+
+@count_even__C28 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C27 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C29 = (?(((a a) @count_even__C28) b) b)
+
+@count_even__C30 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C29 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C31 = (?(((a a) (* ($([&0x0000001] $([-0x0000001] b_q29)) ((@count_even__C29 (c_q29 d_q29)) ($([+] $(b_q29 c_q29)) d_q29))))) b) b)
+
+@count_even__C32 = (* ($([&0x0000001] $([-0x0000001] b)) ((@count_even__C31 (c d)) ($([+] $(b c)) d))))
+
+@count_even__C33 = (?(((a a) @count_even__C32) b) b)
+
+@prog = ((@count_even__C33 (0 b)) b)

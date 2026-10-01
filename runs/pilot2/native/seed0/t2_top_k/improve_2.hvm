@@ -1,0 +1,91 @@
+@prog = (input output)
+  & input ~ (k xs)
+  & @ms ~ (xs sorted)
+  & @take ~ (k (sorted output))
+
+@ms = ((?((@ms_nil @ms_cons) (pl out)) pl) out)
+
+@ms_nil = (* out)
+  & out ~ (0 *)
+
+@ms_cons = (* ((h t) out))
+  & @ms_tail ~ (t (h out))
+
+@ms_tail = ((?((@ms_single @ms_many) (pl (h out))) pl) (h out))
+
+@ms_single = (* (h out))
+  & out ~ (1 (h (0 *)))
+
+@ms_many = (* ((j u) (h out)))
+  & @split0 ~ ((1 (h (1 (j u)))) halves)
+  & halves ~ (left right)
+  & @ms ~ (left sl)
+  & @ms ~ (right sr)
+  & @merge ~ (sl (sr out))
+
+@split0 = ((?((@split0_nil @split0_cons) (pl out)) pl) out)
+
+@split0_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split0_cons = (* ((h t) out))
+  & @split1 ~ (t halves)
+  & halves ~ (a b)
+  & out ~ ((1 (h a)) b)
+
+@split1 = ((?((@split1_nil @split1_cons) (pl out)) pl) out)
+
+@split1_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split1_cons = (* ((h t) out))
+  & @split0 ~ (t halves)
+  & halves ~ (a b)
+  & out ~ (a (1 (h b)))
+
+@merge = ((?((@merge_a_nil @merge_a_cons) (pl (b out))) pl) (b out))
+
+@merge_a_nil = (* (b out))
+  & out ~ b
+
+@merge_a_cons = (* ((h t) (b out)))
+  & @merge_b ~ (b (h (t out)))
+
+@merge_b = ((?((@merge_b_nil @merge_b_cons) (pl (h (t out)))) pl) (h (t out)))
+
+@merge_b_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@merge_b_cons = (* ((j u) (h (t out))))
+  & h ~ {hc ho}
+  & j ~ {jc jo}
+  & hc ~ $([<] $(jc z))
+  & z ~ ?((@merge_take_h @merge_take_j) (ho (t (jo (u out))))
+
+@merge_take_h = (ho (t (jo (u out))))
+  & @merge ~ (t ((1 (jo u)) rest))
+  & out ~ (1 (ho rest))
+
+@merge_take_j = (* (ho (t (jo (u out)))))
+  & @merge ~ ((1 (ho t)) (u rest))
+  & out ~ (1 (jo rest))
+
+@take = (k (list out))
+  & k ~ ?((@take_zero @take_pos) (list out))
+
+@take_zero = (list out)
+  & list ~ *
+  & out ~ (0 *)
+
+@take_pos = (pred (list out))
+  & @take_list ~ (list (pred out))
+
+@take_list = ((?((@take_nil @take_cons) (pl (k out))) pl) (k out))
+
+@take_nil = (* (k out))
+  & k ~ *
+  & out ~ (0 *)
+
+@take_cons = (* ((h t) (k out)))
+  & @take ~ (k (t rest))
+  & out ~ (1 (h rest))

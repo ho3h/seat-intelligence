@@ -1,0 +1,42 @@
+--- 05:34:54
+leaf of zip2 `z2` must return exactly one value; returned 2
+--- 05:35:20
+key of scatter `scatter_combo` via update `hadd` (act add) (@scatter_combo_k): 2 value(s) never used:
+    `i` (num, argument `i` of key of scatter `scatter_combo` via update `hadd` (act add), made at build.py:24)
+    `env` (num, argument `E` of key of scatter `scatter_combo` via update `hadd` (act add), made at build.py:24)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:35:33
+build.py:138: split needs a tuple wire or an explicit n; `pred_list` is list[num]
+--- 05:36:09
+leaf of fold `count_fold` (@count_fold_leaf): 2 value(s) never used:
+    `x` (num, argument `x` of leaf of fold `count_fold`, made at build.py:51)
+    `i` (num, argument `i` of leaf of fold `count_fold`, made at build.py:51)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:36:15
+build.py:55: kind mismatch at fold `count_fold` port `t`: expected trie[num], got list[num] `pred_list` from argument `in0` of @prog (t5_metric_pairwise) (made at build.py:131).
+--- 05:39:19
+build.py:30: kind mismatch at stream `count_walker` port `init`: expected num, got (num) (0,).
+--- 05:39:31
+build.py:35: wire `truth_list` (list[num], argument `in1` of @prog (t5_metric_pairwise), made at build.py:123) belongs to @prog (t5_metric_pairwise) (@prog), but is used in branch zero case of @prog (t5_metric_pairwise) (@prog_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:39:55
+wrong arity: branch nonzero case of @prog (t5_metric_pairwise) is called as f(d, cm1:num, passed[0]:num, passed[1]:list[num]), i.e. d plus 3 value(s); your function `nonempty_proc` takes 3 parameter(s) (b, n_val, truth_val).
+--- 05:40:06
+wrong arity: branch nonzero case of @prog (t5_metric_pairwise) is called as f(d, cm1:num, passed[0]:num, passed[1]:list[num]), i.e. d plus 3 value(s); your function `nonempty_proc` takes 3 parameter(s) (b, n_minus_1, truth_val).
+--- 05:40:16
+build.py:39: wire `n_minus_1` (num, argument `cm1` of branch nonzero case of @prog (t5_metric_pairwise), made at build.py:119) is used a second time (lg port `x`); it was already used at build.py:38 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(n_minus_1, 2)  and use each once.
+--- 05:40:35
+build.py:45: kind mismatch at to_list `tl` port `t`: expected trie[?], got list[num] `pred_list` from argument `in0` of @prog (t5_metric_pairwise) (made at build.py:122).
+--- 05:43:32
+wrong arity: step of stream `l2t` is called as f(d, depth:num, trie:trie[num], elem:num), i.e. d plus 3 value(s); your function `list_to_trie_step` takes 5 parameter(s) (bd, depth, trie_acc, elem, idx).
+--- 05:43:59
+build.py:37: wire `n_minus_1` (num, argument `cm1` of branch nonzero case of @prog (t5_metric_pairwise), made at build.py:147) is used a second time (lg port `x`); it was already used at build.py:36 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(n_minus_1, 2)  and use each once.
+--- 05:52:23
+build.py:35: wire `nm1` (num, argument `cm1` of branch nonzero case of @prog (t5_metric_pairwise), made at build.py:143) is used a second time (lg port `x`); it was already used at build.py:32 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(nm1, 2)  and use each once.
+--- 05:52:35
+build.py:43: port `P` does not exist on update `upd_pred` (act set1) (@upd_pred); d.call returns t2:
+    in  t: trie[num]  [exactly once]
+    in  k: num  [exactly once]
+    in  L: depth  [exactly once]
+    out t2: trie[num]  [exactly once]
+--- 05:52:46
+build.py:43: wire `L1` (depth, copy 1 of `L`, made at build.py:38) belongs to branch nonzero case of @prog (t5_metric_pairwise) (@prog_b1s), but is used in step of stream `pred_build` (@pred_build_step) (update `upd_pred` (act set) port `L`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.

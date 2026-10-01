@@ -1,0 +1,283 @@
+// Entry point
+@prog = ((n (cap (mnl cands))) out)
+  & @init ~ (n (0 labels))
+  & @sort ~ (cands sorted)
+  & @run ~ (sorted (mnl (cap (labels out))))
+
+// Build [0, 1, ..., n-1].
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_step) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_step = (rem (i out))
+  & i ~ {ih inext}
+  & inext ~ $([+1] next)
+  & @init ~ (rem (next tail))
+  & out ~ (1 (ih tail))
+
+// Sort candidates by descending score, then ascending u, then ascending v.
+@sort = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@sort_nil @sort_cons) (payload out))
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((x rest) out))
+  & @sort ~ (rest sorted)
+  & @ins ~ (x (sorted out))
+
+@ins = (x (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@ins_nil @ins_cons) (payload (x out)))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((y tail) (x out)))
+  & x ~ {xc xk}
+  & y ~ {yc yk}
+  & @before ~ (xc (yc z))
+  & z ~ ?((@ins_later @ins_first) (xk (yk (tail out))))
+
+@ins_first = (x (y (tail out)))
+  & y ~ *
+  & out ~ (1 (x tail))
+
+@ins_later = (x (y (tail out)))
+  & @ins ~ (x (tail rest))
+  & out ~ (1 (y rest))
+
+// Return 1 iff the first candidate precedes the second.
+@before = ((u1 (v1 s1)) ((u2 (v2 s2)) out))
+  & s1 ~ {s1a s1b}
+  & s2 ~ {s2a s2b}
+  & s1a ~ $([>] $(s2a gt))
+  & gt ~ ?((@before_not_gt @ret_true) (s1b (s2b (u1 (v1 (u2 (v2 out)))))))
+
+@before_not_gt = (s1 (s2 (u1 (v1 (u2 (v2 out))))))
+  & s1 ~ $([<] $(s2 lt))
+  & lt ~ ?((@before_score_tie @ret_false) (u1 (v1 (u2 (v2 out)))))
+
+@before_score_tie = (u1 (v1 (u2 (v2 out))))
+  & @before_u ~ (u1 (v1 (u2 (v2 out))))
+
+@before_u = (u1 (v1 (u2 (v2 out))))
+  & u1 ~ {u1lt u1eq}
+  & u2 ~ {u2lt u2eq}
+  & u1lt ~ $([<] $(u2lt lt))
+  & lt ~ ?((@before_u_equal @ret_true) (u1eq (v1 (u2eq (v2 out)))))
+
+@before_u_equal = (u1 (v1 (u2 (v2 out))))
+  & u1 ~ $([=] $(u2 eq))
+  & eq ~ ?((@ret_false @before_v) (v1 (v2 out)))
+
+@before_v = (v1 (v2 out))
+  & v1 ~ $([<] $(v2 out))
+
+@ret_false = (ctx out)
+  & ctx ~ *
+  & out ~ 0
+
+@ret_true = (ctx out)
+  & ctx ~ *
+  & out ~ 1
+
+// Process sorted candidates.
+@run = (lst (mnl (cap (labels out))))
+  & lst ~ (tag payload)
+  & tag ~ ?((@run_nil @run_cons) (payload (mnl (cap (labels out)))))
+
+@run_nil = (* (mnl (cap (labels out))))
+  & mnl ~ *
+  & cap ~ *
+  & out ~ labels
+
+@run_cons = (* ((x rest) (mnl (cap (labels out)))))
+  & mnl ~ {mnl_try mnl_rec}
+  & cap ~ {cap_try cap_rec}
+  & @try ~ (x (mnl_try (cap_try (labels newlabels))))
+  & @run ~ (rest (mnl_rec (cap_rec (newlabels out))))
+
+// Attempt one merge.
+@try = ((u (v score)) (mnl (cap (labels out))))
+  & score ~ *
+  & labels ~ {luL {lvL {caL {cbL {cfL mgL}}}}}
+  & @get ~ (u (luL la))
+  & @get ~ (v (lvL lb))
+  & la ~ {laE {laA {laC laM}}}
+  & lb ~ {lbE {lbB {lbC lbM}}}
+  & @eq ~ (laE (lbE same))
+  & same ~ ?((@try_different @try_same)
+      (mnl (cap (mgL (cfL (laC (lbC (laA (lbB (caL (cbL (laM (lbM out)))))))))))))
+
+@try_same = (mnl (cap (mgL (cfL (laC (lbC (laA (lbB (caL (cbL (laM (lbM out))))))))))))
+  & mnl ~ *
+  & cap ~ *
+  & cfL ~ *
+  & laC ~ *
+  & lbC ~ *
+  & laA ~ *
+  & lbB ~ *
+  & caL ~ *
+  & cbL ~ *
+  & laM ~ *
+  & lbM ~ *
+  & out ~ mgL
+
+@try_different = (mnl (cap (mgL (cfL (laC (lbC (laA (lbB (caL (cbL (laM (lbM out))))))))))))
+  & @count ~ (caL (laA cA))
+  & @count ~ (cbL (lbB cB))
+  & cA ~ $([+] $(cB total))
+  & total ~ $([>] $(cap too_big))
+  & too_big ~ ?((@try_cap_ok @try_cap_fail)
+      (mnl (mgL (cfL (laC (lbC (laM (lbM out))))))))
+
+@try_cap_fail = (mnl (mgL (cfL (laC (lbC (laM (lbM out)))))))
+  & mnl ~ *
+  & cfL ~ *
+  & laC ~ *
+  & lbC ~ *
+  & laM ~ *
+  & lbM ~ *
+  & out ~ mgL
+
+@try_cap_ok = (mnl (mgL (cfL (la (lb (laM (lbM out)))))))
+  & @conflict ~ (mnl (cfL (la (lb blocked))))
+  & blocked ~ ?((@try_merge @try_blocked) (mgL (laM (lbM out))))
+
+@try_blocked = (* (mgL (la (lb out))))
+  & la ~ *
+  & lb ~ *
+  & out ~ mgL
+
+@try_merge = (mgL (la (lb out)))
+  & @merge ~ (mgL (la (lb out)))
+
+// Look up the label at an index in a label list.
+@get = (idx (lst out))
+  & idx ~ ?((@get_zero @get_succ) (lst out))
+
+@get_zero = ((tag (head tail)) out)
+  & tag ~ *
+  & tail ~ *
+  & out ~ head
+
+@get_succ = (idx ((tag (head tail)) out))
+  & tag ~ *
+  & head ~ *
+  & @get ~ (idx (tail out))
+
+// Count occurrences of a component label.
+@count = (lst (key out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@count_nil @count_cons) (payload (key out)))
+
+@count_nil = (* (key out))
+  & key ~ *
+  & out ~ 0
+
+@count_cons = (* ((h tail) (key out)))
+  & key ~ {ke kr}
+  & @eq ~ (h (ke z))
+  & @count ~ (tail (kr cnt))
+  & z ~ $([+] $(cnt out))
+
+// Check whether any must-not-link pair crosses the two components.
+@conflict = (ml (labels (la (lb out))))
+  & ml ~ (tag payload)
+  & tag ~ ?((@conflict_nil @conflict_cons) (payload (labels (la (lb out)))))
+
+@conflict_nil = (* (labels (la (lb out))))
+  & labels ~ *
+  & la ~ *
+  & lb ~ *
+  & out ~ 0
+
+@conflict_cons = (* ((a (b rest)) (labels (la (lb out)))))
+  & labels ~ {labs_a {labs_b labs_rec}}
+  & la ~ {la_cross la_rec}
+  & lb ~ {lb_cross lb_rec}
+  & @get ~ (a (labs_a xa))
+  & @get ~ (b (labs_b xb))
+  & @cross ~ (xa (xb (la_cross (lb_cross z))))
+  & z ~ ?((@conflict_no @conflict_yes)
+      (rest (labs_rec (la_rec (lb_rec out)))))
+
+@conflict_no = (rest (labs (la (lb out))))
+  & @conflict ~ (rest (labs (la (lb out))))
+
+@conflict_yes = (* (rest (labs (la (lb out)))))
+  & rest ~ *
+  & labs ~ *
+  & la ~ *
+  & lb ~ *
+  & out ~ 1
+
+// Return 1 iff endpoints belong to opposite components.
+@cross = (xa (xb (la (lb out))))
+  & xa ~ {xa1 xa2}
+  & xb ~ {xb1 xb2}
+  & la ~ {la1 la2}
+  & lb ~ {lb1 lb2}
+  & @eq ~ (xa1 (la1 e1))
+  & @eq ~ (xb1 (lb1 e2))
+  & @eq ~ (xa2 (lb2 e3))
+  & @eq ~ (xb2 (la2 e4))
+  & e1 ~ $([*] $(e2 p1))
+  & e3 ~ $([*] $(e4 p2))
+  & p1 ~ $([+] $(p2 total))
+  & total ~ $([>] $(0 out))
+
+// Merge labels by replacing the smaller representative with the larger.
+@merge = (labels (la (lb out)))
+  & la ~ {lac lak}
+  & lb ~ {lbc lbk}
+  & lac ~ $([>] $(lbc z))
+  & z ~ ?((@merge_not_gt @merge_gt) (labels (lak (lbk out))))
+
+@merge_not_gt = (labels (la (lb out)))
+  & @replace ~ (labels (la (lb out)))
+
+@merge_gt = (* (labels (la (lb out))))
+  & @replace ~ (labels (lb (la out)))
+
+// List replacement.
+@replace = (lst (old (new out)))
+  & @replace_walk ~ (lst (old (new out)))
+
+@replace_walk = (lst (old (new out)))
+  & lst ~ (tag payload)
+  & tag ~ ?((@replace_nil @replace_cons) (payload (old (new out))))
+
+@replace_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* ((h tail) (old (new out))))
+  & @replace_cell ~ (h (tail (old (new out))))
+
+@replace_cell = (h (tail (old (new out))))
+  & h ~ {heq hkeep}
+  & old ~ {oldeq oldrec}
+  & new ~ {newhead newrec}
+  & @eq ~ (heq (oldeq z))
+  & z ~ ?((@replace_other @replace_same)
+      (newhead (newrec (tail (oldrec (hkeep out))))))
+
+@replace_same = (newhead (newrec (tail (old (hkeep out)))))
+  & hkeep ~ *
+  & @replace_walk ~ (tail (old (newrec rest)))
+  & out ~ (1 (newhead rest))
+
+@replace_other = (newhead (newrec (tail (old (hkeep out)))))
+  & newhead ~ *
+  & @replace_walk ~ (tail (old (newrec rest)))
+  & out ~ (1 (hkeep rest))
+
+@eq = (a (b out))
+  & a ~ $([=] $(b out))

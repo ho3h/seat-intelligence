@@ -1,0 +1,63 @@
+@prog = (input out)
+  & input ~ (k xs)
+  & k ~ {k_cmp k_keep}
+  & @count ~ (xs (16777215 (0 r)))
+  & r ~ (len xs2)
+  & len ~ $([>] $(k_cmp z))
+  & z ~ ?((@prog_invalid @prog_valid) (k_keep (xs2 out)))
+
+@prog_invalid = (* (* 0))
+
+@prog_valid = (* (k (xs out)))
+  & @search ~ (0 (16777215 (k (xs out))))
+
+@count = ((?((@count_nil @count_cons) (pl (mid (acc out)))) pl) (mid (acc out)))
+
+@count_nil = (* (* (acc (0 *))))
+
+@count_cons = (* ((h t) (mid (acc out))))
+  & h ~ {h_cmp h_keep}
+  & mid ~ {mid_cmp mid_keep}
+  & h_cmp ~ $([>] $(mid_cmp z))
+  & z ~ ?((@count_inc @count_same) (h_keep (t (mid_keep (acc out)))))
+
+@count_inc = (h (t (mid (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (mid (acc2 r)))
+  & r ~ (cnt tail)
+  & out ~ (cnt (1 (h tail)))
+
+@count_same = (* (h (t (mid (acc out)))))
+  & @count ~ (t (mid (acc r)))
+  & r ~ (cnt tail)
+  & out ~ (cnt (1 (h tail)))
+
+@search = (low (high (k (xs out))))
+  & low ~ {low_cmp low_keep}
+  & high ~ {high_cmp high_keep}
+  & low_cmp ~ $([<] $(high_cmp z))
+  & z ~ ?((@search_done @search_more) (low_keep (high_keep (k (xs out)))))
+
+@search_done = (low (* (* (* low))))
+
+@search_more = (* (low (high (k (xs out)))))
+  & low ~ {low_a low_keep}
+  & low_a ~ {low_sub low_add}
+  & high ~ {high_diff high_keep}
+  & high_diff ~ $([-] $(low_sub diff))
+  & diff ~ $([/] $(2 half))
+  & low_add ~ $([+] $(half mid))
+  & k ~ {k_cmp k_keep}
+  & mid ~ {mid_count mid_keep}
+  & @count ~ (xs (mid_count (0 r)))
+  & r ~ (cnt xs2)
+  & cnt ~ $([>] $(k_cmp z))
+  & z ~ ?((@search_lower @search_upper) (low_keep (high_keep (k_keep (xs2 (mid_keep out)))))
+
+@search_lower = (low (high (k (xs (mid out)))))
+  & mid ~ $([+1] low2)
+  & @search ~ (low2 (high (k (xs out))))
+
+@search_upper = (* (low (high (k (xs (mid out))))))
+  & high ~ *
+  & @search ~ (low (mid (k (xs out))))

@@ -1,0 +1,23 @@
+@decide = ((@decide__C6 a) a)
+
+@decide__C0 = (* 6)
+
+@decide__C1 = (* (a a))
+
+@decide__C2 = ($([+0x0000001] b) (c (d (e (* (a f))))))
+  & @decide ~ (a (b (c (d (e f)))))
+
+@decide__C3 = (* ({$([+0x0000001] b) c} (* (* (e (d (a f)))))))
+  & @decide ~ (a (b (c (d (e f)))))
+
+@decide__C4 = (* (c ($([<] $(a b)) (a d))))
+  & $(b ?((@decide__C0 @decide__C1) (c d))) ~ [=0x0000000]
+
+@decide__C5 = (* ({$([>] $(a ?((@decide__C2 @decide__C3) (b (c (d (e (f (g h))))))))) f} (g (b (c ({a d} (e h)))))))
+
+@decide__C6 = (?((@decide__C4 @decide__C5) a) a)
+
+@prog = ((b a) c)
+  & @decide ~ (a (0 (0 (0 (b c)))))
+
+

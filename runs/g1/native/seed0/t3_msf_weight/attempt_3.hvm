@@ -1,0 +1,173 @@
+// Initialize each vertex label to its own index.
+@prog = ((n edges) out)
+  & @init ~ (n labels0)
+  & @rev ~ (labels0 labels)
+  & @go ~ (edges (labels (0 out)))
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_succ) out)
+
+@init_zero = (0 *)
+
+@init_succ = (nm out)
+  & nm ~ {n1 n2}
+  & @init ~ (n1 rest)
+  & out ~ (1 (n2 rest))
+
+// Reverse the descending labels produced by @init.
+@rev = (l out)
+  & @rev_go ~ (l ((0 *) out))
+
+@rev_go = ((tag payload) (acc out))
+  & tag ~ ?((@rev_nil @rev_cons) (payload (acc out)))
+
+@rev_nil = (* (acc out))
+  & out ~ acc
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev_go ~ (t ((1 (h acc)) out))
+
+// Look up the label at index idx in a list.
+@at = (idx ((tag payload) out))
+  & tag ~ ?((@at_nil @at_list_cons) (payload (idx out)))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@at_list_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@at_here @at_more) (h (t out)))
+
+@at_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@at_more = (idxm (h (t out)))
+  & h ~ *
+  & @at ~ (idxm (t out))
+
+// Return the minimum-weight edge.
+@min = ((tag payload) out)
+  & tag ~ ?((@min_nil @min_cons) (payload out))
+
+@min_nil = (* out)
+  & out ~ (0 (0 16777215))
+
+@min_cons = (* ((h t) out))
+  & @min ~ (t m)
+  & @pick ~ (h (m out))
+
+// Pick the lighter of two edges; ties pick the first.
+@pick = ((u (v w)) ((a (b q)) out))
+  & w ~ {wc wh}
+  & q ~ {qc qh}
+  & wc ~ $([>] $(qc flag))
+  & flag ~ ?((@pick_head @pick_tail) ((u (v wh)) ((a (b qh)) out)))
+
+@pick_head = ((u (v w)) ((a (b q)) out))
+  & a ~ *
+  & b ~ *
+  & q ~ *
+  & out ~ (u (v w))
+
+@pick_tail = (* ((u (v w)) ((a (b q)) out)))
+  & u ~ *
+  & v ~ *
+  & w ~ *
+  & out ~ (a (b q))
+
+// Compare two edges for exact equality.
+@same = ((u (v w)) ((a (b q)) out))
+  & u ~ $([=] $(a x))
+  & v ~ $([=] $(b y))
+  & w ~ $([=] $(q z))
+  & x ~ $([*] $(y xy))
+  & xy ~ $([*] $(z out))
+
+// Remove the first occurrence of target from a list of edges.
+@remove = ((tag payload) (target out))
+  & tag ~ ?((@rm_nil @rm_cons) (payload (target out)))
+
+@rm_nil = (* (target out))
+  & target ~ *
+  & out ~ (0 *)
+
+@rm_cons = (* ((h t) (target out)))
+  & h ~ {hcmp hkeep}
+  & target ~ {tcmp targetkeep}
+  & @same ~ (hcmp (tcmp eq))
+  & eq ~ ?((@rm_keep @rm_drop) (hkeep (t (targetkeep out))))
+
+@rm_keep = (h (t (target out)))
+  & @remove ~ (t (target rest))
+  & out ~ (1 (h rest))
+
+@rm_drop = (* (h (t (target out))))
+  & h ~ *
+  & target ~ *
+  & out ~ t
+
+// Replace every occurrence of old with new in a label list.
+@replace = ((tag payload) (old (new out)))
+  & tag ~ ?((@rp_nil @rp_cons) (payload (old (new out))))
+
+@rp_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rp_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hh}
+  & old ~ {oc oldkeep}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@rp_no @rp_yes) (hh (t (oldkeep (new out)))))
+
+@rp_no = (h (t (old (new out))))
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@rp_yes = (* (h (t (old (new out)))))
+  & h ~ *
+  & new ~ {nrec nhead}
+  & @replace ~ (t (old (nrec rest)))
+  & out ~ (1 (nhead rest))
+
+// Process edges in increasing weight order.
+@go = ((tag payload) (labels (acc out)))
+  & tag ~ ?((@go_nil @go_cons) (payload (labels (acc out))))
+
+@go_nil = (* (labels (acc out)))
+  & labels ~ *
+  & out ~ acc
+
+@go_cons = (* ((h t) (labels (acc out))))
+  & (1 (h t)) ~ {lmin lrem}
+  & @min ~ (lmin e)
+  & e ~ {erem eproc}
+  & @remove ~ (lrem (erem rest))
+  & @process ~ (eproc (labels (acc (rest out))))
+
+// Look up both endpoint labels, then join the components or skip the edge.
+@process = ((u (v w)) (labels (acc (rest out))))
+  & labels ~ {la more}
+  & more ~ {lb lc}
+  & @at ~ (u (la lu))
+  & @at ~ (v (lb lv))
+  & @decision ~ (w (lu (lv (lc (acc (rest out))))))
+
+@decision = (w (lu (lv (labels (acc (rest out))))))
+  & lu ~ {lu_cmp lu_keep}
+  & lv ~ {lv_cmp lv_keep}
+  & lu_cmp ~ $([=] $(lv_cmp eq))
+  & eq ~ ?((@different @samecomp) (w (lu_keep (lv_keep (labels (acc (rest out)))))))
+
+@different = (w (lu (lv (labels (acc (rest out))))))
+  & @replace ~ (labels (lv (lu newlabels)))
+  & acc ~ $([+] $(w acc2))
+  & @go ~ (rest (newlabels (acc2 out)))
+
+@samecomp = (* (w (lu (lv (labels (acc (rest out)))))))
+  & w ~ *
+  & lu ~ *
+  & lv ~ *
+  & @go ~ (rest (labels (acc out)))

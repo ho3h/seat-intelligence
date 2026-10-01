@@ -1,0 +1,35 @@
+// Search a sorted list, carrying the current index.
+@prog = ((xs target) out)
+  & @search ~ (xs (target (0 out)))
+
+@search = ((?((@search_nil @search_cons) (pl (target (idx out)))) pl) (target (idx out)))
+
+@search_nil = (* (target (idx out)))
+  & target ~ *
+  & out ~ 16777215
+
+@search_cons = (* ((head tail) (target (idx out))))
+  & head ~ {head_eq head_gt}
+  & target ~ {target_eq target_rest}
+  & target_eq ~ {target_cmp target_gt}
+  & head_eq ~ $([=] $(target_cmp equal))
+  & equal ~ ?((@search_order @search_found) (head_gt (tail (target_gt (target_rest (idx out))))))
+
+@search_found = (* (head_gt (tail (target_gt (target_rest (idx out))))))
+  & head_gt ~ *
+  & tail ~ *
+  & target_gt ~ *
+  & target_rest ~ *
+
+@search_order = (head_gt (tail (target_gt (target_rest (idx out)))))
+  & head_gt ~ $([>] $(target_gt greater))
+  & greater ~ ?((@search_less @search_stop) (tail (target_rest (idx out))))
+
+@search_less = (tail (target_rest (idx out)))
+  & idx ~ $([+] next_idx)
+  & @search ~ (tail (target_rest (next_idx out)))
+
+@search_stop = (* (tail (target_rest (idx out))))
+  & tail ~ *
+  & target_rest ~ *
+  & out ~ 16777215

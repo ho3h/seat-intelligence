@@ -1,0 +1,281 @@
+@prog = ((n edges) out)
+  & n ~ {n_tmp n_loop}
+  & n_tmp ~ {n_v n_n}
+  & edges ~ {edges_c edges_loop}
+  & @components_excluding ~ (n_v (n_n (edges_c C)))
+  & @articulation_loop ~ (0 (n_loop (edges_loop (C out))))
+
+@components_excluding = (v (n (edges out)))
+  & v ~ {v_proc v_count}
+  & n ~ {n_init n_count}
+  & @init_map ~ (n_init (0 (0 *) map0))
+  & @process_edges ~ (v_proc (edges (map0 map1)))
+  & @count_components ~ (v_count (n_count (map1 out)))
+
+@articulation_loop = (v (n (edges (C out))))
+  & v ~ {v_lt v_ctx}
+  & n ~ {n_lt n_ctx}
+  & @lt ~ (v_lt (n_lt flag))
+  & flag ~ ?((@art_end @art_rec) (v_ctx (n_ctx (edges (C out)))))
+
+@art_end = (v (n (edges (C out))))
+  & v ~ *
+  & n ~ *
+  & edges ~ *
+  & C ~ *
+  & 0 ~ out
+
+@art_rec = (z (v (n (edges (C out)))))
+  & z ~ *
+  & v ~ {v_comp v_ctx}
+  & n ~ {n_comp n_ctx}
+  & edges ~ {edges_comp edges_ctx}
+  & C ~ {C_cmp C_ctx}
+  & @components_excluding ~ (v_comp (n_comp (edges_comp cv)))
+  & @gt ~ (cv (C_cmp flag))
+  & @art_after_cmp ~ (v_ctx (n_ctx (edges_ctx (C_ctx (flag out)))))
+
+@art_after_cmp = (v (n (edges (C (flag out)))))
+  & flag ~ ?((@art_add0 @art_add1) (v (n (edges (C out)))))
+
+@art_add0 = (v (n (edges (C out))))
+  & v ~ $([+1] v2)
+  & @articulation_loop ~ (v2 (n (edges (C out))))
+
+@art_add1 = (z (v (n (edges (C out)))))
+  & z ~ *
+  & v ~ $([+1] v2)
+  & @articulation_loop ~ (v2 (n (edges (C rec))))
+  & rec ~ $([+1] out)
+
+@init_map = (n (i (map out)))
+  & i ~ {i_lt i_ctx}
+  & n ~ {n_lt n_ctx}
+  & @lt ~ (i_lt (n_lt flag))
+  & flag ~ ?((@init_done @init_cons) (n_ctx (i_ctx (map out))))
+
+@init_done = (n (i (map out)))
+  & n ~ *
+  & i ~ *
+  & map ~ out
+
+@init_cons = (z (n (i (map out))))
+  & z ~ *
+  & i ~ {i_pair i_inc}
+  & i_pair ~ {i1 i2}
+  & i_inc ~ $([+1] i_next)
+  & @init_map ~ (n (i_next (1 ((i1 i2) map)) out))
+
+@process_edges = (v (edges (map_in map_out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@pe_nil @pe_cons) (payload (v (map_in map_out))))
+
+@pe_nil = (payload (v (map_in map_out)))
+  & payload ~ *
+  & v ~ *
+  & map_in ~ map_out
+
+@pe_cons = (z (payload (v (map_in map_out))))
+  & z ~ *
+  & payload ~ (edge rest)
+  & edge ~ (u w)
+  & v ~ {v_tmp v_rec}
+  & v_tmp ~ {v_u v_w}
+  & u ~ {u_cmp u_ctx}
+  & w ~ {w_cmp w_ctx}
+  & @neq ~ (u_cmp (v_u neq_u))
+  & @neq ~ (w_cmp (v_w neq_w))
+  & @and ~ (neq_u (neq_w both))
+  & both ~ ?((@pe_skip @pe_union) (rest (v_rec (u_ctx (w_ctx (map_in map_out))))))
+
+@pe_skip = (rest (v (u (w (map_in map_out)))))
+  & u ~ *
+  & w ~ *
+  & @process_edges ~ (v (rest (map_in map_out)))
+
+@pe_union = (z (rest (v (u (w (map_in map_out))))))
+  & z ~ *
+  & @union ~ (u (w (map_in map_mid)))
+  & @process_edges ~ (v (rest (map_mid map_out)))
+
+@union = (u (w (map_in map_out)))
+  & map_in ~ {map_tmp map_base}
+  & map_tmp ~ {map_u map_w}
+  & @find ~ (u (map_u ru_found))
+  & @find ~ (w (map_w rw_found))
+  & ru_found ~ {ru_cmp ru_ctx}
+  & rw_found ~ {rw_cmp rw_ctx}
+  & @eq ~ (ru_cmp (rw_cmp same))
+  & same ~ ?((@union_diff @union_same) (ru_ctx (rw_ctx (map_base map_out))))
+
+@union_same = (ru (rw (map_base map_out)))
+  & ru ~ *
+  & rw ~ *
+  & map_base ~ map_out
+
+@union_diff = (z (ru (rw (map_base map_out))))
+  & z ~ *
+  & @set_parent ~ (ru (rw (map_base map_out)))
+
+@find = (x (map out))
+  & map ~ {map_search map_recurse}
+  & @find_search ~ (x (map_search (map_recurse out)))
+
+@find_search = (x (list (saved out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@fs_nil @fs_cons) (payload (x (saved out))))
+
+@fs_nil = (payload (x (saved out)))
+  & payload ~ *
+  & x ~ *
+  & saved ~ *
+  & 0 ~ out
+
+@fs_cons = (z (payload (x (saved out))))
+  & z ~ *
+  & payload ~ (elem rest)
+  & elem ~ (k p)
+  & x ~ {x_cmp x_ctx}
+  & @eq ~ (x_cmp (k same))
+  & same ~ ?((@fs_next @fs_found) (p (rest (x_ctx (saved out)))))
+
+@fs_next = (p (rest (x (saved out))))
+  & p ~ *
+  & @find_search ~ (x (rest (saved out)))
+
+@fs_found = (z (p (rest (x (saved out)))))
+  & z ~ *
+  & rest ~ *
+  & p ~ {p_cmp p_ctx}
+  & x ~ {x_cmp x_ctx}
+  & @eq ~ (p_cmp (x_cmp same2))
+  & same2 ~ ?((@fs_nonroot @fs_root) (p_ctx (x_ctx (saved out))))
+
+@fs_nonroot = (p (x (saved out)))
+  & x ~ *
+  & @find ~ (p (saved out))
+
+@fs_root = (z (p (x (saved out))))
+  & z ~ *
+  & p ~ *
+  & saved ~ *
+  & x ~ out
+
+@set_parent = (key (new_parent (map_in map_out)))
+  & map_in ~ (tag payload)
+  & tag ~ ?((@sp_nil @sp_cons) (payload (key (new_parent map_out))))
+
+@sp_nil = (payload (key (new_parent map_out)))
+  & payload ~ *
+  & key ~ *
+  & new_parent ~ *
+  & map_out ~ (0 *)
+
+@sp_cons = (z (payload (key (new_parent map_out))))
+  & z ~ *
+  & payload ~ (elem rest)
+  & elem ~ {elem_a elem_b}
+  & elem_a ~ (k p)
+  & p ~ *
+  & key ~ {key_cmp key_ctx}
+  & @eq ~ (k (key_cmp same))
+  & same ~ ?((@sp_keep @sp_replace) (elem_b (rest (key_ctx (new_parent map_out)))))
+
+@sp_keep = (elem (rest (key (new_parent map_out))))
+  & @set_parent ~ (key (new_parent (rest map_rest)))
+  & map_out ~ (1 (elem map_rest))
+
+@sp_replace = (z (elem (rest (key (new_parent map_out)))))
+  & z ~ *
+  & elem ~ (k p)
+  & p ~ *
+  & key ~ *
+  & map_out ~ (1 ((k new_parent) rest))
+
+@count_components = (v (n (map out)))
+  & @count_loop ~ (v (n (0 (map ((0 *) (0 out))))))
+
+@count_loop = (v (n (i (map (roots (acc out))))))
+  & i ~ {i_lt i_ctx}
+  & n ~ {n_lt n_ctx}
+  & @lt ~ (i_lt (n_lt flag))
+  & flag ~ ?((@cl_done @cl_next) (v (n_ctx (i_ctx (map (roots (acc out)))))))
+
+@cl_done = (v (n (i (map (roots (acc out))))))
+  & v ~ *
+  & n ~ *
+  & i ~ *
+  & map ~ *
+  & roots ~ *
+  & acc ~ out
+
+@cl_next = (z (v (n (i (map (roots (acc out)))))))
+  & z ~ *
+  & i ~ {i_tmp i_inc}
+  & i_tmp ~ {i_cmp i_proc}
+  & i_inc ~ $([+1] i_next)
+  & v ~ {v_eq v_ctx}
+  & @eq ~ (i_cmp (v_eq same))
+  & same ~ ?((@cl_process @cl_skip) (v_ctx (n (i_next (i_proc (map (roots (acc out))))))))
+
+@cl_skip = (z (v (n (i_next (i_proc (map (roots (acc out))))))))
+  & z ~ *
+  & i_proc ~ *
+  & @count_loop ~ (v (n (i_next (map (roots (acc out))))))
+
+@cl_process = (v (n (i_next (i_proc (map (roots (acc out)))))))
+  & map ~ {map_find map_rec}
+  & roots ~ {roots_mem roots_ctx}
+  & @find ~ (i_proc (map_find root_found))
+  & root_found ~ {root_mem root_ctx}
+  & @member ~ (root_mem (roots_mem is_mem))
+  & is_mem ~ ?((@cl_add @cl_noadd) (root_ctx (v (n (i_next (map_rec (roots_ctx (acc out))))))))
+
+@cl_noadd = (z (root (v (n (i_next (map (roots (acc out))))))))
+  & z ~ *
+  & root ~ *
+  & @count_loop ~ (v (n (i_next (map (roots (acc out))))))
+
+@cl_add = (root (v (n (i_next (map (roots (acc out)))))))
+  & acc ~ $([+1] acc2)
+  & @count_loop ~ (v (n (i_next (map ((1 (root roots)) (acc2 out))))))
+
+@member = (x (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@mem_nil @mem_cons) (payload (x out)))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & 0 ~ out
+
+@mem_cons = (z (payload (x out)))
+  & z ~ *
+  & payload ~ (h rest)
+  & x ~ {x_cmp x_rec}
+  & @eq ~ (x_cmp (h same))
+  & same ~ ?((@mem_next @mem_found) (x_rec (rest out)))
+
+@mem_next = (x (rest out))
+  & @member ~ (x (rest out))
+
+@mem_found = (z (x (rest out)))
+  & z ~ *
+  & x ~ *
+  & rest ~ *
+  & 1 ~ out
+
+@eq = (a (b out))
+  & a ~ $([=] $(b out))
+
+@neq = (a (b out))
+  & a ~ $([!] $(b out))
+
+@lt = (a (b out))
+  & a ~ $([<] $(b out))
+
+@gt = (a (b out))
+  & a ~ $([>] $(b out))
+
+@and = (a (b out))
+  & a ~ $([&] $(b out))

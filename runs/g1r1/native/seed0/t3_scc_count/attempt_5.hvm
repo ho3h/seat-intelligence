@@ -1,0 +1,176 @@
+@prog = ((n edges) out)
+  & @norm ~ (edges normEdges)
+  & @cv ~ (0 (n (normEdges (0 out))))
+
+@norm = ((?((@norm_nil @norm_cons) (payload out)) payload) out)
+
+@norm_nil = (* (payload out))
+  & payload ~ *
+  & out ~ (0 *)
+
+@norm_cons = (* ((u v) out))
+  & @norm ~ (tail normalized)
+  & out ~ (1 ((u v) normalized))
+
+@cv = (i (n (edges (count out))))
+  & i ~ {iEq iCtx}
+  & n ~ {nEq nCtx}
+  & iEq ~ $([=] $(nEq eq))
+  & eq ~ ?((@cv_more @cv_done) (iCtx (nCtx (edges (count out)))))
+
+@cv_more = (i (n (edges (count out))))
+  & i ~ {iF iRest}
+  & iRest ~ {iB iRest2}
+  & iRest2 ~ {iH iNextIn}
+  & edges ~ {edgesF edgesRest}
+  & edgesRest ~ {edgesB edgesNext}
+  & @reach_fwd ~ (iF (edgesF fset))
+  & @reach_back ~ (iB (edgesB bset))
+  & @hasprev ~ (iH (fset (bset found)))
+  & iNextIn ~ $([+1] iNext)
+  & found ~ ?((@cv_increment @cv_same) (iNext (n (edgesNext (count out)))))
+
+@cv_done = (* (i (n (edges (count out)))))
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+  & count ~ out
+
+@cv_increment = (i (n (edges (count out))))
+  & count ~ $([+1] count2)
+  & @cv ~ (i (n (edges (count2 out))))
+
+@cv_same = (* (i (n (edges (count out)))))
+  & @cv ~ (i (n (edges (count out))))
+
+@reach_fwd = (src (edges out))
+  & @close_fwd ~ (edges ((1 (src (0 *))) out))
+
+@reach_back = (src (edges out))
+  & @close_back ~ (edges ((1 (src (0 *))) out))
+
+@close_fwd = (edges (vis out))
+  & edges ~ {edgesScan edgesRec}
+  & @sf_walk ~ (edgesScan (0 (vis scanRes)))
+  & scanRes ~ (changed vis2)
+  & changed ~ ?((@cf_stop @cf_again) (edgesRec (vis2 out)))
+
+@cf_stop = (edges (vis out))
+  & edges ~ *
+  & vis ~ out
+
+@cf_again = (* (edges (vis out)))
+  & @close_fwd ~ (edges (vis out))
+
+@close_back = (edges (vis out))
+  & edges ~ {edgesScan edgesRec}
+  & @sb_walk ~ (edgesScan (0 (vis scanRes)))
+  & scanRes ~ (changed vis2)
+  & changed ~ ?((@cb_stop @cb_again) (edgesRec (vis2 out)))
+
+@cb_stop = (edges (vis out))
+  & edges ~ *
+  & vis ~ out
+
+@cb_again = (* (edges (vis out)))
+  & @close_back ~ (edges (vis out))
+
+@sf_walk = ((?((@sf_nil @sf_cons) (p (changed (vis out)))) p) (changed (vis out)))
+
+@sf_nil = (* (changed (vis out)))
+  & out ~ (changed vis)
+
+@sf_cons = (* ((u v) (tail (changed (vis out)))))
+  & vis ~ {visM visKeep}
+  & @member ~ (u (visM active))
+  & active ~ ?((@sf_skip @sf_u_yes) (v (tail (changed (visKeep out)))))
+
+@sf_skip = (v (tail (changed (vis out))))
+  & v ~ *
+  & @sf_walk ~ (tail (changed (vis out)))
+
+@sf_u_yes = (* (v (tail (changed (vis out)))))
+  & v ~ {vQuery vKeep}
+  & vis ~ {visM visKeep}
+  & @member ~ (vQuery (visM found))
+  & found ~ ?((@sf_add @sf_present) (vKeep (tail (changed (visKeep out)))))
+
+@sf_present = (* (v (tail (changed (vis out)))))
+  & v ~ *
+  & @sf_walk ~ (tail (changed (vis out)))
+
+@sf_add = (v (tail (changed (vis out))))
+  & changed ~ *
+  & @sf_walk ~ (tail (1 ((1 (v vis)) out)))
+
+@sb_walk = ((?((@sb_nil @sb_cons) (p (changed (vis out)))) p) (changed (vis out)))
+
+@sb_nil = (* (changed (vis out)))
+  & out ~ (changed vis)
+
+@sb_cons = (* ((u v) (tail (changed (vis out)))))
+  & vis ~ {visM visKeep}
+  & @member ~ (v (visM active))
+  & active ~ ?((@sb_skip @sb_v_yes) (u (tail (changed (visKeep out)))))
+
+@sb_skip = (u (tail (changed (vis out))))
+  & u ~ *
+  & @sb_walk ~ (tail (changed (vis out)))
+
+@sb_v_yes = (* (u (tail (changed (vis out)))))
+  & u ~ {uQuery uKeep}
+  & vis ~ {visM visKeep}
+  & @member ~ (uQuery (visM found))
+  & found ~ ?((@sb_add @sb_present) (uKeep (tail (changed (visKeep out)))))
+
+@sb_present = (* (u (tail (changed (vis out)))))
+  & u ~ *
+  & @sb_walk ~ (tail (changed (vis out)))
+
+@sb_add = (u (tail (changed (vis out))))
+  & changed ~ *
+  & @sb_walk ~ (tail (1 ((1 (u vis)) out)))
+
+@member = (x (list out))
+  & @mwalk ~ (list (x out))
+
+@mwalk = ((?((@mw_nil @mw_cons) (p (x out))) p) (x out))
+
+@mw_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mw_cons = (* ((h t) (x out)))
+  & h ~ {hEq hDrop}
+  & x ~ {xEq xRec}
+  & hEq ~ $([=] $(xEq eq))
+  & hDrop ~ *
+  & @mwalk ~ (t (xRec tailBool))
+  & eq ~ $([|] $(tailBool out))
+
+@hasprev = (j (fwd (back out)))
+  & j ~ ?((@hp_none @hp_more) (fwd (back out)))
+
+@hp_none = (fwd (back out))
+  & fwd ~ *
+  & back ~ *
+  & out ~ 0
+
+@hp_more = (k (fwd (back out)))
+  & k ~ {kF kRest}
+  & kRest ~ {kB kRec}
+  & fwd ~ {fQuery fRec}
+  & back ~ {bQuery bRec}
+  & @member ~ (kF (fQuery fbool))
+  & @member ~ (kB (bQuery bbool))
+  & fbool ~ $([&] $(bbool both))
+  & both ~ ?((@hp_continue @hp_found) (kRec (fRec (bRec out))))
+
+@hp_continue = (k (fwd (back out)))
+  & @hasprev ~ (k (fwd (back out)))
+
+@hp_found = (* (k (fwd (back out))))
+  & k ~ *
+  & fwd ~ *
+  & back ~ *
+  & out ~ 1

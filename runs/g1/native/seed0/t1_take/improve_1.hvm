@@ -1,0 +1,17 @@
+// Multiply the list tag by k: zero means stop; otherwise the switch decrements k.
+@prog = (input out)
+  & input ~ (k xs)
+  & @take ~ (k (xs out))
+
+@take = (k ((tag payload) out))
+  & tag ~ $([*] $(k flag))
+  & flag ~ ?((@take_end @take_more) (payload out))
+
+@take_end = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@take_more = (k (payload out))
+  & payload ~ (head tail)
+  & @take ~ (k (tail rest))
+  & out ~ (1 (head rest))

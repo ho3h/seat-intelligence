@@ -1,0 +1,52 @@
+# t5_cluster_histogram: min-label propagation over vertex-keyed tuple-trees (the exp7 cc engine: frontier
+# rounds, keyed min-updates that collapse level by level, Braun adjacency, one-round lookahead), then a
+# scatter of 1 per vertex into a size tree keyed by final label (keyed adds, collapse once labels exist),
+# then a balanced reduction of one-hot 8-vectors.
+def prog(x):
+  (n, es) = x
+  (l, m) = lvl(n, 0, 1)
+  A = walk(es, zb(l), l, m)
+  D0 = init(l, 0, n)
+  D = loop(A, D0, emit(A, D0, l, l, m, zinf(l)), l, m)
+  S = scat(D, l, 0, n, l, m, zt(l))
+  (a, b, c, d, e, f, g, h) = hist(S, l)
+  return [a, b, c, d, e, f, g, h]
+
+def zt(l):
+  switch l:
+    case 0:
+      return 0
+    case _:
+      return (zt(l-1), zt(l-1))
+
+def add(t, k, l, m, v):
+  switch l:
+    case 0:
+      return t + v
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, add(b, k, l-1, m >> 1, v))
+      else:
+        return (add(a, k, l-1, m >> 1, v), b)
+
+def scat(D, lv, base, n, l, m, S):
+  switch lv:
+    case 0:
+      (d, f) = D
+      return add(S, d, l, m, base < n)
+    case _:
+      (d1, d2) = D
+      h = 1 << (lv-1)
+      return scat(d2, lv-1, base + h, n, l, m, scat(d1, lv-1, base, n, l, m, S))
+
+def hist(S, l):
+  switch l:
+    case 0:
+      return (S == 1, S == 2, S == 3, S == 4, S == 5, S == 6, S == 7, S >= 8)
+    case _:
+      (x, y) = S
+      (a1, b1, c1, d1, e1, f1, g1, h1) = hist(x, l-1)
+      (a2, b2, c2, d2, e2, f2, g2, h2) = hist(y, l-1)
+      return (a1 + a2, b1 + b2, c1 + c2, d1 + d2, e1 + e2, f1 + f2, g1 + g2, h1 + h2)
+

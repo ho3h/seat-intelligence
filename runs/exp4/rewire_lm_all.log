@@ -1,0 +1,8 @@
+/Users/tedsandtads/Genome/genome/exp4/wire.py:94: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(el, layers); self.norm = nn.LayerNorm(d)
+lam=0.0: rewired 846 static samples -> {'pass': 118, 'fail': 637, 'still_static': 91, 'unparseable': 112}
+{"pass@1": 0.1229, "pass@1_task_boot95": [0.081, 0.169], "static_filter_best_of_8": 0.15, "static_clean_rate": 0.7885, "per_family_pass@1": {"pipeline": 0.119, "reduce": 0.127}}
+paired vs baseline: {'tasks': 120, 'delta_pass@1': -0.0208, 'boot95': (-0.041, -0.003)}
+lam=3.0: rewired 846 static samples -> {'pass': 138, 'fail': 617, 'still_static': 91, 'unparseable': 112}
+{"pass@1": 0.1437, "pass@1_task_boot95": [0.098, 0.193], "static_filter_best_of_8": 0.1833, "static_clean_rate": 0.7885, "per_family_pass@1": {"pipeline": 0.127, "reduce": 0.16}}
+paired vs baseline: {'tasks': 120, 'delta_pass@1': 0.0, 'boot95': (-0.013, 0.014)}

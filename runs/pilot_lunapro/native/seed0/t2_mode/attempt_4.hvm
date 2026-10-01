@@ -1,0 +1,54 @@
+// Scan the list. For each value, count its occurrences in a copy of the
+// complete list, then retain the highest count, breaking ties by value.
+@prog = (l out)
+  & l ~ {rem full}
+  & @walk ~ (rem (full (0 (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (full (bv (bc out))))) pl) (full (bv (bc out))))
+
+@walk_nil = (* (full (bv (bc out))))
+  & full ~ *
+  & bc ~ *
+  & out ~ bv
+
+@walk_cons = (* ((h t) (full (bv (bc out)))))
+  & full ~ {fc fr}
+  & h ~ {hc {hm hk}}
+  & bv ~ {bvc bvkeep}
+  & bc ~ {bcgt {bce bckeep}}
+  & @count ~ (fc (hc (0 cnt)))
+  & cnt ~ {cg {ce ck}}
+  & cg ~ $([>] $(bcgt gt))
+  & ce ~ $([=] $(bce eq))
+  & hm ~ $([<] $(bvc lt))
+  & eq ~ $([&] $(lt tie))
+  & gt ~ $([|] $(tie upd))
+  & upd ~ ?((@walk_keep @walk_take) (t (fr (hk (ck (bvkeep (bckeep out)))))))
+
+@walk_keep = (* (t (fr (hk (ck (bv (bc out)))))))
+  & hk ~ *
+  & ck ~ *
+  & @walk ~ (t (fr (bv (bc out))))
+
+@walk_take = (* (t (fr (hk (ck (bv (bc out)))))))
+  & bv ~ *
+  & bc ~ *
+  & @walk ~ (t (fr (hk (ck out))))
+
+@count = ((?((@count_nil @count_cons) (pl (x (acc out)))) pl) (x (acc out)))
+
+@count_nil = (* (x (acc out)))
+  & x ~ *
+  & acc ~ out
+
+@count_cons = (* ((h t) (x (acc out))))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc eq))
+  & eq ~ ?((@cnt_no @cnt_yes) (xr (t (acc out))))
+
+@cnt_no = (xr (t (acc out)))
+  & @count ~ (t (xr (acc out)))
+
+@cnt_yes = (* (xr (t (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (xr (acc2 out)))

@@ -1,0 +1,135 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & @init ~ (n (0 labels))
+  & @edges ~ (edges (labels out))
+
+@splitnum = (x (a b))
+  & x ~ {a b}
+
+@splitlist = (x (a b))
+  & x ~ {a b}
+
+@init = (n (i out))
+  & n ~ ?((@init_zero @init_succ) (i out))
+
+@init_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (n (i out))
+  & @splitnum ~ (i (ival inext))
+  & inext ~ $([+1] inext2)
+  & @init ~ (n (inext2 tail))
+  & out ~ (1 (ival tail))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (labels out))) pl) (labels out))
+
+@edges_nil = (pl (labels out))
+  & pl ~ *
+  & @maxstart ~ (labels out)
+
+@edges_cons = (* (pl (labels out)))
+  & pl ~ (edge tail)
+  & edge ~ (u v)
+  & @lookup ~ (u (labels (lu labels1)))
+  & @lookup ~ (v (labels1 (lv labels2)))
+  & @replace_all ~ (labels2 (lu (lv updated)))
+  & @edges ~ (tail (updated out))
+
+@lookup = (idx (list (out rebuilt)))
+  & idx ~ ?((@lookup_zero @lookup_succ) (list (out rebuilt)))
+
+@lookup_zero = (list (out rebuilt))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @splitnum ~ (head (out hcopy))
+  & rebuilt ~ (1 (hcopy tail))
+
+@lookup_succ = (idx (list (out rebuilt)))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @splitnum ~ (head (hcopy hdrop))
+  & hdrop ~ *
+  & @lookup ~ (idx (tail (out nextrebuilt)))
+  & rebuilt ~ (1 (hcopy nextrebuilt))
+
+@replace_all = ((?((@replace_nil @replace_cons) (pl (target (new out)))) pl) (target (new out)))
+
+@replace_nil = (pl (target (new out)))
+  & pl ~ *
+  & target ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* (pl (target (new out))))
+  & pl ~ (head tail)
+  & @splitnum ~ (head (hcmp hkeep))
+  & @splitnum ~ (target (tcmp tkeep))
+  & hcmp ~ $([=] $(tcmp bit))
+  & bit ~ ?((@replace_no @replace_yes) (hkeep (tkeep (new (tail out)))))
+
+@replace_no = (hkeep (tkeep (new (tail out))))
+  & @replace_all ~ (tail (tkeep (new rest)))
+  & out ~ (1 (hkeep rest))
+
+@replace_yes = (zero (hkeep (tkeep (new (tail out)))))
+  & zero ~ *
+  & hkeep ~ *
+  & @splitnum ~ (new (newhead newrec))
+  & @replace_all ~ (tail (tkeep (newrec rest)))
+  & out ~ (1 (newhead rest))
+
+@maxstart = (labels out)
+  & @splitlist ~ (labels (cursor full))
+  & @maxscan ~ (cursor (full (0 out)))
+
+@maxscan = ((?((@max_nil @max_cons) (pl (full (best out)))) pl) (full (best out)))
+
+@max_nil = (pl (full (best out)))
+  & pl ~ *
+  & full ~ *
+  & out ~ best
+
+@max_cons = (* (pl (full (best out))))
+  & pl ~ (head tail)
+  & @splitlist ~ (full (fcount frec))
+  & @freq ~ (head (fcount (0 freq)))
+  & @splitnum ~ (freq (fcmp fkeep))
+  & @splitnum ~ (best (bcmp bkeep))
+  & fcmp ~ $([>] $(bcmp bit))
+  & bit ~ ?((@max_no @max_yes) (fkeep (bkeep (tail (frec out)))))
+
+@max_no = (fkeep (bkeep (tail (frec out))))
+  & fkeep ~ *
+  & @maxscan ~ (tail (frec (bkeep out)))
+
+@max_yes = (zero (fkeep (bkeep (tail (frec out)))))
+  & zero ~ *
+  & bkeep ~ *
+  & @maxscan ~ (tail (frec (fkeep out)))
+
+@freq = (target (list (acc out)))
+  & list ~ ((?((@freq_nil @freq_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@freq_nil = (pl (target (acc out)))
+  & pl ~ *
+  & target ~ *
+  & out ~ acc
+
+@freq_cons = (* (pl (target (acc out))))
+  & pl ~ (head tail)
+  & @splitnum ~ (head (hcmp hdrop))
+  & hdrop ~ *
+  & @splitnum ~ (target (tcmp tkeep))
+  & hcmp ~ $([=] $(tcmp bit))
+  & bit ~ ?((@freq_no @freq_yes) (tkeep (tail (acc out))))
+
+@freq_no = (tkeep (tail (acc out)))
+  & @freq ~ (tkeep (tail (acc out)))
+
+@freq_yes = (zero (tkeep (tail (acc out))))
+  & zero ~ *
+  & acc ~ $([+1] acc2)
+  & @freq ~ (tkeep (tail (acc2 out)))

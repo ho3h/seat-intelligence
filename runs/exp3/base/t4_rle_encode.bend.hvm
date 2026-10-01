@@ -1,0 +1,54 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* (b (a c)))
+  & @rle ~ (a (b (1 c)))
+
+@prog__C1 = (?((@List/Nil @prog__C0) a) a)
+
+@rle = ((@rle__C13 a) a)
+
+@rle__C0 = (a (b (c e)))
+  & @List/Cons ~ ((a b) (d e))
+  & @List/Cons ~ ((c 1) (@List/Nil d))
+
+@rle__C1 = (* (a ($([+0x0000001] b) (* c))))
+  & @List/Cons ~ ((a b) (@List/Nil c))
+
+@rle__C10 = (?((@rle__C8 @rle__C9) a) a)
+
+@rle__C11 = (a (b c))
+  & @List/Cons ~ ((a b) (@List/Nil c))
+
+@rle__C12 = (* (c ((@rle__C10 (a (b (c d)))) (a (b d)))))
+
+@rle__C13 = (?((@rle__C11 @rle__C12) a) a)
+
+@rle__C2 = (a (b (c (e (d h)))))
+  & @List/Cons ~ ((a b) (g h))
+  & @List/Cons ~ ((c 1) (f g))
+  & @rle ~ (d (e (1 f)))
+
+@rle__C3 = (* (a (b (d (* (c f))))))
+  & @List/Cons ~ ((a b) (e f))
+  & @rle ~ (c (d (2 e)))
+
+@rle__C4 = (a ($([+0x0000001] b) (d (c f))))
+  & @List/Cons ~ ((a b) (e f))
+  & @rle ~ (c (d (1 e)))
+
+@rle__C5 = (* (b ($([+0x0000002] c) (* (a d)))))
+  & @rle ~ (a (b (c d)))
+
+@rle__C6 = (b (c ({a d} ({$([=] $(a ?((@rle__C2 @rle__C3) (b (c (d (e f))))))) e} f))))
+
+@rle__C7 = (* ({a b} (c (* ({$([=] $(a ?((@rle__C4 @rle__C5) (b (c (d e)))))) d} e)))))
+
+@rle__C8 = ({a b} (c ({$([=] $(a ?((@rle__C0 @rle__C1) (b (c (d e)))))) d} e)))
+
+@rle__C9 = (* (e (f ({a b} (c ({$([=] $(a ?((@rle__C6 @rle__C7) (b (c (d (e (f g)))))))) d} g))))))
+
+

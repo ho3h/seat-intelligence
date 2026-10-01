@@ -1,0 +1,190 @@
+// Reject out-of-range vertices, then run a level-order search.
+@prog = ((n (s (t edges))) out)
+  & @valid_s ~ (n (s (t (edges out))))
+
+@valid_s = (n (s (t (edges out))))
+  & n ~ {ncmp nctx}
+  & s ~ {scmp skeep}
+  & ncmp ~ $([<] $(scmp ok))
+  & ok ~ ?((@invalid @valid_t) (nctx (skeep (t (edges out)))))
+
+@valid_t = (n (s (t (edges out))))
+  & n ~ {ncmp nctx}
+  & t ~ {tcmp tkeep}
+  & ncmp ~ $([<] $(tcmp ok))
+  & ok ~ ?((@invalid @begin) (nctx (s (tkeep (edges out)))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@begin = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ {scmp skeep}
+  & t ~ {tcmp tkeep}
+  & scmp ~ $([=] $(tcmp eq))
+  & eq ~ ?((@start_search @same) (skeep (tkeep (edges out))))
+
+@same = (s (t (edges out)))
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 1
+
+@start_search = (s (t (edges out)))
+  & s ~ {sfront sseen}
+  & @process ~ ((1 ((sfront 1) (0 *))) (edges ((1 (sseen (0 *))) (t out))))
+
+// Process every vertex in the current frontier and build the next frontier.
+@process = ((?((@process_nil @process_cons) (all_edges (seen (next (t out))))) front) (all_edges (seen (next (t out)))))
+
+@process_nil = (* (all_edges (seen (next (t out)))))
+  & next ~ {ntarget nremain}
+  & @target_sum ~ (ntarget (t (0 (0 result))))
+  & result ~ (has (count any))
+  & has ~ ?((@no_target @yes_target) (count (any (nremain (all_edges (seen (t out))))))
+
+@process_cons = (* (((u cnt) tail) (all_edges (seen (next (t out))))))
+  & all_edges ~ {ei ea}
+  & @scan ~ (ei (u (cnt (seen (next (tail (ea (t out)))))))
+
+@yes_target = (* (count (any (nremain (all_edges (seen (t out)))))))
+  & any ~ *
+  & nremain ~ *
+  & all_edges ~ *
+  & seen ~ *
+  & t ~ *
+  & out ~ count
+
+@no_target = (count (any (nremain (all_edges (seen (t out))))))
+  & count ~ *
+  & any ~ ?((@no_next @has_next) (count (nremain (all_edges (seen (t out))))))
+
+@no_next = (count (nremain (all_edges (seen (t out)))))
+  & count ~ *
+  & nremain ~ *
+  & all_edges ~ *
+  & seen ~ *
+  & t ~ *
+  & out ~ 0
+
+@has_next = (* (count (nremain (all_edges (seen (t out))))))
+  & count ~ *
+  & nremain ~ {nmark nfront}
+  & @mark_seen ~ (nmark (seen seen2))
+  & @process ~ (nfront (all_edges (seen2 (t out))))
+
+// Scan all edges for neighbors of a current-frontier vertex.
+@scan = ((?((@scan_nil @scan_cons) (u (cnt (seen (next (tailfront (all_edges (t out))))))) elist) (u (cnt (seen (next (tailfront (all_edges (t out)))))))
+
+@scan_nil = (* (u (cnt (seen (next (tailfront (all_edges (t out))))))))
+  & u ~ *
+  & cnt ~ *
+  & @process ~ (tailfront (all_edges (seen (next (t out))))
+
+@scan_cons = (* (((a b) rest) (u (cnt (seen (next (tailfront (all_edges (t out))))))))
+  & @edge_a ~ (u (a (b (rest (cnt (seen (next (tailfront (all_edges (t out))))))))
+
+@edge_a = (u (a (b (rest (cnt (seen (next (tailfront (all_edges (t out)))))))))
+  & u ~ {uc uk}
+  & a ~ {ac ak}
+  & uc ~ $([=] $(ac eq))
+  & eq ~ ?((@edge_b @take_b) (uk (ak (b (rest (cnt (seen (next (tailfront (all_edges (t out))))))))))
+
+@edge_b = (u (a (b (rest (cnt (seen (next (tailfront (all_edges (t out)))))))))
+  & u ~ {uc uk}
+  & b ~ {bc bk}
+  & uc ~ $([=] $(bc eq))
+  & eq ~ ?((@skip_edge @take_a) (a (uk (bk (rest (cnt (seen (next (tailfront (all_edges (t out))))))))))
+
+@take_b = (* (u (a (b (rest (cnt (seen (next (tailfront (all_edges (t out))))))))))
+  & u ~ *
+  & a ~ *
+  & @candidate ~ (b (u (cnt (seen (next (rest (tailfront (all_edges (t out))))))))
+
+@take_a = (* (a (u (b (rest (cnt (seen (next (tailfront (all_edges (t out))))))))))
+  & b ~ *
+  & @candidate ~ (a (u (cnt (seen (next (rest (tailfront (all_edges (t out))))))))
+
+@skip_edge = (a (u (b (rest (cnt (seen (next (tailfront (all_edges (t out)))))))))
+  & a ~ *
+  & b ~ *
+  & @scan ~ (rest (u (cnt (seen (next (tailfront (all_edges (t out)))))))
+
+@candidate = (v (u (cnt (seen (next (rest (tailfront (all_edges (t out)))))))))
+  & v ~ {vm vk}
+  & cnt ~ {cp cn}
+  & seen ~ {sm sk}
+  & @mem ~ (sm (vm found))
+  & found ~ ?((@cand_unseen @cand_seen) (vk (u (cp (cn (sk (next (rest (tailfront (all_edges (t out)))))))))
+
+@cand_unseen = (v (u (cp (cn (seen (next (rest (tailfront (all_edges (t out)))))))))
+  & seen ~ *
+  & @scan ~ (rest (u (cn (seen (1 ((v cp) next)) (tailfront (all_edges (t out))))))
+
+@cand_seen = (* (v (u (cp (cn (seen (next (rest (tailfront (all_edges (t out))))))))))
+  & v ~ *
+  & cp ~ *
+  & @scan ~ (rest (u (cn (seen (next (tailfront (all_edges (t out)))))))
+
+// Membership test for a vertex in a list.
+@mem = ((?((@mem_nil @mem_cons) (x out)) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (x out)))
+  & x ~ {xc xkeep}
+  & h ~ {hc hkeep}
+  & xc ~ $([=] $(hc eq))
+  & eq ~ ?((@mem_no @mem_yes) (xkeep (hkeep (tail out))))
+
+@mem_no = (x (h (tail out)))
+  & h ~ *
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (x (h (tail out))))
+  & x ~ *
+  & h ~ *
+  & tail ~ *
+  & out ~ 1
+
+// Sum the path counts of frontier entries whose vertex is t.
+// The final pair is (found, (count, nonempty)).
+@target_sum = ((?((@ts_nil @ts_cons) (t (acc (found (any out))))) pl) (t (acc (found (any out)))))
+
+@ts_nil = (* (t (acc (found (any out)))))
+  & out ~ (found (acc any))
+
+@ts_cons = (* ((v cnt) (tail (t (acc (found (any out)))))))
+  & v ~ {vc vk}
+  & t ~ {tc tk}
+  & vc ~ $([=] $(tc eq))
+  & eq ~ ?((@ts_no @ts_yes) (cnt (tail (tk (acc (found (any out))))))
+
+@ts_no = (cnt (tail (t (acc (found (any out))))))
+  & cnt ~ *
+  & found ~ {fdrop fkeep}
+  & fdrop ~ *
+  & any ~ *
+  & @target_sum ~ (tail (t (acc (fkeep (1 out))))
+
+@ts_yes = (* (cnt (tail (t (acc (found (any out)))))))
+  & acc ~ $([+] $(cnt acc2))
+  & found ~ *
+  & any ~ *
+  & @target_sum ~ (tail (t (acc2 (1 (1 out))))
+
+// Add every vertex in the completed next frontier to the visited list.
+@mark_seen = ((?((@mark_nil @mark_cons) (seen out)) pl) (seen out))
+
+@mark_nil = (* (seen out))
+  & out ~ seen
+
+@mark_cons = (* (((v cnt) tail) (seen out)))
+  & cnt ~ *
+  & @mark_seen ~ (tail ((1 (v seen)) out))

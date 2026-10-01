@@ -1,0 +1,33 @@
+@prog = (l out)
+  & @arg ~ (l r)
+  & @get ~ (r out)
+
+@arg = ((?((@arg_nil @arg_cons) (pl out)) pl) out)
+
+@arg_nil = (* (pl out))
+  & pl ~ *
+  & out ~ (0 0)
+
+@arg_cons = (* ((h t) out))
+  & @arg ~ (t r)
+  & @combine ~ (r (h out))
+
+@combine = ((bv idx) (h out))
+  & h ~ {hc hk}
+  & bv ~ {bc bk}
+  & hc ~ $([<] $(bc z))
+  & z ~ ?((@combine_head @combine_tail) (bk (idx (hk out))))
+
+@combine_head = (* (bk (idx (hk out))))
+  & bk ~ *
+  & idx ~ *
+  & out ~ (hk 0)
+
+@combine_tail = (* (bk (idx (hk out))))
+  & hk ~ *
+  & idx ~ $([+1] i2)
+  & out ~ (bk i2)
+
+@get = ((bv idx) out)
+  & bv ~ *
+  & out ~ idx

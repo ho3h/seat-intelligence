@@ -1,0 +1,67 @@
+@prog = ((x (y (?((@lca_leaf @lca_node) (x (y (payload_q189 out)))) payload_q189))) out)
+
+@lca = (x (y (t out)))
+  & t ~ (tag payload)
+  & tag ~ ?((@lca_leaf @lca_node) (x (y (payload out))))
+
+@lca_leaf = (x (y (payload out)))
+  & x ~ *
+  & y ~ *
+  & payload ~ *
+  & out ~ 0
+
+@lca_node = (* (x (y (p out))))
+  & p ~ (l (v r))
+  & x ~ {xc xkeep}
+  & v ~ {vc vkeep}
+  & xc ~ $([<] $(vc b))
+  & b ~ ?((@x_notlt @x_lt) (xkeep (y (l (vkeep (r out))))))
+
+@x_lt = (* (x (y (l (v (r out))))))
+  & y ~ {yc ykeep}
+  & v ~ {vc vkeep}
+  & yc ~ $([<] $(vc b))
+  & b ~ ?((@yl_no @yl_yes) (x (ykeep (l (vkeep (r out))))))
+
+@yl_no = (x (y (l (v (r out)))))
+  & x ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@yl_yes = (* (x (y (l (v (r out))))))
+  & v ~ *
+  & r ~ *
+  & @lca ~ (x (y (l out)))
+
+@x_notlt = (x (y (l (v (r out)))))
+  & x ~ {xc xkeep}
+  & v ~ {vc vkeep}
+  & xc ~ $([>] $(vc b))
+  & b ~ ?((@x_notgt @x_gt) (xkeep (y (l (vkeep (r out))))))
+
+@x_notgt = (x (y (l (v (r out)))))
+  & x ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@x_gt = (* (x (y (l (v (r out))))))
+  & y ~ {yc ykeep}
+  & v ~ {vc vkeep}
+  & yc ~ $([>] $(vc b))
+  & b ~ ?((@yg_no @yg_yes) (x (ykeep (l (vkeep (r out))))))
+
+@yg_no = (x (y (l (v (r out)))))
+  & x ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@yg_yes = (* (x (y (l (v (r out))))))
+  & v ~ *
+  & l ~ *
+  & @lca ~ (x (y (r out)))

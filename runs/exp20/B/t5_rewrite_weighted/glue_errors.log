@@ -1,0 +1,27 @@
+--- 05:52:59
+build.py:53: wire `i1` (num, copy 1 of `i`, made at recipes.py:627) is used a second time (left operand of `&`); it was already used at build.py:52 (left operand of `>>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i1, 2)  and use each once.
+--- 05:53:18
+build.py:81: d.call needs a primitive made by the Program (e.g. P.update(...)); got <wire L: depth in @prog_b2s>
+--- 05:53:41
+build.py:88: wire `c1` (list[num], output `c1` of recipe list_length_and_copy `lc`, made at build.py:71) belongs to @prog (t5_rewrite_weighted) (@prog), but is used in branch nonzero case of @prog (t5_rewrite_weighted) (@prog_b2s) (recipe list_to_trie `ct` port `list`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:54:02
+wrong arity: branch zero case of @prog (t5_rewrite_weighted) is called as f(d, passed[0]:list[num], passed[1]:list[(num num num)]), i.e. d plus 2 value(s); your function `empty` takes 2 parameter(s) (b, edges).
+--- 05:54:22
+build.py:99: wire `r` (num, result of `+`, made at build.py:80) is used a second time (left operand of `*`); it was already used at recipes.py:154 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:54:43
+build.py:103: input port `E` is not connected in this call of recipe select_sorted `sel` (@sel); d.call returns o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    in  E: num  [exactly once]
+    out o: list[any]  [exactly once]
+--- 05:56:48
+build.py:40: wire `sel` (num, select, made at recipes.py:124) is used a second time (left operand of `=`); it was already used at build.py:38 (left operand of `<<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(sel, 2)  and use each once.
+--- 05:57:08
+build.py:42: wire `sel` (num, select, made at recipes.py:124) is used a second time (right operand of `=`); it was already used at build.py:40 (right operand of `|`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(sel, 2)  and use each once.
+--- 09:03:09
+step of stream `rk_w` (@rk_w_step): 2 value(s) never used:
+    `sel2` (num, copy 2 of `sel`, made at build.py:45)
+    `sel2` (num, copy 2 of `sel`, made at build.py:46)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:03:28
+build.py:61: wire `i` (num, argument `passed[1]` of branch nonzero case of leaf of fold `sel_f`, made at recipes.py:638) is used a second time (left operand of `&`); it was already used at build.py:60 (left operand of `>>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.

@@ -1,0 +1,2951 @@
+{
+ "primitives": {
+  "lg": {
+   "entry": "lg",
+   "open": {
+    "terminates": true,
+    "interactions": 2,
+    "residual_nodes": {
+     "F": 2,
+     "S": 1,
+     "C": 1,
+     "N": 1,
+     "R": 1
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "x": 1
+    },
+    "unexpanded_refs": 1,
+    "recursive_refs_left": [
+     "lg_s"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 2,
+    "residual_nodes": {
+     "F": 2,
+     "S": 1,
+     "C": 1,
+     "N": 1,
+     "R": 1
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "x": 1
+    },
+    "unexpanded_refs": 1,
+    "recursive_refs_left": [
+     "lg_s"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 2,
+    "residual_nodes": {
+     "F": 2,
+     "S": 1,
+     "C": 1,
+     "N": 1,
+     "R": 1
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "x": 1
+    },
+    "unexpanded_refs": 1,
+    "recursive_refs_left": [
+     "lg_s"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "const_trie": {
+   "entry": "ct",
+   "open": {
+    "terminates": true,
+    "interactions": 2,
+    "residual_nodes": {
+     "F": 2,
+     "S": 1,
+     "C": 1,
+     "N": 1,
+     "R": 1
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 1,
+    "recursive_refs_left": [
+     "ct_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 96,
+    "residual_nodes": {
+     "F": 1,
+     "C": 7,
+     "N": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 96,
+    "residual_nodes": {
+     "F": 1,
+     "C": 7,
+     "N": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "iota_trie": {
+   "entry": "io",
+   "open": {
+    "terminates": true,
+    "interactions": 3,
+    "residual_nodes": {
+     "F": 3,
+     "S": 1,
+     "C": 2,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "io_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 155,
+    "residual_nodes": {
+     "F": 2,
+     "C": 7,
+     "D": 7,
+     "O": 14,
+     "N": 14
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 14,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 155,
+    "residual_nodes": {
+     "F": 2,
+     "C": 7,
+     "D": 7,
+     "O": 14,
+     "N": 14
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 14,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "update": {
+   "entry": "up",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "E": 1,
+     "F": 4,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "up_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 14,
+    "residual_nodes": {
+     "E": 1,
+     "F": 3,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "C": 5,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "up_L",
+     "up_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 14,
+    "residual_nodes": {
+     "E": 1,
+     "F": 3,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "C": 5,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "up_L",
+     "up_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "get": {
+   "entry": "gt",
+   "open": {
+    "terminates": true,
+    "interactions": 4,
+    "residual_nodes": {
+     "F": 4,
+     "S": 1,
+     "C": 3,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "gt_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 12,
+    "residual_nodes": {
+     "F": 3,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "gt_L",
+     "gt_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 12,
+    "residual_nodes": {
+     "F": 3,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "gt_L",
+     "gt_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "reduce": {
+   "entry": "rd",
+   "open": {
+    "terminates": true,
+    "interactions": 3,
+    "residual_nodes": {
+     "F": 3,
+     "S": 1,
+     "C": 2,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "rd_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 134,
+    "residual_nodes": {
+     "F": 2,
+     "C": 7,
+     "O": 14,
+     "N": 7
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 14,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 134,
+    "residual_nodes": {
+     "F": 2,
+     "C": 7,
+     "O": 14,
+     "N": 7
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 14,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "fold": {
+   "entry": "fd",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "F": 5,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "fd_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 215,
+    "residual_nodes": {
+     "F": 4,
+     "C": 7,
+     "D": 7,
+     "O": 30,
+     "N": 22,
+     "E": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 30,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 215,
+    "residual_nodes": {
+     "F": 4,
+     "C": 7,
+     "D": 7,
+     "O": 30,
+     "N": 22,
+     "E": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 30,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "to_list": {
+   "entry": "tl",
+   "open": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "N": 1,
+     "F": 5,
+     "S": 1,
+     "C": 5,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "tl_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 285,
+    "residual_nodes": {
+     "F": 4,
+     "C": 31,
+     "D": 7,
+     "S": 8,
+     "R": 16,
+     "O": 8,
+     "N": 8
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 8,
+    "blocked_by_open_ports": {
+     "n": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 285,
+    "residual_nodes": {
+     "C": 38,
+     "N": 12,
+     "E": 1,
+     "F": 6,
+     "D": 7,
+     "S": 8,
+     "R": 16,
+     "O": 8
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 8,
+    "blocked_by_open_ports": {
+     "n": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "filter_list": {
+   "entry": "fl",
+   "open": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "N": 1,
+     "F": 5,
+     "S": 1,
+     "C": 5,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "fl_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 317,
+    "residual_nodes": {
+     "F": 4,
+     "C": 31,
+     "D": 15,
+     "E": 8,
+     "S": 8,
+     "R": 16,
+     "O": 16,
+     "N": 16
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 16,
+    "blocked_by_open_ports": {
+     "E": 8,
+     "t": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 317,
+    "residual_nodes": {
+     "C": 38,
+     "N": 20,
+     "E": 9,
+     "F": 6,
+     "D": 15,
+     "S": 8,
+     "R": 16,
+     "O": 16
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 16,
+    "blocked_by_open_ports": {
+     "E": 8,
+     "t": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "scatter": {
+   "entry": "sc",
+   "open": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "N": 1,
+     "C": 6,
+     "F": 6,
+     "S": 1,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "sc_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 443,
+    "residual_nodes": {
+     "F": 4,
+     "C": 47,
+     "D": 15,
+     "O": 32,
+     "N": 48,
+     "S": 8,
+     "R": 16,
+     "E": 8
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 32,
+    "blocked_by_open_ports": {
+     "t": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [
+     "scup_L",
+     "scup_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 443,
+    "residual_nodes": {
+     "F": 4,
+     "C": 47,
+     "D": 15,
+     "O": 32,
+     "N": 48,
+     "S": 8,
+     "R": 16,
+     "E": 8
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 32,
+    "blocked_by_open_ports": {
+     "t": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [
+     "scup_L",
+     "scup_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L",
+    "Lh"
+   ]
+  },
+  "zip2": {
+   "entry": "z2",
+   "open": {
+    "terminates": true,
+    "interactions": 4,
+    "residual_nodes": {
+     "F": 4,
+     "S": 1,
+     "C": 3,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "z2_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 164,
+    "residual_nodes": {
+     "F": 3,
+     "C": 21,
+     "O": 16,
+     "N": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 16,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 164,
+    "residual_nodes": {
+     "F": 3,
+     "C": 21,
+     "O": 16,
+     "N": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 16,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "zip2e": {
+   "entry": "z2e",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "F": 5,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "z2e_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 194,
+    "residual_nodes": {
+     "F": 4,
+     "C": 21,
+     "D": 7,
+     "E": 8,
+     "O": 16,
+     "N": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 16,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 194,
+    "residual_nodes": {
+     "F": 4,
+     "C": 21,
+     "D": 7,
+     "E": 8,
+     "O": 16,
+     "N": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 16,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "bcast": {
+   "entry": "bc",
+   "open": {
+    "terminates": true,
+    "interactions": 4,
+    "residual_nodes": {
+     "C": 5,
+     "F": 6,
+     "S": 1,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "Lo": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "bc_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 313,
+    "residual_nodes": {
+     "F": 4,
+     "C": 54,
+     "D": 22,
+     "O": 32,
+     "N": 40,
+     "S": 8,
+     "R": 16
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 32,
+    "blocked_by_open_ports": {
+     "k": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [
+     "bcu_L",
+     "bcu_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 313,
+    "residual_nodes": {
+     "F": 4,
+     "C": 54,
+     "D": 22,
+     "O": 32,
+     "N": 40,
+     "S": 8,
+     "R": 16
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 32,
+    "blocked_by_open_ports": {
+     "k": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [
+     "bcu_L",
+     "bcu_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "Lo",
+    "Li"
+   ]
+  },
+  "mapreduce": {
+   "entry": "mr",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "F": 5,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "mr_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 215,
+    "residual_nodes": {
+     "F": 4,
+     "C": 14,
+     "D": 7,
+     "O": 28,
+     "N": 21
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 28,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 215,
+    "residual_nodes": {
+     "F": 4,
+     "C": 14,
+     "D": 7,
+     "O": 28,
+     "N": 21
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 28,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "iterate": {
+   "entry": "it_it",
+   "open": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "C": 4,
+     "F": 4,
+     "S": 1,
+     "R": 2,
+     "D": 1,
+     "O": 3,
+     "N": 3
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 3,
+    "blocked_by_open_ports": {
+     "n": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "it_more"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "C": 4,
+     "F": 4,
+     "S": 1,
+     "R": 2,
+     "D": 1,
+     "O": 3,
+     "N": 3
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 3,
+    "blocked_by_open_ports": {
+     "n": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "it_more"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "C": 4,
+     "F": 4,
+     "S": 1,
+     "R": 2,
+     "D": 1,
+     "O": 3,
+     "N": 3
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 3,
+    "blocked_by_open_ports": {
+     "n": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "it_more"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "mc_empty": {
+   "entry": "mce",
+   "open": {
+    "terminates": true,
+    "interactions": 2,
+    "residual_nodes": {
+     "F": 2,
+     "S": 1,
+     "C": 2,
+     "R": 1
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 1,
+    "recursive_refs_left": [
+     "mce_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 103,
+    "residual_nodes": {
+     "F": 1,
+     "C": 15
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 103,
+    "residual_nodes": {
+     "F": 1,
+     "C": 15
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "mc_request": {
+   "entry": "mcr",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "F": 5,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "mcr_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 14,
+    "residual_nodes": {
+     "F": 4,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "C": 5,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "mcr_L",
+     "mcr_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 14,
+    "residual_nodes": {
+     "F": 4,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "C": 5,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "mcr_L",
+     "mcr_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "mc_deliver": {
+   "entry": "mcd",
+   "open": {
+    "terminates": true,
+    "interactions": 3,
+    "residual_nodes": {
+     "F": 3,
+     "S": 1,
+     "C": 2,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "mcd_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 134,
+    "residual_nodes": {
+     "F": 2,
+     "C": 22,
+     "E": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 134,
+    "residual_nodes": {
+     "F": 2,
+     "C": 22,
+     "E": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "mc_deliver_keep": {
+   "entry": "mck",
+   "open": {
+    "terminates": true,
+    "interactions": 4,
+    "residual_nodes": {
+     "F": 4,
+     "S": 1,
+     "C": 3,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "mck_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 164,
+    "residual_nodes": {
+     "F": 3,
+     "C": 29
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 164,
+    "residual_nodes": {
+     "F": 3,
+     "C": 29
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "stream": {
+   "entry": "w_blk",
+   "open": {
+    "terminates": true,
+    "interactions": 3,
+    "residual_nodes": {
+     "C": 112,
+     "F": 4,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 3,
+    "residual_nodes": {
+     "C": 112,
+     "F": 4,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 251,
+    "residual_nodes": {
+     "F": 6,
+     "E": 7,
+     "C": 27,
+     "D": 6,
+     "S": 6,
+     "R": 12
+    },
+    "switches_on_open_data": 6,
+    "switches_total": 6,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 6
+    },
+    "unexpanded_refs": 12,
+    "recursive_refs_left": [
+     "dinc_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "frontier": {
+   "entry": "fr_loop",
+   "open": {
+    "terminates": true,
+    "interactions": 22,
+    "residual_nodes": {
+     "F": 6,
+     "E": 2,
+     "S": 3,
+     "C": 17,
+     "R": 5,
+     "D": 6,
+     "N": 1
+    },
+    "switches_on_open_data": 2,
+    "switches_total": 3,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 2
+    },
+    "unexpanded_refs": 5,
+    "recursive_refs_left": [
+     "fr_again",
+     "fr_node",
+     "fr_zc_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 547,
+    "residual_nodes": {
+     "F": 5,
+     "E": 10,
+     "S": 9,
+     "C": 104,
+     "R": 18,
+     "D": 34,
+     "N": 56,
+     "O": 46
+    },
+    "switches_on_open_data": 9,
+    "switches_total": 9,
+    "operators_stuck": 46,
+    "blocked_by_open_ports": {
+     "C": 9
+    },
+    "unexpanded_refs": 18,
+    "recursive_refs_left": [
+     "fr_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 547,
+    "residual_nodes": {
+     "F": 5,
+     "E": 10,
+     "S": 9,
+     "C": 104,
+     "R": 18,
+     "D": 34,
+     "N": 56,
+     "O": 46
+    },
+    "switches_on_open_data": 9,
+    "switches_total": 9,
+    "operators_stuck": 46,
+    "blocked_by_open_ports": {
+     "C": 9
+    },
+    "unexpanded_refs": 18,
+    "recursive_refs_left": [
+     "fr_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "relax": {
+   "entry": "rl_loop",
+   "open": {
+    "terminates": true,
+    "interactions": 22,
+    "residual_nodes": {
+     "F": 6,
+     "E": 2,
+     "S": 3,
+     "C": 17,
+     "R": 5,
+     "D": 6,
+     "N": 1
+    },
+    "switches_on_open_data": 2,
+    "switches_total": 3,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 2
+    },
+    "unexpanded_refs": 5,
+    "recursive_refs_left": [
+     "rl_again",
+     "rl_node",
+     "rl_zc_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 547,
+    "residual_nodes": {
+     "F": 5,
+     "E": 2,
+     "S": 17,
+     "C": 128,
+     "R": 34,
+     "D": 66,
+     "N": 48,
+     "O": 62
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 62,
+    "blocked_by_open_ports": {
+     "X": 17,
+     "C": 17,
+     "D": 17
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "rl_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 547,
+    "residual_nodes": {
+     "F": 5,
+     "E": 2,
+     "S": 17,
+     "C": 128,
+     "R": 34,
+     "D": 66,
+     "N": 48,
+     "O": 62
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 62,
+    "blocked_by_open_ports": {
+     "X": 17,
+     "C": 17,
+     "D": 17
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "rl_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "sssp": {
+   "entry": "ss_sssp",
+   "open": {
+    "terminates": true,
+    "interactions": 37,
+    "residual_nodes": {
+     "F": 6,
+     "D": 11,
+     "O": 4,
+     "N": 7,
+     "S": 7,
+     "C": 25,
+     "E": 3,
+     "R": 9
+    },
+    "switches_on_open_data": 6,
+    "switches_total": 7,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "s": 1,
+     "n": 1,
+     "L": 5
+    },
+    "unexpanded_refs": 9,
+    "recursive_refs_left": [
+     "gl_inf_n",
+     "ss_again",
+     "ss_node",
+     "ss_seed_node",
+     "ss_zc_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 777,
+    "residual_nodes": {
+     "F": 5,
+     "D": 61,
+     "O": 70,
+     "N": 81,
+     "S": 19,
+     "C": 135,
+     "E": 3,
+     "R": 36
+    },
+    "switches_on_open_data": 19,
+    "switches_total": 19,
+    "operators_stuck": 70,
+    "blocked_by_open_ports": {
+     "s": 2,
+     "n": 2,
+     "budget": 17
+    },
+    "unexpanded_refs": 36,
+    "recursive_refs_left": [
+     "ss_again",
+     "ss_seed_L",
+     "ss_seed_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 777,
+    "residual_nodes": {
+     "F": 5,
+     "D": 61,
+     "O": 70,
+     "N": 81,
+     "S": 19,
+     "C": 135,
+     "E": 3,
+     "R": 36
+    },
+    "switches_on_open_data": 19,
+    "switches_total": 19,
+    "operators_stuck": 70,
+    "blocked_by_open_ports": {
+     "s": 2,
+     "n": 2,
+     "budget": 17
+    },
+    "unexpanded_refs": 36,
+    "recursive_refs_left": [
+     "ss_again",
+     "ss_seed_L",
+     "ss_seed_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "adjacency": {
+   "entry": "gl_adj",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "C": 5,
+     "F": 6,
+     "S": 1,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "gl_adj_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 14,
+    "residual_nodes": {
+     "C": 6,
+     "F": 5,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "u": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "gl_adj_L",
+     "gl_adj_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 14,
+    "residual_nodes": {
+     "C": 6,
+     "F": 5,
+     "D": 1,
+     "O": 4,
+     "N": 5,
+     "S": 1,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 4,
+    "blocked_by_open_ports": {
+     "u": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "gl_adj_L",
+     "gl_adj_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  }
+ },
+ "recipes": {
+  "list_length_and_copy": {
+   "entry": "lc",
+   "open": {
+    "terminates": true,
+    "interactions": 7,
+    "residual_nodes": {
+     "F": 4,
+     "C": 113,
+     "N": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "lc_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 7,
+    "residual_nodes": {
+     "F": 4,
+     "C": 113,
+     "N": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "lc_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 232,
+    "residual_nodes": {
+     "F": 6,
+     "C": 14,
+     "N": 9,
+     "E": 2,
+     "D": 3
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "list_to_trie": {
+   "entry": "lt",
+   "open": {
+    "terminates": true,
+    "interactions": 8,
+    "residual_nodes": {
+     "F": 3,
+     "D": 1,
+     "C": 114,
+     "N": 2,
+     "S": 17,
+     "R": 33
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16,
+     "L": 1
+    },
+    "unexpanded_refs": 33,
+    "recursive_refs_left": [
+     "lt_w_last",
+     "lt_z_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 103,
+    "residual_nodes": {
+     "F": 2,
+     "C": 120,
+     "N": 10,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "lt_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 652,
+    "residual_nodes": {
+     "F": 4,
+     "C": 7,
+     "N": 5
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "A pure plumbing",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "filter_in_order": {
+   "entry": "fio",
+   "open": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "F": 3,
+     "C": 112,
+     "E": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "fio_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "F": 3,
+     "C": 112,
+     "E": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "fio_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 231,
+    "residual_nodes": {
+     "F": 5,
+     "E": 2,
+     "C": 10,
+     "N": 7,
+     "D": 6,
+     "O": 9,
+     "S": 3,
+     "R": 6
+    },
+    "switches_on_open_data": 3,
+    "switches_total": 3,
+    "operators_stuck": 9,
+    "blocked_by_open_ports": {
+     "E": 3,
+     "list2": 1,
+     "list1": 1,
+     "list0": 1
+    },
+    "unexpanded_refs": 6,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "count_where": {
+   "entry": "cw",
+   "open": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "F": 2,
+     "N": 1,
+     "C": 111,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "cw_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 5,
+    "residual_nodes": {
+     "F": 2,
+     "N": 1,
+     "C": 111,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "cw_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 221,
+    "residual_nodes": {
+     "F": 4,
+     "O": 11,
+     "N": 9
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 11,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "take_first": {
+   "entry": "tf",
+   "open": {
+    "terminates": true,
+    "interactions": 7,
+    "residual_nodes": {
+     "F": 4,
+     "C": 113,
+     "N": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "tf_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 7,
+    "residual_nodes": {
+     "F": 4,
+     "C": 113,
+     "N": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "tf_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 229,
+    "residual_nodes": {
+     "F": 6,
+     "N": 2,
+     "E": 2,
+     "C": 19,
+     "S": 3,
+     "R": 6
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 3,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "k": 1
+    },
+    "unexpanded_refs": 6,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "argmax_first": {
+   "entry": "am",
+   "open": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "F": 3,
+     "C": 114,
+     "N": 3,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "am_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 6,
+    "residual_nodes": {
+     "F": 3,
+     "C": 114,
+     "N": 3,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "am_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 240,
+    "residual_nodes": {
+     "F": 5,
+     "N": 15,
+     "D": 9,
+     "O": 11,
+     "S": 7,
+     "C": 21,
+     "R": 14
+    },
+    "switches_on_open_data": 6,
+    "switches_total": 7,
+    "operators_stuck": 11,
+    "blocked_by_open_ports": {
+     "list2": 2,
+     "list1": 2,
+     "list0": 2
+    },
+    "unexpanded_refs": 14,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "sort_by": {
+   "entry": "sb",
+   "open": {
+    "terminates": true,
+    "interactions": 9,
+    "residual_nodes": {
+     "F": 2,
+     "S": 17,
+     "C": 116,
+     "R": 34,
+     "N": 1
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "sb_len_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 9,
+    "residual_nodes": {
+     "F": 2,
+     "S": 17,
+     "C": 116,
+     "R": 34,
+     "N": 1
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "sb_len_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 2337,
+    "residual_nodes": {
+     "F": 4,
+     "D": 48,
+     "C": 28,
+     "N": 101,
+     "E": 6,
+     "O": 128,
+     "S": 3,
+     "R": 6
+    },
+    "switches_on_open_data": 3,
+    "switches_total": 3,
+    "operators_stuck": 128,
+    "blocked_by_open_ports": {
+     "list0": 3,
+     "list2": 3,
+     "list1": 3
+    },
+    "unexpanded_refs": 6,
+    "recursive_refs_left": [
+     "sb_oset_L",
+     "sb_oset_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  },
+  "lookup_many": {
+   "entry": "lm",
+   "open": {
+    "terminates": true,
+    "interactions": 9,
+    "residual_nodes": {
+     "F": 4,
+     "D": 1,
+     "C": 116,
+     "E": 1,
+     "S": 17,
+     "R": 33
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16,
+     "L": 1
+    },
+    "unexpanded_refs": 33,
+    "recursive_refs_left": [
+     "lm_q0_n",
+     "lm_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 111,
+    "residual_nodes": {
+     "F": 3,
+     "C": 129,
+     "E": 1,
+     "N": 1,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "lm_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 517,
+    "residual_nodes": {
+     "F": 5,
+     "C": 62,
+     "N": 19,
+     "E": 9,
+     "D": 6,
+     "O": 12,
+     "S": 3,
+     "R": 6
+    },
+    "switches_on_open_data": 3,
+    "switches_total": 3,
+    "operators_stuck": 12,
+    "blocked_by_open_ports": {
+     "list2": 1,
+     "list1": 1,
+     "list0": 1
+    },
+    "unexpanded_refs": 6,
+    "recursive_refs_left": [
+     "lm_rq_L",
+     "lm_rq_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "reduce_by_key": {
+   "entry": "rbk",
+   "open": {
+    "terminates": true,
+    "interactions": 8,
+    "residual_nodes": {
+     "F": 3,
+     "D": 1,
+     "C": 113,
+     "S": 17,
+     "R": 33,
+     "N": 1
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16,
+     "L": 1
+    },
+    "unexpanded_refs": 33,
+    "recursive_refs_left": [
+     "rbk_w_last",
+     "rbk_z_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 103,
+    "residual_nodes": {
+     "F": 2,
+     "C": 119,
+     "N": 9,
+     "S": 16,
+     "R": 32
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "rbk_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 367,
+    "residual_nodes": {
+     "F": 4,
+     "E": 3,
+     "D": 3,
+     "O": 12,
+     "N": 23,
+     "S": 3,
+     "C": 22,
+     "R": 6
+    },
+    "switches_on_open_data": 3,
+    "switches_total": 3,
+    "operators_stuck": 12,
+    "blocked_by_open_ports": {
+     "list2": 1,
+     "list1": 1,
+     "list0": 1
+    },
+    "unexpanded_refs": 6,
+    "recursive_refs_left": [
+     "rbk_u_L",
+     "rbk_u_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "select_sorted": {
+   "entry": "ssel",
+   "open": {
+    "terminates": true,
+    "interactions": 10,
+    "residual_nodes": {
+     "F": 4,
+     "N": 2,
+     "C": 6,
+     "E": 1,
+     "S": 1,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "ssel_f_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 289,
+    "residual_nodes": {
+     "F": 3,
+     "C": 48,
+     "N": 9,
+     "E": 9,
+     "D": 23,
+     "S": 8,
+     "R": 16
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "t": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 289,
+    "residual_nodes": {
+     "F": 3,
+     "C": 48,
+     "N": 9,
+     "E": 9,
+     "D": 23,
+     "S": 8,
+     "R": 16
+    },
+    "switches_on_open_data": 8,
+    "switches_total": 8,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "t": 8
+    },
+    "unexpanded_refs": 16,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "count_where_trie": {
+   "entry": "cwt",
+   "open": {
+    "terminates": true,
+    "interactions": 9,
+    "residual_nodes": {
+     "F": 4,
+     "N": 1,
+     "S": 1,
+     "C": 4,
+     "R": 2
+    },
+    "switches_on_open_data": 1,
+    "switches_total": 1,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 1
+    },
+    "unexpanded_refs": 2,
+    "recursive_refs_left": [
+     "cwt_r_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 251,
+    "residual_nodes": {
+     "F": 3,
+     "C": 7,
+     "D": 7,
+     "O": 30,
+     "N": 23,
+     "E": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 30,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 251,
+    "residual_nodes": {
+     "F": 3,
+     "C": 7,
+     "D": 7,
+     "O": 30,
+     "N": 23,
+     "E": 8
+    },
+    "switches_on_open_data": 0,
+    "switches_total": 0,
+    "operators_stuck": 30,
+    "blocked_by_open_ports": {},
+    "unexpanded_refs": 0,
+    "recursive_refs_left": [],
+    "class": "B branch-free symbolic arithmetic",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "argmax_first_trie": {
+   "entry": "amt",
+   "open": {
+    "terminates": true,
+    "interactions": 16,
+    "residual_nodes": {
+     "F": 5,
+     "D": 3,
+     "N": 5,
+     "O": 2,
+     "S": 3,
+     "C": 12,
+     "R": 6
+    },
+    "switches_on_open_data": 2,
+    "switches_total": 3,
+    "operators_stuck": 2,
+    "blocked_by_open_ports": {
+     "L": 2
+    },
+    "unexpanded_refs": 6,
+    "recursive_refs_left": [
+     "amt_ix_node",
+     "amt_mx_node"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 545,
+    "residual_nodes": {
+     "F": 4,
+     "D": 60,
+     "O": 94,
+     "N": 81,
+     "S": 23,
+     "C": 76,
+     "R": 46,
+     "E": 8
+    },
+    "switches_on_open_data": 12,
+    "switches_total": 23,
+    "operators_stuck": 94,
+    "blocked_by_open_ports": {
+     "t": 12
+    },
+    "unexpanded_refs": 46,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 545,
+    "residual_nodes": {
+     "F": 4,
+     "D": 60,
+     "O": 94,
+     "N": 81,
+     "S": 23,
+     "C": 76,
+     "R": 46,
+     "E": 8
+    },
+    "switches_on_open_data": 12,
+    "switches_total": 23,
+    "operators_stuck": 94,
+    "blocked_by_open_ports": {
+     "t": 12
+    },
+    "unexpanded_refs": 46,
+    "recursive_refs_left": [],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "frontier_relax": {
+   "entry": "frx",
+   "open": {
+    "terminates": true,
+    "interactions": 32,
+    "residual_nodes": {
+     "F": 5,
+     "S": 3,
+     "C": 17,
+     "R": 5,
+     "D": 3,
+     "N": 3
+    },
+    "switches_on_open_data": 2,
+    "switches_total": 3,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "L": 2
+    },
+    "unexpanded_refs": 5,
+    "recursive_refs_left": [
+     "frx_fr_again",
+     "frx_fr_node",
+     "frx_fr_zc_n"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 580,
+    "residual_nodes": {
+     "F": 4,
+     "S": 17,
+     "C": 128,
+     "R": 34,
+     "N": 49,
+     "O": 46,
+     "D": 48
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 46,
+    "blocked_by_open_ports": {
+     "D": 17,
+     "C": 8
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "frx_fr_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 580,
+    "residual_nodes": {
+     "F": 4,
+     "S": 17,
+     "C": 128,
+     "R": 34,
+     "N": 49,
+     "O": 46,
+     "D": 48
+    },
+    "switches_on_open_data": 17,
+    "switches_total": 17,
+    "operators_stuck": 46,
+    "blocked_by_open_ports": {
+     "D": 17,
+     "C": 8
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "frx_fr_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "layered_bfs_count": {
+   "entry": "lbc",
+   "open": {
+    "terminates": true,
+    "interactions": 15,
+    "residual_nodes": {
+     "F": 6,
+     "D": 3,
+     "C": 123,
+     "S": 19,
+     "R": 35,
+     "N": 2,
+     "E": 2
+    },
+    "switches_on_open_data": 19,
+    "switches_total": 19,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "es": 16,
+     "L": 3
+    },
+    "unexpanded_refs": 35,
+    "recursive_refs_left": [
+     "gl_zl_n",
+     "lbc_q0_n",
+     "lbc_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 335,
+    "residual_nodes": {
+     "F": 5,
+     "C": 162,
+     "N": 17,
+     "S": 16,
+     "R": 32,
+     "E": 16
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 16,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "es": 16
+    },
+    "unexpanded_refs": 32,
+    "recursive_refs_left": [
+     "lbc_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 2528,
+    "residual_nodes": {
+     "F": 7,
+     "D": 93,
+     "N": 254,
+     "S": 41,
+     "C": 387,
+     "R": 80,
+     "O": 169,
+     "E": 17
+    },
+    "switches_on_open_data": 15,
+    "switches_total": 41,
+    "operators_stuck": 169,
+    "blocked_by_open_ports": {
+     "s": 3,
+     "n": 2,
+     "es2": 4,
+     "es1": 4,
+     "es0": 4
+    },
+    "unexpanded_refs": 80,
+    "recursive_refs_left": [
+     "lbc_adj_L",
+     "lbc_adj_R",
+     "lbc_rq_L",
+     "lbc_rq_R",
+     "lbc_seed_L",
+     "lbc_seed_R",
+     "lbc_sp_again",
+     "lbc_sp_seed_L",
+     "lbc_sp_seed_R",
+     "lbc_wave_fr_again"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": [
+    "L"
+   ]
+  },
+  "pointer_jump": {
+   "entry": "pj",
+   "open": {
+    "terminates": true,
+    "interactions": 8,
+    "residual_nodes": {
+     "F": 2,
+     "S": 17,
+     "C": 114,
+     "R": 34,
+     "N": 1
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "pj_len_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "shape": {
+    "terminates": true,
+    "interactions": 8,
+    "residual_nodes": {
+     "F": 2,
+     "S": 17,
+     "C": 114,
+     "R": 34,
+     "N": 1
+    },
+    "switches_on_open_data": 16,
+    "switches_total": 17,
+    "operators_stuck": 0,
+    "blocked_by_open_ports": {
+     "list": 16
+    },
+    "unexpanded_refs": 34,
+    "recursive_refs_left": [
+     "pj_len_w_last"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "spine": {
+    "terminates": true,
+    "interactions": 5677,
+    "residual_nodes": {
+     "F": 4,
+     "D": 48,
+     "C": 239,
+     "N": 132,
+     "E": 33,
+     "O": 96,
+     "S": 24,
+     "R": 48
+    },
+    "switches_on_open_data": 3,
+    "switches_total": 24,
+    "operators_stuck": 96,
+    "blocked_by_open_ports": {
+     "list2": 1,
+     "list1": 1,
+     "list0": 1
+    },
+    "unexpanded_refs": 48,
+    "recursive_refs_left": [
+     "pj_rq_L",
+     "pj_rq_R"
+    ],
+    "class": "C branches on open data",
+    "flags": []
+   },
+   "depth_ports": []
+  }
+ }
+}

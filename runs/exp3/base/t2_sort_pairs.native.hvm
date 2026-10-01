@@ -1,0 +1,29 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((pair tail) out))
+  & @sort ~ (tail sorted)
+  & @ins ~ (pair (sorted out))
+
+@ins = (({kc kk} val) ((?((@ins_nil @ins_cons) (pl (kc ((kk val) out)))) pl) out))
+
+@ins_nil = (pl (kc ((kk val) out)))
+  & pl ~ *
+  & kc ~ *
+  & out ~ (1 ((kk val) (0 *)))
+
+@ins_cons = (* ((({hc hk} hv) tail) (kc ((kk val) out))))
+  & kc ~ $([>] $(hc cmp))
+  & cmp ~ ?((@ins_before @ins_after) (((hk hv) tail) ((kk val) out)))
+
+@ins_before = (((hk hv) tail) ((k v) out))
+  & out ~ (1 ((k v) (1 ((hk hv) tail))))
+
+@ins_after = (* (((hk hv) tail) ((k v) out)))
+  & @ins ~ ((k v) (tail rec))
+  & out ~ (1 ((hk hv) rec))

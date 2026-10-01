@@ -1,0 +1,459 @@
+// t3_mst_second (GRAPH-SWING-2, runs/exp9): Prim over tries (prim template, second=True). second-best spanning tree
+// weight = MST + min over non-tree edges e = (v, x) of w_e - maxpath_T(v, x); the minimum of that difference is
+// found while Prim runs: when v joins, each arc to an already-visited x other than its parent is a non-tree edge,
+// and maxpath is a min-max zip of the two ancestor rows. A tree (m == n - 1, including n <= 1) has one spanning tree.
+@prog = ((n es) out)
+  & n ~ ?((@ms_zero @ms_pos) (es out))
+@ms_zero = (* 16777215)
+@ms_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & n ~ {n1 {n2 n3}}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 (G0 0)) (G m)))
+  & @ki ~ (G (L3 (0 (n1 K0))))
+  & @zr ~ (L4 (L5 (0 M0)))
+  & @prim ~ (n2 (K0 (M0 (L6 ((0 16777215) (tot best))))))
+  & n3 ~ $([-] $(1 nm))
+  & m ~ $([=] $(nm eq))
+  & eq ~ ?((@ms_ok @ms_tree) (tot (best out)))
+@ms_ok = (t (b o))
+  & t ~ $([+] $(b o))
+@ms_tree = (* (* (* 16777215)))
+@ms_step = ((L (g m)) ((u (v w)) (L3 (g3 m2))))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @gp ~ (g (u1 (L1 ((v1 w1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 w2) g3))))
+  & m ~ $([+1] m2)
+@ms_fin = ((* s) s)
+// ki(G, L, base, n) -> K: leaf (packed list); vertex 0 packed 0 (root; @ki0 instead: vertex 0 unreached too), others < n unreached, >= n visited
+@ki = (g (L (base (n o))))
+  & L ~ ?((@ki_leaf @ki_node) (g (base (n o))))
+@ki_leaf = (l (i (n (pk l))))
+  & i ~ {i1 i2}
+  & i1 ~ $([<] $(n inr))
+  & inr ~ ?((@ki_out @ki_in) (i2 pk))
+@ki_out = (* 16777215)
+@ki_in = (* (i o))
+  & i ~ ?((0 (* 8388607)) o)
+@ki_node = (lm ((a b) (base (n (x y)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @ki ~ (a (l1 (b1 (n1 x))))
+  & @ki ~ (b (l2 (bR (n2 y))))
+@ki0 = (g (L (base (n o))))
+  & L ~ ?((@ki0_leaf @ki0_node) (g (base (n o))))
+@ki0_leaf = (l (i (n (pk l))))
+  & i ~ {i1 i2}
+  & i1 ~ $([<] $(n inr))
+  & inr ~ ?((@ki0_out @ki0_in) (i2 pk))
+@ki0_out = (* 16777215)
+@ki0_in = (* (i o))
+  & i ~ ?((8388607 (* 8388607)) o)
+@ki0_node = (lm ((a b) (base (n (x y)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @ki0 ~ (a (l1 (b1 (n1 x))))
+  & @ki0 ~ (b (l2 (bR (n2 y))))
+@w_blk = (t (S0 o0))
+  & t ~ (T1 (E1 (T2 (E2 (T3 (E3 (T4 (E4 (T5 (E5 (T6 (E6 (T7 (E7 (T8 (E8 (T9 (E9 (T10 (E10 (T11 (E11 (T12 (E12 (T13 (E13 (T14 (E14 (T15 (E15 (T16 (E16 t16))))))))))))))))))))))))))))))))
+  & T1 ~ ?((@w_nil @w_cons) (S0 (o0 (E1 (S1 o1)))))
+  & T2 ~ ?((@w_nil @w_cons) (S1 (o1 (E2 (S2 o2)))))
+  & T3 ~ ?((@w_nil @w_cons) (S2 (o2 (E3 (S3 o3)))))
+  & T4 ~ ?((@w_nil @w_cons) (S3 (o3 (E4 (S4 o4)))))
+  & T5 ~ ?((@w_nil @w_cons) (S4 (o4 (E5 (S5 o5)))))
+  & T6 ~ ?((@w_nil @w_cons) (S5 (o5 (E6 (S6 o6)))))
+  & T7 ~ ?((@w_nil @w_cons) (S6 (o6 (E7 (S7 o7)))))
+  & T8 ~ ?((@w_nil @w_cons) (S7 (o7 (E8 (S8 o8)))))
+  & T9 ~ ?((@w_nil @w_cons) (S8 (o8 (E9 (S9 o9)))))
+  & T10 ~ ?((@w_nil @w_cons) (S9 (o9 (E10 (S10 o10)))))
+  & T11 ~ ?((@w_nil @w_cons) (S10 (o10 (E11 (S11 o11)))))
+  & T12 ~ ?((@w_nil @w_cons) (S11 (o11 (E12 (S12 o12)))))
+  & T13 ~ ?((@w_nil @w_cons) (S12 (o12 (E13 (S13 o13)))))
+  & T14 ~ ?((@w_nil @w_cons) (S13 (o13 (E14 (S14 o14)))))
+  & T15 ~ ?((@w_nil @w_cons) (S14 (o14 (E15 (S15 o15)))))
+  & T16 ~ ?((@w_nil @w_last) (S15 (o15 (E16 t16))))
+@w_nil = (S (o *))
+  & @ms_fin ~ (S o)
+@w_cons = (* (S (o (E (S2 o)))))
+  & @ms_step ~ (S (E S2))
+@w_last = (* (S (o (E t))))
+  & @ms_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+
+@prim = (c (K (M (L (acc o)))))
+  & c ~ ?((@pr_done @pr_step) (K (M (L (acc o)))))
+@pr_done = (* (* (* (a a))))
+@pr_step = (cm (K (M (L ((tot best) o)))))
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & @am2 ~ (K (L1 (0 (K2 (mn (v (lst (16777215 (0 *)))))))))
+  & L2 ~ *
+  & mn ~ {mn1 {mn2 mn3}}
+  & mn1 ~ $([>>] $(7 key0))
+  & mn3 ~ $([<] $(8388607 reached))
+  & key0 ~ $([*] $(reached key))
+  & mn2 ~ $([&] $(127 p))
+  & key ~ {k1 k2}
+  & v ~ {v1 {v2 {v3 v4}}}
+  & p ~ {p1 p2}
+  & v1 ~ *
+  & tot ~ $([+] $(k2 tot2))
+  & @co ~ (M (p1 (L3 (rp M1))))
+  & @rm ~ (rp (L4 (0 ((v2 k1) rv))))
+  & rv ~ {rv1 rv2}
+  & @stn ~ (M1 (v3 (L5 (rv1 M2))))
+  & @nb ~ (lst (K2 (M2 (rv2 ((v4 (p2 L6)) (K3 (M3 cm2)))))))
+  & @min ~ (best (cm2 best2))
+  & @prim ~ (cm (K3 (M3 (L7 ((tot2 best2) o)))))
+
+// am(K, L, base) -> (K' (min packed, index)); ties go left
+@am = (t (L (base o)))
+  & L ~ ?((@am_leaf @am_node) (t (base o)))
+@am_leaf = ((pk l) (i ((p1 l) (p2 i))))
+  & pk ~ {p1 p2}
+@am_node = (lm ((a b) (base ((ta tb) m))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @am ~ (a (l1 (b1 (ta ma))))
+  & @am ~ (b (l2 (bR (tb mb))))
+  & @amsel ~ (ma (mb m))
+@amsel = ((ma ia) ((mb ib) o))
+  & ma ~ {ma1 ma2}
+  & mb ~ {mb1 mb2}
+  & mb1 ~ $([<] $(ma1 lt))
+  & lt ~ ?((@as_l @as_r) ((ma2 ia) ((mb2 ib) o)))
+@as_l = (a (* a))
+@as_r = (* (* (b b)))
+// am2(K, L, base) -> (K' offer): single-pass argmin that also TAKES the winner. Each leaf offers
+// (packed (index (list R))) upward, R being a wire back to the leaf's slot in K'. At a node the loser's R is closed
+// with its own (packed list) and only the winner travels on; the caller closes the root winner's R with
+// (16777215 Nil): the winner is marked visited and its adjacency list handed out, no second keyed descent.
+@am2 = (t (L (base o)))
+  & L ~ ?((@am2_leaf @am2_node) (t (base o)))
+@am2_leaf = ((pk l) (i (X (pk (i (l X))))))
+@am2_node = (lm ((a b) (base ((ta tb) o))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @am2 ~ (a (l1 (b1 (ta oa))))
+  & @am2 ~ (b (l2 (bR (tb ob))))
+  & @amsel2 ~ (oa (ob o))
+@amsel2 = ((ma A) ((mb B) o))
+  & ma ~ {ma1 ma2}
+  & mb ~ {mb1 mb2}
+  & mb1 ~ $([<] $(ma1 lt))
+  & lt ~ ?((@as2_l @as2_r) ((ma2 A) ((mb2 B) o)))
+@as2_l = (A ((mb (* (lb (mb lb)))) A))
+@as2_r = (* ((ma (* (la (ma la)))) (B B)))
+// ku: guarded min of a packed candidate into a leaf; payload (c vis) returns vis = (leaf was visited)
+@ku_act = ((pk l) ((c vis) (pk2 l)))
+  & pk ~ {p1 p2}
+  & p1 ~ $([=] $(16777215 vi))
+  & vi ~ {vis v2}
+  & v2 ~ ?((@ku_min @ku_keep) (p2 (c pk2)))
+@ku_min = (pk (c o))
+  & @min ~ (pk (c o))
+@ku_keep = (* (pk (* pk)))
+// nb(adjacency list of v, K, M, R_v, S = (v (p L))) -> (K' (M' best candidate))
+@nb = ((?((@nb_nil @nb_cons) (pl (K (M (rv (S o)))))) pl) (K (M (rv (S o)))))
+@nb_nil = (* (K (M (* (* (K (M 16777215)))))))
+@nb_cons = (* (((x w) rest) (K (M (rv (S (K2 (M2 cm))))))))
+  & S ~ {S1 {S2 S3}}
+  & S1 ~ (v1 (p1 La))
+  & x ~ {x1 {x2 {x3 x4}}}
+  & w ~ {w1 w2}
+  & w1 ~ $([*] $(128 w8))
+  & w8 ~ $([+] $(v1 c))
+  & @ku ~ (K (x1 (La ((c vis) Km))))
+  & x2 ~ $([!] $(p1 np))
+  & vis ~ $([&] $(np test))
+  & S2 ~ (* (* Lb))
+  & Lb ~ {Lb1 Lb2}
+  & @co ~ (M (x3 (Lb1 (rx Mm))))
+  & rv ~ {r1 r2}
+  & test ~ ?((@nb_no @nb_yes) (r1 (rx (w2 (Lb2 cd)))))
+  & x4 ~ *
+  & @nb ~ (rest (Km (Mm (r2 (S3 (K2 (M2 cr)))))))
+  & @min ~ (cd (cr cm))
+@nb_no = (* (* (* (* 16777215))))
+@nb_yes = (* (ra (rb (w (L c)))))
+  & @mm ~ (ra (rb (L m)))
+  & w ~ $([-] $(m c))
+// rm(R_p, L, base, (v key)) -> R_v
+@rm = (r (L (base (vk o))))
+  & L ~ ?((@rm_leaf @rm_node) (r (base (vk o))))
+@rm_leaf = (x (i ((v k) o)))
+  & i ~ $([=] $(v eq))
+  & eq ~ ?((@rm_max @rm_zero) (x (k o)))
+@rm_max = (x (k o))
+  & @max ~ (x (k o))
+@rm_zero = (* (* (* 0)))
+@rm_node = (lm ((a b) (base (vk (x y)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & vk ~ {vk1 vk2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @rm ~ (a (l1 (b1 (vk1 x))))
+  & @rm ~ (b (l2 (bR (vk2 y))))
+// mm(A, B, L) = min over leaves of max(a, b)
+@mm = (a (b (L o)))
+  & L ~ ?((@mm_leaf @mm_node) (a (b o)))
+@mm_leaf = (a (b o))
+  & @max ~ (a (b o))
+@mm_node = (lm ((a1 a2) ((b1 b2) o)))
+  & lm ~ {l1 l2}
+  & @mm ~ (a1 (b1 (l1 x)))
+  & @mm ~ (a2 (b2 (l2 y)))
+  & @min ~ (x (y o))
+@co_act = (row (o r2))
+  & row ~ {o r2}
+@co = (t (k (L (P o))))
+  & L ~ ?((@co_leaf @co_node) (t (k (P o))))
+@co_leaf = (t (* (P o)))
+  & @co_act ~ (t (P o))
+@co_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@co_L @co_R) (t (k2 (l2 (P o)))))
+@co_L = ((l r) (k (L (P (l2 r)))))
+  & @co ~ (l (k (L (P l2))))
+@co_R = (* ((l r) (k (L (P (l r2))))))
+  & @co ~ (r (k (L (P r2))))
+
+// zr(L, Lw, base): matrix of rows; row u = 0 at u, 16777215 elsewhere
+@zr = (L (Lw (base o)))
+  & L ~ ?((@zr_leaf @zr_node) (Lw (base o)))
+@zr_leaf = (Lw (u o))
+  & Lw ~ {w1 w2}
+  & @zi ~ (w1 z)
+  & @stn ~ (z (u (w2 (0 o))))
+@zr_node = (lm (Lw (base (x y))))
+  & lm ~ {l1 {l2 l3}}
+  & Lw ~ {w1 w2}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @zr ~ (l1 (w1 (b1 x)))
+  & @zr ~ (l2 (w2 (bR y)))
+@stn_act = (* (x x))
+@stn = (t (k (L (P o))))
+  & L ~ ?((@stn_leaf @stn_node) (t (k (P o))))
+@stn_leaf = (t (* (P o)))
+  & @stn_act ~ (t (P o))
+@stn_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@stn_L @stn_R) (t (k2 (l2 (P o)))))
+@stn_L = ((l r) (k (L (P (l2 r)))))
+  & @stn ~ (l (k (L (P l2))))
+@stn_R = (* ((l r) (k (L (P (l r2))))))
+  & @stn ~ (r (k (L (P r2))))
+@ku = (t (k (L (P o))))
+  & L ~ ?((@ku_leaf @ku_node) (t (k (P o))))
+@ku_leaf = (t (* (P o)))
+  & @ku_act ~ (t (P o))
+@ku_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ku_L @ku_R) (t (k2 (l2 (P o)))))
+@ku_L = ((l r) (k (L (P (l2 r)))))
+  & @ku ~ (l (k (L (P l2))))
+@ku_R = (* ((l r) (k (L (P (l r2))))))
+  & @ku ~ (r (k (L (P r2))))
+
+@min = (a (b o))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@sel2 @sel1s) (a2 (b2 o)))
+@max = (a (b o))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@sel1 @sel2s) (a2 (b2 o)))
+@sel1 = (x (* x))
+@sel2 = (* (y y))
+@sel1s = (* (x (* x)))
+@sel2s = (* (* (y y)))
+// ---- shared SSSP core (GRAPH-SWING, runs/exp5): frontier Bellman-Ford over tries.
+// G: adjacency trie keyed by vertex, leaves are lists of (v w). Dt: distance trie. C: candidate trie of this round.
+// One round = one pre-expanded traversal of (G, Dt, C): at each leaf, d' = min(d, c) (accepted only if c <= budget);
+// a leaf that improved emits d'+w into the NEXT round's candidate trie for each of its out-edges (min-updates, keyed
+// by v, threaded through the traversal in order); flags are OR-reduced; the loop continues while anything improved.
+// E = (L b): trie depth and budget (b = 16777215 means no budget).
+@loop = ((g (dt (c E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 *)
+  & @zi ~ (L1 ci)
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @rd ~ (Lr (Eb (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & any ~ ?((@lp_done @lp_again) (g2 (dt2 (co (E3 o)))))
+@lp_done = (* (dt (* (* dt))))
+@lp_again = (* (g (dt (c (E o)))))
+  & @loop ~ ((g (dt (c E))) o)
+
+@rd = (L (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & L ~ ?((@rd_leaf @rd_node) (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+@rd_node = (lm (E ((g1 gr) ((d1 dr) ((c1 cr) (ci ((h1 hr) ((e1 er) (co any)))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @rd ~ (l1 (Ea (g1 (d1 (c1 (ci (h1 (e1 (cm a1)))))))))
+  & @rd ~ (l2 (Eb (gr (dr (cr (cm (hr (er (co a2)))))))))
+  & a1 ~ $([|] $(a2 any))
+@rd_leaf = (E (g (d (c (ci (g2 (d2 (co any))))))))
+  & c ~ {c1 {c2 c3}}
+  & d ~ {dA dB}
+  & E ~ {Ex Ey}
+  & Ey ~ (* b)
+  & c1 ~ $([<] $(dA lt))
+  & c2 ~ $([>] $(b gt))
+  & lt ~ $([>] $(gt f))
+  & f ~ {f1 {any f3}}
+  & f1 ~ ?((@rl_keep @rl_take) (dB (c3 nd)))
+  & nd ~ {nd1 d2}
+  & f3 ~ ?((@rl_quiet @rl_emit) (g (nd1 (ci (g2 (co Ex))))))
+@rl_keep = (d (* d))
+@rl_take = (* (* (c c)))
+@rl_quiet = (g (* (ci (g (ci *)))))
+@rl_emit = (* (g (nd (ci (g2 (co E))))))
+  & E ~ (L *)
+  & @em ~ (g (nd (ci (g2 (co L)))))
+
+// emit nd+w into the candidate trie for every (v w) of the adjacency list, rebuilding the list
+@em = ((?((@em_nil @em_cons) (p (nd (ci (g2 (co L)))))) p) (nd (ci (g2 (co L)))))
+@em_nil = (* (* (ci ((0 *) (ci *)))))
+@em_cons = (* (((v w) rest) (nd (ci ((1 ((v2 w2) rest2)) (co L))))))
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & nd ~ {n1 n2}
+  & L ~ {La Lb}
+  & n1 ~ $([+] $(w1 cand))
+  & @mu ~ (ci (v1 (La (cand cm))))
+  & @em ~ (rest (n2 (cm (rest2 (co Lb)))))
+
+// leaf actions for nav(): min-update, and push (v w) onto an adjacency list
+@mu_act = (old (cand o))
+  & old ~ {o1 o2}
+  & cand ~ {k1 k2}
+  & k1 ~ $([<] $(o1 lt))
+  & lt ~ ?((@mu_keep @mu_take) (o2 (k2 o)))
+@mu_keep = (x (* x))
+@mu_take = (* (* (y y)))
+@gp_act = (lst ((v w) (1 ((v w) lst))))
+
+// tries with constant leaves: 16777215, and empty lists
+@zi = (?((16777215 @zi_node) o) o)
+@zi_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zi ~ (l1 a)
+  & @zi ~ (l2 b)
+@zl = (?(((0 *) @zl_node) o) o)
+@zl_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zl ~ (l1 a)
+  & @zl ~ (l2 b)
+
+// initial state: (G, Dt = all INF, C0 = 0 at s if s < n), then the loop; o receives the final distance trie
+@sssp_start = (n (s (L (b (g o)))))
+  & s ~ {s1 s2}
+  & n ~ {n1 n2}
+  & n1 ~ *
+  & s1 ~ $([<] $(n2 inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & i2 ~ ?((16777215 (* 0)) val)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @zi ~ (L1 D0)
+  & @zi ~ (L2 Ci)
+  & @mu ~ (Ci (key (L3 (val C0))))
+  & @loop ~ ((g (D0 (C0 (L4 b)))) o)
+@mu = (t (k (L (P o))))
+  & L ~ ?((@mu_leaf @mu_node) (t (k (P o))))
+@mu_leaf = (t (* (P o)))
+  & @mu_act ~ (t (P o))
+@mu_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@mu_L @mu_R) (t (k2 (l2 (P o)))))
+@mu_L = ((l r) (k (L (P (l2 r)))))
+  & @mu ~ (l (k (L (P l2))))
+@mu_R = (* ((l r) (k (L (P (l r2))))))
+  & @mu ~ (r (k (L (P r2))))
+@gp = (t (k (L (P o))))
+  & L ~ ?((@gp_leaf @gp_node) (t (k (P o))))
+@gp_leaf = (t (* (P o)))
+  & @gp_act ~ (t (P o))
+@gp_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@gp_L @gp_R) (t (k2 (l2 (P o)))))
+@gp_L = ((l r) (k (L (P (l2 r)))))
+  & @gp ~ (l (k (L (P l2))))
+@gp_R = (* ((l r) (k (L (P (l r2))))))
+  & @gp ~ (r (k (L (P r2))))
+// ---- shared trie primitives (depth-L complete binary trie, leaves are numbers, keyed by bits of the key, high bit first)
+// lg(x) = number of bits of x (0 for 0): trie depth for keys 0..x
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+// zt(L): trie of depth L with all leaves 0
+@zt = (?((0 @zt_node) o) o)
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+// cnt(t, L): sum of the leaves
+@cnt = (t (L o))
+  & L ~ ?((@cnt_leaf @cnt_node) (t o))
+@cnt_leaf = (x x)
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+// ins(t, k, L): set leaf k to 1. Control flow depends on k and L only, so it expands before t exists.
+@ins = (t (k (L o)))
+  & L ~ ?((@ins_leaf @ins_node) (t (k o)))
+@ins_leaf = (* (* 1))
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))

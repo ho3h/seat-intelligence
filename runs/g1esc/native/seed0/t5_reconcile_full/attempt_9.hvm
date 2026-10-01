@@ -1,0 +1,452 @@
+@and = (x (y out))
+  & x ~ $([&] $(y out))
+
+@or = (x (y out))
+  & x ~ $([|] $(y out))
+
+@eq = (a (b out))
+  & a ~ $([=] $(b out))
+
+@lt = (a (b out))
+  & a ~ $([<] $(b out))
+
+@gt = (a (b out))
+  & a ~ $([>] $(b out))
+
+@num_max = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & @lt ~ (a1 (b1 lt))
+  & lt ~ ?((@max_a @max_b) (a2 (b2 out)))
+
+@max_a = (a (b out))
+  & a ~ out
+  & b ~ *
+
+@max_b = (* (a (b out)))
+  & a ~ *
+  & b ~ out
+
+@minmax = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & @lt ~ (a1 (b1 lt))
+  & lt ~ ?((@mm_ge @mm_lt) (a2 (b2 out)))
+
+@mm_ge = (a (b out))
+  & out ~ (b a)
+
+@mm_lt = (* (a (b out)))
+  & out ~ (a b)
+
+@range_desc = (n out)
+  & n ~ ?((@rd_zero @rd_succ) out)
+
+@rd_zero = (0 *)
+
+@rd_succ = (m out)
+  & m ~ {m_rec m_out}
+  & @range_desc ~ (m_rec tail)
+  & out ~ (1 (m_out tail))
+
+@reverse = (list out)
+  & @rev ~ (list ((0 *) out))
+
+@rev = (list (acc out))
+  & list ~ (tag payload)
+  & tag ~ ?((@rev_nil @rev_cons) (payload (acc out)))
+
+@rev_nil = (* (x x))
+
+@rev_cons = (* (payload (acc out)))
+  & payload ~ (head tail)
+  & @rev ~ (tail ((1 (head acc)) out))
+
+@fold_cands = (cands (entries out))
+  & cands ~ (tag payload)
+  & tag ~ ?((@fc_nil @fc_cons) (payload (entries out)))
+
+@fc_nil = (* (x x))
+
+@fc_cons = (* (payload (entries out)))
+  & payload ~ (triple tail)
+  & triple ~ (u (v score))
+  & @insert_max ~ (u (v (score (entries new_entries))))
+  & @fold_cands ~ (tail (new_entries out))
+
+@insert_max = (u (v (score (entries out))))
+  & entries ~ (tag payload)
+  & tag ~ ?((@im_nil @im_cons) (u (v (score (payload out)))))
+
+@im_nil = (u (v (score (payload out))))
+  & payload ~ *
+  & out ~ (1 ((u (v score)) (0 *)))
+
+@im_cons = (u (v (score (payload out))))
+  & payload ~ (head tail)
+  & head ~ (hu (hv hs))
+  & u ~ {u_cmp u_rec}
+  & v ~ {v_cmp v_rec}
+  & score ~ {score_cmp score_rec}
+  & hu ~ {hu_cmp hu_out}
+  & hv ~ {hv_cmp hv_out}
+  & hs ~ {hs_cmp hs_out}
+  & @eq ~ (u_cmp (hu_cmp eq_u))
+  & eq_u ~ ?((@im_u_ne @im_u_eq) (u_rec (v_cmp (hv_cmp (v_rec (score_cmp (score_rec (hu_out (hv_out (hs_cmp (hs_out (tail out))))))))))))
+
+@im_u_ne = (u_rec (v_cmp (hv_cmp (v_rec (score_cmp (score_rec (hu_out (hv_out (hs_cmp (hs_out (tail out)))))))))))
+  & v_cmp ~ *
+  & hv_cmp ~ *
+  & score_cmp ~ *
+  & hs_cmp ~ *
+  & @insert_max ~ (u_rec (v_rec (score_rec (tail new_tail))))
+  & out ~ (1 ((hu_out (hv_out hs_out)) new_tail))
+
+@im_u_eq = (u_rec (v_cmp (hv_cmp (v_rec (score_cmp (score_rec (hu_out (hv_out (hs_cmp (hs_out (tail out)))))))))))
+  & @eq ~ (v_cmp (hv_cmp eq_v))
+  & eq_v ~ ?((@im_v_ne @im_v_eq) (u_rec (v_rec (score_cmp (score_rec (hu_out (hv_out (hs_cmp (hs_out (tail out))))))))))
+
+@im_v_ne = (u_rec (v_rec (score_cmp (score_rec (hu_out (hv_out (hs_cmp (hs_out (tail out)))))))))
+  & score_cmp ~ *
+  & hs_cmp ~ *
+  & @insert_max ~ (u_rec (v_rec (score_rec (tail new_tail))))
+  & out ~ (1 ((hu_out (hv_out hs_out)) new_tail))
+
+@im_v_eq = (u_rec (v_rec (score_cmp (score_rec (hu_out (hv_out (hs_cmp (hs_out (tail out)))))))))
+  & u_rec ~ *
+  & v_rec ~ *
+  & score_rec ~ *
+  & hs_out ~ *
+  & @num_max ~ (score_cmp (hs_cmp newhs))
+  & out ~ (1 ((hu_out (hv_out newhs)) tail))
+
+@filter_tau = (entries (tau out))
+  & entries ~ (tag payload)
+  & tag ~ ?((@ft_nil @ft_cons) (payload (tau out)))
+
+@ft_nil = (payload (tau out))
+  & payload ~ *
+  & tau ~ *
+  & out ~ (0 *)
+
+@ft_cons = (* (payload (tau out)))
+  & payload ~ (head tail)
+  & head ~ (u (v score))
+  & tau ~ {tau_cmp tau_ctx}
+  & score ~ {score_cmp score_ctx}
+  & @lt ~ (score_cmp (tau_cmp less))
+  & less ~ ?((@ft_keep @ft_drop) (u (v (score_ctx (tail (tau_ctx out))))))
+
+@ft_keep = (u (v (score (tail (tau out)))))
+  & @filter_tau ~ (tail (tau new_tail))
+  & out ~ (1 ((u (v score)) new_tail))
+
+@ft_drop = (* (u (v (score (tail (tau out))))))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & @filter_tau ~ (tail (tau out))
+
+@entry_less = (e1 (e2 out))
+  & e1 ~ (u1 (v1 s1))
+  & e2 ~ (u2 (v2 s2))
+  & s1 ~ {s1_gt s1_eq}
+  & s2 ~ {s2_gt s2_eq}
+  & u1 ~ {u1_lt u1_eq}
+  & u2 ~ {u2_lt u2_eq}
+  & @gt ~ (s1_gt (s2_gt b_s_gt))
+  & @eq ~ (s1_eq (s2_eq b_s_eq))
+  & @lt ~ (u1_lt (u2_lt b_u_lt))
+  & @eq ~ (u1_eq (u2_eq b_u_eq))
+  & @lt ~ (v1 (v2 b_v_lt))
+  & @and ~ (b_u_eq (b_v_lt t1))
+  & @or ~ (b_u_lt (t1 t2))
+  & @and ~ (b_s_eq (t2 t3))
+  & @or ~ (b_s_gt (t3 out))
+
+@sort_entries = (list out)
+  & @sort_loop ~ (list (0 *) out)
+
+@sort_loop = (list (sorted out))
+  & list ~ (tag payload)
+  & tag ~ ?((@sort_nil @sort_cons) (payload (sorted out)))
+
+@sort_nil = (* (x x))
+
+@sort_cons = (* (payload (sorted out)))
+  & payload ~ (head tail)
+  & @insert_entry ~ (head (sorted new_sorted))
+  & @sort_loop ~ (tail (new_sorted out))
+
+@insert_entry = (entry (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@ie_nil @ie_cons) (entry (payload out)))
+
+@ie_nil = (entry (payload out))
+  & payload ~ *
+  & out ~ (1 (entry (0 *)))
+
+@ie_cons = (* (entry ((head tail) out)))
+  & entry ~ {entry_cmp entry_ctx}
+  & head ~ {head_cmp head_ctx}
+  & @entry_less ~ (entry_cmp (head_cmp less))
+  & less ~ ?((@ie_false @ie_true) (entry_ctx (head_ctx (tail out))))
+
+@ie_false = (entry (head (tail out)))
+  & @insert_entry ~ (entry (tail new_tail))
+  & out ~ (1 (head new_tail))
+
+@ie_true = (* (entry (head (tail out))))
+  & out ~ (1 (entry (1 (head tail))))
+
+@get = (list (idx out))
+  & list ~ (tag payload)
+  & tag ~ ?((@get_nil @get_cons) (payload (idx out)))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* (payload (idx out)))
+  & payload ~ (head tail)
+  & idx ~ ?((@get_zero @get_succ) (head tail out))
+
+@get_zero = (head tail out)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (idx_minus1 (head tail out))
+  & head ~ *
+  & @get ~ (tail (idx_minus1 out))
+
+@replace_one = (x (oldA (oldB (new out))))
+  & x ~ {x_cmpA x_rest}
+  & x_rest ~ {x_cmpB x_out}
+  & @eq ~ (x_cmpA (oldA eqA))
+  & @eq ~ (x_cmpB (oldB eqB))
+  & @or ~ (eqA (eqB choose))
+  & choose ~ ?((@ro_false @ro_true) (new (x_out out)))
+
+@ro_false = (new (x_out out))
+  & new ~ *
+  & x_out ~ out
+
+@ro_true = (* (new (x_out out)))
+  & new ~ out
+  & x_out ~ *
+
+@replace_labels = (oldA (oldB (new (labels out))))
+  & labels ~ (tag payload)
+  & tag ~ ?((@rl_nil @rl_cons) (payload (oldA (oldB (new out)))))
+
+@rl_nil = (* (oldA (oldB (new out))))
+  & oldA ~ *
+  & oldB ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rl_cons = (* (payload (oldA (oldB (new out)))))
+  & oldA ~ {oldA1 oldA2}
+  & oldB ~ {oldB1 oldB2}
+  & new ~ {new1 new2}
+  & payload ~ (x tail)
+  & @replace_one ~ (x (oldA1 (oldB1 (new1 newx))))
+  & @replace_labels ~ (oldA2 (oldB2 (new2 (tail new_tail))))
+  & out ~ (1 (newx new_tail))
+
+@has_cross = (mnl (labels (lu (lv out))))
+  & mnl ~ (tag payload)
+  & tag ~ ?((@hc_nil @hc_cons) (payload (labels (lu (lv out)))))
+
+@hc_nil = (* (labels (lu (lv out))))
+  & labels ~ *
+  & lu ~ *
+  & lv ~ *
+  & out ~ 0
+
+@hc_cons = (* (payload (labels (lu (lv out)))))
+  & labels ~ {labels_a labels_rest}
+  & labels_rest ~ {labels_b labels_tail}
+  & lu ~ {lu_a lu_rest}
+  & lu_rest ~ {lu_b lu_tail}
+  & lv ~ {lv_a lv_rest}
+  & lv_rest ~ {lv_b lv_tail}
+  & payload ~ (a (b tail))
+  & @get ~ (labels_a (a la))
+  & @get ~ (labels_b (b lb))
+  & la ~ {la_al la_av}
+  & lb ~ {lb_bl lb_bu}
+  & @eq ~ (la_al (lu_a eq_al))
+  & @eq ~ (lb_bl (lv_a eq_bl))
+  & @eq ~ (la_av (lv_b eq_av))
+  & @eq ~ (lb_bu (lu_b eq_bu))
+  & @and ~ (eq_al (eq_bl c1))
+  & @and ~ (eq_av (eq_bu c2))
+  & @or ~ (c1 (c2 cross))
+  & cross ~ ?((@hc_false @hc_true) (tail (labels_tail (lu_tail (lv_tail out)))))
+
+@hc_false = (tail (labels (lu (lv out))))
+  & @has_cross ~ (tail (labels (lu (lv out))))
+
+@hc_true = (* (tail (labels (lu (lv out)))))
+  & tail ~ *
+  & labels ~ *
+  & lu ~ *
+  & lv ~ *
+  & out ~ 1
+
+@process_pairs = (pairs (labels (mnl out)))
+  & pairs ~ (tag payload)
+  & tag ~ ?((@pp_nil @pp_cons) (payload (labels (mnl out))))
+
+@pp_nil = (payload (labels (mnl out)))
+  & payload ~ *
+  & mnl ~ *
+  & labels ~ out
+
+@pp_cons = (* (payload (labels (mnl out))))
+  & payload ~ (pair tail)
+  & pair ~ (u (v *))
+  & labels ~ {labels_u {labels_v {labels_check labels_rec}}}
+  & mnl ~ {mnl_check mnl_rec}
+  & @get ~ (labels_u (u lu))
+  & @get ~ (labels_v (v lv))
+  & lu ~ {lu_cmp lu_val}
+  & lv ~ {lv_cmp lv_val}
+  & @eq ~ (lu_cmp (lv_cmp same))
+  & same ~ ?((@pp_same @pp_diff) (lu_val (lv_val (labels_check (labels_rec (mnl_check (mnl_rec (tail out))))))))
+
+@pp_same = (lu_val (lv_val (labels_check (labels_rec (mnl_check (mnl_rec (tail out)))))))
+  & lu_val ~ *
+  & lv_val ~ *
+  & labels_check ~ *
+  & mnl_check ~ *
+  & @process_pairs ~ (tail (labels_rec (mnl_rec out)))
+
+@pp_diff = (* (lu_val (lv_val (labels_check (labels_rec (mnl_check (mnl_rec (tail out))))))))
+  & lu_val ~ {lu_val_cross lu_val_ctx}
+  & lv_val ~ {lv_val_cross lv_val_ctx}
+  & @has_cross ~ (mnl_check (labels_check (lu_val_cross (lv_val_cross cross))))
+  & cross ~ ?((@pp_no_cross @pp_has_cross) (lu_val_ctx (lv_val_ctx (labels_rec (mnl_rec (tail out))))))
+
+@pp_no_cross = (lu_val (lv_val (labels_rec (mnl_rec (tail out)))))
+  & lu_val ~ {lu_val_max lu_val_rep}
+  & lv_val ~ {lv_val_max lv_val_rep}
+  & @num_max ~ (lu_val_max (lv_val_max new_label))
+  & @replace_labels ~ (lu_val_rep (lv_val_rep (new_label (labels_rec new_labels))))
+  & @process_pairs ~ (tail (new_labels (mnl_rec out)))
+
+@pp_has_cross = (* (lu_val (lv_val (labels_rec (mnl_rec (tail out))))))
+  & lu_val ~ *
+  & lv_val ~ *
+  & @process_pairs ~ (tail (labels_rec (mnl_rec out)))
+
+@rewrite_edges = (edges (labels out))
+  & edges ~ (tag payload)
+  & tag ~ ?((@re_nil @re_cons) (payload (labels out)))
+
+@re_nil = (payload (labels out))
+  & payload ~ *
+  & labels ~ *
+  & out ~ (0 *)
+
+@re_cons = (* (payload (labels out)))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & labels ~ {labels_u {labels_v labels_rec}}
+  & @get ~ (labels_u (u cu))
+  & @get ~ (labels_v (v cv))
+  & cu ~ {cu_cmp cu_val}
+  & cv ~ {cv_cmp cv_val}
+  & @eq ~ (cu_cmp (cv_cmp same))
+  & same ~ ?((@re_same @re_diff) (cu_val (cv_val (labels_rec (tail out)))))
+
+@re_same = (cu_val (cv_val (labels_rec (tail out))))
+  & cu_val ~ *
+  & cv_val ~ *
+  & @rewrite_edges ~ (tail (labels_rec out))
+
+@re_diff = (* (cu_val (cv_val (labels_rec (tail out)))))
+  & @minmax ~ (cu_val (cv_val pair))
+  & @rewrite_edges ~ (tail (labels_rec new_tail))
+  & out ~ (1 (pair new_tail))
+
+@edge_less = (e1 (e2 out))
+  & e1 ~ (a1 b1)
+  & e2 ~ (a2 b2)
+  & a1 ~ {a1_lt a1_gt}
+  & a2 ~ {a2_lt a2_gt}
+  & @lt ~ (a1_lt (a2_lt lt_a))
+  & lt_a ~ ?((@edge_a_not_lt @edge_a_lt) (a1_gt (a2_gt (b1 (b2 out)))))
+
+@edge_a_lt = (* (a1_gt (a2_gt (b1 (b2 out)))))
+  & a1_gt ~ *
+  & a2_gt ~ *
+  & b1 ~ *
+  & b2 ~ *
+  & out ~ 1
+
+@edge_a_not_lt = (a1_gt (a2_gt (b1 (b2 out))))
+  & @gt ~ (a1_gt (a2_gt gt_a))
+  & gt_a ~ ?((@edge_a_eq @edge_a_gt) (b1 (b2 out)))
+
+@edge_a_gt = (* (b1 (b2 out)))
+  & b1 ~ *
+  & b2 ~ *
+  & out ~ 0
+
+@edge_a_eq = (b1 (b2 out))
+  & b1 ~ {b1_lt b1_out}
+  & b2 ~ {b2_lt b2_out}
+  & @lt ~ (b1_lt (b2_lt result))
+  & b1_out ~ *
+  & b2_out ~ *
+  & result ~ out
+
+@sort_edges = (list out)
+  & @se_loop ~ (list (0 *) out)
+
+@se_loop = (list (sorted out))
+  & list ~ (tag payload)
+  & tag ~ ?((@se_nil @se_cons) (payload (sorted out)))
+
+@se_nil = (* (x x))
+
+@se_cons = (* (payload (sorted out)))
+  & payload ~ (edge tail)
+  & @insert_edge ~ (edge (sorted new_sorted))
+  & @se_loop ~ (tail (new_sorted out))
+
+@insert_edge = (edge (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@iee_nil @iee_cons) (edge (payload out)))
+
+@iee_nil = (edge (payload out))
+  & payload ~ *
+  & out ~ (1 (edge (0 *)))
+
+@iee_cons = (* (edge ((head tail) out)))
+  & edge ~ {edge_cmp edge_ctx}
+  & head ~ {head_cmp head_ctx}
+  & @edge_less ~ (edge_cmp (head_cmp less))
+  & less ~ ?((@iee_false @iee_true) (edge_ctx (head_ctx (tail out))))
+
+@iee_false = (edge (head (tail out)))
+  & @insert_edge ~ (edge (tail new_tail))
+  & out ~ (1 (head new_tail))
+
+@iee_true = (* (edge (head (tail out))))
+  & out ~ (1 (edge (1 (head tail))))
+
+@prog = (input out)
+  & input ~ (n (tau (mnl (cands edges))))
+  & @range_desc ~ (n desc_labels)
+  & @reverse ~ (desc_labels labels0)
+  & @fold_cands ~ (cands (0 *) entries)
+  & @filter_tau ~ (entries (tau filtered))
+  & @sort_entries ~ (filtered accepted)
+  & @process_pairs ~ (accepted (labels0 (mnl labels_raw)))
+  & labels_raw ~ {labels_rewrite labels_final}
+  & @rewrite_edges ~ (edges (labels_rewrite raw_edges))
+  & @sort_edges ~ (raw_edges sorted_edges)
+  & out ~ (labels_final sorted_edges)

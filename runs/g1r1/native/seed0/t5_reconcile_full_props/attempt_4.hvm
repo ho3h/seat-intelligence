@@ -1,0 +1,38 @@
+// Identity canonical ids; discard self-loops from the edge list.
+@prog = ((n (tau (mnl (cands (edges attrs))))) out)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & @range ~ (n ((0 *) c))
+  & @filter ~ (edges e)
+  & out ~ (c (e attrs))
+
+@range = (n (acc out))
+  & n ~ ?((@range_zero @range_succ) (acc out))
+
+@range_zero = (a out)
+  & a ~ out
+
+@range_succ = (p (acc out))
+  & p ~ {a b}
+  & @range ~ (a ((1 (b acc)) out))
+
+@filter = ((?((@filter_nil @filter_cons) (pl out)) pl) out)
+
+@filter_nil = (* out)
+  & out ~ (0 *)
+
+@filter_cons = (* (((u v) tail) out))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([=] $(v1 z))
+  & z ~ ?((@filter_keep @filter_drop) (u2 (v2 (tail out))))
+
+@filter_keep = (u (v (tail out)))
+  & @filter ~ (tail rest)
+  & out ~ (1 ((u v) rest))
+
+@filter_drop = (* (u (v (tail out))))
+  & u ~ *
+  & v ~ *
+  & @filter ~ (tail out)

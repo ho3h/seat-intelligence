@@ -1,0 +1,47 @@
+@prog = (l out)
+  & @scan ~ (l (0 (0 out)))
+
+@scan = (lv1 (cur (max out)))
+  & @scan_cons_lw ~ (lv1 (cur (max out)))
+
+@scan_nil = (* (* (x x)))
+
+@scan_cons = (* (($([=] $(40 z6)) t) (cur (max out))))
+  & z6 ~ ?((@close_hz @open_hz) (xw47 (cur (max out))))
+  & @scan_cons_lw ~ (t xw47)
+
+@close = (t (cur (max out)))
+  & cur ~ $([-] $(1 c2))
+  & @scan ~ (t (c2 (max out)))
+
+@open = (* (t (cur ({m_cmp m_ctx} out))))
+  & cur ~ $([+1] c1)
+  & c1 ~ {c_cmp c_rec}
+  & c_cmp ~ $([>] $(m_cmp gt))
+  & gt ~ ?((@keep @raise) (t (c_rec (m_ctx out))))
+
+@keep = (t (cur (max out)))
+  & @scan ~ (t (cur (max out)))
+
+@raise = (* (t ({c1 c2} (* out))))
+  & @scan ~ (t (c1 (c2 out)))
+
+@scan_cons_lw = (ls62 (q50 (q51 q52)))
+  & ls62 ~ (g59 (e57 (g60 (e58 tk61))))
+  & g59 ~ ?((@scan_nil @scan_cons_la) ((e57 (q54 (q55 q56))) (q50 (q51 q52))))
+  & g60 ~ ?((@scan_nil @scan_cons) ((e58 tk61) (q54 (q55 q56))))
+
+@close_hz = (hw16 ($([-] $(1 q11)) (q9 q10)))
+  & hw16 ~ (q11 (q9 q10))
+
+@keep_hz = (hw35 (q28 (q29 q30)))
+  & hw35 ~ (q28 (q29 q30))
+
+@raise_hz = (* (hw44 ({q37 q38} (* q39))))
+  & hw44 ~ (q37 (q38 q39))
+
+@open_hz = (* (hw46 ($([+1] {$([>] $(q19 z26)) q24}) ({q19 q20} q21))))
+  & z26 ~ ?((@keep_hz @raise_hz) (xw45 (q24 (q20 q21))))
+  & hw46 ~ xw45
+
+@scan_cons_la = (* (($([=] $(40 ?((@close_hz @open_hz) (xw47 (cur (max out)))))) xw47) (cur (max out))))

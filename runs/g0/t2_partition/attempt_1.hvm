@@ -1,0 +1,18 @@
+@prog = ((p xs) (lo hi))
+  & @pt ~ (xs (p (lo hi)))
+
+@pt = ((?((@pt_nil @pt_cons) (pl (p (lo hi)))) pl) (p (lo hi)))
+
+@pt_nil = (* (* ((0 *) (0 *))))
+
+@pt_cons = (* ((h t) (p (lo hi))))
+  & p ~ {p1 p2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(p1 c))
+  & c ~ ?((@pt_ge @pt_lt) (h2 (t (p2 (lo hi)))))
+
+@pt_ge = (h (t (p (lo (1 (h hi2))))))
+  & @pt ~ (t (p (lo hi2)))
+
+@pt_lt = (* (h (t (p ((1 (h lo2)) hi)))))
+  & @pt ~ (t (p (lo2 hi)))

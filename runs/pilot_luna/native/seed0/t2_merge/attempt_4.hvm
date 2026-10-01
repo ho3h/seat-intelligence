@@ -1,0 +1,31 @@
+// Merge two sorted ascending lists.
+
+@prog = ((xs ys) out)
+  & @mg ~ (xs (ys out))
+
+@mg = ((?((@mg_nil @mg_cons) (pl (ys out))) pl) (ys out))
+
+@mg_nil = (* (ys out))
+  & ys ~ out
+
+@mg_cons = (* ((x xt) (ys out)))
+  & @mg_y ~ (ys (x (xt out)))
+
+@mg_y = ((?((@mg_y_nil @mg_y_cons) (py (x (xt out)))) py) (x (xt out)))
+
+@mg_y_nil = (* (x (xt out)))
+  & out ~ (1 (x xt))
+
+@mg_y_cons = (* ((y yt) (x (xt out))))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & xc ~ $([<] $(yc lt))
+  & lt ~ ?((@mg_take_x @mg_take_y) (xkeep (xt (ykeep (yt out))))
+
+@mg_take_x = (xkeep (xt (ykeep (yt out))))
+  & @mg ~ (xt ((1 (ykeep yt)) tail))
+  & out ~ (1 (xkeep tail))
+
+@mg_take_y = (* (xkeep (xt (ykeep (yt out)))))
+  & @mg ~ ((1 (xkeep xt)) (yt tail))
+  & out ~ (1 (ykeep tail))

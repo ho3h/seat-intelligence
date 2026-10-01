@@ -1,0 +1,40 @@
+--- 05:03:49
+build.py:20: wire `n_idx` (num, argument `n` of step of stream `c_walk`, made at build.py:26) is used a second time (update `hadd` (act add) port `k`); it was already used at build.py:19 (lg port `x`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(n_idx, 2)  and use each once.
+--- 05:04:51
+fin of stream `c_walk` must return exactly one value (the result); returned 2
+--- 05:05:10
+fin of stream `c_walk` must return exactly one value (the result); returned 2
+--- 05:06:36
+build.py:19: wire `idx` (num, argument `i` of leaf of fold `c_fold`, made at build.py:21) is used a second time (update `hadd` (act add) port `k`); it was already used at build.py:18 (lg port `x`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(idx, 2)  and use each once.
+--- 05:06:43
+build.py:28: split needs a tuple wire or an explicit n; `edge` is num
+--- 05:07:01
+wrong arity: step of stream `e_stream` is called as f(d, state:(trie[num] request-trie), e0:num, e1:num, e2:num), i.e. d plus 4 value(s); your function `e_step` takes 3 parameter(s) (d, state_pair, edge).
+--- 05:07:44
+wrong arity: step of stream `e_stream` is called as f(d, acc_trie:trie[num], req_q:request-trie, e0:num, e1:num, e2:num), i.e. d plus 5 value(s); your function `e_step` takes 4 parameter(s) (d, acc_trie, req_q, edge).
+--- 05:08:17
+build.py:33: wire `r` (num, output `r` of mc_request `mcq_req`, made at build.py:28) is used a second time (select if_true); it was already used at build.py:32 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:08:38
+build.py:37: wire `r` (num, result of `<`, made at build.py:35) is used a second time (select condition); it was already used at build.py:36 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:08:54
+fin of stream `e_stream` must return exactly one value (the result); returned 2
+--- 05:09:17
+build.py:64: wire `idx` (num, argument `i` of leaf of fold `out_fold`, made at build.py:68) is used a second time (left operand of `&`); it was already used at build.py:63 (left operand of `>>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(idx, 2)  and use each once.
+--- 05:09:32
+build.py:66: kind mismatch at leaf of fold `out_fold` result `acc2`: expected list[(num num num)], got list[(num (num num))] `cell` from cons (made at build.py:64).
+--- 05:09:40
+build.py:74: kind mismatch at fold `c_fold` port `t`: expected trie[num], got list[num] `c_list` from argument `in0` of @prog (t5_rewrite_weighted) (made at build.py:90).
+--- 05:18:02
+build.py:85: split needs a tuple wire or an explicit n; `out` is list[trie[num]]
+--- 05:18:25
+@prog (t5_rewrite_weighted) (@prog): 1 value(s) never used:
+    `out_1_1` (any, field 1 of `out_1`, made at build.py:88)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:29:42
+build.py:21: wire `r` (num, result of `<`, made at build.py:18) is used a second time (select condition); it was already used at build.py:20 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:29:55
+build.py:29: wire `r` (num, result of `+`, made at build.py:25) is used a second time (update `hadd` (act add) port `k`); it was already used at build.py:28 (lg port `x`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:30:09
+@prog (t5_rewrite_weighted) (@prog): 1 value(s) never used:
+    `c_list` (list[num], argument `in0` of @prog (t5_rewrite_weighted), made at build.py:63)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

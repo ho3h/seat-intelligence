@@ -1,0 +1,187 @@
+// Build a zero-filled color list, then visit each vertex.
+@prog = ((n edges) out)
+  & n ~ {n_fill n_roots}
+  & @fill ~ (n_fill colors)
+  & @roots ~ (n_roots (edges (colors (0 out))))
+
+@fill = (n out)
+  & n ~ ?((@fill_zero @fill_succ) out)
+
+@fill_zero = (0 *)
+
+@fill_succ = (k out)
+  & @fill ~ (k tail)
+  & out ~ (1 (0 tail))
+
+// Get the value at index idx from a list.
+@get = ((?((@get_nil @get_cons) ctx) payload) (idx out))
+  & ctx ~ (payload (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (z ((head tail) (idx out)))
+  & z ~ *
+  & idx ~ ?((@get_here @get_more) ((head tail) out))
+
+@get_here = ((head tail) out)
+  & tail ~ *
+  & out ~ head
+
+@get_more = (k ((head tail) out))
+  & head ~ *
+  & @get ~ (k (tail out))
+
+// Replace the value at index idx in a list.
+@put = (idx (val ((?((@put_nil @put_cons) ctx) payload) out)))
+  & ctx ~ (payload (idx (val out)))
+
+@put_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@put_cons = (z ((head tail) (idx (val out))))
+  & z ~ *
+  & idx ~ ?((@put_here @put_more) (val ((head tail) out))
+
+@put_here = (val ((head tail) out))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@put_more = (k (val ((head tail) out)))
+  & @put ~ (k (val (tail tailout)))
+  & out ~ (1 (head tailout))
+
+// Process a queue of vertices.
+@walk = ((?((@walk_nil @walk_cons) ctx) payload) state)
+  & ctx ~ (payload state)
+
+@walk_nil = (payload state)
+  & payload ~ *
+  & state ~ (edges (colors (good out)))
+  & edges ~ *
+  & out ~ (colors good)
+
+@walk_cons = (z (payload state))
+  & z ~ *
+  & payload ~ (v tail)
+  & state ~ (edges (colors (good out)))
+  & edges ~ {edges_scan edges_walk}
+  & colors ~ {colors_get colors_scan}
+  & @get ~ (v (colors_get c))
+  & @scan ~ (v (c (edges_scan (tail (colors_scan (good scanout)))))
+  & scanout ~ (queue2 (colors2 good2))
+  & @walk ~ (queue2 (edges_walk (colors2 (good2 out))))
+
+// Scan all edges for neighbors of the current vertex.
+@scan = ((?((@scan_nil @scan_cons) ctx) payload) state)
+  & ctx ~ (payload state)
+
+@scan_nil = (payload state)
+  & payload ~ *
+  & state ~ (v (c (edges (queue (colors (good out))))))
+  & v ~ *
+  & c ~ *
+  & edges ~ *
+  & out ~ (queue (colors good))
+
+@scan_cons = (z (payload state))
+  & z ~ *
+  & payload ~ ((u w) rest)
+  & state ~ (v (c (edges (queue (colors (good out))))))
+  & u ~ {u_cmp u_keep}
+  & v ~ {v_cmp v_keep}
+  & u_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@scan_check_w @scan_hit_u) (w (u_keep (v_keep (c (rest (edges (queue (colors (good out)))))))))
+
+@scan_check_w = (w (u state))
+  & u ~ *
+  & state ~ (v (c (rest (edges (queue (colors (good out))))))
+  & w ~ {w_cmp w_keep}
+  & v ~ {v_cmp v_keep}
+  & w_cmp ~ $([=] $(v_cmp eq2))
+  & eq2 ~ ?((@scan_continue @scan_hit_w) (w_keep (v_keep (c (rest (edges (queue (colors (good out))))))))
+
+@scan_hit_u = (z (w (u state)))
+  & z ~ *
+  & u ~ *
+  & @process ~ (w state)
+
+@scan_continue = (w state)
+  & w ~ *
+  & state ~ (v (c (rest (edges (queue (colors (good out)))))))
+  & @scan ~ (v (c (rest (edges (queue (colors (good out)))))))
+
+@scan_hit_w = (z (w state))
+  & z ~ *
+  & @process ~ (w state)
+
+// Assign an uncolored neighbor the opposite color, or detect a conflict.
+@process = (nb state)
+  & state ~ (v (c (rest (edges (queue (colors (good out))))))
+  & nb ~ {nb_get nb_keep}
+  & colors ~ {colors_get colors_keep}
+  & @get ~ (nb_get (colors_get old))
+  & old ~ {old_test old_keep}
+  & old_test ~ $([=] $(0 iszero))
+  & iszero ~ ?((@process_new @process_old) (nb_keep (old_keep (v (c (rest (edges (queue (colors_keep (good out)))))))))
+
+@process_new = (nb (old state))
+  & old ~ *
+  & state ~ (v (c (rest (edges (queue (colors (good out)))))))
+  & nb ~ {nb_set nb_queue}
+  & c ~ {c_calc c_keep}
+  & 3 ~ $([-] $(c_calc opposite))
+  & @put ~ (nb_set (opposite (colors colors2)))
+  & @scan ~ (v (c_keep (rest (edges (1 (nb_queue (colors2 (good out)))))))
+
+@process_old = (z (nb (old state)))
+  & z ~ *
+  & nb ~ *
+  & state ~ (v (c (rest (edges (queue (colors (good out)))))))
+  & c ~ {c_calc c_keep}
+  & 3 ~ $([-] $(c_calc expected))
+  & old ~ $([=] $(expected eq))
+  & eq ~ ?((@process_conflict @process_match) (v (c_keep (rest (edges (queue (colors (good out))))))))
+
+@process_conflict = (z state)
+  & z ~ *
+  & state ~ (v (c (rest (edges (queue (colors (good out)))))))
+  & @scan ~ (v (c (rest (edges (queue (colors (0 out)))))))
+
+@process_match = (z state)
+  & z ~ *
+  & state ~ (v (c (rest (edges (queue (colors (good out)))))))
+  & @scan ~ (v (c (rest (edges (queue (colors (good out)))))))
+
+// Process vertices in descending index order.
+@roots = (i (edges (colors (count out))))
+  & i ~ ?((@roots_done @roots_step) (edges (colors (count out))))
+
+@roots_done = (edges (colors (count out)))
+  & edges ~ *
+  & colors ~ *
+  & out ~ count
+
+@roots_step = (i (edges (colors (count out))))
+  & i ~ {i_get i_keep}
+  & colors ~ {colors_get colors_keep}
+  & @get ~ (i_get (colors_get state))
+  & state ~ ?((@roots_new @roots_assigned) (i_keep (edges (colors_keep (count out))))
+
+@roots_assigned = (z (i (edges (colors (count out)))))
+  & z ~ *
+  & @roots ~ (i (edges (colors (count out))))
+
+@roots_new = (i (edges (colors (count out))))
+  & i ~ {i_set {i_start i_next}}
+  & @put ~ (i_set (1 (colors colors2)))
+  & edges ~ {edges_walk edges_next}
+  & @walk ~ ((1 (i_start (0 *))) (edges_walk (colors2 (1 walkout))))
+  & walkout ~ (colors_final good_result)
+  & count ~ $([+] $(good_result count2))
+  & @roots ~ (i_next (edges_next (colors_final (count2 out))))

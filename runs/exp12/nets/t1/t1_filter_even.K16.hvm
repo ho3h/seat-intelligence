@@ -1,0 +1,38 @@
+@prog = (l out)
+  & @filter ~ (l out)
+
+@filter = (lv1 out)
+  & @filter_cons_lw ~ (lv1 out)
+
+@filter_nil = (* (0 *))
+
+@filter_cons = (* (({$([%] $(2 ?((@filter_even @filter_odd) (h_keep (rest out))))) h_keep} t) out))
+  & @filter_cons_lw ~ (t rest)
+
+@filter_even = (h (rest out))
+  & out ~ (1 (h rest))
+
+@filter_odd = (* (h (rest out)))
+  & h ~ *
+  & out ~ rest
+
+@filter_cons_lw = (ls72 q8)
+  & ls72 ~ (g55 (e39 (g56 (e40 (g57 (e41 (g58 (e42 (g59 (e43 (g60 (e44 (g61 (e45 (g62 (e46 (g63 (e47 (g64 (e48 (g65 (e49 (g66 (e50 (g67 (e51 (g68 (e52 (g69 (e53 (g70 (e54 tk71))))))))))))))))))))))))))))))))
+  & g55 ~ ?((@filter_nil @filter_cons_la) ((e39 q10) q8))
+  & g56 ~ ?((@filter_nil @filter_cons_la) ((e40 q12) q10))
+  & g57 ~ ?((@filter_nil @filter_cons_la) ((e41 q14) q12))
+  & g58 ~ ?((@filter_nil @filter_cons_la) ((e42 q16) q14))
+  & g59 ~ ?((@filter_nil @filter_cons_la) ((e43 q18) q16))
+  & g60 ~ ?((@filter_nil @filter_cons_la) ((e44 q20) q18))
+  & g61 ~ ?((@filter_nil @filter_cons_la) ((e45 q22) q20))
+  & g62 ~ ?((@filter_nil @filter_cons_la) ((e46 q24) q22))
+  & g63 ~ ?((@filter_nil @filter_cons_la) ((e47 q26) q24))
+  & g64 ~ ?((@filter_nil @filter_cons_la) ((e48 q28) q26))
+  & g65 ~ ?((@filter_nil @filter_cons_la) ((e49 q30) q28))
+  & g66 ~ ?((@filter_nil @filter_cons_la) ((e50 q32) q30))
+  & g67 ~ ?((@filter_nil @filter_cons_la) ((e51 q34) q32))
+  & g68 ~ ?((@filter_nil @filter_cons_la) ((e52 q36) q34))
+  & g69 ~ ?((@filter_nil @filter_cons_la) ((e53 q38) q36))
+  & g70 ~ ?((@filter_nil @filter_cons) ((e54 tk71) q38))
+
+@filter_cons_la = (* (({$([%] $(2 ?((@filter_even @filter_odd) (h_keep (rest out))))) h_keep} rest) out))

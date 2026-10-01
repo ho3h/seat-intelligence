@@ -1,0 +1,84 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@find_compress = ({a e} ({c {d f}} ({b g} k)))
+  & @get_tree ~ (a (0 (b (c ({$([=] $(d ?((@find_compress__C0 @find_compress__C1) (e (f (g (h (i (j k))))))))) h} (i j))))))
+
+@find_compress__C0 = (a (f ({c e} (b (h (i (j (k l))))))))
+  & @set_tree ~ (d (0 (e (f ((g (h i)) j)))))
+  & @find_compress ~ (a (b (c (d ({k g} l)))))
+
+@find_compress__C1 = (* (a (b (* (* (c (d (a (b (c d))))))))))
+
+@get_tree = (c ({a d} ({$([-] $(a $([=0x0000001] ?((@get_tree__C2 (* (b (* (* (* b)))))) (c (d (e f))))))) e} f)))
+
+@get_tree__C0 = (* (c (d (* (a (b e))))))
+  & @get_tree ~ (a (b (c (d e))))
+
+@get_tree__C1 = (* (b (* (d (a (* (c e)))))))
+  & @get_tree ~ (a (b (c (d e))))
+
+@get_tree__C2 = ((g h) ({d {$([+] $(b {c i})) a}} ({e $([-] $(a $([:/0x0000002] b)))} ({$([<] $(c ?((@get_tree__C0 @get_tree__C1) (d (e (f (g (h (i j))))))))) f} j))))
+
+@make_output = ({$([<] $(a ?((@make_output__C0 @make_output__C1) (b (c (d (e f))))))) b} (c (d ({a e} f))))
+
+@make_output__C0 = (* (* (a (* (a @List/Nil)))))
+
+@make_output__C1 = (* ({b $([+0x0000001] d)} (e (a ({c g} (h k))))))
+  & @make_output ~ (d (e (f (g (h j)))))
+  & @find_compress ~ (a (b (c (f (* (i *))))))
+  & @List/Cons ~ (i (j k))
+
+@make_tree = ({a b} ({$([-] $(a $([=0x0000001] ?((@make_tree__C0 @make_tree__C1) (b (c d)))))) c} d))
+
+@make_tree__C0 = ({c {$([+] $(b {f d})) a}} ({g $([-] $(a $([:/0x0000002] b)))} (e h)))
+  &!@make_tree ~ (c (d e))
+  &!@make_tree ~ (f (g h))
+
+@make_tree__C1 = (* ({a b} (* (a (b 1)))))
+
+@max2 = ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f))
+
+@merge_edges = ((@merge_edges__C5 a) a)
+
+@merge_edges__C0 = ({o {i c}} (a ({k {d e}} (* (b (j (m ({l f} (g p)))))))))
+  & @merge_edges ~ (a (n (o p)))
+  & @set_tree ~ (h (0 (i (j ((k (l m)) n)))))
+  & @set_tree ~ (b (0 (c (d ((e (f g)) h)))))
+
+@merge_edges__C1 = (* ({o {i c}} (a (j (m (b ({k {d e}} (* ({l f} (g p))))))))))
+  & @merge_edges ~ (a (n (o p)))
+  & @set_tree ~ (h (0 (i (j ((k (l m)) n)))))
+  & @set_tree ~ (b (0 (c (d ((e (f g)) h)))))
+
+@merge_edges__C2 = (b (c (d (i ({$([<] $(a ?((@merge_edges__C0 @merge_edges__C1) (b (c (d (e (f (g (h (k (m n)))))))))))) {e $([+] $(l m))}} (f (g (j ({a {h l}} n)))))))))
+  & @max2 ~ (i (j k))
+
+@merge_edges__C3 = (* (c (a (* (* (* (b (* (* (* d))))))))))
+  & @merge_edges ~ (a (b (c d)))
+
+@merge_edges__C4 = (* ((b e) (i (a ({c {f h}} q)))))
+  & @find_compress ~ (d (e (f (m ({g n} (o p))))))
+  & @find_compress ~ (a (b (c (d ({$([=] $(g ?((@merge_edges__C2 @merge_edges__C3) (h (i (j (k (l (m (n (o (p q)))))))))))) j} (k l))))))
+
+@merge_edges__C5 = (?(((a (* a)) @merge_edges__C4) b) b)
+
+@prog = (({$([=0x0000000] ?((@prog__C0 (* (* (* @List/Nil)))) (a (b c)))) a} b) c)
+
+@prog__C0 = ({a {g {e c}}} (b h))
+  & @make_output ~ (0 (a (f (g (* h)))))
+  & @merge_edges ~ (b (d (e f)))
+  & @make_tree ~ (0 (c d))
+
+@set_tree = (c ({a d} ({$([-] $(a $([=0x0000001] ?((@set_tree__C2 (* (* (* (* (* (b b))))))) (c (d (e f))))))) e} f)))
+
+@set_tree__C0 = (* (d (e (f (a (b (c (a g))))))))
+  & @set_tree ~ (b (c (d (e (f g)))))
+
+@set_tree__C1 = (* (b (* (d (e (a (g (c (f g)))))))))
+  & @set_tree ~ (a (b (c (d (e f)))))
+
+@set_tree__C2 = ((h i) ({d {$([+] $(b {c j})) a}} ({e $([-] $(a $([:/0x0000002] b)))} ({$([<] $(c ?((@set_tree__C0 @set_tree__C1) (d (e (f (g (h (i (j k)))))))))) f} (g k)))))
+
+

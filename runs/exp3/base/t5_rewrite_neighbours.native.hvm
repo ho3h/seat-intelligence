@@ -1,0 +1,115 @@
+// Entry point: split the clustering list for candidate enumeration and edge lookup.
+@prog = ((k (c e)) out)
+  & c ~ {cs cl}
+  & @cand ~ (cs (0 (k (cl (e out)))))
+
+@cand = ((?((@cand_nil @cand_cons) (pl (i (k (c (e out)))))) pl) (i (k (c (e out)))))
+
+@cand_nil = (* (i (k (c (e out)))))
+  & i ~ *
+  & k ~ *
+  & c ~ *
+  & e ~ *
+  & out ~ (0 *)
+
+@cand_cons = (* ((h t) (i (k (c (e out))))))
+  & i ~ {ic ir}
+  & h ~ $([=] $(ic eq))
+  & eq ~ ?((@cand_no @cand_yes) (t (ir (k (c (e out))))))
+
+@cand_no = (t (i (k (c (e out)))))
+  & i ~ $([+1] i2)
+  & @cand ~ (t (i2 (k (c (e out)))))
+
+@cand_yes = (* (t (i (k (c (e out))))))
+  & i ~ {ic ir}
+  & k ~ {kc kr}
+  & ic ~ $([=] $(kc eq))
+  & eq ~ ?((@cand_other @cand_self) (t (ir (kr (c (e out))))))
+
+@cand_self = (* (t (i (k (c (e out))))))
+  & i ~ $([+1] i2)
+  & @cand ~ (t (i2 (k (c (e out)))))
+
+@cand_other = (t (i (k (c (e out)))))
+  & i ~ {iq ir}
+  & k ~ {kq kr}
+  & c ~ {cq cr}
+  & e ~ {eqs er}
+  & @has ~ (eqs (kq (iq (cq found))))
+  & @cand_choose ~ (found (t (ir (kr (cr (er out))))))
+
+@cand_choose = (b (t (i (k (c (e out))))))
+  & b ~ ?((@cand_choose_no @cand_choose_yes) (t (i (k (c (e out))))))
+
+@cand_choose_no = (t (i (k (c (e out)))))
+  & i ~ $([+1] i2)
+  & @cand ~ (t (i2 (k (c (e out)))))
+
+@cand_choose_yes = (* (t (i (k (c (e out))))))
+  & i ~ {ih ir}
+  & ir ~ $([+1] ix)
+  & @cand ~ (t (ix (k (c (e rest)))))
+  & out ~ (1 (ih rest))
+
+@has = ((?((@has_nil @has_cons) (pl (k (i (c out))))) pl) (k (i (c out))))
+
+@has_nil = (* (k (i (c out))))
+  & k ~ *
+  & i ~ *
+  & c ~ *
+  & out ~ 0
+
+@has_cons = (* (((u v) t) (k (i (c out)))))
+  & c ~ {cu_list cmore}
+  & cmore ~ {cv_list cr}
+  & k ~ {km kr}
+  & i ~ {im ir}
+  & @get ~ (cu_list (u a))
+  & @get ~ (cv_list (v b))
+  & @match ~ (a (b (km (im found))))
+  & @edge_choose ~ (found (t (kr (ir (cr out)))))
+
+@edge_choose = (b (t (k (i (c out)))))
+  & b ~ ?((@edge_no @edge_yes) (t (k (i (c out)))))
+
+@edge_no = (t (k (i (c out))))
+  & @has ~ (t (k (i (c out))))
+
+@edge_yes = (* (t (k (i (c out)))))
+  & t ~ *
+  & k ~ *
+  & i ~ *
+  & c ~ *
+  & out ~ 1
+
+@match = (a (b (k (i out))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & k ~ {k1 k2}
+  & i ~ {i1 i2}
+  & a1 ~ $([=] $(k1 p))
+  & b1 ~ $([=] $(i1 q))
+  & a2 ~ $([=] $(i2 r))
+  & b2 ~ $([=] $(k2 s))
+  & p ~ $([*] $(q pq))
+  & r ~ $([*] $(s rs))
+  & pq ~ $([+] $(rs sum))
+  & sum ~ $([>] $(0 out))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_more = (prev (h (t out)))
+  & h ~ *
+  & @get ~ (t (prev out))

@@ -1,0 +1,39 @@
+// Each vertex is checked by scanning a copy of the edge list.
+// Flags record whether an incoming or outgoing edge was found.
+
+@prog = ((n edges) out)
+  & @v ~ (n (0 (edges (0 (0 out))))
+
+@v = (?((@v_done @v_step) (i (edges (src (sink out))))) (i (edges (src (sink out)))))
+
+@v_done = (* (* (src (sink out))))
+  & out ~ (src sink)
+
+@v_step = (rem (i (edges (src (sink out)))))
+  & edges ~ {es_scan es_next}
+  & @scan ~ (es_scan (i (0 (0 (rem (es_next (src (sink out)))))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (i (fi (fo (rem (edges (src (sink out))))))))) payload) (i (fi (fo (rem (edges (src (sink out))))))))
+
+@scan_nil = (* (i (fi (fo (rem (edges (src (sink out))))))))
+  & @after ~ (i (fi (fo (rem (edges (src (sink out)))))))
+
+@scan_cons = (* (((u v) tail) (i (fi (fo (rem (edges (src (sink out)))))))))
+  & @edge ~ (u (v (i (fi (fo (tail (rem (edges (src (sink out)))))))))
+
+@edge = (u (v (i (fi (fo (tail (rem (edges (src (sink out)))))))))
+  & i ~ {iu ir}
+  & ir ~ {iv inext}
+  & u ~ $([=] $(iu zo))
+  & v ~ $([=] $(iv zi))
+  & fo ~ $([|] $(zo fo2))
+  & fi ~ $([|] $(zi fi2))
+  & @scan ~ (tail (inext (fi2 (fo2 (rem (edges (src (sink out))))))))
+
+@after = (i (fi (fo (rem (edges (src (sink out)))))))
+  & i ~ $([+1] inext)
+  & fi ~ $([=] $(0 isrc))
+  & fo ~ $([=] $(0 isink))
+  & src ~ $([+] $(isrc src2))
+  & sink ~ $([+] $(isink sink2))
+  & @v ~ (rem (inext (edges (src2 (sink2 out)))))

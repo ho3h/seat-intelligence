@@ -1,0 +1,84 @@
+@prog = (input out)
+  & input ~ (c mnl)
+  & @pairs ~ (mnl (c ((0 *) out)))
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@pairs_nil = (* (c (acc out)))
+  & c ~ *
+  & acc ~ out
+
+@pairs_cons = (d (((a b) tail) (c (acc out))))
+  & d ~ *
+  & c ~ {cnext {ca cb}}
+  & a ~ {a_idx a_keep}
+  & b ~ {b_idx b_keep}
+  & @get ~ (ca (a_idx va))
+  & @get ~ (cb (b_idx vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@pairs_no @pairs_yes) (tail (cnext (acc (a_keep (b_keep out))))))
+
+@pairs_no = (tail (c (acc (a (b out)))))
+  & a ~ *
+  & b ~ *
+  & @pairs ~ (tail (c (acc out)))
+
+@pairs_yes = (tail (c (acc (a (b out)))))
+  & @ins ~ ((a b) (acc sorted))
+  & @pairs ~ (tail (c (sorted out)))
+
+@get = ((?((@get_nil @get_cons) (pl (ix out))) pl) (ix out))
+
+@get_nil = (* (ix out))
+  & ix ~ *
+  & out ~ 0
+
+@get_cons = (d ((h t) (ix out)))
+  & d ~ *
+  & @at ~ (ix (h (t out)))
+
+@at = (?( (@at_zero @at_succ) (h (t out))) (h (t out)))
+
+@at_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@at_succ = (dec (h (t out)))
+  & h ~ *
+  & @get ~ (t (dec out))
+
+@ins = ((?((@ins_nil @ins_cons) (pl (new out))) pl) (new out))
+
+@ins_nil = (* (new out))
+  & out ~ (1 (new (0 *)))
+
+@ins_cons = (d (((x y) tail) ((a b) out)))
+  & d ~ *
+  & a ~ {a_lt {a_eq a_keep}}
+  & x ~ {x_lt {x_eq x_keep}}
+  & a_lt ~ $([<] $(x_lt less))
+  & less ~ ?((@ins_not_less @ins_before) (a_eq (x_eq (a_keep (b (x_keep (y (tail out))))))))
+
+@ins_before = (a_eq (x_eq (a (b (x (y (tail out))))))
+  & out ~ (1 ((a b) (1 ((x y) tail))))
+
+@ins_not_less = (a_eq (x_eq (a (b (x (y (tail out))))))
+  & a_eq ~ $([=] $(x_eq equal))
+  & equal ~ ?((@ins_greater @ins_equal) (a (b (x (y (tail out))))))
+
+@ins_greater = (a (b (x (y (tail out)))))
+  & @ins ~ ((a b) (tail mid))
+  & mid ~ (1 ((x y) out))
+
+@ins_equal = (a (b (x (y (tail out)))))
+  & b ~ {b_cmp b_keep}
+  & y ~ {y_cmp y_keep}
+  & b_cmp ~ $([<] $(y_cmp less2))
+  & less2 ~ ?((@ins_after_second @ins_before_second) (a (b_keep (x (y_keep (tail out))))))
+
+@ins_before_second = (a (b (x (y (tail out)))))
+  & out ~ (1 ((a b) (1 ((x y) tail))))
+
+@ins_after_second = (a (b (x (y (tail out)))))
+  & @ins ~ ((a b) (tail mid))
+  & mid ~ (1 ((x y) out))

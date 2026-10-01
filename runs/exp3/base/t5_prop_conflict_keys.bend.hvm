@@ -1,0 +1,133 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@append = ((@append__C1 a) a)
+
+@append__C0 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @append ~ (b (c d))
+
+@append__C1 = (?(((a a) @append__C0) b) b)
+
+@emit_keys = (a (b ({$([=0x0000004] ?((@emit_keys__C2 (* (* (* (* @List/Nil))))) (a (b (c d))))) c} d)))
+
+@emit_keys__C0 = (a (b ($([+0x0000001] c) d)))
+  & @emit_keys ~ (a (b (c d)))
+
+@emit_keys__C1 = (* (c ({a d} ({b $([+0x0000001] e)} g))))
+  & @List/Cons ~ ((a b) (f g))
+  & @emit_keys ~ (c (d (e f)))
+
+@emit_keys__C2 = ({a c} (d ({b e} f)))
+  & @has_conflict ~ (a (b (0 (0 $([=0x0000001] ?((@emit_keys__C0 @emit_keys__C1) (c (d (e f)))))))))
+
+@emit_range = ((@emit_range__C3 a) a)
+
+@emit_range__C0 = ({g $([+] $(a {e k}))} ($([:/0x0000002] {l {h a}}) (b (c n))))
+  & @append ~ (i (m n))
+  & @partition ~ (d (e (@List/Nil (@List/Nil (f j)))))
+  & @List/Cons ~ (b (c d))
+  &!@emit_range ~ (f (g (h i)))
+  &!@emit_range ~ (j (k (l m)))
+
+@emit_range__C1 = (* (d (* (a (b e)))))
+  & @emit_keys ~ (c (d (0 e)))
+  & @List/Cons ~ (a (b c))
+
+@emit_range__C2 = (* (c (d (a ({$([=0x0000001] ?((@emit_range__C0 @emit_range__C1) (a (b (c (d e)))))) b} e)))))
+
+@emit_range__C3 = (?(((* (* @List/Nil)) @emit_range__C2) a) a)
+
+@has_conflict = ((@has_conflict__C7 a) a)
+
+@has_conflict__C0 = (b (c (d (a e))))
+  & @has_conflict ~ (a (b (c (d e))))
+
+@has_conflict__C1 = (* (* (* (* (* 1)))))
+
+@has_conflict__C2 = (b (c ({a d} (e ($([!] $(a ?((@has_conflict__C0 @has_conflict__C1) (b (c (d (e f))))))) f)))))
+
+@has_conflict__C3 = (* (b (* (* (a c)))))
+  & @has_conflict ~ (a (b (1 c)))
+
+@has_conflict__C4 = (b (c (d (a (* e)))))
+  & @has_conflict ~ (a (b (c (d e))))
+
+@has_conflict__C5 = (* (a ({$([=0x0000000] ?((@has_conflict__C2 @has_conflict__C3) (a (b c)))) b} c)))
+
+@has_conflict__C6 = (* ((* ($([=] $(a ?((@has_conflict__C4 @has_conflict__C5) (b (c (d (e (f g)))))))) f)) (e ({a b} (c (d g))))))
+
+@has_conflict__C7 = (?(((* (* (* 0))) @has_conflict__C6) a) a)
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @length ~ (a b)
+
+@length__C1 = (?((0 @length__C0) a) a)
+
+@make_tree = (a ({$([=0x0000001] ?((@make_tree__C2 @make_tree__C3) (a (b c)))) b} c))
+
+@make_tree__C0 = (* (a (b ((a 0) b))))
+
+@make_tree__C1 = (?((((0 0) @List/Nil) @make_tree__C0) a) a)
+
+@make_tree__C2 = (a ($([:/0x0000002] {b e}) ((c f) g)))
+  &!@make_tree ~ (d (e (f g)))
+  &!@make_tree ~ (a (b (c d)))
+
+@make_tree__C3 = (* ((@make_tree__C1 a) (* a)))
+
+@map_attrs = ((@map_attrs__C1 a) a)
+
+@map_attrs__C0 = (* ((b e) (g ({h a} ({i c} k)))))
+  & @List/Cons ~ ((d e) (j k))
+  & @tree_get ~ (a (b (c d)))
+  & @map_attrs ~ (g (h (i j)))
+
+@map_attrs__C1 = (?(((* (* @List/Nil)) @map_attrs__C0) a) a)
+
+@next_power = ({a d} ({$([<] $(a b)) e} f))
+  & $(b ?((@next_power__C0 (* (* (c c)))) (d (e f)))) ~ [=0x0000000]
+
+@next_power__C0 = (a ($([*0x0000002] b) c))
+  & @next_power ~ (a (b c))
+
+@partition = ((@partition__C4 a) a)
+
+@partition__C0 = (b (c (e (d (a g)))))
+  & @partition ~ (a (b (c (f g))))
+  & @List/Cons ~ (d (e f))
+
+@partition__C1 = (* (b (d (f (c (a g))))))
+  & @partition ~ (a (b (e (f g))))
+  & @List/Cons ~ (c (d e))
+
+@partition__C2 = (* (a (b (a b))))
+
+@partition__C3 = (* ({($([<] $(a ?((@partition__C0 @partition__C1) (b (c (d (e (f g)))))))) *) e} (f ({a b} (c (d g))))))
+
+@partition__C4 = (?((@partition__C2 @partition__C3) a) a)
+
+@prog = (({c a} e) j)
+  & @emit_range ~ (h (0 (i j)))
+  & @make_tree ~ (c (d (f *)))
+  & @next_power ~ (b (1 {d {i g}}))
+  & @length ~ (a b)
+  & @map_attrs ~ (e (f (g h)))
+
+@tree_get = (a (b ({$([=0x0000001] ?((@tree_get__C2 @tree_get__C3) (a (b (c d))))) c} d)))
+
+@tree_get__C0 = ($([-] $(b c)) (* (a ({b d} e))))
+  & @tree_get ~ (a (c (d e)))
+
+@tree_get__C1 = (* (b (a (* c))))
+  & @tree_get ~ (a (b c))
+
+@tree_get__C2 = ((c d) ({$([<] $(a ?((@tree_get__C0 @tree_get__C1) (b (c (d (e f))))))) b} ($([:/0x0000002] {a e}) f)))
+
+@tree_get__C3 = (* ((a *) (* (* a))))
+
+

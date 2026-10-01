@@ -1,0 +1,66 @@
+@prog = (input output)
+  & input ~ {cand all}
+  & @outer ~ (cand (all (0 (0 output))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (all (best (bc out))))) pl) (all (best (bc out))))
+
+@outer_nil = (* (all (best (bc out))))
+  & all ~ *
+  & bc ~ *
+  & best ~ out
+
+@outer_cons = (* ((h t) (all (best (bc out)))))
+  & all ~ {afreq anext}
+  & h ~ {htarget hchoose}
+  & @freq ~ (afreq (htarget fcount))
+  & @choose ~ (hchoose (fcount (t (anext (best (bc out)))))
+
+@freq = ((?((@freq_nil @freq_cons) (pl (target out))) pl) (target out))
+
+@freq_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@freq_cons = (* ((h t) (target out)))
+  & target ~ {tc tr}
+  & h ~ $([=] $(tc eq))
+  & @freq ~ (t (tr rest))
+  & eq ~ $([+] $(rest out))
+
+@choose = (h (fc (t (all (best (bc out))))))
+  & fc ~ {fc_cmp fc_keep}
+  & bc ~ {bc_cmp bc_keep}
+  & fc_cmp ~ $([>] $(bc_cmp gt))
+  & gt ~ ?((@choose_no @choose_yes) (h (fc_keep (t (all (best (bc_keep out))))))
+
+@choose_yes = (* (h (fc (t (all (best (bc out))))))
+  & best ~ *
+  & bc ~ *
+  & @outer ~ (t (all (h (fc out))))
+
+@choose_no = (h (fc (t (all (best (bc out))))))
+  & fc ~ {fc_cmp fc_keep}
+  & bc ~ {bc_cmp bc_keep}
+  & fc_cmp ~ $([=] $(bc_cmp eq))
+  & eq ~ ?((@choose_neq @choose_tie) (h (fc_keep (t (all (best (bc_keep out))))))
+
+@choose_neq = (h (fc (t (all (best (bc out))))))
+  & h ~ *
+  & fc ~ *
+  & @outer ~ (t (all (best (bc out))))
+
+@choose_tie = (h (fc (t (all (best (bc out))))))
+  & h ~ {hcmp hkeep}
+  & best ~ {bestcmp bestkeep}
+  & hcmp ~ $([<] $(bestcmp lt))
+  & lt ~ ?((@choose_old @choose_new) (hkeep (fc (t (all (bestkeep (bc out))))))
+
+@choose_old = (h (fc (t (all (best (bc out))))))
+  & h ~ *
+  & fc ~ *
+  & @outer ~ (t (all (best (bc out))))
+
+@choose_new = (* (h (fc (t (all (best (bc out))))))
+  & best ~ *
+  & bc ~ *
+  & @outer ~ (t (all (h (fc out))))

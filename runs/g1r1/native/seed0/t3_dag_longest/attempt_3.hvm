@@ -1,0 +1,111 @@
+@prog = ((n edges) out)
+  & n ~ {n1 n2}
+  & @makezeros ~ (n1 dist)
+  & @rounds ~ (n2 (edges (dist out)))
+
+@makezeros = (?((@mz0 @mzS) (out *)) out)
+
+@mz0 = (out *)
+  & out ~ (0 *)
+
+@mzS = (k (out *))
+  & @makezeros ~ (k rest)
+  & out ~ (1 (0 rest))
+
+@rounds = (?((@rd0 @rdS) (edges (dist out))) (edges (dist out)))
+
+@rd0 = (edges (dist out))
+  & edges ~ *
+  & @maxlist ~ (dist out)
+
+@rdS = (k (edges (dist out)))
+  & edges ~ {e1 e2}
+  & @pass ~ (e1 (dist d2))
+  & @rounds ~ (k (e2 (d2 out)))
+
+@pass = ((?((@p0 @p1) (payload (dist out))) payload) (dist out))
+
+@p0 = (payload (dist out))
+  & payload ~ *
+  & dist ~ out
+
+@p1 = (* ((edge tail) (dist out)))
+  & @update ~ (edge (dist d2))
+  & @pass ~ (tail (d2 out))
+
+@get = ((?((@g0 @gS) (payload (idx out))) payload) (idx out))
+
+@g0 = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@gS = (* ((head tail) (idx out)))
+  & idx ~ ?((@gi0 @giS) (head (tail out)))
+
+@gi0 = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@giS = (k (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (k out))
+
+@set = ((?((@s0 @sS) (payload (idx (val out)))) payload) (idx (val out)))
+
+@s0 = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@sS = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@si0 @siS) (head (tail (val out))))
+
+@si0 = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@siS = (k (head (tail (val out))))
+  & @set ~ (tail (k (val newtail)))
+  & out ~ (1 (head newtail))
+
+@update = (((u v) dist) out)
+  & dist ~ {dA dBC}
+  & dBC ~ {dB dC}
+  & v ~ {v_get v_set}
+  & @get ~ (dA (u du))
+  & @get ~ (dB (v_get dv))
+  & du ~ $([+1] cand)
+  & cand ~ {cand_test cand_ctx}
+  & cand_test ~ $([>] $(dv cmp))
+  & cmp ~ ?((@upd_no @upd_yes) (v_set (cand_ctx (dC out))))
+
+@upd_no = (* (v_set (cand_ctx (dC out))))
+  & v_set ~ *
+  & cand_ctx ~ *
+  & out ~ dC
+
+@upd_yes = (* (v_set (cand_ctx (dC out))))
+  & @set ~ (dC (v_set (cand_ctx out)))
+
+@maxlist = ((?((@ma0 @ma1) (payload out)) payload) out)
+
+@ma0 = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@ma1 = (* ((head tail) out))
+  & head ~ {h_test h_ctx}
+  & @maxlist ~ (tail m)
+  & m ~ {m_test m_ctx}
+  & h_test ~ $([>] $(m_test cmp))
+  & cmp ~ ?((@ma_no @ma_yes) (h_ctx (m_ctx out)))
+
+@ma_no = (* (h (m out)))
+  & h ~ *
+  & out ~ m
+
+@ma_yes = (* (h (m out)))
+  & m ~ *
+  & out ~ h

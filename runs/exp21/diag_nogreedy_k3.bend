@@ -1,0 +1,541 @@
+# End-to-end reconciliation in Bend (swing 27, G4 fairness): LP + must-not-link conflicts + ordered greedy.
+# Same input as genome/exp16/net_full.py: (n, L, tau, E, HE, M, HM) with the edge tree laid out in processing order
+# (descending score, ties ascending (u, v)).
+# Output (canon, conflicts, skipped):
+#   canon      entry i = largest member of i's cluster AFTER the must-not-link greedy (RECONCILIATION-SPEC step 4)
+#   conflicts  (a, b, c) for every live must-not-link pair inside one LP component c, in M order
+#   skipped    merges (u, v) the greedy skipped, grouped by LP component label ascending, processing order within
+#
+# Stage 1 is recon_cps.bend.tmpl (channels in weight-balanced ropes, lagged LP, continuation-passing flag streams), plus: every accepted edge also probes u's final label.
+# Stage 2 routes by LP label into a second sparse trie Q (leaf payload: members (i, reply sink), edges (u, v) in
+# processing order, conflicting pairs (a, b)). A label with no pair replies its label to its members; a label with
+# pairs runs the greedy (arithmetic, switch-free per edge: tree sums for cu / cv, OR over pairs for blocked, tree map for
+# the relabel) and replies each member's greedy label.
+
+type S:
+  Node { l, r }
+  Leaf { ix, ch, h, pr }   # h = number of channels
+  Emp
+
+# channel rope; CT carries the sizes of its two children (weight-balanced joins)
+type C:
+  CT { hl, hr, a, b }
+  CO { x }
+  CZ
+
+type R:
+  Two { a, b }
+  One { x }
+  Z
+
+type O:
+  ONode { l, r }
+  OLf { x }
+  OEmp
+
+type Q:
+  QNode { l, r }
+  QLeaf { c, mem, nm, eds, prs }   # mem: weight-balanced C rope of (i, reply sink), nm = its size
+  QEmp
+
+def mx(a, b):
+  if b > a:
+    return b
+  else:
+    return a
+
+# rope join that drops empty sides
+def jn(a, b):
+  match a:
+    case R/Z:
+      return b
+    case R/Two:
+      match b:
+        case R/Z:
+          return R/Two(a.a, a.b)
+        case _:
+          return R/Two(R/Two(a.a, a.b), b)
+    case R/One:
+      match b:
+        case R/Z:
+          return R/One(a.x)
+        case _:
+          return R/Two(R/One(a.x), b)
+
+def path(k, h, p):
+  switch h:
+    case 0:
+      return p
+    case _:
+      sub = path(k, h-1, p)
+      switch (k >> h-1) & 1:
+        case 0:
+          return S/Node(sub, S/Emp)
+        case _:
+          return S/Node(S/Emp, sub)
+
+def qpath(k, h, p):
+  switch h:
+    case 0:
+      return p
+    case _:
+      sub = qpath(k, h-1, p)
+      switch (k >> h-1) & 1:
+        case 0:
+          return Q/QNode(sub, Q/QEmp)
+        case _:
+          return Q/QNode(Q/QEmp, sub)
+
+def mgE(a, b):
+  match a:
+    case S/Emp:
+      return b
+    case S/Node:
+      match b:
+        case S/Node:
+          return S/Node(mgE(a.l, b.l), mgE(a.r, b.r))
+        case S/Emp:
+          return S/Node(a.l, a.r)
+        case S/Leaf:
+          return S/Emp
+    case S/Leaf:
+      match b:
+        case S/Leaf:
+          return S/Leaf(a.ix, cj(a.ch, a.h, b.ch, b.h), a.h + b.h, jn(a.pr, b.pr))
+        case S/Emp:
+          return S/Leaf(a.ix, a.ch, a.h, a.pr)
+        case S/Node:
+          return S/Emp
+
+def mgM(a, b):
+  match a:
+    case S/Emp:
+      return b
+    case S/Node:
+      match b:
+        case S/Node:
+          return S/Node(mgM(a.l, b.l), mgM(a.r, b.r))
+        case S/Emp:
+          return S/Node(a.l, a.r)
+        case S/Leaf:
+          return S/Emp
+    case S/Leaf:
+      match b:
+        case S/Leaf:
+          return S/Leaf(a.ix, C/CZ, 0, R/Two(a.pr, b.pr))
+        case S/Emp:
+          return S/Leaf(a.ix, a.ch, a.h, a.pr)
+        case S/Node:
+          return S/Emp
+
+def mgF(a, b):
+  match a:
+    case S/Emp:
+      return b
+    case S/Node:
+      match b:
+        case S/Node:
+          return S/Node(mgF(a.l, b.l), mgF(a.r, b.r))
+        case S/Emp:
+          return S/Node(a.l, a.r)
+        case S/Leaf:
+          return S/Emp
+    case S/Leaf:
+      match b:
+        case S/Leaf:
+          return S/Leaf(a.ix, a.ch, a.h, jn(a.pr, b.pr))
+        case S/Emp:
+          return S/Leaf(a.ix, a.ch, a.h, a.pr)
+        case S/Node:
+          return S/Emp
+
+def mgQ(a, b):
+  match a:
+    case Q/QEmp:
+      return b
+    case Q/QNode:
+      match b:
+        case Q/QNode:
+          return Q/QNode(mgQ(a.l, b.l), mgQ(a.r, b.r))
+        case Q/QEmp:
+          return Q/QNode(a.l, a.r)
+        case Q/QLeaf:
+          return Q/QEmp
+    case Q/QLeaf:
+      match b:
+        case Q/QLeaf:
+          return Q/QLeaf(a.c, cjz(a.mem, a.nm, b.mem, b.nm), a.nm + b.nm, jn(a.eds, b.eds), jn(a.prs, b.prs))
+        case Q/QEmp:
+          return Q/QLeaf(a.c, a.mem, a.nm, a.eds, a.prs)
+        case Q/QNode:
+          return Q/QEmp
+
+# ---------------------------------------------------------------- stage 1 inputs
+def qedge(e, u, v, L):
+  return qpath(e, L, Q/QLeaf(e, C/CZ, 0, R/One((u, v)), R/Z))
+
+def ew(E, h, L, tau):
+  switch h:
+    case 0:
+      (u, v, s) = E
+      if s < tau:
+        return (S/Emp, Q/QEmp)
+      else:
+        pu = path(u, L, S/Leaf(u, C/CO(($b, lambda $a: 0)), 1, R/One(lambda $e: 0)))
+        pv = path(v, L, S/Leaf(v, C/CO(($a, lambda $b: 0)), 1, R/Z))
+        return (mgE(pu, pv), qedge($e, u, v, L))
+    case _:
+      (el, er) = E
+      (tl, ql) = ew(el, h-1, L, tau)
+      (tr, qr) = ew(er, h-1, L, tau)
+      return (mgE(tl, tr), mgQ(ql, qr))
+
+def mconf(a, b, x, y, tail, L):
+  if x == y:
+    return (List/Cons((a, b, x), tail), qpath(x, L, Q/QLeaf(x, C/CZ, 0, R/Z, R/One((a, b)))))
+  else:
+    return (tail, Q/QEmp)
+
+def mw(M, h, L, tail):
+  switch h:
+    case 0:
+      (a, b, live) = M
+      switch live:
+        case 0:
+          return (S/Emp, tail, Q/QEmp)
+        case _:
+          ta = path(a, L, S/Leaf(a, C/CZ, 0, R/One(lambda $pa: 0)))
+          tb = path(b, L, S/Leaf(b, C/CZ, 0, R/One(lambda $pb: 0)))
+          (cl, q) = mconf(a, b, $pa, $pb, tail, L)
+          return (mgM(ta, tb), cl, q)
+    case _:
+      (ml, mr) = M
+      (tr, cr, qr) = mw(mr, h-1, L, tail)
+      (tl, cl, ql) = mw(ml, h-1, L, cr)
+      return (mgM(tl, tr), cl, mgQ(ql, qr))
+
+# ---------------------------------------------------------------- stage 1: vertex processes (as recon.bend.tmpl)
+def split(r):
+  match r:
+    case C/CT:
+      (ia, sa) = split(r.a)
+      (ib, sb) = split(r.b)
+      return (R/Two(ia, ib), R/Two(sa, sb))
+    case C/CO:
+      (i, s) = r.x
+      return (R/One(i), R/One(s))
+    case C/CZ:
+      return (R/Z, R/Z)
+
+# weight-balanced join of two nonempty channel ropes of sizes na, nb (order is irrelevant: max and duplication are
+# commutative). Sizes are plain sums, so the new top node is known after one match; the descent pipelines.
+def cjz(A, na, B, nb):
+  switch na:
+    case 0:
+      return B
+    case _:
+      switch nb:
+        case 0:
+          return A
+        case _:
+          return cj(A, na, B, nb)
+
+def cj(A, na, B, nb):
+  if nb > na:
+    return cj2(B, nb, A, na)
+  else:
+    return cj2(A, na, B, nb)
+
+def cj2(A, na, B, nb):
+  if na <= 2 * nb:
+    return C/CT(na, nb, A, B)
+  else:
+    return cjd(A, B, nb)
+
+def cjd(A, B, nb):
+  match A:
+    case C/CT:
+      if A.hl <= A.hr:
+        return C/CT(A.hl + nb, A.hr, cj(A.a, A.hl, B, nb), A.b)
+      else:
+        return C/CT(A.hl, A.hr + nb, A.a, cj(A.b, A.hr, B, nb))
+    case _:
+      return C/CZ
+
+
+def feed(r, v):
+  match r:
+    case R/Two:
+      return feed(r.a, v) + feed(r.b, v)
+    case R/One:
+      f = r.x
+      return f(v)
+    case R/Z:
+      return 0
+
+def pull(r):
+  match r:
+    case R/Two:
+      (ma, ra) = pull(r.a)
+      (mb, rb) = pull(r.b)
+      return (mx(ma, mb), R/Two(ra, rb))
+    case R/One:
+      s = r.x
+      match s:
+        case List/Cons:
+          return (s.head, R/One(s.tail))
+        case List/Nil:
+          return (0, R/Z)
+    case R/Z:
+      return (0, R/Z)
+
+# Flag and decision streams in continuation-passing form: a cell is `lambda k: k(v, next)`, the stream ends in `*`.
+# A consumer applies the cell to a top-level function (never calls itself directly), so each step runs only when the
+# cell exists; that costs two annihilations and one expansion, where a list `match` costs a tag switch and more.
+def cell(v, nx):
+  return lambda k, e: k(v, nx, e)
+
+def go(lab, ins, D):
+  return D(go_k, (lab, ins))
+
+def go_k(d, Dt, st):
+  (lab, ins) = st
+  switch d:
+    case 0:
+      return ([], *, lab)
+    case _:
+      (m, ins2) = pull(ins)
+      new = mx(lab, m)
+      (o, f, fin) = go(new, ins2, Dt)
+      return (List/Cons(lab, o), cell(new != lab, f), fin)
+
+def qvert(c, ix, s, L):
+  return qpath(c, L, Q/QLeaf(c, C/CO((ix, s)), 1, R/Z, R/Z))
+
+def vtx(ix, ch, pr, D, L):
+  match ch:
+    case C/CZ:
+      z = feed(pr, ix)
+      return (*, 0, O/OLf($r0), qvert(ix, ix, lambda $r0: 0, L))
+    case _:
+      return vrun(ix, ch, pr, D, L)
+
+def vrun(ix, ch, pr, D, L):
+  (ins, sinks) = split(ch)
+  (out, fl, fin) = go(ix, ins, D)
+  z1 = feed(sinks, out)
+  z2 = feed(pr, fin)
+  return (fl, 1, O/OLf($r), qvert(fin, ix, lambda $r: 0, L))
+
+# elementwise OR of two flag streams
+def orl(a, b):
+  return a(orl_k, b)
+
+def orl_k(fa, ra, b):
+  return b(orl_k2, (fa, ra))
+
+def orl_k2(fb, rb, e):
+  (fa, ra) = e
+  return cell(fa | fb, orl(ra, rb))
+
+def fcomb(fl, hl, fr, hr):
+  switch hl:
+    case 0:
+      return fr
+    case _:
+      switch hr:
+        case 0:
+          return fl
+        case _:
+          return orl(fl, fr)
+
+def run(t, D, L):
+  match t:
+    case S/Emp:
+      return (*, 0, O/OEmp, Q/QEmp)
+    case S/Node:
+      (fl, hl, ol, ql) = run(t.l, D, L)
+      (fr, hr, orr, qr) = run(t.r, D, L)
+      return (fcomb(fl, hl, fr, hr), hl | hr, O/ONode(ol, orr), mgQ(ql, qr))
+    case S/Leaf:
+      return vtx(t.ix, t.ch, t.pr, D, L)
+
+# ---------------------------------------------------------------- stage 2: per LP label
+def reply(r, c):
+  match r:
+    case C/CT:
+      return reply(r.a, c) + reply(r.b, c)
+    case C/CO:
+      (x, s) = r.x
+      return s(c)
+    case C/CZ:
+      return 0
+
+def mkc(r):
+  match r:
+    case C/CT:
+      (ca, sa) = mkc(r.a)
+      (cb, sb) = mkc(r.b)
+      return (R/Two(ca, cb), R/Two(sa, sb))
+    case C/CO:
+      (x, s) = r.x
+      return (R/One((x, x)), R/One(s))
+    case C/CZ:
+      return (R/Z, R/Z)
+
+def lk(r, u, v):
+  match r:
+    case R/Two:
+      (a1, b1) = lk(r.a, u, v)
+      (a2, b2) = lk(r.b, u, v)
+      return (a1 + a2, b1 + b2)
+    case R/One:
+      (x, l) = r.x
+      return ((x == u) * l, (x == v) * l)
+    case R/Z:
+      return (0, 0)
+
+def blk(r, cu, cv):
+  match r:
+    case R/Two:
+      return blk(r.a, cu, cv) | blk(r.b, cu, cv)
+    case R/One:
+      (pa, pb) = r.x
+      return ((pa == cu) & (pb == cv)) | ((pa == cv) & (pb == cu))
+    case R/Z:
+      return 0
+
+def rlv(l, cu, cv, nc, g):
+  return l + g * ((l == cu) | (l == cv)) * (nc - l)
+
+def rl(r, cu, cv, nc, g):
+  match r:
+    case R/Two:
+      return R/Two(rl(r.a, cu, cv, nc, g), rl(r.b, cu, cv, nc, g))
+    case R/One:
+      (x, l) = r.x
+      return R/One((x, rlv(l, cu, cv, nc, g)))
+    case R/Z:
+      return R/Z
+
+def rlp(r, cu, cv, nc, g):
+  match r:
+    case R/Two:
+      return R/Two(rlp(r.a, cu, cv, nc, g), rlp(r.b, cu, cv, nc, g))
+    case R/One:
+      (pa, pb) = r.x
+      return R/One((rlv(pa, cu, cv, nc, g), rlv(pb, cu, cv, nc, g)))
+    case R/Z:
+      return R/Z
+
+def skit(sk, u, v):
+  switch sk:
+    case 0:
+      return R/Z
+    case _:
+      return R/One((u, v))
+
+def gstep(u, v, cells, prs):
+  (cu, cv) = lk(cells, u, v)
+  bl = blk(prs, cu, cv)
+  ne = cu != cv
+  g = ne & (1 - bl)
+  nc = mx(cu, cv)
+  return (rl(cells, cu, cv, nc, g), rlp(prs, cu, cv, nc, g), skit(ne & bl, u, v))
+
+def gfold(e, cells, prs):
+  match e:
+    case R/Z:
+      return (cells, prs, R/Z)
+    case R/Two:
+      (c1, p1, s1) = gfold(e.a, cells, prs)
+      (c2, p2, s2) = gfold(e.b, c1, p1)
+      return (c2, p2, R/Two(s1, s2))
+    case R/One:
+      (u, v) = e.x
+      return gstep(u, v, cells, prs)
+
+def zipfeed(c, s):
+  match c:
+    case R/Two:
+      match s:
+        case R/Two:
+          return zipfeed(c.a, s.a) + zipfeed(c.b, s.b)
+        case _:
+          return 0
+    case R/One:
+      match s:
+        case R/One:
+          (x, l) = c.x
+          f = s.x
+          return f(l)
+        case _:
+          return 0
+    case R/Z:
+      return 0
+
+def flat(r, tail):
+  match r:
+    case R/Two:
+      return flat(r.a, flat(r.b, tail))
+    case R/One:
+      return List/Cons(r.x, tail)
+    case R/Z:
+      return tail
+
+def greedy(mem, eds, prs, tail):
+  (cells, sinks) = mkc(mem)
+  (cf, pf, skr) = gfold(eds, cells, prs)
+  z = zipfeed(cf, sinks)
+  return flat(skr, tail)
+
+def lf(c, mem, eds, prs, tail):
+  match prs:
+    case R/Z:
+      z = reply(mem, c)
+      return tail
+    case _:
+      z = reply(mem, c)
+      return tail
+
+def st(q, tail):
+  match q:
+    case Q/QEmp:
+      return tail
+    case Q/QNode:
+      return st(q.l, st(q.r, tail))
+    case Q/QLeaf:
+      return lf(q.c, q.mem, q.eds, q.prs, tail)
+
+# ---------------------------------------------------------------- output
+def ids(base, h, n, tail):
+  if base < n:
+    switch h:
+      case 0:
+        return List/Cons(base, tail)
+      case _:
+        return ids(base, h-1, n, ids(base + (1 << h-1), h-1, n, tail))
+  else:
+    return tail
+
+def tl(t, h, base, n, tail):
+  match t:
+    case O/OEmp:
+      return ids(base, h, n, tail)
+    case O/OLf:
+      return List/Cons(t.x, tail)
+    case O/ONode:
+      h1 = h - 1
+      return tl(t.l, h1, base, n, tl(t.r, h1, base + (1 << h1), n, tail))
+
+def prog(x):
+  (n, L, tau, E, HE, M, HM) = x
+  (te, qe) = ew(E, HE, L, tau)
+  (tm, cf, qm) = mw(M, HM, L, [])
+  (F, hf, fins, qv) = run(mgF(te, tm), $d, L)
+  z = (lambda $d: 0)(cell(1, cell(1, cell(1, F))))
+  sk = st(mgQ(mgQ(qe, qm), qv), [])
+  return (tl(fins, L, z, n, []), cf, sk)
+
+def main():
+  return prog(0)

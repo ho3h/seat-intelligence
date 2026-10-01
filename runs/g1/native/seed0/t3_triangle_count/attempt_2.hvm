@@ -1,0 +1,185 @@
+// Traverse each edge against later edges; carry the full list through the traversal.
+@prog = ((n edges) out)
+  & n ~ *
+  & {walk full} ~ edges
+  & @outer ~ (walk (full (out fullout)))
+  & fullout ~ *
+
+@outer = ((?((@outer_nil @outer_cons) (pl (full (count fullout)))) pl) (full (count fullout)))
+
+@outer_nil = (* (full (count fullout)))
+  & full ~ fullout
+  & count ~ 0
+
+@outer_cons = (* ((e tail) (full (count fullout))))
+  & {tail_pairs tail_outer} ~ tail
+  & @pairs ~ (tail_pairs (e (full (pcount fullmid))))
+  & @outer ~ (tail_outer (fullmid (ocount fullout)))
+  & pcount ~ $([+] $(ocount count))
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (edge (full (count fullout)))) pl) (edge (full (count fullout))))
+
+@pairs_nil = (* (edge (full (count fullout))))
+  & edge ~ *
+  & count ~ 0
+  & full ~ fullout
+
+@pairs_cons = (* ((f rest) (edge (full (count fullout)))))
+  & @pair_one ~ ((edge f) (full (pcount fullmid)))
+  & @pairs ~ (rest (edge (fullmid (rcount fullout))))
+  & pcount ~ $([+] $(rcount count))
+
+// The decision stages select the shared endpoint, then test that candidate triangle.
+@pair_one = ((e1 e2) (full (count fullout)))
+  & e1 ~ (u v)
+  & e2 ~ (x y)
+
+  & {uAx {uBy {uA {uB {uC uD}}}}} ~ u
+  & {vCx {vDy {vA {vB {vC vD}}}}} ~ v
+  & {xAu {xCv {xB xD}}} ~ x
+  & {yBu {yDv {yA yC}}} ~ y
+
+  & @eq ~ ((uAx xAu) mA)
+  & @eq ~ ((uBy yBu) mB)
+  & @eq ~ ((vCx xCv) mC)
+  & @eq ~ ((vDy yDv) mD)
+
+  & @pair_decA ~ (mA ctx)
+  & ctx ~ (mB (mC (mD
+      ((uA (vA yA))
+       ((uB (vB xB))
+        ((vC (uC yC))
+         ((vD (uD xD)) (full (count fullout))))))))
+
+@pair_decA = (mA ctx)
+  & mA ~ ?((@pair_noA @pair_yesA) ctx)
+
+@pair_noA = ctx
+  & ctx ~ (mB (mC (mD
+      (A (B (C (D (full (count fullout))))))))
+  & @pair_decB ~ (mB (mC (mD
+      (A (B (C (D (full (count fullout))))))))
+
+@pair_yesA = ctx
+  & ctx ~ (mB (mC (mD
+      (A (B (C (D (full (count fullout))))))))
+  & mB ~ *
+  & mC ~ *
+  & mD ~ *
+  & B ~ *
+  & C ~ *
+  & D ~ *
+  & @cand ~ (A (full (count fullout)))
+
+@pair_decB = (mB ctx)
+  & mB ~ ?((@pair_noB @pair_yesB) ctx)
+
+@pair_noB = ctx
+  & ctx ~ (mC (mD (A (B (C (D (full (count fullout)))))))
+  & @pair_decC ~ (mC (mD (A (B (C (D (full (count fullout)))))))
+
+@pair_yesB = ctx
+  & ctx ~ (mC (mD (A (B (C (D (full (count fullout)))))))
+  & mC ~ *
+  & mD ~ *
+  & A ~ *
+  & C ~ *
+  & D ~ *
+  & @cand ~ (B (full (count fullout)))
+
+@pair_decC = (mC ctx)
+  & mC ~ ?((@pair_noC @pair_yesC) ctx)
+
+@pair_noC = ctx
+  & ctx ~ (mD (A (B (C (D (full (count fullout)))))))
+  & @pair_decD ~ (mD (A (B (C (D (full (count fullout)))))))
+
+@pair_yesC = ctx
+  & ctx ~ (mD (A (B (C (D (full (count fullout)))))))
+  & mD ~ *
+  & A ~ *
+  & B ~ *
+  & D ~ *
+  & @cand ~ (C (full (count fullout)))
+
+@pair_decD = (mD ctx)
+  & mD ~ ?((@pair_noD @pair_yesD) ctx)
+
+@pair_noD = ctx
+  & ctx ~ (A (B (C (D (full (count fullout))))))
+  & A ~ *
+  & B ~ *
+  & C ~ *
+  & D ~ *
+  & count ~ 0
+  & full ~ fullout
+
+@pair_yesD = ctx
+  & ctx ~ (A (B (C (D (full (count fullout))))))
+  & A ~ *
+  & B ~ *
+  & C ~ *
+  & @cand ~ (D (full (count fullout)))
+
+// A candidate contributes only if its center is smaller than both endpoints
+// and the endpoints differ. The full edge list is copied only for the lookup.
+@cand = (c (a (b (full (count fullout))))
+  & {c1 c2} ~ c
+  & {a1 {a2 a3}} ~ a
+  & {b1 {b2 b3}} ~ b
+  & @lt ~ ((c1 a1) l1)
+  & @lt ~ ((c2 b1) l2)
+  & @ne ~ ((a2 b2) neq)
+  & l1 ~ $([*] $(l2 p))
+  & p ~ $([*] $(neq q))
+  & q ~ ?((@cand_no @cand_yes) (a3 (b3 (full (count fullout))))
+
+@cand_no = (* (a (b (full (count fullout)))))
+  & a ~ *
+  & b ~ *
+  & full ~ fullout
+  & count ~ 0
+
+@cand_yes = (* (a (b (full (count fullout)))))
+  & {search keep} ~ full
+  & @has ~ (search (a (b h)))
+  & h ~ count
+  & keep ~ fullout
+
+// Search for an undirected edge, stopping as soon as one is found.
+@has = ((?((@has_nil @has_cons) (pl (a (b out)))) pl) (a (b out)))
+
+@has_nil = (* (* (* 0)))
+
+@has_cons = (* ((edge tail) (a (b out))))
+  & edge ~ (x y)
+  & {a1 {a2 ar}} ~ a
+  & {b1 {b2 br}} ~ b
+  & {x1 x2} ~ x
+  & {y1 y2} ~ y
+  & @eq ~ ((x1 a1) e1)
+  & @eq ~ ((y1 b1) e2)
+  & @eq ~ ((x2 b2) e3)
+  & @eq ~ ((y2 a2) e4)
+  & e1 ~ $([*] $(e2 h1))
+  & e3 ~ $([*] $(e4 h2))
+  & h1 ~ $([|] $(h2 hit))
+  & hit ~ ?((@has_more @has_yes) (tail (ar (br out))))
+
+@has_more = (* (tail (a (b out))))
+  & @has ~ (tail (a (b out)))
+
+@has_yes = (* (tail (a (b out))))
+  & tail ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@eq = ((a b) out)
+  & a ~ $([=] $(b out))
+
+@ne = ((a b) out)
+  & a ~ $([!] $(b out))
+
+@lt = ((a b) out)
+  & a ~ $([<] $(b out))

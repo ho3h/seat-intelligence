@@ -1,0 +1,43 @@
+@prog = (input out)
+  & input ~ (p xs)
+  & @part ~ (p (xs out))
+
+@part = (p (xs out))
+  & xs ~ lv1
+  & @part_cons_lw ~ (lv1 (p out))
+
+@part_nil = (body (p out))
+  & body ~ *
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* (({$([<] $(p_cmp ?((@part_ge @part_lt) (h_keep (lo (hi out)))))) h_keep} t) ({p_rec p_cmp} out)))
+  & @part_cons_lw ~ (t (p_rec (lo hi)))
+
+@part_ge = (h (lo (hi out)))
+  & out ~ (lo (1 (h hi)))
+
+@part_lt = (ignored (h (lo (hi out))))
+  & ignored ~ *
+  & out ~ ((1 (h lo)) hi)
+
+@part_cons_lw = (ls91 (q11 q12))
+  & ls91 ~ (g74 (e58 (g75 (e59 (g76 (e60 (g77 (e61 (g78 (e62 (g79 (e63 (g80 (e64 (g81 (e65 (g82 (e66 (g83 (e67 (g84 (e68 (g85 (e69 (g86 (e70 (g87 (e71 (g88 (e72 (g89 (e73 tk90))))))))))))))))))))))))))))))))
+  & g74 ~ ?((@part_nil @part_cons_la) ((e58 (q14 q15)) (q11 q12)))
+  & g75 ~ ?((@part_nil @part_cons_la) ((e59 (q17 q18)) (q14 q15)))
+  & g76 ~ ?((@part_nil @part_cons_la) ((e60 (q20 q21)) (q17 q18)))
+  & g77 ~ ?((@part_nil @part_cons_la) ((e61 (q23 q24)) (q20 q21)))
+  & g78 ~ ?((@part_nil @part_cons_la) ((e62 (q26 q27)) (q23 q24)))
+  & g79 ~ ?((@part_nil @part_cons_la) ((e63 (q29 q30)) (q26 q27)))
+  & g80 ~ ?((@part_nil @part_cons_la) ((e64 (q32 q33)) (q29 q30)))
+  & g81 ~ ?((@part_nil @part_cons_la) ((e65 (q35 q36)) (q32 q33)))
+  & g82 ~ ?((@part_nil @part_cons_la) ((e66 (q38 q39)) (q35 q36)))
+  & g83 ~ ?((@part_nil @part_cons_la) ((e67 (q41 q42)) (q38 q39)))
+  & g84 ~ ?((@part_nil @part_cons_la) ((e68 (q44 q45)) (q41 q42)))
+  & g85 ~ ?((@part_nil @part_cons_la) ((e69 (q47 q48)) (q44 q45)))
+  & g86 ~ ?((@part_nil @part_cons_la) ((e70 (q50 q51)) (q47 q48)))
+  & g87 ~ ?((@part_nil @part_cons_la) ((e71 (q53 q54)) (q50 q51)))
+  & g88 ~ ?((@part_nil @part_cons_la) ((e72 (q56 q57)) (q53 q54)))
+  & g89 ~ ?((@part_nil @part_cons) ((e73 tk90) (q56 q57)))
+
+@part_cons_la = (* (({$([<] $(p_cmp ?((@part_ge @part_lt) (h_keep (lo (hi out)))))) h_keep} (p_rec (lo hi))) ({p_rec p_cmp} out)))

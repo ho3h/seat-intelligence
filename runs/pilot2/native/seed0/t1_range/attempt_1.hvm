@@ -1,0 +1,12 @@
+// Generate [0, 1, ..., n-1] by prepending each predecessor.
+@prog = (n out)
+  & @go ~ (n ((0 *) out))
+
+@go = (n (acc out))
+  & n ~ ?((@go_zero @go_succ) (acc out))
+
+@go_zero = (a a)
+
+@go_succ = (k (acc out))
+  & k ~ {k1 k2}
+  & @go ~ (k1 ((1 (k2 acc)) out))

@@ -1,0 +1,33 @@
+@prog = (input output)
+  & input ~ (a (b edges))
+  & @len ~ (edges edge_count)
+  & @min ~ (a (b smaller))
+  & @min ~ (smaller (edge_count output))
+
+@len = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@len_cons = (dummy (payload out))
+  & dummy ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @len ~ (tail rest)
+  & rest ~ $([+1] out)
+
+@min = (a (b out))
+  & a ~ {acmp actx}
+  & b ~ {bcmp bctx}
+  & acmp ~ $([<] $(bcmp z))
+  & z ~ ?((@min_no @min_yes) (actx (bctx out)))
+
+@min_no = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_yes = (dummy (a (b out)))
+  & dummy ~ *
+  & b ~ *
+  & out ~ a

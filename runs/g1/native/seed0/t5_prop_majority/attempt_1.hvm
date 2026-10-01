@@ -1,0 +1,125 @@
+// Program: (k, key, clustering, attributes) -> merged value
+@prog = ((k (key (cl attrs))) out)
+  & @mk ~ (cl (k mem))
+  & @scanattrs ~ (attrs (key (mem ((0 *) out))))
+
+// Convert clustering IDs to membership flags for the requested cluster.
+@mk = ((?((@mk_nil @mk_cons) (pl (k out))) pl) (k out))
+
+@mk_nil = (* (k out))
+  & k ~ *
+  & out ~ (0 *)
+
+@mk_cons = (* ((h t) (k out)))
+  & k ~ {k_cmp k_next}
+  & h ~ $([=] $(k_cmp eq))
+  & @mk ~ (t (k_next rest))
+  & out ~ (1 (eq rest))
+
+// Process attributes, accumulating a histogram of matching values.
+@scanattrs = ((?((@a_nil @a_cons) (pl (key (mem (hist out))))) pl) (key (mem (hist out))))
+
+@a_nil = (* (key (mem (hist out))))
+  & key ~ *
+  & mem ~ *
+  & @best ~ (hist out)
+
+@a_cons = (* ((node (ak val)) (tail (key (mem (hist out))))))
+  & key ~ {key_attr key_next}
+  & mem ~ {mem_at mem_next}
+  & @at ~ (mem_at (node member))
+  & key_attr ~ $([=] $(ak eqkey))
+  & eqkey ~ $([*] $(member include))
+  & @maybe ~ (include (val (hist hist2)))
+  & @scanattrs ~ (tail (key_next (mem_next (hist2 out))))
+
+// Look up a node's membership flag by index.
+@at = ((?((@at_nil @at_cons) (pl (idx out))) pl) (idx out))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@at_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@at_zero @at_succ) (head (tail out)))
+
+@at_zero = (head (tail out))
+  & tail ~ *
+  & @id ~ (head out)
+
+@at_succ = (idx2 (head (tail out)))
+  & head ~ *
+  & @at ~ (tail (idx2 out))
+
+// Add a value to the histogram only when include is 1.
+@maybe = (?((@maybe_no @maybe_yes) (val (hist out))) (val (hist out)))
+
+@maybe_no = (val (hist out))
+  & val ~ *
+  & @id ~ (hist out)
+
+@maybe_yes = (* (val (hist out)))
+  & @update ~ (hist (val out))
+
+// Histogram update: increment an existing value's count, or insert it.
+@update = ((?((@u_nil @u_cons) (pl (v out))) pl) (v out))
+
+@u_nil = (* (v out))
+  & out ~ (1 ((v 1) (0 *)))
+
+@u_cons = (* ((x cnt) (tail (v out))))
+  & x ~ {x_cmp x_ctx}
+  & v ~ {v_cmp v_ctx}
+  & x_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@u_diff @u_same) (x_ctx (cnt (tail (v_ctx out))))
+
+@u_diff = (x (cnt (tail (v out))))
+  & @update ~ (tail (v tail2))
+  & out ~ (1 ((x cnt) tail2))
+
+@u_same = (* (x (cnt (tail (v out)))))
+  & cnt ~ $([+1] cnt2)
+  & v ~ *
+  & out ~ (1 ((x cnt2) tail))
+
+// Select the best histogram entry; the empty histogram yields the sentinel.
+@best = ((?((@best_nil @best_cons) (pl out)) pl) out)
+
+@best_nil = (* out)
+  & out ~ 16777215
+
+@best_cons = (* ((val cnt) (tail out)))
+  & @choose ~ (tail (val (cnt out)))
+
+// Scan the remaining entries, preferring larger counts, then smaller values.
+@choose = ((?((@ch_nil @ch_cons) (pl (best (bc out)))) pl) (best (bc out)))
+
+@ch_nil = (* (best (bc out)))
+  & bc ~ *
+  & @id ~ (best out)
+
+@ch_cons = (* ((val cnt) (tail (best (bc out)))))
+  & val ~ {val_cmp val_ctx}
+  & cnt ~ {cnt_gt cnt_rest}
+  & cnt_rest ~ {cnt_eq cnt_ctx}
+  & bc ~ {bc_gt bc_rest}
+  & bc_rest ~ {bc_eq bc_ctx}
+  & best ~ {best_cmp best_ctx}
+  & cnt_gt ~ $([>] $(bc_gt gt))
+  & cnt_eq ~ $([=] $(bc_eq eq))
+  & val_cmp ~ $([<] $(best_cmp lt))
+  & eq ~ $([&] $(lt tie))
+  & gt ~ $([|] $(tie better))
+  & better ~ ?((@ch_no @ch_yes) (val_ctx (cnt_ctx (tail (best_ctx (bc_ctx out)))))
+
+@ch_no = (val (cnt (tail (best (bc out)))))
+  & val ~ *
+  & cnt ~ *
+  & @choose ~ (tail (best (bc out)))
+
+@ch_yes = (* (val (cnt (tail (best (bc out))))))
+  & best ~ *
+  & bc ~ *
+  & @choose ~ (tail (val (cnt out)))
+
+@id = (x x)

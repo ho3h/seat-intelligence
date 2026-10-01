@@ -1,0 +1,67 @@
+@prog = (xs out)
+  & {lcount lbuild} ~ xs
+  & @len ~ (lcount (0 n))
+  & @build ~ (n (lbuild result))
+  & result ~ (out *)
+
+@len = (lv1 (acc out))
+  & @len_cons_lw ~ (lv1 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) (acc out)))
+  & @len2_cons_lw ~ (t (acc out))
+
+@len2 = (lv2 (acc out))
+  & @len2_cons_lw ~ (lv2 (acc out))
+
+@len2_nil = (* (acc out))
+  & acc ~ $([+1] out)
+
+@len2_cons = (* ((* t) ($([+2] acc2) out)))
+  & @len_cons_lw ~ (t (acc2 out))
+
+@build = (?((@build_zero @build_pos) (l out)) (l out))
+
+@build_zero = (l out)
+  & out ~ ((0 *) l)
+
+@build_pos = (k (l out))
+  & {ka kb} ~ k
+  & ka ~ $([/] $(2 mm))
+  & {mleft msub} ~ mm
+  & kb ~ $([-] $(msub rcount))
+  & @build ~ (mleft (l left_result))
+  & left_result ~ (lefttree remaining)
+  & remaining ~ (tag payload)
+  & tag ~ *
+  & payload ~ (val tail)
+  & @build ~ (rcount (tail right_result))
+  & right_result ~ (righttree finalrest)
+  & out ~ ((1 (lefttree (val righttree))) finalrest)
+
+@len_cons_lw = (ls58 (q18 q19))
+  & ls58 ~ (g49 (e41 (g50 (e42 (g51 (e43 (g52 (e44 (g53 (e45 (g54 (e46 (g55 (e47 (g56 (e48 tk57))))))))))))))))
+  & g49 ~ ?((@len_nil @len_cons_la) ((e41 (q21 q22)) (q18 q19)))
+  & g50 ~ ?((@len2_nil @len2_cons_la) ((e42 (q24 q25)) (q21 q22)))
+  & g51 ~ ?((@len_nil @len_cons_la) ((e43 (q27 q28)) (q24 q25)))
+  & g52 ~ ?((@len2_nil @len2_cons_la) ((e44 (q30 q31)) (q27 q28)))
+  & g53 ~ ?((@len_nil @len_cons_la) ((e45 (q33 q34)) (q30 q31)))
+  & g54 ~ ?((@len2_nil @len2_cons_la) ((e46 (q36 q37)) (q33 q34)))
+  & g55 ~ ?((@len_nil @len_cons_la) ((e47 (q39 q40)) (q36 q37)))
+  & g56 ~ ?((@len2_nil @len2_cons) ((e48 tk57) (q39 q40)))
+
+@len2_cons_lw = (ls100 (q60 q61))
+  & ls100 ~ (g91 (e83 (g92 (e84 (g93 (e85 (g94 (e86 (g95 (e87 (g96 (e88 (g97 (e89 (g98 (e90 tk99))))))))))))))))
+  & g91 ~ ?((@len2_nil @len2_cons_la) ((e83 (q63 q64)) (q60 q61)))
+  & g92 ~ ?((@len_nil @len_cons_la) ((e84 (q66 q67)) (q63 q64)))
+  & g93 ~ ?((@len2_nil @len2_cons_la) ((e85 (q69 q70)) (q66 q67)))
+  & g94 ~ ?((@len_nil @len_cons_la) ((e86 (q72 q73)) (q69 q70)))
+  & g95 ~ ?((@len2_nil @len2_cons_la) ((e87 (q75 q76)) (q72 q73)))
+  & g96 ~ ?((@len_nil @len_cons_la) ((e88 (q78 q79)) (q75 q76)))
+  & g97 ~ ?((@len2_nil @len2_cons_la) ((e89 (q81 q82)) (q78 q79)))
+  & g98 ~ ?((@len_nil @len_cons) ((e90 tk99) (q81 q82)))
+
+@len_cons_la = (* ((* (acc out)) (acc out)))
+
+@len2_cons_la = (* ((* (acc2 out)) ($([+2] acc2) out)))

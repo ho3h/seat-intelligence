@@ -1,0 +1,55 @@
+@prog = (inp out)
+  & inp ~ (n (s (t edges)))
+  & @validate ~ (n (s (t (edges out))))
+
+@validate = (n (s (t (edges out))))
+  & s ~ {sc sk}
+  & t ~ {tc tk}
+  & sc ~ $([=] $(tc z))
+  & z ~ ?((@bounds @zero) (n (sk (tk (edges out)))))
+
+@bounds = (n (s (t (edges out))))
+  & n ~ {nc nr}
+  & s ~ {sc sk}
+  & sc ~ $([<] $(nc z))
+  & z ~ ?((@zero @check_t) (nr (sk (t (edges out)))))
+
+@check_t = (n (s (t (edges out))))
+  & n ~ {nc nk}
+  & t ~ {tc tk}
+  & tc ~ $([<] $(nc z))
+  & z ~ ?((@zero @start) (nk (s (tk (edges out)))))
+
+@start = (n (s (t (edges out))))
+  & n ~ *
+  & t ~ *
+  & @sum_edges ~ (edges (s (0 out)))
+
+@zero = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@sum_edges = ((?((@sum_nil @sum_cons) (pl (s (acc out)))) pl) (s (acc out)))
+
+@sum_nil = (* (s (acc out)))
+  & s ~ *
+  & out ~ acc
+
+@sum_cons = (* (((u (v w)) tail) (s (acc out))))
+  & s ~ {su sr}
+  & sr ~ {sv srec}
+  & u ~ $([=] $(su eq))
+  & v ~ $([!] $(sv neq))
+  & eq ~ $([&] $(neq cond))
+  & cond ~ ?((@skip_edge @take_edge) (w (tail (srec (acc out)))))
+
+@skip_edge = (w (tail (s (acc out))))
+  & w ~ *
+  & @sum_edges ~ (tail (s (acc out)))
+
+@take_edge = (* (w (tail (s (acc out)))))
+  & acc ~ $([+] $(w acc2))
+  & @sum_edges ~ (tail (s (acc2 out)))

@@ -1,0 +1,29 @@
+// State: (best_value (best_index (current_index output)))
+@prog = (l out)
+  & @am ~ (l (0 (0 (0 out))))
+
+@am = ((?((@am_nil @am_cons) (pl (best (bi (i out))))) pl) (best (bi (i out))))
+
+@am_nil = (pl (best (bi (i out))))
+  & pl ~ *
+  & best ~ *
+  & i ~ *
+  & bi ~ out
+
+@am_cons = (* ((h t) (best (bi (i out)))))
+  & h ~ {hc hv}
+  & best ~ {bc bv}
+  & i ~ {ix i2}
+  & i2 ~ $([+1] ni)
+  & hc ~ $([>] $(bc cmp))
+  & cmp ~ ?((@am_keep @am_take) (t (bv (bi (hv (ix (ni out)))))))
+
+@am_keep = (t (bv (bi (hv (ix (ni out))))))
+  & hv ~ *
+  & ix ~ *
+  & @am ~ (t (bv (bi (ni out))))
+
+@am_take = (* (t (bv (bi (hv (ix (ni out)))))))
+  & bv ~ *
+  & bi ~ *
+  & @am ~ (t (hv (ix (ni out))))

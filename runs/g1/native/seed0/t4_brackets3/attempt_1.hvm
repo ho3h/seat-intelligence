@@ -1,0 +1,112 @@
+// Program entry: scan with an empty stack and index 0.
+@prog = (input output)
+  & @scan ~ (input ((0 *) (0 output)))
+
+// Scan a list cell; the switch receives its tag and payload.
+@scan = ((?((@scan_nil @scan_cons) (pl (stk (idx out)))) pl) (stk (idx out)))
+
+@scan_nil = (* (stk (idx out)))
+  & @finish ~ (stk (idx out))
+
+@scan_cons = (* ((h t) (stk (idx out))))
+  & @test40 ~ (h (t (stk (idx out))))
+
+// At end of input, return 0 for an empty stack, otherwise index + 1.
+@finish = ((?((@finish_empty @finish_nonempty) (pl (idx out))) pl) (idx out))
+
+@finish_empty = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@finish_nonempty = (* (pl (idx out)))
+  & pl ~ *
+  & idx ~ $([+1] out)
+
+// Test each possible bracket code in turn.
+@test40 = (h (t (stk (idx out))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(40 z))
+  & z ~ ?((@test91 @open40) (hk (t (stk (idx out))))
+
+@open40 = (* (h (t (stk (idx out)))))
+  & h ~ *
+  & @push ~ (40 (t (stk (idx out))))
+
+@test91 = (h (t (stk (idx out))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(91 z))
+  & z ~ ?((@test123 @open91) (hk (t (stk (idx out))))
+
+@open91 = (* (h (t (stk (idx out)))))
+  & h ~ *
+  & @push ~ (91 (t (stk (idx out))))
+
+@test123 = (h (t (stk (idx out))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(123 z))
+  & z ~ ?((@test41 @open123) (hk (t (stk (idx out))))
+
+@open123 = (* (h (t (stk (idx out)))))
+  & h ~ *
+  & @push ~ (123 (t (stk (idx out))))
+
+@test41 = (h (t (stk (idx out))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(41 z))
+  & z ~ ?((@test93 @closeparen) (hk (t (stk (idx out))))
+
+@test93 = (h (t (stk (idx out))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(93 z))
+  & z ~ ?((@test125 @closebracket) (hk (t (stk (idx out))))
+
+@test125 = (h (t (stk (idx out))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(125 z))
+  & z ~ ?((@invalid @closebrace) (hk (t (stk (idx out))))
+
+// Push an opening bracket and advance the input index.
+@push = (op (t (stk (idx out))))
+  & idx ~ $([+1] idx2)
+  & @scan ~ ((1 (op stk)) (t (idx2 out)))
+
+// Closing brackets require the matching opener at the top of the stack.
+@closeparen = (* (h (t (stk (idx out)))))
+  & h ~ *
+  & @check_top ~ (stk (40 (t (idx out))))
+
+@closebracket = (* (h (t (stk (idx out)))))
+  & h ~ *
+  & @check_top ~ (stk (91 (t (idx out))))
+
+@closebrace = (* (h (t (stk (idx out)))))
+  & h ~ *
+  & @check_top ~ (stk (123 (t (idx out))))
+
+@check_top = ((?((@underflow @has_top) (pl (want (t (idx out))))) pl) (want (t (idx out))))
+
+@underflow = (* (want (t (idx out))))
+  & want ~ *
+  & @error ~ (t (idx out))
+
+@has_top = (* ((top rest) (want (t (idx out)))))
+  & top ~ $([=] $(want z))
+  & z ~ ?((@mismatch @matched) (rest (t (idx out))))
+
+@mismatch = (rest (t (idx out)))
+  & rest ~ *
+  & @error ~ (t (idx out))
+
+@matched = (* (rest (t (idx out))))
+  & idx ~ $([+1] idx2)
+  & @scan ~ (t (rest (idx2 out)))
+
+// An invalid code (unreachable for the specified input type) is an error.
+@invalid = (h (t (stk (idx out))))
+  & h ~ *
+  & stk ~ *
+  & @error ~ (t (idx out))
+
+@error = (t (idx out))
+  & t ~ *
+  & idx ~ $([+1] out)

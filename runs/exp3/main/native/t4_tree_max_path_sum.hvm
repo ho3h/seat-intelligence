@@ -1,0 +1,23 @@
+@prog = ((?((@walk_nil @walk_node) (p (0 (?((@final_none (* (n_q264 n_q264))) (p_i8 out)) p_i8)))) p) out)
+
+@walk_nil = (* (* (0 *)))
+
+@walk_node = (* (((?((@walk_nil @walk_node) (pl (s1 (?((@merge_none @merge_some) (p_i9 (xr (s3 out)))) p_i9)))) pl) (v (?((@walk_nil @walk_node) (pr (s2 xr))) pr))) ($([+] $(v {s1 {s2 s3}})) out)))
+
+@merge_none = (* ((?((@pick_y_none @pick_y_some) (p_i10 (f o))) p_i10) (f o)))
+
+@merge_some = (* (a ((?((@pick_y_with_none @pick_y_with_some) (p_i11 (a (f o)))) p_i11) (f o))))
+
+@pick_y_none = (* (f (1 f)))
+
+@pick_y_some = (* (n (* (1 n))))
+
+@pick_y_with_none = (* (a (* (1 a))))
+
+@pick_y_with_some = (* ({bt_q261 bc_q261} ({$([>] $(bt_q261 ?((@max_no @max_yes) (ac_q261 (bc_q261 m))))) ac_q261} (* (1 m)))))
+
+@max_no = (* (b b))
+
+@max_yes = (* (a (* a)))
+
+@final_none = (* 0)

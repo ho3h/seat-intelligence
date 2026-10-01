@@ -1,0 +1,34 @@
+// Tree path sums, with lists kept in left-to-right order.
+@prog = (tree out)
+  & @walk ~ (tree (0 out))
+
+@walk = ((?((@walk_leaf @walk_node) (payload (acc out))) payload) (acc out))
+
+@walk_leaf = (* (* (0 *)))
+
+@walk_node = (* ((left (value right)) (acc out)))
+  & value ~ $([+] $(acc total))
+  & total ~ {sum_l delayed}
+  & delayed ~ $([+] $(0 after))
+  & after ~ {sum_r sum_emit}
+  & @walk ~ (left (sum_l left_sums))
+  & @walk ~ (right (sum_r right_sums))
+  & @append ~ (left_sums (right_sums combined))
+  & @ensure_leaf ~ (combined (sum_emit out))
+
+@append = ((?((@append_nil @append_cons) (payload (other out))) payload) (other out))
+
+@append_nil = (* (a a))
+
+@append_cons = (* ((head tail) (other out)))
+  & @append ~ (tail (other rest))
+  & out ~ (1 (head rest))
+
+// Emit the current sum only when both child traversals produced no sums.
+@ensure_leaf = ((?((@ensure_nil @ensure_cons) (payload (sum out))) payload) (sum out))
+
+@ensure_nil = (* (sum out))
+  & out ~ (1 (sum (0 *)))
+
+@ensure_cons = (* ((head tail) (* out)))
+  & out ~ (1 (head tail))

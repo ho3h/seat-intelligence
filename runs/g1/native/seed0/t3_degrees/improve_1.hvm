@@ -1,0 +1,68 @@
+@prog = ((n edges) out)
+  & @zeros ~ (n zlist)
+  & @process ~ (edges (zlist out))
+
+@zeros = (?(((0 *) @z_more) out) out)
+
+@z_more = (rem out)
+  & out ~ (1 (0 tail))
+  & @zeros ~ (rem tail)
+
+@process = ((?((@p_nil @p_cons) (pl (deg out))) pl) (deg out))
+
+@p_nil = (* (a a))
+
+@p_cons = (* (((u v) tail) (deg out)))
+  & @update ~ ((u v) (deg deg2))
+  & @process ~ (tail (deg2 out))
+
+@update = ((u v) (deg out))
+  & u ~ {ua urest}
+  & v ~ {va vrest}
+  & ua ~ $([<] $(va z))
+  & z ~ ?((@ord_no @ord_yes) (urest (vrest (deg out))))
+
+@ord_no = (u (v (deg out)))
+  & v ~ {vcalc vidx}
+  & u ~ $([-] $(vcalc d))
+  & d ~ $([-1] gap)
+  & @seek ~ (deg (vidx (gap out)))
+
+@ord_yes = (* (u (v (deg out))))
+  & u ~ {ucalc uidx}
+  & v ~ $([-] $(ucalc d))
+  & d ~ $([-1] gap)
+  & @seek ~ (deg (uidx (gap out)))
+
+@seek = ((?((@seek_nil @seek_cons) (pl (count (gap out)))) pl) (count (gap out)))
+
+@seek_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@seek_cons = (* ((head tail) (count (gap out))))
+  & count ~ ?((@seek_here @seek_more) (head (tail (gap out))))
+
+@seek_here = (head (tail (gap out)))
+  & head ~ $([+1] head2)
+  & @gap ~ (tail (gap tailout))
+  & out ~ (1 (head2 tailout))
+
+@seek_more = (count (head (tail (gap out))))
+  & @seek ~ (tail (count (gap tailout)))
+  & out ~ (1 (head tailout))
+
+@gap = ((?((@gap_nil @gap_cons) (pl (count out))) pl) (count out))
+
+@gap_nil = (* (* out))
+  & out ~ (0 *)
+
+@gap_cons = (* ((head tail) (count out)))
+  & count ~ ?((@gap_here @gap_more) (head (tail out)))
+
+@gap_here = (head (tail out))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@gap_more = (count (head (tail out)))
+  & @gap ~ (tail (count tailout))
+  & out ~ (1 (head tailout))

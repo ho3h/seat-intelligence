@@ -1,0 +1,19 @@
+// Returns n for an empty edge list; for nonempty lists, handles n = 2 or 3.
+@prog = ((n edges) out)
+  & edges ~ (?((@empty @nonempty) (n out)) payload)
+  & payload ~ *
+
+@empty = (x x)
+
+@nonempty = (* (n out))
+  & n ~ {n_test n_keep}
+  & n_test ~ $([=] $(2 b))
+  & b ~ ?((@check3 @one) (n_keep out))
+
+@check3 = (n out)
+  & n ~ $([=] $(3 b))
+  & b ~ ?((@zero @one) (0 out))
+
+@one = (* (* 1))
+
+@zero = (* 0)

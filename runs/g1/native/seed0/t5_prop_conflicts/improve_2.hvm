@@ -1,0 +1,71 @@
+@prog = (input out)
+  & input ~ (cl attrs)
+  & @fold ~ (attrs (cl ((0 *) out)))
+
+@fold = ((?((@fold_nil @fold_cons) (pay (cl (sum out)))) pay) (cl (sum out)))
+
+@fold_nil = (* (cl (sum out)))
+  & cl ~ *
+  & @count ~ (sum out)
+
+@fold_cons = (* (((node (key val)) tail) (cl (sum out))))
+  & cl ~ {cl_lookup cl_rec}
+  & @lookup ~ (cl_lookup (node cid))
+  & @upsert ~ (sum (cid (key (val sum2))))
+  & @fold ~ (tail (cl_rec (sum2 out)))
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pay (idx out))) pay) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@lookup_hit @lookup_next) (head (tail out)))
+
+@lookup_hit = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@lookup_next = (idx (head (tail out)))
+  & head ~ *
+  & @lookup ~ (tail (idx out))
+
+@upsert = ((?((@up_nil @up_cons) (pay (cid (key (val out))))) pay) (cid (key (val out))))
+
+@up_nil = (* (cid (key (val out))))
+  & out ~ (1 ((cid (key (val 0))) (0 *)))
+
+@up_cons = (* (((scid (skey (base oldflag))) tail) (cid (key (val out)))))
+  & cid ~ {cid_cmp cid_ctx}
+  & key ~ {key_cmp key_ctx}
+  & scid ~ {scid_cmp scid_ctx}
+  & skey ~ {skey_cmp skey_ctx}
+  & base ~ {base_cmp base_ctx}
+  & cid_cmp ~ $([=] $(scid_cmp ceq))
+  & key_cmp ~ $([=] $(skey_cmp keq))
+  & ceq ~ $([*] $(keq cond))
+  & cond ~ ?((@up_miss @up_hit) (cid_ctx (key_ctx (val (scid_ctx (skey_ctx (base_ctx (oldflag (tail out))))))))
+
+@up_miss = (cid (key (val (scid (skey (base (oldflag (tail out))))))))
+  & @upsert ~ (tail (cid (key (val rest))))
+  & out ~ (1 ((scid (skey (base oldflag))) rest))
+
+@up_hit = (* (cid (key (val (scid (skey (base (oldflag (tail out)))))))))
+  & cid ~ *
+  & key ~ *
+  & val ~ $([!] $(base neq))
+  & oldflag ~ $([|] $(neq newflag))
+  & out ~ (1 ((scid (skey (base newflag))) tail))
+
+@count = ((?((@count_nil @count_cons) (pay (acc out))) pay) (acc out))
+
+@count_nil = (* (acc out))
+  & acc ~ out
+
+@count_cons = (* (((cid (key (base flag))) tail) (acc out)))
+  & cid ~ *
+  & key ~ *
+  & base ~ *
+  & acc ~ $([+] $(flag next))
+  & @count ~ (tail (next out))

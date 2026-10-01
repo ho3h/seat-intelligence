@@ -1,0 +1,29 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@filter_even = (((?((@List/Nil (* (a_q3 (((?((@filter_even__C8 (* (b_q8 (((?((@List/Nil (* (a_q15 (((?((@filter_even__C8 (* (b_q24 (((?((@List/Nil (* (a_q35 ((@filter_even__C10 (a_q35 b_q35)) b_q35)))) a_q29) a_q29) d_q24) ({$([&0x0000001] ?((@filter_even__C7_z @filter_even__C6_s) (a_q24 (b_q24 (d_q24 e_q24))))) a_q24} e_q24))))) a_q19) a_q19) (a_q15 b_q15)) b_q15)))) a_q11) a_q11) d_q8) ({$([&0x0000001] ?((@filter_even__C7_z @filter_even__C6_s) (a_q8 (b_q8 (d_q8 e_q8))))) a_q8} e_q8))))) a_q5) a_q5) (a_q3 b_q3)) b_q3)))) a_q1) a_q1) a) a)
+
+@filter_even__C10 = (?((@filter_even__C8 (* (b_q47 (((?((@List/Nil @filter_even__C11) a_q46_q47) a_q46_q47) d_q47) ({$([&0x0000001] ?((@filter_even__C7_z @filter_even__C6_s) (a_q47 (b_q47 (d_q47 e_q47))))) a_q47} e_q47))))) a) a)
+
+@filter_even__C11 = (* (a ((@filter_even__C10 (a b)) b)))
+
+@filter_even__C8 = ({$([&0x0000001] ?((@filter_even__C1_z @filter_even__C0_s) (a b))) a} b)
+
+@prog = @filter_even
+
+@filter_even__C3_z = @List/Cons
+
+@filter_even__C2_s = (* (* (a a)))
+
+@filter_even__C5_z = (a (b (c ((1 (a (((1 (b (c c_i3))) c_i3) c_i2))) c_i2))))
+
+@filter_even__C4_s = (* (a (* (b_i1 ((1 (a (b_i1 c_i1))) c_i1)))))
+
+@filter_even__C1_z = (a ((1 (a (@List/Nil c_i0))) c_i0))
+
+@filter_even__C0_s = (* (* @List/Nil))
+
+@filter_even__C7_z = (a ({$([&0x0000001] ?((@filter_even__C5_z @filter_even__C4_s) (a (b c)))) b} c))
+
+@filter_even__C6_s = (* (* ({$([&0x0000001] ?((@filter_even__C3_z @filter_even__C2_s) (a b))) a} b)))

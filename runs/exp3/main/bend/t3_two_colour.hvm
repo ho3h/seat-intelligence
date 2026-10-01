@@ -1,0 +1,83 @@
+@List/Nil = ((0 a) a)
+
+@breadth_first__C0 = (* (a (b (a b))))
+
+@breadth_first__C1 = (* ({a c} (g ({e i} ({f ((?(((* 0) (* (c_q229 (d_q229 ({?(((* (a_q229 (* a_q229))) (* ($([:-0x0000001] b_q230) (* ((@list_get__C2 (b_q230 c_q230)) c_q230))))) (b_q229 (c_q229 (d_q229 e_q229)))) b_q229} e_q229))))) a_q228) a_q228) (c d))} ({$([=0x0000001] ?((@scan_edges__C7 @scan_edges__C8) (a (d (e (f (g (f_q196 (j (k {$([=0x0000001] ?((@breadth_first__C3 @breadth_first__C4) (i (j (k (d_q195 m)))))) d_q195})))))))))) f_q196} m))))))
+
+@breadth_first__C2 = (?((@breadth_first__C0 @breadth_first__C1) a) a)
+
+@breadth_first__C3 = (a (b ((@breadth_first__C2 (a (b c))) c)))
+
+@breadth_first__C4 = (* (* (a (* (b (a b))))))
+
+@list_append__C0 = (a ((1 (a (@List/Nil c_i14))) c_i14))
+
+@list_append__C1 = (* (a ((@list_append__C2 (c d)) (c ((1 (a (d c_i15))) c_i15)))))
+
+@list_append__C2 = (?((@list_append__C0 @list_append__C1) a) a)
+
+@list_get__C1 = (* (c (d ({?(((* (a (* a))) @list_get__C0_s) (b (c (d e)))) b} e))))
+
+@list_get__C2 = (?(((* 0) @list_get__C1) a) a)
+
+@list_set__C2 = (* (c (d ({?((@list_set__C1_z @list_set__C0_s) (a (b (c (d e))))) a} (b e)))))
+
+@list_set__C3 = (?(((* (* @List/Nil)) @list_set__C2) a) a)
+
+@make_fill = ({?(((* (* @List/Nil)) @make_fill__C0_s) (a b)) a} b)
+
+@process_roots__C0 = ($([+0x0000001] a) (b_q199 (c_q199 (d_q199 ({$([=0x0000001] ?((@process_roots__C4 @process_roots__C5) (a (b_q199 (c_q199 (d_q199 (e_q199 f_q199))))))) e_q199} f_q199)))))
+
+@process_roots__C1 = (* ({e {$([+0x0000001] g) c}} (h ({a i} ((@list_set__C3 (c (0 d))) (* l))))))
+  & ?((@breadth_first__C3 @breadth_first__C4) (a (d (((1 (e (@List/Nil c_i20))) c_i20) (0 (j {$([=0x0000001] ?((@process_roots__C4 @process_roots__C5) (g (h (i (j (e_q200 l))))))) e_q200})))))) ~ 0
+
+@process_roots__C2 = ({c b} (d (e ({f (@list_get__C2 (b $([=0x0000002] ?((@process_roots__C0 @process_roots__C1) (c (d (e (f g))))))))} g))))
+
+@process_roots__C3 = (* (* (* (* (a (b (a b)))))))
+
+@process_roots__C4 = ({$([=] $(a ?((@process_roots__C2 @process_roots__C3) (b (c d))))) b} ({a c} d))
+
+@process_roots__C5 = (* (* (* (* (a (b (a b)))))))
+
+@prog = (({a {f {?(((* @List/Nil) @make_colors__C0_s) (a_q205 d)) a_q205}}} b) h)
+  & ?((@process_roots__C4 @process_roots__C5) (0 (a (b (d (0 (g $([=0x0000001] ?(((* (e e)) @prog__C0) (f (g h))))))))))) ~ 0
+
+@prog__C0 = (* (a (* b)))
+  & @make_fill ~ (a (16777215 b))
+
+@scan_edges__C0 = (a (b (d (e ({$([=0x0000001] ?((@scan_edges__C7 @scan_edges__C8) (a (b (c (d (e (f_q207 g)))))))) f_q207} (c (* g)))))))
+
+@scan_edges__C1 = (* (f ({$([-0x0000001] h_i21) g} ({d_i21 (@list_get__C2 (b_i21 {$([=0x0000002] ?((@visit_neighbor__C2 @visit_neighbor__C3) (c_i21 (d_i21 (d (e (h_i21 (i_i21 (i (j {$([=0x0000001] ?(((a_q242 (b_q242 ((@scan_edges__C6 (a_q242 (b_q242 c_q242))) c_q242))) @scan_edges__C8) (f (g (h (i (j (f_q209 l)))))))) f_q209})))))))))) i_i21}))} (d (e (h ({c_i21 b_i21} l))))))))
+
+@scan_edges__C2 = ({a b} (c (d (e (f (g (h ($([=] $(a ?((@scan_edges__C0 @scan_edges__C1) (b (c (d (e (f (g (h i)))))))))) i))))))))
+
+@scan_edges__C3 = (* (f ({$([-0x0000001] h_i22) g} ({d_i22 (@list_get__C2 (b_i22 {$([=0x0000002] ?((@visit_neighbor__C2 @visit_neighbor__C3) (c_i22 (d_i22 (d (e (h_i22 (i_i22 (i (j {$([=0x0000001] ?((@scan_edges__C7 @scan_edges__C8) (f (g (h (i (j (f_q213 l)))))))) f_q213})))))))))) i_i22}))} (d (e (h (* ({c_i22 b_i22} l)))))))))
+
+@scan_edges__C4 = (* (* (a (b (c (a (b c)))))))
+
+@scan_edges__C5 = (* (({$([=] $(a ?((@scan_edges__C2 @scan_edges__C3) (b (c (d (e (f (g (h (i j))))))))))) h} i) (g ({a b} (c (d (e (f j))))))))
+
+@scan_edges__C6 = (?((@scan_edges__C4 @scan_edges__C5) a) a)
+
+@scan_edges__C7 = (a (b ((@scan_edges__C6 (a (b c))) c)))
+
+@scan_edges__C8 = (* (* (* (* (a (b (c (a (b c)))))))))
+
+@visit_neighbor__C0 = (a (b (c (a (b c)))))
+
+@visit_neighbor__C1 = (* (a (b (* (a (b 1))))))
+
+@visit_neighbor__C2 = (* (b (c (d (a ($([!] $(a ?((@visit_neighbor__C0 @visit_neighbor__C1) (b (c (d e)))))) e))))))
+
+@visit_neighbor__C3 = (* ({f b} ((@list_set__C3 (b (c d))) ((@list_append__C2 (f g)) (h (c (* (d (g h)))))))))
+
+@list_get__C0_s = (* ($([:-0x0000001] b) (* ((@list_get__C2 (b c)) c))))
+
+@list_set__C1_z = (* (a (* (b_i17 ((1 (a (b_i17 c_i17))) c_i17)))))
+
+@list_set__C0_s = (* ($([:-0x0000001] c) (d (a ((@list_set__C3 (c (d e))) ((1 (a (e c_i16))) c_i16))))))
+
+@make_colors__C0_s = (* ($([:-0x0000001] {?(((* @List/Nil) (* ($([:-0x0000001] {?(((* @List/Nil) @make_colors__C0_s) (a_q225_q231 b_q231)) a_q225_q231}) ((1 (2 (b_q231 c_i18_q231))) c_i18_q231)))) (a_q225 b)) a_q225}) ((1 (2 (b c_i18))) c_i18)))
+
+@make_fill__C0_s = (* ($([:-0x0000001] b) ({a c} ((1 (a (d c_i19))) c_i19))))
+  & @make_fill ~ (b (c d))

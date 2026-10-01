@@ -1,0 +1,165 @@
+// Build the vertex list, find each component, and retain the largest size.
+@prog = (input out)
+  & input ~ (n edges)
+  & @range ~ (n candidates)
+  & @components ~ (candidates (edges (0 out)))
+
+// Generate vertices 0 through n-1.
+@range = (n out)
+  & n ~ ?((@range_zero @range_more) (0 out))
+
+@range_zero = (dummy out)
+  & dummy ~ *
+  & out ~ (0 *)
+
+@range_more = (m (dummy out))
+  & dummy ~ *
+  & m ~ {head rec}
+  & @range ~ (rec tail)
+  & out ~ (1 (head tail))
+
+// Visit candidate vertices, flood each component, and update the maximum.
+@components = ((?((@components_nil @components_cons) (pl (edges (best out)))) pl) (edges (best out)))
+
+@components_nil = (* (edges (best out)))
+  & edges ~ *
+  & out ~ best
+
+@components_cons = (* ((start tail) (edges (best out))))
+  & edges ~ {eflood enext}
+  & @flood ~ (start (eflood comp))
+  & comp ~ {ccount cfilt}
+  & @count ~ (ccount size)
+  & @filter ~ (tail (cfilt remaining))
+  & @max ~ (size (best bestnext))
+  & @components ~ (remaining (enext (bestnext out)))
+
+// Return the size of the component containing start.
+@flood = (start (edges out))
+  & @sweep ~ (edges ((1 (start (0 *))) out))
+
+// Sweep all edges until a scan adds no new vertices.
+@sweep = (edges (seen out))
+  & edges ~ {escan erepeat}
+  & @scan ~ (escan (seen (0 scanned)))
+  & scanned ~ (nextseen changed)
+  & changed ~ ?((@sweep_done @sweep_again) (erepeat (nextseen out)))
+
+@sweep_done = (edges (seen out))
+  & edges ~ *
+  & out ~ seen
+
+@sweep_again = (* (edges (seen out)))
+  & @sweep ~ (edges (seen out))
+
+// Scan the edge list once, extending the visited set at each edge.
+@scan = ((?((@scan_nil @scan_cons) (pl (seen (changed out)))) pl) (seen (changed out)))
+
+@scan_nil = (* (seen (changed out)))
+  & out ~ (seen changed)
+
+@scan_cons = (* ((edge tail) (seen (changed out))))
+  & @edge ~ (edge (seen (changed scanres)))
+  & scanres ~ (seen2 changed2)
+  & @scan ~ (tail (seen2 (changed2 out)))
+
+// For edge (u,v), try adding v when u is visited, then u when v is visited.
+@edge = ((u v) (seen (changed out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @extend ~ (u1 (v1 (seen (changed mid)))
+  & mid ~ (seen1 changed1)
+  & @extend ~ (v2 (u2 (seen1 (changed1 result))))
+  & result ~ (seen2 changed2)
+  & out ~ (seen2 changed2)
+
+// Add dst to seen if src is already in seen; set changed if dst is new.
+@extend = (src (dst (seen (changed out))))
+  & seen ~ {stest skeep}
+  & @mem ~ (stest (src found))
+  & found ~ ?((@extend_no @extend_yes) (dst (skeep (changed out))))
+
+@extend_no = (dst (seen (changed out)))
+  & dst ~ *
+  & out ~ (seen changed)
+
+@extend_yes = (* (dst (seen (changed out))))
+  & seen ~ {dtest dkeep}
+  & dst ~ {dmem dhead}
+  & @mem ~ (dtest (dmem found2))
+  & found2 ~ ?((@extend_new @extend_old) (dhead (dkeep (changed out))))
+
+@extend_new = (dst (seen (changed out)))
+  & changed ~ *
+  & out ~ ((1 (dst seen)) 1)
+
+@extend_old = (dst (seen (changed out)))
+  & dst ~ *
+  & out ~ (seen changed)
+
+// Membership test: output 1 iff x is in the list.
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (x out)))
+  & x ~ {xcmp xkeep}
+  & head ~ $([=] $(xcmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (xkeep out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+// Count the elements of a list.
+@count = ((?((@count_nil @count_cons) (pl out)) pl) out)
+
+@count_nil = (* out)
+  & out ~ 0
+
+@count_cons = (* ((head tail) out))
+  & head ~ *
+  & @count ~ (tail c)
+  & c ~ $([+1] out)
+
+// Keep candidates that are not in the component.
+@filter = ((?((@filter_nil @filter_cons) (pl (comp out))) pl) (comp out))
+
+@filter_nil = (* (comp out))
+  & comp ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((x tail) (comp out)))
+  & x ~ {xmem xkeep}
+  & comp ~ {cmem cnext}
+  & @mem ~ (cmem (xmem found))
+  & found ~ ?((@filter_absent @filter_present) (xkeep (tail (cnext out))))
+
+@filter_absent = (x (tail (comp out)))
+  & @filter ~ (tail (comp rest))
+  & out ~ (1 (x rest))
+
+@filter_present = (* (x (tail (comp out))))
+  & x ~ *
+  & @filter ~ (tail (comp out))
+
+// Return the larger of size and best.
+@max = (size (best out))
+  & size ~ {scmp stake}
+  & best ~ {bcmp bkeep}
+  & scmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (stake (bkeep out)))
+
+@max_no = (size (best out))
+  & size ~ *
+  & out ~ best
+
+@max_yes = (* (size (best out)))
+  & best ~ *
+  & out ~ size

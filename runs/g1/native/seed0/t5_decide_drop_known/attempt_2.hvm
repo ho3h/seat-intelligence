@@ -1,0 +1,50 @@
+// Filter candidates whose exact pair is not present in known.
+@prog = ((known cands) out)
+  & @filter ~ (cands (known out))
+
+@filter = ((?((@filter_nil @filter_cons) (pl (known out))) pl) (known out))
+
+@filter_nil = (* (known out))
+  & known ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (((u (v score)) tail) (known out)))
+  & known ~ {kn_rec kn_mem}
+  & u ~ {u_mem u_keep}
+  & v ~ {v_mem v_keep}
+  & @has ~ (kn_mem (u_mem (v_mem found)))
+  & @filter ~ (tail (kn_rec rest))
+  & found ~ ?((@filter_keep @filter_drop) (u_keep (v_keep (score (rest out)))))
+
+@filter_keep = (u (v (score (rest out))))
+  & out ~ (1 ((u (v score)) rest))
+
+@filter_drop = (* (u (v (score (rest out)))))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & out ~ rest
+
+// Return 1 if the pair occurs in the known list, otherwise 0.
+@has = ((?((@has_nil @has_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@has_nil = (* (u (v out)))
+  & u ~ *
+  & v ~ *
+  & out ~ 0
+
+@has_cons = (* (((a b) tail) (u (v out))))
+  & u ~ {u_cmp u_rec}
+  & v ~ {v_cmp v_rec}
+  & a ~ $([=] $(u_cmp eq_a))
+  & b ~ $([=] $(v_cmp eq_b))
+  & eq_a ~ $([&] $(eq_b both))
+  & both ~ ?((@has_no @has_yes) (tail (u_rec (v_rec out))))
+
+@has_no = (tail (u (v out)))
+  & @has ~ (tail (u (v out)))
+
+@has_yes = (* (u (v out)))
+  & u ~ *
+  & v ~ *
+  & out ~ 1

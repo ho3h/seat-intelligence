@@ -1,0 +1,118 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@at = ((@at__C2 a) a)
+
+@at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @at ~ (a (b c))
+
+@at__C1 = (* (c (d ({$([=0x0000000] ?((@at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@at__C2 = (?(((* 0) @at__C1) a) a)
+
+@count_label = ((@count_label__C3 a) a)
+
+@count_label__C0 = (b (c (a d)))
+  & @count_label ~ (a (b (c d)))
+
+@count_label__C1 = (* (b ($([+0x0000001] c) (a d))))
+  & @count_label ~ (a (b (c d)))
+
+@count_label__C2 = (* ($([=] $(a ?((@count_label__C0 @count_label__C1) (b (c (d e)))))) (d ({a b} (c e)))))
+
+@count_label__C3 = (?(((* (a a)) @count_label__C2) b) b)
+
+@count_roots = ({$([=] $(a ?((@count_roots__C4 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@count_roots__C0 = ($([+0x0000001] a) b)
+  & @count_roots ~ (a b)
+
+@count_roots__C1 = (* ($([+0x0000001] a) (b (c (d ($([+0x0000001] e) f))))))
+  & @count_roots ~ (a (b (c (d (e f)))))
+
+@count_roots__C2 = ($([+0x0000001] a) (b (c (d (e (* f))))))
+  & @count_roots ~ (a (b (c (d (e f)))))
+
+@count_roots__C3 = (* (e (f ({g a} ({c h} (i (b j)))))))
+  & @count_label ~ (a (b (0 $([<] $(c d)))))
+  & $(d ?((@count_roots__C0 @count_roots__C1) (e (f (g (h (i j))))))) ~ [=0x0000000]
+
+@count_roots__C4 = ({c {d b}} (e ({f a} (g (h j)))))
+  & @at ~ (a (b {$([=] $(c ?((@count_roots__C2 @count_roots__C3) (d (e (f (g (h (i j))))))))) i}))
+
+@count_roots_all = ({$([=] $(a ?((@count_roots_all__C2 (* (* (* (* (b b)))))) (c (d e))))) c} ({a d} e))
+
+@count_roots_all__C0 = ($([+0x0000001] a) b)
+  & @count_roots_all ~ (a b)
+
+@count_roots_all__C1 = (* ($([+0x0000001] a) (b (c ($([+0x0000001] d) e)))))
+  & @count_roots_all ~ (a (b (c (d e))))
+
+@count_roots_all__C2 = ({c {d b}} (e ({f a} g)))
+  & @at ~ (a (b $([=] $(c ?((@count_roots_all__C0 @count_roots_all__C1) (d (e (f g))))))))
+
+@get_pair = ((@get_pair__C6 a) a)
+
+@get_pair__C0 = ($([+0x0000001] b) (c (d (e (* (a f))))))
+  & @get_pair ~ (a (b (c (d (e f)))))
+
+@get_pair__C1 = (* ($([+0x0000001] b) (c (d (* (e (a f)))))))
+  & @get_pair ~ (a (b (c (d (e f)))))
+
+@get_pair__C2 = ({$([=] $(a ?((@get_pair__C0 @get_pair__C1) (b (c d))))) b} ({a c} d))
+
+@get_pair__C3 = (* (* (* (* (a (b (* (a b))))))))
+
+@get_pair__C4 = (* (* (* (a (a 0)))))
+
+@get_pair__C5 = (* (f (g ({$([=] $(a ?((@get_pair__C2 @get_pair__C3) (b (c (d (e (f (g h))))))))) b} (c ({a d} (e h)))))))
+
+@get_pair__C6 = (?((@get_pair__C4 @get_pair__C5) a) a)
+
+@make_labels = ({$([=] $(a ?((@make_labels__C0 (* (* (* @List/Nil)))) (b (c d))))) b} ({a c} d))
+
+@make_labels__C0 = ({a $([+0x0000001] b)} (c e))
+  & @List/Cons ~ (a (d e))
+  & @make_labels ~ (b (c d))
+
+@merge_edges = ((@merge_edges__C3 a) a)
+
+@merge_edges__C0 = (b (a (d (c f))))
+  & @merge_edges ~ (a (e f))
+  & @replace_all ~ (b (c (d e)))
+
+@merge_edges__C1 = (* (b (a (* (* c)))))
+  & @merge_edges ~ (a (b c))
+
+@merge_edges__C2 = (* ((b c) (f ({a e} i))))
+  & @get_pair ~ (a (0 (b (c (0 ({$([=] $(d ?((@merge_edges__C0 @merge_edges__C1) (e (f (g (h i))))))) g} {d h}))))))
+
+@merge_edges__C3 = (?(((a a) @merge_edges__C2) b) b)
+
+@prog = (({b e} ({$([<0x0000001] a) c} d)) h)
+  & $(a ?((@prog__C0 @prog__C1) (b (c (g h))))) ~ [=0x0000000]
+  & @merge_edges ~ (d (f g))
+  & @make_labels ~ (0 (e f))
+
+@prog__C0 = (a (c (b d)))
+  & @count_roots ~ (0 (a (b (c (0 d)))))
+
+@prog__C1 = (* (a (* (b c))))
+  & @count_roots_all ~ (0 (a (b (0 c))))
+
+@replace_all = ((@replace_all__C3 a) a)
+
+@replace_all__C0 = (c (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @replace_all ~ (b (c (d e)))
+
+@replace_all__C1 = (* (c ({a d} (* (b f)))))
+  & @List/Cons ~ (a (e f))
+  & @replace_all ~ (b (c (d e)))
+
+@replace_all__C2 = (* ({$([=] $(a ?((@replace_all__C0 @replace_all__C1) (b (c (d (e f))))))) d} (e ({a b} (c f)))))
+
+@replace_all__C3 = (?(((* (* @List/Nil)) @replace_all__C2) a) a)
+
+

@@ -1,0 +1,42 @@
+runs/exp/A_bend_v1_pool.json
+{
+ "file": "runs/exp/A_bend_v1_pool.scored.json",
+ "tasks": 428,
+ "n": 2,
+ "samples": 856,
+ "outcomes": {
+  "fail": 273,
+  "pass": 494,
+  "static": 89
+ },
+ "static_classes": {
+  "bend_compile": 89
+ },
+ "pass@1": 0.5771,
+ "pass@1_task_boot95": [
+  0.535,
+  0.618
+ ],
+ "pass@1_wilson95_samples(naive)": [
+  0.544,
+  0.61
+ ],
+ "pass@2": 0.6776,
+ "static_filter_best_of_2": 0.6075,
+ "static_filter_best_of_n_wilson95": [
+  0.56,
+  0.653
+ ],
+ "pass_given_static_clean": 0.6441,
+ "static_clean_rate": 0.896,
+ "per_family_pass@1": {
+  "arith": 0.891,
+  "pipeline": 0.417,
+  "position": 0.958,
+  "rangefn": 0.977,
+  "reduce": 0.487,
+  "scan": 0.875,
+  "sortlike": 0.273,
+  "treefold": 0.938
+ }
+}

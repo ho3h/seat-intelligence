@@ -1,0 +1,53 @@
+// Start with empty history and zero counts.
+@prog = (input out)
+  & input ~ (pred truth)
+  & @walk ~ (pred (truth ((0 *) (0 (0 (0 out))))))
+
+// Walk predictions and truths together, scanning prior pairs for each item.
+@walk = ((?((@wnil @wcons) (pl (truth (seen (tp (fp (fn out))))))) pl) (truth (seen (tp (fp (fn out))))))
+
+@wnil = (pl (truth (seen (tp (fp (fn out))))))
+  & pl ~ *
+  & truth ~ *
+  & seen ~ *
+  & out ~ (tp (fp fn))
+
+@wcons = (* ((h pt) (truth (seen (tp (fp (fn out)))))))
+  & truth ~ (1 (th tt))
+  & h ~ {hs hk}
+  & th ~ {ts tk}
+  & @scan ~ (seen (hs (ts (tp (fp (fn sresult))))))
+  & sresult ~ (newseen (stp (sfp sfn)))
+  & @walk ~ (pt (tt ((1 ((hk tk) newseen)) (stp (sfp (sfn out))))))
+
+// Scan prior pairs, counting this node's contribution and rebuilding history.
+@scan = ((?((@snil @scons) (pl (p (t (tp (fp (fn out))))))) pl) (p (t (tp (fp (fn out))))))
+
+@snil = (pl (p (t (tp (fp (fn out))))))
+  & pl ~ *
+  & p ~ *
+  & t ~ *
+  & out ~ ((0 *) (tp (fp fn))
+
+@scons = (* (((prevp prevt) rest) (p (t (tp (fp (fn out)))))))
+  & prevp ~ {oldp keep_p}
+  & prevt ~ {oldt keep_t}
+  & p ~ {peq nextp}
+  & t ~ {teq nextt}
+  & peq ~ $([=] $(oldp ep))
+  & teq ~ $([=] $(oldt et))
+  & ep ~ {ep_tp ep_more}
+  & ep_more ~ {ep_fp ep_fn}
+  & et ~ {et_tp et_more}
+  & et_more ~ {et_fp et_fn}
+  & ep_tp ~ $([*] $(et_tp add_tp))
+  & et_fp ~ $([^] $(1 not_et))
+  & ep_fp ~ $([*] $(not_et add_fp))
+  & ep_fn ~ $([^] $(1 not_ep))
+  & not_ep ~ $([*] $(et_fn add_fn))
+  & tp ~ $([+] $(add_tp next_tp))
+  & fp ~ $([+] $(add_fp next_fp))
+  & fn ~ $([+] $(add_fn next_fn))
+  & @scan ~ (rest (nextp (nextt (next_tp (next_fp (next_fn tailout))))))
+  & tailout ~ (newrest (rtp (rfp rfn)))
+  & out ~ ((1 ((keep_p keep_t) newrest)) (rtp (rfp rfn)))

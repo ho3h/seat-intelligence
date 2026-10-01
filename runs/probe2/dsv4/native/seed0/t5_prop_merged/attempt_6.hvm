@@ -1,0 +1,263 @@
+@prog = ((c attrs) out)
+  & @proc_attrs ~ (attrs (c ((0 *) out)))
+
+// Process attributes list
+@proc_attrs = ((?((@proc_nil @proc_cons) (p (c (acc out)))) p) (c (acc out)))
+
+@proc_nil = (* (* (acc out)))
+  & @finalize ~ (acc out)
+
+@proc_cons = (* ((triple atail) (c (acc out))))
+  & @do_attr ~ (triple (c (atail (acc out))))
+
+@do_attr = ((node (key val)) (c (atail (acc out))))
+  & @lookup_ins ~ (c (node (key (val (atail (acc out))))))
+
+// index into canonical list c
+@lookup_ins = (list (idx (key (val (atail (acc out))))))
+  & list ~ ?((@li_nil @li_cons) (idx (key (val (atail (acc out))))))
+
+@li_nil = (* (idx (key (val (atail (acc out))))))
+  & idx ~ *
+  & @insert_attr ~ (0 (key (val (atail (acc out)))))
+
+@li_cons = ((head cltail) (idx (key (val (atail (acc out))))))
+  & @li_step ~ (idx (head (cltail (key (val (atail (acc out)))))))
+
+@li_step = (idx rest)
+  & idx ~ ?((@li_zero @li_pos) rest)
+
+@li_zero = (head (cltail (key (val (atail (acc out))))))
+  & cltail ~ *
+  & @insert_attr ~ (head (key (val (atail (acc out)))))
+
+@li_pos = (pred (head (cltail (key (val (atail (acc out)))))))
+  & head ~ *
+  & @lookup_ins ~ (cltail (pred (key (val (atail (acc out))))))
+
+// sorted insertion of raw triple (canonical,key,value)
+@insert_attr = (canonical (key (val (atail (acc out)))))
+  & @ins ~ (acc ((canonical (key val)) new_acc))
+  & @after_ins ~ (new_acc (atail out))
+
+@after_ins = (new_acc (atail out))
+  & @proc_attrs ~ (atail (new_acc out))
+
+@ins = ((?((@ins_nil @ins_cons) (p (x result))) p) (x result))
+
+@ins_nil = (* (x result))
+  & result ~ (1 (x (0 *)))
+
+@ins_cons = (* ((head ltail) (x result)))
+  & x ~ {x_cmp x_keep}
+  & head ~ {head_cmp head_keep}
+  & @le3 ~ (x_cmp (head_cmp cmp))
+  & cmp ~ ?((@ins_no @ins_yes) (x_keep (head_keep (ltail result))))
+
+@ins_no = (x (head (ltail result)))
+  & @ins ~ (ltail (x new_tail))
+  & result ~ (1 (head new_tail))
+
+@ins_yes = (* (x (head (ltail result))))
+  & result ~ (1 (x (1 (head ltail))))
+
+// lexicographic <= for raw triples
+@le3 = ((a1 (a2 a3)) ((b1 (b2 b3)) out))
+  & @cmp1 ~ (a1 (b1 (out (a2 (a3 (b2 b3))))))
+
+@cmp1 = (a (b (out (a2 (a3 (b2 b3))))))
+  & a ~ {a_lt a_eq}
+  & b ~ {b_lt b_eq}
+  & a_lt ~ $([<] $(b_lt lt))
+  & a_eq ~ $([=] $(b_eq eq))
+  & @cmp1_decide ~ (lt (eq (out (a2 (a3 (b2 b3))))))
+
+@cmp1_decide = (lt (eq cont2))
+  & lt ~ ?((@lt0 @lt1) (eq cont2))
+
+@lt0 = (eq cont2)
+  & eq ~ ?((@eq0 @eq1) cont2)
+
+@lt1 = (extra (eq (out (a2 (a3 (b2 b3))))))
+  & extra ~ *
+  & eq ~ *
+  & out ~ 1
+  & a2 ~ *
+  & a3 ~ *
+  & b2 ~ *
+  & b3 ~ *
+
+@eq0 = (out (a2 (a3 (b2 b3))))
+  & out ~ 0
+  & a2 ~ *
+  & a3 ~ *
+  & b2 ~ *
+  & b3 ~ *
+
+@eq1 = (extra (out (a2 (a3 (b2 b3)))))
+  & extra ~ *
+  & @cmp2 ~ (a2 (b2 (out (a3 b3))))
+
+@cmp2 = (a2 (b2 (out (a3 b3))))
+  & a2 ~ {a2_lt a2_eq}
+  & b2 ~ {b2_lt b2_eq}
+  & a2_lt ~ $([<] $(b2_lt lt2))
+  & a2_eq ~ $([=] $(b2_eq eq2))
+  & @cmp2_decide ~ (lt2 (eq2 (out (a3 b3))))
+
+@cmp2_decide = (lt2 (eq2 cont3))
+  & lt2 ~ ?((@lt20 @lt21) (eq2 cont3))
+
+@lt20 = (eq2 cont3)
+  & eq2 ~ ?((@eq20 @eq21) cont3)
+
+@lt21 = (extra (eq2 (out (a3 b3))))
+  & extra ~ *
+  & eq2 ~ *
+  & out ~ 1
+  & a3 ~ *
+  & b3 ~ *
+
+@eq20 = (out (a3 b3))
+  & out ~ 0
+  & a3 ~ *
+  & b3 ~ *
+
+@eq21 = (extra (out (a3 b3)))
+  & extra ~ *
+  & @cmp3 ~ (a3 (b3 out))
+
+@cmp3 = (a3 (b3 out))
+  & a3 ~ {a3_lt a3_eq}
+  & b3 ~ {b3_lt b3_eq}
+  & a3_lt ~ $([<] $(b3_lt lt3))
+  & a3_eq ~ $([=] $(b3_eq eq3))
+  & @cmp3_decide ~ (lt3 (eq3 out))
+
+@cmp3_decide = (lt3 (eq3 out))
+  & lt3 ~ ?((@lt30 @lt31) (eq3 out))
+
+@lt30 = (eq3 out)
+  & eq3 ~ ?((@eq30 @eq31) out)
+
+@lt31 = (extra (eq3 out))
+  & extra ~ *
+  & eq3 ~ *
+  & out ~ 1
+
+@eq30 = out
+  & out ~ 0
+
+@eq31 = (extra out)
+  & extra ~ *
+  & out ~ 1
+
+// finalize: raw sorted entries -> output list
+@finalize = ((?((@fin_nil @fin_cons) (p out)) p) out)
+
+@fin_nil = (* out)
+  & out ~ (0 *)
+
+@fin_cons = (* ((head ltail) out))
+  & @start_merge ~ (head (ltail out))
+
+@start_merge = ((c (k v)) (ltail out))
+  & v ~ {v1 v2}
+  & @merge_loop ~ (ltail (c (k (v1 (1 (v2 (1 ((0 *) out))))))))
+
+@merge_loop = ((?((@merge_nil @merge_cons) (p state)) p) state)
+
+@merge_nil = (* state)
+  & @end_merge ~ state
+
+@merge_cons = (* ((head tl) state))
+  & @merge_step ~ (head (tl state))
+
+@merge_step = ((x (y z)) (tl (cur_c (cur_k (best_v (best_c (val (val_c (rev out)))))))))
+  & x ~ {x_c x_s}
+  & y ~ {y_c y_s}
+  & z ~ {z_c z_s}
+  & cur_c ~ {cur_c_cmp cur_c_s}
+  & cur_k ~ {cur_k_cmp cur_k_s}
+  & val ~ {val_cmp val_s}
+  & x_c ~ $([=] $(cur_c_cmp eq_c))
+  & y_c ~ $([=] $(cur_k_cmp eq_k))
+  & z_c ~ $([=] $(val_cmp eq_z))
+  & @merge_decide ~ (eq_c (eq_k (eq_z (x_s (y_s (z_s (tl (cur_c_s (cur_k_s (best_v (best_c (val_s (val_c (rev out))))))))))))))
+
+@merge_decide = (eq_c (eq_k (eq_z rest)))
+  & eq_c ~ ?((@mc_c_no @mc_c_yes) (eq_k (eq_z rest)))
+
+@mc_c_no = (eq_k (eq_z rest))
+  & eq_k ~ *
+  & eq_z ~ *
+  & @new_group ~ rest
+
+@mc_c_yes = (eq_k (eq_z rest))
+  & @merge_decide_k ~ (eq_k (eq_z rest))
+
+@merge_decide_k = (eq_k (eq_z rest))
+  & eq_k ~ ?((@mk_no @mk_yes) (eq_z rest))
+
+@mk_no = (eq_z rest)
+  & eq_z ~ *
+  & @new_group ~ rest
+
+@mk_yes = (eq_z rest)
+  & @merge_decide_z ~ (eq_z rest)
+
+@merge_decide_z = (eq_z rest)
+  & eq_z ~ ?((@mz_no @mz_yes) rest)
+
+@new_group = (x (y (z (tl (cur_c (cur_k (best_v (best_c (val (val_c (rev out)))))))))))
+  & best_c ~ *
+  & val ~ *
+  & val_c ~ *
+  & z ~ {z_best z_val}
+  & rev1 ~ (1 ((cur_c (cur_k best_v)) rev))
+  & @merge_loop ~ (tl (x (y (z_best (1 (z_val (1 (rev1 out))))))))
+
+@mz_yes = (x (y (z (tl (cur_c (cur_k (best_v (best_c (val (val_c (rev out)))))))))))
+  & x ~ *
+  & y ~ *
+  & z ~ *
+  & val_c ~ $([+1] val_c1)
+  & @merge_loop ~ (tl (cur_c (cur_k (best_v (best_c (val (val_c1 (rev out))))))))
+
+@mz_no = (x (y (z (tl (cur_c (cur_k (best_v (best_c (val (val_c (rev out)))))))))))
+  & val_c ~ {val_c_cmp val_c_keep}
+  & best_c ~ {best_c_cmp best_c_keep}
+  & val_c_cmp ~ $([>] $(best_c_cmp gt))
+  & @mz_no_decide ~ (gt (x (y (z (tl (cur_c (cur_k (best_v (best_c_keep (val (val_c_keep (rev out))))))))))))
+
+@mz_no_decide = (gt rest2)
+  & gt ~ ?((@mz_no_le @mz_no_gt) rest2)
+
+@mz_no_le = (x (y (z (tl (cur_c (cur_k (best_v (best_c_keep (val (val_c_keep (rev out)))))))))))
+  & x ~ *
+  & y ~ *
+  & val ~ *
+  & val_c_keep ~ *
+  & @merge_loop ~ (tl (cur_c (cur_k (best_v (best_c_keep (z (1 (rev out))))))))
+
+@mz_no_gt = (* (x (y (z (tl (cur_c (cur_k (best_v (best_c_keep (val (val_c_keep (rev out))))))))))))
+  & x ~ *
+  & y ~ *
+  & best_c_keep ~ *
+  & best_v ~ *
+  & @merge_loop ~ (tl (cur_c (cur_k (val (val_c_keep (z (1 (rev out))))))))
+
+@end_merge = (cur_c (cur_k (best_v (best_c (val (val_c (rev out)))))))
+  & best_c ~ *
+  & val ~ *
+  & val_c ~ *
+  & @rev ~ ((1 ((cur_c (cur_k best_v)) rev)) ((0 *) out))
+
+// reverse a list
+@rev = ((?((@rev_nil @rev_cons) (p (acc out))) p) (acc out))
+
+@rev_nil = (* (acc out))
+  & out ~ acc
+
+@rev_cons = (* ((head tail) (acc out)))
+  & @rev ~ (tail ((1 (head acc)) out))

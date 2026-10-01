@@ -1,0 +1,68 @@
+{
+ "config": "fold_h2",
+ "dsl": "full",
+ "depth": 2,
+ "kind": "fold",
+ "target": "(acc + x)",
+ "task": {
+  "kind": "fold",
+  "z": 0,
+  "xss": [
+   [
+    2,
+    9,
+    1,
+    4
+   ],
+   [
+    1,
+    7,
+    7,
+    7
+   ],
+   [
+    6,
+    3,
+    1,
+    7
+   ]
+  ],
+  "ys": [
+   16,
+   22,
+   17
+  ]
+ },
+ "n_candidates": 616,
+ "sup_itrs": 46543,
+ "sup_wall": 0.03949284553527832,
+ "sup_heap": 111748,
+ "sup_survivors": 2,
+ "sup_survivors_all_verified": true,
+ "sup_err": "",
+ "sup_examples": [
+  "(acc + x)",
+  "(x + acc)"
+ ],
+ "ind_n": 200,
+ "ind_mean_itrs": 106.85,
+ "ind_compiled_mean_itrs": 41.27,
+ "ind_mean_size": 2.915,
+ "ind_extrap": 65819.59999999999,
+ "ind_compiled_extrap": 25422.320000000003,
+ "gain": 1.4141675439915775,
+ "gain_vs_compiled": 0.5462114603699805,
+ "sup_itrs_per_cand": 75.55681818181819,
+ "oe_first_solution": "(acc + x)",
+ "oe_first_sec": 0.002012014389038086,
+ "oe_first_vector_evals": 42,
+ "oe_first_classes": 18,
+ "oe_first_fold_checks": 18,
+ "brute_solutions": 2,
+ "brute_sec": 0.0038890838623046875,
+ "survivors_match_brute": true,
+ "batched_interp_per_cand": 113.89,
+ "batched_compiled_per_cand": 80.54,
+ "gain_vs_batched_interp": 1.507342457512408,
+ "gain_vs_batched_compiled": 1.0659527748533615
+}

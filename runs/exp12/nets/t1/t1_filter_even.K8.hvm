@@ -1,0 +1,30 @@
+@prog = (l out)
+  & @filter ~ (l out)
+
+@filter = (lv1 out)
+  & @filter_cons_lw ~ (lv1 out)
+
+@filter_nil = (* (0 *))
+
+@filter_cons = (* (({$([%] $(2 ?((@filter_even @filter_odd) (h_keep (rest out))))) h_keep} t) out))
+  & @filter_cons_lw ~ (t rest)
+
+@filter_even = (h (rest out))
+  & out ~ (1 (h rest))
+
+@filter_odd = (* (h (rest out)))
+  & h ~ *
+  & out ~ rest
+
+@filter_cons_lw = (ls40 q8)
+  & ls40 ~ (g31 (e23 (g32 (e24 (g33 (e25 (g34 (e26 (g35 (e27 (g36 (e28 (g37 (e29 (g38 (e30 tk39))))))))))))))))
+  & g31 ~ ?((@filter_nil @filter_cons_la) ((e23 q10) q8))
+  & g32 ~ ?((@filter_nil @filter_cons_la) ((e24 q12) q10))
+  & g33 ~ ?((@filter_nil @filter_cons_la) ((e25 q14) q12))
+  & g34 ~ ?((@filter_nil @filter_cons_la) ((e26 q16) q14))
+  & g35 ~ ?((@filter_nil @filter_cons_la) ((e27 q18) q16))
+  & g36 ~ ?((@filter_nil @filter_cons_la) ((e28 q20) q18))
+  & g37 ~ ?((@filter_nil @filter_cons_la) ((e29 q22) q20))
+  & g38 ~ ?((@filter_nil @filter_cons) ((e30 tk39) q22))
+
+@filter_cons_la = (* (({$([%] $(2 ?((@filter_even @filter_odd) (h_keep (rest out))))) h_keep} rest) out))

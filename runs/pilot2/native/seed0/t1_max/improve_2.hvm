@@ -1,0 +1,18 @@
+// Recursively find the maximum of the tail, then compare it with the head.
+@prog = (l out)
+  & @mx ~ (l out)
+
+@mx = ((?((@mx_nil @mx_cons) (pl out)) pl) out)
+
+@mx_nil = (* out)
+
+@mx_cons = (* ((h t) out))
+  & @mx ~ (t m)
+  & h ~ {hc hk}
+  & m ~ {mc mk}
+  & hc ~ $([>] $(mc z))
+  & z ~ ?((@mx_pick_tail @mx_pick_head) (hk (mk out)))
+
+@mx_pick_tail = (* (tail out))
+
+@mx_pick_head = (* (head (* out)))

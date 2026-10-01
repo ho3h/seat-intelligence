@@ -1,0 +1,17 @@
+@min_list__C0 = (a (* a))
+
+@min_list__C1 = (* (* (a a)))
+
+@min_list__C11 = (* (b (((?((@min_list__C8 (* ({a_q6_q10 d_q6_q10} (e_q6_q10 (b_q6_q10 ({$([<] $(a_q6_q10 ?((@min_list__C6 @min_list__C7) (b_q6_q10 (c_q6_q10 (d_q6_q10 (e_q6_q10 f_q6_q10))))))) c_q6_q10} f_q6_q10)))))) a_q10) a_q10) (a (b c))) (a c))))
+
+@min_list__C3 = (* (* (b (((?(((a_q18 a_q18) @min_list__C11) b_q18) b_q18) (b c)) c))))
+
+@min_list__C5 = (* (* (b (((?(((a_q26 a_q26) @min_list__C11) b_q26) b_q26) (b c)) c))))
+
+@min_list__C6 = ({a b} (* ({$([<] $(a ?(((b_q30 (* (((?(((a_q14_q30 a_q14_q30) @min_list__C11) b_q14_q30) b_q14_q30) (b_q30 c_q30)) c_q30))) @min_list__C3) (b (c d))))) c} d)))
+
+@min_list__C7 = (* ({a b} ({$([<] $(a ?(((b_q34 (* (((?(((a_q22_q34 a_q22_q34) @min_list__C11) b_q22_q34) b_q22_q34) (b_q34 c_q34)) c_q34))) @min_list__C5) (b (c d))))) c} (* d))))
+
+@min_list__C8 = ({a b} ({$([<] $(a ?((@min_list__C0 @min_list__C1) (b (c d))))) c} d))
+
+@prog = (((?(((a_q40 a_q40) @min_list__C11) b_q40) b_q40) (16777215 b)) b)

@@ -1,0 +1,129 @@
+@prog = (s out)
+  & @expr ~ (s r)
+  & r ~ (v rest)
+  & out ~ v
+  & rest ~ *
+
+@pairval = (s (v (v s)))
+
+@expr = (s out)
+  & @space ~ (s s1)
+  & @term ~ (s1 r)
+  & r ~ (v rest)
+  & @eloop ~ (rest (v out))
+
+@term = (s out)
+  & @space ~ (s s1)
+  & @factor ~ (s1 r)
+  & r ~ (v rest)
+  & @tloop ~ (rest (v out))
+
+@space = ((?((@sp_nil @sp_cons) (p out)) p) out)
+
+@sp_nil = (* (0 *))
+
+@sp_cons = (* ((h t) out))
+  & h ~ {c d}
+  & c ~ $([=] $(32 z))
+  & z ~ ?((@sp_keep @sp_skip) (d (t out)))
+
+@sp_keep = (d (t (1 (d t))))
+
+@sp_skip = (* (d (t out)))
+  & d ~ *
+  & @space ~ (t out)
+
+@eloop = (s (acc out))
+  & @space ~ (s s1)
+  & s1 ~ (?((@el_nil @el_cons) (p (acc out))) p)
+
+@el_nil = (* (acc (acc (0 *))))
+
+@el_cons = (* ((h t) (acc out)))
+  & h ~ {c d}
+  & c ~ $([=] $(43 z))
+  & z ~ ?((@el_stop @el_more) (d (t (acc out))))
+
+@el_stop = (d (t (acc (acc (1 (d t))))))
+
+@el_more = (* (d (t (acc out))))
+  & d ~ *
+  & @term ~ (t r)
+  & r ~ (v rest)
+  & acc ~ $([+] $(v sum))
+  & @eloop ~ (rest (sum out))
+
+@tloop = (s (acc out))
+  & @space ~ (s s1)
+  & s1 ~ (?((@tl_nil @tl_cons) (p (acc out))) p)
+
+@tl_nil = (* (acc (acc (0 *))))
+
+@tl_cons = (* ((h t) (acc out)))
+  & h ~ {c d}
+  & c ~ $([=] $(42 z))
+  & z ~ ?((@tl_stop @tl_more) (d (t (acc out))))
+
+@tl_stop = (d (t (acc (acc (1 (d t))))))
+
+@tl_more = (* (d (t (acc out))))
+  & d ~ *
+  & @factor ~ (t r)
+  & r ~ (v rest)
+  & acc ~ $([*] $(v prod))
+  & @tloop ~ (rest (prod out))
+
+@factor = (s out)
+  & @space ~ (s s1)
+  & s1 ~ (?((@fac_nil @fac_cons) (p out)) p)
+
+@fac_nil = (* (0 (0 *)))
+
+@fac_cons = (* ((h t) out))
+  & h ~ {c d}
+  & c ~ $([=] $(40 z))
+  & z ~ ?((@fac_open @fac_num) (d (t out)))
+
+@fac_open = (d (t out))
+  & d ~ *
+  & @expr ~ (t r)
+  & r ~ (v rest)
+  & @drop ~ (rest rest2)
+  & @pairval ~ (rest2 (v out))
+
+@fac_num = (* (d (t out)))
+  & @ndig ~ ((1 (d t)) (0 out))
+
+@drop = ((?((@drop_nil @drop_cons) (p out)) p) out)
+
+@drop_nil = (* (0 *))
+
+@drop_cons = (* ((h t) t))
+  & h ~ *
+
+@ndig = (s (acc out))
+  & s ~ (?((@nd_nil @nd_cons) (p (acc out))) p)
+
+@nd_nil = (* (acc (acc (0 *))))
+
+@nd_cons = (* ((h t) (acc out)))
+  & h ~ {c d}
+  & c ~ $([<] $(48 z))
+  & z ~ ?((@nd_ge @nd_low) (d (t (acc out))))
+
+@nd_low = (* (d (t (acc out))))
+  & @pairval ~ ((1 (d t)) (acc out))
+
+@nd_ge = (d (t (acc out)))
+  & d ~ {x y}
+  & x ~ $([>] $(57 z))
+  & z ~ ?((@nd_within @nd_above) (y (t (acc out))))
+
+@nd_above = (* (y (t (acc out))))
+  & @pairval ~ ((1 (y t)) (acc out))
+
+@nd_within = (y (t (acc out)))
+  & y ~ $([-] $(48 dig))
+  & acc ~ $([*] $(10 prod))
+  & prod ~ $([+] $(dig newacc))
+  & @ndig ~ (t (newacc out))

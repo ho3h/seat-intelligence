@@ -1,0 +1,115 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & n ~ *
+  & s ~ {sf sv}
+  & @bfs ~ (t (edges ((1 (sf (0 *))) ((1 (sv (0 *))) (0 out))))
+
+@bfs = (t (edges (front (visited (dist out))))
+  & t ~ {tm tr}
+  & edges ~ {es er}
+  & front ~ {fm fs}
+  & @has ~ (tm (fm hit))
+  & hit ~ ?((@bfs_no @bfs_yes) (tr (es (er (fs (visited (dist out))))))
+
+@bfs_no = (t (es (er (front (visited (dist out)))))
+  & @scan ~ (front (visited ((0 *) (es result))))
+  & @round_done ~ (result (t (dist (er out))))
+
+@bfs_yes = (* (t (es (er (front (visited (dist out))))))
+  & t ~ *
+  & es ~ *
+  & er ~ *
+  & front ~ *
+  & visited ~ *
+  & out ~ dist
+
+@has = (x ((?((@has_nil @has_cons) (pl (x out))) pl) out))
+
+@has_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@has_cons = (* ((h tail) (x out)))
+  & x ~ {xm xr}
+  & h ~ $([=] $(xm eq))
+  & eq ~ ?((@has_no @has_yes) (tail (xr out)))
+
+@has_no = (tail (x out))
+  & @has ~ (x (tail out))
+
+@has_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+@scan = (front (visited (next ((?((@scan_nil @scan_cons) (front (visited (next (pl out))))) pl) out)))
+
+@scan_nil = (front (visited (next (pl out))))
+  & front ~ *
+  & pl ~ *
+  & out ~ (visited next)
+
+@scan_cons = (* (front (visited (next (((u v) tail) out)))))
+  & @edge ~ (u (v (front (visited (next (tail out)))))
+
+@edge = (u (v (front (visited (next (tail out))))))
+  & u ~ {um ur}
+  & front ~ {fm fr}
+  & @has ~ (um (fm hit))
+  & hit ~ ?((@edge_no @edge_yes) (ur (v (fr (visited (next (tail out))))))
+
+@edge_no = (u (v (front (visited (next (tail out))))))
+  & @edge_after ~ ((visited next) (u (v (front (tail out)))))
+
+@edge_yes = (* (u (v (front (visited (next (tail out)))))))
+  & v ~ {vc vr}
+  & @try ~ (vc (visited (next result)))
+  & @edge_after ~ (result (u (vr (front (tail out)))))
+
+@try = (cand (visited (next out)))
+  & cand ~ {cm cr}
+  & visited ~ {vm vr}
+  & @has ~ (cm (vm hit))
+  & hit ~ ?((@try_absent @try_present) (cr (vr (next out))))
+
+@try_absent = (cand (visited (next out)))
+  & cand ~ {c1 c2}
+  & out ~ ((1 (c1 visited)) (1 (c2 next)))
+
+@try_present = (* (cand (visited (next out))))
+  & cand ~ *
+  & out ~ (visited next)
+
+@edge_after = ((visited next) (u (v (front (tail out)))))
+  & v ~ {vm vr}
+  & front ~ {fm fr}
+  & @has ~ (vm (fm hit))
+  & hit ~ ?((@edge_after_no @edge_after_yes) (visited (next (u (vr (fr (tail out))))))
+
+@edge_after_no = (visited (next (u (v (front (tail out))))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (front (visited (next (tail out))))
+
+@edge_after_yes = (* (visited (next (u (v (front (tail out)))))))
+  & v ~ *
+  & @try ~ (u (visited (next result)))
+  & @edge_after_finish ~ (result (front (tail out)))
+
+@edge_after_finish = ((visited next) (front (tail out)))
+  & @scan ~ (front (visited (next (tail out))))
+
+@round_done = ((visited (?((@rd_nil @rd_cons) (visited (pl (t (dist (edges out))))) pl)) (t (dist (edges out))))
+
+@rd_nil = (visited (pl (t (dist (edges out)))))
+  & visited ~ *
+  & pl ~ *
+  & t ~ *
+  & dist ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@rd_cons = (* (visited ((head tail) (t (dist (edges out))))))
+  & dist ~ $([+1] dist2)
+  & @bfs ~ (t (edges ((1 (head tail)) (visited (dist2 out))))

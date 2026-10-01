@@ -1,0 +1,110 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & n ~ *
+  & s ~ {sf sv}
+  & @bfs ~ (t (edges ((1 (sf (0 *))) ((1 (sv (0 *))) (0 out)))))
+
+@bfs = (t (edges (front (visited (dist out)))))
+  & t ~ {tm tr}
+  & front ~ {fm fr}
+  & @has ~ (tm (fm hit))
+  & hit ~ ?((@bfs_no @bfs_yes) (tr (edges (fr (visited (dist out))))))
+
+@bfs_no = (t (edges (front (visited (dist out)))))
+  & edges ~ {es er}
+  & @scan ~ (front (visited ((0 *) (es result))))
+  & @round_done ~ (result (t (er (dist out))))
+
+@bfs_yes = (* (t (edges (front (visited (dist out))))))
+  & t ~ *
+  & edges ~ *
+  & front ~ *
+  & visited ~ *
+  & out ~ dist
+
+@has = (x ((?((@has_nil @has_cons) (pl (x out))) pl) out))
+
+@has_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@has_cons = (* ((h tail) (x out)))
+  & x ~ {xm xr}
+  & h ~ $([=] $(xm eq))
+  & eq ~ ?((@has_no @has_yes) (tail (xr out)))
+
+@has_no = (tail (x out))
+  & @has ~ (x (tail out))
+
+@has_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+@scan = (front (visited (next ((?((@scan_nil @scan_cons) (front (visited (next (pl out))))) pl) out))))
+
+@scan_nil = (front (visited (next (pl out))))
+  & front ~ *
+  & pl ~ *
+  & out ~ (visited next)
+
+@scan_cons = (* (front (visited (next (((u v) tail) out)))))
+  & @edge ~ (u (v (front (visited (next (tail out))))))
+
+@edge = (u (v (front (visited (next (tail out))))))
+  & u ~ {um ur}
+  & front ~ {fm fr}
+  & @has ~ (um (fm hit))
+  & hit ~ ?((@edge_u_no @edge_u_yes) (ur (v (fr (visited (next (tail out)))))))
+
+@edge_u_no = (ur (v (fr (visited (next (tail out))))))
+  & @edge_check_v ~ (ur (v (fr (visited (next (tail out))))))
+
+@edge_u_yes = (ur (v (fr (visited (next (tail out))))))
+  & ur ~ *
+  & @try_add ~ (v (fr (visited (next (tail out)))))
+
+@edge_check_v = (u (v (front (visited (next (tail out))))))
+  & v ~ {vm vr}
+  & front ~ {fm fr}
+  & @has ~ (vm (fm hit))
+  & hit ~ ?((@edge_v_no @edge_v_yes) (u (vr (fr (visited (next (tail out)))))))
+
+@edge_v_no = (u (vr (fr (visited (next (tail out))))))
+  & u ~ *
+  & vr ~ *
+  & @scan ~ (fr (visited (next (tail out))))
+
+@edge_v_yes = (u (vr (fr (visited (next (tail out))))))
+  & vr ~ *
+  & @try_add ~ (u (fr (visited (next (tail out)))))
+
+@try_add = (cand (front (visited (next (tail out)))))
+  & cand ~ {cm cr}
+  & cr ~ {cn cv}
+  & visited ~ {vm vr}
+  & @has ~ (cm (vm hit))
+  & hit ~ ?((@try_absent @try_present) (cn (cv (front (vr (next (tail out)))))))
+
+@try_absent = (cn (cv (front (vr (next (tail out))))))
+  & @scan ~ (front ((1 (cv vr)) ((1 (cn next)) (tail out))))
+
+@try_present = (* (cn (cv (front (vr (next (tail out)))))))
+  & cn ~ *
+  & cv ~ *
+  & @scan ~ (front (vr (next (tail out))))
+
+@round_done = ((visited (?((@rd_empty @rd_nonempty) (pl (visited (t (edges (dist out))))) ) pl)) (t (edges (dist out))))
+
+@rd_empty = (pl (visited (t (edges (dist out)))))
+  & pl ~ *
+  & visited ~ *
+  & t ~ *
+  & edges ~ *
+  & dist ~ *
+  & out ~ 16777215
+
+@rd_nonempty = (* (pl (visited (t (edges (dist out))))))
+  & dist ~ $([+1] dist2)
+  & @bfs ~ (t (edges ((1 pl) (visited (dist2 out)))))

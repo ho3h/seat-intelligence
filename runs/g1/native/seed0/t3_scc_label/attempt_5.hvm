@@ -1,0 +1,127 @@
+// Build reachability sets, then label each vertex with the smallest mutually
+// reachable vertex.
+@prog = ((n edges) out)
+  & {nr nm} ~ n
+  & @build ~ (nr (nm (edges (0 records))))
+  & {maprun mapfull} ~ records
+  & @labels ~ (maprun (mapfull out))
+
+// Generate vertices in ascending order.
+@build = ( ?((@build_zero @build_succ) (max (edges (id out)))) (max (edges (id out))))
+
+@build_zero = (* (* (* (0 *))))
+
+@build_succ = (pred (max (edges (id out))))
+  & {mr mn} ~ max
+  & {er en} ~ edges
+  & {ir ii} ~ id
+  & {inc rec} ~ ii
+  & inc ~ $([+1] next)
+  & @reach ~ (mr (er (ir reachset)))
+  & @build ~ (pred (mn (en (next rest))))
+  & out ~ (1 ((rec reachset) rest))
+
+// Compute the vertices reachable from source by repeated edge sweeps.
+@reach = (count (edges (source out)))
+  & @iterate ~ (count (edges ((1 (source (0 *))) out)))
+
+@iterate = ( ?((@iterate_zero @iterate_succ) (edges (set out))) (edges (set out)))
+
+@iterate_zero = (* (* (s s)))
+
+@iterate_succ = (pred (edges (set out)))
+  & {e1 e2} ~ edges
+  & @sweep ~ (e1 (set updated))
+  & @iterate ~ (pred (e2 (updated out)))
+
+// Add each destination whose source is already in the current set.
+@sweep = ((?((@sweep_nil @sweep_cons) (pl (set out))) pl) (set out))
+
+@sweep_nil = (* (s s))
+
+@sweep_cons = (* (((u v) tail) (set out)))
+  & {sc sr} ~ set
+  & @mem ~ (sc (u z))
+  & z ~ ?((@sweep_skip @sweep_add) (v (tail (sr out))))
+
+@sweep_skip = (v (tail (set out)))
+  & v ~ *
+  & @sweep ~ (tail (set out))
+
+@sweep_add = (* (v (tail (set out))))
+  & @insert ~ (v (set updated))
+  & @sweep ~ (tail (updated out))
+
+// Insert v into set if it is not already present.
+@insert = (v (set out))
+  & {vcheck vkeep} ~ v
+  & {scheck skeep} ~ set
+  & @mem ~ (scheck (vcheck z))
+  & z ~ ?((@insert_new @insert_old) (vkeep (skeep out)))
+
+@insert_new = (v (s out))
+  & out ~ (1 (v s))
+
+@insert_old = (* (v (s out)))
+  & v ~ *
+  & out ~ s
+
+// Membership test: return 1 if x occurs in the list, otherwise 0.
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & {xc xr} ~ x
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_more @mem_yes) (t (xr out)))
+
+@mem_more = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+// Traverse the reachability map and produce one label per vertex.
+@labels = ((?((@labels_nil @labels_cons) (pl (full out))) pl) (full out))
+
+@labels_nil = (* (* (0 *)))
+
+@labels_cons = (* (((id reach) tail) (full out)))
+  & {ffind fnext} ~ full
+  & @find ~ (ffind (id (reach label)))
+  & @labels ~ (tail (fnext rest))
+  & out ~ (1 (label rest))
+
+// Find the first candidate mutually reachable with source.
+@find = ((?((@find_nil @find_cons) (pl (source (reach out)))) pl) (source (reach out)))
+
+@find_nil = (* (s (* s)))
+
+@find_cons = (* (((u ru) tail) (source (reach out))))
+  & {ucandidate ucheck} ~ u
+  & {rcheck rnext} ~ reach
+  & @mem ~ (rcheck (ucheck z))
+  & z ~ ?((@find_not_forward @find_test_reverse) (ucandidate (ru (tail (source (rnext out))))))
+
+@find_not_forward = (u (ru (tail (source (reach out)))))
+  & u ~ *
+  & ru ~ *
+  & @find ~ (tail (source (reach out)))
+
+@find_test_reverse = (* (u (ru (tail (source (reach out))))))
+  & {scheck srec} ~ source
+  & @mem ~ (ru (scheck z2))
+  & z2 ~ ?((@find_continue @find_found) (u (tail (srec (reach out)))))
+
+@find_continue = (u (tail (source (reach out))))
+  & u ~ *
+  & @find ~ (tail (source (reach out)))
+
+@find_found = (* (u (tail (source (reach out)))))
+  & tail ~ *
+  & source ~ *
+  & reach ~ *
+  & out ~ u

@@ -1,0 +1,7 @@
+// Split the payload before branching. Nil's erased payload erases both fields;
+// for Cons, discard the head and recurse directly on the tail.
+@prog = (l out)
+  & @last ~ (l out)
+
+@last = ((tag (* t)) out)
+  & tag ~ ?(((* 0) (* @last)) (t out))

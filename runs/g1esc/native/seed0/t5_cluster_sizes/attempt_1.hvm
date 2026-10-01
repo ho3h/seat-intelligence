@@ -1,0 +1,195 @@
+@prog = (input output)
+  & input ~ (n pairs)
+  & {n_build n_rest} ~ n
+  & {n_roots n_emit} ~ n_rest
+  & @build_state ~ (n_build ((0 *) state))
+  & @proc ~ (pairs (state final_state))
+  & @build_roots ~ (final_state (n_roots ((0 *) roots)))
+  & @emit_counts ~ (roots (0 (n_emit output)))
+
+@build_state = (k (acc out))
+  & k ~ ?((@bs_zero @bs_succ) (acc out))
+
+@bs_zero = (acc out)
+  & acc ~ out
+
+@bs_succ = (pred (acc out))
+  & {pred_rem pred_pair} ~ pred
+  & {pred_id pred_parent} ~ pred_pair
+  & @build_state ~ (pred_rem ((1 ((pred_id pred_parent) acc)) out))
+
+@proc = (pairs (state final_out))
+  & pairs ~ (tag payload)
+  & tag ~ ?((@proc_nil @proc_cons) (payload (state final_out)))
+
+@proc_nil = (payload (state final_out))
+  & payload ~ *
+  & state ~ final_out
+
+@proc_cons = (pred (payload (state final_out)))
+  & pred ~ *
+  & payload ~ (pair rest)
+  & pair ~ (u v)
+  & @union ~ (u (v (state (rest final_out))))
+
+@union = (u (v (state (rest final_out))))
+  & {state_find_u state_rest} ~ state
+  & {state_find_v state_update} ~ state_rest
+  & @find ~ (state_find_u (u ru))
+  & @find ~ (state_find_v (v rv))
+  & @finish_union ~ (ru (rv (state_update (rest final_out))))
+
+@finish_union = (ru (rv (state (rest final_out))))
+  & {ru_eq ru_rest} ~ ru
+  & {rv_eq rv_rest} ~ rv
+  & ru_eq ~ $([=] $(rv_eq eq))
+  & eq ~ ?((@union_diff @union_same) (ru_rest (rv_rest (state (rest final_out)))))
+
+@union_same = (ru (rv (state (rest final_out))))
+  & ru ~ *
+  & rv ~ *
+  & @proc ~ (rest (state final_out))
+
+@union_diff = (ru (rv (state (rest final_out))))
+  & {ru_cmp ru_old} ~ ru
+  & {rv_cmp rv_new} ~ rv
+  & ru_cmp ~ $([<] $(rv_cmp lt))
+  & lt ~ ?((@union_gt @union_lt) (ru_old (rv_new (state (rest final_out)))))
+
+@union_lt = (ru (rv (state (rest final_out))))
+  & @set_root ~ (state (ru (rv (rest final_out))))
+
+@union_gt = (ru (rv (state (rest final_out))))
+  & @set_root ~ (state (rv (ru (rest final_out))))
+
+@set_root = (state (node (new (rest final_out))))
+  & @replace ~ (state (node (new updated_state)))
+  & @proc ~ (rest (updated_state final_out))
+
+@replace = (state (node (new out)))
+  & state ~ (tag payload)
+  & tag ~ ?((@replace_nil @replace_cons) (payload (node (new out))))
+
+@replace_nil = (payload (node (new out)))
+  & payload ~ *
+  & node ~ *
+  & new ~ *
+  & out ~ 0
+
+@replace_cons = (pred (payload (node (new out))))
+  & pred ~ *
+  & payload ~ (entry tail)
+  & entry ~ (id parent)
+  & {node_cmp node_ctx} ~ node
+  & {id_cmp id_keep} ~ id
+  & id_cmp ~ $([=] $(node_cmp eq))
+  & eq ~ ?((@repl_ne @repl_eq) (tail (id_keep (parent (node_ctx (new out))))))
+
+@repl_ne = (tail (id (parent (node (new out)))))
+  & @replace ~ (tail (node (new new_tail)))
+  & out ~ (1 ((id parent) new_tail))
+
+@repl_eq = (tail (id (parent (node (new out)))))
+  & parent ~ *
+  & node ~ *
+  & out ~ (1 ((id new) tail))
+
+@find = (state (node out))
+  & state ~ (tag payload)
+  & tag ~ ?((@find_nil @find_cons) (payload (node out)))
+
+@find_nil = (payload (node out))
+  & payload ~ *
+  & node ~ *
+  & out ~ 0
+
+@find_cons = (pred (payload (node out)))
+  & pred ~ *
+  & payload ~ (entry tail)
+  & entry ~ (id parent)
+  & {node_cmp node_ctx} ~ node
+  & id ~ $([=] $(node_cmp eq))
+  & eq ~ ?((@find_ne @find_eq) (tail (parent (node_ctx out))))
+
+@find_ne = (tail (parent (node out)))
+  & parent ~ *
+  & @find ~ (tail (node out))
+
+@find_eq = (tail (parent (node out)))
+  & {node_cmp node_ret} ~ node
+  & {parent_cmp parent_follow} ~ parent
+  & parent_cmp ~ $([=] $(node_cmp eqp))
+  & eqp ~ ?((@find_eq_ne @find_eq_eq) (tail (parent_follow (node_ret out))))
+
+@find_eq_ne = (tail (parent (node out)))
+  & node ~ *
+  & @find ~ (tail (parent out))
+
+@find_eq_eq = (tail (parent (node out)))
+  & tail ~ *
+  & parent ~ *
+  & node ~ out
+
+@build_roots = (state (k (acc out)))
+  & k ~ ?((@br_zero @br_succ) (state (acc out)))
+
+@br_zero = (state (acc out))
+  & state ~ *
+  & acc ~ out
+
+@br_succ = (pred (state (acc out)))
+  & {state_cur state_rest} ~ state
+  & {pred_id pred_rem} ~ pred
+  & @find ~ (state_cur (pred_id root))
+  & @build_roots ~ (state_rest (pred_rem ((1 (root acc)) out)))
+
+@emit_counts = (roots (id (rem out)))
+  & rem ~ ?((@emit_zero @emit_succ) (roots (id out)))
+
+@emit_zero = (roots (id out))
+  & roots ~ *
+  & id ~ *
+  & out ~ (0 *)
+
+@emit_succ = (pred (roots (id out)))
+  & {roots_count roots_rest} ~ roots
+  & {id_count id_inc} ~ id
+  & @count ~ (roots_count (id_count cnt))
+  & id_inc ~ $([+1] id_next)
+  & @emit_add ~ (cnt (roots_rest (id_next (pred out))))
+
+@emit_add = (cnt (roots (id (rem out))))
+  & {cnt_test cnt_val} ~ cnt
+  & cnt_test ~ ?((@emit_add_zero @emit_add_pos) (roots (id (rem (cnt_val out)))))
+
+@emit_add_zero = (roots (id (rem (cnt out))))
+  & cnt ~ *
+  & @emit_counts ~ (roots (id (rem out)))
+
+@emit_add_pos = (pred (roots (id (rem (cnt out)))))
+  & pred ~ *
+  & @emit_counts ~ (roots (id (rem tail_out)))
+  & out ~ (1 (cnt tail_out))
+
+@count = (list (x out))
+  & list ~ (tag payload)
+  & tag ~ ?((@count_nil @count_cons) (payload (x out)))
+
+@count_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@count_cons = (pred (payload (x out)))
+  & pred ~ *
+  & payload ~ (h tail)
+  & {x_cmp x_rest} ~ x
+  & h ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@count_ne @count_eq) (tail (x_rest out)))
+
+@count_ne = (tail (x out))
+  & @count ~ (tail (x out))
+
+@count_eq = (tail (x out))
+  & @count ~ (tail (x cnt_tail))
+  & cnt_tail ~ $([+1] out)

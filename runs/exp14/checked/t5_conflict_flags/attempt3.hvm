@@ -1,0 +1,54 @@
+@get_idx = (l (i o))
+  & l ~ ?((@get_zero @get_succ) (i o))
+@get_zero = ((tag (head tail)) (* head))
+@get_succ = (* (l (n o)))
+  & l ~ (tag (head tail))
+  & tag ~ *
+  & n ~ ?((@n_zero @n_pos) (tail (m o)))
+  & m ~ $([-] $(1 n))
+@n_zero = (tail (* *))
+@n_pos = (* (tail (m o)))
+  & @get_idx ~ (tail (m o))
+@prog = ((c (mnl o)))
+  & c ~ ?((@empty @cons) ((mnl o)))
+@empty = (ctx o)
+  & ctx ~ (out out)
+  & out ~ (0 *)
+@cons = (* (ctx ((cid tail_c) o)))
+  & ctx ~ (c (mnl (result)))
+  & @has_conflict ~ (mnl (c (cid (conf))))
+  & conf ~ (c_next (c_next rest))
+  & c_next ~ ?((@append0 @append1) (ctx (o)))
+@append0 = (ctx (o tail))
+  & ctx ~ (c (mnl (result)))
+  & @cons ~ (c ((tag c_id) (o tail)))
+@append1 = (* (ctx (o tail)))
+  & ctx ~ (c (mnl (result)))
+  & o ~ $([|] $(1 o_new))
+  & o_new ~ ?((@append0 @append1) (ctx (o_new tail)))
+@has_conflict = (mnl (c (cid (result))))
+  & mnl ~ ?((@cf_nil @cf_cons) (c (cid (result))))
+@cf_nil = (c (cid (* result)))
+  & c ~ *
+  & cid ~ *
+  & result ~ 0
+@cf_cons = (* (mnl (ctx ((a b) tail_mnl))))
+  & ctx ~ (c (cid (result)))
+  & @get_idx ~ (c (a ca))
+  & @get_idx ~ (c (b cb))
+  & ca ~ $([=] $(cid eq_a))
+  & eq_a ~ ?((@skip @check_b) (cb (ctx (tail_mnl (result)))))
+@skip = (cb (ctx result))
+  & cb ~ *
+  & @has_conflict ~ (mnl (c (cid (result))))
+@check_b = (* (cb (ctx (tail (result)))))
+  & tail ~ *
+  & cb ~ $([=] $(cid eq_b))
+  & eq_b ~ ?((@skip @found) (c (cid (tail (result)))))
+@found = (* (ctx result))
+  & ctx ~ (c (cid (tail (result))))
+  & tail ~ *
+  & c ~ *
+  & cid ~ *
+  & mnl ~ *
+  & result ~ 1

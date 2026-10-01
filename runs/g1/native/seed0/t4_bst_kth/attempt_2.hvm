@@ -1,0 +1,53 @@
+// Compute the number of nodes in a tree.
+@size = ((?((@size_leaf @size_node) (pl out)) pl) out)
+
+@size_leaf = (* 0)
+
+@size_node = (* ((l (v r)) out))
+  & @size ~ (l ls)
+  & @size ~ (r rs)
+  & v ~ *
+  & ls ~ $([+] $(rs sum))
+  & sum ~ $([+] $(1 out))
+
+// Return the k-th in-order value, or 16777215 if it is out of range.
+@kth = ((?((@kth_leaf @kth_node) (pl (k out))) pl) (k out))
+
+@kth_leaf = (* (* 16777215))
+
+@kth_node = (* ((l (v r)) (k out)))
+  & l ~ {ls_tree left_tree}
+  & @size ~ (ls_tree ls)
+  & k ~ {k_cmp k_keep}
+  & ls ~ {ls_cmp ls_keep}
+  & k_cmp ~ $([<] $(ls_cmp less))
+  & less ~ ?((@kth_ge @kth_lt) (k_keep (ls_keep (left_tree (v (r out))))))
+
+@kth_lt = (* (k (ls (left (v (r out))))))
+  & ls ~ *
+  & v ~ *
+  & r ~ *
+  & @kth ~ (left (k out))
+
+@kth_ge = (k (ls (left (v (r out)))))
+  & k ~ {k_cmp k_keep}
+  & ls ~ {ls_cmp ls_keep}
+  & k_cmp ~ $([=] $(ls_cmp eq))
+  & eq ~ ?((@kth_gt @kth_eq) (k_keep (ls_keep (left (v (r out))))))
+
+@kth_eq = (* (k (ls (left (v (r out))))))
+  & k ~ *
+  & ls ~ *
+  & left ~ *
+  & r ~ *
+  & v ~ out
+
+@kth_gt = (* (k (ls (left (v (r out))))))
+  & left ~ *
+  & v ~ *
+  & k ~ $([-] $(ls diff))
+  & diff ~ $([-] $(1 k2))
+  & @kth ~ (r (k2 out))
+
+@prog = ((k t) out)
+  & @kth ~ (t (k out))

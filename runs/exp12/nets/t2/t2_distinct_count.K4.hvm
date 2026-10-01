@@ -1,0 +1,73 @@
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = (lv1 (seen (count out)))
+  & @dc_cons_lw ~ (lv1 (seen (count out)))
+
+@dc_nil = (* (seen (count out)))
+  & seen ~ *
+  & count ~ out
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & @trie ~ (seen (h (seen2 z6)))
+  & z6 ~ ?((@dc_skip_hz @dc_add_hz) (xw26 (seen2 (count out))))
+  & @dc_cons_lw ~ (t xw26)
+
+@dc_skip = (t (seen (count out)))
+  & @dc ~ (t (seen (count out)))
+
+@dc_add = (* (t (seen (count out))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t (seen (count2 out)))
+
+@trie = ((?((@trie_empty @trie_node) (pl (key out))) pl) (key out))
+
+@trie_empty = (* (key out))
+  & @step ~ ((0 ((0 *) (0 *))) (key out))
+
+@trie_node = (* ((terminal children) (key out)))
+  & children ~ (left right)
+  & @step ~ ((terminal (left right)) (key out))
+
+@step = ((terminal (left right)) (?((@step_zero @step_more) ((terminal (left right)) out)) out))
+
+@step_zero = ((?((@step_new @step_old) ((left right) out)) (left right)) out)
+
+@step_new = ((left right) out)
+  & out ~ ((1 (1 (left right))) 1)
+
+@step_old = (* ((left right) out))
+  & out ~ ((1 (1 (left right))) 0)
+
+@step_more = (km ((terminal (left right)) out))
+  & km ~ $([+1] key)
+  & key ~ {k1 k2}
+  & k1 ~ $([%] $(2 bit))
+  & k2 ~ $([/] $(2 q))
+  & bit ~ ?((@step_left @step_right) ((terminal (left right)) (q out)))
+
+@step_left = ((terminal (left right)) (q out))
+  & @trie ~ (left (q result))
+  & result ~ (newchild added)
+  & out ~ ((1 (terminal (newchild right))) added)
+
+@step_right = (* ((terminal (left right)) (q out)))
+  & @trie ~ (right (q result))
+  & result ~ (newchild added)
+  & out ~ ((1 (terminal (left newchild))) added)
+
+@dc_cons_lw = (ls53 (q29 (q30 q31)))
+  & ls53 ~ (g48 (e44 (g49 (e45 (g50 (e46 (g51 (e47 tk52))))))))
+  & g48 ~ ?((@dc_nil @dc_cons_la) ((e44 (q33 (q34 q35))) (q29 (q30 q31))))
+  & g49 ~ ?((@dc_nil @dc_cons_la) ((e45 (q37 (q38 q39))) (q33 (q34 q35))))
+  & g50 ~ ?((@dc_nil @dc_cons_la) ((e46 (q41 (q42 q43))) (q37 (q38 q39))))
+  & g51 ~ ?((@dc_nil @dc_cons) ((e47 tk52) (q41 (q42 q43))))
+
+@dc_skip_hz = (hw15 (q8 (q9 q10)))
+  & hw15 ~ (q8 (q9 q10))
+
+@dc_add_hz = (* (hw25 (q17 ($([+1] q20) q19))))
+  & hw25 ~ (q17 (q20 q19))
+
+@dc_cons_la = (* ((h xw26) (seen (count out))))
+  & @trie ~ (seen (h (seen2 ?((@dc_skip_hz @dc_add_hz) (xw26 (seen2 (count out)))))))

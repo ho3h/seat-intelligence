@@ -1,0 +1,94 @@
+@prog = (input output)
+  & @run ~ (input (0 ((0 *) output)))
+
+@run = ((?((@halt (* ((instr tail) (pc1 (stk1 out1))))) (payload (pc (stk out)))) payload) (pc (stk out)))
+  & instr ~ (op arg)
+  & op ~ ?(((argp (tailp (pcp (stkp outp)))) @dispatch) (arg (tail (pc1 (stk1 out1)))))
+  & pcp ~ $([+1] pcp1)
+  & @run ~ (tailp (pcp1 ( (argp stkp) outp)))
+
+@halt = (* (pc (stk out)))
+  & pc ~ *
+  & @top ~ (stk out)
+
+@top = ((head tail) out)
+  & head ~ out
+  & tail ~ *
+
+@dispatch = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argA (tailA (pcA (stkA outA)))) @dispatch2) (arg (tail (pc (stk out)))))
+  & stkA ~ (bA restA1)
+  & restA1 ~ (aA restA)
+  & argA ~ *
+  & aA ~ $([+] $(bA sumA))
+  & pcA ~ $([+1] pcA1)
+  & @run ~ (tailA (pcA1 ((sumA restA) outA)))
+
+@dispatch2 = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argM (tailM (pcM (stkM outM)))) @dispatch3) (arg (tail (pc (stk out)))))
+  & stkM ~ (bM restM1)
+  & restM1 ~ (aM restM)
+  & argM ~ *
+  & aM ~ $([*] $(bM productM))
+  & pcM ~ $([+1] pcM1)
+  & @run ~ (tailM (pcM1 ((productM restM) outM)))
+
+@dispatch3 = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argD (tailD (pcD (stkD outD)))) @dispatch4) (arg (tail (pc (stk out)))))
+  & stkD ~ (aD restD)
+  & argD ~ *
+  & aD ~ {aD1 aD2}
+  & pcD ~ $([+1] pcD1)
+  & @run ~ (tailD (pcD1 ((aD1 (aD2 restD)) outD)))
+
+@dispatch4 = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argS (tailS (pcS (stkS outS)))) @dispatch5) (arg (tail (pc (stk out)))))
+  & stkS ~ (aS tailS1)
+  & tailS1 ~ (bS restS)
+  & argS ~ *
+  & pcS ~ $([+1] pcS1)
+  & @run ~ (tailS (pcS1 ((bS (aS restS)) outS)))
+
+@dispatch5 = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argP (tailP (pcP (stkP outP)))) @dispatch6) (arg (tail (pc (stk out)))))
+  & stkP ~ (aP restP)
+  & argP ~ *
+  & aP ~ *
+  & pcP ~ $([+1] pcP1)
+  & @run ~ (tailP (pcP1 (restP outP)))
+
+@dispatch6 = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argJ (tailJ (pcJ (stkJ outJ)))) @dispatch7) (arg (tail (pc (stk out)))))
+  & stkJ ~ (xJ restJ)
+  & xJ ~ $([=] $(0 zJ))
+  & zJ ~ ?(((argN (tailN (pcN (restN outN)))) (* (argZ (tailZ (pcZ (restZ outZ))))) (argJ (tailJ (restJ outJ))))
+  & argN ~ *
+  & pcN ~ $([+1] pcN1)
+  & @run ~ (tailN (pcN1 (restN outN)))
+  & argZ ~ {arg1 arg2}
+  & pcZ ~ $([+1] nextpc)
+  & arg1 ~ $([-] $(nextpc skipn))
+  & @skip ~ (skipn (tailZ (arg2 (restZ outZ))))
+
+@dispatch7 = (code (arg (tail (pc (stk out)))))
+  & code ~ ?(((argU (tailU (pcU (stkU outU)))) @bad) (arg (tail (pc (stk out)))))
+  & stkU ~ (bU restU1)
+  & restU1 ~ (aU restU)
+  & argU ~ *
+  & aU ~ $([-] $(bU differenceU))
+  & pcU ~ $([+1] pcU1)
+  & @run ~ (tailU (pcU1 ((differenceU restU) outU)))
+
+@bad = (* *)
+
+@skip = (?((@skip_done @skip_more) ctx) ctx)
+
+@skip_done = (program (target (stk out)))
+  & @run ~ (program (target (stk out)))
+
+@skip_more = (count (program (target (stk out))))
+  & program ~ (tag payload)
+  & payload ~ (instruction tail)
+  & tag ~ *
+  & instruction ~ *
+  & @skip ~ (count (tail (target (stk out))))

@@ -1,0 +1,182 @@
+@prog = ((n edges) out)
+  & n ~ {ni ns}
+  & @init ~ (ni (0 labels))
+  & @edges ~ (edges (labels done))
+  & done ~ {full remaining}
+  & @zero_hist ~ (0 hist)
+  & @scan ~ (ns (0 (full (remaining (hist out)))))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (rem (i out))
+  & i ~ {ih ic}
+  & ic ~ $([+1] next)
+  & @init ~ (rem (next tail))
+  & out ~ (1 ((ih 1) tail))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (labels out))) pl) (labels out))
+
+@edges_nil = (pl (labels out))
+  & pl ~ *
+  & out ~ labels
+
+@edges_cons = (rem (pl (labels out)))
+  & rem ~ *
+  & pl ~ (edge tail)
+  & edge ~ (u v)
+  & labels ~ {l1 lrest}
+  & lrest ~ {l2 l3}
+  & @lookup ~ (u (l1 lu))
+  & @lookup ~ (v (l2 lv))
+  & @merge ~ (lu (lv (tail (l3 out))))
+
+@lookup = (idx (list out))
+  & idx ~ ?((@lookup_zero @lookup_more) (list out))
+
+@lookup_zero = (list out)
+  & list ~ (1 (head tail))
+  & tail ~ *
+  & out ~ head
+
+@lookup_more = (rem (list out))
+  & list ~ (1 (head tail))
+  & head ~ *
+  & @lookup ~ (rem (tail out))
+
+@merge = (a (b (tail (labels out))))
+  & a ~ (ar as)
+  & b ~ (br bs)
+  & ar ~ {ac ak}
+  & br ~ {bc bk}
+  & ac ~ $([<] $(bc flag))
+  & flag ~ ?((@merge_ge @merge_lt) (ak (as (bk (bs (tail (labels out)))))))
+
+@merge_lt = (ar (as (br (bs (tail (labels out))))))
+  & as ~ $([+] $(bs total))
+  & @replace ~ (labels (br ((ar total) repl)))
+  & @edges ~ (tail (repl out))
+
+@merge_ge = (ar (as (br (bs (tail (labels out))))))
+  & ar ~ {ac ak}
+  & br ~ {bc bk}
+  & ac ~ $([=] $(bc eq))
+  & eq ~ ?((@merge_unequal @merge_equal) (ak (as (bk (bs (tail (labels out)))))))
+
+@merge_unequal = (ar (as (br (bs (tail (labels out))))))
+  & as ~ $([+] $(bs total))
+  & @replace ~ (labels (ar ((br total) repl)))
+  & @edges ~ (tail (repl out))
+
+@merge_equal = (ar (as (br (bs (tail (labels out))))))
+  & ar ~ *
+  & as ~ *
+  & br ~ *
+  & bs ~ *
+  & @edges ~ (tail (labels out))
+
+@replace = ((?((@replace_nil @replace_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@replace_nil = (pl (old (new out)))
+  & pl ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (rem (pl (old (new out))))
+  & rem ~ *
+  & pl ~ (head tail)
+  & head ~ (hc hs)
+  & hc ~ {hcmp hv}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hcmp ~ $([=] $(oc eq))
+  & eq ~ ?((@replace_no @replace_yes) (hv (hs (or (nc (nr (tail out)))))))
+
+@replace_no = (hv (hs (or (nc (nr (tail out))))))
+  & nc ~ *
+  & @replace ~ (tail (or (nr rest)))
+  & out ~ (1 ((hv hs) rest))
+
+@replace_yes = (hv (hs (or (nc (nr (tail out))))))
+  & hv ~ *
+  & hs ~ *
+  & @replace ~ (tail (or (nr rest)))
+  & out ~ (1 (nc rest))
+
+@scan = (n (i (full (remaining (hist out)))))
+  & n ~ ?((@scan_nil @scan_more) (i (full (remaining (hist out)))))
+
+@scan_nil = (i (full (remaining (hist out))))
+  & i ~ *
+  & full ~ *
+  & remaining ~ *
+  & out ~ hist
+
+@scan_more = (rem (i (full (remaining (hist out)))))
+  & i ~ {ic ir}
+  & ir ~ {ik ib}
+  & ib ~ $([+1] next)
+  & full ~ {fc fr}
+  & @lookup ~ (ic (fc value))
+  & value ~ (vcomp vsize)
+  & vcomp ~ $([=] $(ik eq))
+  & eq ~ ?((@scan_nonroot @scan_root) (rem (next (fr (vsize (hist out))))))
+
+@scan_nonroot = (rem (next (labs (size (hist out)))))
+  & size ~ *
+  & @scan ~ (rem (next (labs (hist out))))
+
+@scan_root = (rem (next (labs (size (hist out)))))
+  & @hinc ~ (size (hist nhist))
+  & @scan ~ (rem (next (labs (nhist out))))
+
+@hinc = (size (hist out))
+  & size ~ {scomp skeep}
+  & scomp ~ $([>] $(7 flag))
+  & flag ~ ?((@hinc_small @hinc_large) (skeep (hist out)))
+
+@hinc_small = (skeep (hist out))
+  & skeep ~ $([-] $(1 idx))
+  & @inc_at ~ (idx (hist out))
+
+@hinc_large = (* (skeep (hist out)))
+  & skeep ~ *
+  & @inc_at ~ (7 (hist out))
+
+@inc_at = (idx (hist out))
+  & idx ~ ?((@inc_zero @inc_more) (hist out))
+
+@inc_zero = (hist out)
+  & hist ~ (1 (head tail))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_more = (rem (hist out))
+  & hist ~ (1 (head tail))
+  & @inc_at ~ (rem (tail sub))
+  & out ~ (1 (head sub))
+
+@zero_hist = (x out)
+  & x ~ *
+  & out ~ (1 (0
+    (1 (0
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (0 *)
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+  ))

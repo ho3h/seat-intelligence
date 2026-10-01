@@ -1,0 +1,205 @@
+{
+ "failed_samples": 115,
+ "components": {
+  "together_cat:extra_or_wrong_category": 45,
+  "limit:missing": 41,
+  "size:extra": 40,
+  "apart:extra_or_wrong_pair": 21,
+  "parse_error:parse: unknown word: apart government go": 15,
+  "size:missing": 15,
+  "order:wrong_categories": 15,
+  "together_company:missing": 5,
+  "together_company:extra": 5,
+  "apart:missing_or_wrong_pair": 5,
+  "limit:wrong_categories": 5,
+  "parse_error:parse: unknown word: order government ai": 5
+ },
+ "by_voice": {
+  "terse": {
+   "size:missing": 10,
+   "together_cat:extra_or_wrong_category": 10,
+   "parse_error:parse: unknown word: apart government go": 5,
+   "together_company:missing": 5,
+   "limit:missing": 5,
+   "apart:extra_or_wrong_pair": 5
+  },
+  "formal": {
+   "limit:missing": 15,
+   "size:extra": 5,
+   "together_cat:extra_or_wrong_category": 5,
+   "apart:extra_or_wrong_pair": 5,
+   "together_company:extra": 5
+  },
+  "chatty": {
+   "size:extra": 5,
+   "together_cat:extra_or_wrong_category": 5,
+   "limit:missing": 1,
+   "apart:extra_or_wrong_pair": 1
+  },
+  "negative": {
+   "apart:extra_or_wrong_pair": 10,
+   "parse_error:parse: unknown word: apart government go": 5,
+   "order:wrong_categories": 5,
+   "size:extra": 5,
+   "limit:missing": 5,
+   "apart:missing_or_wrong_pair": 5
+  },
+  "list": {
+   "size:extra": 20,
+   "limit:missing": 15,
+   "together_cat:extra_or_wrong_category": 15,
+   "limit:wrong_categories": 5,
+   "order:wrong_categories": 5,
+   "size:missing": 5
+  },
+  "wedding": {
+   "together_cat:extra_or_wrong_category": 10,
+   "order:wrong_categories": 5,
+   "parse_error:parse: unknown word: apart government go": 5,
+   "size:extra": 5,
+   "parse_error:parse: unknown word: order government ai": 5
+  }
+ },
+ "examples": {
+  "size:missing": [
+   [
+    "ter05",
+    "apart chips software_security"
+   ],
+   [
+    "ter05",
+    "apart chips software_security"
+   ],
+   [
+    "ter05",
+    "apart chips software_security"
+   ]
+  ],
+  "together_company:missing": [
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ]
+  ],
+  "together_cat:extra_or_wrong_category": [
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ]
+  ],
+  "limit:missing": [
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ]
+  ],
+  "apart:extra_or_wrong_pair": [
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ],
+   [
+    "ter09",
+    "together big_tech ; together chips ; apart big_tech chips"
+   ]
+  ],
+  "size:extra": [
+   [
+    "for05",
+    "size 2 ; together company"
+   ],
+   [
+    "for05",
+    "size 2 ; together company"
+   ],
+   [
+    "for05",
+    "size 2 ; together company"
+   ]
+  ],
+  "together_company:extra": [
+   [
+    "for11",
+    "size 6 ; apart ai_lab government ; order chips ; together company"
+   ],
+   [
+    "for11",
+    "size 6 ; apart ai_lab government ; order chips ; together company"
+   ],
+   [
+    "for11",
+    "size 6 ; apart ai_lab government ; order chips ; together company"
+   ]
+  ],
+  "order:wrong_categories": [
+   [
+    "neg08",
+    "order investor big_tech ; together company"
+   ],
+   [
+    "neg08",
+    "order investor big_tech ; together company"
+   ],
+   [
+    "neg08",
+    "order investor big_tech ; together company"
+   ]
+  ],
+  "apart:missing_or_wrong_pair": [
+   [
+    "neg10",
+    "size 2 ; apart chips government ; apart chips investor"
+   ],
+   [
+    "neg10",
+    "size 2 ; apart chips government ; apart chips investor"
+   ],
+   [
+    "neg10",
+    "size 2 ; apart chips government ; apart chips investor"
+   ]
+  ],
+  "limit:wrong_categories": [
+   [
+    "lis06",
+    "size 1 ; together ai_lab ; limit investor 1"
+   ],
+   [
+    "lis06",
+    "size 1 ; together ai_lab ; limit investor 1"
+   ],
+   [
+    "lis06",
+    "size 1 ; together ai_lab ; limit investor 1"
+   ]
+  ]
+ }
+}

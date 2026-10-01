@@ -1,0 +1,115 @@
+// Build the initial label list [0 .. n-1], then carry its size as the
+// current number of clusters.
+@prog = ((n pairs) out)
+  & n ~ {nm nc}
+  & @mk ~ (nm (0 labels))
+  & @edges ~ (pairs (labels (nc out)))
+
+@mk = (?((@mk_nil @mk_succ) (i out)) (i out))
+
+@mk_nil = (* (0 *))
+
+@mk_succ = (pred (i out))
+  & i ~ {head next}
+  & next ~ $([+1] i2)
+  & @mk ~ (pred (i2 tail))
+  & out ~ (1 (head tail))
+
+// Process merge edges in order.
+@edges = ((?((@edges_nil @edges_cons) (p (labels (count out)))) p) (labels (count out)))
+
+@edges_nil = (* (labels (count out)))
+  & labels ~ *
+  & out ~ count
+
+@edges_cons = (* ((edge tail) (labels (count out))))
+  & @merge ~ (edge (labels (count merged)))
+  & merged ~ (labels2 count2)
+  & @edges ~ (tail (labels2 (count2 out)))
+
+// Look up both endpoint labels, then merge their components if distinct.
+@merge = ((u v) (labels (count out)))
+  & @pick2 ~ (labels (u (v picked)))
+  & picked ~ (a (b labels2))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([=] $(bc eq))
+  & eq ~ ?((@merge_diff @merge_same) (labels2 (ar (br (count out))))
+
+@merge_diff = (labels (a (b (count out))))
+  & @rep ~ (labels (b (a changed)))
+  & changed ~ (labels2 count2)
+  & count ~ $([-] $(1 count2))
+  & out ~ (labels2 count2)
+
+@merge_same = (* (labels (a (b (count out)))))
+  & a ~ *
+  & b ~ *
+  & out ~ (labels count)
+
+// Scan the labels once to retrieve the values at indices i and j,
+// preserving the list. The task guarantees i < j.
+@pick2 = ((?((@p2_nil @p2_cons) (p (i (j out)))) p) (i (j out)))
+
+@p2_nil = (* (i (j out)))
+  & i ~ *
+  & j ~ *
+  & out ~ (0 (0 (0 *)))
+
+@p2_cons = (* ((h t) (i (j out))))
+  & i ~ ?((@p2_at @p2_more) (h (t (j out))))
+
+@p2_at = (h (t (j out)))
+  & j ~ $([-] $(1 jm))
+  & @lk ~ (t (jm got))
+  & got ~ (b tail)
+  & h ~ {a hc}
+  & out ~ (a (b (1 (hc tail))))
+
+@p2_more = (ip (h (t (j out))))
+  & j ~ $([-] $(1 jm))
+  & @p2 ~ (t (ip (jm picked)))
+  & picked ~ (a (b tail))
+  & out ~ (a (b (1 (h tail))))
+
+@p2 = ((?((@p2_nil @p2_cons) (p (i (j out)))) p) (i (j out)))
+
+// Look up an index while preserving the list.
+@lk = ((?((@lk_nil @lk_cons) (p (idx out))) p) (idx out))
+
+@lk_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@lk_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lk_at @lk_more) (h (t out)))
+
+@lk_at = (h (t out))
+  & h ~ {v h2}
+  & out ~ (v (1 (h2 t)))
+
+@lk_more = (pred (h (t out)))
+  & @lk ~ (t (pred got))
+  & got ~ (v rest)
+  & out ~ (v (1 (h rest)))
+
+// Replace every occurrence of old with new in a label list.
+@rep = ((?((@rep_nil @rep_cons) (p (old (new out)))) p) (old (new out)))
+
+@rep_nil = (* (* (* (0 *))))
+
+@rep_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hkeep}
+  & old ~ {oc oldr}
+  & new ~ {newr newc}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@rep_no @rep_yes) (hkeep (t (oldr (newr (newc out))))))
+
+@rep_no = (h (t (old (newr (newc out)))))
+  & newc ~ *
+  & @rep ~ (t (old (newr rest)))
+  & out ~ (1 (h rest))
+
+@rep_yes = (* (* (t (old (newr (newc out))))))
+  & @rep ~ (t (old (newr rest)))
+  & out ~ (1 (newc rest))

@@ -1,0 +1,52 @@
+--- 05:02:35
+build.py:51: the environment of fold `inner_f` is copied to every leaf by DUPs, so it must be numbers or a tuple of numbers; got (num num num trie[num] depth num)
+--- 05:03:12
+build.py:29: wire `c1` (list[num], output `c1` of recipe list_length_and_copy `lc`, made at build.py:24) belongs to @prog (t5_metric_pairwise) (@prog), but is used in branch zero case of @prog (t5_metric_pairwise) (@prog_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:03:34
+build.py:34: wire `nm1` (num, argument `cm1` of branch nonzero case of @prog (t5_metric_pairwise), made at build.py:101) is used a second time (lg port `x`); it was already used at build.py:33 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(nm1, 2)  and use each once.
+--- 05:03:42
+build.py:51: wire `i` (num, argument `i` of body of iterate `iter`, made at build.py:91) is used a second time (get `gt` port `k`); it was already used at build.py:48 (right operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:04:34
+build.py:30: wire `pred_t` (trie[num], argument `pred_t` of body of iterate `iter`, made at build.py:75) is used a second time (get `gt` port `t`); it was already used at build.py:29 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:05:11
+build.py:44: wire `r` (num, result of `>`, made at build.py:27) is used a second time (right operand of `&`); it was already used at build.py:42 (right operand of `&`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:05:36
+build.py:54: wire `j` (num, argument `j` of body of iterate `iter`, made at build.py:77) is used a second time (left operand of `+`); it was already used at build.py:22 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(j, 2)  and use each once.
+--- 05:05:46
+build.py:55: wire `i` (num, argument `i` of body of iterate `iter`, made at build.py:77) is used a second time (left operand of `+`); it was already used at build.py:21 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:05:57
+wrong arity: branch zero case of body of iterate `iter` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:trie[num], passed[3]:trie[num], passed[4]:trie[num], passed[5]:trie[num], passed[6]:depth, passed[7]:num, passed[8]:num, passed[9]:num, passed[10]:num), i.e. d plus 11 value(s); your function `reset_j` takes 11 parameter(s) (b, i_b, pred_t1_b, pred_t2_b, truth_t1_b, truth_t2_b, L_b, n_b, tp_b, fp_b, fn_b).
+--- 05:06:18
+wrong arity: branch nonzero case of body of iterate `iter` is called as f(d, cm1:num, passed[0]:num, passed[1]:num, passed[2]:trie[num], passed[3]:trie[num], passed[4]:trie[num], passed[5]:trie[num], passed[6]:depth, passed[7]:num, passed[8]:num, passed[9]:num, passed[10]:num), i.e. d plus 12 value(s); your function `cont_j` takes 12 parameter(s) (b, i_b, j_new_val, pred_t1_b, pred_t2_b, truth_t1_b, truth_t2_b, L_b, n_b, tp_b, fp_b, fn_b).
+--- 05:06:28
+build.py:69: wire `i` (num, argument `i` of body of iterate `iter`, made at build.py:79) is used a second time (branch passed[0]); it was already used at build.py:21 (fanout into 4). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:07:00
+build.py:25: wire `i` (num, argument `i` of body of iterate `iter`, made at build.py:79) is used a second time (fanout into 3); it was already used at build.py:21 (right operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:07:16
+build.py:69: wire `pred_t1` (trie[num], argument `pred_t1` of body of iterate `iter`, made at build.py:79) is used a second time (branch passed[2]); it was already used at build.py:31 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:08:08
+build.py:22: wire `L_l` (depth, argument `L_l` of body of iterate `iter`, made at build.py:71) is used a second time (get `gt` port `L`); it was already used at build.py:21 (get `gt` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_l, 2)  and use each once.
+--- 05:08:20
+build.py:26: wire `i` (num, argument `i` of body of iterate `iter`, made at build.py:74) is used a second time (get `gt` port `k`); it was already used at build.py:24 (get `gt` port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:08:52
+build.py:71: wire `r` (num, result of `+`, made at build.py:57) is used a second time (branch passed[0]); it was already used at build.py:60 (left operand of `=`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:08:59
+build.py:72: wire `i` (num, argument `i` of body of iterate `iter`, made at build.py:81) is used a second time (branch passed[1]); it was already used at build.py:21 (fanout into 4). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:09:11
+build.py:72: wire `p1` (trie[num], argument `p1` of body of iterate `iter`, made at build.py:81) is used a second time (branch passed[3]); it was already used at build.py:28 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:10:10
+build.py:72: wire `p3` (trie[num], argument `p3` of body of iterate `iter`, made at build.py:81) is used a second time (branch passed[3]); it was already used at build.py:72 (branch passed[2]). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:11:19
+build.py:64: wire `p4_b` (trie[num], argument `passed[2]` of branch zero case of body of iterate `iter`, made at build.py:64) is used a second time (returned value 5); it was already used at build.py:64 (returned value 2). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:20:10
+build.py:65: wire `p4_b` (trie[num], argument `passed[2]` of branch zero case of body of iterate `iter`, made at build.py:65) is used a second time (returned value 5); it was already used at build.py:65 (returned value 2). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:21:52
+build.py:46: wire `L` (depth, output `L` of lg, made at build.py:39) is used a second time (fanout into 2); it was already used at build.py:41 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:24:38
+build.py:63: wire `L1` (depth, copy 1 of `L`, made at build.py:42) is used a second time (get `gt` port `L`); it was already used at build.py:44 (recipe list_to_trie `lt_pred` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L1, 2)  and use each once.
+--- 05:26:16
+build.py:63: wire `r3` (num, copy 3 of `r`, made at build.py:54) is used a second time (left operand of `&`); it was already used at build.py:62 (right operand of `-`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r3, 2)  and use each once.
+--- 05:26:32
+branch nonzero case of @prog (t5_metric_pairwise) (@prog_b1s): 1 value(s) never used:
+    `r` (num, result of `+`, made at build.py:31)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

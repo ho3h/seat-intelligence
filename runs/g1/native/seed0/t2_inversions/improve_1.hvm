@@ -1,0 +1,74 @@
+// Sort each half, then merge while counting cross-inversions.
+// Sort results are (sorted-list (inversions length)); merge results
+// are (sorted-list cross-inversions).
+
+@prog = (xs out)
+  & @sort ~ (xs out)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ ((0 *) (0 0))
+
+@sort_cons = (* ((h t) out))
+  & t ~ ?((@sort_one @sort_many) (h out))
+
+@sort_one = (* (h out))
+  & out ~ ((1 (h (0 *))) (0 1))
+
+@sort_many = (* ((y ys) (h out)))
+  & @split ~ ((1 (h (1 (y ys)))) (a b))
+  & @sort ~ (a (sa (ia la)))
+  & @sort ~ (b (sb (ib lb)))
+  & la ~ {la1 la2}
+  & @merge ~ (sa (sb (la1 (sm cm))))
+  & ia ~ $([+] $(ib x))
+  & x ~ $([+] $(cm total))
+  & la2 ~ $([+] $(lb len))
+  & out ~ (sm (total len))
+
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & t ~ ?((@split_one @split_many) (h out))
+
+@split_one = (* (h out))
+  & out ~ ((1 (h (0 *))) (0 *))
+
+@split_many = (* ((y ys) (h out)))
+  & @split ~ (ys (a b))
+  & out ~ ((1 (h a)) (1 (y b)))
+
+@merge = ((?((@merge_nil @merge_cons) (pl (right (llen out)))) pl) (right (llen out)))
+
+@merge_nil = (* (right (llen out)))
+  & llen ~ *
+  & out ~ (right 0)
+
+@merge_cons = (* ((h t) (right (llen out))))
+  & right ~ ?((@merge_right_nil @merge_right_cons) (h (t (llen out))))
+
+@merge_right_nil = (* (h (t (llen out))))
+  & llen ~ *
+  & out ~ ((1 (h t)) 0)
+
+@merge_right_cons = (* ((y ys) (h (t (llen out)))))
+  & h ~ {hc hs}
+  & y ~ {yc ysave}
+  & hc ~ $([>] $(yc b))
+  & b ~ ?((@merge_left @merge_right) (hs (t (ysave (ys (llen out)))))
+
+@merge_left = (hs (t (ysave (ys (llen out)))))
+  & ysave ~ *
+  & llen ~ $([-] $(1 llen1))
+  & @merge ~ (t (ys (llen1 (m c))))
+  & out ~ ((1 (hs m)) c)
+
+@merge_right = (* (hs (t (ysave (ys (llen out))))))
+  & hs ~ *
+  & @merge ~ ((1 (hs t)) (ys (llen (m c))))
+  & c ~ $([+] $(llen c2))
+  & out ~ ((1 (ysave m)) c2)

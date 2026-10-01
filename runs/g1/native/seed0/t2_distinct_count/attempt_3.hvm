@@ -1,0 +1,43 @@
+// Count distinct values, keeping the scanned values in a reconstructed list.
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (count out)))) pl) (seen (count out)))
+
+@dc_nil = (* (* (v v)))
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & h ~ {hq hk}
+  & @mem ~ (seen (hq mres))
+  & mres ~ (found seen2)
+  & found ~ ?((@dc_add @dc_skip) (t (hk (seen2 (count out)))))
+
+@dc_add = (t (h (seen (count out))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t ((1 (h seen)) (count2 out)))
+
+@dc_skip = (* (t (h (seen (count out)))))
+  & h ~ *
+  & @dc ~ (t (seen (count out)))
+
+// Return (found, reconstructed_list) for query q in the input list.
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (* (q out))
+  & q ~ *
+  & out ~ (0 (0 *))
+
+@mem_cons = (* ((x xs) (q out)))
+  & x ~ {xc xk}
+  & q ~ {qc qr}
+  & xc ~ $([=] $(qc eq))
+  & eq ~ ?((@mem_diff @mem_same) (xk (xs (qr out))))
+
+@mem_diff = (x (xs (q out)))
+  & @mem ~ (xs (q r))
+  & r ~ (found tail)
+  & out ~ (found (1 (x tail)))
+
+@mem_same = (* (x (xs (q out))))
+  & q ~ *
+  & out ~ (1 (1 (x xs)))

@@ -1,0 +1,80 @@
+// Build a list of ledger pairs whose status is Staged (0) or Applied (1).
+@prog = ((ledger proposals) out)
+  & @keys ~ (ledger keys)
+  & @filter ~ (proposals (keys out))
+
+@keys = ((?((@keys_nil @keys_cons) (pl out)) pl) out)
+
+@keys_nil = (* out)
+  & out ~ (0 *)
+
+@keys_cons = (* (((v (t status)) tail) out))
+  & status ~ $([<] $(2 active))
+  & active ~ ?((@keys_inactive @keys_active) (tail (v (t out))))
+
+@keys_inactive = (tail (v (t out)))
+  & v ~ *
+  & t ~ *
+  & @keys ~ (tail out)
+
+@keys_active = (* (tail (v (t out))))
+  & @keys ~ (tail rest)
+  & out ~ (1 ((v t) rest))
+
+// Filter proposals, keeping the active ledger pairs and earlier kept pairs
+// together in one list of blockers. Construct the output in forward order.
+@filter = ((?((@f_nil @f_cons) (pl (blocked out))) pl) (blocked out))
+
+@f_nil = (* (blocked out))
+  & blocked ~ *
+  & out ~ (0 *)
+
+@f_cons = (* (((v t) rest) (blocked out)))
+  & blocked ~ {bcheck bnext}
+  & v ~ {vq vk}
+  & t ~ {tq tk}
+  & @hasK ~ (bcheck (vq (tq found)))
+  & found ~ ?((@f_allow @f_drop) (rest (bnext (vk (tk out))))
+
+@f_allow = (* (rest (bnext (vk (tk out)))))
+  & vk ~ {v_block v_out}
+  & tk ~ {t_block t_out}
+  & @filter ~ (rest ((1 ((v_block t_block) bnext)) tail_out))
+  & out ~ (1 ((v_out t_out) tail_out))
+
+@f_drop = (* (rest (bnext (vk (tk out)))))
+  & vk ~ *
+  & tk ~ *
+  & @filter ~ (rest (bnext tail_out))
+  & out ~ tail_out
+
+// Return 1 if the list contains the pair (v, t).
+@hasK = ((?((@hk_nil @hk_cons) (pl (v (t out)))) pl) (v (t out)))
+
+@hk_nil = (* (v (t out)))
+  & v ~ *
+  & t ~ *
+  & out ~ 0
+
+@hk_cons = (* (((ev et) tail) (v (t out))))
+  & v ~ {vc vr}
+  & ev ~ $([=] $(vc eqv))
+  & eqv ~ ?((@hk_vno @hk_vyes) (et (tail (vr (t out)))))
+
+@hk_vno = (et (tail (v (t out))))
+  & et ~ *
+  & @hasK ~ (tail (v (t out)))
+
+@hk_vyes = (* (et (tail (v (t out)))))
+  & t ~ {tc tr}
+  & et ~ $([=] $(tc eqt))
+  & eqt ~ ?((@hk_tno @hk_tyes) (tail (v (tr out))))
+
+@hk_tno = (tail (v (t out)))
+  & @hasK ~ (tail (v (t out)))
+
+@hk_tyes = (* (tail (v (t out))))
+  & tail ~ *
+  & v ~ *
+  & t ~ *
+  & out ~ 1

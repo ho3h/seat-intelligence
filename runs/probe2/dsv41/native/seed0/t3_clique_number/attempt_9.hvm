@@ -1,0 +1,106 @@
+@prog = (in out)
+  & in ~ (n edges)
+  & n ~ {n1 n2}
+  & @make_vertices ~ (n2 verts)
+  & @mc ~ (edges (verts (0 (0 out))))
+
+@make_vertices = (n out)
+  & n ~ ?((@mv_z @mv_s) out)
+
+@mv_z = (0 *)
+
+@mv_s = (x out)
+  & x ~ {xa xb}
+  & @make_vertices ~ (xa tail)
+  & out ~ (1 (xb tail))
+
+@eq = (x (y out))
+  & x ~ $([=] $(y out))
+
+@adj = (edges (u (v out)))
+  & edges ~ (?((@adj_nil @adj_cons) ((a b) (tail (u (v out))))) ((a b) tail))
+
+@adj_nil = ((* *) (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 0
+
+@adj_cons = (* ((a b) (tail (u (v out)))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u ~ {uA uB}
+  & uA ~ {uA1 uA2}
+  & v ~ {vA vB}
+  & vA ~ {vA1 vA2}
+  & @eq ~ (a1 (uA1 e1))
+  & @eq ~ (b1 (vA1 e2))
+  & @eq ~ (a2 (vA2 e3))
+  & @eq ~ (b2 (uA2 e4))
+  & e1 ~ $([&] $(e2 p))
+  & e3 ~ $([&] $(e4 q))
+  & p ~ $([|] $(q res))
+  & res ~ ?((@adj_skip @adj_hit) (tail (uB (vB out))))
+
+@adj_skip = (tail (u (v out)))
+  & @adj ~ (tail (u (v out)))
+
+@adj_hit = (* (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1
+
+@mc = (edges (cands (curr (best out))))
+  & cands ~ (?((@mc_nil @mc_cons) ((v rest) (edges (curr (best out))))) (v rest))
+
+@mc_nil = ((* *) (edges (curr (best out))))
+  & edges ~ *
+  & @maxv ~ (curr (best out))
+
+@mc_cons = (* ((v rest) (edges (curr (best out)))))
+  & edges ~ {e1 e2}
+  & e2 ~ {e3 e4}
+  & rest ~ {r1 r2}
+  & curr ~ {c1 c2}
+  & @filter ~ (e1 (v (r1 ncands)))
+  & c1 ~ $([+1] cplus)
+  & @mc ~ (e3 (ncands (cplus (best best1))))
+  & @mc ~ (e4 (r2 (c2 (best1 out))))
+
+@filter = (edges (v (lst out)))
+  & lst ~ (?((@flt_nil @flt_cons) ((u rest) (v (edges out)))) (u rest))
+
+@flt_nil = ((* *) (v (edges out)))
+  & v ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@flt_cons = (* ((u rest) (v (edges out))))
+  & edges ~ {e1 e2}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @adj ~ (e1 (v1 (u1 r)))
+  & r ~ ?((@flt_skip @flt_keep) (u2 (rest (e2 (v2 out)))))
+
+@flt_skip = (u (rest (edges (v out))))
+  & u ~ *
+  & @filter ~ (edges (v (rest out)))
+
+@flt_keep = (* (u (rest (edges (v out)))))
+  & @filter ~ (edges (v (rest tail)))
+  & out ~ (1 (u tail))
+
+@maxv = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 c))
+  & c ~ ?((@maxv_false @maxv_true) (a2 (b2 out)))
+
+@maxv_false = (a (b out))
+  & b ~ *
+  & out ~ a
+
+@maxv_true = (* (a (b out)))
+  & a ~ *
+  & out ~ b

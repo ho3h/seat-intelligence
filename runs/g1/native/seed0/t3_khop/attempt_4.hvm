@@ -1,0 +1,129 @@
+// Input: (n, s, k, edges). Explore at most k layers, stopping when no
+// undiscovered vertices remain.
+@prog = ((n (s (k edges))) out)
+  & n ~ *
+  & {s1 s2} ~ s
+  & @bfs ~ (k (edges ((1 (s1 (0 *))) ((1 (s2 (0 *))) out))))
+
+// BFS state: (remaining (edges (frontier (visited out))))
+@bfs = (?((@bfs_stop @bfs_more) (edges (frontier (all out)))) (edges (frontier (all out))))
+
+@bfs_stop = (edges (frontier (all out)))
+  & edges ~ *
+  & frontier ~ *
+  & @len ~ (all out)
+
+@bfs_more = (m (edges (frontier (all out))))
+  & @scan ~ (edges (frontier ((0 *) cands)))
+  & @merge ~ (cands (all ((0 *) merged)))
+  & merged ~ (all2 next)
+  & @continue ~ (next (m (edges (all2 out))))
+
+// If the newly discovered frontier is empty, count visited vertices;
+// otherwise continue with the remaining layer budget.
+@continue = ((?((@cont_empty @cont_more) (pl (m (edges (all out))))) pl) (m (edges (all out))))
+
+@cont_empty = (pl (m (edges (all out))))
+  & pl ~ *
+  & m ~ *
+  & edges ~ *
+  & @len ~ (all out)
+
+@cont_more = (z (pl (m (edges (all out)))))
+  & z ~ *
+  & @bfs ~ (m (edges ((1 pl) (all out))))
+
+// Scan all edges, accumulating possible neighbors of the current frontier.
+@scan = ((?((@scan_nil @scan_cons) (pl (fr (cand out)))) pl) (fr (cand out)))
+
+@scan_nil = (pl (fr (cand out)))
+  & pl ~ *
+  & fr ~ *
+  & out ~ cand
+
+@scan_cons = (* ((edge tail) (fr (cand out))))
+  & {fr1 fr2} ~ fr
+  & @edge_scan ~ (edge (fr1 (cand c1)))
+  & @scan ~ (tail (fr2 (c1 out)))
+
+// Add the opposite endpoint as a candidate whenever an endpoint is in
+// the current frontier. Duplicates are filtered later against visited.
+@edge_scan = ((u v) (fr (cand out)))
+  & {u_mem u_saved} ~ u
+  & {v_mem v_saved} ~ v
+  & {fr_mem fr_saved} ~ fr
+  & @mem ~ (u_mem (fr_mem b))
+  & b ~ ?((@edge_u_no @edge_u_yes) (u_saved (v_mem (v_saved (fr_saved (cand out)))))
+
+@edge_u_no = (u (v_mem (v (fr (cand out)))))
+  & v ~ *
+  & @edge_vstep ~ (v_mem (u (fr (cand out))))
+
+@edge_u_yes = (u (v_mem (v (fr (cand out)))))
+  & c ~ (1 (v cand))
+  & @edge_vstep ~ (v_mem (u (fr (c out))))
+
+@edge_vstep = (v (u (fr (cand out))))
+  & @mem ~ (v (fr b))
+  & b ~ ?((@edge_v_no @edge_v_yes) (u (cand out)))
+
+@edge_v_no = (u (cand out))
+  & u ~ *
+  & out ~ cand
+
+@edge_v_yes = (u (cand out))
+  & out ~ (1 (u cand))
+
+// Membership test: return 1 if x is in the list, otherwise 0.
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & {x1 x2} ~ x
+  & h ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (x2 (t out)))
+
+@mem_yes = (x (t out))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@mem_no = (x (t out))
+  & @mem ~ (t (x out))
+
+// Merge candidates into visited, adding each newly seen vertex to next.
+@merge = ((?((@merge_nil @merge_cons) (pl (all (next out)))) pl) (all (next out)))
+
+@merge_nil = (pl (all (next out)))
+  & pl ~ *
+  & out ~ (all next)
+
+@merge_cons = (* ((x tail) (all (next out))))
+  & {x_mem x_keep} ~ x
+  & {all_mem all_keep} ~ all
+  & @mem ~ (x_mem (all_mem b))
+  & b ~ ?((@merge_absent @merge_present) (x_keep (tail (all_keep (next out)))))
+
+@merge_absent = (x (tail (all (next out))))
+  & {x1 x2} ~ x
+  & @merge ~ (tail ((1 (x1 all)) ((1 (x2 next)) out)))
+
+@merge_present = (x (tail (all (next out))))
+  & x ~ *
+  & @merge ~ (tail (all (next out)))
+
+// Count list elements.
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t z)
+  & z ~ $([+1] out)

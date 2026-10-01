@@ -1,0 +1,36 @@
+@min_list = ((@min_list__C12 a) a)
+
+@min_list__C0 = (a (* a))
+
+@min_list__C1 = (* (* (a a)))
+
+@min_list__C10 = (?((@min_list__C8 @min_list__C9) a) a)
+
+@min_list__C11 = (* (b ((@min_list__C10 (a (b c))) (a c))))
+
+@min_list__C12 = (?(((a a) @min_list__C11) b) b)
+
+@min_list__C2 = (b (* (a c)))
+  & @min_list ~ (a (b c))
+
+@min_list__C3 = (* (* (b (a c))))
+  & @min_list ~ (a (b c))
+
+@min_list__C4 = (b (* (a c)))
+  & @min_list ~ (a (b c))
+
+@min_list__C5 = (* (* (b (a c))))
+  & @min_list ~ (a (b c))
+
+@min_list__C6 = ({a b} (* ({$([<] $(a ?((@min_list__C2 @min_list__C3) (b (c d))))) c} d)))
+
+@min_list__C7 = (* ({a b} ({$([<] $(a ?((@min_list__C4 @min_list__C5) (b (c d))))) c} (* d))))
+
+@min_list__C8 = ({a b} ({$([<] $(a ?((@min_list__C0 @min_list__C1) (b (c d))))) c} d))
+
+@min_list__C9 = (* ({a d} (e (b ({$([<] $(a ?((@min_list__C6 @min_list__C7) (b (c (d (e f))))))) c} f)))))
+
+@prog = (a b)
+  & @min_list ~ (a (16777215 b))
+
+

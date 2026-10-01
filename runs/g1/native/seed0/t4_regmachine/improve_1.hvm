@@ -1,0 +1,171 @@
+// Register state: (r0 (r1 (r2 (r3 sentinel))))
+
+@prog = (input out)
+  & @run ~ (input ((0 (0 (0 (0 0)))) out))
+
+@run = (l c)
+  & l ~ (tag payload)
+  & tag ~ ?((@run_nil @run_cons) (payload c))
+
+@run_nil = (payload (regs out))
+  & payload ~ *
+  & @emit ~ (regs out)
+
+@run_cons = (z (payload (regs out)))
+  & z ~ *
+  & payload ~ (instr tail)
+  & @step ~ (instr (regs next))
+  & @run ~ (tail (next out))
+
+@step = (instr (regs out))
+  & instr ~ (op (a b))
+  & @dispatch ~ (op (a (b (regs out))))
+
+@dispatch = (op c)
+  & op ~ ?((@step0 @stepS) c)
+
+@step0 = (a (b (regs out)))
+  & @load ~ (a (b (regs out)))
+
+@stepS = (n c)
+  & n ~ ?((@step1 @stepS2) c)
+
+@stepS2 = (n c)
+  & n ~ ?((@step2 @stepS3) c)
+
+@stepS3 = (n c)
+  & n ~ ?((@step3 @step4) c)
+
+@step1 = (a (b (regs out)))
+  & @binary ~ (1 (a (b (regs out))))
+
+@step2 = (a (b (regs out)))
+  & @binary ~ (2 (a (b (regs out))))
+
+@step3 = (a (b (regs out)))
+  & @binary ~ (3 (a (b (regs out))))
+
+@step4 = (z (a (b (regs out))))
+  & z ~ *
+  & @binary ~ (4 (a (b (regs out))))
+
+@load = (a (val (regs out)))
+  & a ~ ?((@load0 @loadS) (val (regs out)))
+
+@loadS = (n c)
+  & n ~ ?((@load1 @loadS2) c)
+
+@loadS2 = (n c)
+  & n ~ ?((@load2 @load3) c)
+
+@load0 = (val (regs out))
+  & regs ~ (old rest)
+  & old ~ *
+  & out ~ (val rest)
+
+@load1 = (val (regs out))
+  & regs ~ (r0 (old rest))
+  & old ~ *
+  & out ~ (r0 (val rest))
+
+@load2 = (val (regs out))
+  & regs ~ (r0 (r1 (old rest)))
+  & old ~ *
+  & out ~ (r0 (r1 (val rest)))
+
+@load3 = (z (val (regs out)))
+  & z ~ *
+  & regs ~ (r0 (r1 (r2 (old sentinel))))
+  & old ~ *
+  & out ~ (r0 (r1 (r2 (val sentinel))))
+
+@binary = (op (a (b (regs out))))
+  & @target ~ (a (op (b (regs out))))
+
+@target = (a c)
+  & a ~ ?((@bin0 @targetS) c)
+
+@targetS = (n c)
+  & n ~ ?((@bin1 @targetS2) c)
+
+@targetS2 = (n c)
+  & n ~ ?((@bin2 @bin3) c)
+
+@bin0 = (op (b (regs out)))
+  & regs ~ {write read}
+  & write ~ (old rest)
+  & @get ~ (b (read rhs))
+  & @arith ~ (op (old (rhs val)))
+  & out ~ (val rest)
+
+@bin1 = (op (b (regs out)))
+  & regs ~ {write read}
+  & write ~ (r0 (old rest))
+  & @get ~ (b (read rhs))
+  & @arith ~ (op (old (rhs val)))
+  & out ~ (r0 (val rest))
+
+@bin2 = (op (b (regs out)))
+  & regs ~ {write read}
+  & write ~ (r0 (r1 (old rest)))
+  & @get ~ (b (read rhs))
+  & @arith ~ (op (old (rhs val)))
+  & out ~ (r0 (r1 (val rest)))
+
+@bin3 = (z (op (b (regs out))))
+  & z ~ *
+  & regs ~ {write read}
+  & write ~ (r0 (r1 (r2 (old sentinel))))
+  & @get ~ (b (read rhs))
+  & @arith ~ (op (old (rhs val)))
+  & out ~ (r0 (r1 (r2 (val sentinel))))
+
+@get = (idx c)
+  & idx ~ ?((@get0 @getS) c)
+
+@get0 = (regs out)
+  & regs ~ (r0 rest)
+  & r0 ~ out
+  & rest ~ *
+
+@getS = (n (regs out))
+  & regs ~ (r0 rest)
+  & r0 ~ *
+  & @get ~ (n (rest out))
+
+@arith = (op c)
+  & op ~ ?((@arith_invalid @arithS) c)
+
+@arith_invalid = (c)
+  & c ~ *
+
+@arithS = (n c)
+  & n ~ ?((@arith_add @arithS2) c)
+
+@arithS2 = (n c)
+  & n ~ ?((@arith_sub @arithS3) c)
+
+@arithS3 = (n c)
+  & n ~ ?((@arith_mul @arith_move) c)
+
+@arith_add = (lhs (rhs out))
+  & lhs ~ $([+] $(rhs out))
+
+@arith_sub = (lhs (rhs out))
+  & lhs ~ $([-] $(rhs out))
+
+@arith_mul = (lhs (rhs out))
+  & lhs ~ $([*] $(rhs out))
+
+@arith_move = (z (lhs (rhs out)))
+  & z ~ *
+  & lhs ~ *
+  & out ~ rhs
+
+@emit = (regs out)
+  & regs ~ (r0 rest1)
+  & rest1 ~ (r1 rest2)
+  & rest2 ~ (r2 rest3)
+  & rest3 ~ (r3 sentinel)
+  & sentinel ~ *
+  & out ~ (1 (r0 (1 (r1 (1 (r2 (1 (r3 (0 *)))))))))

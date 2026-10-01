@@ -1,0 +1,127 @@
+// BFS queue and seen set are lists. The output accumulator is reversed.
+@prog = (input output)
+  & input ~ (n (s edges))
+  & s ~ {s_q s_seen}
+  & @bfs ~ ((1 (s_q (0 *))) (n (edges ((1 (s_seen (0 *))) ((0 *) output)))))
+
+@bfs = ((?((@bfs_done @bfs_more) (p (n (edges (seen (acc out)))))) p) (n (edges (seen (acc out)))))
+
+@bfs_done = (p (n (edges (seen (acc out)))))
+  & p ~ *
+  & n ~ *
+  & edges ~ *
+  & seen ~ *
+  & @rev ~ (acc out)
+
+@bfs_more = (* ((u qt) (n (edges (seen (acc out))))))
+  & n ~ {n_scan n_rec}
+  & edges ~ {edges_scan edges_rec}
+  & u ~ {u_scan u_acc}
+  & @scan ~ (n_scan (0 (edges_scan (u_scan (qt (seen res))))))
+  & res ~ (qnew seennew)
+  & accnew ~ (1 (u_acc acc))
+  & @bfs ~ (qnew (n_rec (edges_rec (seennew (accnew out)))))
+
+// Scan all vertex IDs from 0 to n-1 in increasing order.
+@scan = (?((@scan_done @scan_more) (i (edges (u (q (seen out)))))) (i (edges (u (q (seen out))))))
+
+@scan_done = (i (edges (u (q (seen out)))))
+  & i ~ *
+  & edges ~ *
+  & u ~ *
+  & out ~ (q seen)
+
+@scan_more = (rem (i (edges (u (q (seen out))))))
+  & i ~ {i_adj i_rest}
+  & i_rest ~ {i_mem i_inc}
+  & i_inc ~ $([+1] next_i)
+  & edges ~ {edges_adj edges_next}
+  & u ~ {u_adj u_next}
+  & @adj ~ (edges_adj (u_adj (i_adj has)))
+  & has ~ ?((@scan_no @scan_yes) (i_mem (rem (next_i (edges_next (u_next (q (seen out))))))))
+
+@scan_no = (i_mem (rem (next_i (edges (u (q (seen out)))))))
+  & i_mem ~ *
+  & @scan ~ (rem (next_i (edges (u (q (seen out))))))
+
+@scan_yes = (i_mem (rem (next_i (edges (u (q (seen out)))))))
+  & i_mem ~ {i_test i_add}
+  & seen ~ {seen_mem seen_keep}
+  & @mem ~ (seen_mem (i_test found))
+  & found ~ $([=] $(0 fresh))
+  & fresh ~ ?((@scan_seen @scan_add) (i_add (rem (next_i (edges (u (q (seen_keep out))))))))
+
+@scan_seen = (i_add (rem (next_i (edges (u (q (seen out)))))))
+  & i_add ~ *
+  & @scan ~ (rem (next_i (edges (u (q (seen out))))))
+
+@scan_add = (* (i_add (rem (next_i (edges (u (q (seen out))))))))
+  & i_add ~ {ia ib}
+  & @append ~ (q (ia qnew))
+  & seennew ~ (1 (ib seen))
+  & @scan ~ (rem (next_i (edges (u (qnew (seennew out))))))
+
+// Test whether an undirected edge connects u and i; recurse through edges.
+@adj = ((?((@adj_nil @adj_cons) (p (u (i out)))) p) (u (i out)))
+
+@adj_nil = (p (u (i out)))
+  & p ~ *
+  & u ~ *
+  & i ~ *
+  & out ~ 0
+
+@adj_cons = (* (((a b) t) (u (i out))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u ~ {u_cmp u_rec}
+  & u_cmp ~ {u1 u2}
+  & i ~ {i_cmp i_rec}
+  & i_cmp ~ {i1 i2}
+  & a1 ~ $([=] $(u1 e1))
+  & b1 ~ $([=] $(i1 e2))
+  & a2 ~ $([=] $(i2 e3))
+  & b2 ~ $([=] $(u2 e4))
+  & e1 ~ $([&] $(e2 both1))
+  & e3 ~ $([&] $(e4 both2))
+  & both1 ~ $([|] $(both2 either))
+  & @adj ~ (t (u_rec (i_rec rest)))
+  & either ~ $([|] $(rest out))
+
+// Membership test for a vertex in a list of vertices.
+@mem = ((?((@mem_nil @mem_cons) (p (x out))) p) (x out))
+
+@mem_nil = (p (x out))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 eq))
+  & @mem ~ (t (x2 rest))
+  & eq ~ $([|] $(rest out))
+
+// Append one vertex to the end of a queue.
+@append = ((?((@append_nil @append_cons) (p (x out))) p) (x out))
+
+@append_nil = (p (x out))
+  & p ~ *
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* ((h t) (x out)))
+  & @append ~ (t (x tail))
+  & out ~ (1 (h tail))
+
+// Reverse a list.
+@rev = (l out)
+  & @rev_acc ~ (l ((0 *) out))
+
+@rev_acc = ((?((@rev_nil @rev_cons) (p (acc out))) p) (acc out))
+
+@rev_nil = (p (acc out))
+  & p ~ *
+  & out ~ acc
+
+@rev_cons = (* ((h t) (acc out)))
+  & accnew ~ (1 (h acc))
+  & @rev_acc ~ (t (accnew out))

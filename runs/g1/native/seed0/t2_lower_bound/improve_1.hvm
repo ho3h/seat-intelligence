@@ -1,0 +1,21 @@
+@prog = ((xs t) out)
+  & @lb ~ (xs (t (0 out)))
+
+@lb = (l (t (acc out)))
+  & l ~ (?( (@lb_nil @lb_cons) (payload (t (acc out))) ) payload)
+
+@lb_nil = (* (* (a a)))
+
+@lb_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb_stop @lb_continue) (tail (tr (acc out))))
+
+@lb_stop = (tail (tr (acc out)))
+  & tail ~ *
+  & tr ~ *
+  & acc ~ out
+
+@lb_continue = (* (tail (tr (acc out))))
+  & acc ~ $([+1] acc2)
+  & @lb ~ (tail (tr (acc2 out)))

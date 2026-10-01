@@ -1,0 +1,100 @@
+@prog = (({cb cd} edges) out)
+  & @build ~ (edges (cb ((0 *) uniq)))
+  & @deglist ~ (cd (uniq (0 out)))
+
+@build = ((?((@build_nil @build_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@build_nil = (* (* (a a)))
+
+@build_cons = (* ((e tail) ({c1 c2} (acc out))))
+  & @mapedge ~ (e (c1 mapped))
+  & @process ~ (mapped (tail (c2 (acc out))))
+
+@mapedge = ((u v) ({c1 c2} out))
+  & @look ~ (c1 (u x))
+  & @look ~ (c2 (v y))
+  & out ~ (x y)
+
+@look = ((?((@look_nil @look_cons) (pl (i out))) pl) (i out))
+
+@look_nil = (* (* 0))
+
+@look_cons = (* ((h t) (i out)))
+  & @look_step ~ (i (h (t out)))
+
+@look_step = ((?((@look_head @look_tail) (h (t out))) i) (h (t out)))
+
+@look_head = (h (* h))
+
+@look_tail = (i (* (t out)))
+  & @look ~ (t (i out))
+
+@process = (({x1 x2} {y1 y2}) (tail (c (acc out))))
+  & x1 ~ $([=] $(y1 z))
+  & z ~ ?((@process_distinct @process_same) (x2 (y2 (tail (c (acc out)))))
+
+@process_same = (* (* (* (tail (c (acc out))))))
+  & @build ~ (tail (c (acc out)))
+
+@process_distinct = ({xh xn} ({yh yn} (tail (c ({ah ak} out))))
+  & @has ~ (ah ((xh yh) found))
+  & found ~ ?((@insert_absent @insert_present) (xn (yn (tail (c (ak out)))))
+
+@insert_absent = (x (y (tail (c (acc out)))))
+  & @build ~ (tail (c ((1 ((x y) acc)) out)))
+
+@insert_present = (* (* (* (tail (c (acc out))))))
+  & @build ~ (tail (c (acc out)))
+
+@has = ((?((@has_nil @has_cons) (pl (target out))) pl) (target out))
+
+@has_nil = (* (* 0))
+
+@has_cons = (* ((({a1 a2} {b1 b2}) tail) (({{x1 x2} xr} {{y1 y2} yr}) out)))
+  & a1 ~ $([=] $(x1 q1))
+  & b1 ~ $([=] $(y1 q2))
+  & a2 ~ $([=] $(y2 q3))
+  & b2 ~ $([=] $(x2 q4))
+  & q1 ~ $([&] $(q2 fwd))
+  & q3 ~ $([&] $(q4 rev))
+  & fwd ~ $([|] $(rev match))
+  & match ~ ?((@has_no @has_yes) (tail ((xr yr) out)))
+
+@has_no = (tail ((x y) out))
+  & @has ~ (tail ((x y) out))
+
+@has_yes = (* (* (* 1)))
+
+@count = ((?((@count_nil @count_cons) (pl (id (acc out)))) pl) (id (acc out)))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* ((({a1 a2} {b1 b2}) tail) ({id_a {id_b id_rec}} (acc out))))
+  & a1 ~ $([=] $(id_a qa))
+  & b1 ~ $([=] $(id_b qb))
+  & qa ~ $([|] $(qb q))
+  & q ~ ?((@count_no @count_yes) (tail (id_rec (acc out))))
+
+@count_no = (tail (id (acc out)))
+  & @count ~ (tail (id (acc out)))
+
+@count_yes = (* (tail (id (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (id (acc2 out)))
+
+@deglist = ((?((@deg_nil @deg_cons) (pl (edges (i out)))) pl) (edges (i out)))
+
+@deg_nil = (* (* (* (0 *))))
+
+@deg_cons = (* ((h tail) ({ed er} ({ie {id inext}} out))))
+  & h ~ $([=] $(ie z))
+  & inext ~ $([+1] inext2)
+  & z ~ ?((@deg_skip @deg_keep) (tail (ed (er (id (inext2 out)))))
+
+@deg_skip = (tail (* (er (* (inext out)))))
+  & @deglist ~ (tail (er (inext out)))
+
+@deg_keep = (* (tail (ed (er (id (inext out))))))
+  & @count ~ (ed (id (0 d)))
+  & @deglist ~ (tail (er (inext rest)))
+  & out ~ (1 (d rest))

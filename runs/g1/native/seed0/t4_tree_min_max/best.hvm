@@ -1,0 +1,38 @@
+// Tree minimum and maximum.
+@prog = (tree out)
+  & @tm ~ (tree out)
+
+@tm = ((?((@tm_leaf @tm_node) (p out)) p) out)
+
+@tm_leaf = (* (16777215 0))
+
+@tm_node = (* ((l (v r)) out))
+  & @tm ~ (l (lm lx))
+  & @tm ~ (r (rm rx))
+  & v ~ {vmin vmax}
+
+  // min(lm, vmin)
+  & lm ~ {lm_a lm_keep}
+  & vmin ~ {lm_b lm_other}
+  & lm_a ~ $([<] $(lm_b lm_cmp))
+  & lm_cmp ~ ?(((* (lm_zero lm_zero)) (* (lm_yes (* lm_yes)))) (lm_keep (lm_other midmin)))
+
+  // min(midmin, rm)
+  & midmin ~ {mn_a mn_keep}
+  & rm ~ {mn_b mn_other}
+  & mn_a ~ $([<] $(mn_b mn_cmp))
+  & mn_cmp ~ ?(((* (mn_zero mn_zero)) (* (mn_yes (* mn_yes)))) (mn_keep (mn_other minout)))
+
+  // max(lx, vmax)
+  & lx ~ {lx_a lx_keep}
+  & vmax ~ {lx_b lx_other}
+  & lx_a ~ $([>] $(lx_b lx_cmp))
+  & lx_cmp ~ ?(((* (lx_zero lx_zero)) (* (lx_yes (* lx_yes)))) (lx_keep (lx_other midmax)))
+
+  // max(midmax, rx)
+  & midmax ~ {mx_a mx_keep}
+  & rx ~ {mx_b mx_other}
+  & mx_a ~ $([>] $(mx_b mx_cmp))
+  & mx_cmp ~ ?(((* (mx_zero mx_zero)) (* (mx_yes (* mx_yes)))) (mx_keep (mx_other maxout)))
+
+  & out ~ (minout maxout)

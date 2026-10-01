@@ -1,0 +1,170 @@
+@prog = ((n edges) out)
+  & {n_p n_i} ~ n
+  & {e_p e_i} ~ edges
+  & e_p ~ *
+  & @pow2 ~ ((n_p 1) max_val)
+  & @iter ~ ((0 (max_val (n_i (e_i (0 out))))) *)
+
+@pow2 = ((n acc) out)
+  & z ~ $(n [=] 0)
+  & z ~ ?((@p_done @p_loop) (n (acc out)))
+
+@p_done = (n (a o)) & n ~ * & o ~ a
+
+@p_loop = (* (n (a o)))
+  & n1 ~ $(n [-] 1)
+  & a2 ~ $(a [*] 2)
+  & @pow2 ~ ((n1 a2) o)
+
+@iter = ((mask (max (n (edges (best out))))) *)
+  & {m1 m2} ~ mask
+  & {x1 x2} ~ max
+  & done ~ $(m1 [=] x1)
+  & done ~ ?((@i_done @i_step) ((m2 (x2 (n (edges (best out)))))))
+
+@i_done = ((m (x (n (e (b o))))))
+  & m ~ * & x ~ * & n ~ * & e ~ * & o ~ b
+
+@i_step = (* ((m (x (n (e (b o)))))))
+  & @is_clique ~ (((m (n e))) valid)
+  & valid ~ ?((@i_skip @i_count) ((m (x (n (e (b o)))))))
+
+@i_skip = ((m (x (n (e (b o))))))
+  & m1 ~ $(m [+] 1)
+  & @iter ~ ((m1 (x (n (e (b o))))) *)
+
+@i_count = (* ((m (x (n (e (b o)))))))
+  & {m_p m_r} ~ m
+  & @popcount ~ (m_p cnt)
+  & {c1 c2} ~ cnt
+  & {b1 b2} ~ b
+  & c2 ~ *
+  & cmp ~ $(c1 [>] b1)
+  & cmp ~ ?((@i_skip2 @i_upd) ((m_r (x (n (e (c1 (b2 o))))))))
+
+@i_skip2 = ((m (x (n (e (cnt (b o)))))))
+  & cnt ~ *
+  & m1 ~ $(m [+] 1)
+  & @iter ~ ((m1 (x (n (e (b o))))) *)
+
+@i_upd = (* ((m (x (n (e (cnt (b o))))))))
+  & b ~ *
+  & m1 ~ $(m [+] 1)
+  & @iter ~ ((m1 (x (n (e (cnt o))))) *)
+
+@is_clique = (input output)
+  & input ~ ((mask (n edges)))
+  & @chk ~ ((mask (n edges) 0 0) output)
+
+@chk = ((mask (n edges i j)) (result out))
+  & {i1 i2} ~ i
+  & {n1 n2} ~ n
+  & {m1 m2} ~ mask
+  & done ~ $(i1 [=] n1)
+  & done ~ ?((@c_done @c_loop) ((m2 (n2 (edges (i2 j (result out)))))))
+
+@c_done = ((m (n (e (i j (r o))))))
+  & m ~ * & n ~ * & e ~ * & i ~ * & j ~ * & o ~ 1
+
+@c_loop = (* ((m (n (e (i j (r o)))))))
+  & {j1 j2} ~ j
+  & {n1 n2} ~ n
+  & jeq ~ $(j1 [=] n1)
+  & jeq ~ ?((@c_i_next @c_pair) ((m (n2 (e (i j2 (r o)))))))
+
+@c_i_next = ((m (n (e (i j (r o))))))
+  & i1 ~ $(i [+] 1)
+  & @chk ~ ((m (n e i1 0) (r o)))
+
+@c_pair = (* ((m (n (e (i j (r o)))))))
+  & {j1 j2} ~ j
+  & jgt ~ $(j1 [>] i)
+  & jgt ~ ?((@c_j_next @c_check) ((m (n (e (i j2 (r o)))))))
+
+@c_j_next = ((m (n (e (i j (r o))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@c_check = (* ((m (n (e (i j (r o)))))))
+  & {i1 i2} ~ i
+  & {m1 m2} ~ m
+  & iin ~ $(i1 [&] m1)
+  & iin ~ ?((@c_j_next2 @c_j_test) ((i2 j (m2 (n (e (r o)))))))
+
+@c_j_next2 = ((i (j (m (n (e (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@c_j_test = (* ((i j (m (n (e (r o)))))))
+  & {j1 j2} ~ j
+  & {m1 m2} ~ m
+  & jin ~ $(j1 [&] m1)
+  & jin ~ ?((@c_j_next3 @c_edge) ((i j2 (m2 (n (e (r o)))))))
+
+@c_j_next3 = ((i (j (m (n (e (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@c_edge = (* ((i j (m (n (e (r o)))))))
+  & @find_edge ~ (((i j e)) found)
+  & found ~ ?((@c_fail @c_j_next4) ((i j (m (n (e (r o)))))))
+
+@c_fail = ((i (j (m (n (e (r o)))))))
+  & o ~ 0
+
+@c_j_next4 = (* ((i j (m (n (e (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@find_edge = (input output)
+  & input ~ (((i j edges)))
+  & @search ~ ((i j edges) output)
+
+@search = ((i j edges) (result out))
+  & edges ~ ?((@no @yes) (result out))
+
+@no = (r o) & o ~ 0
+
+@yes = (* (r o))
+  & edges ~ ((u v) tail)
+  & c1 ~ $(u [=] i)
+  & c1 ~ ?((@try_v @check_v) ((v i j tail (r o))))
+
+@try_v = ((v i j tail r o))
+  & c2 ~ $(u [=] j)
+  & c2 ~ ?((@next @found) ((tail (r o))))
+
+@next = ((tail r o))
+  & @search ~ ((i j tail) (r o))
+
+@found = (* ((tail r o))) & o ~ 1
+
+@check_v = (* ((v i j tail r o)))
+  & c3 ~ $(v [=] j)
+  & c3 ~ ?((@next2 @found2) ((tail (r o))))
+
+@next2 = ((tail r o))
+  & @search ~ ((i j tail) (r o))
+
+@found2 = (* ((tail r o))) & o ~ 1
+
+@popcount = (mask out)
+  & @sum ~ ((mask 0) out)
+
+@sum = ((mask acc) out)
+  & z ~ $(mask [=] 0)
+  & z ~ ?((@s_ret @s_loop) (acc out))
+
+@s_ret = (a o) & o ~ a
+
+@s_loop = (* (a o))
+  & bit ~ $(mask [%] 2)
+  & sh ~ $(mask [>>] 1)
+  & bit ~ ?((@s_skip @s_add) ((sh (a o))))
+
+@s_skip = ((s (a o)))
+  & @sum ~ ((s a) o)
+
+@s_add = (* ((s (a o))))
+  & a1 ~ $(a [+] 1)
+  & @sum ~ ((s a1) o)

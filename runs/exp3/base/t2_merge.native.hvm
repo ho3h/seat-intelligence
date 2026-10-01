@@ -1,0 +1,53 @@
+@prog = (input out)
+  & input ~ (xs ys)
+  & @m_merge ~ (xs (ys out))
+
+@m_merge = (x (y out))
+  & x ~ (tag p)
+  & tag ~ ?((@m_nil_x @m_cons_x) (p (y out)))
+
+@m_nil_x = (p (y out))
+  & p ~ *
+  & y ~ out
+
+@m_cons_x = (* (p (y out)))
+  & p ~ (h t)
+  & @m_xknown ~ ((h t) (y out))
+
+@m_xknown = ((h t) (y out))
+  & y ~ (tag p)
+  & tag ~ ?((@m_x_y_nil @m_x_y_cons) (p (h (t out))))
+
+@m_x_y_nil = (p (h (t out)))
+  & p ~ *
+  & out ~ (1 (h t))
+
+@m_x_y_cons = (* (p (h (t out))))
+  & p ~ (yh yt)
+  & h ~ {hc hk}
+  & yh ~ {yc yk}
+  & hc ~ $([>] $(yc z))
+  & z ~ ?((@m_take_x @m_take_y) (hk (yk (t (yt out)))))
+
+@m_yknown = (x (yh (yt out)))
+  & x ~ (tag p)
+  & tag ~ ?((@m_nil_y @m_cons_y) (p (yh (yt out))))
+
+@m_nil_y = (p (yh (yt out)))
+  & p ~ *
+  & out ~ (1 (yh yt))
+
+@m_cons_y = (* (p (yh (yt out))))
+  & p ~ (h t)
+  & h ~ {hc hk}
+  & yh ~ {yc yk}
+  & hc ~ $([>] $(yc z))
+  & z ~ ?((@m_take_x @m_take_y) (hk (yk (t (yt out)))))
+
+@m_take_x = (hk (yk (t (yt out))))
+  & out ~ (1 (hk r))
+  & @m_yknown ~ (t (yk (yt r)))
+
+@m_take_y = (* (hk (yk (t (yt out)))))
+  & out ~ (1 (yk r))
+  & @m_xknown ~ ((hk t) (yt r))

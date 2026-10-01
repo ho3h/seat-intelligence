@@ -1,0 +1,59 @@
+// Search four list cells per index increment, reducing the dependent counter chain.
+@prog = (input out)
+  & input ~ (xs target)
+  & @walk ~ (xs (target (0 out)))
+
+@walk = ((?((@empty @step0) (pl (target (idx out)))) pl) (target (idx out)))
+
+@scan1 = ((?((@empty @step1) (pl (target (idx out)))) pl) (target (idx out)))
+
+@scan2 = ((?((@empty @step2) (pl (target (idx out)))) pl) (target (idx out)))
+
+@scan3 = ((?((@empty @step3) (pl (target (idx out)))) pl) (target (idx out)))
+
+@empty = (* (* (* out)))
+  & out ~ 16777215
+
+@step0 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss0 @hit0) (tail (tr (idx out))))
+
+@miss0 = (tail (tr (idx out)))
+  & @scan1 ~ (tail (tr (idx out)))
+
+@hit0 = (* (* (* (v v))))
+
+@step1 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss1 @hit1) (tail (tr (idx out))))
+
+@miss1 = (tail (tr (idx out)))
+  & @scan2 ~ (tail (tr (idx out)))
+
+@hit1 = (* (* (* (idx out))))
+  & idx ~ $([+] $(1 out))
+
+@step2 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss2 @hit2) (tail (tr (idx out))))
+
+@miss2 = (tail (tr (idx out)))
+  & @scan3 ~ (tail (tr (idx out)))
+
+@hit2 = (* (* (* (idx out))))
+  & idx ~ $([+] $(2 out))
+
+@step3 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss3 @hit3) (tail (tr (idx out))))
+
+@miss3 = (tail (tr (idx out)))
+  & idx ~ $([+] $(4 idx2))
+  & @walk ~ (tail (tr (idx2 out)))
+
+@hit3 = (* (* (* (idx out))))
+  & idx ~ $([+] $(3 out))

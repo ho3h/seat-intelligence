@@ -1,0 +1,93 @@
+// ---- shared SSSP core (GRAPH-SWING, runs/exp5): frontier Bellman-Ford over tries.
+// G: adjacency trie keyed by vertex, leaves are lists of (v w). Dt: distance trie. C: candidate trie of this round.
+// One round = one pre-expanded traversal of (G, Dt, C): at each leaf, d' = min(d, c) (accepted only if c <= budget);
+// a leaf that improved emits d'+w into the NEXT round's candidate trie for each of its out-edges (min-updates, keyed
+// by v, threaded through the traversal in order); flags are OR-reduced; the loop continues while anything improved.
+// E = (L b): trie depth and budget (b = 16777215 means no budget).
+@loop = ((g (dt (c E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 *)
+  & @zi ~ (L1 ci)
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @rd ~ (Lr (Eb (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & any ~ ?((@lp_done @lp_again) (g2 (dt2 (co (E3 o)))))
+@lp_done = (* (dt (* (* dt))))
+@lp_again = (* (g (dt (c (E o)))))
+  & @loop ~ ((g (dt (c E))) o)
+
+@rd = (L (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+  & L ~ ?((@rd_leaf @rd_node) (E (g (dt (c (ci (g2 (dt2 (co any)))))))))
+@rd_node = (lm (E ((g1 gr) ((d1 dr) ((c1 cr) (ci ((h1 hr) ((e1 er) (co any)))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @rd ~ (l1 (Ea (g1 (d1 (c1 (ci (h1 (e1 (cm a1)))))))))
+  & @rd ~ (l2 (Eb (gr (dr (cr (cm (hr (er (co a2)))))))))
+  & a1 ~ $([|] $(a2 any))
+@rd_leaf = (E (g (d (c (ci (g2 (d2 (co any))))))))
+  & c ~ {c1 {c2 c3}}
+  & d ~ {dA dB}
+  & E ~ {Ex Ey}
+  & Ey ~ (* b)
+  & c1 ~ $([<] $(dA lt))
+  & c2 ~ $([>] $(b gt))
+  & lt ~ $([>] $(gt f))
+  & f ~ {f1 {any f3}}
+  & f1 ~ ?((@rl_keep @rl_take) (dB (c3 nd)))
+  & nd ~ {nd1 d2}
+  & f3 ~ ?((@rl_quiet @rl_emit) (g (nd1 (ci (g2 (co Ex))))))
+@rl_keep = (d (* d))
+@rl_take = (* (* (c c)))
+@rl_quiet = (g (* (ci (g (ci *)))))
+@rl_emit = (* (g (nd (ci (g2 (co E))))))
+  & E ~ (L *)
+  & @em ~ (g (nd (ci (g2 (co L)))))
+
+// emit nd+w into the candidate trie for every (v w) of the adjacency list, rebuilding the list
+@em = ((?((@em_nil @em_cons) (p (nd (ci (g2 (co L)))))) p) (nd (ci (g2 (co L)))))
+@em_nil = (* (* (ci ((0 *) (ci *)))))
+@em_cons = (* (((v w) rest) (nd (ci ((1 ((v2 w2) rest2)) (co L))))))
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & nd ~ {n1 n2}
+  & L ~ {La Lb}
+  & n1 ~ $([+] $(w1 cand))
+  & @mu ~ (ci (v1 (La (cand cm))))
+  & @em ~ (rest (n2 (cm (rest2 (co Lb)))))
+
+// leaf actions for nav(): min-update, and push (v w) onto an adjacency list
+@mu_act = (old (cand o))
+  & old ~ {o1 o2}
+  & cand ~ {k1 k2}
+  & k1 ~ $([<] $(o1 lt))
+  & lt ~ ?((@mu_keep @mu_take) (o2 (k2 o)))
+@mu_keep = (x (* x))
+@mu_take = (* (* (y y)))
+@gp_act = (lst ((v w) (1 ((v w) lst))))
+
+// tries with constant leaves: 16777215, and empty lists
+@zi = (?((16777215 @zi_node) o) o)
+@zi_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zi ~ (l1 a)
+  & @zi ~ (l2 b)
+@zl = (?(((0 *) @zl_node) o) o)
+@zl_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zl ~ (l1 a)
+  & @zl ~ (l2 b)
+
+// initial state: (G, Dt = all INF, C0 = 0 at s if s < n), then the loop; o receives the final distance trie
+@sssp_start = (n (s (L (b (g o)))))
+  & s ~ {s1 s2}
+  & n ~ {n1 n2}
+  & n1 ~ *
+  & s1 ~ $([<] $(n2 inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & i2 ~ ?((16777215 (* 0)) val)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & @zi ~ (L1 D0)
+  & @zi ~ (L2 Ci)
+  & @mu ~ (Ci (key (L3 (val C0))))
+  & @loop ~ ((g (D0 (C0 (L4 b)))) o)

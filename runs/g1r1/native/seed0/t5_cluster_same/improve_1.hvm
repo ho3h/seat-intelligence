@@ -1,0 +1,89 @@
+@prog = ((n (pairs queries)) out)
+  & @mk ~ (n (0 labels))
+  & @edges ~ (pairs (labels query_labels))
+  & @queries ~ (queries (query_labels out))
+
+@mk = (?((@mk_zero @mk_succ) (cur out)) (cur out))
+
+@mk_zero = (* (0 *))
+
+@mk_succ = (dec (cur (1 (cur_head tail))))
+  & {cur_head cur_inc} ~ cur
+  & cur_inc ~ $([+1] next)
+  & @mk ~ (dec (next tail))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (labels out))) pl) (labels out))
+
+@edges_nil = (* (a a))
+
+@edges_cons = (* (((u v) rest) (labels out)))
+  & {lab_u lab_more} ~ labels
+  & {lab_v lab_upd} ~ lab_more
+  & @get ~ (lab_u (u ru))
+  & @get ~ (lab_v (v rv))
+  & {ru_cmp ru_ctx} ~ ru
+  & {rv_cmp rv_ctx} ~ rv
+  & ru_cmp ~ $([=] $(rv_cmp same))
+  & same ~ ?((@edges_join @edges_skip) (rest (lab_upd (ru_ctx (rv_ctx out))))
+
+@edges_join = (rest (labels (ru (rv out))))
+  & @replace ~ (labels (ru (rv labels2)))
+  & @edges ~ (rest (labels2 out))
+
+@edges_skip = (* (rest (labels (* (* out)))))
+  & @edges ~ (rest (labels out))
+
+@replace = ((?((@replace_nil @replace_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@replace_nil = (* (* (* (0 *))))
+
+@replace_cons = (* ((head tail) (u (v out))))
+  & {h_eq h_keep} ~ head
+  & {u_eq u_rec} ~ u
+  & {v_rec v_branch} ~ v
+  & @replace ~ (tail (u_rec (v_rec tail2)))
+  & h_eq ~ $([=] $(u_eq z))
+  & z ~ ?((@replace_no @replace_yes) (h_keep (v_branch (tail2 out))))
+
+@replace_no = (h_keep (* (tail2 (1 (h_keep tail2)))))
+
+@replace_yes = (* (* (v_branch (tail2 (1 (v_branch tail2))))))
+
+@queries = ((?((@queries_nil @queries_cons) (pl (labels out))) pl) (labels out))
+
+@queries_nil = (* (* (0 *)))
+
+@queries_cons = (* (((a b) rest) (labels out)))
+  & {lab_a lab_more} ~ labels
+  & {lab_b lab_rec} ~ lab_more
+  & {a_cmp a_ctx} ~ a
+  & {b_cmp b_ctx} ~ b
+  & a_cmp ~ $([=] $(b_cmp same))
+  & same ~ ?((@query_diff @query_same) (rest (lab_rec (a_ctx (b_ctx out))))
+
+@query_diff = (rest (labels (a (b out))))
+  & @get ~ (labels (a la))
+  & @get ~ (labels (b lb))
+  & @queries ~ (rest (labels restout))
+  & la ~ $([=] $(lb z))
+  & z ~ ?((@query_no @query_yes) (restout out))
+
+@query_same = (* (rest (labels (* (* out)))))
+  & @queries ~ (rest (labels restout))
+  & out ~ (1 (1 restout))
+
+@query_no = (restout (1 (0 restout)))
+
+@query_yes = (* (restout (1 (1 restout))))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (* 0))
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (head (tail out)))
+
+@get_zero = (head (* head))
+
+@get_more = (idx (* (tail out)))
+  & @get ~ (tail (idx out))

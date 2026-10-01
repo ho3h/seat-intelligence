@@ -1,0 +1,108 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@bfs = (a (b (c (d (e ((@bfs__C3 (a (b (c (d (e f)))))) f))))))
+
+@bfs__C0 = (a (b (c ($([+0x0000001] g) (d (e (f h)))))))
+  & @bfs ~ (a (b (c (d (e (f (g h)))))))
+
+@bfs__C1 = (* (* (b (* (* (* (a (* c))))))))
+  & @get_at ~ (a (b c))
+
+@bfs__C2 = (* (a (b ({e {k l}} ({j m} ({d n} (g (h ({f o} s)))))))))
+  & @get_at ~ (i (j $([!] $(k ?((@bfs__C0 @bfs__C1) (l (m (n (o (p (q (r s))))))))))))
+  & @scan_frontier ~ (c (d (e (f (g (h (@List/Nil ({i p} (q r)))))))))
+  & @List/Cons ~ (a (b c))
+
+@bfs__C3 = (?(((* (* (* (* (* (* 0)))))) @bfs__C2) a) a)
+
+@fill = (?(((* @List/Nil) @fill__C0) a) a)
+
+@fill__C0 = ($([+0x0000001] $([:-0x0000001] b)) ({a c} e))
+  & @List/Cons ~ (a (d e))
+  & @fill ~ (b (c d))
+
+@get_at = (a (?((@get_at__C3 @get_at__C4) (a b)) b))
+
+@get_at__C0 = (?((0 (* (a (* a)))) b) b)
+
+@get_at__C1 = (* (* (a ($([+0x0000001] $([:-0x0000001] b)) c))))
+  & @get_at ~ (a (b c))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@get_at__C3 = ((@get_at__C0 a) a)
+
+@get_at__C4 = (a ((@get_at__C2 (a b)) b))
+
+@prog = ((b ({$([=] $(a ?((@prog__C0 (* (* (* (* (* 1)))))) (b (c (d (e f))))))) c} ({a d} e))) f)
+
+@prog__C0 = ({a {i {d e}}} ({m {k g}} (b (c o))))
+  & @bfs ~ (a (b (c (h (l (n (0 o)))))))
+  & @set_at ~ (f (g (0 h)))
+  & @fill ~ (d (e f))
+  & @set_at ~ (j (k (1 l)))
+  & @fill ~ (i (0 j))
+  & @List/Cons ~ (m (@List/Nil n))
+
+@scan_edges = ((@scan_edges__C4 a) a)
+
+@scan_edges__C0 = (b (c (d (e (f (g (h (a (* i)))))))))
+  & @scan_edges ~ (a (b (c (d (e (f (g (h i))))))))
+
+@scan_edges__C1 = (* (i ({a j} ({b k} ({d l} (e (f (g (h (c p))))))))))
+  & @scan_edges ~ (h (i (j (k (l (m (n (o p))))))))
+  & @update_edge ~ (a (b (c (d (e (f (g (m (n o)))))))))
+
+@scan_edges__C2 = (* (* (* (* (a (b (c (a (b c)))))))))
+
+@scan_edges__C3 = (* (($([=] $(a ?((@scan_edges__C0 @scan_edges__C1) (b (c (d (e (f (g (h (i (j k)))))))))))) j) (i ({a b} (c (d (e (f (g (h k))))))))))
+
+@scan_edges__C4 = (?((@scan_edges__C2 @scan_edges__C3) a) a)
+
+@scan_frontier = ((@scan_frontier__C2 a) a)
+
+@scan_frontier__C0 = (* (* (* (a (b (c (a (b c))))))))
+
+@scan_frontier__C1 = (* ({b f} (k ({a l} ({c m} ({d n} (h ({i e} (j r)))))))))
+  & @scan_frontier ~ (k (l (m (n (o (p (q r)))))))
+  & @scan_edges ~ (a (b (c (d (g (h (i (j (o (p q))))))))))
+  & @get_at ~ (e (f g))
+
+@scan_frontier__C2 = (?((@scan_frontier__C0 @scan_frontier__C1) a) a)
+
+@set_at = (a (?((@set_at__C4 @set_at__C5) (a b)) b))
+
+@set_at__C0 = (* (* (b (a c))))
+  & @List/Cons ~ (a (b c))
+
+@set_at__C1 = (?(((* @List/Nil) @set_at__C0) a) a)
+
+@set_at__C2 = (* (a (b (d ($([+0x0000001] $([:-0x0000001] c)) f)))))
+  & @List/Cons ~ (a (e f))
+  & @set_at ~ (b (c (d e)))
+
+@set_at__C3 = (?(((* (* @List/Nil)) @set_at__C2) a) a)
+
+@set_at__C4 = ((@set_at__C1 a) a)
+
+@set_at__C5 = (b ((@set_at__C3 (a (b c))) (a c)))
+
+@update_edge = (c (d ({e b} (f ({g a} (h (i k)))))))
+  & @get_at ~ (a (b {$([=] $(c ?((@update_edge__C2 @update_edge__C3) (d (e (f (g (h (i (j k)))))))))) j}))
+
+@update_edge__C0 = (* (* (a (b (c (a (b c)))))))
+
+@update_edge__C1 = (* ({c e} (f (a ({b d} (i (a (h i))))))))
+  & @set_at ~ (b (c (g h)))
+  & @get_at ~ (d (e $([+] $(f g))))
+
+@update_edge__C2 = ($([+0x0000001] a) (b (c (d (e (f ($([=] $(a ?((@update_edge__C0 @update_edge__C1) (b (c (d (e (f g)))))))) g)))))))
+
+@update_edge__C3 = (* ($([+0x0000001] c) ({i {f b}} (g (a (e (j (* (d (h k))))))))))
+  & @set_at ~ (a (b (c d)))
+  & @set_at ~ (e (f (g h)))
+  & @List/Cons ~ (i (j k))
+
+

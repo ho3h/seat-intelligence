@@ -1,0 +1,54 @@
+{
+ "pid": "t5_prop_majority",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1491,
+    "itrs_median_big": 802932,
+    "itrs_max": 924466,
+    "depth_median_big": 4658,
+    "depth_max": 87131
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 4373,
+    "itrs_median_big": 806247,
+    "itrs_max": 813764,
+    "depth_median_big": 4673,
+    "depth_max": 4922
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 290544,
+ "best": {
+  "itrs_median_small": 1491,
+  "itrs_median_big": 802932,
+  "itrs_max": 924466,
+  "depth_median_big": 4658,
+  "depth_max": 87131
+ },
+ "usd": 0.073393675,
+ "free_rejects": 1,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

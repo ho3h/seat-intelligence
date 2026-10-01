@@ -1,0 +1,20 @@
+// Search a sorted list, carrying the target and current index.
+@prog = (input out)
+  & input ~ (xs target)
+  & @walk ~ (xs (target (0 out)))
+
+@walk = ((?((@empty @step) (pl (target (idx out)))) pl) (target (idx out)))
+
+@empty = (* (* (* out)))
+  & out ~ 16777215
+
+@step = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & eq ~ ?((@miss @hit) (tail (tr (idx out))))
+  & t ~ {tc tr}
+
+@miss = (tail (target (idx out)))
+  & idx ~ $([+1] idx2)
+  & @walk ~ (tail (target (idx2 out)))
+
+@hit = (* (* (* (v v))))

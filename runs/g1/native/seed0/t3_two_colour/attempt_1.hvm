@@ -1,0 +1,205 @@
+// Initialize the colour list with 2s.
+@init2 = (n out)
+  & n ~ ?((@init2_nil @init2_cons) out)
+
+@init2_nil = out
+  & out ~ (0 *)
+
+@init2_cons = (n out)
+  & @init2 ~ (n tail)
+  & out ~ (1 (2 tail))
+
+// Build the invalid-colouring result.
+@bad_fill = (n out)
+  & n ~ ?((@bad_fill_nil @bad_fill_cons) out)
+
+@bad_fill_nil = out
+  & out ~ (0 *)
+
+@bad_fill_cons = (n out)
+  & @bad_fill ~ (n tail)
+  & out ~ (1 (16777215 tail))
+
+// Read list element i.
+@get = (i ((?((@get_nil @get_cons) (i (pl out))) pl) out))
+
+@get_nil = (i (pl out))
+  & i ~ *
+  & pl ~ *
+  & out ~ 0
+
+@get_cons = (* (i ((h t) out)))
+  & i ~ ?((@get_here @get_step) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_step = (i (h (t out)))
+  & h ~ *
+  & @get ~ (i (t out))
+
+// Set list element i to v.
+@set = (i (v ((?((@set_nil @set_cons) (i (v (pl out)))) pl) out))
+
+@set_nil = (i (v (pl out)))
+  & i ~ *
+  & v ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (i (v ((h t) out))))
+  & i ~ ?((@set_here @set_step) (v (h (t out)))
+
+@set_here = (v (h (t out)))
+  & h ~ *
+  & out ~ (1 (v t))
+
+@set_step = (i (v (h (t out))))
+  & @set ~ (i (v (t tail)))
+  & out ~ (1 (h tail))
+
+// Process one edge against the current colouring.
+@process = ((u v) (colors (changed (bad out))))
+  & u ~ {ug uu}
+  & v ~ {vg vv}
+  & colors ~ {ca {cb cc}}
+  & @get ~ (ug (ca cu))
+  & @get ~ (vg (cb cv))
+  & @process_vals ~ (uu (vv (cu (cv (cc (changed (bad out)))))))
+
+@process_vals = (u (v (cu (cv (colors (changed (bad out))))))
+  & cu ~ {ct ck}
+  & ct ~ $([=] $(2 z))
+  & z ~ ?((@pv_assigned @pv_uncoloured) (u (v (ck (cv (colors (changed (bad out)))))))
+
+@pv_uncoloured = (* (u (v (ck (cv (colors (changed (bad out)))))))
+  & cv ~ {cvt cvk}
+  & cvt ~ $([=] $(2 z))
+  & z ~ ?((@pv_setu @pv_both_uncoloured) (u (v (ck (cvk (colors (changed (bad out)))))))
+
+@pv_both_uncoloured = (* (u (v (ck (cv (colors (changed (bad out)))))))
+  & u ~ *
+  & v ~ *
+  & ck ~ *
+  & cv ~ *
+  & out ~ (colors (changed bad))
+
+@pv_setu = (u (v (ck (cv (colors (changed (bad out)))))))
+  & 1 ~ $([-] $(cv val))
+  & @set ~ (u (val (colors nc)))
+  & v ~ *
+  & ck ~ *
+  & changed ~ *
+  & out ~ (nc (1 bad))
+
+@pv_assigned = (u (v (ck (cv (colors (changed (bad out)))))))
+  & cv ~ {cvt cvk}
+  & cvt ~ $([=] $(2 z))
+  & z ~ ?((@pv_compare @pv_setv) (u (v (ck (cvk (colors (changed (bad out)))))))
+
+@pv_setv = (* (u (v (ck (cv (colors (changed (bad out)))))))
+  & 1 ~ $([-] $(ck val))
+  & @set ~ (v (val (colors nc)))
+  & u ~ *
+  & cv ~ *
+  & changed ~ *
+  & out ~ (nc (1 bad))
+
+@pv_compare = (u (v (ck (cv (colors (changed (bad out)))))))
+  & ck ~ $([=] $(cv z))
+  & u ~ *
+  & v ~ *
+  & z ~ ?((@pv_no_conflict @pv_conflict) (colors (changed (bad out))))
+
+@pv_no_conflict = (colors (changed (bad out)))
+  & out ~ (colors (changed bad))
+
+@pv_conflict = (* (colors (changed (bad out))))
+  & bad ~ *
+  & out ~ (colors (changed 1))
+
+// Scan the edge list once, returning a rebuilt edge list and the updated state.
+@scan = ((?((@scan_nil @scan_cons) (pl (colors (changed (bad out))))) pl) (colors (changed (bad out))))
+
+@scan_nil = (pl (colors (changed (bad out))))
+  & pl ~ *
+  & out ~ ((0 *) (colors (changed bad)))
+
+@scan_cons = (* (((u v) tail) (colors (changed (bad out)))))
+  & u ~ {up uc}
+  & v ~ {vp vc}
+  & @process ~ ((uc vc) (colors (changed (bad pstate))))
+  & pstate ~ (c2 (ch2 b2))
+  & @scan ~ (tail (c2 (ch2 (b2 rest))))
+  & rest ~ (erest (cr (chr br)))
+  & out ~ ((1 ((up vp) erest)) (cr (chr br)))
+
+// Repeat scans until no colour changes occur, or a conflict is found.
+@repeat = (edges (colors (bad out)))
+  & @scan ~ (edges (colors (0 (bad state))))
+  & state ~ (newedges (newcolors (changed newbad)))
+  & newbad ~ ?((@repeat_check @repeat_bad) (newedges (newcolors (changed out)))
+
+@repeat_bad = (* (newedges (newcolors (changed out))))
+  & changed ~ *
+  & out ~ (newedges (newcolors 1))
+
+@repeat_check = (newedges (newcolors (changed out)))
+  & changed ~ ?((@repeat_done @repeat_more) (newedges (newcolors out)))
+
+@repeat_done = (newedges (newcolors out))
+  & out ~ (newedges (newcolors 0))
+
+@repeat_more = (* (newedges (newcolors out)))
+  & @repeat ~ (newedges (newcolors (0 out)))
+
+// Visit vertices in ascending order, seeding each uncoloured component with 0.
+@loop = (i (n (edges (colors (bad out)))))
+  & i ~ {itest ikeep}
+  & n ~ {ntest nkeep}
+  & itest ~ $([=] $(ntest eq))
+  & eq ~ ?((@loop_more @loop_done) (ikeep (nkeep (edges (colors (bad out))))))
+
+@loop_done = (* (i (n (edges (colors (bad out))))))
+  & i ~ *
+  & @final ~ (n (edges (colors (bad out))))
+
+@loop_more = (i (n (edges (colors (bad out)))))
+  & i ~ {ig ic}
+  & colors ~ {cg ck}
+  & @get ~ (ig (cg cv))
+  & cv ~ $([=] $(2 z))
+  & z ~ ?((@loop_assigned @loop_uncoloured) (ic (n (edges (ck (bad out))))))
+
+@loop_assigned = (i (n (edges (colors (bad out)))))
+  & i ~ $([+1] next)
+  & @loop ~ (next (n (edges (colors (bad out)))))
+
+@loop_uncoloured = (* (i (n (edges (colors (bad out))))))
+  & i ~ {iset inext}
+  & @set ~ (iset (0 (colors seeded)))
+  & @repeat ~ (edges (seeded (bad state)))
+  & state ~ (newedges (newcolors newbad))
+  & inext ~ $([+1] next)
+  & @loop ~ (next (n (newedges (newcolors (newbad out))))
+
+// Return the colouring if valid, otherwise a list of 16777215s.
+@final = (n (edges (colors (bad out))))
+  & bad ~ ?((@final_ok @final_invalid) (n (edges (colors out))))
+
+@final_ok = (n (edges (colors out)))
+  & n ~ *
+  & edges ~ *
+  & out ~ colors
+
+@final_invalid = (* (n (edges (colors out))))
+  & edges ~ *
+  & colors ~ *
+  & @bad_fill ~ (n out)
+
+// Input and initial state.
+@prog = ((n edges) out)
+  & n ~ {nfill nloop}
+  & @init2 ~ (nfill colors)
+  & @loop ~ (0 (nloop (edges (colors (0 out)))))

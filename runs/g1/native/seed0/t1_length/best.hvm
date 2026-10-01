@@ -1,0 +1,60 @@
+@prog = (l out)
+  & @len ~ (l (0 out))
+
+@len = ((?((@len_nil @len_cons1) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons1 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len1_nil @len_cons2) (pl (acc out))) pl)
+
+@len1_nil = (* (a out))
+  & a ~ $([+1] out)
+
+@len_cons2 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len2_nil @len_cons3) (pl (acc out))) pl)
+
+@len2_nil = (* (a out))
+  & a ~ $([+2] out)
+
+@len_cons3 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len3_nil @len_cons4) (pl (acc out))) pl)
+
+@len3_nil = (* (a out))
+  & a ~ $([+3] out)
+
+@len_cons4 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len4_nil @len_cons5) (pl (acc out))) pl)
+
+@len4_nil = (* (a out))
+  & a ~ $([+4] out)
+
+@len_cons5 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len5_nil @len_cons6) (pl (acc out))) pl)
+
+@len5_nil = (* (a out))
+  & a ~ $([+5] out)
+
+@len_cons6 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len6_nil @len_cons7) (pl (acc out))) pl)
+
+@len6_nil = (* (a out))
+  & a ~ $([+6] out)
+
+@len_cons7 = (* ((h t) (acc out)))
+  & h ~ *
+  & t ~ (?( (@len7_nil @len_cons8) (pl (acc out))) pl)
+
+@len7_nil = (* (a out))
+  & a ~ $([+7] out)
+
+@len_cons8 = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+8] acc2)
+  & @len ~ (t (acc2 out))

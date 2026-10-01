@@ -1,0 +1,46 @@
+{
+ "group_company": {
+  "meaning": "Guests from the same company must sit together, each company forming one block.",
+  "slots": []
+ },
+ "group_category": {
+  "meaning": "Guests of the same category must sit together, each category forming one block.",
+  "slots": []
+ },
+ "spread": {
+  "meaning": "Guests of the same category must be spread out: hand the categories out in turn, one guest of each category, then the next round, instead of letting a category sit together.",
+  "slots": []
+ },
+ "order_rank": {
+  "meaning": "Seat guests in order of their RSVP rank number, lowest number first.",
+  "slots": []
+ },
+ "order_rankdesc": {
+  "meaning": "Seat guests in order of their RSVP rank number, highest number first.",
+  "slots": []
+ },
+ "order_category": {
+  "meaning": "Seat categories in a priority sequence given by a phrase {LIST} (categories not in the list come afterwards).",
+  "slots": [
+   "{LIST}: the categories in priority sequence written as a natural phrase, e.g. 'government officials, then AI labs, then investors' (1 to 4 categories)"
+  ]
+ },
+ "order_company": {
+  "meaning": "Seat companies in a priority sequence given by a phrase {LIST} (other companies come afterwards).",
+  "slots": [
+   "{LIST}: the companies in priority sequence as a natural phrase, e.g. 'Nvidia, then Palantir' (1 to 4 companies)"
+  ]
+ },
+ "sections": {
+  "meaning": "The table is divided into sections of {S} seats; the answer is which section each guest is in.",
+  "slots": [
+   "{S}: the section size, written as a digit like 6 or a number word like six"
+  ]
+ },
+ "captains": {
+  "meaning": "The table is divided into sections of {S} seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number).",
+  "slots": [
+   "{S}: the section size, written as a digit or a number word"
+  ]
+ }
+}

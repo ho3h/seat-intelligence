@@ -1,0 +1,91 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@bfs = ((@bfs__C20 a) a)
+
+@bfs__C0 = a
+  & @reverse ~ a
+
+@bfs__C1 = (* (a (b e)))
+  & @bfs ~ (d (@List/Nil e))
+  & @reverse ~ (c d)
+  & @List/Cons ~ (a (b c))
+
+@bfs__C10 = (* (c (g (b (d (h (a j)))))))
+  & @bfs ~ (a (f (i j)))
+  & @List/Cons ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+  & @List/Cons ~ (g (h i))
+
+@bfs__C11 = (?((@bfs__C9 @bfs__C10) a) a)
+
+@bfs__C12 = a
+  & @bfs ~ (@List/Nil a)
+
+@bfs__C13 = (* ((@bfs__C11 (a (b (c d)))) (c (a (b d)))))
+
+@bfs__C14 = (?((@bfs__C12 @bfs__C13) a) a)
+
+@bfs__C15 = (a (b ((@bfs__C8 (a (b c))) c)))
+
+@bfs__C16 = (* (b (f (a (c (g ((@bfs__C14 (e (h i))) i)))))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+  & @List/Cons ~ (f (g h))
+
+@bfs__C17 = (?((@bfs__C15 @bfs__C16) a) a)
+
+@bfs__C18 = ((@bfs__C2 a) a)
+
+@bfs__C19 = (* ((@bfs__C17 (a (b (c d)))) (c (a (b d)))))
+
+@bfs__C2 = (?((@bfs__C0 @bfs__C1) a) a)
+
+@bfs__C20 = (?((@bfs__C18 @bfs__C19) a) a)
+
+@bfs__C3 = (b (c (a d)))
+  & @bfs ~ (a (b (c d)))
+
+@bfs__C4 = (* (c (g (b (d (h (a j)))))))
+  & @bfs ~ (a (f (i j)))
+  & @List/Cons ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+  & @List/Cons ~ (g (h i))
+
+@bfs__C5 = (?((@bfs__C3 @bfs__C4) a) a)
+
+@bfs__C6 = a
+  & @bfs ~ (@List/Nil a)
+
+@bfs__C7 = (* ((@bfs__C5 (a (b (c d)))) (c (a (b d)))))
+
+@bfs__C8 = (?((@bfs__C6 @bfs__C7) a) a)
+
+@bfs__C9 = (b (c (a d)))
+  & @bfs ~ (a (b (c d)))
+
+@prog = (a c)
+  & @bfs ~ (b (@List/Nil (@List/Nil c)))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@reverse = (a b)
+  & @reverse_acc ~ (a (@List/Nil b))
+
+@reverse_acc = ((@reverse_acc__C4 a) a)
+
+@reverse_acc__C0 = (b (a c))
+  & @List/Cons ~ (a (b c))
+
+@reverse_acc__C1 = (* (b (a (d (c g)))))
+  & @reverse_acc ~ (a (f g))
+  & @List/Cons ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@reverse_acc__C2 = (?((@reverse_acc__C0 @reverse_acc__C1) a) a)
+
+@reverse_acc__C3 = (* (b ((@reverse_acc__C2 (a (b c))) (a c))))
+
+@reverse_acc__C4 = (?(((a a) @reverse_acc__C3) b) b)
+
+

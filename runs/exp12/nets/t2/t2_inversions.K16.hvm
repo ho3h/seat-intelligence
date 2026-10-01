@@ -1,0 +1,76 @@
+@prog = (xs out)
+  & @inv ~ (xs ((0 *) (0 out)))
+
+@inv = (lv1 (seen (acc out)))
+  & @inv_cons_lw ~ (lv1 (seen (acc out)))
+
+@inv_nil = (* (* (a a)))
+
+@inv_cons = (* (({h1 h2} t) ({s1 s2} (acc out))))
+  & @count ~ (h1 (s1 (0 $([+] $(acc acc2)))))
+  & @inv_cons_lw ~ (t ((1 (h2 s2)) (acc2 out)))
+
+@count = (h (lv2 (acc out)))
+  & @count_cons_lw ~ (lv2 (h (acc out)))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* (($([>] $(h1 z15)) ys) ({h1 h2} (acc out))))
+  & z15 ~ ?((@count_no_hz @count_yes_hz) (h2 (xw35 (acc out))))
+  & @count_cons_lw ~ (ys xw35)
+
+@count_no = (h (ys (acc out)))
+  & @count ~ (h (ys (acc out)))
+
+@count_yes = (* (h (ys (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count ~ (h (ys (acc2 out)))
+
+@inv_cons_lw = (ls135 (q39 (q40 q41)))
+  & ls135 ~ (g118 (e102 (g119 (e103 (g120 (e104 (g121 (e105 (g122 (e106 (g123 (e107 (g124 (e108 (g125 (e109 (g126 (e110 (g127 (e111 (g128 (e112 (g129 (e113 (g130 (e114 (g131 (e115 (g132 (e116 (g133 (e117 tk134))))))))))))))))))))))))))))))))
+  & g118 ~ ?((@inv_nil @inv_cons_la) ((e102 (q43 (q44 q45))) (q39 (q40 q41))))
+  & g119 ~ ?((@inv_nil @inv_cons_la) ((e103 (q47 (q48 q49))) (q43 (q44 q45))))
+  & g120 ~ ?((@inv_nil @inv_cons_la) ((e104 (q51 (q52 q53))) (q47 (q48 q49))))
+  & g121 ~ ?((@inv_nil @inv_cons_la) ((e105 (q55 (q56 q57))) (q51 (q52 q53))))
+  & g122 ~ ?((@inv_nil @inv_cons_la) ((e106 (q59 (q60 q61))) (q55 (q56 q57))))
+  & g123 ~ ?((@inv_nil @inv_cons_la) ((e107 (q63 (q64 q65))) (q59 (q60 q61))))
+  & g124 ~ ?((@inv_nil @inv_cons_la) ((e108 (q67 (q68 q69))) (q63 (q64 q65))))
+  & g125 ~ ?((@inv_nil @inv_cons_la) ((e109 (q71 (q72 q73))) (q67 (q68 q69))))
+  & g126 ~ ?((@inv_nil @inv_cons_la) ((e110 (q75 (q76 q77))) (q71 (q72 q73))))
+  & g127 ~ ?((@inv_nil @inv_cons_la) ((e111 (q79 (q80 q81))) (q75 (q76 q77))))
+  & g128 ~ ?((@inv_nil @inv_cons_la) ((e112 (q83 (q84 q85))) (q79 (q80 q81))))
+  & g129 ~ ?((@inv_nil @inv_cons_la) ((e113 (q87 (q88 q89))) (q83 (q84 q85))))
+  & g130 ~ ?((@inv_nil @inv_cons_la) ((e114 (q91 (q92 q93))) (q87 (q88 q89))))
+  & g131 ~ ?((@inv_nil @inv_cons_la) ((e115 (q95 (q96 q97))) (q91 (q92 q93))))
+  & g132 ~ ?((@inv_nil @inv_cons_la) ((e116 (q99 (q100 q101))) (q95 (q96 q97))))
+  & g133 ~ ?((@inv_nil @inv_cons) ((e117 tk134) (q99 (q100 q101))))
+
+@count_cons_lw = (ls233 (q137 (q138 q139)))
+  & ls233 ~ (g216 (e200 (g217 (e201 (g218 (e202 (g219 (e203 (g220 (e204 (g221 (e205 (g222 (e206 (g223 (e207 (g224 (e208 (g225 (e209 (g226 (e210 (g227 (e211 (g228 (e212 (g229 (e213 (g230 (e214 (g231 (e215 tk232))))))))))))))))))))))))))))))))
+  & g216 ~ ?((@count_nil @count_cons_la) ((e200 (q141 (q142 q143))) (q137 (q138 q139))))
+  & g217 ~ ?((@count_nil @count_cons_la) ((e201 (q145 (q146 q147))) (q141 (q142 q143))))
+  & g218 ~ ?((@count_nil @count_cons_la) ((e202 (q149 (q150 q151))) (q145 (q146 q147))))
+  & g219 ~ ?((@count_nil @count_cons_la) ((e203 (q153 (q154 q155))) (q149 (q150 q151))))
+  & g220 ~ ?((@count_nil @count_cons_la) ((e204 (q157 (q158 q159))) (q153 (q154 q155))))
+  & g221 ~ ?((@count_nil @count_cons_la) ((e205 (q161 (q162 q163))) (q157 (q158 q159))))
+  & g222 ~ ?((@count_nil @count_cons_la) ((e206 (q165 (q166 q167))) (q161 (q162 q163))))
+  & g223 ~ ?((@count_nil @count_cons_la) ((e207 (q169 (q170 q171))) (q165 (q166 q167))))
+  & g224 ~ ?((@count_nil @count_cons_la) ((e208 (q173 (q174 q175))) (q169 (q170 q171))))
+  & g225 ~ ?((@count_nil @count_cons_la) ((e209 (q177 (q178 q179))) (q173 (q174 q175))))
+  & g226 ~ ?((@count_nil @count_cons_la) ((e210 (q181 (q182 q183))) (q177 (q178 q179))))
+  & g227 ~ ?((@count_nil @count_cons_la) ((e211 (q185 (q186 q187))) (q181 (q182 q183))))
+  & g228 ~ ?((@count_nil @count_cons_la) ((e212 (q189 (q190 q191))) (q185 (q186 q187))))
+  & g229 ~ ?((@count_nil @count_cons_la) ((e213 (q193 (q194 q195))) (q189 (q190 q191))))
+  & g230 ~ ?((@count_nil @count_cons_la) ((e214 (q197 (q198 q199))) (q193 (q194 q195))))
+  & g231 ~ ?((@count_nil @count_cons) ((e215 tk232) (q197 (q198 q199))))
+
+@inv_cons_la = (* (({h1 h2} ((1 (h2 s2)) (acc2 out))) ({s1 s2} (acc out))))
+  & @count ~ (h1 (s1 (0 $([+] $(acc acc2)))))
+
+@count_no_hz = (q16 (hw24 (q18 q19)))
+  & hw24 ~ (q16 (q18 q19))
+
+@count_yes_hz = (* (q25 (hw34 ($([+] $(1 q29)) q28))))
+  & hw34 ~ (q25 (q29 q28))
+
+@count_cons_la = (* (($([>] $(h1 ?((@count_no_hz @count_yes_hz) (h2 (xw35 (acc out)))))) xw35) ({h1 h2} (acc out))))

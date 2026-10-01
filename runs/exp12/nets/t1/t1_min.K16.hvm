@@ -1,0 +1,75 @@
+@prog = (l out)
+  & @mn_start ~ (l (* out))
+
+@mn_start = (lv1 (unused out))
+  & @mn_start_cons_lw ~ (lv1 (unused out))
+
+@mn_start_nil = (* (* 16777215))
+
+@mn_start_cons = (* ((h t) (* out)))
+  & @mn_cons_lw ~ (t (h out))
+
+@mn = (lv2 (acc out))
+  & @mn_cons_lw ~ (lv2 (acc out))
+
+@mn_nil = (* (a a))
+
+@mn_cons = (* (({$([<] $(acmp z12)) hctx} t) ({acmp actx} out)))
+  & z12 ~ ?((@mn_keep_hz @mn_take_hz) (xw29 (hctx (actx out))))
+  & @mn_cons_lw ~ (t xw29)
+
+@mn_keep = (t (h (acc out)))
+  & @mn ~ (t (acc out))
+  & h ~ *
+
+@mn_take = (* (t (h (acc out))))
+  & acc ~ *
+  & @mn ~ (t (h out))
+
+@mn_start_cons_lw = (ls113 (q33 q34))
+  & ls113 ~ (g96 (e80 (g97 (e81 (g98 (e82 (g99 (e83 (g100 (e84 (g101 (e85 (g102 (e86 (g103 (e87 (g104 (e88 (g105 (e89 (g106 (e90 (g107 (e91 (g108 (e92 (g109 (e93 (g110 (e94 (g111 (e95 tk112))))))))))))))))))))))))))))))))
+  & g96 ~ ?((@mn_start_nil @mn_start_cons_la) ((e80 (q36 q37)) (q33 q34)))
+  & g97 ~ ?((@mn_nil @mn_cons_la) ((e81 (q39 q40)) (q36 q37)))
+  & g98 ~ ?((@mn_nil @mn_cons_la) ((e82 (q42 q43)) (q39 q40)))
+  & g99 ~ ?((@mn_nil @mn_cons_la) ((e83 (q45 q46)) (q42 q43)))
+  & g100 ~ ?((@mn_nil @mn_cons_la) ((e84 (q48 q49)) (q45 q46)))
+  & g101 ~ ?((@mn_nil @mn_cons_la) ((e85 (q51 q52)) (q48 q49)))
+  & g102 ~ ?((@mn_nil @mn_cons_la) ((e86 (q54 q55)) (q51 q52)))
+  & g103 ~ ?((@mn_nil @mn_cons_la) ((e87 (q57 q58)) (q54 q55)))
+  & g104 ~ ?((@mn_nil @mn_cons_la) ((e88 (q60 q61)) (q57 q58)))
+  & g105 ~ ?((@mn_nil @mn_cons_la) ((e89 (q63 q64)) (q60 q61)))
+  & g106 ~ ?((@mn_nil @mn_cons_la) ((e90 (q66 q67)) (q63 q64)))
+  & g107 ~ ?((@mn_nil @mn_cons_la) ((e91 (q69 q70)) (q66 q67)))
+  & g108 ~ ?((@mn_nil @mn_cons_la) ((e92 (q72 q73)) (q69 q70)))
+  & g109 ~ ?((@mn_nil @mn_cons_la) ((e93 (q75 q76)) (q72 q73)))
+  & g110 ~ ?((@mn_nil @mn_cons_la) ((e94 (q78 q79)) (q75 q76)))
+  & g111 ~ ?((@mn_nil @mn_cons) ((e95 tk112) (q78 q79)))
+
+@mn_cons_lw = (ls195 (q115 q116))
+  & ls195 ~ (g178 (e162 (g179 (e163 (g180 (e164 (g181 (e165 (g182 (e166 (g183 (e167 (g184 (e168 (g185 (e169 (g186 (e170 (g187 (e171 (g188 (e172 (g189 (e173 (g190 (e174 (g191 (e175 (g192 (e176 (g193 (e177 tk194))))))))))))))))))))))))))))))))
+  & g178 ~ ?((@mn_nil @mn_cons_la) ((e162 (q118 q119)) (q115 q116)))
+  & g179 ~ ?((@mn_nil @mn_cons_la) ((e163 (q121 q122)) (q118 q119)))
+  & g180 ~ ?((@mn_nil @mn_cons_la) ((e164 (q124 q125)) (q121 q122)))
+  & g181 ~ ?((@mn_nil @mn_cons_la) ((e165 (q127 q128)) (q124 q125)))
+  & g182 ~ ?((@mn_nil @mn_cons_la) ((e166 (q130 q131)) (q127 q128)))
+  & g183 ~ ?((@mn_nil @mn_cons_la) ((e167 (q133 q134)) (q130 q131)))
+  & g184 ~ ?((@mn_nil @mn_cons_la) ((e168 (q136 q137)) (q133 q134)))
+  & g185 ~ ?((@mn_nil @mn_cons_la) ((e169 (q139 q140)) (q136 q137)))
+  & g186 ~ ?((@mn_nil @mn_cons_la) ((e170 (q142 q143)) (q139 q140)))
+  & g187 ~ ?((@mn_nil @mn_cons_la) ((e171 (q145 q146)) (q142 q143)))
+  & g188 ~ ?((@mn_nil @mn_cons_la) ((e172 (q148 q149)) (q145 q146)))
+  & g189 ~ ?((@mn_nil @mn_cons_la) ((e173 (q151 q152)) (q148 q149)))
+  & g190 ~ ?((@mn_nil @mn_cons_la) ((e174 (q154 q155)) (q151 q152)))
+  & g191 ~ ?((@mn_nil @mn_cons_la) ((e175 (q157 q158)) (q154 q155)))
+  & g192 ~ ?((@mn_nil @mn_cons_la) ((e176 (q160 q161)) (q157 q158)))
+  & g193 ~ ?((@mn_nil @mn_cons) ((e177 tk194) (q160 q161)))
+
+@mn_start_cons_la = (* ((h (h out)) (* out)))
+
+@mn_keep_hz = (hw20 (* (q15 q16)))
+  & hw20 ~ (q15 q16)
+
+@mn_take_hz = (* (hw28 (q22 (* q24))))
+  & hw28 ~ (q22 q24)
+
+@mn_cons_la = (* (({$([<] $(acmp ?((@mn_keep_hz @mn_take_hz) (xw29 (hctx (actx out)))))) hctx} xw29) ({acmp actx} out)))

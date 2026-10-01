@@ -1,0 +1,68 @@
+// Task t2_closest
+@prog = (inp out)
+  & inp ~ (x xs)
+  & @scan ~ (xs (x (0 (0 (0 out)))))
+
+@scan = ((?((@snil @scons) (pl (x (have (best (bd out)))))) pl) (x (have (best (bd out)))))
+
+@snil = (* (x (have (best (bd out)))))
+  & x ~ *
+  & bd ~ *
+  & have ~ ?((@nil_empty @nil_some) (best out))
+
+@nil_empty = (best 0)
+  & best ~ *
+
+@nil_some = (* (a a))
+
+@scons = (* ((h t) (x (have (best (bd out))))))
+  & x ~ {x_cmp x_state}
+  & x_cmp ~ {x_lt x_arith}
+  & x_arith ~ {x_xh x_hx}
+  & h ~ {h_cmp h_state}
+  & h_cmp ~ {h_lt h_arith}
+  & h_arith ~ {h_xh h_hx}
+  & x_lt ~ $([<] $(h_lt islt))
+  & x_xh ~ $([-] $(h_xh d1))
+  & h_hx ~ $([-] $(x_hx d2))
+  & islt ~ ?((@d_xge @d_xlt) (d1 (d2 (h_state (t (x_state (have (best (bd out))))))))
+
+@d_xge = (d1 (d2 (h (t (x (have (best (bd out)))))))
+  & d2 ~ *
+  & @process ~ (d1 (h (t (x (have (best (bd out)))))))
+
+@d_xlt = (* (d1 (d2 (h (t (x (have (best (bd out))))))))
+  & d1 ~ *
+  & @process ~ (d2 (h (t (x (have (best (bd out)))))))
+
+@process = (d (h (t (x (have (best (bd out)))))))
+  & have ~ ?((@p_first @p_have) (d (h (t (x (best (bd out)))))))
+
+@p_first = (d (h (t (x (best (bd out))))))
+  & best ~ *
+  & bd ~ *
+  & @scan ~ (t (x (1 (h (d out)))))
+
+@p_have = (* (d (h (t (x (best (bd out)))))))
+  & d ~ {d_cmp d_state}
+  & d_cmp ~ {d_lt d_eq}
+  & bd ~ {bd_cmp bd_state}
+  & bd_cmp ~ {bd_lt bd_eq}
+  & h ~ {h_cmp h_state}
+  & best ~ {best_cmp best_state}
+  & d_lt ~ $([<] $(bd_lt less))
+  & d_eq ~ $([=] $(bd_eq equal))
+  & h_cmp ~ $([<] $(best_cmp hless))
+  & equal ~ $([&] $(hless tie))
+  & less ~ $([|] $(tie update))
+  & update ~ ?((@p_keep @p_replace) (t (x (h_state (d_state (best_state (bd_state out)))))))
+
+@p_keep = (t (x (h (d (best (bd out))))))
+  & h ~ *
+  & d ~ *
+  & @scan ~ (t (x (1 (best (bd out)))))
+
+@p_replace = (* (t (x (h (d (best (bd out)))))))
+  & best ~ *
+  & bd ~ *
+  & @scan ~ (t (x (1 (h (d out)))))

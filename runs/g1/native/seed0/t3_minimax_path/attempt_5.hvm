@@ -1,0 +1,151 @@
+@prog = (inp out)
+  & inp ~ (n (s (t edges)))
+  & @chk_s ~ (n (s (t (edges out))))
+
+@chk_s = (n (s (t (edges out))))
+  & n ~ {ncheck niter}
+  & s ~ {scheck skeep}
+  & scheck ~ $([<] $(ncheck z))
+  & z ~ ?((@bad @chk_t) (niter (skeep (t (edges out)))))
+
+@bad = (* (* (* (* out))))
+  & out ~ 16777215
+
+@chk_t = (* (n (s (t (edges out)))))
+  & n ~ {ncheck niter}
+  & t ~ {tcheck tkeep}
+  & tcheck ~ $([<] $(ncheck z))
+  & z ~ ?((@bad @chk_eq) (niter (s (tkeep (edges out)))))
+
+@chk_eq = (* (n (s (t (edges out)))))
+  & s ~ {scheck skeep}
+  & t ~ {tcheck tkeep}
+  & scheck ~ $([=] $(tcheck z))
+  & z ~ ?((@run @same) (n (skeep (tkeep (edges out)))))
+
+@same = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@run = (n (s (t (edges out))))
+  & n ~ {ni nr}
+  & s ~ {si sp}
+  & @init ~ (ni (si dist))
+  & @putmin ~ (dist (sp (0 seeded)))
+  & @loop ~ (nr (edges (t (seeded out))))
+
+@init = (n (s out))
+  & n ~ ?((@init_nil @init_cons) (s out))
+
+@init_nil = (s out)
+  & s ~ *
+  & out ~ (0 *)
+
+@init_cons = (idx (s out))
+  & @init ~ (idx (s tail))
+  & out ~ (1 (16777215 tail))
+
+@loop = (r (edges (t (dist out))))
+  & r ~ ?((@loop_done @loop_more) (edges (t (dist out))))
+
+@loop_done = (edges (t (dist out)))
+  & edges ~ *
+  & @get ~ (dist (t out))
+
+@loop_more = (r (edges (t (dist out))))
+  & edges ~ {ep en}
+  & @pass ~ (ep (dist d2))
+  & @loop ~ (r (en (t (d2 out))))
+
+@pass = ((?((@pass_nil @pass_cons) (pl (dist out))) pl) (dist out))
+
+@pass_nil = (* (dist out))
+  & dist ~ out
+
+@pass_cons = (* ((h tail) (dist out)))
+  & @relax ~ (h (dist d1))
+  & @pass ~ (tail (d1 out))
+
+@relax = (edge (dist out))
+  & edge ~ (u (v w))
+  & dist ~ {du_list dv_rest}
+  & dv_rest ~ {dv_list base}
+  & u ~ {u_get u_put}
+  & v ~ {v_get v_put}
+  & w ~ {w1 w2}
+  & @get ~ (du_list (u_get du))
+  & @get ~ (dv_list (v_get dv))
+  & @max ~ (du (w1 cv))
+  & @max ~ (dv (w2 cu))
+  & @putmin ~ (base (v_put (cv d1)))
+  & @putmin ~ (d1 (u_put (cu out)))
+
+@max = (a (b out))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([<] $(bc z))
+  & z ~ ?((@max_no @max_yes) (ar (br out)))
+
+@max_no = (a (b out))
+  & a ~ out
+  & b ~ *
+
+@max_yes = (* (a (b out)))
+  & a ~ *
+  & b ~ out
+
+@min = (a (b out))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([<] $(bc z))
+  & z ~ ?((@min_no @min_yes) (ar (br out)))
+
+@min_no = (a (b out))
+  & a ~ *
+  & b ~ out
+
+@min_yes = (* (a (b out)))
+  & a ~ out
+  & b ~ *
+
+@get = ((tag payload) (idx out))
+  & tag ~ ?((@get_nil @get_cons) (payload (idx out)))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@get_cons = (* (payload (idx out)))
+  & payload ~ (head tail)
+  & idx ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@get_next = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (idx out))
+
+@putmin = ((tag payload) (idx (cand out)))
+  & tag ~ ?((@put_nil @put_cons) (payload (idx (cand out))))
+
+@put_nil = (* (idx (cand out)))
+  & idx ~ *
+  & cand ~ *
+  & out ~ (0 *)
+
+@put_cons = (* (payload (idx (cand out))))
+  & payload ~ (head tail)
+  & idx ~ ?((@put_here @put_next) (head (tail (cand out))))
+
+@put_here = (head (tail (cand out)))
+  & @min ~ (head (cand val))
+  & out ~ (1 (val tail))
+
+@put_next = (idx (head (tail (cand out))))
+  & @putmin ~ (tail (idx (cand rest)))
+  & out ~ (1 (head rest))

@@ -1,0 +1,71 @@
+{
+ "config": "fold_h3b",
+ "dsl": "full",
+ "depth": 3,
+ "kind": "fold",
+ "target": "((acc * 2) + x)",
+ "task": {
+  "kind": "fold",
+  "z": 0,
+  "xss": [
+   [
+    2,
+    9,
+    1,
+    4
+   ],
+   [
+    1,
+    7,
+    7,
+    7
+   ],
+   [
+    6,
+    3,
+    1,
+    7
+   ]
+  ],
+  "ys": [
+   58,
+   57,
+   69
+  ]
+ },
+ "n_candidates": 3417576,
+ "sup_itrs": 170857369,
+ "sup_wall": 7.349971771240234,
+ "sup_heap": 348456929,
+ "sup_survivors": 153,
+ "sup_survivors_all_verified": true,
+ "sup_err": "",
+ "sup_examples": [
+  "(acc + (acc + x))",
+  "(acc + (x + acc))",
+  "(x + (acc + acc))",
+  "((acc + acc) + x)",
+  "((acc + x) + acc)"
+ ],
+ "ind_n": 200,
+ "ind_mean_itrs": 241.67,
+ "ind_compiled_mean_itrs": 55.55,
+ "ind_mean_size": 6.835,
+ "ind_extrap": 825925591.92,
+ "ind_compiled_extrap": 189846346.79999998,
+ "gain": 4.8340062635519105,
+ "gain_vs_compiled": 1.1111393550722415,
+ "sup_itrs_per_cand": 49.99372918115062,
+ "oe_first_solution": "(acc + (acc + x))",
+ "oe_first_sec": 0.039515018463134766,
+ "oe_first_vector_evals": 1170,
+ "oe_first_classes": 355,
+ "oe_first_fold_checks": 355,
+ "brute_solutions": 153,
+ "brute_sec": 38.664122104644775,
+ "survivors_match_brute": true,
+ "batched_interp_per_cand": 248.67,
+ "batched_compiled_per_cand": 115.025,
+ "gain_vs_batched_interp": 4.9740238240470624,
+ "gain_vs_batched_compiled": 2.3007885565649793
+}

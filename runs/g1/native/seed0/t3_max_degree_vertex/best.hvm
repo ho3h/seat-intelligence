@@ -1,0 +1,82 @@
+@prog = ((n edges) out)
+  & n ~ ?((@prog_zero @prog_nonzero) (edges out))
+
+@prog_zero = (edges out)
+  & edges ~ *
+  & out ~ 16777215
+
+@prog_nonzero = (nm1 (edges out))
+  & nm1 ~ $([+1] actual)
+  & @zeros ~ (actual degrees0)
+  & @count_edges ~ (edges (degrees0 degrees))
+  & @maxlist ~ (degrees (0 (0 (0 out))))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) out)
+
+@zeros_nil = (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+@count_edges = (l (degrees out))
+  & l ~ (?( (@ce_nil @ce_cons) (payload (degrees out))) payload)
+
+@ce_nil = (* (degrees out))
+  & degrees ~ out
+
+@ce_cons = (* (((u v) tail) (degrees out)))
+  & @inc_at ~ (u (degrees deg1))
+  & @inc_at ~ (v (deg1 deg2))
+  & @count_edges ~ (tail (deg2 out))
+
+@inc_at = (idx (l out))
+  & idx ~ ?((@inc_here @inc_later) (l out))
+
+@inc_here = (l out)
+  & l ~ (?( (@ih_nil @ih_cons) (payload out)) payload)
+
+@ih_nil = (* out)
+  & out ~ (0 *)
+
+@ih_cons = (* ((head tail) out))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_later = (idx (l out))
+  & l ~ (?( (@il_nil @il_cons) (payload (idx out))) payload)
+
+@il_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 *)
+
+@il_cons = (* ((head tail) (idx out)))
+  & @inc_at ~ (idx (tail tail2))
+  & out ~ (1 (head tail2))
+
+@maxlist = (l (id (best (bestid out))))
+  & l ~ (?( (@max_nil @max_cons) (payload (id (best (bestid out))))) payload)
+
+@max_nil = (* (id (best (bestid out))))
+  & id ~ *
+  & best ~ *
+  & out ~ bestid
+
+@max_cons = (* ((head tail) (id (best (bestid out)))))
+  & head ~ {h_cmp h_keep}
+  & best ~ {b_cmp b_keep}
+  & h_cmp ~ $([>] $(b_cmp gt))
+  & gt ~ ?((@max_keep @max_update) (tail (id (b_keep (bestid (h_keep out))))))
+
+@max_keep = (tail (id (best (bestid (head out)))))
+  & head ~ *
+  & id ~ $([+1] id2)
+  & @maxlist ~ (tail (id2 (best (bestid out))))
+
+@max_update = (* (tail (id (best (bestid (head out))))))
+  & best ~ *
+  & bestid ~ *
+  & id ~ {id_next id_best}
+  & id_next ~ $([+1] id2)
+  & @maxlist ~ (tail (id2 (head (id_best out))))

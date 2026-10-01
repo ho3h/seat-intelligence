@@ -1,0 +1,153 @@
+@prog = ((n (k pairs)) out)
+  & @loop ~ (n (0 (k (pairs (0 out)))))
+
+@loop = (n (i (k (edges (acc out)))))
+  & n ~ ?((@loop_done @loop_step) (i (k (edges (acc out)))))
+
+@loop_done = (i (k (edges (acc out))))
+  & i ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ acc
+
+@loop_step = (left (i (k (edges (acc out)))))
+  & @candidate ~ (left (i (k (edges (acc out)))))
+
+@candidate = (left (i (k (edges (acc out)))))
+  & i ~ {seed ir}
+  & ir ~ {iseed inext}
+  & k ~ {kcmp kloop}
+  & edges ~ {efind erest}
+  & @close ~ (efind ((1 (seed (0 *))) closed))
+  & @stats ~ (closed (0 (16777215 stat)))
+  & stat ~ (size min)
+  & min ~ $([=] $(iseed ismin))
+  & ismin ~ ?((@candidate_notmin @candidate_min) (size (left (inext (kcmp (kloop (erest (acc out))))))))
+
+@candidate_notmin = (size (left (inext (kcmp (kloop (edges (acc out)))))))
+  & size ~ *
+  & kcmp ~ *
+  & @loop ~ (left (inext (kloop (edges (acc out)))))
+
+@candidate_min = (* (size (left (inext (kcmp (kloop (edges (acc out))))))))
+  & size ~ $([<] $(kcmp below))
+  & below ~ ?((@candidate_accept @candidate_reject) (left (inext (kloop (edges (acc out))))))
+
+@candidate_accept = (left (inext (kloop (edges (acc out)))))
+  & acc ~ $([+] $(1 anew))
+  & @loop ~ (left (inext (kloop (edges (anew out)))))
+
+@candidate_reject = (* (left (inext (kloop (edges (acc out))))))
+  & @loop ~ (left (inext (kloop (edges (acc out)))))
+
+@close = (edges (set out))
+  & edges ~ {escan erepeat}
+  & @scan ~ (escan (set res))
+  & res ~ (newset changed)
+  & changed ~ ?((@close_done @close_again) (erepeat (newset out)))
+
+@close_done = (edges (set out))
+  & edges ~ *
+  & out ~ set
+
+@close_again = (* (edges (set out)))
+  & @close ~ (edges (set out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (set (changed out)))) pl) (set (changed out)))
+
+@scan_nil = (* (set (changed out)))
+  & out ~ (set changed)
+
+@scan_cons = (* ((edge tail) (set (changed out))))
+  & @edge ~ (edge (set result))
+  & result ~ (newset did)
+  & changed ~ $([|] $(did merged))
+  & @scan ~ (tail (newset (merged out)))
+
+@edge = (edge (set out))
+  & edge ~ (u v)
+  & set ~ {setu rest}
+  & rest ~ {setv setkeep}
+  & u ~ {ut ukeep}
+  & v ~ {vt vkeep}
+  & @mem ~ (setu (ut hasu))
+  & hasu ~ ?((@edge_u0 @edge_u1) (setv (vt (ukeep (vkeep (setkeep out))))))
+
+@edge_u0 = (setv (vt (u (v (set out)))))
+  & @mem ~ (setv (vt hv))
+  & @edge_finish ~ (0 (hv (u (v (set out)))))
+
+@edge_u1 = (* (setv (vt (u (v (set out))))))
+  & @mem ~ (setv (vt hv))
+  & @edge_finish ~ (1 (hv (u (v (set out)))))
+
+@edge_finish = (hu (hv (u (v (set out)))))
+  & hu ~ ?((@edge_hu0 @edge_hu1) (hv (u (v (set out)))))
+
+@edge_hu0 = (hv (u (v (set out))))
+  & hv ~ ?((@edge_00 @edge_01) (u (v (set out))))
+
+@edge_hu1 = (* (hv (u (v (set out)))))
+  & hv ~ ?((@edge_10 @edge_11) (u (v (set out))))
+
+@edge_00 = (u (v (set out)))
+  & u ~ *
+  & v ~ *
+  & out ~ (set 0)
+
+@edge_01 = (u (v (set out)))
+  & @add ~ (set added)
+  & v ~ *
+  & out ~ (added 1)
+
+@edge_10 = (u (v (set out)))
+  & u ~ *
+  & @add ~ (set added)
+  & out ~ (added 1)
+
+@edge_11 = (u (v (set out)))
+  & u ~ *
+  & v ~ *
+  & out ~ (set 0)
+
+@add = (set (x out))
+  & out ~ (1 (x set))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xt xr}
+  & h ~ $([=] $(xt z))
+  & z ~ ?((@mem_no @mem_yes) (t (xr out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@stats = ((?((@stats_nil @stats_cons) (pl (size (min out)))) pl) (size (min out)))
+
+@stats_nil = (* (size (min out)))
+  & out ~ (size min)
+
+@stats_cons = (* ((h t) (size (min out))))
+  & h ~ {hc hk}
+  & min ~ {mc mk}
+  & size ~ $([+1] sz)
+  & hc ~ $([<] $(mc z))
+  & z ~ ?((@stats_keep @stats_new) (t (sz (hk (mk out)))))
+
+@stats_keep = (t (sz (h (m out))))
+  & h ~ *
+  & @stats ~ (t (sz (m out)))
+
+@stats_new = (* (t (sz (h (m out)))))
+  & m ~ *
+  & @stats ~ (t (sz (h out)))

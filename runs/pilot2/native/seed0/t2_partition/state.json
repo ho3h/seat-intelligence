@@ -1,0 +1,54 @@
+{
+ "pid": "t2_partition",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 203,
+    "itrs_median_big": 6432,
+    "itrs_max": 6516,
+    "depth_median_big": 1805,
+    "depth_max": 1805
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 330,
+    "itrs_median_big": 11535,
+    "itrs_max": 11535,
+    "depth_median_big": 1808,
+    "depth_max": 1808
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 78,
+    "itrs_median_big": null,
+    "itrs_max": 348,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 168371,
+ "best": {
+  "itrs_median_small": 203,
+  "itrs_median_big": 6432,
+  "itrs_max": 6516,
+  "depth_median_big": 1805,
+  "depth_max": 1805
+ },
+ "usd": 0.04573141000000001,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

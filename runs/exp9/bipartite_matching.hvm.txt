@@ -1,0 +1,98 @@
+// t3_bipartite_matching (GRAPH-SWING-2, runs/exp9): greedy matching as a dataflow pass, then max flow on the residual
+// unit network (the t3_max_flow net's core, entered at @mf_some with the greedy count as initial flow).
+// Vertices: left u, right a+v, source S = a+b, sink T = a+b+1. Greedy: streaming the edges, each edge does two
+// keyed exchange-updates on the free-flag tries FL, FR; an update hands out the leaf's current flag and installs a
+// wire for its next value, so decision(e) = fl(u) & fr(v) is a dataflow value that only waits for earlier edges at
+// u and v. Matched edges and their S/T arcs enter the flow network already saturated (cap 0, reverse cap 1).
+@prog = ((a (b es)) out)
+  & a ~ {a1 {a2 {a3 {a4 a5}}}}
+  & b ~ {b1 {b2 b3}}
+  & a4 ~ $([+] $(b1 ab))
+  & ab ~ {S1 {S2 ab2}}
+  & ab2 ~ $([+1] T)
+  & T ~ {T1 {T2 T3}}
+  & T3 ~ $([+1] N)
+  & N ~ {N1 N2}
+  & N1 ~ $([-] $(1 nm))
+  & @lg ~ (nm L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & @zo ~ (L1 FL)
+  & @zo ~ (L2 FR)
+  & @wg_blk ~ (es (((L3 a1) (FL (FR (0 (0 *))))) (FLf (FRf (cnt el)))))
+  & @sa ~ (FLf (L4 (0 (a2 (S1 (el e2))))))
+  & @ta ~ (FRf (L5 (0 (b2 (a3 (T1 (e2 e3)))))))
+  & @wx_blk ~ (e3 ((0 (0 *)) (m il)))
+  & m ~ {m1 m2}
+  & m1 ~ ?((@mf_none @mf_some) (m2 (il (N2 (S2 (T2 (L6 (cnt out))))))))
+  & b3 ~ *
+  & a5 ~ *
+@bg_step = (((L a) (fl (fr (c l)))) ((u v) ((L3 a3) (fl2 (fr2 (c2 (1 ((u2 (w (cp r))) l))))))))
+  & L ~ {L1 {L2 L3}}
+  & a ~ {a1 a3}
+  & u ~ {u1 u2}
+  & @xa ~ (fl (u1 (L1 ((fu nu) fl2))))
+  & @xa ~ (fr (vx (L2 ((fv nv) fr2))))
+  & fu ~ {fu1 fu2}
+  & fv ~ {fv1 fv2}
+  & fu1 ~ $([&] $(fv1 d))
+  & d ~ {d1 {d2 {d3 {d4 r}}}}
+  & fu2 ~ $([^] $(d1 nu))
+  & fv2 ~ $([^] $(d2 nv))
+  & c ~ $([+] $(d3 c2))
+  & d4 ~ $([^] $(1 cp))
+  & v ~ {v1 vx}
+  & v1 ~ $([+] $(a1 w))
+@bg_fin = ((* s) s)
+@xa_act = (old ((old new) new))
+@zo = (?((1 @zo_node) o) o)
+@zo_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zo ~ (l1 a)
+  & @zo ~ (l2 b)
+// sa(FL, L, base, a, S, tail): (S (i (f (1-f)))) for leaves i < a, prepended to tail
+@sa = (t (L (base (a (S (tail o))))))
+  & L ~ ?((@sa_leaf @sa_node) (t (base (a (S (tail o))))))
+@sa_leaf = (f (i (a (S (tail o)))))
+  & i ~ {i1 i2}
+  & i1 ~ $([<] $(a keep))
+  & keep ~ ?((@sa_drop @sa_keep) (f (i2 (S (tail o)))))
+@sa_drop = (* (* (* (t t))))
+@sa_keep = (* (f (i (S (t (1 ((S (i (f1 r))) t)))))))
+  & f ~ {f1 f2}
+  & f2 ~ $([^] $(1 r))
+@sa_node = (lm ((x y) (base (a (S (tail o))))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & a ~ {a1 a2}
+  & S ~ {S1 S2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @sa ~ (x (l1 (b1 (a1 (S1 (mid o))))))
+  & @sa ~ (y (l2 (bR (a2 (S2 (tail mid))))))
+// ta(FR, L, base, b, a, T, tail): ((a+j) (T (f (1-f)))) for leaves j < b
+@ta = (t (L (base (b (a (T (tail o)))))))
+  & L ~ ?((@ta_leaf @ta_node) (t (base (b (a (T (tail o)))))))
+@ta_leaf = (f (j (b (a (T (tail o))))))
+  & j ~ {j1 j2}
+  & j1 ~ $([<] $(b keep))
+  & keep ~ ?((@ta_drop @ta_keep) (f (j2 (a (T (tail o))))))
+@ta_drop = (* (* (* (* (t t)))))
+@ta_keep = (* (f (j (a (T (t (1 ((v (T (f1 r))) t))))))))
+  & f ~ {f1 f2}
+  & f2 ~ $([^] $(1 r))
+  & j ~ $([+] $(a v))
+@ta_node = (lm ((x y) (base (b (a (T (tail o)))))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & b ~ {c1 c2}
+  & a ~ {a1 a2}
+  & T ~ {T1 T2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @ta ~ (x (l1 (b1 (c1 (a1 (T1 (mid o)))))))
+  & @ta ~ (y (l2 (bR (c2 (a2 (T2 (tail mid)))))))
+// index the flow edge list: (u (v (c r))) -> (u (v (c (r i))))
+@ix_step = ((i l) ((u (v (c r))) (i2 (1 ((u (v (c (r i1)))) l)))))
+  & i ~ {i1 i3}
+  & i3 ~ $([+1] i2)
+@ix_fin = (s s)

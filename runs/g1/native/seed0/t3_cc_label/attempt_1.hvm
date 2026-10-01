@@ -1,0 +1,103 @@
+// Program entry: initialize labels to their vertex ids, then relax all edges
+// until a complete pass makes no changes.
+@prog = ((n edges) out)
+  & @make ~ (n (0 labels))
+  & @loop ~ (edges (labels out))
+
+// Build [0, 1, ..., n-1].
+@make = (n (i out))
+  & n ~ ?((@make_zero @make_succ) (i out))
+
+@make_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@make_succ = (rem (i out))
+  & @copy_num ~ (i (i_head i_rec))
+  & i_rec ~ $([+1] i_next)
+  & @make ~ (rem (i_next rest))
+  & out ~ (1 (i_head rest))
+
+// Kept separate so @make_succ itself contains no DUP node.
+@copy_num = (x (a b))
+  & x ~ {a b}
+
+// A pass returns the updated labels and whether any edge had unequal labels.
+@loop = (edges (labels out))
+  & edges ~ {edges_scan edges_keep}
+  & @scan ~ (edges_scan (labels (0 res)))
+  & res ~ (newlabels changed)
+  & changed ~ ?((@loop_done @loop_more) (edges_keep (newlabels out)))
+
+@loop_done = (edges (labels out))
+  & edges ~ *
+  & out ~ labels
+
+@loop_more = (* (edges (labels out)))
+  & @loop ~ (edges (labels out))
+
+// Scan a list of edges.
+@scan = ((?((@scan_nil @scan_cons) (pl (labels (changed out)))) pl) (labels (changed out)))
+
+@scan_nil = (* (labels (changed out)))
+  & out ~ (labels changed)
+
+@scan_cons = (* ((edge tail) (labels (changed out))))
+  & @relax ~ (edge (labels (changed (tail out))))
+
+// Relax both endpoints of one edge, then continue scanning.
+@relax = ((u v) (labels (changed (tail out))))
+  & labels ~ {lab_base {lab_v lab_u}}
+  & u ~ {u_set u_get}
+  & v ~ {v_set v_get}
+  & @get ~ (u_get (lab_u lu))
+  & @get ~ (v_get (lab_v lv))
+  & lu ~ {lu_min lu_eq}
+  & lv ~ {lv_min lv_eq}
+  & @min ~ (lu_min (lv_min m))
+  & lu_eq ~ $([!] $(lv_eq diff))
+  & m ~ {m_u m_v}
+  & @set ~ (u_set (m_u (lab_base lab_mid)))
+  & @set ~ (v_set (m_v (lab_mid lab_final)))
+  & changed ~ $([|] $(diff next_changed))
+  & @scan ~ (tail (lab_final (next_changed out)))
+
+// Get the label at index idx.
+@get = (idx (list out))
+  & idx ~ ?((@get_zero @get_succ) (list out))
+
+@get_zero = ((tag (head tail)) out)
+  & tag ~ *
+  & tail ~ *
+  & out ~ head
+
+@get_succ = (idx ((tag (head tail)) out))
+  & tag ~ *
+  & @get ~ (idx (tail out))
+
+// Set the label at index idx to value.
+@set = (idx (value (list out)))
+  & idx ~ ?((@set_zero @set_succ) (value (list out)))
+
+@set_zero = (value ((tag (head tail)) out))
+  & head ~ *
+  & out ~ (tag (value tail))
+
+@set_succ = (idx (value ((tag (head tail)) out)))
+  & @set ~ (idx (value (tail rest)))
+  & out ~ (tag (head rest))
+
+// Return the smaller of a and b.
+@min = (a (b out))
+  & a ~ {a_cmp a_keep}
+  & b ~ {b_cmp b_keep}
+  & a_cmp ~ $([<] $(b_cmp z))
+  & z ~ ?((@min_no @min_yes) (a_keep (b_keep out)))
+
+@min_no = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_yes = (* (a (b out)))
+  & b ~ *
+  & out ~ a

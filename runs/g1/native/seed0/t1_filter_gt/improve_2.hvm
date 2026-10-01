@@ -1,0 +1,19 @@
+// Filter the list, preserving elements strictly greater than the key.
+@prog = ((k xs) out)
+  & @filter_gt ~ (k (xs out))
+
+@filter_gt = (k ((?((@filter_nil @filter_cons) (pl (ka (kr o)))) pl) o))
+  & k ~ {ka kr}
+
+@filter_nil = (pl (ka (kr out)))
+  & pl ~ *
+  & ka ~ *
+  & kr ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((h t) (ka (kr out))))
+  & @filter_gt ~ (kr (t ft))
+  & h ~ {ht hk}
+  & ht ~ $([>] $(ka z))
+  & z ~ ?(((* (d d)) (* (u (v w)))) (hk (ft out)))
+  & w ~ (1 (u v))

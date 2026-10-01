@@ -1,0 +1,143 @@
+// Build a binary trie from source vertex to its list of destinations.
+// Empty trie node: (0 *). Nonempty node: (1 (bucket (left right))).
+
+@prog = (input out)
+  & input ~ (n (s edges))
+  & n ~ *
+  & @build ~ (edges ((0 *) built))
+  & @walk ~ ((1 (s (0 *))) (built ((0 *) (0 out))))
+
+@build = ((?((@build_nil @build_cons) (pl (map out))) pl) (map out))
+
+@build_nil = (* (a a))
+
+@build_cons = (* ((u v) rest) (map out))
+  & @put ~ (map (u (v map2)))
+  & @build ~ (rest (map2 out))
+
+@put = ((?((@put_empty @put_node) (p (k (val out)))) p) (k (val out)))
+
+@put_empty = (p (k (val out)))
+  & p ~ *
+  & @put ~ ((1 ((0 *) ((0 *) (0 *)))) (k (val out)))
+
+@put_node = (* (p (k (val out))))
+  & @put_key ~ (p (k (val out)))
+
+@put_key = (parts (k (val out)))
+  & k ~ {kt kc}
+  & kt ~ $([=] $(0 z))
+  & z ~ ?((@put_zero @put_more) (parts (kc (val out))))
+
+@put_zero = ((bucket (left right)) (kc (val out)))
+  & kc ~ *
+  & bucketnew ~ (1 (val bucket))
+  & out ~ (1 (bucketnew (left right)))
+
+@put_more = (parts (kc (val out)))
+  & kc ~ {km kd}
+  & km ~ $([%2] bit)
+  & kd ~ $([/2] q)
+  & bit ~ ?((@put_bit0 @put_bit1) (parts (q (val out))))
+
+@put_bit0 = ((bucket (left right)) (q (val out)))
+  & @put ~ (left (q (val child)))
+  & out ~ (1 (bucket (child right)))
+
+@put_bit1 = (* ((bucket (left right)) (q (val out))))
+  & @put ~ (right (q (val child)))
+  & out ~ (1 (bucket (left child)))
+
+// Lookup returns both the destination list and the reconstructed trie.
+@get = ((?((@get_empty @get_node) (p (k out))) p) (k out))
+
+@get_empty = (p (k out))
+  & p ~ *
+  & k ~ *
+  & out ~ ((0 *) (0 *))
+
+@get_node = (* (p (k out)))
+  & @get_key ~ (p (k res))
+  & res ~ (inner parts2)
+  & out ~ (inner (1 parts2))
+
+@get_key = (parts (k out))
+  & k ~ {kt kc}
+  & kt ~ $([=] $(0 z))
+  & z ~ ?((@get_zero @get_more) (parts (kc out)))
+
+@get_zero = ((bucket (left right)) (kc out))
+  & kc ~ *
+  & bucket ~ {bret bmap}
+  & out ~ (bret (1 (bmap (left right))))
+
+@get_more = (parts (kc out))
+  & kc ~ {km kd}
+  & km ~ $([%2] bit)
+  & kd ~ $([/2] q)
+  & bit ~ ?((@get_bit0 @get_bit1) (parts (q out)))
+
+@get_bit0 = ((bucket (left right)) (q out))
+  & @get ~ (left (q res))
+  & res ~ (inner leftnew)
+  & bucket ~ {bret bmap}
+  & out ~ (inner (1 (bmap (leftnew right))))
+
+@get_bit1 = (* ((bucket (left right)) (q out)))
+  & @get ~ (right (q res))
+  & res ~ (inner rightnew)
+  & bucket ~ {bret bmap}
+  & out ~ (inner (1 (bmap (left rightnew))))
+
+// Prepend every item in one list to another list.
+@pushall = ((?((@push_nil @push_cons) (pl (stack out))) pl) (stack out))
+
+@push_nil = (* (a a))
+
+@push_cons = (* ((h rest) (stack out)))
+  & @pushall ~ (rest ((1 (h stack)) out))
+
+// Depth-first traversal with a visited list and trie lookup.
+@walk = ((?((@walk_nil @walk_cons) (pl (map (visited (count out))))) pl) (map (visited (count out))))
+
+@walk_nil = (* (map (visited (count out))))
+  & map ~ *
+  & visited ~ *
+  & count ~ out
+
+@walk_cons = (* ((v tail) (map (visited (count out)))))
+  & v ~ {v_mem v_keep}
+  & visited ~ {vis_mem vis_keep}
+  & @mem ~ (vis_mem (v_mem z))
+  & z ~ ?((@walk_new @walk_seen) (tail (v_keep (map (vis_keep (count out))))))
+
+@walk_seen = (* (tail (v (map (visited (count out))))))
+  & v ~ *
+  & @walk ~ (tail (map (visited (count out))))
+
+@walk_new = (tail (v (map (visited (count out)))))
+  & v ~ {v_lookup v_visit}
+  & count ~ $([+] $(1 count2))
+  & @get ~ (map (v_lookup got))
+  & got ~ (adj map2)
+  & @pushall ~ (adj (tail newstack))
+  & @walk ~ (newstack (map2 ((1 (v_visit visited)) (count2 out))))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & h ~ $([=] $(target_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (target_keep out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1

@@ -1,0 +1,54 @@
+@idx_get = (l (i o))
+  & l ~ ?((@idx_get_base @idx_get_rec) (i o))
+@idx_get_base = ((tag (x rest)) (* (tag x)))
+@idx_get_rec = (* (l (n o)))
+  & l ~ (tag (x rest))
+  & tag ~ *
+  & n ~ ?((@idx_neg @idx_pos) (rest (np1 o)))
+  & np1 ~ $([-] $(1 n))
+@idx_neg = (l (* *))
+@idx_pos = (* (l (np1 o)))
+  & @idx_get ~ (l (np1 o))
+@prog = ((c (mnl o)))
+  & c ~ ?((@empty @cons) ((mnl o)))
+@empty = (ctx o)
+  & ctx ~ (out out)
+  & out ~ (0 *)
+@cons = (* (ctx ((tag (cluster_id tail_c)) o)))
+  & ctx ~ (c (mnl (out)))
+  & @check_conflict ~ (mnl (c (cluster_id (res out))))
+  & res ~ ?((@res_zero @res_one) (ctx (o)))
+@res_zero = (ctx (o rest))
+  & ctx ~ (c (mnl (out)))
+  & @cons ~ (c ((tag next_cluster) (o rest)))
+@res_one = (* (ctx (o rest)))
+  & ctx ~ (c (mnl (out)))
+  & o ~ $([|] $(1 res1))
+  & res1 ~ ?((@res_zero @res_one) (ctx (res1 rest)))
+@check_conflict = (mnl (c (cluster_id (result))))
+  & mnl ~ ?((@cf_nil @cf_cons) (c (cluster_id (result))))
+@cf_nil = (c (cluster_id (* result)))
+  & c ~ *
+  & cluster_id ~ *
+  & result ~ 0
+@cf_cons = (* (mnl (ctx ((a b) tail_mnl))))
+  & ctx ~ (c (cluster_id (result)))
+  & @idx_get ~ (c (a ca))
+  & @idx_get ~ (c (b cb))
+  & ca ~ $([=] $(cluster_id ca_eq))
+  & ca_eq ~ ?((@cf_diff @cf_same) (cb (c (cluster_id (tail_mnl (result))))))
+@cf_diff = (cb (ctx result))
+  & ctx ~ (c (cluster_id (tail_mnl (result))))
+  & cb ~ *
+  & @check_conflict ~ (mnl (c (cluster_id (result))))
+@cf_same = (* (cb (ctx result)))
+  & ctx ~ (c (cluster_id (tail_mnl (result))))
+  & cb ~ $([=] $(cluster_id cb_eq))
+  & cb_eq ~ ?((@cf_diff @cf_found) (c (cluster_id (tail_mnl (result)))))
+@cf_found = (* (ctx result))
+  & ctx ~ (c (cluster_id (tail (result))))
+  & tail ~ *
+  & c ~ *
+  & cluster_id ~ *
+  & mnl ~ *
+  & result ~ 1

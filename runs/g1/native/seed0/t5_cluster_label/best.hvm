@@ -1,0 +1,110 @@
+// Build labels in ascending order, then make n complete passes over the edges.
+@prog = ((n edges) out)
+  & n ~ {rn rr}
+  & @build ~ (rn (0 labels))
+  & @rounds ~ (rr (labels (edges out)))
+
+@build = (n (i out))
+  & n ~ ?((@build_nil @build_cons) (i out))
+
+@build_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@build_cons = (n (i out))
+  & i ~ {iv inc}
+  & inc ~ $([+1] next)
+  & @build ~ (n (next tail))
+  & out ~ (1 (iv tail))
+
+@rounds = (n (labels (edges out)))
+  & n ~ ?((@round_done @round_more) (labels (edges out)))
+
+@round_done = (labels (edges out))
+  & edges ~ *
+  & out ~ labels
+
+@round_more = (n (labels (edges out)))
+  & @sweep ~ (edges (labels res))
+  & res ~ (newlabels newedges)
+  & @rounds ~ (n (newlabels (newedges out)))
+
+// A sweep returns both the updated labels and a reconstructed edge list.
+@sweep = ((tag payload) (labels out))
+  & tag ~ ?((@sweep_nil @sweep_cons) (payload (labels out)))
+
+@sweep_nil = (* (labels out))
+  & out ~ (labels (0 *))
+
+@sweep_cons = (* (((u v) tail) (labels out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @edge ~ ((u1 v1) (labels updated))
+  & @sweep ~ (tail (updated res))
+  & res ~ (newlabels tailcopy)
+  & out ~ (newlabels (1 ((u2 v2) tailcopy)))
+
+// Read both endpoint labels, take their minimum, and write it at both endpoints.
+@edge = ((u v) (labels out))
+  & u ~ {ug us}
+  & v ~ {vg vs}
+  & @getcopy ~ (ug (labels r1))
+  & r1 ~ (lu labels1)
+  & @getcopy ~ (vg (labels1 r2))
+  & r2 ~ (lv base)
+  & lu ~ {lcmp lctx}
+  & lv ~ {vcmp vctx}
+  & lcmp ~ $([<] $(vcmp z))
+  & z ~ ?((@edge_ge @edge_lt) (lctx (vctx (base (us (vs out))))))
+
+@edge_ge = (lu (lv (base (u (v out)))))
+  & lu ~ *
+  & lv ~ {m1 m2}
+  & @set ~ (u (m1 (base mid)))
+  & @set ~ (v (m2 (mid out)))
+
+@edge_lt = (* (lu (lv (base (u (v out))))))
+  & lu ~ {m1 m2}
+  & lv ~ *
+  & @set ~ (u (m1 (base mid)))
+  & @set ~ (v (m2 (mid out)))
+
+// Look up an indexed label while rebuilding the list.
+@getcopy = (idx ((tag payload) out))
+  & tag ~ ?((@gc_nil @gc_cons) (payload (idx out)))
+
+@gc_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@gc_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@gc_here @gc_next) (head (tail out)))
+
+@gc_here = (head (tail out))
+  & head ~ {hval hcopy}
+  & out ~ (hval (1 (hcopy tail)))
+
+@gc_next = (idx (head (tail out)))
+  & @getcopy ~ (idx (tail res))
+  & res ~ (value tailcopy)
+  & out ~ (value (1 (head tailcopy)))
+
+// Replace the label at an indexed position.
+@set = (idx (val ((tag payload) out)))
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (val out))))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (idx (head (tail (val out))))
+  & @set ~ (idx (val (tail rest)))
+  & out ~ (1 (head rest))

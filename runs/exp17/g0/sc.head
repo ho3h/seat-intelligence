@@ -1,0 +1,58 @@
+# t5_rewrite_sameas_cycle: pointer jumping with a fixed number of rounds (l = ceil(log2 n), no convergence test,
+# so rounds pipeline). A round is Q'[i] = Q[Q[i]] for all i at once: the table Q is handed down the index tree
+# (Bend duplicates it at every level, a balanced copy tree), and each leaf does one keyed read. After l rounds
+# every node of an acyclic chain points at its root, while nodes that reach a cycle point at cycle nodes, which
+# are not roots. Answer = some i < n whose Q[i] is not a root (p[j] == j), by one more gather.
+def prog(p):
+  n = len(p)
+  (l, m) = lvl(n, 0, 1)
+  P = cwalk(p, 0, zt(l), l, m)
+  Q = rounds(P, l, l, m)
+  R = rflags(P, l, 0)
+  return anyb(gall(R, Q, l, l, m), l, 0, n)
+
+def get(t, k, l, m):
+  switch l:
+    case 0:
+      return t
+    case _:
+      (a, b) = t
+      if k & m:
+        return get(b, k, l-1, m >> 1)
+      else:
+        return get(a, k, l-1, m >> 1)
+
+# G[i] = T[Q[i]]
+def gall(T, Q, lv, l, m):
+  switch lv:
+    case 0:
+      return get(T, Q, l, m)
+    case _:
+      (q1, q2) = Q
+      return (gall(T, q1, lv-1, l, m), gall(T, q2, lv-1, l, m))
+
+def rounds(Q, k, l, m):
+  switch k:
+    case 0:
+      return Q
+    case _:
+      return rounds(gall(Q, Q, l, l, m), k-1, l, m)
+
+def rflags(P, l, base):
+  switch l:
+    case 0:
+      return P == base
+    case _:
+      (a, b) = P
+      h = 1 << (l-1)
+      return (rflags(a, l-1, base), rflags(b, l-1, base + h))
+
+def anyb(F, l, base, n):
+  switch l:
+    case 0:
+      return (F == 0) & (base < n)
+    case _:
+      (a, b) = F
+      h = 1 << (l-1)
+      return anyb(a, l-1, base, n) | anyb(b, l-1, base + h, n)
+

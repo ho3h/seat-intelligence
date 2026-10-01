@@ -1,0 +1,179 @@
+// Compute connected-component counts after deleting each vertex.
+@prog = (input out)
+  & input ~ (n edges)
+  & @compute ~ (n (edges out))
+
+@compute = (n (edges out))
+  & n ~ {n_base n_candidates}
+  & n_base ~ {n_rem n_omit}
+  & edges ~ {edges_base edges_candidates}
+  & @count ~ (n_rem (n_omit (edges_base base)))
+  & @cand ~ (n_candidates (0 (edges_candidates (base out))))
+
+// Count components, with omit=n meaning that no vertex is omitted.
+@count = (n (omit (edges out)))
+  & @cc ~ (n (0 (edges (omit ((0 *) (0 out)))))
+
+@cc = (rem (idx (edges (omit (vis (cnt out))))))
+  & rem ~ ?((@cc_done @cc_step) (idx (edges (omit (vis (cnt out))))))
+
+@cc_done = (idx (edges (omit (vis (cnt out)))))
+  & idx ~ *
+  & edges ~ *
+  & omit ~ *
+  & vis ~ *
+  & out ~ cnt
+
+@cc_step = (rem (idx (edges (omit (vis (cnt out))))))
+  & idx ~ {idx_cmp idx_keep}
+  & omit ~ {omit_cmp omit_keep}
+  & idx_cmp ~ $([=] $(omit_cmp z))
+  & z ~ ?((@cc_check @cc_omit) (rem (idx_keep (edges (omit_keep (vis (cnt out)))))))
+
+@cc_omit = (* (rem (idx (edges (omit (vis (cnt out)))))))
+  & @cc_advance ~ (rem (idx (edges (omit (vis (cnt out))))))
+
+@cc_check = (rem (idx (edges (omit (vis (cnt out))))))
+  & idx ~ {idx_mem idx_keep}
+  & vis ~ {vis_mem vis_keep}
+  & @mem ~ (idx_mem (vis_mem found))
+  & found ~ ?((@cc_unvisited @cc_seen) (rem (idx_keep (edges (omit (vis_keep (cnt out)))))))
+
+@cc_seen = (* (rem (idx (edges (omit (vis (cnt out)))))))
+  & @cc_advance ~ (rem (idx (edges (omit (vis (cnt out))))))
+
+@cc_unvisited = (* (rem (idx (edges (omit (vis (cnt out)))))))
+  & idx ~ {iq idx_rest}
+  & idx_rest ~ {iv ia}
+  & edges ~ {edges_bfs edges_next}
+  & @bfs ~ ((1 (iq (0 *))) (edges_bfs ((1 (iv vis)) bfs_vis)))
+  & cnt ~ $([+1] cnt_next)
+  & @cc_advance ~ (rem (ia (edges_next (omit (bfs_vis (cnt_next out)))))
+
+@cc_advance = (rem (idx (edges (omit (vis (cnt out))))))
+  & idx ~ $([+1] idx_next)
+  & @cc ~ (rem (idx_next (edges (omit (vis (cnt out))))))
+
+// Breadth-first search. Returns the updated visited-vertex list.
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (edges (vis out)))) pl) (edges (vis out)))
+
+@bfs_nil = (pl (edges (vis out)))
+  & pl ~ *
+  & edges ~ *
+  & out ~ vis
+
+@bfs_cons = (* ((x tail) (edges (vis out))))
+  & edges ~ {edges_scan edges_rec}
+  & @scan_edges ~ (edges_scan (x (tail (vis pair))))
+  & pair ~ (queue_next vis_next)
+  & @bfs ~ (queue_next (edges_rec (vis_next out)))
+
+// Scan every edge for neighbors of x; return (queue, visited).
+@scan_edges = ((?((@se_nil @se_cons) (pl (x (queue (vis out)))) pl) pl) (x (queue (vis out))))
+
+@se_nil = (pl (x (queue (vis out))))
+  & pl ~ *
+  & x ~ *
+  & out ~ (queue vis)
+
+@se_cons = (* ((u v) (tail (x (queue (vis out))))))
+  & x ~ {x_edge x_rec}
+  & @scan_edge ~ (u (v (x_edge (queue (vis pair)))))
+  & pair ~ (queue_next vis_next)
+  & @scan_edges ~ (tail (x_rec (queue_next (vis_next out))))
+
+// Add the opposite endpoint when an edge touches x.
+@scan_edge = (u (v (x (queue (vis out)))))
+  & u ~ {u_cmp u_neighbor}
+  & v ~ {v_cmp v_neighbor}
+  & x ~ {x_u x_v}
+  & u_cmp ~ $([=] $(x_u z))
+  & z ~ ?((@edge_u_no @edge_u_yes) (u_neighbor (v_cmp (v_neighbor (x_v (queue (vis out))))))
+
+@edge_u_no = (u_neighbor (v_cmp (v_neighbor (x_v (queue (vis out))))))
+  & v_neighbor ~ *
+  & @edge_second ~ (u_neighbor (v_cmp (x_v (queue (vis out)))))
+
+@edge_u_yes = (* (u_neighbor (v_cmp (v_neighbor (x_v (queue (vis out)))))))
+  & @enqueue ~ (v_neighbor (queue (vis pair)))
+  & pair ~ (queue_next vis_next)
+  & @edge_second ~ (u_neighbor (v_cmp (x_v (queue_next (vis_next out))))
+
+@edge_second = (u (v (x (queue (vis out)))))
+  & v ~ $([=] $(x z))
+  & z ~ ?((@edge_v_no @edge_v_yes) (u (queue (vis out))))
+
+@edge_v_no = (u (queue (vis out)))
+  & u ~ *
+  & out ~ (queue vis)
+
+@edge_v_yes = (* (u (queue (vis out))))
+  & @enqueue ~ (u (queue (vis pair)))
+  & pair ~ (queue_next vis_next)
+  & out ~ (queue_next vis_next)
+
+// Add val to the queue and visited set if it is not already visited.
+@enqueue = (val (queue (vis out)))
+  & val ~ {val_mem val_keep}
+  & vis ~ {vis_mem vis_tail}
+  & @mem ~ (val_mem (vis_mem found))
+  & found ~ ?((@enq_new @enq_old) (val_keep (queue (vis_tail out))))
+
+@enq_new = (val (queue (vis out)))
+  & val ~ {val_queue val_visited}
+  & out ~ ((1 (val_queue queue)) (1 (val_visited vis)))
+
+@enq_old = (* (val (queue (vis out))))
+  & val ~ *
+  & out ~ (queue vis)
+
+// Membership test for a number in a list of numbers.
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (pl (q out))
+  & pl ~ *
+  & q ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (q out)))
+  & q ~ {q_cmp q_rec}
+  & h ~ $([=] $(q_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (q_rec (t out)))
+
+@mem_no = (q (t out))
+  & @mem ~ (t (q out))
+
+@mem_yes = (* (q (t out)))
+  & q ~ *
+  & t ~ *
+  & out ~ 1
+
+// Test candidates in ascending order; prepend each cut vertex to the result.
+@cand = (rem (idx (edges (base out))))
+  & rem ~ ?((@cand_done @cand_step) (idx (edges (base out))))
+
+@cand_done = (idx (edges (base out)))
+  & idx ~ *
+  & edges ~ *
+  & base ~ *
+  & out ~ (0 *)
+
+@cand_step = (rem (idx (edges (base out))))
+  & rem ~ {rem_count rem_rec}
+  & rem_count ~ $([+1] total)
+  & idx ~ {idx_omit idx_rest}
+  & idx_rest ~ {idx_out idx_rec}
+  & idx_rec ~ $([+1] idx_next)
+  & edges ~ {edges_count edges_rec}
+  & base ~ {base_cmp base_rec}
+  & @count ~ (total (idx_omit (edges_count count_after)))
+  & count_after ~ $([>] $(base_cmp z))
+  & @cand ~ (rem_rec (idx_next (edges_rec (base_rec tail))))
+  & z ~ ?((@cand_no @cand_yes) (idx_out (tail out)))
+
+@cand_no = (idx (tail out))
+  & idx ~ *
+  & out ~ tail
+
+@cand_yes = (* (idx (tail out)))
+  & out ~ (1 (idx tail))

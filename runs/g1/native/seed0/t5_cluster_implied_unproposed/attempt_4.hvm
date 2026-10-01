@@ -1,0 +1,146 @@
+@prog = ((n pairs) out)
+  & n ~ {nloop nfinal}
+  & pairs ~ {pnodes puniq}
+  & @nodes ~ (nloop (0 (pnodes (0 total))))
+  & @uniq ~ (puniq (0 unique))
+  & total ~ $([-] $(nfinal diff))
+  & diff ~ $([/] $(2 half))
+  & half ~ $([-] $(unique out))
+
+@nodes = (remaining (i (edges (sum out))))
+  & remaining ~ ?((@nodes_done @nodes_more) (i (edges (sum out))))
+
+@nodes_done = (* (* (sum out)))
+  & out ~ sum
+
+@nodes_more = (rem (i (edges (sum out))))
+  & i ~ {ibfs ival}
+  & edges ~ {ebfs enext}
+  & @bfs_start ~ (ebfs (ibfs comp))
+  & comp ~ $([-] $(1 delta))
+  & sum ~ $([+] $(delta sum2))
+  & ival ~ $([+1] next_i)
+  & @nodes ~ (rem (next_i (enext (sum2 out))))
+
+@bfs_start = (edges (start out))
+  & start ~ {s1 s2}
+  & @walk ~ ((1 (s1 (0 *))) (edges ((1 (s2 (0 *))) (1 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (payload (edges (visited (count out))))) payload) (edges (visited (count out))))
+
+@walk_nil = (* (* (count out)))
+  & out ~ count
+
+@walk_cons = (* ((x qtail) (edges (visited (count out)))))
+  & edges ~ {escan ekeep}
+  & @scan ~ (escan (x (qtail (visited (count state)))))
+  & @after_scan ~ (state (ekeep out))
+
+@after_scan = ((stack (visited count)) (edges out))
+  & @walk ~ (stack (edges (visited (count out))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (x (stack (visited (count out)))))) payload) (x (stack (visited (count out))))
+
+@scan_nil = (* (* (stack (visited (count out)))))
+  & out ~ (stack (visited count))
+
+@scan_cons = (* (((u v) rest) (x (stack (visited (count out))))))
+  & @edge ~ ((u v) (rest (x (stack (visited (count out))))))
+
+@edge = ((u v) (rest (x (stack (visited (count out))))))
+  & u ~ {ucmp ukeep}
+  & x ~ {xcmp xkeep}
+  & ucmp ~ $([=] $(xcmp z1))
+  & z1 ~ ?((@eu_no @eu_yes) (ukeep (v (xkeep (rest (stack (visited (count out))))))))
+
+@eu_yes = (* (v (xkeep (rest (stack (visited (count out)))))))
+  & @add ~ (v (rest (xkeep (stack (visited (count out))))))
+
+@eu_no = (ukeep (v (xkeep (rest (stack (visited (count out)))))))
+  & v ~ {vcmp vkeep}
+  & xkeep ~ {xc xkeep2}
+  & vcmp ~ $([=] $(xc z2))
+  & z2 ~ ?((@ev_no @ev_yes) (ukeep (vkeep (xkeep2 (rest (stack (visited (count out))))))))
+
+@ev_yes = (ukeep (* (xkeep2 (rest (stack (visited (count out)))))))
+  & @add ~ (ukeep (rest (xkeep2 (stack (visited (count out))))))
+
+@ev_no = (* (* (xkeep2 (rest (stack (visited (count out)))))))
+  & @scan ~ (rest (xkeep2 (stack (visited (count out)))))
+
+@add = (candidate (rest (x (stack (visited (count out))))))
+  & candidate ~ {ccheck ckeep}
+  & visited ~ {vcheck vkeep}
+  & @member ~ (vcheck (ccheck z))
+  & z ~ ?((@add_new @add_seen) (ckeep (rest (x (stack (vkeep (count out)))))))
+
+@add_seen = (* (rest (x (stack (vkeep (count out))))))
+  & ckeep ~ *
+  & @scan ~ (rest (x (stack (vkeep (count out)))))
+
+@add_new = (candidate (rest (x (stack (visited (count out))))))
+  & candidate ~ {cstack cvis}
+  & count ~ $([+1] count2)
+  & @scan ~ (rest (x ((1 (cstack stack)) ((1 (cvis visited)) (count2 out)))))
+
+@member = ((?((@member_nil @member_cons) (payload (candidate out))) payload) (candidate out))
+
+@member_nil = (* (candidate out))
+  & candidate ~ *
+  & out ~ 0
+
+@member_cons = (* ((head tail) (candidate out)))
+  & candidate ~ {ccmp crec}
+  & head ~ $([=] $(ccmp z))
+  & z ~ ?((@member_no @member_yes) (tail (crec out)))
+
+@member_no = (tail (candidate out))
+  & @member ~ (tail (candidate out))
+
+@member_yes = (* (* out))
+  & out ~ 1
+
+@uniq = ((?((@uniq_nil @uniq_cons) (payload (seen (count out)))) payload) (seen (count out)))
+
+@uniq_nil = (* (* (count out)))
+  & out ~ count
+
+@uniq_cons = (* (((u v) tail) (seen (count out))))
+  & seen ~ {scheck skeep}
+  & u ~ {uc ukeep}
+  & v ~ {vc vkeep}
+  & @has ~ (scheck (uc (vc z)))
+  & z ~ ?((@uniq_new @uniq_old) (tail (ukeep (vkeep (skeep (count out))))))
+
+@uniq_old = (tail (* (* (skeep (count out)))))
+  & @uniq ~ (tail (skeep (count out)))
+
+@uniq_new = (tail (ukeep (vkeep (skeep (count out)))))
+  & count ~ $([+1] count2)
+  & @uniq ~ (tail (1 ((ukeep vkeep) skeep)) (count2 out))
+
+@has = ((?((@has_nil @has_cons) (payload (u (v out)))) payload) (u (v out)))
+
+@has_nil = (* (* (* out)))
+  & out ~ 0
+
+@has_cons = (* (((a b) tail) (u (v out))))
+  & a ~ {ac adrop}
+  & u ~ {uc ukeep}
+  & ac ~ $([=] $(uc z1))
+  & z1 ~ ?((@has_a_no @has_a_yes) (adrop (b (tail (ukeep (v out))))))
+
+@has_a_no = (* (* (tail (ukeep (v out)))))
+  & @has ~ (tail (ukeep (v out)))
+
+@has_a_yes = (* (b (tail (ukeep (v out)))))
+  & b ~ {bc bd}
+  & v ~ {vc vkeep}
+  & bc ~ $([=] $(vc z2))
+  & z2 ~ ?((@has_b_no @has_b_yes) (bd (tail (ukeep (vkeep out)))))
+
+@has_b_no = (* (tail (ukeep (vkeep out))))
+  & @has ~ (tail (ukeep (vkeep out)))
+
+@has_b_yes = (* (* (* (* out))))
+  & out ~ 1

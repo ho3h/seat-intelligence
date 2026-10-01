@@ -1,0 +1,119 @@
+// Build a parent list, union every edge, then emit each node's root label.
+@prog = ((n edges) out)
+  & n ~ {build_n map_n}
+  & @build ~ (build_n (0 parents))
+  & @union_edges ~ (edges (parents finalparents))
+  & @map ~ (map_n (0 (finalparents out)))
+
+@build = (n (i out))
+  & n ~ ?((@build_nil @build_cons) (i out))
+
+@build_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@build_cons = (n (i out))
+  & i ~ {iv inc}
+  & inc ~ $([+1] next)
+  & @build ~ (n (next tail))
+  & out ~ (1 (iv tail))
+
+@union_edges = ((tag payload) (parents out))
+  & tag ~ ?((@ue_nil @ue_cons) (payload (parents out)))
+
+@ue_nil = (* (parents out))
+  & out ~ parents
+
+@ue_cons = (* ((pair tail) (parents out)))
+  & pair ~ (u v)
+  & @union_edge ~ ((u v) (parents pnext))
+  & @union_edges ~ (tail (pnext out))
+
+// Find both endpoint roots and attach the larger root to the smaller one.
+@union_edge = ((u v) (parents out))
+  & @find ~ (u (parents found_u))
+  & found_u ~ (root_u parents1)
+  & @find ~ (v (parents1 found_v))
+  & found_v ~ (root_v parents2)
+  & root_u ~ {u_cmp u_set}
+  & root_v ~ {v_cmp v_set}
+  & u_cmp ~ $([<] $(v_cmp z))
+  & z ~ ?((@ue_ge @ue_lt) (u_set (v_set (parents2 out))))
+
+@ue_ge = (root_u (root_v (parents out)))
+  & @set ~ (root_u (root_v (parents out)))
+
+@ue_lt = (root_u (root_v (parents out)))
+  & @set ~ (root_v (root_u (parents out)))
+
+// Follow parent pointers until the index is its own parent.
+@find = (idx (parents out))
+  & idx ~ {lookup_idx test_idx}
+  & @getcopy ~ (lookup_idx (parents found))
+  & found ~ (value parents_copy)
+  & value ~ {test_value next_value}
+  & test_idx ~ $([!] $(test_value different))
+  & different ~ ?((@find_root @find_more) (next_value (parents_copy out)))
+
+@find_root = (root parents out)
+  & out ~ (root parents)
+
+@find_more = (* (value (parents out)))
+  & @find ~ (value (parents out))
+
+// Emit one root label per node.
+@map = (n (idx (parents out)))
+  & n ~ ?((@map_nil @map_cons) (idx (parents out)))
+
+@map_nil = (idx (parents out))
+  & idx ~ *
+  & parents ~ *
+  & out ~ (0 *)
+
+@map_cons = (n (idx (parents out)))
+  & idx ~ {find_idx inc_idx}
+  & inc_idx ~ $([+1] next_idx)
+  & @find ~ (find_idx (parents found))
+  & found ~ (root parents_copy)
+  & @map ~ (n (next_idx (parents_copy rest)))
+  & out ~ (1 (root rest))
+
+// Read an indexed value while returning the list unchanged.
+@getcopy = (idx ((tag payload) out))
+  & tag ~ ?((@gc_nil @gc_cons) (payload (idx out)))
+
+@gc_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@gc_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@gc_here @gc_next) (head (tail out)))
+
+@gc_here = (head (tail out))
+  & head ~ {hval hcopy}
+  & out ~ (hval (1 (hcopy tail)))
+
+@gc_next = (idx (head (tail out)))
+  & @getcopy ~ (idx (tail res))
+  & res ~ (value tailcopy)
+  & out ~ (value (1 (head tailcopy)))
+
+// Replace the value at an indexed position.
+@set = (idx (val ((tag payload) out)))
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (val out))))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (idx (head (tail (val out))))
+  & @set ~ (idx (val (tail rest)))
+  & out ~ (1 (head rest))

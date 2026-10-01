@@ -1,0 +1,79 @@
+@prog = ((n edges) out)
+  & @count_loop ~ (0 (n (edges (0 out))))
+
+@count_loop = (v (n (edges (count out))))
+  & is_done ~ $([=] $(v n))
+  & is_done ~ ?((@done @continue) (v (n (edges (count out)))))
+
+@done = (v (n (edges (count out))))
+  & v ~ *
+  & n ~ *
+  & edges ~ *
+  & count ~ out
+
+@continue = (v (n (edges (count out))))
+  & {v1 v2} ~ v
+  & {edges1 edges2} ~ edges
+  & @check_cyclic ~ (v1 (edges1 (res out)))
+  & res ~ ?((@skip_v @add_v) (v2 (n (edges2 (count out)))))
+
+@skip_v = (v (n (edges (count out))))
+  & v_inc ~ $([+] $(1 v1))
+  & @count_loop ~ (v1 (n (edges (count out))))
+
+@add_v = (v (n (edges (count out))))
+  & v_inc ~ $([+] $(1 v1))
+  & c_inc ~ $([+] $(1 c1))
+  & @count_loop ~ (v1 (n (edges (c1 out))))
+
+@check_cyclic = (v (edges out))
+  & {v1 v2} ~ v
+  & @find_outgoing ~ (v1 (edges (v2 out)))
+
+@find_outgoing = (v (edges (target out)))
+  & {edges1 edges2} ~ edges
+  & edges1 ~ ?((@no_more @has_more) (v (edges2 (target out))))
+
+@no_more = (v (edges (target out)))
+  & v ~ *
+  & edges ~ *
+  & target ~ *
+  & out ~ 0
+
+@has_more = ((src (dst rest)) (v (edges (target out))))
+  & match ~ $([=] $(src v))
+  & match ~ ?((@skip_edge @follow_edge) (dst (rest (v (edges (target out))))))
+
+@skip_edge = (dst (rest (v (edges (target out)))))
+  & dst ~ *
+  & @find_outgoing ~ (v (rest (target out)))
+
+@follow_edge = (dst (rest (v (edges (target out)))))
+  & @dfs ~ (dst (target (edges (result out))))
+  & result ~ ?((@still_searching @found_cycle) (rest (v (edges (target out)))))
+
+@still_searching = (rest (v (edges (target out))))
+  & rest ~ *
+  & @find_outgoing ~ (v (edges (target out)))
+
+@found_cycle = (rest (v (edges (target out))))
+  & rest ~ *
+  & v ~ *
+  & target ~ *
+  & edges ~ *
+  & out ~ 1
+
+@dfs = (curr (target (edges (result out))))
+  & eq ~ $([=] $(curr target))
+  & eq ~ ?((@dfs_found @dfs_continue) (curr (target (edges (result out)))))
+
+@dfs_found = (curr (target (edges (result out))))
+  & curr ~ *
+  & target ~ *
+  & edges ~ *
+  & result ~ 1
+
+@dfs_continue = (curr (target (edges (result out))))
+  & curr ~ *
+  & target ~ *
+  & @find_outgoing ~ (curr (edges (target out)))

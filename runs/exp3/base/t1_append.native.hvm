@@ -1,0 +1,16 @@
+@prog = ((xs ys) out)
+  & @ap2 ~ (xs (ys out))
+
+@ap2 = ((?((@ap2_nil @ap2_first) (payload (ys out))) payload) (ys out))
+
+@ap2_nil = (* (a a))
+
+@ap2_first = (* ((head tail) (ys out)))
+  & tail ~ (?((@ap2_one @ap2_two) (payload2 (ys rest))) payload2)
+  & out ~ (1 (head rest))
+
+@ap2_one = (* (a a))
+
+@ap2_two = (* ((head2 tail2) (ys rest)))
+  & @ap2 ~ (tail2 (ys result))
+  & rest ~ (1 (head2 result))

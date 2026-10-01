@@ -1,0 +1,154 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@choose_two = ({$([:%0x0000002] $([=0x0000000] ?((@choose_two__C0 @choose_two__C1) (a b)))) a} b)
+
+@choose_two__C0 = ({$([*] $(a b)) $([:-0x0000001] $([:/0x0000002] a))} b)
+
+@choose_two__C1 = (* ({$([:/0x0000002] $([*] $(a b))) $([:-0x0000001] a)} b))
+
+@list_length = ((@list_length__C1 a) a)
+
+@list_length__C0 = (* (* (a ($([+0x0000001] b) c))))
+  & @list_length ~ (a (b c))
+
+@list_length__C1 = (?(((a a) @list_length__C0) b) b)
+
+@make_pairs = ((@make_pairs__C3 a) a)
+
+@make_pairs__C0 = (* (b (d (a (c f)))))
+  & @List/Cons ~ ((a b) (e f))
+  & @make_pairs ~ (c (d e))
+
+@make_pairs__C1 = (?(((* (* @List/Nil)) @make_pairs__C0) a) a)
+
+@make_pairs__C2 = (* (a (b ((@make_pairs__C1 (a (b c))) c))))
+
+@make_pairs__C3 = (?(((* @List/Nil) @make_pairs__C2) a) a)
+
+@merge_pairs = ((@merge_pairs__C6 a) a)
+
+@merge_pairs__C0 = (f (b (c (a (e h)))))
+  & @List/Cons ~ (a (g h))
+  & @merge_pairs ~ (d (e (f g)))
+  & @List/Cons ~ (b (c d))
+
+@merge_pairs__C1 = (* (f (a (b (c (d h))))))
+  & @List/Cons ~ (a (g h))
+  & @merge_pairs ~ (b (e (f g)))
+  & @List/Cons ~ (c (d e))
+
+@merge_pairs__C2 = (* a)
+  & @List/Cons ~ a
+
+@merge_pairs__C3 = (* ({b g} (h ({c d} ({a e} (f i))))))
+  & @pair_less ~ (a (b (c ?((@merge_pairs__C0 @merge_pairs__C1) (d (e (f (g (h i)))))))))
+
+@merge_pairs__C4 = (?((@merge_pairs__C2 @merge_pairs__C3) a) a)
+
+@merge_pairs__C5 = (* (b (c ((@merge_pairs__C4 (a (b (c d)))) (a d)))))
+
+@merge_pairs__C6 = (?(((a (* a)) @merge_pairs__C5) b) b)
+
+@pair_equal = ((b c) ((d e) ({$([=0x0000000] ?((@pair_equal__C4 @pair_equal__C5) (a (b (c (d (e f))))))) a} f)))
+
+@pair_equal__C0 = ($([=] $(a b)) (* (a (* b))))
+
+@pair_equal__C1 = (* (* ($([=] $(a b)) (* (a b)))))
+
+@pair_equal__C2 = ({$([=] $(a ?((@pair_equal__C0 @pair_equal__C1) (b (c (d e)))))) b} (c ({a d} e)))
+
+@pair_equal__C3 = (* (* ($([=] $(a b)) (* (a b)))))
+
+@pair_equal__C4 = ($([=0x0000001] ?((@pair_equal__C2 @pair_equal__C3) a)) a)
+
+@pair_equal__C5 = (* (* ($([=] $(a b)) (* (a (* b))))))
+
+@pair_less = ((b c) ((d e) ({$([=0x0000000] ?((@pair_less__C6 @pair_less__C7) (a (b (c (d (e f))))))) a} f)))
+
+@pair_less__C0 = ($([<] $(a b)) (* (a (* b))))
+
+@pair_less__C1 = (* (* ($([<] $(a b)) (* (a b)))))
+
+@pair_less__C2 = ({$([=] $(a ?((@pair_less__C0 @pair_less__C1) (b (c (d e)))))) b} (c ({a d} e)))
+
+@pair_less__C3 = (* ($([<] $(a b)) (* (a (* b)))))
+
+@pair_less__C4 = ({$([<] $(a ?((@pair_less__C2 @pair_less__C3) (b (c (d e)))))) b} (c ({a d} e)))
+
+@pair_less__C5 = (* (* ($([<] $(a b)) (* (a b)))))
+
+@pair_less__C6 = ($([=0x0000001] ?((@pair_less__C4 @pair_less__C5) a)) a)
+
+@pair_less__C7 = (* (* ($([<] $(a b)) (* (a (* b))))))
+
+@prog = ((a b) o)
+  & @choose_two ~ (d $([-] $(g $([-] $(j $([+] $(n o)))))))
+  & @make_pairs ~ (a (b {c {k {h e}}}))
+  & @list_length ~ (c (0 d))
+  & @run_total ~ (f (0 g))
+  & @sort_pairs ~ (e (0 f))
+  & @run_total ~ (i (1 j))
+  & @sort_pairs ~ (h (1 i))
+  & $(m n) ~ [*0x0000002]
+  & @run_total ~ (l (2 m))
+  & @sort_pairs ~ (k (2 l))
+
+@run_more = ((@run_more__C4 a) a)
+
+@run_more__C0 = (* (c ($([+] $(d e)) (f (b (a g))))))
+  & @run_more ~ (a (b (1 (e (f g)))))
+  & @choose_two ~ (c d)
+
+@run_more__C1 = (* (b ($([+0x0000001] c) (d (e (* (a f)))))))
+  & @run_more ~ (a (b (c (d (e f)))))
+
+@run_more__C2 = (* (a ($([+] $(b c)) (* c))))
+  & @choose_two ~ (a b)
+
+@run_more__C3 = (* ({a h} (i ({b d} (e (f ({c g} j)))))))
+  & @pair_equal ~ (a (b (c ?((@run_more__C0 @run_more__C1) (d (e (f (g (h (i j))))))))))
+
+@run_more__C4 = (?((@run_more__C2 @run_more__C3) a) a)
+
+@run_total = ((@run_total__C1 a) a)
+
+@run_total__C0 = (* (b (a c)))
+  & @run_more ~ (a (b (1 (0 c))))
+
+@run_total__C1 = (?(((* 0) @run_total__C0) a) a)
+
+@sort_pairs = ((@sort_pairs__C4 a) a)
+
+@sort_pairs__C0 = (* a)
+  & @List/Cons ~ a
+
+@sort_pairs__C1 = (* (* (* ({j {h e}} (a (b k))))))
+  & @merge_pairs ~ (f (i (j k)))
+  & @split_pairs ~ (c (0 (d g)))
+  & @List/Cons ~ (a (b c))
+  &!@sort_pairs ~ (d (e f))
+  &!@sort_pairs ~ (g (h i))
+
+@sort_pairs__C2 = (?((@sort_pairs__C0 @sort_pairs__C1) a) a)
+
+@sort_pairs__C3 = (* (b ({(@sort_pairs__C2 (a (b (c d)))) c} (a d))))
+
+@sort_pairs__C4 = (?(((* @List/Nil) @sort_pairs__C3) a) a)
+
+@split_pairs = ((@split_pairs__C3 a) a)
+
+@split_pairs__C0 = (b (a (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@split_pairs__C1 = (* (a (b (d (c d)))))
+  & @List/Cons ~ (a (b c))
+
+@split_pairs__C2 = (* (d (a ({b $([=0x0000000] ?((@split_pairs__C0 @split_pairs__C1) (d (e (f g)))))} g))))
+  & @split_pairs ~ (a (c (e f)))
+  & $(b c) ~ [-0x0000001]
+
+@split_pairs__C3 = (?(((* (@List/Nil @List/Nil)) @split_pairs__C2) a) a)
+
+

@@ -1,0 +1,83 @@
+// Sort by alternating split and merge; each result is (sorted-list (length inversions)).
+@prog = (xs out)
+  & @sort ~ (xs out)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 0))
+
+@sort_cons = (* ((h ((?((@sort_single @sort_many) (h (tp out))) tp)) out))
+
+@sort_single = (h (tp out))
+  & tp ~ *
+  & out ~ ((1 (h (0 *))) (1 0))
+
+@sort_many = (* (h (tp out)))
+  & @split ~ ((1 (h (1 tp))) sp)
+  & @sort_parts ~ (sp out)
+
+@sort_parts = ((a b) out)
+  & @sort ~ (a ra)
+  & @sort ~ (b rb)
+  & @combine ~ (ra (rb out))
+
+@combine = ((sa (la ia)) ((sb (lb ib)) out))
+  & @merge ~ (sa (sb (la mres)))
+  & @finish ~ (mres (la (lb (ia (ib out)))))
+
+@finish = ((merged cross) (la (lb (ia (ib out)))))
+  & la ~ $([+] $(lb len))
+  & ia ~ $([+] $(ib isum))
+  & isum ~ $([+] $(cross inv))
+  & out ~ (merged (len inv))
+
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split ~ (t res)
+  & @split_done ~ (res (h out))
+
+@split_done = ((a b) (h out))
+  & out ~ ((1 (h b)) a)
+
+// Merge two sorted lists; the result is (merged-list cross-inversions).
+@merge = ((?((@merge_a_nil @merge_a_cons) (ap (b (la out)))) ap) (b (la out)))
+
+@merge_a_nil = (ap (b (la out)))
+  & ap ~ *
+  & la ~ *
+  & out ~ (b 0)
+
+@merge_a_cons = (* ((ah at) ((?((@merge_b_nil @merge_b_cons) (ah (at (bp (la out))))) bp) (la out))))
+
+@merge_b_nil = (ah (at (bp (la out))))
+  & bp ~ *
+  & la ~ *
+  & out ~ ((1 (ah at)) 0)
+
+@merge_b_cons = (* (ah (at ((bh bt) (la out)))))
+  & ah ~ $([>] $(bh z))
+  & z ~ ?((@merge_take_a @merge_take_b) (ah (at (bh (bt (la out))))))
+
+@merge_take_a = (ah (at (bh (bt (la out)))))
+  & la ~ $([-] $(1 la2))
+  & @merge ~ (at ((1 (bh bt)) (la2 res)))
+  & @pack_a ~ (res (ah out))
+
+@merge_take_b = (* (ah (at (bh (bt (la out))))))
+  & la ~ {lam lap}
+  & @merge ~ ((1 (ah at)) (bt (lam res)))
+  & @pack_b ~ (res (bh (lap out)))
+
+@pack_a = ((tail cross) (ah out))
+  & out ~ ((1 (ah tail)) cross)
+
+@pack_b = ((tail cross) (bh (la out)))
+  & la ~ $([+] $(cross c))
+  & out ~ ((1 (bh tail)) c)

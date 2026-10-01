@@ -1,0 +1,15 @@
+// t3_wsp_dist (GRAPH-SWING-2, runs/exp9): undirected adjacency trie (both directions) built while streaming the edges,
+// the exp5 frontier Bellman-Ford core from s, then one keyed lookup of t (guarded t < n).
+@prog = ((n (s (t es))) out)
+  & n ~ ?((@wd_zero @wd_pos) (s (t (es out))))
+@wd_zero = (* (* (* 16777215)))
+@wd_pos = (nm1 (s (t (es out))))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sssp_start ~ (n1 (s (L3 (16777215 (G Df)))))
+  & @get ~ (Df (t (n2 (L4 out))))

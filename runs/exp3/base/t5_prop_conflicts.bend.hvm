@@ -1,0 +1,106 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@at = ((@at__C2 a) a)
+
+@at__C0 = ($([+0x0000001] $([:-0x0000001] b)) (* (a c)))
+  & @at ~ (a (b c))
+
+@at__C1 = (* (b (c (?(((a (* a)) @at__C0) (b (c d))) d))))
+
+@at__C2 = (?(((* 0) @at__C1) a) a)
+
+@count_clusters = ((@count_clusters__C2 a) a)
+
+@count_clusters__C0 = (* (a (b ($([+] $(c d)) d))))
+  & @scan_attrs ~ (a (b (0 (0 (0 (0 (0 (0 (0 (0 (0 (0 (0 (0 c))))))))))))))
+
+@count_clusters__C1 = (* ($([=] $(a ?(((* (* (b b))) @count_clusters__C0) (c (d (i j)))))) (e ({c f} ({a {d $([+0x0000001] g)}} (h j))))))
+  & @count_clusters ~ (e (f (g (h i))))
+
+@count_clusters__C2 = (?(((* (* (a a))) @count_clusters__C1) b) b)
+
+@map_attrs = ((@map_attrs__C1 a) a)
+
+@map_attrs__C0 = (* ((b d) (f ({g a} i))))
+  & @List/Cons ~ ((c d) (h i))
+  & @at ~ (a (b c))
+  & @map_attrs ~ (f (g h))
+
+@map_attrs__C1 = (?(((* @List/Nil) @map_attrs__C0) a) a)
+
+@prog = (({a c} b) e)
+  & @count_clusters ~ (a (d (0 (0 e))))
+  & @map_attrs ~ (b (c d))
+
+@scan_attrs = ((@scan_attrs__C26 a) a)
+
+@scan_attrs__C0 = (b (c (d (e (a f)))))
+  & @scan_attrs ~ (a (b (c (d (e f)))))
+
+@scan_attrs__C1 = (* (b (c (d (e (a (f (g (h (i (j (k (l (m (* n)))))))))))))))
+  & @scan_attrs ~ (a (b (c (d (e (f (g (h (i (j (k (l (m (1 n))))))))))))))
+
+@scan_attrs__C10 = (b (c (d (e (a f)))))
+  & @scan_attrs ~ (a (b (c (d (e f)))))
+
+@scan_attrs__C11 = (* (b (c (d (e (a (f (g (* h)))))))))
+  & @scan_attrs ~ (a (b (c (d (e (f (g (1 h))))))))
+
+@scan_attrs__C12 = (b (c (d (e (f (g ({a h} (i (j ($([!] $(a ?((@scan_attrs__C10 @scan_attrs__C11) (b (c (d (e (f (g (h (i (j k)))))))))))) k))))))))))
+
+@scan_attrs__C13 = (* (b (c (d (e (a (* (* (g (h (f i)))))))))))
+  & @scan_attrs ~ (a (b (c (d (e (1 (f (g (h i)))))))))
+
+@scan_attrs__C14 = (a (b (c (d (e (f (g (h ($([=0x0000002] ?((@scan_attrs__C8 @scan_attrs__C9) (a (b (c (d (e (f (g (h i)))))))))) i)))))))))
+
+@scan_attrs__C15 = (* (a (b (c (d (e ({$([=0x0000000] ?((@scan_attrs__C12 @scan_attrs__C13) (a (b (c (d (e (f (g (h i)))))))))) f} (g (h (* i))))))))))
+
+@scan_attrs__C16 = (b (c (d (e (a f)))))
+  & @scan_attrs ~ (a (b (c (d (e f)))))
+
+@scan_attrs__C17 = (* (b (c (d (* (a e))))))
+  & @scan_attrs ~ (a (b (c (d (1 e)))))
+
+@scan_attrs__C18 = (b (c ({a d} (e (f (g (h (i (j ($([!] $(a ?((@scan_attrs__C16 @scan_attrs__C17) (b (c (d (e (f (g (h (i (j k)))))))))))) k))))))))))
+
+@scan_attrs__C19 = (* (b (* (* (d (a (e (f (g (h (c i)))))))))))
+  & @scan_attrs ~ (a (b (1 (c (d (e (f (g (h i)))))))))
+
+@scan_attrs__C2 = (b (c (d (e (f (g (h (i (j ($([!] $(a ?((@scan_attrs__C0 @scan_attrs__C1) (b (c (d (e (f (g (h (i (j (k (l (m (n o)))))))))))))))) (k (l (m ({a n} o))))))))))))))
+
+@scan_attrs__C20 = (a (b (c (d (e (f (g (h ({$([=0x0000001] ?((@scan_attrs__C14 @scan_attrs__C15) (a (b (c (d (e (f (g (h (i j))))))))))) i} j)))))))))
+
+@scan_attrs__C21 = (* (a ({$([=0x0000000] ?((@scan_attrs__C18 @scan_attrs__C19) (a (b (c (d (e (f (g (h i)))))))))) b} (c (d (e (f (g (h (* i))))))))))
+
+@scan_attrs__C22 = (b (c (d (e (a (f (g (h (* (i (* j)))))))))))
+  & @scan_attrs ~ (a (b (c (d (e (f (g (h (i j)))))))))
+
+@scan_attrs__C23 = (* (a (b (c (d (e (f (g (h ({$([=0x0000000] ?((@scan_attrs__C20 @scan_attrs__C21) (a (b (c (d (e (f (g (h (i j))))))))))) i} j))))))))))
+
+@scan_attrs__C24 = (* (* (* ($([+] $(a $([+] $(b $([+] $(c d)))))) (* (* (a (* (* (b (* (* (c d)))))))))))))
+
+@scan_attrs__C25 = (* (($([=] $(a ?((@scan_attrs__C22 @scan_attrs__C23) (b (c (d (e (f (g (h (i (j (k (l m)))))))))))))) (j l)) (f ({a b} (c (d (e (g (h (i (k m)))))))))))
+
+@scan_attrs__C26 = (?((@scan_attrs__C24 @scan_attrs__C25) a) a)
+
+@scan_attrs__C3 = (* (b (c (d (e (a (f (g (h (i (l (j (k (* (* m)))))))))))))))
+  & @scan_attrs ~ (a (b (c (d (e (f (g (h (i (j (k (1 (l m)))))))))))))
+
+@scan_attrs__C4 = (b (c (d (e (a f)))))
+  & @scan_attrs ~ (a (b (c (d (e f)))))
+
+@scan_attrs__C5 = (* (b (c (d (e (a (f (g (h (i (j (* k))))))))))))
+  & @scan_attrs ~ (a (b (c (d (e (f (g (h (i (j (1 k)))))))))))
+
+@scan_attrs__C6 = (b (c (d (e (f (g (h (i (j ($([!] $(a ?((@scan_attrs__C4 @scan_attrs__C5) (b (c (d (e (f (g (h (i (j (k l))))))))))))) ({a k} l)))))))))))
+
+@scan_attrs__C7 = (* (b (c (d (e (a (f (g (h (* (i (* j))))))))))))
+  & @scan_attrs ~ (a (b (c (d (e (f (g (h (1 (i j))))))))))
+
+@scan_attrs__C8 = (a (b (c (d (e (f (g (h (i (j (k (l ({$([=0x0000000] ?((@scan_attrs__C2 @scan_attrs__C3) (a (b (c (d (e (f (g (h (i (j (k (l (m n))))))))))))))) m} n)))))))))))))
+
+@scan_attrs__C9 = (* (a (b (c (d (e (f (g (h ({$([=0x0000000] ?((@scan_attrs__C6 @scan_attrs__C7) (a (b (c (d (e (f (g (h (i j))))))))))) i} j))))))))))
+
+

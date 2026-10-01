@@ -1,0 +1,30 @@
+// Handle the first element separately: it is already the maximum of the
+// one-element prefix, so it need not be compared with an initial zero.
+@prog = (l out)
+  & @first ~ (l out)
+
+@first = ((?((@first_nil @first_cons) (pl out)) pl) out)
+
+@first_nil = (* 0)
+
+@first_cons = (* ((h t) out))
+  & @max ~ (t (h out))
+
+// Continue scanning with the current maximum in acc.
+@max = ((?((@max_nil @max_cons) (pl (acc out))) pl) (acc out))
+
+@max_nil = (* (a a))
+
+@max_cons = (* ((h t) (acc out)))
+  & h ~ {h_cmp h_ctx}
+  & acc ~ {acc_cmp acc_ctx}
+  & h_cmp ~ $([>] $(acc_cmp z))
+  & z ~ ?((@max_keep @max_take) (h_ctx (t (acc_ctx out))))
+
+@max_keep = (h (t (acc out)))
+  & h ~ *
+  & @max ~ (t (acc out))
+
+@max_take = (* (h (t (acc out))))
+  & acc ~ *
+  & @max ~ (t (h out))

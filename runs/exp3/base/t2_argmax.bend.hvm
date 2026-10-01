@@ -1,0 +1,40 @@
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* (b (a c)))
+  & @scan ~ (a (1 (0 (b c))))
+
+@prog__C1 = (?((0 @prog__C0) a) a)
+
+@scan = ((@scan__C12 a) a)
+
+@scan__C0 = (* (a a))
+
+@scan__C1 = (* (a (* a)))
+
+@scan__C10 = (?((@scan__C8 @scan__C9) a) a)
+
+@scan__C11 = (* (d ((@scan__C10 (a (b (c (d e))))) (a (b (c e))))))
+
+@scan__C12 = (?(((* (a (* a))) @scan__C11) b) b)
+
+@scan__C2 = ($([+0x0000002] b) (c (d (* (a e)))))
+  & @scan ~ (a (b (c (d e))))
+
+@scan__C3 = (* ({$([+0x0000002] b) $([+0x0000001] c)} (* (* (d (a e))))))
+  & @scan ~ (a (b (c (d e))))
+
+@scan__C4 = ({$([+0x0000002] b) c} (d (* (a e))))
+  & @scan ~ (a (b (c (d e))))
+
+@scan__C5 = (* ({$([+0x0000002] b) $([+0x0000001] c)} (* (d (a e)))))
+  & @scan ~ (a (b (c (d e))))
+
+@scan__C6 = (b (c ({a d} (* ({$([>] $(a ?((@scan__C2 @scan__C3) (b (c (d (e f))))))) e} f)))))
+
+@scan__C7 = (* (b (* (* ({a c} ({$([>] $(a ?((@scan__C4 @scan__C5) (b (c (d e)))))) d} e))))))
+
+@scan__C8 = (b (c (a ($([>] $(a ?((@scan__C0 @scan__C1) (b (c d))))) d))))
+
+@scan__C9 = (* (f (g (b (c ({a d} ({$([>] $(a ?((@scan__C6 @scan__C7) (b (c (d (e (f (g h))))))))) e} h)))))))
+
+

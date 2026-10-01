@@ -1,0 +1,99 @@
+// Scan each edge once, map its endpoints to cluster ids, and insert neighbours
+// into a sorted, duplicate-free accumulator.
+@prog = ((k (c e)) out)
+  & @scan ~ (e (k (c (0 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (k (c (acc out))))) pl) (k (c (acc out))))
+
+@scan_nil = (* (k (c (acc out))))
+  & k ~ *
+  & c ~ *
+  & out ~ acc
+
+@scan_cons = (* (((u v) t) (k (c (acc out)))))
+  & c ~ {c1 {c2 cr}}
+  & @get ~ (c1 (u cu))
+  & @get ~ (c2 (v cv))
+  & @ep ~ ((cu cv) (t (k (cr (acc out)))))
+
+@ep = ((cu cv) (t (k (c (acc out)))))
+  & cu ~ {ua ub}
+  & cv ~ {vc vp}
+  & k ~ {ka {kb kr}}
+  & ua ~ $([=] $(ka aeq))
+  & aeq ~ ?((@ep_no @ep_yes) (ub (vc (vp (kb (kr (t (c (acc out))))))))
+
+@ep_yes = (* (ub (vc (vp (kb (kr (t (c (acc out))))))))
+  & ub ~ *
+  & vc ~ $([=] $(kb eq))
+  & eq ~ ?((@ep_yes_add @ep_yes_skip) (vp (kr (t (c (acc out))))))
+
+@ep_yes_add = (vp (kr (t (c (acc out)))))
+  & @ep_add ~ (vp (t (kr (c (acc out)))))
+
+@ep_yes_skip = (* (kr (t (c (acc out)))))
+  & vp ~ *
+  & @scan ~ (t (kr (c (acc out))))
+
+@ep_no = (ub (vc (vp (kb (kr (t (c (acc out))))))))
+  & vc ~ $([=] $(kb eq))
+  & eq ~ ?((@ep_no_skip @ep_no_add) (ub (vp (kr (t (c (acc out)))))))
+
+@ep_no_skip = (* (vp (kr (t (c (acc out))))))
+  & vp ~ *
+  & @scan ~ (t (kr (c (acc out))))
+
+@ep_no_add = (* (ub (vp (kr (t (c (acc out)))))))
+  & vp ~ *
+  & @ep_add ~ (ub (t (kr (c (acc out)))))
+
+@ep_add = (x (t (k (c (acc out)))))
+  & @ins ~ (x (acc next))
+  & @scan ~ (t (k (c (next out))))
+
+// Insert x into an ascending list, keeping it sorted and unique.
+@ins = ((?((@ins_nil @ins_cons) (pl (x out))) pl) (x out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((y t) (x out)))
+  & x ~ {xl {xe xv}}
+  & y ~ {yl {ye yv}}
+  & xl ~ $([<] $(yl less))
+  & less ~ ?((@ins_notless @ins_before) ((xe ye) (xv (yv (t out))))
+
+@ins_before = (* ((* *) (xv (yv (t out)))))
+  & xe ~ *
+  & ye ~ *
+  & out ~ (1 (xv (1 (yv t))))
+
+@ins_notless = ((xe ye) (xv (yv (t out))))
+  & xe ~ $([=] $(ye eq))
+  & eq ~ ?((@ins_after @ins_equal) (xv (yv (t out))))
+
+@ins_equal = (xv (yv (t out)))
+  & xv ~ *
+  & out ~ (1 (yv t))
+
+@ins_after = (* (xv (yv (t out))))
+  & @ins ~ (xv (t rest))
+  & out ~ (1 (yv rest))
+
+// Get the cluster id at a node index.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_more = (prev (h (t out)))
+  & h ~ *
+  & @get ~ (t (prev out))

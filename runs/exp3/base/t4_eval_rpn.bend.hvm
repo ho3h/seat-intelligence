@@ -1,0 +1,46 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@eval_tokens = ((@eval_tokens__C13 a) a)
+
+@eval_tokens__C0 = (?((0 (* (a (* a)))) b) b)
+
+@eval_tokens__C1 = (a (b ($([*] $(b c)) (d f))))
+  & @eval_tokens ~ (a (e f))
+  & @List/Cons ~ (c (d e))
+
+@eval_tokens__C10 = (* (c (a (b e))))
+  & @eval_tokens ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@eval_tokens__C11 = ((@eval_tokens__C0 a) a)
+
+@eval_tokens__C12 = (* (($([=0x0000000] ?((@eval_tokens__C9 @eval_tokens__C10) (a (b (c d))))) c) (b (a d))))
+
+@eval_tokens__C13 = (?((@eval_tokens__C11 @eval_tokens__C12) a) a)
+
+@eval_tokens__C2 = (* (a (b ($([-] $(b c)) (d f)))))
+  & @eval_tokens ~ (a (e f))
+  & @List/Cons ~ (c (d e))
+
+@eval_tokens__C3 = (a ($([=0x000002D] ?((@eval_tokens__C1 @eval_tokens__C2) (a b))) b))
+
+@eval_tokens__C4 = (* (a (* (b ($([+] $(b c)) (d f))))))
+  & @eval_tokens ~ (a (e f))
+  & @List/Cons ~ (c (d e))
+
+@eval_tokens__C5 = (* (d (e (a ({$([=0x000002B] ?((@eval_tokens__C3 @eval_tokens__C4) (a (b (c (d (e f))))))) b} (c f))))))
+
+@eval_tokens__C6 = (?(((* (* (* 0))) @eval_tokens__C5) a) a)
+
+@eval_tokens__C7 = (* (c ((@eval_tokens__C6 (a (b (c d)))) (a (b d)))))
+
+@eval_tokens__C8 = (?(((* (* 0)) @eval_tokens__C7) a) a)
+
+@eval_tokens__C9 = ((@eval_tokens__C8 a) a)
+
+@prog = (a b)
+  & @eval_tokens ~ (a (@List/Nil b))
+
+

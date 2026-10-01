@@ -1,0 +1,33 @@
+// @prog = (input output)
+@prog = (l out)
+  & @scan ~ (l (0 (0 out)))
+
+// Scan with state (largest (second_largest output)).
+@scan = ((?((@snil @scons) (pl (mx (sc out)))) pl) (mx (sc out)))
+
+@snil = (* (mx (a a)))
+  & mx ~ *
+
+@scons = (* ((h t) (mx (sc out))))
+  & h ~ {hc hs}
+  & mx ~ {mc ms}
+  & hc ~ $([>] $(mc z))
+  & z ~ ?((@s_else @s_gt) (hs (t (ms (sc out)))))
+
+@s_gt = (* (h (t (mx (sc out)))))
+  & sc ~ *
+  & @scan ~ (t (h (mx out)))
+
+@s_else = (* (h (t (mx (sc out)))))
+  & h ~ {hc hs}
+  & sc ~ {scmp scsave}
+  & hc ~ $([>] $(scmp z))
+  & z ~ ?((@s_keep @s_update) (hs (t (mx (scsave out)))))
+
+@s_keep = (* (h (t (mx (sc out)))))
+  & h ~ *
+  & @scan ~ (t (mx (sc out)))
+
+@s_update = (* (h (t (mx (sc out)))))
+  & sc ~ *
+  & @scan ~ (t (mx (h out)))

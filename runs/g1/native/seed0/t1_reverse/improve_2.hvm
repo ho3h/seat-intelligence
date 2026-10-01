@@ -1,0 +1,10 @@
+// Reverse by prepending each head to the accumulator.
+// Inline the empty-list case to avoid expanding a separate base-case reference.
+
+@prog = (l out)
+  & @rev ~ (l ((0 *) out))
+
+@rev = ((?(((* (a a)) @rev_cons) (pl (acc out))) pl) (acc out))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

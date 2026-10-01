@@ -1,0 +1,13 @@
+// Prefix sums modulo 2^24
+@prog = (l out)
+  & @scan ~ (l (0 out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (acc out))) pl) (acc out))
+
+@scan_nil = (* (* (0 *)))
+
+@scan_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h sum))
+  & sum ~ {v acc2}
+  & @scan ~ (t (acc2 rest))
+  & out ~ (1 (v rest))

@@ -1,0 +1,47 @@
+@prog = ((a b) c)
+  & @upper_bound ~ (a (b (0 c)))
+
+@upper_bound = ((@upper_bound__C17 a) a)
+
+@upper_bound__C0 = (* ($([+0x0000003] a) (* a)))
+
+@upper_bound__C1 = (* (b ($([+0x0000004] c) (a d))))
+  & @upper_bound ~ (a (b (c d)))
+
+@upper_bound__C10 = (* ($([+0x0000001] a) (* a)))
+
+@upper_bound__C11 = (* (a (b ((@upper_bound__C9 (a (b c))) c))))
+
+@upper_bound__C12 = (* ($([+0x0000001] a) a))
+
+@upper_bound__C13 = (* ($([>] $(a b)) (e ({a c} (d f)))))
+  & $(b ?((@upper_bound__C10 @upper_bound__C11) (c (d (e f))))) ~ [=0x0000000]
+
+@upper_bound__C14 = (?((@upper_bound__C12 @upper_bound__C13) a) a)
+
+@upper_bound__C15 = (* (a (b ((@upper_bound__C14 (a (b c))) c))))
+
+@upper_bound__C16 = (* ($([>] $(a b)) (f ({a d} (e g)))))
+  & $(b ?(((* (c (* c))) @upper_bound__C15) (d (e (f g))))) ~ [=0x0000000]
+
+@upper_bound__C17 = (?(((* (a a)) @upper_bound__C16) b) b)
+
+@upper_bound__C2 = (* ($([+0x0000003] a) a))
+
+@upper_bound__C3 = (* ($([>] $(a b)) (e ({a c} (d f)))))
+  & $(b ?((@upper_bound__C0 @upper_bound__C1) (c (d (e f))))) ~ [=0x0000000]
+
+@upper_bound__C4 = (?((@upper_bound__C2 @upper_bound__C3) a) a)
+
+@upper_bound__C5 = (* ($([+0x0000002] a) (* a)))
+
+@upper_bound__C6 = (* (a (b ((@upper_bound__C4 (a (b c))) c))))
+
+@upper_bound__C7 = (* ($([+0x0000002] a) a))
+
+@upper_bound__C8 = (* ($([>] $(a b)) (e ({a c} (d f)))))
+  & $(b ?((@upper_bound__C5 @upper_bound__C6) (c (d (e f))))) ~ [=0x0000000]
+
+@upper_bound__C9 = (?((@upper_bound__C7 @upper_bound__C8) a) a)
+
+

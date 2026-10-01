@@ -1,0 +1,67 @@
+@prog = (input output)
+  & @scan ~ (input (0 (0 output)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (acc (active out)))) pl) (acc (active out)))
+
+@scan_nil = (* (acc (?((@nil_inactive @nil_active) (acc out)) out)))
+
+@nil_inactive = (acc out)
+  & acc ~ *
+  & out ~ (0 *)
+
+@nil_active = (* (acc out))
+  & out ~ (1 ((0 acc) (0 *)))
+
+@scan_cons = (* ((h t) (acc (active out))))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@maybe_digit @below) (hk (t (acc (active out)))))
+
+@below = (* (h (t (acc (active out)))))
+  & @nondigit ~ (h (t (acc (active out))))
+
+@maybe_digit = (h (t (acc (active out))))
+  & h ~ {hc hk}
+  & hc ~ $([>] $(57 z))
+  & z ~ ?((@is_digit @not_digit) (hk (t (acc (active out)))))
+
+@is_digit = (h (t (acc (active out))))
+  & active ~ *
+  & acc ~ $([*] $(10 prod))
+  & h ~ $([-] $(48 digit))
+  & prod ~ $([+] $(digit acc2))
+  & @scan ~ (t (acc2 (1 out)))
+
+@not_digit = (* (h (t (acc (active out)))))
+  & @nondigit ~ (h (t (acc (active out))))
+
+@nondigit = (ch (t (acc (?((@inactive @flush) (ch (t (acc out)))) out))))
+
+@inactive = (ch (t (acc out)))
+  & acc ~ *
+  & @charproc ~ (ch (t out))
+
+@flush = (* (ch (t (acc out))))
+  & @charproc ~ (ch (t out2))
+  & out ~ (1 ((0 acc) out2))
+
+@charproc = (ch (t out))
+  & ch ~ {hc hk}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@symbol @space) (hk (t out)))
+
+@space = (* (* (t out)))
+  & @scan ~ (t (0 (0 out)))
+
+@symbol = (ch (t out))
+  & ch ~ {hc hv}
+  & hc ~ $([<] $(42 z))
+  & z ~ ?((@operator @paren) (hv (t out)))
+
+@paren = (* (v (t out)))
+  & @scan ~ (t (0 (0 out2)))
+  & out ~ (1 ((2 v) out2))
+
+@operator = (v (t out))
+  & @scan ~ (t (0 (0 out2)))
+  & out ~ (1 ((1 v) out2))

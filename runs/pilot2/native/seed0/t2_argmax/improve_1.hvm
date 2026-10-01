@@ -1,0 +1,26 @@
+// @prog = (input output)
+@prog = (l out)
+  & @arg ~ (l (m out))
+  & m ~ *
+
+@arg = ((?((@arg_nil @arg_cons) (pl out)) pl) out)
+
+@arg_nil = (* out)
+  & out ~ (0 0)
+
+@arg_cons = (* ((h t) out))
+  & h ~ {hc hv}
+  & @arg ~ (t (tailmax tailidx))
+  & tailmax ~ {tc tv}
+  & hc ~ $([<] $(tc z))
+  & z ~ ?((@arg_head @arg_tail) (hv (tv (tailidx out))))
+
+@arg_head = (hv (tv (ti out)))
+  & tv ~ *
+  & ti ~ *
+  & out ~ (hv 0)
+
+@arg_tail = (* (hv (tv (ti out))))
+  & hv ~ *
+  & ti ~ $([+1] ti2)
+  & out ~ (tv ti2)

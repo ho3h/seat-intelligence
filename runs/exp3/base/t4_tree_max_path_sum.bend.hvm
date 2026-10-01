@@ -1,0 +1,27 @@
+@Gtree/C1 = (a (b (c ((1 (a (b (c d)))) d))))
+
+@max_path = ((@max_path__C6 a) a)
+
+@max_path__C0 = (* (a (b (c e))))
+  & @max_path ~ (d e)
+  & @Gtree/C1 ~ (a (b (c d)))
+
+@max_path__C1 = (?(((a a) @max_path__C0) b) b)
+
+@max_path__C2 = ((@max_path__C1 a) a)
+
+@max_path__C3 = (* (a (b (c (f ({g e} m))))))
+  &!@max_path ~ (f (g {h l}))
+  &!@max_path ~ (d (e {$([>] $(h ?(((* (i i)) (* (j (* j)))) (k (l m))))) k}))
+  & @Gtree/C1 ~ (a (b (c d)))
+
+@max_path__C4 = (?((@max_path__C2 @max_path__C3) a) a)
+
+@max_path__C5 = (* ((@max_path__C4 (a (c d))) (b (a ($([+] $(b c)) d)))))
+
+@max_path__C6 = (?(((* 0) @max_path__C5) a) a)
+
+@prog = (a b)
+  & @max_path ~ (a (0 b))
+
+

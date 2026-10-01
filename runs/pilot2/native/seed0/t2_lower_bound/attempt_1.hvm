@@ -1,0 +1,21 @@
+// Count elements strictly less than the threshold.
+@prog = ((xs t) out)
+  & @count ~ (xs (t (0 out)))
+
+@count = ((?((@cnt_nil @cnt_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@cnt_nil = (* (t (acc acc)))
+  & t ~ *
+
+@cnt_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@cnt_done @cnt_less) (tail (tr (acc out))))
+
+@cnt_done = (tail (t (acc acc)))
+  & tail ~ *
+  & t ~ *
+
+@cnt_less = (* (tail (t (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (t (acc2 out)))

@@ -1,0 +1,45 @@
+--- 05:39:07
+recipes.py:121: wire `e0` (num, argument `e0` of step of stream `sort_wedges_kw`, made at recipes.py:416) is used a second time (fanout into 3); it was already used at recipes.py:121 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(e0, 2)  and use each once.
+--- 05:39:31
+wrong arity: branch zero case of step of stream `dedup_walker` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:hole[(num num num)], passed[3]:num, passed[4]:num, passed[5]:num, passed[6]:num, passed[7]:num), i.e. d plus 8 value(s); your function `append_elem` takes 1 parameter(s) (b).
+--- 05:40:00
+build.py:48: fill_cons needs a hole[list[...]]; got hole[(num num num)]
+--- 05:40:19
+branch zero case of step of stream `dedup_walker` (@dedup_walker_step_b2z): 2 value(s) never used:
+    `prev_min` (num, argument `passed[0]` of branch zero case of step of stream `dedup_walker`, made at build.py:59)
+    `prev_max` (num, argument `passed[1]` of branch zero case of step of stream `dedup_walker`, made at build.py:59)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:40:49
+wrong arity: branch nonzero case of step of stream `dedup_walker` is called as f(d, cm1:num, passed[0]:num, passed[1]:num, passed[2]:hole[list[(num num num)]], passed[3]:num, passed[4]:num, passed[5]:num, passed[6]:num, passed[7]:num), i.e. d plus 9 value(s); your function `skip_elem` takes 9 parameter(s) (b, prev_min, prev_max, hole, u2, v2, s, min_ret, max_ret).
+--- 05:41:13
+build.py:63: wire `prev_min` (num, argument `prev_min` of step of stream `dedup_walker`, made at build.py:72) is used a second time (branch passed[0]); it was already used at build.py:41 (right operand of `=`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(prev_min, 2)  and use each once.
+--- 05:46:40
+wrong arity: branch zero case of step of stream `dedup_walker` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:hole[list[(num num num)]], passed[3]:num, passed[4]:num, passed[5]:num, passed[6]:num, passed[7]:num, passed[8]:num, passed[9]:num), i.e. d plus 10 value(s); your function `skip_elem` takes 9 parameter(s) (b, prev_min, prev_max, hole, u2, v2, s, min_ret, max_ret).
+--- 05:48:08
+recipes.py:121: wire `u1` (num, copy 1 of `u`, made at build.py:29) is used a second time (fanout into 3); it was already used at recipes.py:121 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(u1, 2)  and use each once.
+--- 05:48:25
+build.py:60: wire `min_ret` (num, argument `passed[3]` of branch nonzero case of step of stream `dedup_walker`, made at build.py:60) is used a second time (returned as `out0`); it was already used at build.py:51 (cons head). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(min_ret, 2)  and use each once.
+--- 05:48:42
+wrong arity: branch zero case of step of stream `dedup_walker` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:list[(num num num)], passed[3]:num, passed[4]:num, passed[5]:num, passed[6]:num, passed[7]:num), i.e. d plus 8 value(s); your function `skip_elem` takes 7 parameter(s) (b, prev_min, prev_max, result_list, min_ret_b, max_ret_b, s).
+--- 05:49:05
+build.py:63: wire `min_ret_a` (num, argument `passed[3]` of branch nonzero case of step of stream `dedup_walker`, made at build.py:63) is used a second time (returned as `out0`); it was already used at build.py:52 (cons head). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(min_ret_a, 2)  and use each once.
+--- 05:49:25
+build.py:65: kind mismatch at branch nonzero case of step of stream `dedup_walker` result `out2`: expected list[(num num num)], got list[(num (num num))] `cell` from cons (made at build.py:52).
+--- 05:50:07
+build.py:61: wire `min_use` (num, argument `passed[3]` of branch nonzero case of step of stream `dedup_walker`, made at build.py:61) is used a second time (returned as `out0`); it was already used at build.py:52 (cons head). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(min_use, 2)  and use each once.
+--- 05:50:27
+build.py:65: kind mismatch at branch nonzero case of step of stream `dedup_walker` result `out2`: expected list[(num num num)], got list[(num (num num))] `cell` from cons (made at build.py:54).
+--- 05:51:28
+wrong arity: step of stream `dedup_walker` is called as f(d, state_unused:num, e0:num, e1:num, e2:num), i.e. d plus 4 value(s); your function `step` takes 6 parameter(s) (d, state_unused, result_list, u, v, s).
+--- 05:51:40
+build.py:44: kind mismatch at stream `dedup_walker` port `init`: expected list[(num num num)], got (list[any]) ((0 *),).
+--- 09:02:14
+build.py:46: kind mismatch at stream `dedup_walker` port `init`: expected list[(num num num)], got (list[any]) ((0 *),).
+--- 09:04:01
+build.py:45: kind mismatch at stream `dedup_walker` port `init`: expected list[(num num num)], got (list[any]) ((0 *),).
+--- 09:04:31
+wrong arity: pred of select_sorted `sel` is called as f(d, x1, i1, E1), i.e. d plus 3 value(s); your function `<lambda>` takes 5 parameter(s).
+--- 09:04:48
+build.py:51: wire `L` (depth, output `L` of lg, made at recipes.py:156) is used a second time (recipe select_sorted `sel` port `L`); it was already used at build.py:48 (recipe list_to_trie `lt` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 09:05:02
+build.py:52: wire `n` (num, output `n` of recipe list_length_and_copy `lc`, made at build.py:44) is used a second time (recipe select_sorted `sel` port `E`); it was already used at recipes.py:154 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(n, 2)  and use each once.

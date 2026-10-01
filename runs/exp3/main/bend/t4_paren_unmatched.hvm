@@ -1,0 +1,47 @@
+@prog = (((?((@scan__C19 (* (c_q192 (((?((@scan__C16 (* (c_q197 (d_q197 (a_q197 (b_q197 ($([=0x0000028] ?((@scan__C14 (* (a_q201 (b_q201 ($([=0x0000028] ?((@scan__C12 (* (b_q206 ($([+0x0000002] c_q206) (((?((@scan__C19 @scan__C20) a_q211) a_q211) (b_q206 (c_q206 d_q206))) d_q206))))) (a_q201 (b_q201 c_q201)))) c_q201))))) (a_q197 (b_q197 (c_q197 (d_q197 e_q197)))))) e_q197))))))) a_q194) a_q194) (a_q192 (b_q192 (c_q192 d_q192)))) (a_q192 (b_q192 d_q192)))))) a_q190) a_q190) (0 (0 b))) b)
+
+@scan = ((@scan__C21 a) a)
+
+@scan__C0 = ($([+0x0000001] a) (b (a b)))
+
+@scan__C1 = (* (a ($([:-0x0000001] b) (a b))))
+
+@scan__C10 = (a ({$([<0x0000001] ?((@scan__C6 @scan__C7) (a (b c)))) b} c))
+
+@scan__C11 = (* (a ({?((@scan__C8 @scan__C9) (a (b c))) b} c)))
+
+@scan__C12 = (b (c ((@scan__C21 (b (c d))) d)))
+
+@scan__C13 = (* (b ($([+0x0000002] c) (((?((@scan__C19 @scan__C20) a_q225) a_q225) (b (c d))) d))))
+
+@scan__C14 = (a (b ($([=0x0000028] ?((@scan__C10 @scan__C11) (a (b c)))) c)))
+
+@scan__C15 = (* (a (b ($([=0x0000028] ?((@scan__C12 @scan__C13) (a (b c)))) c))))
+
+@scan__C16 = (a (b ($([=0x0000028] ?((@scan__C2 @scan__C3) (a (b c)))) c)))
+
+@scan__C18 = (?((@scan__C16 (* (c_q223 (d_q223 (a_q223 (b_q223 ($([=0x0000028] ?((@scan__C14 @scan__C15) (a_q223 (b_q223 (c_q223 (d_q223 e_q223)))))) e_q223))))))) a) a)
+
+@scan__C19 = (a (b (a b)))
+
+@scan__C2 = (a ({?((@scan__C0 @scan__C1) (a (b c))) b} c))
+
+@scan__C20 = (* (c ((@scan__C18 (a (b (c d)))) (a (b d)))))
+
+@scan__C21 = (?((@scan__C19 @scan__C20) a) a)
+
+@scan__C3 = (* (a ($([+0x0000001] b) (a b))))
+
+@scan__C4 = ($([+0x0000002] b) (a c))
+  & @scan ~ (a (b (0 c)))
+
+@scan__C5 = (* ($([+0x0000001] b) ((@scan__C21 (b (0 c))) c)))
+
+@scan__C6 = (a ($([=0x0000001] ?((@scan__C4 @scan__C5) (a b))) b))
+
+@scan__C7 = (* (b ($([:-0x0000002] c) ((@scan__C21 (b (c d))) d))))
+
+@scan__C8 = ($([+0x0000001] b) ($([-0x0000001] c) (a d)))
+  & @scan ~ (a (b (c d)))
+
+@scan__C9 = (* (b (c (((?((@scan__C19 @scan__C20) a_q215) a_q215) (b (c d))) d))))

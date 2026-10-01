@@ -1,0 +1,18 @@
+@prog = ((?((@scan_nil @scan_cons) (p_q149 ((0 0) out))) p_q149) out)
+
+@scan = ((?((@scan_nil @scan_cons) (p (a out))) p) (a out))
+
+@scan_nil = (* (a a))
+
+@scan_cons = (* ((h t) ((u v) out)))
+  & h ~ $([-40] k)
+  & k ~ ?((@scan_open_char @scan_close_char) (t ((u v) out)))
+
+@scan_open_char = ((?((@scan_nil @scan_cons) (p_q150 ((u vv) out))) p_q150) ((u $([+1] vv)) out))
+
+@scan_close_char = (* (t ((u v) out)))
+  & v ~ ?((@scan_zero_open (vminus_q158 (u_q158 ((?((@scan_nil @scan_cons) (p_q152_q158 ((u_q158 vminus_q158) out_q158))) p_q152_q158) out_q158)))) (u (t out)))
+
+@scan_zero_open = (u (t out))
+  & u ~ $([+1] uu)
+  & @scan ~ (t ((uu 0) out))

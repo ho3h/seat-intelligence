@@ -1,0 +1,127 @@
+// Initialize one parent per node, union each qualifying edge, then emit roots.
+@prog = ((n (tau cands)) out)
+  & n ~ {n_init n_emit}
+  & @init ~ (n_init (0 parents))
+  & @scan ~ (cands (tau (parents parents2)))
+  & @emit ~ (n_emit (0 (parents2 out)))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (k (i out))
+  & i ~ {iout irec}
+  & irec ~ $([+1] inext)
+  & @init ~ (k (inext tail))
+  & out ~ (1 (iout tail))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (tau (parents out)))) pl) (tau (parents out)))
+
+@scan_nil = (pl (tau (parents out)))
+  & pl ~ *
+  & tau ~ *
+  & out ~ parents
+
+@scan_cons = (* ((edge tail) (tau (parents out))))
+  & tau ~ {te tr}
+  & @edge ~ (edge (te (parents parents2)))
+  & @scan ~ (tail (tr (parents2 out)))
+
+@edge = ((u (v score)) (tau (parents out)))
+  & score ~ $([<] $(tau lt))
+  & lt ~ ?((@edge_accept @edge_reject) (u (v (parents out))))
+
+@edge_reject = (* (u (v (parents out))))
+  & u ~ *
+  & v ~ *
+  & out ~ parents
+
+@edge_accept = (u (v (parents out)))
+  & parents ~ {pu prest}
+  & prest ~ {pv pset}
+  & @find ~ (pu (u ru))
+  & @find ~ (pv (v rv))
+  & @union_roots ~ (ru (rv (pset out)))
+
+@union_roots = (ru (rv (parents out)))
+  & ru ~ {ruop ruval}
+  & rv ~ {rvop rvval}
+  & ruop ~ $([<] $(rvop less))
+  & less ~ ?((@union_ge @union_lt) (ruval (rvval (parents out))))
+
+@union_lt = (ru (rv (parents out)))
+  & @set ~ (parents (ru (rv out)))
+
+@union_ge = (ru (rv (parents out)))
+  & @set ~ (parents (rv (ru out)))
+
+@find = (parents (idx out))
+  & parents ~ {p_lookup p_next}
+  & idx ~ {i_lookup i_cmp}
+  & @lookup ~ (p_lookup (i_lookup val))
+  & val ~ {v_cmp v_next}
+  & i_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@find_more @find_done) (p_next (v_next out)))
+
+@find_more = (parents (idx out))
+  & @find ~ (parents (idx out))
+
+@find_done = (* (idx out))
+  & parents ~ *
+  & out ~ idx
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_here @lookup_next) (h (t out)))
+
+@lookup_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@lookup_next = (k (h (t out)))
+  & h ~ *
+  & @lookup ~ (t (k out))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (pl (idx (val out)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (k (h (t (val out))))
+  & @set ~ (t (k (val tailout)))
+  & out ~ (1 (h tailout))
+
+@emit = (n (i (parents out)))
+  & n ~ ?((@emit_nil @emit_cons) (i (parents out)))
+
+@emit_nil = (i (parents out))
+  & i ~ *
+  & parents ~ *
+  & out ~ (0 *)
+
+@emit_cons = (k (i (parents out)))
+  & i ~ {i_find i_rec}
+  & i_rec ~ $([+1] inext)
+  & parents ~ {p_find p_rec}
+  & @find ~ (p_find (i_find root))
+  & @emit ~ (k (inext (p_rec tail)))
+  & out ~ (1 (root tail))

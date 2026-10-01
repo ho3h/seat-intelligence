@@ -1,0 +1,25 @@
+// t3_girth (GRAPH-SWING-2, runs/exp9): all-sources BFS with bitsets and a saturating two-counter per source
+// (msbfs template, girth on). In round k a vertex whose previous frontier meets a neighbour's previous frontier
+// closes an odd walk of length 2k-1; a source reaching v from two distinct neighbours closes an even walk of
+// length 2k. Every such walk contains a cycle no longer than it, and a shortest cycle is detected exactly in the
+// round of its length, so the loop stops at the first round with any detection. No detection: 0.
+@mp_zero = (* 0)
+@xl = (k (* (od (ev (* (X (X cand)))))))
+  & od ~ $([!] $(0 ob))
+  & ob ~ ?((@g_ev @g_od) (k (ev cand)))
+@g_od = (* (k (* c)))
+  & k ~ $([*] $(2 k2))
+  & k2 ~ $([-] $(1 c))
+@g_ev = (k (ev c))
+  & ev ~ $([!] $(0 e))
+  & e ~ ?((@g_none @g_even) (k c))
+@g_none = (* 16777215)
+@g_even = (* (k c))
+  & k ~ $([*] $(2 c))
+@msb_out = (Sf (cand (* (* out))))
+  & Sf ~ *
+  & cand ~ {c1 c2}
+  & c1 ~ $([=] $(16777215 none))
+  & none ~ ?((@g_some @g_zero) (c2 out))
+@g_some = (c c)
+@g_zero = (* (* 0))

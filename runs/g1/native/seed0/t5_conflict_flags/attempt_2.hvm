@@ -1,0 +1,67 @@
+// Traverse c in node order. For each canonical id, scan the must-not-link
+// pairs and flag whether both endpoints belong to that cluster.
+@prog = ((c mnl) out)
+  & {c_trav c_full} ~ c
+  & @outer ~ (c_trav (c_full (mnl (0 out))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (cfull (mnl (i out))))) pl) (cfull (mnl (i out))))
+
+@outer_nil = (* (cfull (mnl (i out))))
+  & cfull ~ *
+  & mnl ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@outer_cons = (* ((h t) (cfull (mnl (i out)))))
+  & {h_eq h_key} ~ h
+  & {i_eq i_inc} ~ i
+  & i_inc ~ $([+1] i_next)
+  & h_eq ~ $([=] $(i_eq z))
+  & z ~ ?((@outer_no @outer_yes) (t (cfull (mnl (i_next (h_key out))))))
+
+@outer_no = (t (cfull (mnl (i_next (h_key out)))))
+  & @outer ~ (t (cfull (mnl (i_next rest))))
+  & h_key ~ *
+  & out ~ rest
+
+@outer_yes = (* (t (cfull (mnl (i_next (h_key out))))))
+  & {c_scan c_next} ~ cfull
+  & {m_scan m_next} ~ mnl
+  & @outer ~ (t (c_next (m_next (i_next rest))))
+  & @scan ~ (m_scan (c_scan (h_key flag)))
+  & out ~ (1 (flag rest))
+
+// Scan must-not-link pairs, looking up each endpoint's cluster in c.
+@scan = ((?((@scan_nil @scan_cons) (pl (c (k out)))) pl) (c (k out)))
+
+@scan_nil = (* (c (k out)))
+  & c ~ *
+  & k ~ *
+  & out ~ 0
+
+@scan_cons = (* (((a b) t) (c (k out))))
+  & {c_rec {c_a c_b}} ~ c
+  & {k_rec {k_a k_b}} ~ k
+  & @look ~ (c_a (a va))
+  & @look ~ (c_b (b vb))
+  & @scan ~ (t (c_rec (k_rec rest)))
+  & va ~ $([=] $(k_a ea))
+  & vb ~ $([=] $(k_b eb))
+  & ea ~ $([&] $(eb both))
+  & both ~ $([|] $(rest out))
+
+// Look up an index in a list of numbers.
+@look = ((?((@look_nil @look_cons) (pl (idx out))) pl) (idx out))
+
+@look_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@look_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@look_zero @look_succ) (h (t out)))
+
+@look_zero = (x (* x))
+
+@look_succ = (idx (h (t out)))
+  & h ~ *
+  & @look ~ (t (idx out))

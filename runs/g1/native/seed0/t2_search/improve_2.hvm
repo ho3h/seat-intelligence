@@ -1,0 +1,89 @@
+// Scan four list elements per index increment. Since the list is sorted,
+// stop as soon as an element is greater than the target.
+@prog = ((xs targ) out)
+  & @bs ~ (xs (targ (0 out)))
+
+@bs = ((?((@snil @s0_cons) (pl (targ (i out)))) pl) (targ (i out)))
+
+@snil = (* (targ (i out)))
+  & targ ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@s0_cons = (* ((h tail) (targ (i out))))
+  & h ~ {hc hr}
+  & targ ~ {tc tr}
+  & hc ~ $([<] $(tc lt))
+  & lt ~ ?((@s0_ge @s1_more) (hr (tail (tr (i out)))))
+
+@s1_more = (* (hr (tail (tr (i out)))))
+  & hr ~ *
+  & tail ~ (?((@snil @s1_cons) (pl (tr (i out)))) pl)
+
+@s1_cons = (* ((h tail) (targ (i out))))
+  & h ~ {hc hr}
+  & targ ~ {tc tr}
+  & hc ~ $([<] $(tc lt))
+  & lt ~ ?((@s1_ge @s2_more) (hr (tail (tr (i out)))))
+
+@s2_more = (* (hr (tail (tr (i out)))))
+  & hr ~ *
+  & tail ~ (?((@snil @s2_cons) (pl (tr (i out)))) pl)
+
+@s2_cons = (* ((h tail) (targ (i out))))
+  & h ~ {hc hr}
+  & targ ~ {tc tr}
+  & hc ~ $([<] $(tc lt))
+  & lt ~ ?((@s2_ge @s3_more) (hr (tail (tr (i out)))))
+
+@s3_more = (* (hr (tail (tr (i out)))))
+  & hr ~ *
+  & tail ~ (?((@snil @s3_cons) (pl (tr (i out)))) pl)
+
+@s3_cons = (* ((h tail) (targ (i out))))
+  & h ~ {hc hr}
+  & targ ~ {tc tr}
+  & hc ~ $([<] $(tc lt))
+  & lt ~ ?((@s3_ge @s3_less) (hr (tail (tr (i out)))))
+
+@s0_ge = (hr (tail (tr (i out))))
+  & hr ~ $([=] $(tr eq))
+  & eq ~ ?((@sgreater @s0_equal) (tail (i out)))
+
+@s1_ge = (hr (tail (tr (i out))))
+  & hr ~ $([=] $(tr eq))
+  & eq ~ ?((@sgreater @s1_equal) (tail (i out)))
+
+@s2_ge = (hr (tail (tr (i out))))
+  & hr ~ $([=] $(tr eq))
+  & eq ~ ?((@sgreater @s2_equal) (tail (i out)))
+
+@s3_ge = (hr (tail (tr (i out))))
+  & hr ~ $([=] $(tr eq))
+  & eq ~ ?((@sgreater @s3_equal) (tail (i out)))
+
+@s3_less = (* (hr (tail (tr (i out)))))
+  & hr ~ *
+  & i ~ $([+4] idx)
+  & @bs ~ (tail (tr (idx out)))
+
+@sgreater = (* (tail (i out)))
+  & tail ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@s0_equal = (* (tail (i out)))
+  & tail ~ *
+  & i ~ out
+
+@s1_equal = (* (tail (i out)))
+  & tail ~ *
+  & i ~ $([+1] out)
+
+@s2_equal = (* (tail (i out)))
+  & tail ~ *
+  & i ~ $([+2] out)
+
+@s3_equal = (* (tail (i out)))
+  & tail ~ *
+  & i ~ $([+3] out)

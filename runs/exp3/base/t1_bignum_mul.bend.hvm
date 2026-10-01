@@ -1,0 +1,123 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_lists = ((@add_lists__C10 a) a)
+
+@add_lists__C0 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@add_lists__C1 = (* (* @List/Nil))
+
+@add_lists__C10 = (?((@add_lists__C8 @add_lists__C9) a) a)
+
+@add_lists__C2 = ({$([=0x0000000] ?((@add_lists__C0 @add_lists__C1) (a b))) a} b)
+
+@add_lists__C3 = (* ($([+] $(a {$([:/0x0001000] d) $([:%0x0001000] b)})) (c (a f))))
+  & @List/Cons ~ (b (e f))
+  & @add_lists ~ (@List/Nil (c (d e)))
+
+@add_lists__C4 = (?((@add_lists__C2 @add_lists__C3) a) a)
+
+@add_lists__C5 = (a ($([+] $(a {$([:/0x0001000] d) $([:%0x0001000] b)})) (c f)))
+  & @List/Cons ~ (b (e f))
+  & @add_lists ~ (c (@List/Nil (d e)))
+
+@add_lists__C6 = (* (a (e (b ($([+] $(a $([+] $(b {$([:/0x0001000] f) $([:%0x0001000] c)})))) (d h))))))
+  & @List/Cons ~ (c (g h))
+  & @add_lists ~ (d (e (f g)))
+
+@add_lists__C7 = (?((@add_lists__C5 @add_lists__C6) a) a)
+
+@add_lists__C8 = ((@add_lists__C4 a) a)
+
+@add_lists__C9 = (* (b (c ((@add_lists__C7 (a (b (c d)))) (a d)))))
+
+@list_len = ((@list_len__C1 a) a)
+
+@list_len__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @list_len ~ (a b)
+
+@list_len__C1 = (?((0 @list_len__C0) a) a)
+
+@mul_digit = ((@mul_digit__C3 a) a)
+
+@mul_digit__C0 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@mul_digit__C1 = (* ({$([=0x0000000] ?((@mul_digit__C0 (* (* @List/Nil))) (a b))) a} b))
+
+@mul_digit__C2 = (* ($([*] $(a $([+] $(b {$([:/0x0001000] f) $([:%0x0001000] c)})))) (d ({e a} (b h)))))
+  & @List/Cons ~ (c (g h))
+  & @mul_digit ~ (d (e (f g)))
+
+@mul_digit__C3 = (?((@mul_digit__C1 @mul_digit__C2) a) a)
+
+@mul_tree = (a (b (?(((* (* @List/Nil)) @mul_tree__C4) (a (b c))) c)))
+
+@mul_tree__C0 = (* (b (* (a c))))
+  & @mul_digit ~ (a (b (0 c)))
+
+@mul_tree__C1 = (?(((* @List/Nil) @mul_tree__C0) a) a)
+
+@mul_tree__C2 = ((@mul_tree__C1 a) a)
+
+@mul_tree__C3 = ({$([+0x0000002] $([-] $(i j))) $([+0x0000002] $([:/0x0000002] {b {l {i e}}}))} (a ({h d} n)))
+  & @add_lists ~ (f (m (0 n)))
+  & @split_at ~ (a (b (c g)))
+  &!@mul_tree ~ (c (d (e f)))
+  & @shift ~ (k (l m))
+  &!@mul_tree ~ (g (h (j k)))
+
+@mul_tree__C4 = (?((@mul_tree__C2 @mul_tree__C3) a) a)
+
+@prog = (({d a} {e b}) h)
+  & @list_len ~ (b {c g})
+  & @list_len ~ (a {$([<] $(c ?((@prog__C0 @prog__C1) (d (e (f (g h))))))) f})
+
+@prog__C0 = (a (b (c (* e))))
+  & @trim ~ (d e)
+  & @mul_tree ~ (a (b (c d)))
+
+@prog__C1 = (* (b (a (* (c e)))))
+  & @trim ~ (d e)
+  & @mul_tree ~ (a (b (c d)))
+
+@shift = (b (?(((a a) @shift__C0) (b c)) c))
+
+@shift__C0 = ($([+0x0000001] $([:-0x0000001] b)) (a d))
+  & @List/Cons ~ (0 (c d))
+  & @shift ~ (a (b c))
+
+@split_at = (a (?((@split_at__C2 @split_at__C3) (a b)) b))
+
+@split_at__C0 = (* (c (a ($([+0x0000001] $([:-0x0000001] b)) (e f)))))
+  & @List/Cons ~ (c (d e))
+  & @split_at ~ (a (b (d f)))
+
+@split_at__C1 = (?(((* (@List/Nil @List/Nil)) @split_at__C0) a) a)
+
+@split_at__C2 = (a (@List/Nil a))
+
+@split_at__C3 = (a ((@split_at__C1 (a b)) b))
+
+@trim = ((@trim__C5 a) a)
+
+@trim__C0 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@trim__C1 = ({$([=0x0000000] ?((@trim__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@trim__C2 = (* (b (c (a e))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@trim__C3 = (?((@trim__C1 @trim__C2) a) a)
+
+@trim__C4 = (* (b (a c)))
+  & @trim ~ (a (@trim__C3 (b c)))
+
+@trim__C5 = (?((@List/Nil @trim__C4) a) a)
+
+

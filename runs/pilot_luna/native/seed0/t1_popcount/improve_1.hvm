@@ -1,0 +1,26 @@
+// Parallel 24-bit population count using SWAR bit folding.
+@prog = (n out)
+  & n ~ {n0 n1}
+  & n1 ~ $([>>] $(1 s1))
+  & s1 ~ $([&] $(5592405 masked1))
+  & n0 ~ $([-] $(masked1 x1))
+
+  & x1 ~ {x1a x1b}
+  & x1a ~ $([&] $(3355443 lo2))
+  & x1b ~ $([>>] $(2 s2))
+  & s2 ~ $([&] $(3355443 hi2))
+  & lo2 ~ $([+] $(hi2 x2))
+
+  & x2 ~ {x2a x2b}
+  & x2b ~ $([>>] $(4 s3))
+  & x2a ~ $([+] $(s3 sum3))
+  & sum3 ~ $([&] $(986895 x3))
+
+  & x3 ~ {x3a x3b}
+  & x3b ~ $([>>] $(8 s4))
+  & x3a ~ $([+] $(s4 x4))
+
+  & x4 ~ {x4a x4b}
+  & x4b ~ $([>>] $(16 s5))
+  & x4a ~ $([+] $(s5 sum5))
+  & sum5 ~ $([&] $(63 out))

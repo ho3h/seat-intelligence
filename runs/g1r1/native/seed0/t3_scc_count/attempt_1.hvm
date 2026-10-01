@@ -1,0 +1,110 @@
+@prog = ((n edges) out)
+  & @cv ~ (0 (n (edges ((0 *) (0 out)))))
+
+@reach = (src (edges out))
+  & @close ~ (edges (1 (src (0 *) out)))
+
+@close = (edges (visited out))
+  & edges ~ {scanEdges nextEdges}
+  & @scan_edges ~ (scanEdges (0 (visited res)))
+  & res ~ (changed vis2)
+  & changed ~ ?((@cl_done @cl_more) (nextEdges (vis2 out)))
+
+@cl_done = (* (edges (visited out)))
+  & edges ~ *
+  & visited ~ out
+
+@cl_more = (* (edges (visited out)))
+  & @close ~ (edges (visited out))
+
+@scan_edges = ((?((@se_nil @se_cons) (p (changed (visited out)))) p) (changed (visited out)))
+
+@se_nil = (* (changed (visited out)))
+  & out ~ (changed visited)
+
+@se_cons = (* ((u v) (tail (changed (visited out)))))
+  & @member ~ (u (visited res))
+  & res ~ (active vis1)
+  & active ~ ?((@se_skip @se_check) (v (tail (changed (vis1 out))))
+
+@se_skip = (* (v (tail (changed (visited out)))))
+  & @scan_edges ~ (tail (changed (visited out)))
+
+@se_check = (* (v (tail (changed (visited out)))))
+  & v ~ {v1 v2}
+  & @member ~ (v1 (visited res))
+  & res ~ (found vis2)
+  & found ~ ?((@se_absent @se_present) (v2 (tail (changed (vis2 out))))
+
+@se_present = (* (v (tail (changed (visited out)))))
+  & @scan_edges ~ (tail (changed (visited out)))
+
+@se_absent = (* (v (tail (changed (visited out)))))
+  & changed ~ *
+  & @scan_edges ~ (tail (1 ((1 (v visited)) out)))
+
+@member = (x (list out))
+  & @mwalk ~ (x (list out))
+
+@mwalk = ((?((@mw_nil @mw_cons) (p (x out))) p) (x out))
+
+@mw_nil = (* (x out))
+  & x ~ *
+  & out ~ (0 (0 *))
+
+@mw_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(x1 eq))
+  & @mwalk ~ (x2 (t rest))
+  & rest ~ (tailBool tailList)
+  & eq ~ $([|] $(tailBool bool))
+  & out ~ (bool (1 (h2 tailList)))
+
+@checkprev = (i (cur (records out)))
+  & @cp_walk ~ (records (i (cur out)))
+
+@cp_walk = ((?((@cp_nil @cp_cons) (p (i (cur out)))) p) (i (cur out)))
+
+@cp_nil = (* (i (cur out)))
+  & i ~ *
+  & out ~ (0 ((0 *) cur))
+
+@cp_cons = (* ((u reachable) (tail (i (cur out)))))
+  & u ~ {uQuery uKeep}
+  & i ~ {iQuery iTail}
+  & @member ~ (uQuery (cur a))
+  & a ~ (uIn cur1)
+  & @member ~ (iQuery (reachable b))
+  & b ~ (iIn reachable1)
+  & uIn ~ $([&] $(iIn both))
+  & @cp_walk ~ (tail (iTail (cur1 tailRes)))
+  & tailRes ~ (hasTail (recordsTail curTail))
+  & both ~ $([|] $(hasTail hasOut))
+  & out ~ (hasOut ((1 ((uKeep reachable1) recordsTail)) curTail))
+
+@cv = (i (n (edges (records (count out)))))
+  & i ~ {iEq iWork}
+  & n ~ {nEq nWork}
+  & iEq ~ $([=] $(nEq eq))
+  & eq ~ ?((@cv_more @cv_done) (iWork (nWork (edges (records (count out)))))
+
+@cv_done = (* (i (n (edges (records (count out))))))
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+  & records ~ *
+  & count ~ out
+
+@cv_more = (* (i (n (edges (records (count out))))))
+  & i ~ {iReach iRest}
+  & iRest ~ {iCheck iRest2}
+  & iRest2 ~ {iInc iRecord}
+  & edges ~ {edgesReach edgesNext}
+  & @reach ~ (iReach (edgesReach rset))
+  & @checkprev ~ (iCheck (rset (records res)))
+  & res ~ (has (records2 rset2))
+  & iInc ~ $([+1] iNext)
+  & 1 ~ $([-] $(has add))
+  & count ~ $([+] $(add count2))
+  & @cv ~ (iNext (n (edgesNext ((1 ((iRecord rset2) records2)) (count2 out))))

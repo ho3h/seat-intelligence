@@ -1,0 +1,82 @@
+exp11 / swing 11b: superposition search in the RIGHT regime (expression trees, fold loop bodies), 2026-09-30
+HVM4 @6defdfc (physics/hvm4/src/hvm), single thread, -s -C. Code genome/exp11/, HVM4 programs genome/exp11/hvm4/, per-config JSON here.
+
+SETUP
+DSL (u32, same semantics as HVM4 OP2): leaves x, 0..5 (fold bodies also acc); unary e%m (m=2..5); binary + - * xor and min max
+lt(0/1) eq(0/1). "Depth h" = all expressions of height <= h. Exact candidate counts: map 7 / 476 / 2,041,095; fold 8 / 616 /
+3,417,576. Depth 4 = 9*(2.04M)^2 ~ 3.7e13: infeasible, so the depth-4 point uses a SMALL DSL (leaves x,1; ops + * xor):
+2 / 14 / 590 / 1,044,302.
+Superposed search: every position of the tree is its own choice (balanced SUP tree, one fresh label per SUP node); an AST
+interpreter @ev runs it over the example elements in ONE shared list traversal (map: 10 elements in 0..63; fold: 3 lists of
+4 in 0..9, z=0); each mismatch is erased (&{}) as soon as it is seen, so later elements only run on survivors; -C prints
+the surviving ASTs. Correctness: survivors == exact solution count in 18/18 configs (map: numpy OE class-count; fold:
+Python brute force), every survivor re-verified in Python.
+Independent: uniform sample of 200 candidates from the exact candidate set, each run alone through (a) the SAME interpreter
+and (b) compiled (candidate = a direct HVM4 lambda, no interpreter); mean x N = extrapolated cost. Depth-3 means re-checked
+with a fresh 1,000-sample (95% CI below). A batched variant (all sampled candidates in one run) is costlier per candidate
+than single runs, so single runs are not inflated by setup.
+
+GAIN = independent interactions (extrapolated) / superposed interactions
+config         N            sup_itrs     sup/cand  ind interp/cand  ind compiled/cand  GAIN interp  GAIN compiled  survivors
+map_h1                 7          599      85.6       36.4             26.9              0.43x        0.31x          1
+map_h2               476       15,877      33.4       37.2             14.2              1.12x        0.42x          2
+map_h3a        2,041,095   49,340,485      24.2       83.6 (n=1000)    20.8 (n=1000)     3.46x [3.34,3.57]  0.86x [0.82,0.90]  293
+map_h3b        2,041,095   35,566,061      17.4       75.4 (n=1000)    18.5 (n=1000)     4.33x [4.29,4.36]  1.06x [1.05,1.08]   58
+map_h3c        2,041,095   40,833,732      20.0       79.9             20.0              3.99x        1.00x        5,839
+fold_h1                8          755      94.4       72.6             48.2              0.77x        0.51x          1
+fold_h2              616       46,543      75.6      106.8             41.3              1.41x        0.55x          2
+fold_h3a       3,417,576  170,807,662      50.0      230.7 (n=1000)    52.5 (n=1000)     4.62x [4.49,4.74]  1.05x [1.03,1.07]   27
+fold_h3b       3,417,576  170,857,369      50.0      241.7             55.5              4.83x        1.11x          153
+small_h1               2          328     164.0       85.0             66.5              0.52x        0.41x          1
+small_h2              14        2,205     157.5       47.5             21.3              0.30x        0.14x          1
+small_h3             590       23,759      40.3       62.5             16.5              1.55x        0.41x          4
+small_h4       1,044,302   17,054,591      16.3      121.8             21.8              7.46x        1.33x        1,132
+smallfold_h3       2,703      177,892      65.8      253.8             52.5              3.86x        0.80x          8
+LAZY regime probe (Peano values, lazy add/mul/min/max/monus, output compared one constructor at a time, SupGen style;
+leaves x,0..5; N = 7 / 252 / 317,527):
+peano_h1               7        1,937     276.7       78.6              -                0.28x          -            1
+peano_h2             252       75,665     300.3      118.1              -                0.39x          -            3
+peano_h3a        317,527   30,513,411      96.1      136.4              -                1.42x          -           46
+peano_h3b        317,527   33,358,552     105.1      137.9              -                1.31x          -           10
+
+KILL RULE (gain < 5x at depth 3): HIT. Depth-3 gain is 3.5x-4.8x against the same interpreter run per candidate (all 95%
+CIs below 5) and 0.86x-1.11x against compiled candidates. The lazy Peano regime is worse (1.3-1.4x).
+
+WHY. The shared work is real but small: sub-expression values and the interpreter's dispatch are computed once per tree
+position instead of once per candidate, which is exactly what the interpreted baseline pays for (its gain tracks mean
+expression size: 1, 2.9, 6.8 nodes). But every candidate's final value is still materialised as its own leaf of a SUP
+tree: the root operator applied to two superposed children of N_{h-1} values builds N_{h-1}^2 leaves, and HVM has no
+merging of equal values. The superposed cost floors at ~16-24 interactions per candidate for maps (~50 per 4-step fold),
+which is what evaluating one small compiled expression costs. Scaling (small DSL, h1..h4): sup cost/candidate
+164 -> 158 -> 40 -> 16 (converging to the floor); gain vs compiled 0.41 -> 0.14 -> 0.41 -> 1.33x, vs interpreted
+0.52 -> 0.30 -> 1.55 -> 7.46x. It grows with depth, but only like expression SIZE (linear in nodes), not the exponential
+growth that sharing across reconverging candidates would give, and depth 5 (3e12 candidates) is out of reach anyway.
+Laziness does not rescue it: partial-value pruning skips sibling sub-searches, but each emitted Peano constructor is
+distributed over the SUP tree, so the per-candidate cost rises (96-105 itrs).
+
+STRONG BASELINE: Python bottom-up enumerator with observational-equivalence merging (genome/exp11/baseline.py), same DSL
+and examples. OE merging collapses the search: 476 depth-2 map expressions fall into 55 classes on the 10 example inputs.
+                sup HVM4 (all solutions)           OE first solution (pure Python)       OE exact count of ALL solutions (numpy)
+map_h3a         49.3M itrs, 0.79 s, 293 sols        (1 + (x % 3))   0.8 ms,    766 vec-evals   293 in 2.8 ms, 27,928 vec-evals
+map_h3b         35.6M itrs, 0.62 s,  58 sols        (5 ^ (x * x))  15.5 ms,  9,916 vec-evals    58 in 2.0 ms
+map_h3c         40.8M itrs, 0.68 s, 5839 sols       (x + 5)         0.1 ms,     42 vec-evals  5839 in 2.4 ms (examples ambiguous: x+5 fits)
+small_h4        17.1M itrs, 0.35 s, 1132 sols       ((x+x)^(x+(x*x))) 9.8 ms, 6,438 vec-evals 1132 in 1.5 ms,  9,618 vec-evals
+fold_h3a       170.8M itrs, 4.0 s,   27 sols        (acc + (x * x)) 29 ms, 1,221 vec-evals (grid-OE on acc 0..31, verified by real fold)
+fold_h3b       170.9M itrs, 7.4 s,  153 sols        (acc + (acc + x)) 40 ms, 1,170 vec-evals
+The plain enumerator wins by 2-4 orders of magnitude in wall-clock, and its class counts give the exact number of ALL
+solutions (matching the superposed survivor count in every map config), so superposition does not even win on
+"all solutions at once". (Caveat: fold OE merges on a probe grid, unsound in general; here every reported solution
+passes the real fold.)
+
+VERDICT: CLEAN NEGATIVE again, now in the regime chosen to favour superposition. Superposed HVM4 search is exact, but
+its advantage over evaluating the same candidates independently is the amortised interpreter (<=4.8x at depth 3, ~1x
+against compiled candidates), and it loses to an observational-equivalence enumerator by 100-10,000x. The missing
+ingredient is value merging (hash-consing on outputs), which HVM's SUP/DUP does not do. Superposition is not a Genome
+search mechanism for this workload; keep HVM2 + a Python OE enumerator.
+Part (4) (lowering to HVM2) was conditional on superposition being competitive, so it was not built. What a Genome pipeline
+would use: OE enumerator finds e(x) or g(acc,x) on the task examples -> instantiate the verified map/fold skeleton word
+with e in its operator slot (a few OPR nodes; the skeleton's list walker is already a corpus word) -> genome/verify on
+fresh seeds -> keep as a new word. The search is outside the medium; the word is inside.
+NEXT: if superposition is to be tried a third time, it must be on outputs that are merged: an HVM-level OE (SUP leaves
+keyed by value) or a lambda/structure-synthesis task where lazy pruning cuts whole sub-searches (SupGen's regime,
+e.g. collapse_supgen_mul), measured against the same OE enumerator from day one.

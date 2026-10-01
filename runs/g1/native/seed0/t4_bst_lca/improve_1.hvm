@@ -1,0 +1,56 @@
+// Sort the query values once, so each tree node needs at most two comparisons.
+@prog = (inp out)
+  & inp ~ (x (y t))
+  & @sort ~ (x (y (t out)))
+
+@sort = (x (y (t out)))
+  & x ~ {xa xb}
+  & y ~ {ya yb}
+  & xa ~ $([<] $(ya b))
+  & b ~ ?((@sort_no @sort_yes) (xb (yb (t out))))
+
+@sort_no = (x (y (t out)))
+  & @lca ~ (y (x (t out)))
+
+@sort_yes = (x (y (t out)))
+  & @lca ~ (x (y (t out)))
+
+@lca = (x (y (t out)))
+  & t ~ (tag payload)
+  & tag ~ ?((@lca_leaf @lca_node) (x (y (payload out))))
+
+@lca_leaf = (x (y (payload out)))
+  & x ~ *
+  & y ~ *
+  & payload ~ *
+  & out ~ 0
+
+@lca_node = (* (x (y (p out))))
+  & p ~ (l (v r))
+  & y ~ {yc ykeep}
+  & v ~ {vc vkeep}
+  & yc ~ $([<] $(vc b))
+  & b ~ ?((@check_low @go_left) (x (ykeep (vkeep (l (r out))))))
+
+@go_left = (* (x (y (v (l (r out))))))
+  & v ~ *
+  & r ~ *
+  & @lca ~ (x (y (l out)))
+
+@check_low = (x (y (v (l (r out)))))
+  & x ~ {xc xkeep}
+  & v ~ {vc vkeep}
+  & xc ~ $([>] $(vc b))
+  & b ~ ?((@found @go_right) (xkeep (y (vkeep (l (r out))))))
+
+@found = (x (y (v (l (r out)))))
+  & x ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out
+
+@go_right = (* (x (y (v (l (r out))))))
+  & v ~ *
+  & l ~ *
+  & @lca ~ (x (y (r out)))

@@ -1,0 +1,133 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@comes_before = ((b (c {$([>] $(a ?((@comes_before__C4 (* (* (* (* (* (* (* 1)))))))) (b (c (d (e (f (g h))))))))) d})) ((e (f {a g})) h))
+
+@comes_before__C0 = ($([<] $(a ?((0 (* 1)) b))) (a b))
+
+@comes_before__C1 = (* (* (* 0)))
+
+@comes_before__C2 = ($([>] $(a ?((@comes_before__C0 @comes_before__C1) (b c)))) (b (a c)))
+
+@comes_before__C3 = ({$([<] $(a ?((@comes_before__C2 (* (* (* (* (* 1)))))) (b (c (d e)))))) b} (c ({a d} e)))
+
+@comes_before__C4 = (b (c ($([<] $(a ?((@comes_before__C3 (* (* (* (* (* 0)))))) (b (c (d (e f))))))) (d (e (a f))))))
+
+@filter_candidates = ((@filter_candidates__C2 a) a)
+
+@filter_candidates__C0 = (* a)
+  & @List/Cons ~ a
+
+@filter_candidates__C1 = (* ({(* (* $([<] $(a b)))) d} (e ({a f} h))))
+  & $(b ?(((* (c c)) @filter_candidates__C0) (d (g h)))) ~ [=0x0000000]
+  & @filter_candidates ~ (e (f g))
+
+@filter_candidates__C2 = (?(((* @List/Nil) @filter_candidates__C1) a) a)
+
+@get_at = ((@get_at__C2 a) a)
+
+@get_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_at ~ (a (b c))
+
+@get_at__C1 = (* (c (d ({$([=0x0000000] ?((@get_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@make_labels = ({$([=] $(a ?((@make_labels__C0 (* (* (* @List/Nil)))) (b (c d))))) b} ({a c} d))
+
+@make_labels__C0 = ({a $([+0x0000001] b)} (c e))
+  & @List/Cons ~ (a (d e))
+  & @make_labels ~ (b (c d))
+
+@merge_edges = ((@merge_edges__C3 a) a)
+
+@merge_edges__C0 = (b ($([+0x0000001] f) (a (d (c g)))))
+  & @merge_edges ~ (a (e (f g)))
+  & @replace_label ~ (b (c (d e)))
+
+@merge_edges__C1 = (* (b (c (a (* (* d))))))
+  & @merge_edges ~ (a (b (c d)))
+
+@merge_edges__C2 = (* ((b (d *)) (h ({f {c a}} (g k)))))
+  & @get_at ~ (c (d {e j}))
+  & @get_at ~ (a (b {$([=] $(e ?((@merge_edges__C0 @merge_edges__C1) (f (g (h (i (j k)))))))) i}))
+
+@merge_edges__C3 = (?(((* (a a)) @merge_edges__C2) b) b)
+
+@merge_sort = ((@merge_sort__C4 a) a)
+
+@merge_sort__C0 = a
+  & @List/Cons ~ a
+
+@merge_sort__C1 = (* (* (* (a (b h)))))
+  & @merge_sorted ~ (e (g h))
+  & @split_alternate ~ (c (0 (d f)))
+  & @List/Cons ~ (a (b c))
+  &!@merge_sort ~ (d e)
+  &!@merge_sort ~ (f g)
+
+@merge_sort__C2 = (?((@merge_sort__C0 @merge_sort__C1) a) a)
+
+@merge_sort__C3 = (* (a ({(@merge_sort__C2 (a (b c))) b} c)))
+
+@merge_sort__C4 = (?((@List/Nil @merge_sort__C3) a) a)
+
+@merge_sorted = ((@merge_sorted__C6 a) a)
+
+@merge_sorted__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_sorted ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_sorted__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_sorted ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_sorted__C2 = a
+  & @List/Cons ~ a
+
+@merge_sorted__C3 = (* ({b e} (f ({a c} (d g)))))
+  & @comes_before ~ (a (b $([=0x0000001] ?((@merge_sorted__C0 @merge_sorted__C1) (c (d (e (f g))))))))
+
+@merge_sorted__C4 = (?((@merge_sorted__C2 @merge_sorted__C3) a) a)
+
+@merge_sorted__C5 = (* (a (b ((@merge_sorted__C4 (a (b c))) c))))
+
+@merge_sorted__C6 = (?(((a a) @merge_sorted__C5) b) b)
+
+@prog = ((e (b a)) g)
+  & @merge_edges ~ (d (f (0 g)))
+  & @merge_sort ~ (c d)
+  & @filter_candidates ~ (a (b c))
+  & @make_labels ~ (0 (e f))
+
+@replace_label = ((@replace_label__C3 a) a)
+
+@replace_label__C0 = (* a)
+  & @List/Cons ~ a
+
+@replace_label__C1 = (* (a (* b)))
+  & @List/Cons ~ (a b)
+
+@replace_label__C2 = (* ({$([=] $(a ?((@replace_label__C0 @replace_label__C1) (b (c (g h)))))) c} (d ({a e} ({b f} h)))))
+  & @replace_label ~ (d (e (f g)))
+
+@replace_label__C3 = (?(((* (* @List/Nil)) @replace_label__C2) a) a)
+
+@split_alternate = ((@split_alternate__C3 a) a)
+
+@split_alternate__C0 = (b (a (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@split_alternate__C1 = (* (a (b (d (c d)))))
+  & @List/Cons ~ (a (b c))
+
+@split_alternate__C2 = (* (d (a ({b $([=0x0000000] ?((@split_alternate__C0 @split_alternate__C1) (d (e (f g)))))} g))))
+  & @split_alternate ~ (a (c (e f)))
+  & $(b c) ~ [-0x0000001]
+
+@split_alternate__C3 = (?(((* (@List/Nil @List/Nil)) @split_alternate__C2) a) a)
+
+

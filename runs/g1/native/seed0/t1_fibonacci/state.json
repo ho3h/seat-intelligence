@@ -1,0 +1,48 @@
+{
+ "pid": "t1_fibonacci",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 246,
+    "itrs_median_big": 6252,
+    "itrs_max": 6252,
+    "depth_median_big": 2409,
+    "depth_max": 2409
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 270,
+    "itrs_median_big": 478,
+    "itrs_max": 478,
+    "depth_median_big": 178,
+    "depth_max": 178
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 124173,
+ "best": {
+  "itrs_median_small": 270,
+  "itrs_median_big": 478,
+  "itrs_max": 478,
+  "depth_median_big": 178,
+  "depth_max": 178
+ },
+ "usd": 0.031461039999999996,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

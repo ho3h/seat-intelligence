@@ -1,0 +1,150 @@
+@prog = (in out)
+  & in ~ (n (s (t edges)))
+  & @run ~ (n (s (t (edges out))))
+
+@run = (n (s (t (edges out))))
+  & n ~ {n1 n_rest}
+  & n_rest ~ {n2 n3}
+  & s ~ {s1 s_next}
+  & t ~ {t1 t_next}
+  & s1 ~ $([<] $(n1 s_lt))
+  & t1 ~ $([<] $(n2 t_lt))
+  & s_lt ~ $([&] $(t_lt v))
+  & v ~ ?((@bad @eq_check) (n3 (s_next (t_next (edges out)))))
+
+@bad = (* (* (* (* out))))
+  & out ~ 0
+
+@eq_check = (* (n (s (t (edges out)))))
+  & s ~ {s_eq s_alg}
+  & t ~ {t_eq t_alg}
+  & s_eq ~ $([=] $(t_eq same))
+  & same ~ ?((@alg @out_one) (n (s_alg (t_alg (edges out)))))
+
+@out_one = (* (* (* (* (* out)))))
+  & out ~ 1
+
+@alg = (n (s (t (edges out))))
+  & n ~ {n_zero n_loop}
+  & n_loop ~ {n_rem n_step}
+  & @zeros ~ (n_zero zero)
+  & @set1 ~ (zero (s (0 cur)))
+  & @loop ~ (cur (n_rem (n_step (t (edges out)))))
+
+@zeros = (n out)
+  & n ~ ?((@znil @zcons) out)
+
+@znil = (0 *)
+
+@zcons = (np1 out)
+  & out ~ (1 (0 tail))
+  & @zeros ~ (np1 tail)
+
+@set1 = (list (idx (i out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@s1_nil @s1_cons) (payload (idx (i out))))
+
+@s1_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@s1_cons = (* (payload (idx (i out))))
+  & payload ~ (head tail)
+  & i ~ {i_cmp i_next}
+  & i_cmp ~ $([=] $(idx eq))
+  & i_next ~ $([+1] i_plus)
+  & eq ~ ?((@s1_no @s1_yes) (head (tail (idx (i_plus out)))))
+
+@s1_no = (head (tail (idx (i_plus out))))
+  & @set1 ~ (tail (idx (i_plus rest)))
+  & out ~ (1 (head rest))
+
+@s1_yes = (* (* (tail (idx (i_plus out)))))
+  & @set1 ~ (tail (idx (i_plus rest)))
+  & out ~ (1 (1 rest))
+
+@get = (list (idx (i out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@get_nil @get_cons) (payload (idx (i out))))
+
+@get_nil = (* (* (* out)))
+  & out ~ 0
+
+@get_cons = (* (payload (idx (i out))))
+  & payload ~ (head tail)
+  & i ~ {i_cmp i_next}
+  & i_cmp ~ $([=] $(idx eq))
+  & i_next ~ $([+1] i_plus)
+  & eq ~ ?((@get_no @get_yes) (head (tail (idx (i_plus out)))))
+
+@get_no = (* (tail (idx (i_plus out))))
+  & @get ~ (tail (idx (i_plus out)))
+
+@get_yes = (* (head (* (* (* out)))))
+  & out ~ head
+
+@add_at = (list (idx (val (i out))))
+  & list ~ (tag payload)
+  & tag ~ ?((@aa_nil @aa_cons) (payload (idx (val (i out)))))
+
+@aa_nil = (* (* (* (* out))))
+  & out ~ (0 *)
+
+@aa_cons = (* (payload (idx (val (i out)))))
+  & payload ~ (head tail)
+  & i ~ {i_cmp i_next}
+  & i_cmp ~ $([=] $(idx eq))
+  & i_next ~ $([+1] i_plus)
+  & val ~ {val_add val_pass}
+  & head ~ $([+] $(val_add added))
+  & eq ~ ?((@aa_no @aa_yes) (head (added (tail (idx (val_pass (i_plus out)))))))
+
+@aa_no = (head (* (tail (idx (val (i_plus out))))))
+  & @add_at ~ (tail (idx (val (i_plus rest))))
+  & out ~ (1 (head rest))
+
+@aa_yes = (* (* (added (tail (idx (val (i_plus out)))))))
+  & @add_at ~ (tail (idx (val (i_plus rest))))
+  & out ~ (1 (added rest))
+
+@step = (cur (n (edges out_next)))
+  & @zeros ~ (n zero)
+  & @fold_edges ~ (cur (edges (zero out_next)))
+
+@fold_edges = (cur (edges (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@fe_nil @fe_cons) (payload (cur (acc out))))
+
+@fe_nil = (* (* (acc out)))
+  & out ~ acc
+
+@fe_cons = (* (payload (cur (acc out))))
+  & payload ~ (edge rest)
+  & edge ~ (u v)
+  & cur ~ {cur_u cur_rest}
+  & cur_rest ~ {cur_v cur_keep}
+  & @get ~ (cur_u (v (0 val_v)))
+  & @get ~ (cur_v (u (0 val_u)))
+  & @add_at ~ (acc (u (val_v (0 acc2))))
+  & @add_at ~ (acc2 (v (val_u (0 acc3))))
+  & @fold_edges ~ (cur_keep (rest (acc3 out)))
+
+@loop = (cur (rem (n (t (edges out)))))
+  & cur ~ {cur_get cur_keep}
+  & @get ~ (cur_get (t (0 val)))
+  & val ~ ?((@lp_zero @lp_done) (cur_keep (rem (n (t (edges out))))))
+
+@lp_zero = (cur (rem (n (t (edges out)))))
+  & rem ~ ?((@lp_end @lp_step) (cur (n (t (edges out)))))
+
+@lp_end = (* (* (* (* out))))
+  & out ~ 0
+
+@lp_step = (rem_minus1 (cur (n (t (edges out)))))
+  & n ~ {n_step n_rec}
+  & edges ~ {edges_step edges_rec}
+  & @step ~ (cur (n_step (edges_step next)))
+  & @loop ~ (next (rem_minus1 (n_rec (t (edges_rec out)))))
+
+@lp_done = (val_minus1 (* (* (* (* (* out)))))
+  & val_minus1 ~ $([+1] val)
+  & out ~ val

@@ -1,0 +1,25 @@
+// With cap below 2, no merge can occur, so every candidate is skipped.
+// For larger caps this currently returns the empty list.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & mnl ~ *
+  & cap ~ $([<] $(2 b))
+  & b ~ ?((@empty @all) (cands out))
+
+@empty = (cands out)
+  & cands ~ *
+  & out ~ (0 *)
+
+@all = (* (cands out))
+  & @map ~ (cands out)
+
+@map = ((?((@map_nil @map_cons) (pl out)) pl) out)
+
+@map_nil = (* out)
+  & out ~ (0 *)
+
+@map_cons = (* ((item tail) out))
+  & item ~ (u (v score))
+  & score ~ *
+  & @map ~ (tail rest)
+  & out ~ (1 ((u v) rest))

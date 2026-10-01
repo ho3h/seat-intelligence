@@ -1,0 +1,126 @@
+@prog = ((pred truth) out)
+  & @zip ~ (pred (truth rows))
+  & rows ~ {todo full}
+  & @outer ~ (todo (full ((0 *) (0 out))))
+
+@zip = ((?((@zip_nil @zip_cons) (pl (truth out))) pl) (truth out))
+
+@zip_nil = (* (truth out))
+  & truth ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((ph pt) (truth out)))
+  & @zipT ~ (truth (ph (pt out)))
+
+@zipT = ((?((@zipT_nil @zipT_cons) (pl (ph (pt out)))) pl) (ph (pt out)))
+
+@zipT_nil = (* (ph (pt out)))
+  & ph ~ *
+  & pt ~ *
+  & out ~ (0 *)
+
+@zipT_cons = (* ((th tt) (ph (pt out))))
+  & @zip ~ (pt (tt rest))
+  & out ~ (1 ((ph th) rest))
+
+@contains = ((?((@contains_nil @contains_cons) (pl (target out))) pl) (target out))
+
+@contains_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@contains_cons = (* ((h t) (target out)))
+  & target ~ {tc tr}
+  & h ~ $([=] $(tc eq))
+  & eq ~ ?((@contains_no @contains_yes) (t (tr out)))
+
+@contains_no = (* (t (target out)))
+  & @contains ~ (t (target out))
+
+@contains_yes = (* (t (target out)))
+  & t ~ *
+  & target ~ *
+  & out ~ 1
+
+@outer = ((?((@outer_nil @outer_cons) (pl (full (seen (acc out))))) pl) (full (seen (acc out))))
+
+@outer_nil = (* (full (seen (acc out))))
+  & full ~ *
+  & seen ~ *
+  & acc ~ out
+
+@outer_cons = (* (((p t) tail) (full (seen (acc out)))))
+  & full ~ {full_scan full_next}
+  & seen ~ {seen_query seen_next}
+  & p ~ {pc pkeep}
+  & pkeep ~ {ps ptgt}
+  & @contains ~ (seen_query (pc has))
+  & has ~ ?((@outer_new @outer_skip) (tail (full_scan (full_next (seen_next (ps (ptgt (t (acc out))))))))
+
+@outer_skip = (* (tail (full_scan (full_next (seen_next (ps (ptgt (t (acc out))))))))
+  & full_scan ~ *
+  & ps ~ *
+  & ptgt ~ *
+  & t ~ *
+  & @outer ~ (tail (full_next (seen_next (acc out))))
+
+@outer_new = (* (tail (full_scan (full_next (seen_next (ps (ptgt (t (acc out))))))))
+  & @maxgroup ~ (full_scan (ptgt m))
+  & newseen ~ (1 (ps seen_next))
+  & acc ~ $([+] $(m acc2))
+  & t ~ *
+  & @outer ~ (tail (full_next (newseen (acc2 out))))
+
+@maxgroup = (full (target out))
+  & full ~ {candidates countfull}
+  & @mg_scan ~ (candidates (countfull (target (0 out))))
+
+@mg_scan = ((?((@mg_nil @mg_cons) (pl (full (target (mx out))))) pl) (full (target (mx out))))
+
+@mg_nil = (* (full (target (mx out))))
+  & full ~ *
+  & target ~ *
+  & mx ~ out
+
+@mg_cons = (* (((p t) tail) (full (target (mx out)))))
+  & full ~ {full_count full_next}
+  & target ~ {tc tr}
+  & p ~ $([=] $(tc eq))
+  & eq ~ ?((@mg_no @mg_yes) (tail (full_count (full_next (tr (t (mx out)))))))
+
+@mg_no = (* (tail (full_count (full_next (target (t (mx out)))))))
+  & full_count ~ *
+  & t ~ *
+  & @mg_scan ~ (tail (full_next (target (mx out))))
+
+@mg_yes = (* (tail (full_count (full_next (target (t (mx out)))))))
+  & target ~ {target_count target_next}
+  & @count ~ (full_count (target_count (t (0 cnt))))
+  & cnt ~ {cnt_cmp cnt_val}
+  & mx ~ {mx_cmp mx_keep}
+  & cnt_cmp ~ $([>] $(mx_cmp gt))
+  & gt ~ ?((@mg_keep @mg_update) (tail (full_next (target_next (mx_keep (cnt_val out))))))
+
+@mg_keep = (* (tail (full (target (mx (cnt out))))))
+  & cnt ~ *
+  & @mg_scan ~ (tail (full (target (mx out))))
+
+@mg_update = (* (tail (full (target (mx (cnt out))))))
+  & mx ~ *
+  & @mg_scan ~ (tail (full (target (cnt out))))
+
+@count = ((?((@count_nil @count_cons) (pl (targetp (targett (acc out))))) pl) (targetp (targett (acc out))))
+
+@count_nil = (* (targetp (targett (acc out))))
+  & targetp ~ *
+  & targett ~ *
+  & acc ~ out
+
+@count_cons = (* (((p t) tail) (targetp (targett (acc out)))))
+  & targetp ~ {pc pr}
+  & targett ~ {tc tr}
+  & p ~ $([=] $(pc ep))
+  & t ~ $([=] $(tc et))
+  & ep ~ $([*] $(et both))
+  & acc ~ $([+] $(both acc2))
+  & @count ~ (tail (pr (tr (acc2 out))))

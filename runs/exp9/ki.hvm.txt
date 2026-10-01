@@ -1,0 +1,35 @@
+// ki(G, L, base, n) -> K: leaf (packed list); vertex 0 packed 0 (root; @ki0 instead: vertex 0 unreached too), others < n unreached, >= n visited
+@ki = (g (L (base (n o))))
+  & L ~ ?((@ki_leaf @ki_node) (g (base (n o))))
+@ki_leaf = (l (i (n (pk l))))
+  & i ~ {i1 i2}
+  & i1 ~ $([<] $(n inr))
+  & inr ~ ?((@ki_out @ki_in) (i2 pk))
+@ki_out = (* 16777215)
+@ki_in = (* (i o))
+  & i ~ ?((0 (* 8388607)) o)
+@ki_node = (lm ((a b) (base (n (x y)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @ki ~ (a (l1 (b1 (n1 x))))
+  & @ki ~ (b (l2 (bR (n2 y))))
+@ki0 = (g (L (base (n o))))
+  & L ~ ?((@ki0_leaf @ki0_node) (g (base (n o))))
+@ki0_leaf = (l (i (n (pk l))))
+  & i ~ {i1 i2}
+  & i1 ~ $([<] $(n inr))
+  & inr ~ ?((@ki0_out @ki0_in) (i2 pk))
+@ki0_out = (* 16777215)
+@ki0_in = (* (i o))
+  & i ~ ?((8388607 (* 8388607)) o)
+@ki0_node = (lm ((a b) (base (n (x y)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @ki0 ~ (a (l1 (b1 (n1 x))))
+  & @ki0 ~ (b (l2 (bR (n2 y))))

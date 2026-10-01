@@ -1,0 +1,23 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@mul_digits = ((@mul_digits__C3 a) a)
+
+@mul_digits__C0 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@mul_digits__C1 = (* ({$([=0x0000000] ?((@mul_digits__C0 (* (* @List/Nil))) (a b))) a} b))
+
+@mul_digits__C2 = (* ($([*] $(a $([+] $(b {$([:/0x0001000] f) $([:%0x0001000] c)})))) (d ({e a} (b h)))))
+  & @List/Cons ~ (c (g h))
+  & @mul_digits ~ (d (e (f g)))
+
+@mul_digits__C3 = (?((@mul_digits__C1 @mul_digits__C2) a) a)
+
+@prog = ((a {$([=0x0000000] ?((@prog__C0 (* (* (* @List/Nil)))) (a (b c)))) b}) c)
+
+@prog__C0 = (a (b c))
+  & @mul_digits ~ (a (b (0 c)))
+
+

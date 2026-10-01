@@ -1,0 +1,29 @@
+// @prog: initialize the inversion accumulator.
+@prog = (input out)
+  & @inv ~ (input (0 out))
+
+// Process the list, carrying the accumulator and output.
+@inv = ((?((@inv_nil @inv_cons) (pl (acc out))) pl) (acc out))
+
+@inv_nil = (* (a a))
+
+@inv_cons = (* ((h t) (acc out)))
+  & @scan ~ (t (h sr))
+  & sr ~ (cnt rest)
+  & acc ~ $([+] $(cnt acc2))
+  & @inv ~ (rest (acc2 out))
+
+// Return the number of elements smaller than target, along with
+// the list reconstructed as it is scanned.
+@scan = ((?((@scan_nil @scan_cons) (pl (target out))) pl) (target out))
+
+@scan_nil = (* (* (0 (0 *))))
+
+@scan_cons = (* ((h t) (target out)))
+  & target ~ {ta tb}
+  & h ~ {hc hk}
+  & hc ~ $([>] $(ta z))
+  & @scan ~ (t (tb sr))
+  & sr ~ (cnt rest)
+  & z ~ $([+] $(cnt sum))
+  & out ~ (sum (1 (hk rest)))

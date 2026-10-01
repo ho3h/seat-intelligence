@@ -1,0 +1,123 @@
+// Entry point
+@prog = ((n edges) out)
+  & n ~ {n1 n2}
+  & @mklabels ~ (n1 (0 labs))
+  & @run ~ (n2 (labs (edges out)))
+
+// Build labels [0, 1, ..., n-1]
+@mklabels = (?((@mk_nil @mk_succ) c) c)
+
+@mk_nil = (* (0 *))
+
+@mk_succ = (pred (i out))
+  & i ~ {ix iy}
+  & iy ~ $([+1] ni)
+  & @mklabels ~ (pred (ni tl))
+  & out ~ (1 (ix tl))
+
+// Run n complete edge passes, then count equal labels.
+@run = (?((@run_done @run_more) c) c)
+
+@run_done = (labs (* out))
+  & @count ~ (labs out)
+
+@run_more = (pred (labs (edges out)))
+  & edges ~ {e1 e2}
+  & @ep ~ (e1 (labs nextlabs))
+  & @run ~ (pred (nextlabs (e2 out)))
+
+// Apply every edge once.
+@ep = ((?((@ep_nil @ep_cons) (pl (labs out))) pl) (labs out))
+
+@ep_nil = (* (a a))
+
+@ep_cons = (* (((u v) t) (labs out)))
+  & @merge ~ (labs (u (v merged)))
+  & @ep ~ (t (merged out))
+
+// Get both endpoint labels, preserving the label list for the updates.
+@merge = (labs (u (v out)))
+  & labs ~ {lkeep lvlist}
+  & u ~ {ug us}
+  & v ~ {vg vs}
+  & @gk ~ (ug (lkeep (lu lbase)))
+  & @get ~ (vg (lvlist lv))
+  & @min ~ (lu (lv m))
+  & m ~ {m1 m2}
+  & @set ~ (us (m1 (lbase lmid)))
+  & @set ~ (vs (m2 (lmid out)))
+
+// Get a label and rebuild the original list.
+@gk = (?((@gk_zero @gk_succ) c) c)
+
+@gk_zero = ((* (h t)) (val outlist))
+  & h ~ {hv hh}
+  & val ~ hv
+  & outlist ~ (1 (hh t))
+
+@gk_succ = (pred ((* (h t)) (val outlist)))
+  & @gk ~ (pred (t (val tailout)))
+  & outlist ~ (1 (h tailout))
+
+// Get the label at an index.
+@get = (?((@get_zero @get_succ) c) c)
+
+@get_zero = ((* (h *)) h)
+
+@get_succ = (pred ((* (* t)) out))
+  & @get ~ (pred (t out))
+
+// Replace the label at an index.
+@set = (?((@set_zero @set_succ) c) c)
+
+@set_zero = (value ((* (* tail)) out))
+  & out ~ (1 (value tail))
+
+@set_succ = (pred (value ((* (head tail)) out)))
+  & @set ~ (pred (value (tail nexttail)))
+  & out ~ (1 (head nexttail))
+
+// Return the minimum of two numbers.
+@min = (a (b out))
+  & a ~ {aa ac}
+  & b ~ {bb bc}
+  & aa ~ $([<] $(bb z))
+  & z ~ ?((@min_ge @min_lt) (ac (bc out)))
+
+@min_ge = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_lt = (* (a (b out)))
+  & out ~ a
+  & b ~ *
+
+// Count unordered pairs of equal labels.
+@count = ((?((@count_nil @count_cons) (pl out)) pl) out)
+
+@count_nil = (* out)
+  & out ~ 0
+
+@count_cons = (* ((h t) out))
+  & t ~ {t1 t2}
+  & @eqtail ~ (h (t1 eqn))
+  & @count ~ (t2 rest)
+  & eqn ~ $([+] $(rest out))
+
+// Count occurrences of x in a list.
+@eqtail = ((?((@eq_nil @eq_cons) (pl (x out))) pl) (x out))
+
+@eq_nil = (* (* out))
+  & out ~ 0
+
+@eq_cons = (* ((h t) (x out)))
+  & x ~ {xr xc}
+  & @eqtail ~ (t (xr c))
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@eq_no @eq_yes) (c out))
+
+@eq_no = (c out)
+  & out ~ c
+
+@eq_yes = (* (c out))
+  & c ~ $([+1] out)

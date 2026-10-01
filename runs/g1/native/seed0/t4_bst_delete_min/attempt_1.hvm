@@ -1,0 +1,18 @@
+// Remove the leftmost value from a BST.
+@prog = (tree out)
+  & @dm ~ (tree out)
+
+@dm = ((?((@dm_leaf @dm_node) (payload out)) payload) out)
+
+@dm_leaf = (* (0 *))
+
+// The root is a Node. Inspect its left child.
+@dm_node = (* (((?((@dm_at_leaf @dm_at_node) (lpayload (value (right out)))) lpayload) (value right)) out))
+
+// The left child is Leaf: replace this Node with its right subtree.
+@dm_at_leaf = (* (* (r r)))
+
+// The left child is Node: recursively delete its minimum, then rebuild this Node.
+@dm_at_node = (* (lpay (value (right out))))
+  & @dm ~ ((1 lpay) lres)
+  & out ~ (1 (lres (value right)))

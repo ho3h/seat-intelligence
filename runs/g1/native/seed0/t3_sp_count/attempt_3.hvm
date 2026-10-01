@@ -1,0 +1,146 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & @start ~ (n (s (t (edges out))))
+
+@start = (n (s (t (edges out))))
+  & n ~ {nz ns}
+  & ns ~ {nlen nsub}
+  & s ~ {s1 s2}
+  & @zeros ~ (nz z)
+  & z ~ {z1 z2}
+  & @set_at ~ (z1 (s1 (1 front)))
+  & @set_at ~ (z2 (s2 (1 counts)))
+  & nsub ~ $([-] $(1 fuel))
+  & @bfs ~ (fuel (nlen (t (edges (front (counts out))))))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_cons) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_cons = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_next = (idx (h (t out)))
+  & h ~ *
+  & @get ~ (t (idx out))
+
+@set_at = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (idx (h (t (val out))))
+  & @set_at ~ (t (idx (val newtail)))
+  & out ~ (1 (h newtail))
+
+@add_at = ((?((@add_nil @add_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@add_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@add_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@add_here @add_next) (h (t (val out))))
+
+@add_here = (h (t (val out)))
+  & t ~ *
+  & h ~ $([+] $(val nh))
+  & out ~ (1 (nh t))
+
+@add_next = (idx (h (t (val out))))
+  & @add_at ~ (t (idx (val newtail)))
+  & out ~ (1 (h newtail))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (front (counts (nf (nc out)))))) payload) (front (counts (nf (nc out)))))
+
+@scan_nil = (* (front (counts (nf (nc out)))))
+  & front ~ *
+  & counts ~ *
+  & out ~ (nf nc)
+
+@scan_cons = (* (((u v) tail) (front (counts (nf (nc out))))))
+  & front ~ {fr_do fr_rec}
+  & counts ~ {co_do co_rec}
+  & @doedge ~ (fr_do (co_do (nf (nc (u (v upd))))))
+  & upd ~ (nf2 nc2)
+  & @scan ~ (tail (fr_rec (co_rec (nf2 (nc2 out)))))
+
+@doedge = (front (counts (nf (nc (u (v out))))))
+  & front ~ {fg fh}
+  & u ~ {ug uh}
+  & @get ~ (fg (ug b))
+  & b ~ ?((@edge_no @edge_yes) (fh (counts (nf (nc (uh (v out)))))))
+
+@edge_no = (fh (counts (nf (nc (u (v out))))))
+  & fh ~ *
+  & counts ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ (nf nc)
+
+@edge_yes = (* (fh (counts (nf (nc (u (v out)))))))
+  & fh ~ *
+  & v ~ {v_add v_set}
+  & @get ~ (counts (u amount))
+  & @add_at ~ (nc (v_add (amount nc2)))
+  & @set_at ~ (nf (v_set (1 nf2)))
+  & out ~ (nf2 nc2)
+
+@bfs = (fuel (n (t (edges (front (counts out))))))
+  & front ~ {fg fh}
+  & t ~ {tg th}
+  & @get ~ (fg (tg b))
+  & b ~ ?((@bfs_no @bfs_yes) (fuel (n (th (edges (fh (counts out)))))))
+
+@bfs_yes = (* (fuel (n (t (edges (front (counts out)))))))
+  & fuel ~ *
+  & n ~ *
+  & edges ~ *
+  & front ~ *
+  & @get ~ (counts (t out))
+
+@bfs_no = (fuel (n (t (edges (front (counts out))))))
+  & fuel ~ ?((@bfs_end @bfs_more) (n (t (edges (front (counts out))))))
+
+@bfs_end = (n (t (edges (front (counts out)))))
+  & n ~ *
+  & t ~ *
+  & edges ~ *
+  & front ~ *
+  & counts ~ *
+  & out ~ 0
+
+@bfs_more = (fuel (n (t (edges (front (counts out))))))
+  & n ~ {nz nr}
+  & edges ~ {es er}
+  & @zeros ~ (nz z)
+  & z ~ {zf zc}
+  & @scan ~ (es (front (counts (zf (zc upd)))))
+  & upd ~ (nf nc)
+  & @bfs ~ (fuel (nr (t (er (nf (nc out))))))

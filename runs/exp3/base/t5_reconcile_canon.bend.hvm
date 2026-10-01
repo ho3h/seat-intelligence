@@ -1,0 +1,64 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@at = ((@at__C2 a) a)
+
+@at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @at ~ (a (b c))
+
+@at__C1 = (* (c (d ({$([=0x0000000] ?((@at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@at__C2 = (?(((* 0) @at__C1) a) a)
+
+@make_labels = ({$([=] $(a ?((@make_labels__C0 (* (* (* @List/Nil)))) (b (c d))))) b} ({a c} d))
+
+@make_labels__C0 = ({a $([+0x0000001] b)} (c e))
+  & @List/Cons ~ (a (d e))
+  & @make_labels ~ (b (c d))
+
+@merge = ({g {c a}} (b (d j)))
+  & @at ~ (c (d {e i}))
+  & @at ~ (a (b {$([=] $(e ?((@merge__C2 (* (f (* (* f))))) (g (h (i j)))))) h}))
+
+@merge__C0 = a
+  & @relabel ~ a
+
+@merge__C1 = (* (a (c (b d))))
+  & @relabel ~ (a (b (c d)))
+
+@merge__C2 = (b ({$([>] $(a ?((@merge__C0 @merge__C1) (b (c (d e)))))) c} ({a d} e)))
+
+@process = ((@process__C3 a) a)
+
+@process__C0 = (b (c (a (* (* d)))))
+  & @process ~ (a (b (c d)))
+
+@process__C1 = (* (b (c (a (d (e g))))))
+  & @process ~ (a (b (f g)))
+  & @merge ~ (c (d (e f)))
+
+@process__C2 = (* ((f (g $([<] $(a b)))) (e ({a c} (d h)))))
+  & $(b ?((@process__C0 @process__C1) (c (d (e (f (g h))))))) ~ [=0x0000000]
+
+@process__C3 = (?(((* (a a)) @process__C2) b) b)
+
+@prog = ((c (b a)) e)
+  & @process ~ (a (b (d e)))
+  & @make_labels ~ (0 (c d))
+
+@relabel = ((@relabel__C3 a) a)
+
+@relabel__C0 = (c (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @relabel ~ (b (c (d e)))
+
+@relabel__C1 = (* (c ({a d} (* (b f)))))
+  & @List/Cons ~ (a (e f))
+  & @relabel ~ (b (c (d e)))
+
+@relabel__C2 = (* ({$([=] $(a ?((@relabel__C0 @relabel__C1) (b (c (d (e f))))))) d} (e ({a b} (c f)))))
+
+@relabel__C3 = (?(((* (* @List/Nil)) @relabel__C2) a) a)
+
+

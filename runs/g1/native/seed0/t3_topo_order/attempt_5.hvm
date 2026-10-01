@@ -1,0 +1,137 @@
+// Construct a list of n zeros.
+@zeros = (?((@zeros_nil @zeros_more) ctx) ctx)
+
+@zeros_nil = (0 *)
+
+@zeros_more = (m out)
+  & @zeros ~ (m tail)
+  & out ~ (1 (0 tail))
+
+
+// Increment the element at index idx in a list.
+@incAt = ((?((@inc_nil @inc_cons) (pl (idx out))) pl) (idx out))
+
+@inc_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 *)
+
+@inc_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@inc_here @inc_later) (h (t out)))
+
+@inc_here = (h (t out))
+  & h ~ $([+1] h2)
+  & out ~ (1 (h2 t))
+
+@inc_later = (idx (h (t out)))
+  & @incAt ~ (t (idx tail))
+  & out ~ (1 (h tail))
+
+
+// Decrement the element at index idx in a list.
+@decAt = ((?((@dec_nil @dec_cons) (pl (idx out))) pl) (idx out))
+
+@dec_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 *)
+
+@dec_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@dec_here @dec_later) (h (t out)))
+
+@dec_here = (h (t out))
+  & h ~ $([-1] h2)
+  & out ~ (1 (h2 t))
+
+@dec_later = (idx (h (t out)))
+  & @decAt ~ (t (idx tail))
+  & out ~ (1 (h tail))
+
+
+// Build the indegree list and preserve a copy of the edges.
+@builddeg = ((?((@bd_nil @bd_cons) (pl (deg (dego edgeout)))) pl) (deg (dego edgeout)))
+
+@bd_nil = (* (deg (dego edgeout)))
+  & dego ~ deg
+  & edgeout ~ (0 *)
+
+@bd_cons = (* (((u v) tail) (deg (dego edgeout))))
+  & v ~ {v_inc v_copy}
+  & @incAt ~ (deg (v_inc mid))
+  & @builddeg ~ (tail (mid (deg2 tailcopy)))
+  & dego ~ deg2
+  & edgeout ~ (1 ((u v_copy) tailcopy))
+
+
+// Decrement indegrees for edges whose source is v,
+// while preserving a copy of the edge list.
+@remove = ((?((@remove_nil @remove_cons) (pl (v (deg (dego edgeout))))) pl) (v (deg (dego edgeout))))
+
+@remove_nil = (* (v (deg (dego edgeout))))
+  & v ~ *
+  & dego ~ deg
+  & edgeout ~ (0 *)
+
+@remove_cons = (* (((u w) tail) (v (deg (dego edgeout)))))
+  & u ~ {u_cmp u_keep}
+  & w ~ {w_dec w_keep}
+  & v ~ {v_cmp v_next}
+  & u_cmp ~ $([=] $(v_cmp z))
+  & z ~ ?((@remove_no @remove_yes) (u_keep (w_dec (w_keep (tail (v_next (deg (dego edgeout)))))))
+
+@remove_no = (u (w_dec (w_keep (tail (v (deg (dego edgeout)))))))
+  & w_dec ~ *
+  & @remove ~ (tail (v (deg (dego2 tailcopy))))
+  & dego ~ dego2
+  & edgeout ~ (1 ((u w_keep) tailcopy))
+
+@remove_yes = (* (u (w_dec (w_keep (tail (v (deg (dego edgeout))))))))
+  & @decAt ~ (deg (w_dec mid))
+  & @remove ~ (tail (v (mid (dego2 tailcopy))))
+  & dego ~ dego2
+  & edgeout ~ (1 ((u w_keep) tailcopy))
+
+
+// Find the first zero indegree, mark it, and return its index.
+@pick = ((?((@pick_nil @pick_cons) (pl (idx (found out)))) pl) (idx (found out)))
+
+@pick_nil = (* (idx (found out)))
+  & idx ~ *
+  & found ~ 16777215
+  & out ~ (0 *)
+
+@pick_cons = (* ((h t) (idx (found out))))
+  & h ~ {h_test h_keep}
+  & h_test ~ $([=] $(0 z))
+  & z ~ ?((@pick_no @pick_yes) (h_keep (t (idx (found out))))
+
+@pick_no = (h (t (idx (found out))))
+  & idx ~ $([+1] idx2)
+  & @pick ~ (t (idx2 (found tail)))
+  & out ~ (1 (h tail))
+
+@pick_yes = (* (h (t (idx (found out)))))
+  & h ~ *
+  & idx ~ found
+  & out ~ (1 (16777215 t))
+
+
+// Repeatedly choose the smallest available vertex.
+@topo = (?((@topo_nil @topo_more) ctx) ctx)
+
+@topo_nil = (deg (edges out))
+  & deg ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@topo_more = (m (deg (edges out)))
+  & @pick ~ (deg (0 (found marked)))
+  & found ~ {v_remove v_out}
+  & @remove ~ (edges (v_remove (marked (newdeg newedges))))
+  & @topo ~ (m (newdeg (newedges tail)))
+  & out ~ (1 (v_out tail))
+
+
+@prog = ((n edges) out)
+  & n ~ {n_zero n_topo}
+  & @zeros ~ (n_zero zeroes)
+  & @builddeg ~ (edges (zeroes (deg edges_copy)))
+  & @topo ~ (n_topo (deg (edges_copy out)))

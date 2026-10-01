@@ -1,0 +1,36 @@
+// Count an element if it does not occur later in the list.
+@prog = (input output)
+  & @dc ~ (input (0 output))
+
+@dc = ((?((@dc_nil @dc_cons) (p (acc out))) p) (acc out))
+
+@dc_nil = (* (a a))
+
+@dc_cons = (* ((h t) (acc out)))
+  & @mem ~ (h (t found))
+  & found ~ ?((@dc_absent @dc_present) (acc (t out)))
+
+@dc_absent = (acc (t out))
+  & acc ~ $([+] $(1 next))
+  & @dc ~ (t (next out))
+
+@dc_present = (* (acc (t out)))
+  & @dc ~ (t (acc out))
+
+// @mem takes (target (list output)) and returns 1 iff target is in list.
+@mem = (target ((?((@mem_nil @mem_cons) (payload (target out))) payload) out))
+
+@mem_nil = (* (target 0))
+  & target ~ *
+
+@mem_cons = (* ((head tail) (target out)))
+  & target ~ {target_head target_tail}
+  & head ~ $([=] $(target_head equal))
+  & equal ~ ?((@mem_next @mem_yes) (target_tail (tail out)))
+
+@mem_next = (target (tail out))
+  & @mem ~ (target (tail out))
+
+@mem_yes = (* (target (tail 1)))
+  & target ~ *
+  & tail ~ *

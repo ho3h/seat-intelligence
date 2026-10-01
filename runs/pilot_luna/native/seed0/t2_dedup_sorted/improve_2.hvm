@@ -1,0 +1,37 @@
+// Walk the input once, comparing each value with its immediate successor.
+// The recursive result carries both the deduplicated tail and a one-element
+// option containing the original first value of that tail.
+@prog = (input output)
+  & @go ~ (input (output meta))
+  & meta ~ *
+
+@go = ((?((@go_nil @go_cons) (pl (out meta))) pl) (out meta))
+
+@go_nil = (pl (out meta))
+  & pl ~ *
+  & out ~ (0 *)
+  & meta ~ (0 *)
+
+@go_cons = (* ((h t) (pl (out meta))))
+  & h ~ {hcmp hrest}
+  & hrest ~ {hkeep hmeta}
+  & @go ~ (t (r m))
+  & m ~ ((?((@tail_nil @tail_some) (mp (r (hcmp (hkeep (hmeta (out meta))))))) mp) (r (hcmp (hkeep (hmeta (out meta)))))
+
+@tail_nil = (mp (r (hcmp (hkeep (hmeta (out meta))))))
+  & mp ~ *
+  & hcmp ~ *
+  & out ~ (1 (hkeep r))
+  & meta ~ (1 hmeta)
+
+@tail_some = (* (mp (r (hcmp (hkeep (hmeta (out meta))))))
+  & hcmp ~ $([=] $(mp eq))
+  & eq ~ ?((@tail_different @tail_equal) (hkeep (r (hmeta (out meta)))))
+
+@tail_different = (hkeep (r (hmeta (out meta))))
+  & out ~ (1 (hkeep r))
+  & meta ~ (1 hmeta)
+
+@tail_equal = (* (hkeep (r (hmeta (out meta)))))
+  & out ~ r
+  & meta ~ (1 hmeta)

@@ -1,0 +1,14 @@
+// @fib takes n and ((a b) out), where a = F_k and b = F_(k+1).
+@prog = (n out)
+  & @fib ~ (n ((0 1) out))
+
+@fib = (?((@fib_zero @fib_succ) ctx) ctx)
+
+@fib_zero = ((a b) out)
+  & a ~ out
+  & b ~ *
+
+@fib_succ = (m ((a b) out))
+  & b ~ {b1 b2}
+  & a ~ $([+] $(b1 sum))
+  & @fib ~ (m ((b2 sum) out))

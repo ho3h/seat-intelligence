@@ -1,0 +1,44 @@
+@prog = (lv1 out)
+  & @first_cons_lw ~ (lv1 out)
+
+@first_nil = (* 0)
+
+@first_cons = (* ((h t) out))
+  & @max_cons_lw ~ (t (h out))
+
+@max = (lv2 (acc out))
+  & @max_cons_lw ~ (lv2 (acc out))
+
+@max_nil = (* (a a))
+
+@max_cons = (* (({$([>] $(acc_cmp z11)) h_ctx} t) ({acc_cmp acc_ctx} out)))
+  & z11 ~ ?((@max_keep_hz @max_take_hz) (h_ctx (xw28 (acc_ctx out))))
+  & @max_cons_lw ~ (t xw28)
+
+@max_keep = (h (t (acc out)))
+  & h ~ *
+  & @max ~ (t (acc out))
+
+@max_take = (* (h (t (acc out))))
+  & acc ~ *
+  & @max ~ (t (h out))
+
+@first_cons_lw = (ls41 q32)
+  & ls41 ~ (g38 (e36 (g39 (e37 tk40))))
+  & g38 ~ ?((@first_nil @first_cons_la) ((e36 (q34 q35)) q32))
+  & g39 ~ ?((@max_nil @max_cons) ((e37 tk40) (q34 q35)))
+
+@max_cons_lw = (ls53 (q43 q44))
+  & ls53 ~ (g50 (e48 (g51 (e49 tk52))))
+  & g50 ~ ?((@max_nil @max_cons_la) ((e48 (q46 q47)) (q43 q44)))
+  & g51 ~ ?((@max_nil @max_cons) ((e49 tk52) (q46 q47)))
+
+@first_cons_la = (* ((h (h out)) out))
+
+@max_keep_hz = (* (hw19 (q14 q15)))
+  & hw19 ~ (q14 q15)
+
+@max_take_hz = (* (q20 (hw27 (* q23))))
+  & hw27 ~ (q20 q23)
+
+@max_cons_la = (* (({$([>] $(acc_cmp ?((@max_keep_hz @max_take_hz) (h_ctx (xw28 (acc_ctx out)))))) h_ctx} xw28) ({acc_cmp acc_ctx} out)))

@@ -1,0 +1,24 @@
+// Empty input is sorted; otherwise start scanning with the first element.
+@prog = ((?((@empty @begin) (payload out)) payload) out)
+
+@empty = (* 1)
+
+@begin = (* ((h t) out))
+  & @check ~ (t (h out))
+
+// Recurse independently of the comparison so the checks can overlap.
+@check = ((?((@check_nil @check_cons) (payload (prev out))) payload) (prev out))
+
+@check_nil = (* (* 1))
+
+@check_cons = (* ((h t) (prev out)))
+  & h ~ {h1 h2}
+  & prev ~ $([>] $(h1 z))
+  & @check ~ (t (h2 rest))
+  & z ~ ?((@pass @bad) (rest out))
+
+// Forward the recursive result when this adjacent pair is in order.
+@pass = (* (rest out))
+  & rest ~ out
+
+@bad = (* (* 0))

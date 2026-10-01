@@ -1,0 +1,87 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@count_roots__C0 = ($([+0x0000001] {$([=] $(a_q141 ?((@count_roots__C2 (* (* (* (* (* (* (* (b_q141 b_q141))))))))) (c_q141 (d_q141 e_q141))))) c_q141}) ({a_q141 d_q141} e_q141))
+
+@count_roots__C1 = (* ({{a_q143 {d_q143 {l_q143 h_q143}}} $([+0x0000001] {$([=] $(a_q142 ?((@count_roots__C2 (* (* (* (* (* (* (* (b_q142 b_q142))))))))) (c_q142 (d_q142 (j (k (l (m (n o)))))))))) c_q142})} ({b {a_q142 d_q142}} ({{f_q143 (@neighbors__C4 (d_q143 (@scan_neighbors__C12 (a_q143 (b (f_q143 (j_q143 (n_q143 (o_q143 (g (k (l (m n)))))))))))))} j} ((@set_at__C3 (h_q143 (i_q143 j_q143))) ((@set_at__C3 (l_q143 (m_q143 n_q143))) ($([+0x0000001] {o_q143 {m_q143 i_q143}}) (g o))))))))
+
+@count_roots__C2 = ({b c} (d (e ({(@get_at__C2 (b $([=0x0000000] ?((@count_roots__C0 @count_roots__C1) (c (d (e (f g)))))))) f} g))))
+
+@get_at = ((@get_at__C2 a) a)
+
+@get_at__C0 = ($([:-0x0000001] b) (* ((@get_at__C2 (b c)) c)))
+
+@get_at__C1 = (* (c (d ({$([=0x0000000] ?((@get_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@neighbors__C0 = (* @List/Cons)
+
+@neighbors__C1 = (a (c ($([=] $(a ?(((* (b b)) @neighbors__C0) (c d)))) d)))
+
+@neighbors__C2 = (* (* (* @List/Cons)))
+
+@neighbors__C3 = (* (({$([=] $(a ?((@neighbors__C1 @neighbors__C2) (b (c (d (g h))))))) c} d) ((@neighbors__C4 (f g)) ({a {b f}} h))))
+
+@neighbors__C4 = (?(((* @List/Nil) @neighbors__C3) a) a)
+
+@prog = (({{a_q155 d_q155} {{?(((* @List/Nil) @zeros__C0_s2) (a_q157 f)) a_q157} {?(((* @List/Nil) @zeros__C0_s1) (a_q156 d)) a_q156}}} b) g)
+  & 0 ~ $([=] $(a_q155 ?((@count_roots__C2 (* (* (* (* (* (* (* (b_q155 b_q155))))))))) (0 (d_q155 (b (d (f (0 (0 g))))))))))
+
+@scan_neighbors = (a (b ((@scan_neighbors__C12 (a (b c))) c)))
+
+@scan_neighbors__C0 = (* (a (* a)))
+
+@scan_neighbors__C1 = (* (b (a c)))
+  & @set_at ~ (a (b c))
+
+@scan_neighbors__C10 = (* (* (* (a (b (c (d (a (b (c d))))))))))
+
+@scan_neighbors__C11 = (* ({b k} (j (c (d (e ({(@get_at__C2 (b $([=0x0000000] ?((@scan_neighbors__C8 @scan_neighbors__C9) (c (d (e (f (g (h (i (j (k l))))))))))))) f} (g (h (i l))))))))))
+
+@scan_neighbors__C12 = (?((@scan_neighbors__C10 @scan_neighbors__C11) a) a)
+
+@scan_neighbors__C2 = (a (b (d (e (f (g (h ((@scan_neighbors__C12 (a (b (d (e (f (g (h i)))))))) (* i)))))))))
+
+@scan_neighbors__C3 = (* ({c {k i}} (d (f ({g a} ({l h} (o (p (e (b q))))))))))
+  & @scan_neighbors ~ (c (d (e (f (g (n (o (p q))))))))
+  & @get_at ~ (a (b {$([<] $(j ?((@scan_neighbors__C0 @scan_neighbors__C1) (k (l (m n)))))) m}))
+  & @get_at ~ (h (i j))
+
+@scan_neighbors__C4 = (a a)
+
+@scan_neighbors__C5 = (* ($([+0x0000001] a) a))
+
+@scan_neighbors__C6 = (* (a (* a)))
+
+@scan_neighbors__C7 = (* (b (a c)))
+  & @set_at ~ (a (b c))
+
+@scan_neighbors__C8 = (b ({a c} (d (e (f (g (h (i ({$([!] $(a ?((@scan_neighbors__C2 @scan_neighbors__C3) (b (c (d (e (f (g (h (i (j k)))))))))))) j} k)))))))))
+
+@scan_neighbors__C9 = (* ({b {j {r {p x}}}} (k ({{f_q183 (@neighbors__C4 (d_q183 (@scan_neighbors__C12 (a_q183 (b (f_q183 (j_q183 (n_q183 (o_q183 (g ({n w} ({s {o (@get_at__C2 (i {$([<] $(q ?((@scan_neighbors__C6 @scan_neighbors__C7) (r (s (t u)))))) {t $([>] $(y ?((@scan_neighbors__C4 @scan_neighbors__C5) (z ab))))}}))}} (v z)))))))))))))} m} ((@set_at__C3 (h_q183 (i_q183 j_q183))) ((@set_at__C3 (l_q183 (m_q183 n_q183))) ($([+0x0000001] {o_q183 {m_q183 i_q183}}) (g ((@scan_neighbors__C12 (j (k (m (n (u (v (ab bb)))))))) ({{a_q183 {d_q183 {l_q183 h_q183}}} i} bb))))))))))
+  & @get_at ~ (o (p q))
+  & @get_at ~ (w (x y))
+
+@set_at = ((@set_at__C3 a) a)
+
+@set_at__C0 = ($([:-0x0000001] c) (d (a (b ((1 (a (e c_i11))) c_i11)))))
+  & @set_at ~ (b (c (d e)))
+
+@set_at__C1 = (* (* (a (* (b_i12 ((1 (a (b_i12 c_i12))) c_i12))))))
+
+@set_at__C2 = (* (c (d ({$([=0x0000000] ?((@set_at__C0 @set_at__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_at__C3 = (?(((* (* @List/Nil)) @set_at__C2) a) a)
+
+@zeros = ({?(((* @List/Nil) @zeros__C0_s) (a b)) a} b)
+
+@zeros__C0_s = (* ($([:-0x0000001] a) ((1 (0 (b c_i13))) c_i13)))
+  & @zeros ~ (a b)
+
+@zeros__C0_s1 = (* ($([:-0x0000001] a) ((1 (0 (b c_i13))) c_i13)))
+  & @zeros ~ (a b)
+
+@zeros__C0_s2 = (* ($([:-0x0000001] a) ((1 (0 (b c_i13))) c_i13)))
+  & @zeros ~ (a b)

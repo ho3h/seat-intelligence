@@ -1,0 +1,705 @@
+{
+ "frozen_at": "2026-09-30 09:43:32",
+ "n_assoc": 31,
+ "n_nonassoc": 12,
+ "n_adversarial": 1,
+ "hashes": {
+  "genome/hero3/folds.py": "0be039e5d92344d8",
+  "genome/hero3/tester.py": "cc0875713c545c2c",
+  "genome/hero3/nets.py": "4e318dc2803594c2",
+  "genome/hero3/netbuild.py": "e743baae07eb6277",
+  "genome/hero3/programs.py": "f9bde66fb5ddfcd3"
+ },
+ "folds": {
+  "sum": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t1_sum",
+   "flavour": "",
+   "evidence": {
+    "pool": 2700,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "product": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t1_product",
+   "flavour": "",
+   "evidence": {
+    "pool": 2742,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "length": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t1_length",
+   "flavour": "",
+   "evidence": {
+    "pool": 9,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "max": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t1_max",
+   "flavour": "",
+   "evidence": {
+    "pool": 134,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "min": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t1_min",
+   "flavour": "",
+   "evidence": {
+    "pool": 134,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "count_even": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t1_count_even",
+   "flavour": "",
+   "evidence": {
+    "pool": 9,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "argmax_first": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": "t2_argmax",
+   "flavour": "",
+   "evidence": {
+    "pool": 622,
+    "assoc_witness": null,
+    "python_comm_violations": 7908,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "argmin_first": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": "t2_argmin",
+   "flavour": "",
+   "evidence": {
+    "pool": 647,
+    "assoc_witness": null,
+    "python_comm_violations": 7906,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "second_largest": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": "t2_second_largest",
+   "flavour": "",
+   "evidence": {
+    "pool": 371,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "longest_run": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": "t2_longest_run",
+   "flavour": "",
+   "evidence": {
+    "pool": 1819,
+    "assoc_witness": null,
+    "python_comm_violations": 7982,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "is_sorted": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": "t2_is_sorted",
+   "flavour": "",
+   "evidence": {
+    "pool": 967,
+    "assoc_witness": null,
+    "python_comm_violations": 7965,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "last": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": "t1_last",
+   "flavour": "",
+   "evidence": {
+    "pool": 135,
+    "assoc_witness": null,
+    "python_comm_violations": 7831,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "xor_all": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2630,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "category_set": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 128,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "all_positive": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "any_zero": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "count_gt500": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 9,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "sum_squares": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2768,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "gcd": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 177,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "lexmin_pair": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 217,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "top3_merge": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 1444,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "sat_sum_cap": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 1984,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "sat_sum_24": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2191,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "minmax_pair": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 1842,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "mean_floor": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2751,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "hash_affine": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2826,
+    "assoc_witness": null,
+    "python_comm_violations": 7994,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "adjacent_equal": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 1854,
+    "assoc_witness": null,
+    "python_comm_violations": 7972,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "category_counts": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 1107,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "max_priority_guest": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 223,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "first_violation": {
+   "label": "assoc",
+   "comm": false,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 45,
+    "assoc_witness": null,
+    "python_comm_violations": 6590,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "section_fill_cap6": {
+   "label": "assoc",
+   "comm": true,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 7,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "sub_fold": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2713,
+    "assoc_witness": [
+     1467041,
+     749,
+     47
+    ],
+    "python_comm_violations": 7997,
+    "python_idl_fail": 2711,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "hash31": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2813,
+    "assoc_witness": [
+     444,
+     4706830,
+     14658000
+    ],
+    "python_comm_violations": 7998,
+    "python_idl_fail": 0,
+    "python_idr_fail": 2811
+   },
+   "label_consistent": true
+  },
+  "abs_diff": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2611,
+    "assoc_witness": [
+     7724552,
+     3395476,
+     499
+    ],
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "alternating": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2703,
+    "assoc_witness": [
+     1343416,
+     13244581,
+     3395716
+    ],
+    "python_comm_violations": 7997,
+    "python_idl_fail": 0,
+    "python_idr_fail": 2701
+   },
+   "label_consistent": true
+  },
+  "sat_sub": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 1408,
+    "assoc_witness": [
+     4640490,
+     783,
+     4516480
+    ],
+    "python_comm_violations": 7993,
+    "python_idl_fail": 1407,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "horner_square": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2787,
+    "assoc_witness": [
+     6477897,
+     191715,
+     16272483
+    ],
+    "python_comm_violations": 7996,
+    "python_idl_fail": 0,
+    "python_idr_fail": 2785
+   },
+   "label_consistent": true
+  },
+  "xorshift_hash": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2712,
+    "assoc_witness": [
+     10633758,
+     4918364,
+     3826362
+    ],
+    "python_comm_violations": 7998,
+    "python_idl_fail": 0,
+    "python_idr_fail": 2711
+   },
+   "label_consistent": true
+  },
+  "midpoint": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2607,
+    "assoc_witness": [
+     3820606,
+     6258244,
+     6068648
+    ],
+    "python_comm_violations": 0,
+    "python_idl_fail": 2606,
+    "python_idr_fail": 2606
+   },
+   "label_consistent": true
+  },
+  "sat_sum_unclamped": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 1579,
+    "assoc_witness": [
+     12869955,
+     4516890,
+     3938
+    ],
+    "python_comm_violations": 0,
+    "python_idl_fail": 53,
+    "python_idr_fail": 53
+   },
+   "label_consistent": true
+  },
+  "glitch_1e3": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2700,
+    "assoc_witness": [
+     12835492,
+     12075199,
+     1311
+    ],
+    "python_comm_violations": 10,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "planted_point": {
+   "label": "adversarial",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2700,
+    "assoc_witness": null,
+    "python_comm_violations": 0,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  },
+  "avg_wrong_merge": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "",
+   "evidence": {
+    "pool": 2708,
+    "assoc_witness": [
+     [
+      1330025,
+      3
+     ],
+     [
+      840,
+      2
+     ],
+     [
+      3370163,
+      5
+     ]
+    ],
+    "python_comm_violations": 0,
+    "python_idl_fail": 2704,
+    "python_idr_fail": 2704
+   },
+   "label_consistent": true
+  },
+  "adjacent_equal_wrong": {
+   "label": "nonassoc",
+   "comm": null,
+   "corpus": null,
+   "flavour": "seating",
+   "evidence": {
+    "pool": 1837,
+    "assoc_witness": [
+     [
+      4,
+      2592037,
+      5826393,
+      0
+     ],
+     [
+      4,
+      946,
+      5826393,
+      0
+     ],
+     [
+      3,
+      9923116,
+      4270822,
+      0
+     ]
+    ],
+    "python_comm_violations": 7974,
+    "python_idl_fail": 0,
+    "python_idr_fail": 0
+   },
+   "label_consistent": true
+  }
+ },
+ "doc_section1_sha256_16": "4b7f30710220889a",
+ "frozen_before_tester_run": "2026-09-30 09:44:35"
+}

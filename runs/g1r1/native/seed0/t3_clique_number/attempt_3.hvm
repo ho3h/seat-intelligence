@@ -1,0 +1,114 @@
+@prog = ((n edges) out)
+  & @range ~ (n verts)
+  & @dfs ~ (verts ((0 *) (0 (edges (0 out))))
+
+@range = (?((@range_zero @range_succ) (0 out)) out)
+
+@range_zero = (* out)
+  & out ~ (0 *)
+
+@range_succ = (pred (dummy out))
+  & pred ~ {p_rec p_head}
+  & dummy ~ *
+  & @range ~ (p_rec tail)
+  & out ~ (1 (p_head tail))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (p (chosen (size (edges (bestin out)))))) p) (chosen (size (edges (bestin out))))
+
+@dfs_nil = (* (chosen (size (edges (bestin out)))))
+  & chosen ~ *
+  & edges ~ *
+  & @max ~ (size (bestin out))
+
+@dfs_cons = (* ((v tail) (chosen (size (edges (bestin out))))))
+  & tail ~ {tail_skip tail_inc}
+  & v ~ {v_check v_inc}
+  & chosen ~ {chosen_skip chosen_more}
+  & chosen_more ~ {chosen_check chosen_inc}
+  & size ~ {size_skip size_inc}
+  & edges ~ {edges_skip edges_more}
+  & edges_more ~ {edges_check edges_inc}
+  & @dfs ~ (tail_skip (chosen_skip (size_skip (edges_skip (bestin b1)))))
+  & @alladj ~ (chosen_check (v_check (edges_check ok)))
+  & size_inc ~ $([+1] sizeplus)
+  & ok ~ ?((@cons_no @cons_yes) (tail_inc ((1 (v_inc chosen_inc)) (sizeplus (edges_inc (b1 out)))))
+
+@cons_no = (tail (chosen (size (edges (b1 out)))))
+  & tail ~ *
+  & chosen ~ *
+  & size ~ *
+  & edges ~ *
+  & b1 ~ out
+
+@cons_yes = (* (tail (chosen (size (edges (b1 out))))))
+  & @dfs ~ (tail (chosen (size (edges (b1 out)))))
+
+@alladj = ((?((@aa_nil @aa_cons) (p (v (edges out)))) p) (v (edges out)))
+
+@aa_nil = (* (v (edges out)))
+  & v ~ *
+  & edges ~ *
+  & out ~ 1
+
+@aa_cons = (* ((u tail) (v (edges out))))
+  & v ~ {v_test v_rec}
+  & edges ~ {edges_test edges_rec}
+  & @hasedge ~ (edges_test (u (v_test found)))
+  & found ~ ?((@aa_no @aa_yes) (tail (v_rec (edges_rec out))))
+
+@aa_no = (tail (v (edges out)))
+  & tail ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@aa_yes = (* (tail (v (edges out))))
+  & @alladj ~ (tail (v (edges out)))
+
+@hasedge = ((?((@he_nil @he_cons) (p (a (b out)))) p) (a (b out)))
+
+@he_nil = (* (a (b out)))
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@he_cons = (* ((edge tail) (a (b out))))
+  & edge ~ (u v)
+  & @edge_match ~ ((u v) (a (b matched)))
+  & matched ~ ?((@he_no @he_yes) (tail (a (b out))))
+
+@he_no = (tail (a (b out)))
+  & @hasedge ~ (tail (a (b out)))
+
+@he_yes = (* (tail (a (b out))))
+  & tail ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@edge_match = ((u v) (a (b out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u1 ~ $([=] $(a1 eq1))
+  & v1 ~ $([=] $(b1 eq2))
+  & u2 ~ $([=] $(b2 eq3))
+  & v2 ~ $([=] $(a2 eq4))
+  & eq1 ~ $([&] $(eq2 direct))
+  & eq3 ~ $([&] $(eq4 reverse))
+  & direct ~ $([|] $(reverse out))
+
+@max = (a (b out))
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & acmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (akeep (bkeep out)))
+
+@max_no = (a (b out))
+  & a ~ *
+  & b ~ out
+
+@max_yes = (* (a (b out)))
+  & a ~ out
+  & b ~ *

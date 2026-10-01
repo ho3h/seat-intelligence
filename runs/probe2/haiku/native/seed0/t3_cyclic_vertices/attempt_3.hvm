@@ -1,0 +1,69 @@
+@prog = ((n edges) out)
+  & @count_loop ~ (0 (n (edges (0 out))))
+
+@count_loop = (v (n (edges (count out))))
+  & eq ~ $([=] $(v n))
+  & eq ~ ?((@done @check) (v (n (edges (count out)))))
+
+@done = (v (n (edges (count out))))
+  & v ~ *
+  & n ~ *
+  & edges ~ *
+  & count ~ out
+
+@check = (v (n (edges (count out))))
+  & {v1 vrest} ~ v
+  & {v2 v3} ~ vrest
+  & @dfs ~ (v1 (v2 (edges (res out))))
+  & res ~ ?((@inc_no @inc_yes) (v3 (n (edges (count out)))))
+
+@inc_no = (v (n (edges (count out))))
+  & v_new ~ $([+] $(1 v_inc))
+  & @count_loop ~ (v_inc (n (edges (count out))))
+
+@inc_yes = (v (n (edges (count out))))
+  & v_new ~ $([+] $(1 v_inc))
+  & c_new ~ $([+] $(1 c_inc))
+  & @count_loop ~ (v_inc (n (edges (c_inc out))))
+
+@dfs = (curr (target (edges (found out))))
+  & eq ~ $([=] $(curr target))
+  & eq ~ ?((@no @yes) (curr (target (edges (found out)))))
+
+@yes = (curr (target (edges (found out))))
+  & curr ~ *
+  & target ~ *
+  & edges ~ *
+  & found ~ 1
+
+@no = (curr (target (edges (found out))))
+  & @find_neighbors ~ (curr (target (edges (found out))))
+
+@find_neighbors = (curr (target (edges (found out))))
+  & edges ~ ?((@no_edge @yes_edge) (curr (target (found out))))
+
+@no_edge = (curr (target (found out)))
+  & curr ~ *
+  & target ~ *
+  & found ~ 0
+
+@yes_edge = ((src (dst rest)) (curr (target (found out))))
+  & eq ~ $([=] $(src curr))
+  & eq ~ ?((@no_match @yes_match) (dst (rest (curr (target (found out))))))
+
+@no_match = (dst (rest (curr (target (found out)))))
+  & dst ~ *
+  & @find_neighbors ~ (curr (target (rest (found out))))
+
+@yes_match = (dst (rest (curr (target (found out)))))
+  & @dfs ~ (dst (target (rest (res out))))
+  & res ~ ?((@not_found @found_it) (rest (curr (target (found out)))))
+
+@not_found = (rest (curr (target (found out))))
+  & @find_neighbors ~ (curr (target (rest (found out))))
+
+@found_it = (rest (curr (target (found out))))
+  & rest ~ *
+  & curr ~ *
+  & target ~ *
+  & found ~ 1

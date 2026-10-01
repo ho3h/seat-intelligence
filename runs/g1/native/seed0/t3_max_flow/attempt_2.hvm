@@ -1,0 +1,84 @@
+@prog = (inp out)
+  & inp ~ (n (s (t edges)))
+  & @flow_start ~ (n (s (t (edges out))))
+
+@flow_start = (n (s (t (edges out))))
+  & s ~ {sc sk}
+  & t ~ {tc tk}
+  & sc ~ $([=] $(tc z))
+  & z ~ ?((@invalid @bounds) (n (sk (tk (edges out)))))
+
+@bounds = (* (n (s (t (edges out)))))
+  & n ~ {nc nk}
+  & s ~ {sc sk}
+  & sc ~ $([<] $(nc z))
+  & z ~ ?((@invalid @check_t) (nk (sk (t (edges out)))))
+
+@check_t = (* (n (s (t (edges out)))))
+  & n ~ {nc nk}
+  & t ~ {tc tk}
+  & tc ~ $([<] $(nc z))
+  & z ~ ?((@invalid @begin) (nk (s (tk (edges out)))))
+
+@begin = (* (n (s (t (edges out)))))
+  & n ~ {n_shift n_keep}
+  & 1 ~ $([<<] $(n_shift limit))
+  & @enum ~ (0 (limit (16777215 (n_keep (s (t (edges out)))))))
+
+@enum = (mask (limit (best (n (s (t (edges out)))))))
+  & mask ~ {mask_cmp mask_keep}
+  & limit ~ {limit_cmp limit_keep}
+  & mask_cmp ~ $([<] $(limit_cmp z))
+  & z ~ ?((@enum_done @enum_step) (mask_keep (limit_keep (best (n (s (t (edges out)))))))
+
+@enum_done = (* (* (b (* (* (* (* b)))))))
+
+@enum_step = (* (mask (limit (best (n (s (t (edges out)))))))
+  & edges ~ {scan_edges keep_edges}
+  & @cut ~ (scan_edges (mask (keep_edges (0 (n (s (t (limit (best out))))))))
+
+@cut = ((?((@cut_nil @cut_cons) (pl (mask (edges (acc (n (s (t (limit (best out))))))))) pl) (mask (edges (acc (n (s (t (limit (best out))))))))
+
+@cut_nil = (* (mask (edges (sum (n (s (t (limit (best out))))))))
+  & @aftercut ~ (mask (sum (edges (n (s (t (limit (best out))))))))
+
+@cut_cons = (* (((u (v w)) tail) (mask (edges (acc (n (s (t (limit (best out)))))))))
+  & mask ~ {mu mv}
+  & mu ~ $([>>] $(u ru))
+  & ru ~ $([&] $(1 bu))
+  & mv ~ $([>>] $(v rv))
+  & rv ~ $([&] $(1 bv))
+  & w ~ $([*] $(bu weighted))
+  & 1 ~ $([-] $(bv invv))
+  & weighted ~ $([*] $(invv contrib))
+  & acc ~ $([+] $(contrib acc2))
+  & @cut ~ (tail (mask (edges (acc2 (n (s (t (limit (best out))))))))
+
+@aftercut = (mask (sum (edges (n (s (t (limit (best out)))))))
+  & mask ~ {m_tmp m_keep}
+  & m_tmp ~ {ms mt}
+  & s ~ {ss sk}
+  & t ~ {ts tk}
+  & ms ~ $([>>] $(ss rs))
+  & rs ~ $([&] $(1 bs))
+  & mt ~ $([>>] $(ts rt))
+  & rt ~ $([&] $(1 bt))
+  & sum ~ {sum_cmp sum_keep}
+  & best ~ {best_cmp best_keep}
+  & sum_cmp ~ $([<] $(best_cmp lt))
+  & 1 ~ $([-] $(bt invt))
+  & bs ~ $([*] $(invt valid))
+  & valid ~ $([*] $(lt cond))
+  & cond ~ ?((@keep @replace) (m_keep (sum_keep (edges (n (sk (tk (limit (best_keep out))))))))
+
+@keep = (mask (sum (edges (n (s (t (limit (best out)))))))
+  & sum ~ *
+  & mask ~ $([+1] nextmask)
+  & @enum ~ (nextmask (limit (best (n (s (t (edges out)))))))
+
+@replace = (* (mask (sum (edges (n (s (t (limit (best out))))))))
+  & best ~ *
+  & mask ~ $([+1] nextmask)
+  & @enum ~ (nextmask (limit (sum (n (s (t (edges out)))))))
+
+@invalid = *

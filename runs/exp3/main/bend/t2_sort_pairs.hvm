@@ -1,0 +1,26 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@list_length__C0 = (* (* (((?((0 (* (* (((?((0 (* (* (((?((0 (* (* (((?((0 @list_length__C0) a_q110_q111_q112) a_q110_q111_q112) $([+0x0000001] c_q111_q112)) c_q111_q112)))) a_q110_q112) a_q110_q112) $([+0x0000001] c_q112)) c_q112)))) a_q110_q111) a_q110_q111) $([+0x0000001] c_q111)) c_q111)))) a_q110) a_q110) $([+0x0000001] c)) c)))
+
+@merge_pairs__C3 = (* ({(a *) e} (f ({($([>] $(a ?((@merge_pairs__C1_z @merge_pairs__C0_s) (c (d (e (f g))))))) *) c} (d g)))))
+
+@merge_pairs__C5 = (* (a (b (((?((@List/Cons @merge_pairs__C3) a_q118) a_q118) (a (b c))) c))))
+
+@merge_pairs__C6 = (?(((a a) @merge_pairs__C5) b) b)
+
+@prog = ({a ((?((0 @list_length__C0) a_q123) a_q123) {$([>0x0000002] ?((@sort_n__C0 (* (a_q100 (* a_q100)))) (a (c_q100 d)))) c_q100})} d)
+
+@sort_n__C0 = (a ({$([-] $(g {$([>0x0000002] ?((@sort_n__C0 (* (a_q105 (* a_q105)))) (f (c_q105 i)))) c_q105})) $([:/0x0000002] {{?((@split_at__C3_z (* (((?((* (* (c_q136 (a_q136 ($([:-0x0000001] {?((@split_at__C3_z @split_at__C2_s) (a_q136 (b_q106_q136 (d_q136 f_q136)))) b_q106_q136}) (((1 (c_q136 (d_q136 c_i46_q136))) c_i46_q136) f_q136)))))) a_q135) a_q135) a_q129) a_q129))) (a (b_q103 (c f)))) b_q103} {g {$([>0x0000002] ?((@sort_n__C0 (* (a_q104 (* a_q104)))) (c (c_q104 (@merge_pairs__C6 (i j)))))) c_q104}}})} j))
+
+@split_at__C0 = (* (c (a ($([:-0x0000001] {?((@split_at__C3_z @split_at__C2_s) (a (b_q106 (d f)))) b_q106}) (((1 (c (d c_i46))) c_i46) f)))))
+
+@merge_pairs__C1_z = (a (((?(((a_q141 a_q141) @merge_pairs__C5) b_q141) b_q141) (((1 (c (d c_i45))) c_i45) f)) (c (d ((1 (a (f c_i44))) c_i44)))))
+
+@merge_pairs__C0_s = (* (b (c (a (e ((1 (a (f c_i42))) c_i42))))))
+  & ?(((a_q109 a_q109) @merge_pairs__C5) (b (c (e f)))) ~ 1
+
+@split_at__C3_z = (a (* (@List/Nil a)))
+
+@split_at__C2_s = (* (((?(((* (@List/Nil @List/Nil)) @split_at__C0) a_q139) a_q139) a) a))

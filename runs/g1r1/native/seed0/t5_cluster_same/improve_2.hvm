@@ -1,0 +1,147 @@
+@prog = ((n (pairs queries)) out)
+  & n ~ *
+  & @edges ~ (pairs ((0 *) trie))
+  & @queries ~ (queries (trie out))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (trie out))) pl) (trie out))
+
+@edges_nil = (pl (trie out))
+  & pl ~ *
+  & out ~ trie
+
+@edges_cons = (* (((u v) rest) (trie out)))
+  & @find ~ (trie (u f1))
+  & f1 ~ (trie1 ru)
+  & @find ~ (trie1 (v f2))
+  & f2 ~ (trie2 rv)
+  & {ru_cmp ru_ctx} ~ ru
+  & {rv_cmp rv_ctx} ~ rv
+  & ru_cmp ~ $([=] $(rv_cmp same))
+  & same ~ ?((@edge_merge @edge_keep) (rest (trie2 (ru_ctx (rv_ctx out))))
+
+@edge_merge = (rest (trie (ru (rv out))))
+  & @put ~ (24 (trie (ru (rv newtrie))))
+  & @edges ~ (rest (newtrie out))
+
+@edge_keep = (* (rest (trie (ru (rv out)))))
+  & ru ~ *
+  & rv ~ *
+  & @edges ~ (rest (trie out))
+
+@queries = ((?((@queries_nil @queries_cons) (pl (trie out))) pl) (trie out))
+
+@queries_nil = (pl (trie out))
+  & pl ~ *
+  & out ~ (0 *)
+
+@queries_cons = (* (((a b) rest) (trie out)))
+  & @find ~ (trie (a f1))
+  & f1 ~ (trie1 ra)
+  & @find ~ (trie1 (b f2))
+  & f2 ~ (trie2 rb)
+  & ra ~ $([=] $(rb same))
+  & same ~ ?((@query_no @query_yes) (rest (trie2 out)))
+
+@query_no = (rest (trie out))
+  & @queries ~ (rest (trie (tail)))
+  & out ~ (1 (0 tail))
+
+@query_yes = (* (rest (trie out)))
+  & @queries ~ (rest (trie (tail)))
+  & out ~ (1 (1 tail))
+
+@find = (trie (idx out))
+  & {idx_ctx idx_aux} ~ idx
+  & {idx_cmp idx_lookup} ~ idx_aux
+  & {orig bits} ~ idx_lookup
+  & @lookup ~ (trie (orig (bits found_pair)))
+  & found_pair ~ (trie_after parent)
+  & {parent_cmp parent_ctx} ~ parent
+  & idx_cmp ~ $([=] $(parent_cmp same))
+  & same ~ ?((@find_recur @find_done) (trie_after (idx_ctx (parent_ctx out))))
+
+@find_recur = (trie (idx (parent out)))
+  & idx ~ *
+  & @find ~ (trie (parent result))
+  & out ~ result
+
+@find_done = (trie (idx (parent out)))
+  & parent ~ *
+  & out ~ (trie idx)
+
+@lookup = (tree (orig (bits out)))
+  & tree ~ (?( (@lookup_empty @lookup_nonzero) (pl (orig (bits out))) ) pl)
+
+@lookup_empty = (pl (orig (bits out)))
+  & pl ~ *
+  & bits ~ *
+  & out ~ ((0 *) orig)
+
+@lookup_nonzero = (tag (pl (orig (bits out))))
+  & tag ~ ?((@lookup_branch @lookup_leaf) (pl (orig (bits out))))
+
+@lookup_branch = (pl (orig (bits out)))
+  & pl ~ (left right)
+  & {bit_src shift_src} ~ bits
+  & bit_src ~ $([&] $(1 bit))
+  & shift_src ~ $([>>1] bits2)
+  & bit ~ ?((@lookup_left @lookup_right) (left (right (orig (bits2 out))))
+
+@lookup_left = (left (right (orig (bits out))))
+  & @lookup ~ (left (orig (bits res)))
+  & res ~ (newleft found)
+  & out ~ ((1 (newleft right)) found)
+
+@lookup_right = (* (left (right (orig (bits out)))))
+  & @lookup ~ (right (orig (bits res)))
+  & res ~ (newright found)
+  & out ~ ((1 (left newright)) found)
+  & left ~ *
+
+@lookup_leaf = (* (pl (orig (bits out))))
+  & {val_tree val_out} ~ pl
+  & bits ~ *
+  & orig ~ *
+  & out ~ ((2 val_tree) val_out)
+
+@put = (depth (tree (bits (value out))))
+  & depth ~ ?((@put_leaf @put_step) (tree (bits (value out))))
+
+@put_leaf = (tree (bits (value out)))
+  & tree ~ *
+  & bits ~ *
+  & out ~ (2 value)
+
+@put_step = (d (tree (bits (value out))))
+  & tree ~ (?( (@put_empty @put_nonempty) (pl (bits (value (d out)))) ) pl)
+
+@put_empty = (pl (bits (value (d out))))
+  & pl ~ *
+  & {bit_src shift_src} ~ bits
+  & bit_src ~ $([&] $(1 bit))
+  & shift_src ~ $([>>1] bits2)
+  & bit ~ ?((@put_empty_left @put_empty_right) (bits2 (value (d out))))
+
+@put_empty_left = (bits (value (d out)))
+  & @put ~ (d (0 (bits (value kid))))
+  & out ~ (1 (kid (0 *)))
+
+@put_empty_right = (* (bits (value (d out))))
+  & @put ~ (d (0 (bits (value kid))))
+  & out ~ (1 ((0 *) kid))
+
+@put_nonempty = (* (pl (bits (value (d out)))))
+  & pl ~ (left right)
+  & {bit_src shift_src} ~ bits
+  & bit_src ~ $([&] $(1 bit))
+  & shift_src ~ $([>>1] bits2)
+  & bit ~ ?((@put_nonempty_left @put_nonempty_right) (left (right (bits2 (value (d out))))))
+
+@put_nonempty_left = (left (right (bits (value (d out)))))
+  & @put ~ (d (left (bits (value kid))))
+  & out ~ (1 (kid right))
+
+@put_nonempty_right = (* (left (right (bits (value (d out))))))
+  & @put ~ (d (right (bits (value kid))))
+  & out ~ (1 (left kid))
+  & left ~ *

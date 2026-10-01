@@ -1,0 +1,38 @@
+// Insert x into a BST, ignoring duplicates.
+@prog = (input out)
+  & input ~ (x tree)
+  & @ins ~ (tree (x out))
+
+@ins = ((?( (@ins_leaf @ins_node) (payload (x out))) payload) (x out))
+
+@ins_leaf = (payload (x out))
+  & payload ~ *
+  & out ~ (1 ((0 *) (x (0 *))))
+
+// Compute both comparisons in parallel. The greater-than result is only
+// used when the less-than result is false.
+@ins_node = (* (payload (x out)))
+  & payload ~ (l (v r))
+  & x ~ {xlt xrest}
+  & xrest ~ {xgt xkeep}
+  & v ~ {vlt vrest}
+  & vrest ~ {vgt vkeep}
+  & xlt ~ $([<] $(vlt lt))
+  & xgt ~ $([>] $(vgt gt))
+  & lt ~ ?((@ins_check_gt @ins_lt) ((l (vkeep r)) (xkeep (gt out))))
+
+@ins_lt = (* ((l (v r)) (x (gt out))))
+  & gt ~ *
+  & @ins ~ (l (x newl))
+  & out ~ (1 (newl (v r)))
+
+@ins_check_gt = ((l (v r)) (x (gt out)))
+  & gt ~ ?((@ins_eq @ins_gt) ((l (v r)) (x out)))
+
+@ins_eq = ((l (v r)) (x out))
+  & x ~ *
+  & out ~ (1 (l (v r)))
+
+@ins_gt = (* ((l (v r)) (x out)))
+  & @ins ~ (r (x newr))
+  & out ~ (1 (l (v newr)))

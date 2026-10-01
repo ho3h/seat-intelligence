@@ -1,0 +1,71 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@prog = ((a b) c)
+  & @zip_add ~ (a (b c))
+
+@zip_add = ((@zip_add__C21 a) a)
+
+@zip_add__C0 = (c (a (* (* (b f)))))
+  & @List/Cons ~ (a (e f))
+  & @List/Cons ~ (b (d e))
+  & @List/Cons ~ (c (@List/Nil d))
+
+@zip_add__C1 = (* (d (g (c (a ($([+] $(d e)) (f (b l))))))))
+  & @List/Cons ~ (a (k l))
+  & @List/Cons ~ (b (j k))
+  & @List/Cons ~ (c (i j))
+  & @List/Cons ~ (e (h i))
+  & @zip_add ~ (f (g h))
+
+@zip_add__C10 = (* (a (b (c (d ((@zip_add__C8 (a (b (c (d e))))) e))))))
+
+@zip_add__C11 = (?((@zip_add__C9 @zip_add__C10) a) a)
+
+@zip_add__C12 = (a (* (* b)))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@zip_add__C13 = (* (b (d (a ($([+] $(b c)) ((@zip_add__C11 (a (c (d e)))) e))))))
+
+@zip_add__C14 = (?((@zip_add__C12 @zip_add__C13) a) a)
+
+@zip_add__C15 = (a (* b))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@zip_add__C16 = (* (b (c (a ((@zip_add__C14 (a (b (c d)))) d)))))
+
+@zip_add__C17 = (?((@zip_add__C15 @zip_add__C16) a) a)
+
+@zip_add__C18 = (* (a (c ($([+] $(a b)) ((@zip_add__C17 (b (c d))) d)))))
+
+@zip_add__C19 = (?(((* (* @List/Nil)) @zip_add__C18) a) a)
+
+@zip_add__C2 = (?((@zip_add__C0 @zip_add__C1) a) a)
+
+@zip_add__C20 = (* (a (b ((@zip_add__C19 (a (b c))) c))))
+
+@zip_add__C21 = (?(((* @List/Nil) @zip_add__C20) a) a)
+
+@zip_add__C3 = (c (* (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @List/Cons ~ (b (d e))
+  & @List/Cons ~ (c (@List/Nil d))
+
+@zip_add__C4 = (* (c (d (a ((@zip_add__C2 (a (b (c (d e))))) (b e))))))
+
+@zip_add__C5 = (?((@zip_add__C3 @zip_add__C4) a) a)
+
+@zip_add__C6 = (* (* (a (b d))))
+  & @List/Cons ~ (a (c d))
+  & @List/Cons ~ (b (@List/Nil c))
+
+@zip_add__C7 = (* (a (c ($([+] $(a b)) ((@zip_add__C5 (b (c d))) d)))))
+
+@zip_add__C8 = (?((@zip_add__C6 @zip_add__C7) a) a)
+
+@zip_add__C9 = (a (b (* d)))
+  & @List/Cons ~ (a (c d))
+  & @List/Cons ~ (b (@List/Nil c))
+
+

@@ -1,0 +1,170 @@
+// Distance entries are (0 *) when unreachable and (1 distance) when reachable.
+// Distances that overflow u24 are ignored; such paths cannot be within a u24 budget.
+
+@prog = (input out)
+  & input ~ (n (s (b edges)))
+  & n ~ {nb nr}
+  & @build ~ (nb (0 (s initial)))
+  & @passes ~ (nr (edges (initial final)))
+  & @count ~ (final (b out))
+
+@build = (n (i (s out)))
+  & n ~ ?((@build_zero @build_succ) (i (s out)))
+
+@build_zero = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@build_succ = (k (i (s out)))
+  & i ~ {ic ir}
+  & s ~ {sc sr}
+  & ic ~ $([=] $(sc eq))
+  & eq ~ ?((@build_no @build_yes) (k (ir (sr out))))
+
+@build_no = (k (i (s out)))
+  & @build ~ (k (i (s tail)))
+  & out ~ (1 ((0 *) tail))
+
+@build_yes = (* (k (i (s out))))
+  & @build ~ (k (i (s tail)))
+  & out ~ (1 ((1 0) tail))
+
+@passes = (k (edges (dist out)))
+  & k ~ ?((@passes_zero @passes_succ) (edges (dist out)))
+
+@passes_zero = (edges (dist out))
+  & edges ~ *
+  & out ~ dist
+
+@passes_succ = (k (edges (dist out)))
+  & edges ~ {scan keep}
+  & @scan ~ (scan (dist next))
+  & @passes ~ (k (keep (next out)))
+
+@scan = ((?((@scan_nil @scan_cons) (p (dist out))) p) (dist out))
+
+@scan_nil = (* (dist out))
+  & out ~ dist
+
+@scan_cons = (* ((edge tail) (dist out)))
+  & @edge ~ (edge (dist next))
+  & @scan ~ (tail (next out))
+
+@edge = ((u (v w)) (dist out))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @relax ~ (u1 (v1 (w1 (dist next))))
+  & @relax ~ (v2 (u2 (w2 (next out))))
+
+@relax = (src (dst (w (dist out))))
+  & dist ~ {dl dk}
+  & @get ~ (dl (src entry))
+  & @relax_src ~ (entry (dst (w (dk out))))
+
+@relax_src = ((?((@relax_unreachable @relax_reachable) (d (dst (w (dist out))))) d) (dst (w (dist out))))
+
+@relax_unreachable = (d (dst (w (dist out))))
+  & d ~ *
+  & dst ~ *
+  & w ~ *
+  & out ~ dist
+
+@relax_reachable = (* (d (dst (w (dist out)))))
+  & d ~ {da dc}
+  & da ~ $([+] $(w cand))
+  & cand ~ {cc cu}
+  & cc ~ $([<] $(dc overflow))
+  & overflow ~ ?((@relax_candidate_ok @relax_overflow) (dst (dist (cu out))))
+
+@relax_overflow = (* (dst (dist (cand out))))
+  & dst ~ *
+  & cand ~ *
+  & out ~ dist
+
+@relax_candidate_ok = (dst (dist (cand out)))
+  & dst ~ {dg du}
+  & dist ~ {dt dk}
+  & @get ~ (dt (dg target))
+  & @relax_target ~ (target (du (dk (cand out))))
+
+@relax_target = ((?((@target_new @target_old) (td (idx (dist (cand out))))) td) (idx (dist (cand out))))
+
+@target_new = (* (idx (dist (cand out))))
+  & @set ~ (dist (idx ((1 cand) out)))
+
+@target_old = (* (td (idx (dist (cand out)))))
+  & cand ~ {cc cu}
+  & cc ~ $([<] $(td lt))
+  & lt ~ ?((@target_keep @target_improve) (idx (dist (cu out))))
+
+@target_keep = (idx (dist (cand out)))
+  & idx ~ *
+  & cand ~ *
+  & out ~ dist
+
+@target_improve = (* (idx (dist (cand out))))
+  & @set ~ (dist (idx ((1 cand) out)))
+
+@get = ((?((@get_nil @get_cons) (p (i out))) p) (i out))
+
+@get_nil = (* (i out))
+  & i ~ *
+  & out ~ (0 *)
+
+@get_cons = (* ((item tail) (i out)))
+  & i ~ ?((@get_here @get_next) (item (tail out)))
+
+@get_here = (item (tail out))
+  & tail ~ *
+  & out ~ item
+
+@get_next = (i (item (tail out)))
+  & item ~ *
+  & @get ~ (tail (i out))
+
+@set = ((?((@set_nil @set_cons) (p (i (val out)))) p) (i (val out)))
+
+@set_nil = (* (i (val out)))
+  & i ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((item tail) (i (val out))))
+  & i ~ ?((@set_here @set_next) (item (tail (val out))))
+
+@set_here = (item (tail (val out)))
+  & item ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (i (item (tail (val out))))
+  & @set ~ (tail (i (val rest)))
+  & out ~ (1 (item rest))
+
+@count = ((?((@count_nil @count_cons) (p (b (acc out)))) p) (b (acc out)))
+
+@count_nil = (* (b (acc out)))
+  & b ~ *
+  & out ~ acc
+
+@count_cons = (* ((item tail) (b (acc out))))
+  & @count_item ~ (item (tail (b (acc out))))
+
+@count_item = ((?((@count_unreachable @count_reachable) (d (tail (b (acc out))))) d) (tail (b (acc out))))
+
+@count_unreachable = (d (tail (b (acc out))))
+  & d ~ *
+  & @count ~ (tail (b (acc out)))
+
+@count_reachable = (* (d (tail (b (acc out)))))
+  & b ~ {bc br}
+  & d ~ $([>] $(bc bad))
+  & bad ~ ?((@count_yes @count_no) (tail (br (acc out))))
+
+@count_yes = (tail (b (acc out)))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (b (acc2 out)))
+
+@count_no = (* (tail (b (acc out))))
+  & @count ~ (tail (b (acc out)))

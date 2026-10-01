@@ -1,0 +1,17 @@
+// Parallel SWAR popcount, followed by a multiply to sum the three byte counts.
+@prog = (n out)
+  & n ~ {x1 x2}
+  & x2 ~ $([>>] $(1 r1))
+  & r1 ~ $([&] $(5592405 r2))
+  & x1 ~ $([-] $(r2 s1))
+  & s1 ~ {y1 y2}
+  & y1 ~ $([&] $(3355443 r3))
+  & y2 ~ $([>>] $(2 r4))
+  & r4 ~ $([&] $(3355443 r5))
+  & r3 ~ $([+] $(r5 s2))
+  & s2 ~ {z1 z2}
+  & z1 ~ $([+] $(shift sum))
+  & z2 ~ $([>>] $(4 shift))
+  & sum ~ $([&] $(986895 masked))
+  & masked ~ $([*] $(65793 product))
+  & product ~ $([>>] $(16 out))

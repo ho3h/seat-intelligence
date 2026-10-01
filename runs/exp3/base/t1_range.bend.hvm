@@ -1,0 +1,54 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build = ({a c} ({$([-] $(a $([>0x0000020] b))) d} e))
+  & $(b ?((@build__C2 @build__C3) (c (d e)))) ~ [=0x0000000]
+
+@build__C0 = ({a $([+0x0000001] b)} (c e))
+  & @List/Cons ~ (a (d e))
+  & @build ~ (b (c d))
+
+@build__C1 = (* (* (* @List/Nil)))
+
+@build__C2 = ({$([=] $(a ?((@build__C0 @build__C1) (b (c d))))) b} ({a c} d))
+
+@build__C3 = (* ({a {$([+0x0000001] b) {$([+0x0000002] c) {$([+0x0000003] d) {$([+0x0000004] e) {$([+0x0000005] f) {$([+0x0000006] g) {$([+0x0000007] h) {$([+0x0000008] i) {$([+0x0000009] j) {$([+0x000000A] k) {$([+0x000000B] l) {$([+0x000000C] m) {$([+0x000000D] n) {$([+0x000000E] o) {$([+0x000000F] p) {$([+0x0000010] q) {$([+0x0000011] r) {$([+0x0000012] s) {$([+0x0000013] t) {$([+0x0000014] u) {$([+0x0000015] v) {$([+0x0000016] w) {$([+0x0000017] x) {$([+0x0000018] y) {$([+0x0000019] z) {$([+0x000001A] ab) {$([+0x000001B] bb) {$([+0x000001C] cb) {$([+0x000001D] db) {$([+0x000001E] eb) {$([+0x000001F] fb) $([+0x0000020] gb)}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}} (hb oc)))
+  & @List/Cons ~ (a (nc oc))
+  & @List/Cons ~ (b (mc nc))
+  & @List/Cons ~ (c (lc mc))
+  & @List/Cons ~ (d (kc lc))
+  & @List/Cons ~ (e (jc kc))
+  & @List/Cons ~ (f (ic jc))
+  & @List/Cons ~ (g (hc ic))
+  & @List/Cons ~ (h (gc hc))
+  & @List/Cons ~ (i (fc gc))
+  & @List/Cons ~ (j (ec fc))
+  & @List/Cons ~ (k (dc ec))
+  & @List/Cons ~ (l (cc dc))
+  & @List/Cons ~ (m (bc cc))
+  & @List/Cons ~ (n (ac bc))
+  & @List/Cons ~ (o (zb ac))
+  & @List/Cons ~ (p (yb zb))
+  & @List/Cons ~ (q (xb yb))
+  & @List/Cons ~ (r (wb xb))
+  & @List/Cons ~ (s (vb wb))
+  & @List/Cons ~ (t (ub vb))
+  & @List/Cons ~ (u (tb ub))
+  & @List/Cons ~ (v (sb tb))
+  & @List/Cons ~ (w (rb sb))
+  & @List/Cons ~ (x (qb rb))
+  & @List/Cons ~ (y (pb qb))
+  & @List/Cons ~ (z (ob pb))
+  & @List/Cons ~ (ab (nb ob))
+  & @List/Cons ~ (bb (mb nb))
+  & @List/Cons ~ (cb (lb mb))
+  & @List/Cons ~ (db (kb lb))
+  & @List/Cons ~ (eb (jb kb))
+  & @List/Cons ~ (fb (ib jb))
+  & @build ~ (gb (hb ib))
+
+@prog = a
+  & @build ~ (0 a)
+
+

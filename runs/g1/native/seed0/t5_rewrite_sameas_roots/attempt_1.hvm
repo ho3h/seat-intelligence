@@ -1,0 +1,54 @@
+// Resolve every index by following parent pointers and looking up each pointer
+@prog = (input out)
+  & input ~ {scan orig}
+  & @build ~ (scan (0 (orig out)))
+
+@build = ((?((@build_nil @build_cons) (pl (i (orig out)))) pl) (i (orig out)))
+
+@build_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@build_cons = (* ((h t) (i (orig out))))
+  & h ~ *
+  & i ~ {i_find i_inc}
+  & orig ~ {orig_find orig_next}
+  & @find ~ (i_find (orig_find root))
+  & i_inc ~ $([+1] i_next)
+  & @build ~ (t (i_next (orig_next rest)))
+  & out ~ (1 (root rest))
+
+// Find the root reached by repeatedly looking up the current index.
+@find = (cur (orig out))
+  & cur ~ {cur_cmp cur_out}
+  & orig ~ {orig_n orig_rec}
+  & @nth ~ (cur_cmp (orig_n val))
+  & val ~ {val_cmp val_next}
+  & val_cmp ~ $([=] $(cur_cmp eq))
+  & eq ~ ?((@find_no @find_yes) (val_next (orig_rec (cur_out out))))
+
+@find_no = (v (orig (* out)))
+  & @find ~ (v (orig out))
+
+@find_yes = (* (* (* (cur out))))
+  & cur ~ out
+
+// Look up the pointer at an index by walking the list.
+@nth = (?((@nth_zero @nth_succ) (l out)) (l out))
+
+@nth_zero = ((?((@nth_nil @nth_cons) (pl out)) pl) out)
+
+@nth_nil = (* out)
+  & out ~ 0
+
+@nth_cons = (* ((h t) out))
+  & h ~ out
+  & t ~ *
+
+@nth_succ = (k ((?((@nth_bad @nth_step) (pl (k out))) pl) out))
+
+@nth_bad = (* (* out))
+  & out ~ 0
+
+@nth_step = (* ((h t) (k out)))
+  & h ~ *
+  & @nth ~ (k (t out))

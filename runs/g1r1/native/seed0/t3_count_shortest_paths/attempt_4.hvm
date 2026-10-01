@@ -1,0 +1,84 @@
+// Check the vertex indices, then handle s == t or scan for a direct edge.
+@prog = ((n (s (t edges))) out)
+  & @check_s ~ (n (s (t (edges out))))
+
+@check_s = (n (s (t (edges out))))
+  & n ~ {n_op n_keep}
+  & s ~ {s_op s_keep}
+  & s_op ~ $([<] $(n_op c))
+  & c ~ ?((@invalid @check_t) (n_keep (s_keep (t (edges out)))))
+
+@check_t = (* (n (s (t (edges out)))))
+  & n ~ {n_op n_keep}
+  & t ~ {t_op t_keep}
+  & t_op ~ $([<] $(n_op c))
+  & c ~ ?((@invalid @check_eq) (n_keep (s (t_keep (edges out)))))
+
+@check_eq = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ {s_op s_keep}
+  & t ~ {t_op t_keep}
+  & s_op ~ $([=] $(t_op eq))
+  & eq ~ ?((@edge_scan @same) (edges (s_keep (t_keep out))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@same = (* (edges (s (t out))))
+  & edges ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ 1
+
+// Search the edge list for an edge between s and t.
+@edge_scan = ((?((@es_nil @es_cons) (pl (s (t out)))) pl) (s (t out)))
+
+@es_nil = (pl (s (t out)))
+  & pl ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ 0
+
+@es_cons = (* (((u v) tail) (s (t out))))
+  & @test_uv ~ (u (v (s (t (tail out)))))
+
+@test_uv = (u (v (s (t (tail out)))))
+  & u ~ {u_op u_keep}
+  & s ~ {s_op s_keep}
+  & u_op ~ $([=] $(s_op eq))
+  & eq ~ ?((@test_reverse @test_v) (u_keep (v (s_keep (t (tail out))))))
+
+@test_v = (* (u (v (s (t (tail out))))))
+  & v ~ {v_op v_keep}
+  & t ~ {t_op t_keep}
+  & v_op ~ $([=] $(t_op eq))
+  & eq ~ ?((@test_reverse @found) (u (v_keep (s (t_keep (tail out))))))
+
+@test_reverse = (u (v (s (t (tail out)))))
+  & u ~ {u_op u_keep}
+  & t ~ {t_op t_keep}
+  & u_op ~ $([=] $(t_op eq))
+  & eq ~ ?((@scan_tail @test_v_reverse) (u_keep (v (s (t_keep (tail out))))))
+
+@test_v_reverse = (* (u (v (s (t (tail out))))))
+  & v ~ {v_op v_keep}
+  & s ~ {s_op s_keep}
+  & v_op ~ $([=] $(s_op eq))
+  & eq ~ ?((@scan_tail @found) (u (v_keep (s_keep (t (tail out))))))
+
+@scan_tail = (u (v (s (t (tail out)))))
+  & u ~ *
+  & v ~ *
+  & @edge_scan ~ (tail (s (t out)))
+
+@found = (* (u (v (s (t (tail out))))))
+  & u ~ *
+  & v ~ *
+  & s ~ *
+  & t ~ *
+  & tail ~ *
+  & out ~ 1

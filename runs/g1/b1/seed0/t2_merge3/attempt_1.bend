@@ -1,0 +1,17 @@
+def prog(x):
+  (xs, ys, zs) = x
+  return merge(merge(xs, ys), zs)
+
+def merge(xs, ys):
+  match xs:
+    case List/Nil:
+      return ys
+    case List/Cons:
+      match ys:
+        case List/Nil:
+          return xs
+        case List/Cons:
+          if xs.head <= ys.head:
+            return List/Cons(xs.head, merge(xs.tail, ys))
+          else:
+            return List/Cons(ys.head, merge(xs, ys.tail))

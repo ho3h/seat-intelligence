@@ -1,0 +1,89 @@
+@prog = (input out)
+  & input ~ (cl attrs)
+  & @process ~ (attrs (cl ((0 *) (0 out))))
+
+@process = ((?((@p_nil @p_cons) (pay (cl (prefix (acc out))))) pay) (cl (prefix (acc out))))
+
+@p_nil = (* (cl (prefix (acc out))))
+  & cl ~ *
+  & prefix ~ *
+  & acc ~ out
+
+@p_cons = (* (((node (key val)) tail) (cl (prefix (acc out)))))
+  & node ~ {node_l node_p}
+  & key ~ {key_s key_x}
+  & key_x ~ {key_d key_p}
+  & val ~ {val_d val_p}
+  & cl ~ {cl_l cl_x}
+  & cl_x ~ {cl_s cl_y}
+  & cl_y ~ {cl_d cl_r}
+  & prefix ~ {prefix_s prefix_r}
+  & tail ~ {tail_d tail_r}
+  & @lookup ~ (cl_l (node_l cid))
+  & cid ~ {cid_s cid_d}
+  & @seen ~ (prefix_s (cl_s (cid_s (key_s seen))))
+  & seen ~ $([=] $(0 first))
+  & @diff ~ (tail_d (cl_d (cid_d (key_d (val_d diff)))))
+  & first ~ $([*] $(diff flag))
+  & acc ~ $([+] $(flag acc2))
+  & @process ~ (tail_r (cl_r ((1 ((node_p (key_p val_p)) prefix_r)) (acc2 out))))
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pay (idx out))) pay) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@lookup_hit @lookup_next) (head (tail out)))
+
+@lookup_hit = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@lookup_next = (idx (head (tail out)))
+  & head ~ *
+  & @lookup ~ (tail (idx out))
+
+@seen = ((?((@seen_nil @seen_cons) (pay (cl (cid (key out))))) pay) (cl (cid (key out))))
+
+@seen_nil = (* (cl (cid (key out))))
+  & cl ~ *
+  & cid ~ *
+  & key ~ *
+  & out ~ 0
+
+@seen_cons = (* (((node (k v)) tail) (cl (cid (key out)))))
+  & v ~ *
+  & cl ~ {cl_l cl_r}
+  & cid ~ {cid_cmp cid_r}
+  & key ~ {key_cmp key_r}
+  & @lookup ~ (cl_l (node got))
+  & got ~ $([=] $(cid_cmp ceq))
+  & k ~ $([=] $(key_cmp keq))
+  & ceq ~ $([*] $(keq here))
+  & @seen ~ (tail (cl_r (cid_r (key_r rest))))
+  & here ~ $([|] $(rest out))
+
+@diff = ((?((@diff_nil @diff_cons) (pay (cl (cid (key (val out)))))) pay) (cl (cid (key (val out)))))
+
+@diff_nil = (* (cl (cid (key (val out)))))
+  & cl ~ *
+  & cid ~ *
+  & key ~ *
+  & val ~ *
+  & out ~ 0
+
+@diff_cons = (* (((node (k v)) tail) (cl (cid (key (val out))))))
+  & cl ~ {cl_l cl_r}
+  & cid ~ {cid_cmp cid_r}
+  & key ~ {key_cmp key_r}
+  & val ~ {val_cmp val_r}
+  & @lookup ~ (cl_l (node got))
+  & got ~ $([=] $(cid_cmp ceq))
+  & k ~ $([=] $(key_cmp keq))
+  & v ~ $([!] $(val_cmp neq))
+  & ceq ~ $([*] $(keq c1))
+  & c1 ~ $([*] $(neq here))
+  & @diff ~ (tail (cl_r (cid_r (key_r (val_r rest)))))
+  & here ~ $([|] $(rest out))

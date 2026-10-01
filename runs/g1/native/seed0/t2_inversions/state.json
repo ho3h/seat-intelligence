@@ -1,0 +1,58 @@
+{
+ "pid": "t2_inversions",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 59,
+    "itrs_median_big": null,
+    "itrs_max": 233,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1503,
+    "itrs_median_big": 1049695,
+    "itrs_max": 1051963,
+    "depth_median_big": 5886,
+    "depth_max": 5886
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 238377,
+ "best": {
+  "itrs_median_small": 1503,
+  "itrs_median_big": 1049695,
+  "itrs_max": 1051963,
+  "depth_median_big": 5886,
+  "depth_max": 5886
+ },
+ "usd": 0.060401920000000005,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

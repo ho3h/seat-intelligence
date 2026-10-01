@@ -1,0 +1,22 @@
+// Partition a list stably around the pivot.
+@prog = ((p xs) out)
+  & @part ~ (xs (p out))
+
+@part = ((?((@part_nil @part_cons) (pl (p out))) pl) (p out))
+
+@part_nil = (* (p out))
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* ((h t) (p out)))
+  & p ~ {pc pr}
+  & h ~ {hc hs}
+  & hc ~ $([<] $(pc b))
+  & @part ~ (t (pr pair))
+  & b ~ ?((@part_ge @part_lt) (hs (pair out)))
+
+@part_ge = (h ((lo hi) out))
+  & out ~ (lo (1 (h hi)))
+
+@part_lt = (* (h ((lo hi) out)))
+  & out ~ ((1 (h lo)) hi)

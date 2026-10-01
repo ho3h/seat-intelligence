@@ -1,0 +1,175 @@
+// Exact-k shortest walks using repeated relaxation over a fresh distance list.
+
+@prog = (input output)
+  & @solve ~ (input output)
+
+@solve = (arg out)
+  & arg ~ (n (s (t (k edges))))
+  & n ~ {n_cmp n_keep}
+  & s ~ {s_cmp s_keep}
+  & s_cmp ~ $([<] $(n_cmp less))
+  & less ~ ?((@invalid @testT) (n_keep (s_keep (t (k (edges out)))))
+
+@invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@testT = (rem (n (s (t (k (edges out))))))
+  & rem ~ *
+  & n ~ {n_cmp n_keep}
+  & t ~ {t_cmp t_keep}
+  & t_cmp ~ $([<] $(n_cmp less))
+  & less ~ ?((@invalid @initialize) (n_keep (s (t_keep (k (edges out)))))
+
+@initialize = (rem (n (s (t (k (edges out))))))
+  & rem ~ *
+  & n ~ {n_make n_run}
+  & @make ~ (n_make base)
+  & @set ~ ((base (s 0)) initial)
+  & @run ~ ((k (n_run (t (edges initial)))) out)
+
+@make = (arg out)
+  & arg ~ ?((@makeNil @makeCons) out)
+
+@makeNil = out
+  & out ~ (0 *)
+
+@makeCons = (rem out)
+  & @make ~ (rem tail)
+  & out ~ (1 (16777215 tail))
+
+@run = (arg out)
+  & arg ~ (steps (n (t (edges dist))))
+  & steps ~ ?((@runDone @runMore) (n (t (edges (dist out)))))
+
+@runDone = (n (t (edges (dist out))))
+  & n ~ *
+  & edges ~ *
+  & @get ~ ((dist t) out)
+
+@runMore = (rem (n (t (edges dist))))
+  & n ~ {n_make n_keep}
+  & edges ~ {edges_fold edges_keep}
+  & @make ~ (n_make fresh)
+  & @fold ~ ((edges_fold (dist fresh)) next)
+  & @run ~ ((rem (n_keep (t (edges_keep next)))) out)
+
+@fold = (arg out)
+  & arg ~ (es (old next))
+  & es ~ (?( (@foldNil @foldCons) (payload (old (next out)))) payload)
+
+@foldNil = (payload (old (next out)))
+  & payload ~ *
+  & old ~ *
+  & out ~ next
+
+@foldCons = (rem (payload (old (next out))))
+  & rem ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u (v w))
+  & old ~ {old_read old_keep}
+  & @get ~ ((old_read u) d)
+  & @relax ~ ((d (v (w next))) updated)
+  & @fold ~ ((tail (old_keep updated)) out)
+
+@relax = (arg out)
+  & arg ~ (d (v (w next)))
+  & d ~ {d_eq d_base}
+  & d_eq ~ $([=] $(16777215 eq))
+  & eq ~ ?((@relaxReach @relaxSkip) (d_base (v (w (next out))))
+
+@relaxSkip = (rem (d_base (v (w (next out)))))
+  & rem ~ *
+  & d_base ~ *
+  & v ~ *
+  & w ~ *
+  & out ~ next
+
+@relaxReach = (d_base (v (w (next out))))
+  & d_base ~ {base addend}
+  & addend ~ $([+] $(w sum))
+  & sum ~ {sum_test sum_keep}
+  & sum_test ~ $([<] $(base overflow))
+  & overflow ~ ?((@sumSafe @sumOverflow) (sum_keep (v (next out))))
+
+@sumOverflow = (rem (sum (v (next out))))
+  & rem ~ *
+  & sum ~ *
+  & v ~ *
+  & out ~ next
+
+@sumSafe = (sum (v (next out)))
+  & sum ~ {sum_cmp candidate}
+  & sum_cmp ~ $([<] $(16777215 valid))
+  & valid ~ ?((@sumTooBig @sumAccept) (candidate (v (next out))))
+
+@sumTooBig = (candidate (v (next out)))
+  & candidate ~ *
+  & v ~ *
+  & out ~ next
+
+@sumAccept = (candidate (v (next out)))
+  & candidate ~ {cand_cmp cand_keep}
+  & v ~ {v_read v_keep}
+  & next ~ {next_read next_keep}
+  & @get ~ ((next_read v_read) current)
+  & cand_cmp ~ $([<] $(current better))
+  & better ~ ?((@noImprove @improve) (cand_keep (v_keep (next_keep out))))
+
+@noImprove = (candidate (v (next out)))
+  & candidate ~ *
+  & v ~ *
+  & out ~ next
+
+@improve = (rem (candidate (v (next out))))
+  & rem ~ *
+  & @set ~ ((next (v candidate)) out)
+
+@get = (arg out)
+  & arg ~ (list idx)
+  & list ~ (?( (@getNil @getCons) (payload (idx out))) payload)
+
+@getNil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@getCons = (rem (payload (idx out)))
+  & rem ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@getHere @getNext) (head (tail out)))
+
+@getHere = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@getNext = (rem (head (tail out)))
+  & head ~ *
+  & @get ~ ((tail rem) out)
+
+@set = (arg out)
+  & arg ~ (list (idx value))
+  & list ~ (?( (@setNil @setCons) (payload (idx (value out)))) payload)
+
+@setNil = (payload (idx (value out)))
+  & payload ~ *
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@setCons = (rem (payload (idx (value out))))
+  & rem ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@setHere @setNext) (head (tail (value out))))
+
+@setHere = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@setNext = (rem (head (tail (value out))))
+  & @set ~ ((tail (rem value)) newtail)
+  & out ~ (1 (head newtail))

@@ -1,0 +1,24 @@
+// Search the list linearly, carrying the target and current index.
+@prog = ((xs target) out)
+  & @search ~ (xs (target (0 out)))
+
+@search = ((?((@search_nil @search_cons) (pl (target (idx out)))) pl) (target (idx out)))
+
+@search_nil = (* (target (idx out)))
+  & target ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@search_cons = (* ((head tail) (target (idx out))))
+  & target ~ {target_cmp target_rec}
+  & head ~ $([=] $(target_cmp equal))
+  & equal ~ ?((@search_ne @search_found) (tail (target_rec (idx out))))
+
+@search_ne = (tail (target (idx out)))
+  & idx ~ $([+1] next_idx)
+  & @search ~ (tail (target (next_idx out)))
+
+@search_found = (* (tail (target (idx out))))
+  & tail ~ *
+  & target ~ *
+  & out ~ idx

@@ -1,0 +1,131 @@
+// Build indegrees, then run Kahn's algorithm, always selecting the first zero.
+@prog = (({n1 n2} {e1 e2}) out)
+  & @zeros ~ (n1 counts0)
+  & @inc_edges ~ (e1 (counts0 counts))
+  & @kahn ~ (n2 (counts (e2 ((0 *) out))))
+
+// A list of n zeroes.
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) (out *))
+
+@zeros_nil = (out marker)
+  & out ~ (0 *)
+  & marker ~ *
+
+@zeros_succ = (n (out marker))
+  & @zeros ~ (n rest)
+  & out ~ (1 rest)
+  & marker ~ *
+
+// Increment the count at an index in a list.
+@inc = (idx (list out))
+  & idx ~ ?((@inc_at @inc_next) (list out))
+
+@inc_at = (list out)
+  & list ~ (tag payload)
+  & tag ~ 1
+  & payload ~ (head tail)
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_next = (idx (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @inc ~ (idx (tail newtail))
+  & out ~ (1 (head newtail))
+
+// Build indegrees by scanning the edge list.
+@inc_edges = ((?((@ie_nil @ie_cons) (payload (counts out))) tag) (counts out))
+
+@ie_nil = (* (a a))
+
+@ie_cons = (* ((edge tail) (counts out)))
+  & edge ~ (u v)
+  & u ~ *
+  & @inc ~ (v (counts counts2))
+  & @inc_edges ~ (tail (counts2 out))
+
+// Pick the first zero count, replace it with the sentinel, and return its index.
+@pick = ((?((@pick_nil @pick_cons) (payload (i (selected outcounts)))) tag) (i (selected outcounts)))
+
+@pick_nil = (* (i (selected outcounts)))
+  & i ~ *
+  & selected ~ 0
+  & outcounts ~ (0 *)
+
+@pick_cons = (* ((head tail) (i (selected outcounts))))
+  & head ~ {hcheck hkeep}
+  & hcheck ~ ?((@pick_zero @pick_nonzero) (tail (i (hkeep (selected outcounts))))
+
+@pick_zero = (tail (i (hkeep (selected outcounts))))
+  & i ~ selected
+  & hkeep ~ 16777215
+  & outcounts ~ (1 tail)
+
+@pick_nonzero = (* (tail (i (hkeep (selected outcounts)))))
+  & i ~ $([+1] i2)
+  & @pick ~ (i2 (tail (selected rest)))
+  & outcounts ~ (1 (hkeep rest))
+
+// Decrement a count at an index in a list.
+@dec = (idx (list out))
+  & idx ~ ?((@dec_at @dec_next) (list out))
+
+@dec_at = (list out)
+  & list ~ (tag payload)
+  & tag ~ 1
+  & payload ~ (head tail)
+  & head ~ $([-] $(1 head2))
+  & out ~ (1 (head2 tail))
+
+@dec_next = (idx (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @dec ~ (idx (tail newtail))
+  & out ~ (1 (head newtail))
+
+// Scan the edges and decrement indegrees for edges leaving the selected vertex.
+@reduce = ((?((@red_nil @red_cons) (payload (chosen (counts out)))) tag) (chosen (counts out)))
+
+@red_nil = (* (* (a a)))
+
+@red_cons = (* ((u v) (chosen (counts out))))
+  & chosen ~ {c1 c2}
+  & u ~ $([=] $(c1 eq))
+  & eq ~ ?((@red_skip @red_hit) (v (tail (c2 (counts out)))))
+
+@red_skip = (v (tail (chosen (counts out))))
+  & v ~ *
+  & @reduce ~ (tail (chosen (counts out)))
+
+@red_hit = (* (v (tail (chosen (counts out)))))
+  & @dec ~ (v (counts counts2))
+  & @reduce ~ (tail (chosen (counts2 out)))
+
+// Kahn's algorithm. The chosen vertex is pushed onto a reversed output list.
+@kahn = (remaining (counts (edges (acc out))))
+  & edges ~ {e1 e2}
+  & remaining ~ ?((@k_done @k_step) (counts (e1 (e2 (acc out)))))
+
+@k_done = (counts (e1 (e2 (acc out))))
+  & counts ~ *
+  & e1 ~ *
+  & e2 ~ *
+  & @rev ~ (acc out)
+
+@k_step = (remaining (counts (e1 (e2 (acc out)))))
+  & @pick ~ (counts (0 (vertex marked)))
+  & @reduce ~ (e1 (vertex (marked updated)))
+  & @kahn ~ (remaining (updated (e2 ((1 (vertex acc)) out)))
+
+// Reverse the accumulated list.
+@rev = ((?((@rev_nil @rev_cons) (payload (acc out))) payload) (acc out))
+
+@rev_nil = (payload (acc out))
+  & payload ~ *
+  & acc ~ out
+
+@rev_cons = (* ((head tail) (acc out)))
+  & @rev ~ (tail ((1 (head acc)) out))

@@ -1,0 +1,22 @@
+// Count the edges when fewer than n are present; otherwise return zero.
+@prog = ((n l) out)
+  & @len ~ (l m)
+  & m ~ {mc mk}
+  & mc ~ $([<] $(n z))
+  & z ~ ?((@if_no @if_yes) (mk out))
+
+@len = ((?((@len_nil @len_cons) (p out)) p) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t z)
+  & z ~ $([+] $(1 out))
+
+@if_no = (* (m out))
+  & m ~ *
+  & out ~ 0
+
+@if_yes = (* (x x))

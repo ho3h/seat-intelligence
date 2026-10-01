@@ -1,0 +1,58 @@
+@prog = (l out)
+  & @first ~ (l out)
+
+@first = ((?((@first_nil @first_cons) (pl out)) pl) out)
+
+@first_nil = (* 0)
+
+@first_cons = (* ((h t) out))
+  & h ~ *
+  & @second ~ (t (h out))
+
+@second = ((?((@second_nil @second_cons) (pl (first out))) pl) (first out))
+
+@second_nil = (* (first out))
+  & first ~ *
+  & out ~ 0
+
+@second_cons = (* ((h t) (first out)))
+  & h ~ {hc hk}
+  & first ~ {fc fk}
+  & hc ~ $([>] $(fc z))
+  & z ~ ?((@second_no @second_yes) (hk (fk (t out))))
+
+@second_yes = (hk (fk (t out)))
+  & @scan ~ (t (hk (fk out)))
+
+@second_no = (hk (fk (t out)))
+  & @scan ~ (t (fk (hk out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (hi (lo out)))) pl) (hi (lo out)))
+
+@scan_nil = (* (hi (lo out)))
+  & hi ~ *
+  & out ~ lo
+
+@scan_cons = (* ((h t) (hi (lo out))))
+  & h ~ {hc hk}
+  & hi ~ {hic hik}
+  & hc ~ $([>] $(hic z))
+  & z ~ ?((@scan_no @scan_yes) (hk (hik (lo (t out)))))
+
+@scan_yes = (hk (hik (lo (t out))))
+  & lo ~ *
+  & @scan ~ (t (hk (hik out)))
+
+@scan_no = (hk (hik (lo (t out))))
+  & hk ~ {hcmp hkeep}
+  & lo ~ {locmp lkeep}
+  & hcmp ~ $([>] $(locmp z))
+  & z ~ ?((@lower_no @lower_yes) (hkeep (lkeep (hik (t out)))))
+
+@lower_yes = (hkeep (lkeep (hik (t out))))
+  & lkeep ~ *
+  & @scan ~ (t (hik (hkeep out)))
+
+@lower_no = (hkeep (lkeep (hik (t out))))
+  & hkeep ~ *
+  & @scan ~ (t (hik (lkeep out)))

@@ -1,0 +1,130 @@
+@prog = (inp out)
+  & @init ~ (inp out)
+
+@init = ((n (s (k edges))) out)
+  & n ~ *
+  & s ~ {s1 s2}
+  & @loop ~ (k ((1 (s1 (0 *))) ((1 (s2 (0 *))) (1 (edges out)))))
+
+@loop = (k (front (visited (count (edges out))))
+  & k ~ ?((@stop @more) (front (visited (count (edges out)))))
+
+@stop = (front (visited (count (edges out))))
+  & front ~ *
+  & visited ~ *
+  & edges ~ *
+  & count ~ out
+
+@more = (k (front (visited (count (edges out)))))
+  & edges ~ {scan_edges keep_edges}
+  & @scan ~ (scan_edges (front (visited ((0 *) (count scanout)))))
+  & @after ~ (scanout (k (keep_edges out)))
+
+@after = ((visited (next count)) (k (edges out)))
+  & next ~ (tag payload)
+  & tag ~ ?((@after_empty @after_more) (payload (visited (count (k (edges out)))))
+
+@after_empty = (payload (visited (count (k (edges out)))))
+  & payload ~ *
+  & visited ~ *
+  & k ~ *
+  & edges ~ *
+  & count ~ out
+
+@after_more = (* (payload (visited (count (k (edges out))))))
+  & @loop ~ (k ((1 payload) (visited (count (edges out)))))
+
+@scan = (edges (front (visited (next (count out)))))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (payload (front (visited (next (count out)))))
+
+@scan_nil = (payload (front (visited (next (count out)))))
+  & payload ~ *
+  & front ~ *
+  & out ~ (visited (next count))
+
+@scan_cons = (* (((u v) tail) (front (visited (next (count out))))))
+  & front ~ {f1 ftmp}
+  & ftmp ~ {f2 fkeep}
+  & @try1 ~ (u (v (f1 (visited (next (count (f2 (fkeep (tail out))))))))
+
+@try1 = (a (b (front (visited (next (count (f2 (fkeep (tail out))))))))
+  & a ~ {a_test a_keep}
+  & b ~ {b_cand b_keep}
+  & @mem ~ (a_test (front z))
+  & z ~ ?((@try1_no @try1_yes) (a_keep (b_keep (b_cand (visited (next (count (f2 (fkeep (tail out)))))))))
+
+@try1_no = (a (b (b_cand (visited (next (count (f2 (fkeep (tail out))))))))
+  & b_cand ~ *
+  & @try2 ~ (a (b (f2 (visited (next (count (fkeep (tail out))))))))
+
+@try1_yes = (a (b (b_cand (visited (next (count (f2 (fkeep (tail out))))))))
+  & @cand1 ~ (b_cand (visited (next (count (a (b (f2 (fkeep (tail out))))))))
+
+@cand1 = (x (visited (next (count (a (b (front (fkeep (tail out))))))))
+  & x ~ {xq xkeep}
+  & visited ~ {vquery vkeep}
+  & @mem ~ (xq (vquery z))
+  & z ~ ?((@cand1_new @cand1_seen) (xkeep (vkeep (next (count (a (b (front (fkeep (tail out)))))))))
+
+@cand1_new = (xkeep (vkeep (next (count (a (b (front (fkeep (tail out))))))))
+  & xkeep ~ {xv xn}
+  & count ~ $([+1] cnew)
+  & @try2 ~ (a (b (front (vnew (nnew (cnew (fkeep (tail out))))))))
+  & vnew ~ (1 (xv vkeep))
+  & nnew ~ (1 (xn next))
+
+@cand1_seen = (* (xkeep (vkeep (next (count (a (b (front (fkeep (tail out)))))))))
+  & xkeep ~ *
+  & @try2 ~ (a (b (front (vkeep (next (count (fkeep (tail out))))))))
+
+@try2 = (a (b (front (visited (next (count (fkeep (tail out))))))))
+  & a ~ {aq akeep}
+  & @mem ~ (b (front z))
+  & z ~ ?((@try2_no @try2_yes) (akeep (visited (next (count (fkeep (tail out)))))))
+
+@try2_no = (akeep (visited (next (count (fkeep (tail out))))))
+  & akeep ~ *
+  & @scan ~ (tail (fkeep (visited (next (count out)))))
+
+@try2_yes = (* (akeep (visited (next (count (fkeep (tail out)))))))
+  & @cand2 ~ (akeep (visited (next (count (fkeep (tail out))))))
+
+@cand2 = (x (visited (next (count (fkeep (tail out))))))
+  & x ~ {xq xkeep}
+  & visited ~ {vquery vkeep}
+  & @mem ~ (xq (vquery z))
+  & z ~ ?((@cand2_new @cand2_seen) (xkeep (vkeep (next (count (fkeep (tail out)))))))
+
+@cand2_new = (xkeep (vkeep (next (count (fkeep (tail out))))))
+  & xkeep ~ {xv xn}
+  & count ~ $([+1] cnew)
+  & @scan ~ (tail (fkeep (vnew (nnew (cnew out)))))
+  & vnew ~ (1 (xv vkeep))
+  & nnew ~ (1 (xn next))
+
+@cand2_seen = (* (xkeep (vkeep (next (count (fkeep (tail out)))))))
+  & xkeep ~ *
+  & @scan ~ (tail (fkeep (vkeep (next (count out)))))
+
+@mem = (x (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@mem_nil @mem_cons) (payload (x out)))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (x out)))
+  & x ~ {x1 x2}
+  & x1 ~ $([=] $(head z))
+  & z ~ ?((@mem_no @mem_yes) (tail (x2 out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1

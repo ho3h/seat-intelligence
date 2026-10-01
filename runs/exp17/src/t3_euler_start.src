@@ -1,0 +1,49 @@
+# t3_euler_start: one walk builds the channel slots (lib/chan) and a degree tree (keyed increments); components by
+# channel label propagation; then one balanced reduction over (label, degree) gives: number of components among
+# non-isolated vertices, number of odd vertices, smallest non-isolated id, smallest odd id.
+#include base
+#include chan
+#include hooks_cc
+def prog(x):
+  (n, es) = x
+  (l, m) = lvl(n, 0, 1)
+  (T, D) = walk2(es, zio(l), zt(l), l, m)
+  (F, z) = chan_run(T, 0, 3, l, n)
+  (c, o, mz, mo) = red(F, D, l, 0, n)
+  if z + mz == 16777215:
+    return 16777215
+  else:
+    if c != 1:
+      return 16777215
+    else:
+      if o == 0:
+        return mz
+      else:
+        if o == 2:
+          return mo
+        else:
+          return 16777215
+
+def walk2(es, T, D, l, m):
+  match es:
+    case List/Nil:
+      return (T, D)
+    case List/Cons:
+      (u, v) = es.head
+      T1 = addio(T, u, l, m, $b, lambda $a: 0)
+      return walk2(es.tail, addio(T1, v, l, m, $a, lambda $b: 0), inc(inc(D, u, l, m), v, l, m), l, m)
+
+# (roots among non-isolated, odd count, min non-isolated id, min odd id)
+def red(F, D, l, base, n):
+  switch l:
+    case 0:
+      nz = (D > 0) & (base < n)
+      od = D & 1
+      return (nz & (F == base), od, nz * base + (1 - nz) * 16777215, od * base + (1 - od) * 16777215)
+    case _:
+      (f1, f2) = F
+      (d1, d2) = D
+      h = 1 << (l-1)
+      (c1, o1, z1, p1) = red(f1, d1, l-1, base, n)
+      (c2, o2, z2, p2) = red(f2, d2, l-1, base + h, n)
+      return (c1 + c2, o1 + o2, min(z1, z2), min(p1, p2))

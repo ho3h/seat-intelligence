@@ -1,0 +1,34 @@
+// Sort a list by recursively sorting its tail and inserting its head.
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = ((?((@sort_nil @sort_cons) (payload out)) payload) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @sort ~ (t sorted)
+  & @insert ~ (sorted (h out))
+
+// Insert x into a descending list.
+@insert = ((?((@ins_nil @ins_cons) (x (payload out))) payload) (x out))
+
+@ins_nil = (x (payload out))
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((y ys) out)))
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & y_cmp ~ $([>] $(x_cmp z))
+  & z ~ ?((@ins_before @ins_after) (x_keep (y_keep (ys out))))
+
+// y is not greater than x: put x before y.
+@ins_before = (x (y (ys out)))
+  & out ~ (1 (x (1 (y ys))))
+
+// y is greater than x: keep y first and insert x into the tail.
+@ins_after = (x (y (ys out)))
+  & @insert ~ (ys (x rest))
+  & out ~ (1 (y rest))

@@ -1,0 +1,71 @@
+@prog = ((c m) out)
+  & @pairs ~ (m (c out))
+
+@pairs = ((?((@p_nil @p_cons) (pl (c out))) pl) (c out))
+
+@p_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@p_cons = (* ((pair tail) (c out)))
+  & pair ~ (a b)
+  & a ~ {ag ak}
+  & b ~ {bg bk}
+  & c ~ {c_rest ctmp}
+  & ctmp ~ {c_a c_b}
+  & @pairs ~ (tail (c_rest rest))
+  & @get ~ (c_a (ag va))
+  & @get ~ (c_b (bg vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@p_no @p_yes) ((ak bk) (rest out)))
+
+@p_no = (* (rest out))
+  & rest ~ out
+
+@p_yes = (* (pair (rest out)))
+  & @ins ~ (pair (rest out))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@idx_zero @idx_succ) (head (tail out)))
+
+@idx_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@idx_succ = (n (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (n out))
+
+@ins = ((?((@ins_nil @ins_cons) (pl (np out))) pl) (np out))
+
+@ins_nil = (* (np out))
+  & out ~ (1 (np (0 *)))
+
+@ins_cons = (* ((old tail) (np out)))
+  & old ~ (x y)
+  & np ~ (a b)
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & x ~ {xcmp xkeep}
+  & y ~ {ycmp ykeep}
+  & acmp ~ {alt aeqa}
+  & xcmp ~ {xlt xeq}
+  & alt ~ $([<] $(xlt lessA))
+  & aeqa ~ $([=] $(xeq eqA))
+  & bcmp ~ $([<] $(ycmp lessB))
+  & eqA ~ $([&] $(lessB both))
+  & lessA ~ $([|] $(both before))
+  & before ~ ?((@ins_after @ins_before) ((akeep bkeep) ((xkeep ykeep) (tail out))))
+
+@ins_after = (np (old (tail out)))
+  & @ins ~ (np (tail sub))
+  & out ~ (1 (old sub))
+
+@ins_before = (* (np (old (tail out))))
+  & out ~ (1 (np (1 (old tail))))

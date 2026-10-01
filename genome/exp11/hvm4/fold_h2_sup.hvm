@@ -1,0 +1,25 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@sel = λ{ 0: λa. λb. b; _: λc. λa. λb. a }
+@min = λ&a. λ&b. @sel((a < b), a, b)
+@max = λ&a. λ&b. @sel((a < b), b, a)
+@ev = λ{
+  #A: λa. λx. a
+  #X: λa. λx. x
+  #K: λk. λa. λx. k
+  #Mod: λm. λe. λa. λx. (@ev(e, a, x) % m)
+  #Add: λl. λr. λ&a. λ&x. (@ev(l, a, x) + @ev(r, a, x))
+  #Sub: λl. λr. λ&a. λ&x. (@ev(l, a, x) - @ev(r, a, x))
+  #Mul: λl. λr. λ&a. λ&x. (@ev(l, a, x) * @ev(r, a, x))
+  #Xor: λl. λr. λ&a. λ&x. (@ev(l, a, x) ^ @ev(r, a, x))
+  #And: λl. λr. λ&a. λ&x. (@ev(l, a, x) && @ev(r, a, x))
+  #Min: λl. λr. λ&a. λ&x. @min(@ev(l, a, x), @ev(r, a, x))
+  #Max: λl. λr. λ&a. λ&x. @max(@ev(l, a, x), @ev(r, a, x))
+  #Lt: λl. λr. λ&a. λ&x. (@ev(l, a, x) < @ev(r, a, x))
+  #Eq: λl. λr. λ&a. λ&x. (@ev(l, a, x) == @ev(r, a, x))
+}
+
+@fold = λ{ []: λacc. λp. acc; <>: λx. λxs. λacc. λ&p. @fold(xs, @ev(p, acc, x), p) }
+@chk = λ{ []: λys. λp. p; <>: λxs. λxss. λ{ <>: λy. λys. λ&p. @g((@fold(xs, 0, p) == y), @chk(xss, ys, p)); []: λp. &{} } }
+@P = &LEY{&LEZ{&LFA{&LFB{#A{},#X{}},&LFC{#K{0},&LFD{#K{1},#K{2}}}},&LFE{&LFF{#K{3},#K{4}},&LFG{#K{5},&LFH{#Mod{2,&LA{&LB{&LC{#A{},#X{}},&LD{#K{0},#K{1}}},&LE{&LF{#K{2},#K{3}},&LG{#K{4},#K{5}}}}},#Mod{3,&LH{&LI{&LJ{#A{},#X{}},&LK{#K{0},#K{1}}},&LL{&LM{#K{2},#K{3}},&LN{#K{4},#K{5}}}}}}}}},&LFI{&LFJ{&LFK{#Mod{4,&LO{&LP{&LQ{#A{},#X{}},&LR{#K{0},#K{1}}},&LS{&LT{#K{2},#K{3}},&LU{#K{4},#K{5}}}}},#Mod{5,&LV{&LW{&LX{#A{},#X{}},&LY{#K{0},#K{1}}},&LZ{&LAA{#K{2},#K{3}},&LAB{#K{4},#K{5}}}}}},&LFL{#Add{&LAC{&LAD{&LAE{#A{},#X{}},&LAF{#K{0},#K{1}}},&LAG{&LAH{#K{2},#K{3}},&LAI{#K{4},#K{5}}}},&LAJ{&LAK{&LAL{#A{},#X{}},&LAM{#K{0},#K{1}}},&LAN{&LAO{#K{2},#K{3}},&LAP{#K{4},#K{5}}}}},&LFM{#Sub{&LAQ{&LAR{&LAS{#A{},#X{}},&LAT{#K{0},#K{1}}},&LAU{&LAV{#K{2},#K{3}},&LAW{#K{4},#K{5}}}},&LAX{&LAY{&LAZ{#A{},#X{}},&LBA{#K{0},#K{1}}},&LBB{&LBC{#K{2},#K{3}},&LBD{#K{4},#K{5}}}}},#Mul{&LBE{&LBF{&LBG{#A{},#X{}},&LBH{#K{0},#K{1}}},&LBI{&LBJ{#K{2},#K{3}},&LBK{#K{4},#K{5}}}},&LBL{&LBM{&LBN{#A{},#X{}},&LBO{#K{0},#K{1}}},&LBP{&LBQ{#K{2},#K{3}},&LBR{#K{4},#K{5}}}}}}}},&LFN{&LFO{#Xor{&LBS{&LBT{&LBU{#A{},#X{}},&LBV{#K{0},#K{1}}},&LBW{&LBX{#K{2},#K{3}},&LBY{#K{4},#K{5}}}},&LBZ{&LCA{&LCB{#A{},#X{}},&LCC{#K{0},#K{1}}},&LCD{&LCE{#K{2},#K{3}},&LCF{#K{4},#K{5}}}}},&LFP{#And{&LCG{&LCH{&LCI{#A{},#X{}},&LCJ{#K{0},#K{1}}},&LCK{&LCL{#K{2},#K{3}},&LCM{#K{4},#K{5}}}},&LCN{&LCO{&LCP{#A{},#X{}},&LCQ{#K{0},#K{1}}},&LCR{&LCS{#K{2},#K{3}},&LCT{#K{4},#K{5}}}}},#Min{&LCU{&LCV{&LCW{#A{},#X{}},&LCX{#K{0},#K{1}}},&LCY{&LCZ{#K{2},#K{3}},&LDA{#K{4},#K{5}}}},&LDB{&LDC{&LDD{#A{},#X{}},&LDE{#K{0},#K{1}}},&LDF{&LDG{#K{2},#K{3}},&LDH{#K{4},#K{5}}}}}}},&LFQ{#Max{&LDI{&LDJ{&LDK{#A{},#X{}},&LDL{#K{0},#K{1}}},&LDM{&LDN{#K{2},#K{3}},&LDO{#K{4},#K{5}}}},&LDP{&LDQ{&LDR{#A{},#X{}},&LDS{#K{0},#K{1}}},&LDT{&LDU{#K{2},#K{3}},&LDV{#K{4},#K{5}}}}},&LFR{#Lt{&LDW{&LDX{&LDY{#A{},#X{}},&LDZ{#K{0},#K{1}}},&LEA{&LEB{#K{2},#K{3}},&LEC{#K{4},#K{5}}}},&LED{&LEE{&LEF{#A{},#X{}},&LEG{#K{0},#K{1}}},&LEH{&LEI{#K{2},#K{3}},&LEJ{#K{4},#K{5}}}}},#Eq{&LEK{&LEL{&LEM{#A{},#X{}},&LEN{#K{0},#K{1}}},&LEO{&LEP{#K{2},#K{3}},&LEQ{#K{4},#K{5}}}},&LER{&LES{&LET{#A{},#X{}},&LEU{#K{0},#K{1}}},&LEV{&LEW{#K{2},#K{3}},&LEX{#K{4},#K{5}}}}}}}}}}
+@main = @chk([[2,9,1,4],[1,7,7,7],[6,3,1,7]], [16,22,17], @P)

@@ -1,0 +1,70 @@
+// t3_euler_start (GRAPH-SWING-2, runs/exp9): one stream over the edges builds (a) the undirected adjacency trie with
+// weight-0 arcs for min-label propagation (exp5 frontier core, as in cc_count) and (b) a degree trie by keyed
+// increments. One tree reduction over (labels, degrees) yields (min label, max label, #odd, min odd id) over the
+// vertices of nonzero degree; the answer is a few switches on that tuple.
+@prog = ((n es) out)
+  & n ~ ?((@eu_zero @eu_pos) (es out))
+@eu_zero = (* 16777215)
+@eu_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & n ~ *
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & @zl ~ (L1 G0)
+  & @zt ~ (L7 T0)
+  & @w_blk ~ (es ((L2 (G0 T0)) (G Tg)))
+  & @zi ~ (L3 D0)
+  & @idt ~ (L4 (0 C0))
+  & @loop ~ ((G (D0 (C0 (L5 16777215)))) Df)
+  & @er ~ (Df (Tg (L6 (0 r))))
+  & r ~ (mn (mx (oc mo)))
+  & mn ~ {mn1 {mn2 mn3}}
+  & mn1 ~ $([=] $(mx eq))
+  & mn2 ~ $([<] $(16777215 ne))
+  & eq ~ $([&] $(ne ok))
+  & ok ~ ?((@eu_bad @eu_ok) (mn3 (oc (mo out))))
+@eu_bad = (* (* (* 16777215)))
+@eu_ok = (* (mn (oc (mo out))))
+  & oc ~ ?((@eu_c0 @eu_c1) (mn (mo out)))
+@eu_c0 = (mn (* mn))
+@eu_c1 = (x (* (mo o)))
+  & x ~ $([=] $(1 two))
+  & two ~ ?((@eu_n2 @eu_y2) (mo o))
+@eu_n2 = (* 16777215)
+@eu_y2 = (* (mo mo))
+@eu_step = ((L (g t)) ((u v) (L5 (g3 t3))))
+  & L ~ {L1 {L2 {L3 {L4 L5}}}}
+  & u ~ {u1 {u2 u3}}
+  & v ~ {v1 {v2 v3}}
+  & @gp ~ (g (u1 (L1 ((v1 0) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 0) g3))))
+  & @ic ~ (t (u3 (L3 (0 t2))))
+  & @ic ~ (t2 (v3 (L4 (0 t3))))
+@eu_fin = ((* gt) gt)
+@ic_act = (old (* o))
+  & old ~ $([+1] o)
+// er(D, T, L, base) -> (min label, max label, #odd, min odd index) over leaves with T > 0
+@er = (d (t (L (base o))))
+  & L ~ ?((@er_leaf @er_node) (d (t (base o))))
+@er_leaf = (d (t (i o)))
+  & t ~ ?((@er_z @er_nz) (d (i o)))
+@er_z = (* (* (16777215 (0 (0 16777215)))))
+@er_nz = (dm1 (d (i (d1 (d2 (od mo))))))
+  & d ~ {d1 d2}
+  & dm1 ~ $([&] $(1 e))
+  & e ~ {e1 e2}
+  & 1 ~ $([-] $(e1 od))
+  & e2 ~ $([*] $(16777215 m))
+  & i ~ $([|] $(m mo))
+@er_node = (lm ((da db) ((ta tb) (base (mn (mx (oc mo)))))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @er ~ (da (ta (l1 (b1 (mna (mxa (oca moa)))))))
+  & @er ~ (db (tb (l2 (bR (mnb (mxb (ocb mob)))))))
+  & @min ~ (mna (mnb mn))
+  & @max ~ (mxa (mxb mx))
+  & oca ~ $([+] $(ocb oc))
+  & @min ~ (moa (mob mo))

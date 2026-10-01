@@ -1,0 +1,34 @@
+// Deduplicate a sorted list. The first element is emitted directly;
+// the recursive worker keeps the previous value and skips equal heads.
+
+@prog = (input output)
+  & @dedup ~ (input output)
+
+@dedup = ((?((@dd_nil @dd_first) (payload output)) payload) output)
+
+@dd_nil = (* output)
+  & output ~ (0 *)
+
+@dd_first = (* ((head tail) output))
+  & head ~ {prev emitted}
+  & @dedup_rest ~ (tail (prev rest))
+  & output ~ (1 (emitted rest))
+
+@dedup_rest = ((?((@dr_nil @dr_cons) (payload (prev output))) payload) (prev output))
+
+@dr_nil = (* (prev output))
+  & prev ~ *
+  & output ~ (0 *)
+
+@dr_cons = (* ((head tail) (prev output)))
+  & head ~ {cmp copy}
+  & copy ~ {next emitted}
+  & cmp ~ $([=] $(prev equal))
+  & equal ~ ?((@dr_keep @dr_skip) (emitted (rest output)))
+  & @dedup_rest ~ (tail (next rest))
+
+@dr_keep = (emitted (rest output))
+  & output ~ (1 (emitted rest))
+
+@dr_skip = (* (emitted (rest rest)))
+  & emitted ~ *

@@ -1,0 +1,181 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & @sort_edges ~ (edges Nil sorted)
+  & @range_asc ~ (n Nil dsu)
+  & @kruskal_loop ~ (sorted dsu 0 0 Nil Nil (n dsu total mst_edges non_mst_edges))
+  & @after_kruskal ~ (n dsu total mst_edges non_mst_edges output)
+
+@after_kruskal = (n dsu total mst_edges non_mst_edges output)
+  & non_mst_edges ~ ?((@ak_no_non @ak_has_non) (total mst_edges non_mst_edges output))
+
+@ak_no_non = (* (total mst_edges non_mst_edges output))
+  & output ~ 16777215
+
+@ak_has_non = (* (total mst_edges non_mst_edges output))
+  & @min_candidate ~ (non_mst_edges mst_edges total 16777215 output)
+
+@min_candidate = (non_mst_edges mst_edges total best output)
+  & non_mst_edges ~ ?((@mc_nil @mc_cons) (mst_edges total best output))
+
+@mc_nil = (* (mst_edges total best output))
+  & output ~ best
+
+@mc_cons = (* ((edge rest) (mst_edges total best output)))
+  & edge ~ (u (v w))
+  & @path_max ~ (u v mst_edges 0 pm)
+  & total ~ $([-] $(pm diff))
+  & diff ~ $([+] $(w cand))
+  & cand ~ $([<] $(best cand_lt))
+  & cand_lt ~ ?((@mc_best_new @mc_best_old) (best cand rest mst_edges total output))
+
+@mc_best_new = (* (best cand rest mst_edges total output))
+  & @min_candidate ~ (rest mst_edges total cand output)
+
+@mc_best_old = (* (best cand rest mst_edges total output))
+  & @min_candidate ~ (rest mst_edges total best output)
+
+@path_max = (u v edges acc out)
+  & u ~ $([=] $(v eq))
+  & eq ~ ?((@path_search @path_found) (u v edges acc out))
+
+@path_found = (* (u v edges acc out))
+  & out ~ acc
+
+@path_search = (u v edges acc out)
+  & edges ~ ?((@pm_fail @pm_try_edges) (u v edges acc out))
+
+@pm_fail = (* (u v edges acc out))
+  & out ~ 0
+
+@pm_try_edges = (* ((edge rest) (u v edges acc out)))
+  & edge ~ (a (b w))
+  & u ~ $([=] $(a eq_a))
+  & eq_a ~ ?((@try_b_side @try_a_side) (u v a b w rest acc out))
+
+@try_a_side = (* (u v a b w rest acc out))
+  & @path_max_neighbor ~ (u v b w rest acc out)
+
+@try_b_side = (u v a b w rest acc out)
+  & u ~ $([=] $(b eq_b))
+  & eq_b ~ ?((@try_skip @try_b_side_go) (u v a b w rest acc out))
+
+@try_b_side_go = (* (u v a b w rest acc out))
+  & @path_max_neighbor ~ (u v a w rest acc out)
+
+@try_skip = (u v a b w rest acc out)
+  & @pm_try_edges ~ (u v (1 (rest *)) * out)
+
+@path_max_neighbor = (u v nb w rest acc out)
+  & @max ~ (acc w new_acc)
+  & @path_max ~ (nb v (1 (rest *)) new_acc out)
+
+@max = (a b out)
+  & a ~ $([>] $(b a_gt))
+  & a_gt ~ ?((@max_b @max_a) (a b out))
+
+@max_a = (* (a b out)) & out ~ a
+
+@max_b = (a b out) & out ~ b
+
+@sort_edges = (edges acc out)
+  & edges ~ ?((@sort_nil @sort_cons) (acc out))
+
+@sort_nil = (* (acc out)) & out ~ acc
+
+@sort_cons = (* ((edge rest) (acc out)))
+  & @insert ~ (edge acc new_acc)
+  & @sort_edges ~ (rest new_acc out)
+
+@insert = (edge sorted out)
+  & sorted ~ ?((@ins_nil @ins_cons) (edge out))
+
+@ins_nil = (* (edge out))
+  & out ~ (1 (edge (0 *)))
+
+@ins_cons = (* ((head tail) (edge out)))
+  & @get_w ~ (edge ew)
+  & @get_w ~ (head hw)
+  & ew ~ $([>] $(hw cmp))
+  & cmp ~ ?((@ins_before @ins_after) (edge head tail out))
+
+@ins_after = (* (edge head tail out))
+  & out ~ (1 (edge (1 (head tail))))
+
+@ins_before = (* (edge head tail out))
+  & @insert ~ (edge tail new_tail)
+  & out ~ (1 (head new_tail))
+
+@get_w = (edge out)
+  & edge ~ (u (v w))
+  & u ~ *
+  & v ~ *
+  & w ~ out
+
+@range_asc = (n acc out)
+  & n ~ ?((@range_zero @range_pos) (acc out))
+
+@range_zero = (* (acc out)) & out ~ acc
+
+@range_pos = (n1 (acc out))
+  & @range_asc ~ (n1 (1 (n1 acc)) out)
+
+@kruskal_loop = (edges dsu total cnt mst non_mst state_out)
+  & edges ~ ?((@kr_nil @kr_cons) (dsu total cnt mst non_mst state_out))
+
+@kr_nil = (* (dsu total cnt mst non_mst state_out))
+  & state_out ~ (dsu total mst non_mst)
+
+@kr_cons = (* ((edge rest) (dsu total cnt mst non_mst state_out)))
+  & edge ~ (u (v w))
+  & @find ~ (u dsu ru)
+  & @find ~ (v dsu rv)
+  & ru ~ $([=] $(rv same))
+  & same ~ ?((@kr_diff @kr_same) (edge rest dsu total cnt mst non_mst state_out))
+
+@kr_same = (* (edge rest dsu total cnt mst non_mst state_out))
+  & edge ~ (u (v w))
+  & @kruskal_loop ~ (rest dsu total cnt mst (1 (edge non_mst)) state_out)
+
+@kr_diff = (edge rest dsu total cnt mst non_mst state_out)
+  & edge ~ (u (v w))
+  & @find ~ (u dsu ru)
+  & @find ~ (v dsu rv)
+  & @set_at ~ (dsu rv ru new_dsu)
+  & total ~ $([+] $(w new_total))
+  & cnt ~ $([+] $(1 new_cnt))
+  & @kruskal_loop ~ (rest new_dsu new_total new_cnt (1 (edge mst)) non_mst state_out)
+
+@find = (x dsu out)
+  & @get_at ~ (dsu x parent)
+  & x ~ $([=] $(parent eq))
+  & eq ~ ?((@find_go @find_stop) (parent dsu out))
+
+@find_stop = (* (parent dsu out)) & out ~ x
+
+@find_go = (parent dsu out) & @find ~ (parent dsu out)
+
+@get_at = (list idx out)
+  & idx ~ ?((@ga_zero @ga_pos) (list out))
+
+@ga_zero = (* (list out))
+  & list ~ (h t)
+  & h ~ out
+  & t ~ *
+
+@ga_pos = (idx_pred (list out))
+  & list ~ (h t)
+  & h ~ *
+  & @get_at ~ (t idx_pred out)
+
+@set_at = (list idx value out)
+  & idx ~ ?((@sa_zero @sa_pos) (list value out))
+
+@sa_zero = (* (list value out))
+  & list ~ (h t)
+  & h ~ *
+  & out ~ (1 (value t))
+
+@sa_pos = (idx_pred (list value out))
+  & list ~ (h t)
+  & @set_at ~ (t idx_pred value new_t)
+  & out ~ (1 (h new_t))

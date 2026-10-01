@@ -1,0 +1,50 @@
+// Count vertices that occur in no merge edge.
+@prog = (input out)
+  & input ~ (n edges)
+  & @loop ~ (n (0 (edges (0 out))))
+
+@loop = (n (i (edges (acc out))))
+  & n ~ ?((@loop_done @loop_step) (i (edges (acc out))))
+
+@loop_done = (i (edges (acc out)))
+  & i ~ *
+  & edges ~ *
+  & acc ~ out
+
+@loop_step = (rem (i (edges (acc out))))
+  & edges ~ {scan rest}
+  & i ~ {iscan inext}
+  & @has ~ (scan (iscan hit))
+  & acc ~ $([+] $(hit acc2))
+  & inext ~ $([+1] inext2)
+  & @loop ~ (rem (inext2 (rest (acc2 out))))
+
+// Return 1 if the vertex is absent from the edge list, else 0.
+@has = ((?((@has_nil @has_cons) (pl (i out))) pl) (i out))
+
+@has_nil = (* (* one))
+  & one ~ 1
+
+@has_cons = (* (((u v) tail) (i out)))
+  & i ~ {iu iv}
+  & u ~ $([=] $(iu eq))
+  & eq ~ ?((@has_check_v @has_hit_u) (v (tail (iv out))))
+
+@has_check_v = (v (tail (iv out)))
+  & iv ~ {ivcmp ivrec}
+  & v ~ $([=] $(ivcmp eq2))
+  & eq2 ~ ?((@has_recurse @has_hit_v) (tail (ivrec out)))
+
+@has_hit_u = (* (v (tail (iv out))))
+  & v ~ *
+  & tail ~ *
+  & iv ~ *
+  & out ~ 0
+
+@has_hit_v = (* (tail (ivrec out)))
+  & tail ~ *
+  & ivrec ~ *
+  & out ~ 0
+
+@has_recurse = (tail (ivrec out))
+  & @has ~ (tail (ivrec out))

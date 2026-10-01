@@ -1,0 +1,106 @@
+// Multiply little-endian base-4096 limb lists, then remove high zero limbs.
+@prog = ((a b) out)
+  & @mul ~ (a (b raw))
+  & @norm ~ (raw out)
+
+@mul = ((?((@mul_nil @mul_cons) (p (b out))) p) (b out))
+
+@mul_nil = (* (b out))
+  & b ~ *
+  & out ~ (0 *)
+
+@mul_cons = (* ((d tail) (b out)))
+  & b ~ {b1 b2}
+  & @mul ~ (tail (b1 rec))
+  & @scale ~ (b2 (d (0 scaled)))
+  & @add ~ (scaled ((1 (0 rec)) (0 out)))
+
+// Multiply each limb by d, carrying in base 4096.
+@scale = ((?((@scale_nil @scale_cons) (p (d (c out)))) p) (d (c out)))
+
+@scale_nil = (* (d (c out)))
+  & d ~ *
+  & out ~ (1 (c (0 *)))
+
+@scale_cons = (* ((h t) (d (c out))))
+  & d ~ {d1 d2}
+  & h ~ $([*] $(d1 prod))
+  & prod ~ $([+] $(c sum))
+  & sum ~ {s1 s2}
+  & s1 ~ $([%] $(4096 rem))
+  & s2 ~ $([/] $(4096 c2))
+  & @scale ~ (t (d2 (c2 rest)))
+  & out ~ (1 (rem rest))
+
+// Add two limb lists with an initial carry.
+@add = ((?((@add_a_nil @add_a_cons) (p (b (c out)))) p) (b (c out)))
+
+@add_a_nil = (* (b (c out)))
+  & @add_b_only ~ (b (c out))
+
+@add_a_cons = (* ((ah at) (b (c out))))
+  & @add_b_for_a ~ (b (ah (at (c out))))
+
+// A is empty; add B and the carry.
+@add_b_only = ((?((@add_b_nil @add_b_cons) (p (c out))) p) (c out))
+
+@add_b_nil = (* (c out))
+  & out ~ (1 (c (0 *)))
+
+@add_b_cons = (* ((bh bt) (c out)))
+  & bh ~ $([+] $(c total))
+  & total ~ {u v}
+  & u ~ $([%] $(4096 rem))
+  & v ~ $([/] $(4096 c2))
+  & @add_b_only ~ (bt (c2 rest))
+  & out ~ (1 (rem rest))
+
+// Add an A limb to the corresponding B limb.
+@add_b_for_a = ((?((@add_bfa_nil @add_bfa_cons) (p (ah (at (c out))))) p) (ah (at (c out))))
+
+@add_bfa_nil = (* (ah (at (c out))))
+  & ah ~ $([+] $(c total))
+  & total ~ {u v}
+  & u ~ $([%] $(4096 rem))
+  & v ~ $([/] $(4096 c2))
+  & @add ~ (at ((0 *) (c2 rest)))
+  & out ~ (1 (rem rest))
+
+@add_bfa_cons = (* ((bh bt) (ah (at (c out)))))
+  & ah ~ $([+] $(bh s))
+  & s ~ $([+] $(c total))
+  & total ~ {u v}
+  & u ~ $([%] $(4096 rem))
+  & v ~ $([/] $(4096 c2))
+  & @add ~ (at (bt (c2 rest)))
+  & out ~ (1 (rem rest))
+
+// Normalize a list by removing high zero limbs. Nil represents zero.
+@norm = ((?((@norm_nil @norm_cons) (p out)) p) out)
+
+@norm_nil = (* out)
+  & out ~ (0 *)
+
+@norm_cons = (* ((h t) out))
+  & @norm ~ (t nt)
+  & @norm_head ~ (h (nt out))
+
+@norm_head = (h (nt out))
+  & h ~ {hx hy}
+  & hx ~ $([=] $(0 z))
+  & z ~ ?((@norm_head_zero @norm_head_nonzero) (hy (nt out)))
+
+@norm_head_zero = (hy (nt out))
+  & hy ~ *
+  & @norm_tail_check ~ (nt out)
+
+@norm_head_nonzero = (* (hy (nt out)))
+  & out ~ (1 (hy nt))
+
+@norm_tail_check = ((?((@norm_tail_nil @norm_tail_cons) (p out)) p) out)
+
+@norm_tail_nil = (* out)
+  & out ~ (0 *)
+
+@norm_tail_cons = (* ((nh tail) out))
+  & out ~ (1 (0 (nh tail)))

@@ -1,0 +1,159 @@
+@prog = ((n edges) out)
+  & @make_nils ~ (n adj0)
+  & @build_adj ~ (edges (adj0 adj))
+  & @count_cycles ~ (n (adj out))
+
+@make_nils = (n out)
+  & n ~ ?((@make_nils_zero @make_nils_succ) (out))
+
+@make_nils_zero = (* out)
+  & out ~ (0 *)
+
+@make_nils_succ = (pred out)
+  & @make_nils ~ (pred rest)
+  & out ~ (1 ((0 *) rest))
+
+@build_adj = (edges (adj out))
+  & edges ~ (?( (@build_adj_nil @build_adj_cons) (pl (adj out)) ) pl)
+
+@build_adj_nil = (* (adj out))
+  & out ~ adj
+
+@build_adj_cons = (* (((u v) tail) (adj out)))
+  & @add_edge ~ (u (v (adj adj2)))
+  & @build_adj ~ (tail (adj2 out))
+
+@add_edge = (u (v (adj out)))
+  & u ~ ?((@add_edge_zero @add_edge_succ) (v (adj out)))
+
+@add_edge_zero = (v (adj out))
+  & adj ~ (?( (@add_edge_zero_nil @add_edge_zero_cons) (pl (v out)) ) pl)
+
+@add_edge_zero_nil = (* (v out))
+  & out ~ (1 ((1 (v (0 *))) (0 *)))
+
+@add_edge_zero_cons = (* ((head tail) (v out)))
+  & out ~ (1 ((1 (v head)) tail))
+
+@add_edge_succ = (u_pred (v (adj out)))
+  & adj ~ (?( (@add_edge_succ_nil @add_edge_succ_cons) (pl (u_pred (v out))) ) pl)
+
+@add_edge_succ_nil = (* (u_pred (v out)))
+  & out ~ (0 *)
+
+@add_edge_succ_cons = (* ((head tail) (u_pred (v out))))
+  & @add_edge ~ (u_pred (v (tail rest)))
+  & out ~ (1 (head rest))
+
+@get_adj = (u (adj out))
+  & u ~ ?((@get_adj_zero @get_adj_succ) (adj out))
+
+@get_adj_zero = (adj out)
+  & adj ~ (?( (@get_adj_zero_nil @get_adj_zero_cons) (pl out) ) pl)
+
+@get_adj_zero_nil = (* out)
+  & out ~ (0 *)
+
+@get_adj_zero_cons = (* ((head tail) out))
+  & out ~ head
+
+@get_adj_succ = (u_pred (adj out))
+  & adj ~ (?( (@get_adj_succ_nil @get_adj_succ_cons) (pl (u_pred out)) ) pl)
+
+@get_adj_succ_nil = (* (u_pred out))
+  & out ~ (0 *)
+
+@get_adj_succ_cons = (* ((head tail) (u_pred out)))
+  & @get_adj ~ (u_pred (tail out))
+
+@member = (x (list out))
+  & list ~ (?( (@member_nil @member_cons) (pl (x out)) ) pl)
+
+@member_nil = (* (x out))
+  & out ~ 0
+  & x ~ *
+
+@member_cons = (* ((h t) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@member_no @member_yes) (t (x_rec out)))
+
+@member_no = (t (x_rec out))
+  & @member ~ (x_rec (t out))
+
+@member_yes = (* (t (x_rec out)))
+  & out ~ 1
+  & t ~ *
+  & x_rec ~ *
+
+@append = (l1 (l2 out))
+  & l1 ~ (?( (@append_nil @append_cons) (pl (l2 out)) ) pl)
+
+@append_nil = (* (l2 out))
+  & out ~ l2
+
+@append_cons = (* ((h t) (l2 out)))
+  & @append ~ (t (l2 rest))
+  & out ~ (1 (h rest))
+
+@dfs_cycle = (target (stack (visited (adj out))))
+  & stack ~ (?( (@dfs_cycle_nil @dfs_cycle_cons) (target visited (adj out)) ) pl)
+
+@dfs_cycle_nil = (target (visited (adj out)))
+  & out ~ 0
+  & target ~ *
+  & visited ~ *
+  & adj ~ *
+
+@dfs_cycle_cons = (* ((u rest) (target (visited (adj out)))))
+  & u ~ {u_cmp u_rest}
+  & target ~ {target_cmp target_dfs}
+  & u_cmp ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@dfs_cycle_not_target @dfs_cycle_target) (u_rest (target_dfs (rest (visited (adj out))))))
+
+@dfs_cycle_target = (* (u_rest (target_dfs (rest (visited (adj out))))))
+  & out ~ 1
+  & u_rest ~ *
+  & target_dfs ~ *
+  & rest ~ *
+  & visited ~ *
+  & adj ~ *
+
+@dfs_cycle_not_target = (u_rest (target_dfs (rest (visited (adj out)))))
+  & u_rest ~ {u_mem u_neigh}
+  & u_neigh ~ {u_adj u_vis}
+  & visited ~ {visited_m visited_new}
+  & @member ~ (u_mem (visited_m mem_res))
+  & mem_res ~ ?((@dfs_cycle_not_visited @dfs_cycle_visited) (u_adj (u_vis (target_dfs (rest (visited_new (adj out)))))))
+
+@dfs_cycle_visited = (* (u_adj (u_vis (target_dfs (rest (visited_new (adj out)))))))
+  & @dfs_cycle ~ (target_dfs (rest (visited_new (adj out))))
+  & u_adj ~ *
+  & u_vis ~ *
+
+@dfs_cycle_not_visited = (u_adj (u_vis (target_dfs (rest (visited_new (adj out))))))
+  & @get_adj ~ (u_adj (adj neighs))
+  & @append ~ (neighs (rest new_stack))
+  & @dfs_cycle ~ (target_dfs (new_stack ((1 (u_vis visited_new)) (adj out))))
+
+@check_cycle = (v (adj out))
+  & @get_adj ~ (v (adj neighs))
+  & @dfs_cycle ~ (v (neighs ((0 *) (adj out))))
+
+@count_cycles = (n (adj out))
+  & n ~ ?((@count_cycles_zero @count_cycles_succ) (adj (0 out)))
+
+@count_cycles_zero = (adj (acc out))
+  & out ~ acc
+  & adj ~ *
+
+@count_cycles_succ = (n_pred (adj (acc out)))
+  & @check_cycle ~ (n_pred (adj res))
+  & res ~ ?((@count_cycles_no @count_cycles_yes) (n_pred (adj (acc out))))
+
+@count_cycles_no = (n_pred (adj (acc out)))
+  & @count_cycles ~ (n_pred (adj (acc out)))
+
+@count_cycles_yes = (* (n_pred (adj (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count_cycles ~ (n_pred (adj (acc2 out)))

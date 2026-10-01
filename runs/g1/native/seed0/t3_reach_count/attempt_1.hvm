@@ -1,0 +1,69 @@
+// Entry point: initialize the worklist, visited set, and count.
+@prog = (input out)
+  & input ~ (n (s edges))
+  & n ~ *
+  & @dfs ~ ((1 (s (0 *))) ((0 *) (edges (0 out))))
+
+// Depth-first traversal. The worklist and visited set are lists of vertex numbers.
+@dfs = ((?((@dfs_nil @dfs_cons) (payload (visited (edges (count out))))) payload) (visited (edges (count out)))
+
+@dfs_nil = (* (visited (edges (count out))))
+  & visited ~ *
+  & edges ~ *
+  & count ~ out
+
+@dfs_cons = (* ((v tail) (visited (edges (count out)))))
+  & visited ~ {vlist visited_keep}
+  & v ~ {vtest vkeep}
+  & @mem ~ (vlist (vtest z))
+  & z ~ ?((@dfs_new @dfs_seen) (tail (vkeep (visited_keep (edges (count out))))))
+
+@dfs_seen = (* (tail (v (visited (edges (count out))))))
+  & v ~ *
+  & @dfs ~ (tail (visited (edges (count out))))
+
+@dfs_new = (tail (v (visited (edges (count out)))))
+  & v ~ {src_scan src_seen}
+  & edges ~ {scan_edges keep_edges}
+  & count ~ $([+] $(1 count2))
+  & @scan ~ (scan_edges (src_scan (tail newstack)))
+  & @dfs ~ (newstack ((1 (src_seen visited)) (keep_edges (count2 out))))
+
+// Scan all edges, adding destinations of edges whose source is the current vertex.
+@scan = ((?((@scan_nil @scan_cons) (payload (src (stack out)))) payload) (src (stack out)))
+
+@scan_nil = (* (src (stack out)))
+  & src ~ *
+  & stack ~ out
+
+@scan_cons = (* (((u dest) rest) (src (stack out))))
+  & src ~ {src_cmp src_recur}
+  & u ~ $([=] $(src_cmp z))
+  & z ~ ?((@scan_skip @scan_push) (rest (src_recur (stack (dest out))))))
+
+@scan_skip = (* (rest (src (stack (dest out)))))
+  & dest ~ *
+  & @scan ~ (rest (src (stack out)))
+
+@scan_push = (rest (src (stack (dest out))))
+  & @scan ~ (rest (src ((1 (dest stack)) out)))
+
+// Test whether a vertex is in a list.
+@mem = ((?((@mem_nil @mem_cons) (payload (target out))) payload) (target out))
+
+@mem_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & h ~ $([=] $(target_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (target_keep out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1

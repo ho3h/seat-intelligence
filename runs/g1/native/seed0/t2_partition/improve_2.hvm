@@ -1,0 +1,29 @@
+// Emit each output list forward, passing its open tails into the recursive call.
+@prog = (input out)
+  & input ~ (p xs)
+  & out ~ (lo hi)
+  & @fill ~ (p (xs (lo hi)))
+
+@fill = (p (xs (lo hi)))
+  & xs ~ (?( (@fill_nil @fill_cons) (body (p (lo hi)))) body)
+
+@fill_nil = (body (p (lo hi)))
+  & body ~ *
+  & p ~ *
+  & lo ~ (0 *)
+  & hi ~ (0 *)
+
+@fill_cons = (* (body (p (lo hi))))
+  & body ~ (h t)
+  & p ~ {p_rec p_cmp}
+  & h ~ {h_cmp h_keep}
+  & h_cmp ~ $([<] $(p_cmp cmp))
+  & cmp ~ ?((@fill_ge @fill_lt) (t (p_rec (h_keep (lo hi))))
+
+@fill_ge = (t (p (h (lo hi))))
+  & hi ~ (1 (h hi_tail))
+  & @fill ~ (p (t (lo hi_tail)))
+
+@fill_lt = (* (t (p (h (lo hi)))))
+  & lo ~ (1 (h lo_tail))
+  & @fill ~ (p (t (lo_tail hi)))

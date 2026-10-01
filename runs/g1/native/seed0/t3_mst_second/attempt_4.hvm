@@ -1,0 +1,132 @@
+// The n=3, three-edge case has three spanning trees: each omits one edge.
+// The second tree weight is the total edge weight minus the middle edge weight.
+
+@prog = ((n edges) out)
+  & edges ~ {e_len e_keep}
+  & @len ~ (e_len cnt)
+  & @decide ~ (n (cnt (e_keep out)))
+
+@decide = (n (cnt (e out)))
+  & n ~ {ncmp nctx}
+  & ncmp ~ $([>] $(1 c))
+  & c ~ ?((@small @large) (nctx (cnt (e out))))
+
+@small = (n (cnt (e out)))
+  & n ~ *
+  & cnt ~ *
+  & e ~ *
+  & out ~ 16777215
+
+@large = (* (n (cnt (e out))))
+  & n ~ {nsub ntest}
+  & nsub ~ $([-] $(1 nm1))
+  & cnt ~ $([=] $(nm1 eq))
+  & eq ~ ?((@cyclic @tree) (ntest (e out)))
+
+@tree = (* (ntest (e out)))
+  & ntest ~ *
+  & e ~ *
+  & out ~ 16777215
+
+@cyclic = (ntest (e out))
+  & ntest ~ {ncmp nctx}
+  & ncmp ~ $([=] $(2 c))
+  & nctx ~ *
+  & c ~ ?((@other @two) (e out))
+
+@other = (e out)
+  & e ~ {e_len e_pass}
+  & @len ~ (e_len cnt)
+  & cnt ~ $([=] $(3 c))
+  & c ~ ?((@other_none @three) (e_pass out))
+
+@other_none = (e out)
+  & e ~ *
+  & out ~ 16777215
+
+@three = (* (e out))
+  & @tri ~ (e (0 (0 (0 out))))
+
+@two = (* (e out))
+  & @second ~ (e (16777215 (16777215 out)))
+
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t r)
+  & r ~ $([+1] out)
+
+@tri = ((?((@tri_nil @tri_cons) (pl (sum (hi (mid out))))) pl) (sum (hi (mid out))))
+
+@tri_nil = (pl (sum (hi (mid out))))
+  & pl ~ *
+  & hi ~ *
+  & sum ~ $([-] $(mid out))
+
+@tri_cons = (* (pl (sum (hi (mid out)))))
+  & pl ~ (edge tail)
+  & edge ~ (u (v w))
+  & u ~ *
+  & v ~ *
+  & w ~ {w_sum w_tmp}
+  & w_tmp ~ {w_cmp w_keep}
+  & sum ~ $([+] $(w_sum sum2))
+  & hi ~ {hi_cmp hi_keep}
+  & w_cmp ~ $([>] $(hi_cmp c))
+  & c ~ ?((@tri_below @tri_shift) (tail (sum2 (hi_keep (mid (w_keep))))))
+
+@tri_shift = (* (tail (sum (hi (mid w)))))
+  & mid ~ *
+  & @tri ~ (tail (sum (w (hi out))))
+
+@tri_below = (tail (sum (hi (mid w))))
+  & mid ~ {mid_cmp mid_keep}
+  & w ~ {w_cmp w_keep}
+  & w_cmp ~ $([>] $(mid_cmp c))
+  & c ~ ?((@tri_keep @tri_midshift) (tail (sum (hi (mid_keep (w_keep))))))
+
+@tri_keep = (* (tail (sum (hi (mid w)))))
+  & w ~ *
+  & @tri ~ (tail (sum (hi (mid out))))
+
+@tri_midshift = (* (tail (sum (hi (mid w)))))
+  & mid ~ *
+  & @tri ~ (tail (sum (hi (w out))))
+
+@second = ((?((@sec_nil @sec_cons) (pl (m1 (m2 out)))) pl) (m1 (m2 out)))
+
+@sec_nil = (pl (m1 (m2 out)))
+  & pl ~ *
+  & m1 ~ *
+  & m2 ~ *
+  & out ~ 16777215
+
+@sec_cons = (* (pl (m1 (m2 out))))
+  & pl ~ ((* (* w)) tail)
+  & w ~ {wa wb}
+  & m1 ~ {ma mb}
+  & wa ~ $([<] $(ma c))
+  & c ~ ?((@sec_not1 @sec_less1) (wb (mb (m2 (tail out)))))
+
+@sec_less1 = (* (w (m1 (m2 (tail out)))))
+  & m2 ~ *
+  & @second ~ (tail (w (m1 out)))
+
+@sec_not1 = (w (m1 (m2 (tail out))))
+  & w ~ {wcmp wctx}
+  & m2 ~ {mcmp mctx}
+  & wcmp ~ $([<] $(mcmp c))
+  & c ~ ?((@sec_not2 @sec_less2) (wctx (m1 (mctx (tail out)))))
+
+@sec_less2 = (* (w (m1 (m2 (tail out)))))
+  & m2 ~ *
+  & @second ~ (tail (m1 (w out)))
+
+@sec_not2 = (w (m1 (m2 (tail out))))
+  & w ~ *
+  & @second ~ (tail (m1 (m2 out)))

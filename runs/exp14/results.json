@@ -1,0 +1,950 @@
+{
+ "unchecked": [
+  {
+   "prog": "t3_reach_count",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@reach_z: wire `f` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@reach_s: wire `f` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@reach_act: wire "
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `L` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@prog: wire `s` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@p_pos: wire `L2` appears 3 time"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: wire `L_dummy` appears only once (in & L ~ {L_z0 {L_z1 {L_w {L_frontier_tmp {L_); a wire needs exactly two ends. Erase an unused value with `*`.\n@p_pos: wire `L_frontier1` appears only once (in & L_frontier_tmp ~ {L_frontier1 L_fro"
+    },
+    {
+     "attempt": 4,
+     "class": "glue",
+     "feedback": "FAIL: 68 of 68 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (1, 0, [])\n  expected: 1\n  got:      \"thread 'main' (10605487) panicked at src/main.rs:71:62:\\n\\x1b[1mPARSE_ERROR\\n- expected: \\x1b[0m@\\x1b[1m\\n- detected:\\n\\x1b[0m\\x1b[0m "
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: wire `out` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: wire `out_w` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t3_sp_len",
+   "attempts": 5,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@prog: wire `n` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@prog: wire `out` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@prog: wire `t` appears only onc"
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@prog: wire `n` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@prog: wire `out` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@prog: wire `t` appears only onc"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@prog: wire `out` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    },
+    {
+     "attempt": 4,
+     "class": "semantic",
+     "feedback": "FAIL: 43 of 88 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (2, 0, 1, [(0, 1)])\n  expected: 1\n  got:      0"
+    }
+   ],
+   "metrics0": {
+    "itrs_median_small": 3147,
+    "itrs_median_big": 276021,
+    "itrs_max": 798979,
+    "depth_median_big": 2052,
+    "depth_max": 8267
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_cc_label",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3792,
+    "itrs_median_big": 416184,
+    "itrs_max": 439326,
+    "depth_median_big": 2585,
+    "depth_max": 5599
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_count",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@c_step: wire `L1` appears only once (in & L ~ {L1 L2}); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_step: wire `h1` appears only once (in & h ~ {h1 h2}); a wire needs exactly two ends. Erase an unused value with `*`."
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: brackets do not balance in the redex `& @sp_sssp ~ (n (s (L3 {INF} (G (L4 D))))))` (a closing bracket has no opener)\n@p_pos: wire `INF` appears only once (in & @sp_sssp ~ (n (s (L3 {INF} (G (L4 D)))))); a wire needs exactly two end"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: wire `L5b` appears only once (in & L5 ~ {L5a L5b}); a wire needs exactly two ends. Erase an unused value with `*`."
+    },
+    {
+     "attempt": 4,
+     "class": "semantic",
+     "feedback": "FAIL: 82 of 89 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (1, 0, 0, [])\n  expected: 1\n  got:      0"
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: wire `C0` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@p_pos: wire `Dist` appears only once (in & @sp_loop ~ ((G (C0 (C1 (L5 {INF} *)))) D); a wire needs exactly two ends. Erase an unused value "
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@p_pos: wire `Count` appears only once (in & @sc ~ (C0 (s (L6 (1 Count))))); a wire needs exactly two ends. Erase an unused value with `*`.\n@p_pos: wire `D1` appears only once (in & Dist ~ {D1 *}); a wire needs exactly two ends. Erase an u"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_decide_count",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@count_nil: wire `tau` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@count_cons: wire `u` appears only once (in & head ~ (u v_score)); a wire needs exactly two ends. Erase an unused value with"
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "FAIL: 39 of 39 hidden cases wrong. Smallest failing case (enum, size None):\n  reason:   result is not the canonical encoding: expected u24, got *\n  input:    (0, [])\n  expected: 0\n  got:      '*'"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "FAIL: 39 of 39 hidden cases wrong. Smallest failing case (enum, size None):\n  reason:   result is not the canonical encoding: expected u24, got (v13 v13)\n  input:    (0, [])\n  expected: 0\n  got:      '(v13 v13)'"
+    },
+    {
+     "attempt": 4,
+     "class": "semantic",
+     "feedback": "FAIL: 29 of 39 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (0, [(0, 1, 0)])\n  expected: 1\n  got:      0"
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@stop: wire `state` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@stop: wire `tau` appears only once (in & state ~ (tau (acc out))); a wire needs exactly two ends. Erase an unused value with `*`."
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@stop: wire `state` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@incr: wire `tau` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_decide_filter",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `acc2` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@w_step: wire `score` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@w_step: wire `tau` app"
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `score` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@w_step: wire `tau` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@w_fin: wire `t` appears only once "
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `t1` appears only once (in & tau ~ {t1 t2}); a wire needs exactly two ends. Erase an unused value with `*`.\n@w_step: wire `tau` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@w_fin: wire `t`"
+    },
+    {
+     "attempt": 4,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `tau` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `t2` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "FAIL: 39 of 39 hidden cases wrong. Smallest failing case (enum, size None):\n  reason:   result is not the canonical encoding: expected list cell, got *\n  input:    (0, [])\n  expected: []\n  got:      '*'"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_decide_singleton",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@fin: wire `idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@cont: wire `max` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@do_upd: wire `i` appears 3 tim"
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@fin: wire `idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@cont: wire `val` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "FAIL: 38 of 38 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, [0, 0, 0, 0, 0, 0])\n  expected: 0\n  got:      \"thread 'main' (10569936) panicked at src/main.rs:71:62:\\n\\x1b[1mPARSE_ERROR\\n- expected: \\x1b[0m)\\x1b[1m\\n- detected:\\n\\x"
+    },
+    {
+     "attempt": 4,
+     "class": "glue",
+     "feedback": "FAIL: 38 of 38 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, [0, 0, 0, 0, 0, 0])\n  expected: 0\n  got:      \"thread 'main' (10575656) panicked at src/main.rs:71:62:\\n\\x1b[1mPARSE_ERROR\\n- expected: \\x1b[0m)\\x1b[1m\\n- detected:\\n\\x"
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "FAIL: 38 of 38 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, [0, 0, 0, 0, 0, 0])\n  expected: 0\n  got:      \"thread 'main' (10582340) panicked at src/main.rs:71:62:\\n\\x1b[1mPARSE_ERROR\\n- expected: \\x1b[0m)\\x1b[1m\\n- detected:\\n\\x"
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "FAIL: 38 of 38 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    (0, [0, 0, 0, 0, 0, 0])\n  expected: 0\n  got:      \"thread 'main' (10599956) panicked at src/main.rs:71:62:\\n\\x1b[1mPARSE_ERROR\\n- expected: \\x1b[0m)\\x1b[1m\\n- detected:\\n\\x"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_conflict_count",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@w_step: wire `C` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@w_step: wire `L` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@w_step: wire `a2` appears only once (in "
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@count_violations_leaf: wire `L` appears only once (in & L ~ {L1 L2}); a wire needs exactly two ends. Erase an unused value with `*`.\n@count_violations_leaf: wire `idx` appears only once (in root); a wire needs exactly two ends. Erase an u"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@mnl_nil: wire `c` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@mnl_cons: wire `c` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@read_idx: wire `c` appears"
+    },
+    {
+     "attempt": 4,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@mnl_cons: wire `c` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@read_idx: wire `c` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@read_idx: wire `out` appe"
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@read_idx: wire `c` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@read_idx: wire `out` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@idx_dec: wir"
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@get_c: wire `lst` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@get_c: wire `res` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@gc_succ: wire `l"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_conflict_flags",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@fl_p: wire `E` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_nil: wire `i` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_cons: wire `L` appe"
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@fl_p: wire `E` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_nil: wire `i` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_cons: wire `L` appe"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@c_nil: wire `i` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_cons: wire `L` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@c_cons: wire `i` appears 3 tim"
+    },
+    {
+     "attempt": 4,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@c_cons: wire `ct2` appears only once (in & ct ~ {ct1 ct2}); a wire needs exactly two ends. Erase an unused value with `*`.\n@mnl_cons: wire `ca` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@eq: wire `L3"
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@c_end: wire `idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_next: wire `L` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@c_next: wire `idx` appears 3"
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@c_next: wire `i3` appears only once (in & idx ~ {i1 {i2 i3}}); a wire needs exactly two ends. Erase an unused value with `*`.\n@mnl_proc: wire `mnl` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@mnl_end:"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_rewrite_sameas_roots",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@read_ptrs_step: wire `L1` appears only once (in & L ~ {L1 L2}); a wire needs exactly two ends. Erase an unused value with `*`.\n@main_pos: wire `Current0` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@ma"
+    },
+    {
+     "attempt": 2,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@read_ptrs_step: wire `L1` appears only once (in & L ~ {L1 L2}); a wire needs exactly two ends. Erase an unused value with `*`.\n@main_pos: wire `L4` appears only once (in & L ~ {L1 {L2 {L3 L4}}}); a wire needs exactly two ends. Erase an un"
+    },
+    {
+     "attempt": 3,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@main_pos: wire `L` appears only once (in & @lg ~ (c L)); a wire needs exactly two ends. Erase an unused value with `*`.\n@main_pos: wire `n` appears only once (in & a ~ $(0 n)); a wire needs exactly two ends. Erase an unused value with `*`"
+    },
+    {
+     "attempt": 4,
+     "class": "glue",
+     "feedback": "REJECTED before running: static check failed before running:\n@read_ptrs_step: wire `L1` appears only once (in & L ~ {L1 L2}); a wire needs exactly two ends. Erase an unused value with `*`."
+    },
+    {
+     "attempt": 5,
+     "class": "glue",
+     "feedback": "FAIL: 60 of 60 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   net did not run to a result\n  input:    []\n  expected: []\n  got:      \"thread 'main' (10620091) panicked at src/main.rs:71:62:\\n\\x1b[1mPARSE_ERROR\\n- expected: \\x1b[0mname\\x1b[1m\\n- detected:\\n\\x1b[0m\\x1b[0m  37 "
+    },
+    {
+     "attempt": 6,
+     "class": "glue",
+     "feedback": "FAIL: 51 of 60 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   result is not the canonical encoding: expected u24, got *\n  input:    [1, 1]\n  expected: [1, 1]\n  got:      '(1 (* (0 *)))'"
+    }
+   ],
+   "seeds012": false
+  }
+ ],
+ "checked": [
+  {
+   "prog": "t3_reach_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 2,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3625,
+    "itrs_median_big": 245986,
+    "itrs_max": 459925,
+    "depth_median_big": 4729,
+    "depth_max": 5045
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_len",
+   "attempts": 2,
+   "seed0": true,
+   "glue_errors_caught": 1,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "semantic",
+     "feedback": "FAIL: 43 of 88 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (2, 0, 1, [(0, 1)])\n  expected: 1\n  got:      0"
+    }
+   ],
+   "metrics0": {
+    "itrs_median_small": 3147,
+    "itrs_median_big": 276021,
+    "itrs_max": 798979,
+    "depth_median_big": 2052,
+    "depth_max": 8266
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_cc_label",
+   "attempts": 2,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "semantic",
+     "feedback": "FAIL: 19 of 48 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (2, [])\n  expected: [0, 1]\n  got:      [0, 0]"
+    }
+   ],
+   "metrics0": {
+    "itrs_median_small": 3788,
+    "itrs_median_big": 416180,
+    "itrs_max": 439322,
+    "depth_median_big": 2585,
+    "depth_max": 5599
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_count",
+   "attempts": 3,
+   "seed0": false,
+   "glue_errors_caught": 14,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "algorithm",
+     "feedback": "FAIL: 5 of 89 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (4, 0, 3, [(0, 1), (0, 2), (1, 3), (2, 3)])\n  expected: 2\n  got:      1"
+    },
+    {
+     "attempt": 2,
+     "class": "algorithm",
+     "feedback": "FAIL: 5 of 89 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (4, 0, 3, [(0, 1), (0, 2), (1, 3), (2, 3)])\n  expected: 2\n  got:      1"
+    },
+    {
+     "attempt": 3,
+     "class": "algorithm",
+     "feedback": "FAIL: 5 of 89 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (4, 0, 3, [(0, 1), (0, 2), (1, 3), (2, 3)])\n  expected: 2\n  got:      1"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_decide_count",
+   "attempts": 2,
+   "seed0": true,
+   "glue_errors_caught": 3,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "semantic",
+     "feedback": "FAIL: 1 of 39 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (0, [(0, 1, 0)])\n  expected: 1\n  got:      0"
+    }
+   ],
+   "metrics0": {
+    "itrs_median_small": 333,
+    "itrs_median_big": 4989,
+    "itrs_max": 13341,
+    "depth_median_big": 348,
+    "depth_max": 883
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_filter",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 5,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 383,
+    "itrs_median_big": 8722,
+    "itrs_max": 14018,
+    "depth_median_big": 2551,
+    "depth_max": 4246
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_singleton",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 20,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "semantic",
+     "feedback": "FAIL: 38 of 38 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    (0, [0, 0, 0, 0, 0, 0])\n  expected: 0\n  got:      6"
+    },
+    {
+     "attempt": 2,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@return_abstain: wire `min_idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@stream_cons: wire `idx` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@stream_c"
+    },
+    {
+     "attempt": 3,
+     "class": "stale-net(checker-blocked)",
+     "feedback": "REJECTED before running: static check failed before running:\n@return_abstain: wire `min_idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@stream_cons: wire `idx` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@stream_c"
+    },
+    {
+     "attempt": 4,
+     "class": "stale-net(checker-blocked)",
+     "feedback": "REJECTED before running: static check failed before running:\n@return_abstain: wire `min_idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@stream_cons: wire `idx` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@stream_c"
+    },
+    {
+     "attempt": 5,
+     "class": "stale-net(checker-blocked)",
+     "feedback": "REJECTED before running: static check failed before running:\n@return_abstain: wire `min_idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@stream_cons: wire `idx` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@stream_c"
+    },
+    {
+     "attempt": 6,
+     "class": "stale-net(checker-blocked)",
+     "feedback": "REJECTED before running: static check failed before running:\n@return_abstain: wire `min_idx` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@stream_cons: wire `idx` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@stream_c"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_conflict_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 3,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 5644,
+    "itrs_median_big": 50415,
+    "itrs_max": 79553,
+    "depth_median_big": 528,
+    "depth_max": 677
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_conflict_flags",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 1,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@upd_set_leaf: wire `P` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@c_nil: wire `L` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@c_nil: wire `o` appears only once ("
+    },
+    {
+     "attempt": 2,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@idx_get_base: wire `rest` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@idx_get_rec: wire `n` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@idx_get_rec: wi"
+    },
+    {
+     "attempt": 3,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@get_zero: wire `tag` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@get_zero: wire `tail` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@get_succ:"
+    },
+    {
+     "attempt": 4,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@get_idx_zero: wire `rest` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@get_idx_zero: wire `tag` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@g"
+    },
+    {
+     "attempt": 5,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@idx_s: wire `val` appears only once (in & l ~ (tag (val rest))); a wire needs exactly two ends. Erase an unused value with `*`.\n@done: wire `o` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@process: wir"
+    },
+    {
+     "attempt": 6,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@get_s: wire `n` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@dec_z: wire `l` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@c_more: wire `o` appears only o"
+    }
+   ],
+   "seeds012": false
+  },
+  {
+   "prog": "t5_rewrite_sameas_roots",
+   "attempts": 6,
+   "seed0": false,
+   "glue_errors_caught": 7,
+   "fails": [
+    {
+     "attempt": 1,
+     "class": "algorithm",
+     "feedback": "FAIL: 60 of 60 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    []\n  expected: []\n  got:      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "
+    },
+    {
+     "attempt": 2,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@process_cons: wire `seen_list` appears 4 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@find_root: wire `p` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node.\n@follow_pointer: wire `p"
+    },
+    {
+     "attempt": 3,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@lg_s: wire `L` appears 4 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    },
+    {
+     "attempt": 4,
+     "class": "algorithm",
+     "feedback": "FAIL: 60 of 60 hidden cases wrong. Smallest failing case (edge, size None):\n  reason:   wrong answer\n  input:    []\n  expected: []\n  got:      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "
+    },
+    {
+     "attempt": 5,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@reach_root: wire `p` appears only once (in root); a wire needs exactly two ends. Erase an unused value with `*`.\n@r_empty: wire `lst` appears only once (in & lst ~ *); a wire needs exactly two ends. Erase an unused value with `*`.\n@r_cons"
+    },
+    {
+     "attempt": 6,
+     "class": "glue-bypass",
+     "feedback": "REJECTED before running: static check failed before running:\n@resolve: wire `h` appears 3 times; a wire has exactly two ends. Duplicate a value with a { } node."
+    }
+   ],
+   "seeds012": false
+  }
+ ],
+ "unchecked_sonnet": [
+  {
+   "prog": "t3_reach_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3629,
+    "itrs_median_big": 245990,
+    "itrs_max": 459929,
+    "depth_median_big": 4727,
+    "depth_max": 5043
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_len",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3153,
+    "itrs_median_big": 276027,
+    "itrs_max": 798985,
+    "depth_median_big": 2052,
+    "depth_max": 8267
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_cc_label",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3792,
+    "itrs_median_big": 416184,
+    "itrs_max": 439326,
+    "depth_median_big": 2585,
+    "depth_max": 5599
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 5190,
+    "itrs_median_big": 249413,
+    "itrs_max": 1219135,
+    "depth_median_big": 2928,
+    "depth_max": 13600
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 302,
+    "itrs_median_big": 4260,
+    "itrs_max": 11025,
+    "depth_median_big": 432,
+    "depth_max": 1107
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_filter",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 215,
+    "itrs_median_big": 6992,
+    "itrs_max": 11296,
+    "depth_median_big": 4582,
+    "depth_max": 7510
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_singleton",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 142,
+    "itrs_median_big": 143,
+    "itrs_max": 149,
+    "depth_median_big": 75,
+    "depth_max": 76
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_conflict_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 1285,
+    "itrs_median_big": 61957,
+    "itrs_max": 91203,
+    "depth_median_big": 955,
+    "depth_max": 1135
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_conflict_flags",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 1520,
+    "itrs_median_big": 93828,
+    "itrs_max": 105865,
+    "depth_median_big": 828,
+    "depth_max": 879
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_rewrite_sameas_roots",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3712,
+    "itrs_median_big": 1853596,
+    "itrs_max": 1859130,
+    "depth_median_big": 3084,
+    "depth_max": 3420
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  }
+ ],
+ "checked_sonnet": [
+  {
+   "prog": "t3_reach_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3625,
+    "itrs_median_big": 245986,
+    "itrs_max": 459925,
+    "depth_median_big": 4729,
+    "depth_max": 5045
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_len",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3147,
+    "itrs_median_big": 276021,
+    "itrs_max": 798979,
+    "depth_median_big": 2052,
+    "depth_max": 8267
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_cc_label",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 3788,
+    "itrs_median_big": 416180,
+    "itrs_max": 439322,
+    "depth_median_big": 2585,
+    "depth_max": 5599
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t3_sp_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 11833,
+    "itrs_median_big": 540284,
+    "itrs_max": 2331808,
+    "depth_median_big": 5281,
+    "depth_max": 26235
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 302,
+    "itrs_median_big": 4260,
+    "itrs_max": 11025,
+    "depth_median_big": 432,
+    "depth_max": 1107
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_filter",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 351,
+    "itrs_median_big": 7625,
+    "itrs_max": 12113,
+    "depth_median_big": 533,
+    "depth_max": 837
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_decide_singleton",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 401,
+    "itrs_median_big": 401,
+    "itrs_max": 413,
+    "depth_median_big": 71,
+    "depth_max": 72
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_conflict_count",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 1279,
+    "itrs_median_big": 61821,
+    "itrs_max": 91121,
+    "depth_median_big": 882,
+    "depth_max": 1031
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_conflict_flags",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 0,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 2224,
+    "itrs_median_big": 130357,
+    "itrs_max": 142441,
+    "depth_median_big": 903,
+    "depth_max": 1015
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  },
+  {
+   "prog": "t5_rewrite_sameas_roots",
+   "attempts": 1,
+   "seed0": true,
+   "glue_errors_caught": 1,
+   "fails": [],
+   "metrics0": {
+    "itrs_median_small": 8733,
+    "itrs_median_big": 722947,
+    "itrs_max": 724161,
+    "depth_median_big": 2116,
+    "depth_max": 2349
+   },
+   "seeds012": true,
+   "seed12_cx": {}
+  }
+ ]
+}

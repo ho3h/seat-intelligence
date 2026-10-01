@@ -1,0 +1,237 @@
+@make_trie = (leaf d out)
+  & d ~ ?((@make_base @make_step) (leaf out))
+
+@make_base = (leaf out)
+  & out ~ leaf
+
+@make_step = (d' (leaf out))
+  & d' ~ {d1 d2}
+  & leaf ~ {l1 l2}
+  & @make_trie ~ (l1 (d1 left))
+  & @make_trie ~ (l2 (d2 right))
+  & out ~ (left right)
+
+@upd = (d key val trie out)
+  & d ~ ?((@upd_base @upd_step) (key val trie out))
+
+@upd_base = (key val trie out)
+  & key ~ *
+  & trie ~ *
+  & out ~ val
+
+@upd_step = (d' (key val trie out))
+  & trie ~ (l r)
+  & key ~ {kbit knext}
+  & kbit ~ $([&] $(1 bit))
+  & knext ~ $([>>] $(1 next))
+  & bit ~ ?((@upd_left @upd_right) (next (val (l (r (d' out))))))
+
+@upd_left = (next (val (l (r (d' out)))))
+  & @upd ~ (d' next val l newl)
+  & out ~ (newl r)
+
+@upd_right = (ign (next (val (l (r (d' out))))))
+  & ign ~ *
+  & @upd ~ (d' next val r newr)
+  & out ~ (l newr)
+
+@lookup = (d key trie out)
+  & d ~ ?((@lookup_base @lookup_step) (key trie out))
+
+@lookup_base = (key trie out)
+  & key ~ *
+  & out ~ trie
+
+@lookup_step = (d' (key trie out))
+  & trie ~ (l r)
+  & key ~ {kbit knext}
+  & kbit ~ $([&] $(1 bit))
+  & knext ~ $([>>] $(1 next))
+  & bit ~ ?((@lookup_left @lookup_right) (next (l (r (d' out)))))
+
+@lookup_left = (next (l (r (d' out))))
+  & r ~ *
+  & @lookup ~ (d' next l out)
+
+@lookup_right = (ign (next (l (r (d' out)))))
+  & ign ~ *
+  & l ~ *
+  & @lookup ~ (d' next r out)
+
+@find = (d x dsu out)
+  & @lookup ~ (d x dsu node)
+  & node ~ (parent (parity (size bad)))
+  & x ~ {x1 x2}
+  & parent ~ $([=] $(x1 eqroot))
+  & eqroot ~ ?((@find_step @find_root) (d (x2 (parent (parity dsu out)))))
+
+@find_step = (d (x2 (parent (parity dsu out))))
+  & @find ~ (d parent dsu (root ppar))
+  & parity ~ $([^] $(ppar total))
+  & out ~ (root total)
+  & x2 ~ *
+
+@find_root = (* (d (x2 (parent (parity dsu out)))))
+  & d ~ *
+  & parent ~ *
+  & parity ~ *
+  & dsu ~ *
+  & out ~ (x2 0)
+
+@set_bad = (d ru dsu out)
+  & d ~ {d_lkp d_upd}
+  & ru ~ {ru_lkp ru_upd}
+  & dsu ~ {dsu_lkp dsu_upd}
+  & @lookup ~ (d_lkp ru_lkp dsu_lkp node)
+  & node ~ (parent (parity (size bad)))
+  & bad ~ *
+  & @upd ~ (d_upd ru_upd (parent (parity (size 1))) dsu_upd out)
+
+@merge_roots = (d ru rv pu pv dsu out)
+  & d ~ {d_l u_l?}   // will duplicate as needed
+  & ru ~ {ru_lookup ru_use}
+  & rv ~ {rv_lookup rv_use}
+  & dsu ~ {dsu_lu_rv dsu_lu_ru}
+  & @lookup ~ (d ru_lookup dsu_lu_ru node_ru)
+  & @lookup ~ (d rv_lookup dsu_lu_rv node_rv)
+  & node_ru ~ (parent_ru (parity_ru (size_ru bad_ru)))
+  & node_rv ~ (parent_rv (parity_rv (size_rv bad_rv)))
+  & pu ~ {pu1 pu2}
+  & pv ~ {pv1 pv2}
+  & pu1 ~ $([^] $(pv1 xor1))
+  & xor1 ~ $([^] $(1 edge_parity))
+  & size_ru ~ $([>] $(size_rv ru_bigger))
+  & ru_bigger ~ ?((@merge_ru_le @merge_ru_gt) (d (ru_use (rv_use (pu2 (pv2 (size_ru (size_rv (bad_ru (bad_rv (edge_parity (dsu out))))))))))))
+
+@merge_ru_le = (d (ru_use (rv_use (pu2 (pv2 (size_ru (size_rv (bad_ru (bad_rv (x (dsu out)))))))))))
+  // attach ru under rv
+  & size_ru ~ $([+] $(size_rv new_size))
+  & bad_ru ~ $([|] $(bad_rv new_bad))
+  & @upd ~ (d rv_use (rv_use (0 (new_size new_bad))) dsu dsu1)
+  & @upd ~ (d ru_use (rv_use (x (0 0))) dsu1 dsu2)
+  & out ~ dsu2
+  & pu2 ~ *
+  & pv2 ~ *
+
+@merge_ru_gt = (* (d (ru_use (rv_use (pu2 (pv2 (size_ru (size_rv (bad_ru (bad_rv (x (dsu out))))))))))))
+  // attach rv under ru
+  & size_ru ~ $([+] $(size_rv new_size))
+  & bad_ru ~ $([|] $(bad_rv new_bad))
+  & @upd ~ (d ru_use (ru_use (0 (new_size new_bad))) dsu dsu1)
+  & @upd ~ (d rv_use (ru_use (x (0 0))) dsu1 dsu2)
+  & out ~ dsu2
+  & pu2 ~ *
+  & pv2 ~ *
+
+@union_edge = (d u v dsu out)
+  & @find ~ (d u dsu (ru pu))
+  & @find ~ (d v dsu (rv pv))
+  & ru ~ {ru1 ru2}
+  & rv ~ {rv1 rv2}
+  & ru1 ~ $([=] $(rv1 same))
+  & same ~ ?((@union_diff @union_same) (d (ru2 (rv2 (pu (pv dsu out))))))
+
+@union_diff = (d (ru2 (rv2 (pu (pv dsu out)))))
+  & @merge_roots ~ (d ru2 rv2 pu pv dsu out)
+
+@union_same = (* (d (ru2 (rv2 (pu (pv dsu out))))))
+  & pu ~ {pu1 pu2}
+  & pv ~ {pv1 pv2}
+  & pu1 ~ $([^] $(pv1 xor))
+  & xor ~ ?((@same_ok @same_bad) (d (ru2 (rv2 (pu2 (pv2 dsu out))))))
+
+@same_ok = (d (ru2 (rv2 (pu2 (pv2 dsu out)))))
+  & d ~ *
+  & ru2 ~ *
+  & rv2 ~ *
+  & pu2 ~ *
+  & pv2 ~ *
+  & out ~ dsu
+
+@same_bad = (* (d (ru2 (rv2 (pu2 (pv2 dsu out))))))
+  & rv2 ~ *
+  & pu2 ~ *
+  & pv2 ~ *
+  & @set_bad ~ (d ru2 dsu out)
+
+@build_dsu = (i n d dsu out)
+  & i ~ {i1 i2}
+  & n ~ {n1 n2}
+  & i1 ~ $([=] $(n1 eq))
+  & eq ~ ?((@build_dsu_step @build_dsu_done) (i2 (n2 (d (dsu out)))))
+
+@build_dsu_done = (* (i2 (n2 (d (dsu out)))))
+  & i2 ~ *
+  & n2 ~ *
+  & d ~ *
+  & out ~ dsu
+
+@build_dsu_step = (i2 (n2 (d (dsu out))))
+  & @upd ~ (d i2 (i2 (0 (1 0))) dsu new_dsu)
+  & i2 ~ $([+1] next_i)
+  & @build_dsu ~ (next_i n2 d new_dsu out)
+
+@process_edges = (edges d dsu out)
+  & edges ~ (tag payload)
+  & tag ~ ?((@edges_nil @edges_cons) (payload (d (dsu out))))
+
+@edges_nil = (payload (d (dsu out)))
+  & payload ~ *
+  & d ~ *
+  & out ~ dsu
+
+@edges_cons = (* (payload (d (dsu out))))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & @union_edge ~ (d u v dsu new_dsu)
+  & @process_edges ~ (tail d new_dsu out)
+
+@count_roots = (i n d dsu count out)
+  & i ~ {i1 i2}
+  & n ~ {n1 n2}
+  & i1 ~ $([=] $(n1 eq))
+  & eq ~ ?((@count_roots_step @count_roots_done) (i2 (n2 (d (dsu (count out))))))
+
+@count_roots_done = (* (i2 (n2 (d (dsu (count out))))))
+  & i2 ~ *
+  & n2 ~ *
+  & d ~ *
+  & dsu ~ *
+  & out ~ count
+
+@count_roots_step = (i2 (n2 (d (dsu (count out)))))
+  & i2 ~ {i_find i_next}
+  & dsu ~ {dsu_find dsu_keep}
+  & @find ~ (d i_find dsu_find (root parity))
+  & parity ~ *
+  & root ~ {root1 root2}
+  & i2 ~ $([=] $(root1 is_root))
+  & is_root ~ ?((@count_not_root @count_maybe_root) (i2 (root2 (d (dsu_keep (count out))))))
+
+@count_not_root = (i2 (root2 (d (dsu_keep (count out)))))
+  & root2 ~ *
+  & i2 ~ $([+1] next_i)
+  & @count_roots ~ (next_i n2 d dsu_keep count out)
+
+@count_maybe_root = (* (i2 (root2 (d (dsu_keep (count out))))))
+  & @lookup ~ (d root2 dsu_keep node)
+  & node ~ (parent (parity (size bad)))
+  & parent ~ *
+  & parity ~ *
+  & size ~ *
+  & bad ~ ?((@count_bad @count_good) (i2 (d (dsu_keep (count out)))))
+
+@count_bad = (i2 (d (dsu_keep (count out))))
+  & i2 ~ $([+1] next_i)
+  & @count_roots ~ (next_i n2 d dsu_keep count out)
+
+@count_good = (* (i2 (d (dsu_keep (count out)))))
+  & count ~ $([+1] new_count)
+  & i2 ~ $([+1] next_i)
+  & @count_roots ~ (next_i n2 d dsu_keep new_count out)
+
+@prog = ((n edges) out)
+  & @make_trie ~ (0 (8 dsu0))
+  & @build_dsu ~ (0 n 8 dsu0 dsu_read)
+  & @process_edges ~ (edges 8 dsu_read dsu_final)
+  & @count_roots ~ (0 n 8 dsu_final 0 out)

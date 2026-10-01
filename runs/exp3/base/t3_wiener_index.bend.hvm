@@ -1,0 +1,142 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_edges = (a ((@add_edges__C1 (a b)) b))
+
+@add_edges__C0 = (* (({j {b e}} {i {c l}}) (p ({a {k d}} q))))
+  & @add_edges ~ (o (p q))
+  & @set_adj ~ (h (i (n o)))
+  & @set_adj ~ (a (b (g h)))
+  & @List/Cons ~ (c (f g))
+  & @get_adj ~ (d (e f))
+  & @List/Cons ~ (j (m n))
+  & @get_adj ~ (k (l m))
+
+@add_edges__C1 = (?(((a a) @add_edges__C0) b) b)
+
+@all_sources = (c ({a d} ({$([<] $(a ?(((* (* (* (b b)))) @all_sources__C0) (c (d (e f)))))) e} f)))
+
+@all_sources__C0 = (* ({a d} ({b $([+0x0000017] $([:/0x0000018] e))} ({$([+0x0000001] c) {i {k g}}} ($([+] $(l m)) n)))))
+  & @all_sources ~ (a (b (c (m n))))
+  & @bfs ~ (d (h (j (@List/Nil (k (0 l))))))
+  & @mark_seen ~ (f (g h))
+  & @make_nums ~ (e (0 (0 f)))
+  & @List/Cons ~ ((i 0) (@List/Nil j))
+
+@bfs = (a (b ((@bfs__C4 (a (b c))) c)))
+
+@bfs__C0 = (* (c (d (a (b g)))))
+  & @bfs ~ (a (b (f (@List/Nil g))))
+  & @reverse_acc ~ (e (@List/Nil f))
+  & @List/Cons ~ (c (d e))
+
+@bfs__C1 = (?(((* (* (* (a a)))) @bfs__C0) b) b)
+
+@bfs__C2 = (a (b ((@bfs__C1 (a (b c))) c)))
+
+@bfs__C3 = (* ((b f) (k ({i a} (d (e ({g m} (h o))))))))
+  & @bfs ~ (i (j (k (l (m (n o))))))
+  & @visit_neighbors ~ (c (d (e (f (g (h (j (l n))))))))
+  & @get_adj ~ (a (b c))
+
+@bfs__C4 = (?((@bfs__C2 @bfs__C3) a) a)
+
+@get_adj = ((@get_adj__C2 a) a)
+
+@get_adj__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_adj ~ (a (b c))
+
+@get_adj__C1 = (* (c (d ({$([=0x0000000] ?((@get_adj__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_adj__C2 = (?(((* @List/Nil) @get_adj__C1) a) a)
+
+@get_num = ((@get_num__C2 a) a)
+
+@get_num__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_num ~ (a (b c))
+
+@get_num__C1 = (* (c (d ({$([=0x0000000] ?((@get_num__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_num__C2 = (?(((* 0) @get_num__C1) a) a)
+
+@make_adj = ({a b} ({$([<] $(a ?(((* (* @List/Nil)) @make_adj__C0) (b (c d))))) c} d))
+
+@make_adj__C0 = (* (a ($([+0x0000001] b) d)))
+  & @List/Cons ~ (@List/Nil (c d))
+  & @make_adj ~ (a (b c))
+
+@make_nums = ({a b} ({$([<] $(a ?(((* (* (* @List/Nil))) @make_nums__C0) (b (c d))))) c} d))
+
+@make_nums__C0 = (* (b ($([+0x0000001] c) ({a d} f))))
+  & @List/Cons ~ (a (e f))
+  & @make_nums ~ (b (c (d e)))
+
+@mark_seen = ({a c} ({$([:%0x0000018] e) $([:/0x0000018] {b d})} h))
+  & @set_num ~ (a (b (g h)))
+  & @get_num ~ (c (d $([|] $(f g))))
+  & $(e f) ~ [<<0x0000001]
+
+@prog = (({$([<0x0000001] a) b} c) d)
+  & $(a ?((@prog__C0 (* (* (* 0)))) (b (c d)))) ~ [=0x0000000]
+
+@prog__C0 = ({e a} (c f))
+  & @all_sources ~ (d (e (0 (0 f))))
+  & @add_edges ~ (b (c d))
+  & @make_adj ~ (a (0 b))
+
+@reverse_acc = ((@reverse_acc__C1 a) a)
+
+@reverse_acc__C0 = (* (b (a (c e))))
+  & @reverse_acc ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@reverse_acc__C1 = (?(((a a) @reverse_acc__C0) b) b)
+
+@set_adj = ((@set_adj__C3 a) a)
+
+@set_adj__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_adj ~ (b (c (d e)))
+
+@set_adj__C1__M_set_num__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@set_adj__C2 = (* (c (d ({$([=0x0000000] ?((@set_adj__C0 @set_adj__C1__M_set_num__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_adj__C3 = (?(((* (* @List/Nil)) @set_adj__C2) a) a)
+
+@set_num = ((@set_num__C3 a) a)
+
+@set_num__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_num ~ (b (c (d e)))
+
+@set_num__C2 = (* (c (d ({$([=0x0000000] ?((@set_num__C0 @set_adj__C1__M_set_num__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_num__C3 = (?(((* (* @List/Nil)) @set_num__C2) a) a)
+
+@visit_neighbors = ((@visit_neighbors__C6 a) a)
+
+@visit_neighbors__C0 = (d (e (f (a (b (c g))))))
+  & @visit_neighbors ~ (a (b (c (d (e (f g))))))
+
+@visit_neighbors__C1 = (* ({d f} (e ($([+] $(f $([+0x0000001] g))) (a (b (c h)))))))
+  & @visit_neighbors ~ (a (b (c (d (e (g h))))))
+
+@visit_neighbors__C2 = (b (c (d (e (f (a (* (* (* (* g))))))))))
+  & @visit_neighbors ~ (a (b (c (d (e (f g))))))
+
+@visit_neighbors__C3 = (* (f (m ({b $([+0x0000001] l)} ({a c} (d (e ({$([>] $(a ?((@visit_neighbors__C0 @visit_neighbors__C1) (b (c (d (e (j (n o))))))))) k} (g (h ($([|] $(h i)) o)))))))))))
+  & @set_num ~ (f (g (i j)))
+  & @List/Cons ~ ((k l) (m n))
+
+@visit_neighbors__C4 = (a (b (* (* (c (a (b c)))))))
+
+@visit_neighbors__C5 = (* ({k {$([:%0x0000018] a) $([:/0x0000018] {l c})}} (j ({e b} (f (g (h (i o))))))))
+  & @get_num ~ (b (c {$([&] $(d $([=0x0000000] ?((@visit_neighbors__C2 @visit_neighbors__C3) (e (f (g (h (i (j (k (l (m (n o)))))))))))))) n}))
+  & $(a {d m}) ~ [<<0x0000001]
+
+@visit_neighbors__C6 = (?((@visit_neighbors__C4 @visit_neighbors__C5) a) a)
+
+

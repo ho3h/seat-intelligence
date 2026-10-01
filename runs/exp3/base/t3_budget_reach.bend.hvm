@@ -1,0 +1,125 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@choose_min = ((@choose_min__C8 a) a)
+
+@choose_min__C0 = ($([+0x0000001] b) (c (d (e (a (* f))))))
+  & @choose_min ~ (a (b (c (d (e f)))))
+
+@choose_min__C1 = (* ({$([+0x0000001] b) c} (* (* (* (a d))))))
+  & @choose_min ~ (a (b (1 (c d))))
+
+@choose_min__C2 = (b (c (d ({a e} (f ({$([<] $(a ?((@choose_min__C0 @choose_min__C1) (b (c (d (e (f (g h))))))))) g} h))))))
+
+@choose_min__C3 = (* ({$([+0x0000001] b) c} (* (* (* (a d))))))
+  & @choose_min ~ (a (b (1 (c d))))
+
+@choose_min__C4 = ($([+0x0000001] b) (c (d (e (a (* f))))))
+  & @choose_min ~ (a (b (c (d (e f)))))
+
+@choose_min__C5 = (* (a ({$([=0x0000000] ?((@choose_min__C2 @choose_min__C3) (a (b c)))) b} c)))
+
+@choose_min__C6 = (* (a (b (c (a (b c))))))
+
+@choose_min__C7 = (* (($([=0x0000001] ?((@choose_min__C4 @choose_min__C5) (a (b (c (d (e (f g)))))))) f) (e (a (b (c (d g)))))))
+
+@choose_min__C8 = (?((@choose_min__C6 @choose_min__C7) a) a)
+
+@count_reachable = ((@count_reachable__C2 a) a)
+
+@count_reachable__C0 = ($([+0x0000001] a) a)
+
+@count_reachable__C1 = (* (($([=0x0000000] ?((@count_reachable__C0 (* (a a))) (c d))) *) (b d)))
+  & @count_reachable ~ (b c)
+
+@count_reachable__C2 = (?((0 @count_reachable__C1) a) a)
+
+@dijkstra = (b (c (d (?(((a (* (* a))) @dijkstra__C1) (b (c (d e)))) e))))
+
+@dijkstra__C0 = (b ({j a} ({k h} ($([+0x0000001] $([:-0x0000001] l)) ({f c} ({g d} m))))))
+  & @dijkstra ~ (i (j (k (l m))))
+  & @relax_edges ~ (a (e (f (g (h i)))))
+  & @set_dist ~ (b (c ((2 d) e)))
+
+@dijkstra__C1 = (f ({a c} (d (e i))))
+  & @choose_min ~ (a (0 (0 (0 (0 ($([=0x0000000] ?((@dijkstra__C0 (* (b (* (* (* (* (* b)))))))) (c (d (e (f (g (h i)))))))) (g h)))))))
+
+@dist_at = ((@dist_at__C2 a) a)
+
+@dist_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @dist_at ~ (a (b c))
+
+@dist_at__C1 = (* (c (d ({$([=0x0000000] ?((@dist_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@dist_at__C2 = (?(((* (0 0)) @dist_at__C1) a) a)
+
+@init_dist = (?(((* (* @List/Nil)) @init_dist__C2) a) a)
+
+@init_dist__C0 = (b ($([+0x0000001] c) ($([+0x0000001] $([:-0x0000001] a)) e)))
+  & @List/Cons ~ ((0 0) (d e))
+  & @init_dist ~ (a (b (c d)))
+
+@init_dist__C1 = (* (b ($([+0x0000001] c) ($([+0x0000001] $([:-0x0000001] a)) e))))
+  & @List/Cons ~ ((1 0) (d e))
+  & @init_dist ~ (a (b (c d)))
+
+@init_dist__C2 = (d ({a b} ({$([=] $(a ?((@init_dist__C0 @init_dist__C1) (b (c (d e)))))) c} e)))
+
+@prog = (({a c} ({$([<] $(a b)) d} (e f))) g)
+  & $(b ?((@prog__C0 (* (* (* (* (* 0)))))) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@prog__C0 = ({f a} (b (e (d h))))
+  & @count_reachable ~ (g h)
+  & @dijkstra ~ (c (d (e (f g))))
+  & @init_dist ~ (a (b (0 c)))
+
+@relax_edges = ((@relax_edges__C5 a) a)
+
+@relax_edges__C0 = (a (* (* (* (* a)))))
+
+@relax_edges__C1 = (* (a (c (e (b (d f))))))
+  & @relax_target ~ (a (b (c (d (e f)))))
+
+@relax_edges__C2 = (b (a (c (d (e ($([=] $(a ?((@relax_edges__C0 @relax_edges__C1) (b (c (d (e f))))))) f))))))
+
+@relax_edges__C3 = (* (a (* (c (e (* (b (d f))))))))
+  & @relax_target ~ (a (b (c (d (e f)))))
+
+@relax_edges__C4 = (* (({$([=] $(b ?((@relax_edges__C2 @relax_edges__C3) (c (d (e (f (g (h (i j)))))))))) g} (h i)) (a (c ({k {b d}} ({l e} ({m f} n)))))))
+  & @relax_edges ~ (a (j (k (l (m n)))))
+
+@relax_edges__C5 = (?(((a (* (* (* a)))) @relax_edges__C4) b) b)
+
+@relax_target = (e (f ({a g} ({$([>] $(b c)) h} ($([-] $(a b)) i)))))
+  & $(c ?(((d (* (* (* d)))) @relax_target__C5) (e (f (g (h i)))))) ~ [=0x0000000]
+
+@relax_target__C0 = (a (* (* a)))
+
+@relax_target__C1 = (* (a (b (c d))))
+  & @set_dist ~ (a (b ((1 c) d)))
+
+@relax_target__C2 = (b (c ({$([<] $(a ?((@relax_target__C0 @relax_target__C1) (b (c (d e)))))) d} (a e))))
+
+@relax_target__C3 = (* (a (b (c (* d)))))
+  & @set_dist ~ (a (b ((1 c) d)))
+
+@relax_target__C4 = (a (b (c ($([=0x0000000] ?((@relax_target__C2 @relax_target__C3) (a (b (c d))))) d))))
+
+@relax_target__C5 = (* ({a d} ({b e} ($([+] $(f g)) (f j)))))
+  & @dist_at ~ (a (b ({$([=0x0000002] ?((@relax_target__C4 (* (c (* (* (* (* c))))))) (d (e (g (h (i j))))))) h} i)))
+
+@set_dist = ((@set_dist__C3 a) a)
+
+@set_dist__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_dist ~ (b (c (d e)))
+
+@set_dist__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@set_dist__C2 = (* (c (d ({$([=0x0000000] ?((@set_dist__C0 @set_dist__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_dist__C3 = (?(((* (* @List/Nil)) @set_dist__C2) a) a)
+
+

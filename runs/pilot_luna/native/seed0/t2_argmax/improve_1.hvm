@@ -1,0 +1,28 @@
+// @ra returns (largest_value, index_of_first_largest).
+@prog = (l out)
+  & @ra ~ (l (best out))
+  & best ~ *
+
+@ra = ((?((@ra_nil @ra_cons) (pl out)) pl) out)
+
+@ra_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 0)
+
+@ra_cons = (* ((h t) out))
+  & @ra ~ (t (rv ri))
+  & h ~ {hc hv}
+  & rv ~ {rc rv2}
+  & hc ~ $([<] $(rc cmp))
+  & cmp ~ ?((@ra_head @ra_tail) (hv (rv2 (ri out))))
+
+// The head wins unless the tail's maximum is strictly greater.
+@ra_head = (hv (tv (ti out)))
+  & tv ~ *
+  & ti ~ *
+  & out ~ (hv 0)
+
+@ra_tail = (* (hv (tv (ti out))))
+  & hv ~ *
+  & ti ~ $([+1] ix)
+  & out ~ (tv ix)

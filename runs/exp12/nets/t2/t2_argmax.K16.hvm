@@ -1,0 +1,53 @@
+@prog = (l out)
+  & @am ~ (l (0 (0 (0 out))))
+
+@am = (lv1 (idx (bv (bi out))))
+  & @am_cons_lw ~ (lv1 (idx (bv (bi out))))
+
+@am_nil = (* (idx (bv (bi out))))
+  & idx ~ *
+  & bv ~ *
+  & bi ~ out
+
+@am_cons = (* (({$([>] $(bc z7)) hnew} t) ({inx ibest} ({bc bvkeep} (bi out)))))
+  & z7 ~ ?((@am_no_hz @am_yes_hz) (xw36 (inx (hnew (bvkeep (ibest (bi out)))))))
+  & @am_cons_lw ~ (t xw36)
+
+@am_no = (t (inx (hnew (bvkeep (ibest (bi out))))))
+  & hnew ~ *
+  & ibest ~ *
+  & inx ~ $([+1] idx2)
+  & @am ~ (t (idx2 (bvkeep (bi out))))
+
+@am_yes = (* (t (inx (hnew (bvkeep (ibest (bi out)))))))
+  & bvkeep ~ *
+  & bi ~ *
+  & inx ~ $([+1] idx2)
+  & @am ~ (t (idx2 (hnew (ibest out))))
+
+@am_cons_lw = (ls151 (q39 (q40 (q41 q42))))
+  & ls151 ~ (g134 (e118 (g135 (e119 (g136 (e120 (g137 (e121 (g138 (e122 (g139 (e123 (g140 (e124 (g141 (e125 (g142 (e126 (g143 (e127 (g144 (e128 (g145 (e129 (g146 (e130 (g147 (e131 (g148 (e132 (g149 (e133 tk150))))))))))))))))))))))))))))))))
+  & g134 ~ ?((@am_nil @am_cons_la) ((e118 (q44 (q45 (q46 q47)))) (q39 (q40 (q41 q42)))))
+  & g135 ~ ?((@am_nil @am_cons_la) ((e119 (q49 (q50 (q51 q52)))) (q44 (q45 (q46 q47)))))
+  & g136 ~ ?((@am_nil @am_cons_la) ((e120 (q54 (q55 (q56 q57)))) (q49 (q50 (q51 q52)))))
+  & g137 ~ ?((@am_nil @am_cons_la) ((e121 (q59 (q60 (q61 q62)))) (q54 (q55 (q56 q57)))))
+  & g138 ~ ?((@am_nil @am_cons_la) ((e122 (q64 (q65 (q66 q67)))) (q59 (q60 (q61 q62)))))
+  & g139 ~ ?((@am_nil @am_cons_la) ((e123 (q69 (q70 (q71 q72)))) (q64 (q65 (q66 q67)))))
+  & g140 ~ ?((@am_nil @am_cons_la) ((e124 (q74 (q75 (q76 q77)))) (q69 (q70 (q71 q72)))))
+  & g141 ~ ?((@am_nil @am_cons_la) ((e125 (q79 (q80 (q81 q82)))) (q74 (q75 (q76 q77)))))
+  & g142 ~ ?((@am_nil @am_cons_la) ((e126 (q84 (q85 (q86 q87)))) (q79 (q80 (q81 q82)))))
+  & g143 ~ ?((@am_nil @am_cons_la) ((e127 (q89 (q90 (q91 q92)))) (q84 (q85 (q86 q87)))))
+  & g144 ~ ?((@am_nil @am_cons_la) ((e128 (q94 (q95 (q96 q97)))) (q89 (q90 (q91 q92)))))
+  & g145 ~ ?((@am_nil @am_cons_la) ((e129 (q99 (q100 (q101 q102)))) (q94 (q95 (q96 q97)))))
+  & g146 ~ ?((@am_nil @am_cons_la) ((e130 (q104 (q105 (q106 q107)))) (q99 (q100 (q101 q102)))))
+  & g147 ~ ?((@am_nil @am_cons_la) ((e131 (q109 (q110 (q111 q112)))) (q104 (q105 (q106 q107)))))
+  & g148 ~ ?((@am_nil @am_cons_la) ((e132 (q114 (q115 (q116 q117)))) (q109 (q110 (q111 q112)))))
+  & g149 ~ ?((@am_nil @am_cons) ((e133 tk150) (q114 (q115 (q116 q117)))))
+
+@am_no_hz = (hw21 ($([+1] q15) (* (q11 (* (q13 q14))))))
+  & hw21 ~ (q15 (q11 (q13 q14)))
+
+@am_yes_hz = (* (hw35 ($([+1] q29) (q24 (* (q26 (* q28)))))))
+  & hw35 ~ (q29 (q24 (q26 q28)))
+
+@am_cons_la = (* (({$([>] $(bc ?((@am_no_hz @am_yes_hz) (xw36 (inx (hnew (bvkeep (ibest (bi out))))))))) hnew} xw36) ({inx ibest} ({bc bvkeep} (bi out)))))

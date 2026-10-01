@@ -1,0 +1,163 @@
+// Exact-k shortest-walk dynamic programming.
+// dist[v] is the minimum cost to reach v using exactly the current number of arcs.
+
+@prog = (input output)
+  & input ~ (n (s (t (k edges))))
+  & n ~ {n_init n_loop}
+  & @iv ~ ((n_init (0 s)) initial)
+  & @loop ~ ((k (n_loop (t (edges initial)))) output)
+
+@iv = (arg out)
+  & arg ~ (rem (i s))
+  & rem ~ ?((@ivZero @ivSucc) (i (s out)))
+
+@ivZero = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@ivSucc = (rem (i (s out)))
+  & i ~ {ix inext}
+  & s ~ {sx snext}
+  & ix ~ $([=] $(sx eq))
+  & inext ~ $([+1] inext2)
+  & eq ~ ?((@ivNo @ivYes) (rem (inext2 (snext out))))
+
+@ivNo = (rem (i (s out)))
+  & @iv ~ ((rem (i s)) rest)
+  & out ~ (1 (16777215 rest))
+
+@ivYes = (rem (i (s out)))
+  & @iv ~ ((rem (i s)) rest)
+  & out ~ (1 (0 rest))
+
+@fill = (arg out)
+  & arg ~ ?((@fillZero @fillSucc) out)
+
+@fillZero = out
+  & out ~ (0 *)
+
+@fillSucc = (rem out)
+  & @fill ~ (rem rest)
+  & out ~ (1 (16777215 rest))
+
+@loop = (arg out)
+  & arg ~ (steps (n (t (edges dist))))
+  & steps ~ ?((@loopDone @loopMore) (n (t (edges (dist out)))))
+
+@loopDone = (n (t (edges (dist out))))
+  & n ~ *
+  & edges ~ *
+  & @get ~ ((dist t) out)
+
+@loopMore = (steps (n (t (edges (dist out)))))
+  & n ~ {nf nn}
+  & edges ~ {ef en}
+  & @fill ~ (nf acc)
+  & @fold ~ ((ef (dist acc)) next)
+  & @loop ~ ((steps (nn (t (en next)))) out)
+
+@fold = (arg out)
+  & arg ~ (es (old acc))
+  & es ~ ?((@foldNil @foldCons) (old (acc out)))
+
+@foldNil = (old (acc out))
+  & old ~ *
+  & out ~ acc
+
+@foldCons = (* ((u (v w)) (tail (old (acc out)))))
+  & old ~ {old_read old_rest}
+  & @get ~ ((old_read u) d)
+  & @process ~ ((d (v (w (tail (old_rest acc))))) out)
+
+@process = (arg out)
+  & arg ~ (d (v (w (tail (old acc)))))
+  & d ~ {d_test d_add}
+  & d_test ~ $([=] $(16777215 eq))
+  & eq ~ ?((@processReach @processSkip) (d_add (v (w (tail (old (acc out)))))))
+
+@processReach = (d (v (w (tail (old (acc out))))))
+  & d ~ {base addend}
+  & addend ~ $([+] $(w cand))
+  & @check ~ ((cand (base (v (tail (old acc))))) out)
+
+@processSkip = (* (d (v (w (tail (old (acc out)))))))
+  & d ~ *
+  & v ~ *
+  & w ~ *
+  & @fold ~ ((tail (old acc)) out)
+
+@check = (arg out)
+  & arg ~ (cand (base (v (tail (old acc)))))
+  & cand ~ {ct cu}
+  & base ~ {bt bu}
+  & ct ~ $([<] $(bt ov))
+  & ov ~ ?((@checkGood @checkOverflow) (cu (bu (v (tail (old (acc out)))))))
+
+@checkOverflow = (* (cand (base (v (tail (old (acc out)))))))
+  & cand ~ *
+  & base ~ *
+  & v ~ *
+  & @fold ~ ((tail (old acc)) out)
+
+@checkGood = (cand (base (v (tail (old (acc out))))))
+  & base ~ *
+  & acc ~ {acc_read acc_keep}
+  & @get ~ ((acc_read v) cur)
+  & @compare ~ ((cand (cur (v (tail (old acc_keep))))) out)
+
+@compare = (arg out)
+  & arg ~ (cand (cur (v (tail (old acc)))))
+  & cand ~ {ct cu}
+  & cur ~ {rt ru}
+  & ct ~ $([<] $(rt lt))
+  & lt ~ ?((@notBetter @better) (cu (ru (v (tail (old (acc out)))))))
+
+@notBetter = (cand (cur (v (tail (old (acc out))))))
+  & cand ~ *
+  & cur ~ *
+  & @fold ~ ((tail (old acc)) out)
+
+@better = (* (cand (cur (v (tail (old (acc out)))))))
+  & cur ~ *
+  & @set ~ ((acc (v cand)) newacc)
+  & @fold ~ ((tail (old newacc)) out)
+
+@get = (arg out)
+  & arg ~ (list idx)
+  & list ~ ?((@getNil @getCons) (idx out))
+
+@getNil = (idx out)
+  & idx ~ *
+  & out ~ 16777215
+
+@getCons = (* ((head tail) (idx out)))
+  & idx ~ ?((@getHere @getNext) (head (tail out)))
+
+@getHere = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@getNext = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ ((tail idx) out)
+
+@set = (arg out)
+  & arg ~ (list (idx value))
+  & list ~ ?((@setNil @setCons) (idx (value out)))
+
+@setNil = (idx (value out))
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@setCons = (* ((head tail) (idx (value out))))
+  & idx ~ ?((@setHere @setNext) (head (tail (value out))))
+
+@setHere = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@setNext = (idx (head (tail (value out))))
+  & @set ~ ((tail (idx value)) newtail)
+  & out ~ (1 (head newtail))

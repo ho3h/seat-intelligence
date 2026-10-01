@@ -1,0 +1,123 @@
+// Build the identity canonical-id list, then normalize, sort, and deduplicate edges.
+@prog = ((n (tau (mnl (cands (edges attrs))))) out)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & @range ~ (n ((0 *) c))
+  & @edge_fold ~ (edges ((0 *) e))
+  & out ~ (c (e attrs))
+
+@range = (n (acc out))
+  & n ~ ?((@range_zero @range_succ) (acc out))
+
+@range_zero = (a out)
+  & a ~ out
+
+@range_succ = (p (acc out))
+  & p ~ {a b}
+  & @range ~ (a ((1 (b acc)) out))
+
+// Fold edges into an ascending list.
+@edge_fold = ((?((@ef_nil @ef_cons) (pl (acc out))) pl) (acc out))
+
+@ef_nil = (* (acc out))
+  & acc ~ out
+
+@ef_cons = (* ((u v) (tail (acc out))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([=] $(v1 z))
+  & z ~ ?((@ef_same @ef_diff) (u2 (v2 (tail (acc out)))))
+
+@ef_same = (* (u (v (tail (acc out)))))
+  & u ~ *
+  & v ~ *
+  & @edge_fold ~ (tail (acc out))
+
+@ef_diff = (* (u (v (tail (acc out)))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([<] $(v1 z))
+  & z ~ ?((@ef_reverse @ef_ordered) (u2 (v2 (tail (acc out)))))
+
+@ef_ordered = (* (u (v (tail (acc out)))))
+  & @insert ~ (acc ((u v) acc2))
+  & @edge_fold ~ (tail (acc2 out))
+
+@ef_reverse = (* (u (v (tail (acc out)))))
+  & @insert ~ (acc ((v u) acc2))
+  & @edge_fold ~ (tail (acc2 out))
+
+// Insert target into a sorted edge list; equal edges are not inserted twice.
+@insert = ((?((@ins_nil @ins_cons) (pl (target out))) pl) (target out))
+
+@ins_nil = (* (target out))
+  & out ~ (1 (target (0 *)))
+
+@ins_cons = (* ((cur tail) (target out)))
+  & target ~ {tc tk}
+  & cur ~ {cc ck}
+  & @less ~ (tc (cc z))
+  & z ~ ?((@ins_rest @ins_first) (tk (ck (tail out))))
+
+@ins_first = (* (target (cur (tail out))))
+  & out ~ (1 (target (1 (cur tail))))
+
+@ins_rest = (* (target (cur (tail out))))
+  & target ~ {tc tk}
+  & cur ~ {cc ck}
+  & @less ~ (cc (tc z))
+  & z ~ ?((@ins_found @ins_put) (tk (ck (tail out))))
+
+@ins_put = (* (target (cur (tail out))))
+  & @insert ~ (tail (target sub))
+  & out ~ (1 (cur sub))
+
+@ins_found = (* (target (cur (tail out))))
+  & target ~ *
+  & out ~ (1 (cur tail))
+
+// Return 1 iff the first pair is lexicographically less than the second.
+@less = ((u v) ((a b) out))
+  & u ~ {u1 u2}
+  & a ~ {a1 a2}
+  & u1 ~ $([<] $(a1 z))
+  & z ~ ?((@less_checkeq @less_true) (u2 (v (a2 (b out)))))
+
+@less_true = (* (u (v (a (b out)))))
+  & u ~ *
+  & v ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@less_checkeq = (* (u (v (a (b out)))))
+  & u ~ {u1 u2}
+  & a ~ {a1 a2}
+  & u1 ~ $([=] $(a1 z))
+  & z ~ ?((@less_false @less_v) (u2 (v (a2 (b out)))))
+
+@less_false = (* (u (v (a (b out)))))
+  & u ~ *
+  & v ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@less_v = (* (u (v (a (b out)))))
+  & u ~ *
+  & a ~ *
+  & v ~ {v1 v2}
+  & b ~ {b1 b2}
+  & v1 ~ $([<] $(b1 z))
+  & z ~ ?((@less_v_no @less_v_yes) (v2 (b2 out)))
+
+@less_v_no = (* (v (b out)))
+  & v ~ *
+  & b ~ *
+  & out ~ 0
+
+@less_v_yes = (* (v (b out)))
+  & v ~ *
+  & b ~ *
+  & out ~ 1

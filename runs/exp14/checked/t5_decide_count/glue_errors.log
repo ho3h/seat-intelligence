@@ -1,0 +1,9 @@
+--- 04:14:23
+build.py:13: unknown operator '>='; use one of ! % & * + - / < << = > >> ^ |
+--- 04:14:48
+build.py:16: wire `acc` (num, argument `acc` of step of stream `w`, made at build.py:25) is used a second time (select if_false); it was already used at build.py:16 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(acc, 2)  and use each once.
+--- 04:14:59
+step of stream `w` (@w_step): 2 value(s) never used:
+    `u` (num, argument `e0` of step of stream `w`, made at build.py:27)
+    `v` (num, argument `e1` of step of stream `w`, made at build.py:27)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

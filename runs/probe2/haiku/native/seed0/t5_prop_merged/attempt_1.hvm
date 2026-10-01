@@ -1,0 +1,31 @@
+@prog = (input output)
+  & input ~ ((c attrs) _)
+  & @collect ~ (c (attrs (nil output)))
+
+@collect = (c (attrs acc_out))
+  & attrs ~ (?((@coll_nil @coll_cons) (c (acc out))) *)
+
+@coll_nil = (c (acc out))
+  & * ~ c
+  & out ~ acc
+
+@coll_cons = (* ((attr tail) (c (acc out))))
+  & attr ~ ((node (key value)) *)
+  & @lookup_cid ~ (node (c canonical))
+  & canonical ~ ((cid entry) *)
+  & (cid (key value)) ~ entry
+  & @collect ~ (tail (c ((entry acc) out)))
+
+@lookup_cid = (node (c result))
+  & @list_get ~ (node (c result))
+
+@list_get = (i (list result))
+  & i ~ ?((@lg_zero @lg_succ) (list result))
+
+@lg_zero = (list result)
+  & list ~ (head rest)
+  & * ~ rest
+  & head ~ result
+
+@lg_succ = (((i_pred result) list) *)
+  & @list_get ~ (i_pred (list result))

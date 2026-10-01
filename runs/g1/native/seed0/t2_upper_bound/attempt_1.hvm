@@ -1,0 +1,19 @@
+// @prog receives (xs, t) and starts the count at zero.
+@prog = ((xs t) out)
+  & @ub ~ (xs (t (0 out)))
+
+@ub = ((?((@ub_nil @ub_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@ub_nil = (* (* (a a)))
+
+@ub_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub_inc @ub_keep) (tail (tr (acc out))))
+
+@ub_inc = (tail (t (acc out)))
+  & acc ~ $([+1] acc2)
+  & @ub ~ (tail (t (acc2 out)))
+
+@ub_keep = (* (tail (t (acc out))))
+  & @ub ~ (tail (t (acc out)))

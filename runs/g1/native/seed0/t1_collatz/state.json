@@ -1,0 +1,54 @@
+{
+ "pid": "t1_collatz",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 286,
+    "itrs_median_big": 3474,
+    "itrs_max": 3896,
+    "depth_median_big": 2300,
+    "depth_max": 2579
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 18,
+    "itrs_median_big": null,
+    "itrs_max": 41,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 34,
+    "itrs_median_big": null,
+    "itrs_max": 62,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 88794,
+ "best": {
+  "itrs_median_small": 286,
+  "itrs_median_big": 3474,
+  "itrs_max": 3896,
+  "depth_median_big": 2300,
+  "depth_max": 2579
+ },
+ "usd": 0.020454905000000002,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

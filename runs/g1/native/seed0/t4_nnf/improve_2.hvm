@@ -1,0 +1,34 @@
+// Inline the tag-dispatch successor chains so each recursive call avoids
+// expanding a helper definition at every successive tag.
+@prog = ((tag payload) output)
+  & tag ~ ?(((* (0 *)) (?(((* (1 *)) (?(((p2 (2 p2)) (?((@Q (?((@P4c (* @P5c)) c4) c4)) c3) c3)) c2) c2)) c1) c1)) (payload output))
+
+@P = ((tag payload) out)
+  & tag ~ ?(((* (0 *)) (?(((* (1 *)) (?(((p2 (2 p2)) (?((@Q (?((@P4c (* @P5c)) c4) c4)) c3) c3)) c2) c2)) c1) c1)) (payload out))
+
+@Q = ((tag payload) out)
+  & tag ~ ?(((* (1 *)) (?(((* (0 *)) (?(((q2 (3 (2 q2))) (?((@P (?((@Q4c (* @Q5c)) c4) c4)) c3) c3)) c2) c2)) c1) c1)) (payload out))
+
+@P4c = (payload out)
+  & payload ~ (a b)
+  & out ~ (4 (oa ob))
+  & @P ~ (a oa)
+  & @P ~ (b ob)
+
+@P5c = (payload out)
+  & payload ~ (a b)
+  & out ~ (5 (oa ob))
+  & @P ~ (a oa)
+  & @P ~ (b ob)
+
+@Q4c = (payload out)
+  & payload ~ (a b)
+  & out ~ (5 (oa ob))
+  & @Q ~ (a oa)
+  & @Q ~ (b ob)
+
+@Q5c = (payload out)
+  & payload ~ (a b)
+  & out ~ (4 (oa ob))
+  & @Q ~ (a oa)
+  & @Q ~ (b ob)

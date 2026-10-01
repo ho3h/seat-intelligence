@@ -1,0 +1,35 @@
+@prog = ((?(((* 0) @amin_init) (pl out)) pl) out)
+
+@amin_init = (* ((h t) out))
+  & @scan ~ (t (1 (h (0 out))))
+
+@scan = (lv1 (idx (best (bi out))))
+  & @scan_cons_lw ~ (lv1 (idx (best (bi out))))
+
+@scan_nil = (* (* (* (r r))))
+
+@scan_cons = (* (({$([<] $(bc z7)) hh} t) (idx ({bc bb} (bi out)))))
+  & z7 ~ ?((@scan_keep_hz @scan_replace_hz) (hh (xw33 (idx (bb (bi out))))))
+  & @scan_cons_lw ~ (t xw33)
+
+@scan_keep = (* (t (idx (best (bi out)))))
+  & idx ~ $([+1] idx2)
+  & @scan ~ (t (idx2 (best (bi out))))
+
+@scan_replace = (* (h (t (idx (* (* out))))))
+  & idx ~ {idx_inc idx_bi}
+  & idx_inc ~ $([+1] idx2)
+  & @scan ~ (t (idx2 (h (idx_bi out))))
+
+@scan_cons_lw = (ls50 (q36 (q37 (q38 q39))))
+  & ls50 ~ (g47 (e45 (g48 (e46 tk49))))
+  & g47 ~ ?((@scan_nil @scan_cons_la) ((e45 (q41 (q42 (q43 q44)))) (q36 (q37 (q38 q39)))))
+  & g48 ~ ?((@scan_nil @scan_cons) ((e46 tk49) (q41 (q42 (q43 q44)))))
+
+@scan_keep_hz = (* (hw19 ($([+1] q13) (q10 (q11 q12)))))
+  & hw19 ~ (q13 (q10 (q11 q12)))
+
+@scan_replace_hz = (* (q20 (hw32 ({$([+1] q26) q25} (* (* q23))))))
+  & hw32 ~ (q26 (q20 (q25 q23)))
+
+@scan_cons_la = (* (({$([<] $(bc ?((@scan_keep_hz @scan_replace_hz) (hh (xw33 (idx (bb (bi out)))))))) hh} xw33) (idx ({bc bb} (bi out)))))

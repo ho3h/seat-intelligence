@@ -1,0 +1,23 @@
+@prog = ((?((@walk_leaf @walk_node) (payload_q325 (0 (* (head (0 *)))))) payload_q325) head)
+
+@walk_leaf = (* (acc (flag (head hole))))
+  & acc ~ *
+  & flag ~ 1
+  & head ~ hole
+
+@walk_node = (* (((?((@walk_leaf @walk_node) (payload_q327 (total_left (left_flag (left_head left_tail))))) payload_q327) ($([+] $(acc {total_left {total_right total_emit}})) (?((@walk_leaf @walk_node) (payload_q326 (total_right ($([*] $(left_flag ?((@walk_join @walk_emit) ((left_head (left_tail (right_head (right_tail total_emit)))) (flag (head hole)))))) (right_head right_tail))))) payload_q326))) (acc (flag (head hole)))))
+
+@walk_join = ((left_head (left_tail (right_head (right_tail total)))) (flag (head hole)))
+  & total ~ *
+  & flag ~ 0
+  & left_tail ~ right_head
+  & head ~ left_head
+  & hole ~ right_tail
+
+@walk_emit = (* ((left_head (left_tail (right_head (right_tail total)))) (flag (head hole))))
+  & left_head ~ *
+  & left_tail ~ *
+  & right_head ~ *
+  & right_tail ~ *
+  & flag ~ 0
+  & head ~ (1 (total hole))

@@ -1,0 +1,96 @@
+// Build the initial label list [0 .. n-1].
+@prog = ((n pairs) out)
+  & @mk ~ (n (0 labels))
+  & @edges ~ (pairs (labels out))
+
+@mk = (?((@mk_nil @mk_succ) (i out)) (i out))
+
+@mk_nil = (* (0 *))
+
+@mk_succ = (pred (i out))
+  & i ~ {head next}
+  & next ~ $([+1] i2)
+  & @mk ~ (pred (i2 tail))
+  & out ~ (1 (head tail))
+
+// Process merge edges in order.
+@edges = ((?((@edges_nil @edges_cons) (p (labels out))) p) (labels out))
+
+@edges_nil = (* (labels out))
+  & @count ~ (labels (0 (0 out)))
+
+@edges_cons = (* ((edge tail) (labels out)))
+  & @merge ~ (edge (labels labels2))
+  & @edges ~ (tail (labels2 out))
+
+// Merge the components containing the two endpoints.
+@merge = ((u v) (labels out))
+  & labels ~ {lsu {lsv lsm}}
+  & @get ~ (lsu (u a))
+  & @get ~ (lsv (v b))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([=] $(bc eq))
+  & eq ~ ?((@merge_diff @merge_same) (lsm (ar (br out))))
+
+@merge_diff = (labels (a (b out)))
+  & @rep ~ (labels (b (a out)))
+
+@merge_same = (* (labels (a (b out))))
+  & labels ~ out
+  & a ~ *
+  & b ~ *
+
+// Look up the label at an index in a list.
+@get = ((?((@get_nil @get_cons) (p (idx out))) p) (idx out))
+
+@get_nil = (* (* 0))
+
+@get_cons = (* ((h t) (?((@at0 @atS) (h (t out))) out)))
+
+@at0 = (h (* h))
+
+@atS = (pred (h (t out)))
+  & h ~ *
+  & @get ~ (t (pred out))
+
+// Replace every occurrence of old with new in a label list.
+@rep = ((?((@rep_nil @rep_cons) (p (old (new out)))) p) (old (new out)))
+
+@rep_nil = (* (* (* (0 *))))
+
+@rep_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hkeep}
+  & old ~ {oc oldr}
+  & new ~ {newr newc}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@rep_no @rep_yes) (hkeep (t (oldr (newr (newc out))))))
+
+@rep_no = (h (t (old (newr (newc out)))))
+  & newc ~ *
+  & @rep ~ (t (old (newr rest)))
+  & out ~ (1 (h rest))
+
+@rep_yes = (* (* (t (old (newr (newc out))))))
+  & @rep ~ (t (old (newr rest)))
+  & out ~ (1 (newc rest))
+
+// Count labels equal to their list indices.
+@count = ((?((@count_nil @count_cons) (p (idx (acc out)))) p) (idx (acc out)))
+
+@count_nil = (* (idx (acc out)))
+  & idx ~ *
+  & acc ~ out
+
+@count_cons = (* ((h t) (idx (acc out))))
+  & idx ~ {ixc ixr}
+  & h ~ $([=] $(ixc eq))
+  & ixr ~ $([+1] ixnext)
+  & eq ~ ?((@count_no @count_yes) (t (ixnext (acc out))))
+
+@count_no = (t (idx (acc out)))
+  & @count ~ (t (idx (acc out)))
+
+@count_yes = (* (t (idx (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (idx (acc2 out)))

@@ -1,0 +1,36 @@
+@prog = ((k xs) out)
+  & @sort ~ (xs sorted)
+  & @take ~ (k (sorted out))
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* (0 *))
+
+@sort_cons = (* ((h t) out))
+  & @sort ~ (t sorted)
+  & @ins ~ (h (sorted out))
+
+@ins = (h ((?((@ins_nil @ins_cons) (h (pl out))) pl) out))
+
+@ins_nil = (h (* (1 (h (0 *))))
+
+@ins_cons = (* ({hc hh} (({xc xx} t) out)))
+  & hc ~ $([>] $(xc z))
+  & z ~ ?((@ins_after @ins_before) (hh (xx (t out))))
+
+@ins_after = (* (hh (xx (t out))))
+  & xx ~ *
+  & @ins ~ (hh (t out))
+
+@ins_before = (* (hh (xx (t (1 (hh (1 (xx t)))))))
+
+@take = ((?((@take_zero @take_more) (l out))) (l out))
+
+@take_zero = (* (0 *))
+
+@take_more = (k ((?((@take_nil @take_cons) (pl (k out))) pl) out))
+
+@take_nil = (* (* (0 *)))
+
+@take_cons = (* ((h t) (k (1 (h r)))))
+  & @take ~ (k (t r))

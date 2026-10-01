@@ -1,0 +1,57 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = ((?((@lis_nil @lis_cons) (payload (tails out))) payload) (tails out))
+
+@lis_nil = (* (tails result))
+  & @len ~ (tails (0 result))
+
+@lis_cons = (* ((head tail) (tails out)))
+  & @ins ~ (tails (head newtails))
+  & @lis ~ (tail (newtails out))
+
+// Keep the tails in descending order. Values greater than the current
+// maximum can then be prepended immediately.
+@ins = ((?((@ins_nil @ins_cons) (payload (x out))) payload) (x out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((y tl) (x out)))
+  & x ~ {xc xb}
+  & y ~ {yc yb}
+  & xc ~ $([>] $(yc z))
+  & z ~ ?((@ins_scan @ins_high) (xb (yb (tl out))))
+
+@ins_high = (* (x (y (tl out))))
+  & out ~ (1 (x (1 (y tl))))
+
+@ins_scan = (x (y (tl out)))
+  & @scan ~ (y (tl (x out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (prev (x out)))) payload) (prev (x out)))
+
+@scan_nil = (* (prev (x out)))
+  & out ~ (1 (x (0 *)))
+
+@scan_cons = (* ((y tl) (prev (x out))))
+  & x ~ {xc xb}
+  & y ~ {yc yb}
+  & yc ~ $([<] $(xc z))
+  & z ~ ?((@scan_keep @scan_found) (prev (yb (tl (xb out))))
+
+@scan_keep = (prev (y (tl (x out))))
+  & @scan ~ (y (tl (x next)))
+  & out ~ (1 (prev next))
+
+@scan_found = (* (prev (y (tl (x out)))))
+  & out ~ (1 (x (1 (y tl))))
+
+@len = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((* tail) out))
+  & @len ~ (tail next)
+  & next ~ $([+1] out)

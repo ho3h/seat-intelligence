@@ -1,0 +1,79 @@
+// Emit full blocks of 16, then handle the remaining 0–15 items.
+@prog = (input output)
+  & input ~ (n v)
+  & @rep ~ (n (v output))
+
+@rep = (n (v out))
+  & n ~ {saved tested}
+  & tested ~ $([>] $(15 z))
+  & z ~ ?((@rep_small @rep_large) (saved (v out)))
+
+@rep_small = (n (v out))
+  & @small ~ (n (v out))
+
+@rep_large = (* (n (v out)))
+  & n ~ $([-] $(16 n2))
+  & v ~ {blockv nextv}
+  & @rep ~ (n2 (nextv tail))
+  & @block16 ~ (blockv (tail out))
+
+@small = (n (v out))
+  & n ~ ?((@small_zero @small_succ) (v out))
+
+@small_zero = (v out)
+  & v ~ *
+  & out ~ (0 *)
+
+@small_succ = (n (v out))
+  & v ~ {head nextv}
+  & out ~ (1 (head tail))
+  & @small ~ (n (nextv tail))
+
+@block16 = (v (tail out))
+  & v ~ {a b}
+  & a ~ {c d}
+  & b ~ {e f}
+  & c ~ {g h}
+  & d ~ {i j}
+  & e ~ {k l}
+  & f ~ {m n}
+  & g ~ {p0 p1}
+  & h ~ {p2 p3}
+  & i ~ {p4 p5}
+  & j ~ {p6 p7}
+  & k ~ {p8 p9}
+  & l ~ {p10 p11}
+  & m ~ {p12 p13}
+  & n ~ {p14 p15}
+  & out ~ (1 (p0
+    (1 (p1
+      (1 (p2
+        (1 (p3
+          (1 (p4
+            (1 (p5
+              (1 (p6
+                (1 (p7
+                  (1 (p8
+                    (1 (p9
+                      (1 (p10
+                        (1 (p11
+                          (1 (p12
+                            (1 (p13
+                              (1 (p14
+                                (1 (p15 tail))
+                                ))
+                              ))
+                            ))
+                          ))
+                        ))
+                      ))
+                    ))
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+  ))

@@ -1,0 +1,30 @@
+// Count prior elements greater than each current element.
+@prog = (xs out)
+  & @inv ~ (xs ((0 *) (0 out)))
+
+@inv = ((?((@inv_nil @inv_cons) (pl (seen (acc out)))) pl) (seen (acc out)))
+
+@inv_nil = (* (* (a a)))
+
+@inv_cons = (* ((h t) (seen (acc out))))
+  & h ~ {h1 h2}
+  & seen ~ {s1 s2}
+  & @count ~ (h1 (s1 (0 k)))
+  & k ~ $([+] $(acc acc2))
+  & @inv ~ (t ((1 (h2 s2)) (acc2 out)))
+
+@count = (h ((?((@count_nil @count_cons) (pl (h (acc out)))) pl) (acc out)))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* ((y ys) (h (acc out))))
+  & h ~ {h1 h2}
+  & y ~ $([>] $(h1 b))
+  & b ~ ?((@count_no @count_yes) (h2 (ys (acc out))))
+
+@count_no = (h (ys (acc out)))
+  & @count ~ (h (ys (acc out)))
+
+@count_yes = (* (h (ys (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count ~ (h (ys (acc2 out)))

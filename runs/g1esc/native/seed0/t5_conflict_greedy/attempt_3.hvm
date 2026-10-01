@@ -1,0 +1,271 @@
+@prog = (in out)
+  & in ~ (n (mnl cands))
+  & n ~ {n_init n_proc}
+  & @init ~ (n_init init_res)
+  & init_res ~ {parent mx}
+  & @sort ~ (cands sorted)
+  & @process ~ (sorted (n_proc (mnl (parent (mx out)))))
+
+@eq = (a (b out))
+  & a ~ $([=] $(b r))
+  & r ~ out
+
+@gt = (a (b out))
+  & a ~ $([>] $(b r))
+  & r ~ out
+
+@lt = (a (b out))
+  & a ~ $([<] $(b r))
+  & r ~ out
+
+@max2 = (a (b out))
+  & a ~ {a_cmp a_out}
+  & b ~ {b_cmp b_out}
+  & @gt ~ (a_cmp (b_cmp gt))
+  & gt ~ ?((@max2_b @max2_a) (a_out (b_out out)))
+
+@max2_b = (a (b out))
+  & a ~ *
+  & b ~ out
+
+@max2_a = (* (a (b out)))
+  & b ~ *
+  & a ~ out
+
+@cmp_cand = (a (b out))
+  & a ~ (ua (va sa))
+  & b ~ (ub (vb sb))
+  & sa ~ {sa_gt sa_eq}
+  & sb ~ {sb_gt sb_eq}
+  & ua ~ {ua_lt ua_eq}
+  & ub ~ {ub_lt ub_eq}
+  & @gt ~ (sa_gt (sb_gt score_gt))
+  & @eq ~ (sa_eq (sb_eq score_eq))
+  & @lt ~ (ua_lt (ub_lt u_lt))
+  & @eq ~ (ua_eq (ub_eq u_eq))
+  & @lt ~ (va (vb v_lt))
+  & u_eq ~ $([&] $(v_lt eq_vlt))
+  & u_lt ~ $([|] $(eq_vlt u_lt_or_eq))
+  & score_eq ~ $([&] $(u_lt_or_eq score_eq_u))
+  & score_gt ~ $([|] $(score_eq_u result))
+  & result ~ out
+
+@sort = (cands out)
+  & @sort_acc ~ (cands (0 *) out)
+
+@sort_acc = (l (acc out))
+  & l ~ (tag payload)
+  & tag ~ ?((@sort_nil @sort_cons) (payload (acc out)))
+
+@sort_nil = (payload (acc out))
+  & payload ~ *
+  & acc ~ out
+
+@sort_cons = (* (payload (acc out)))
+  & payload ~ (cand tail)
+  & @insert ~ (cand (acc new_acc))
+  & @sort_acc ~ (tail (new_acc out))
+
+@insert = (cand (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@ins_empty @ins_nonempty) (payload (cand out)))
+
+@ins_empty = (payload (cand out))
+  & payload ~ *
+  & (1 (cand (0 *))) ~ out
+
+@ins_nonempty = (* (payload (cand out)))
+  & payload ~ (first rest)
+  & cand ~ {cand_cmp cand_ctx}
+  & first ~ {first_cmp first_ctx}
+  & @cmp_cand ~ (cand_cmp (first_cmp cmp))
+  & cmp ~ ?((@ins_after @ins_before) (cand_ctx (first_ctx (rest out))))
+
+@ins_before = (* (cand (first (rest out))))
+  & (1 (cand (1 (first rest)))) ~ out
+
+@ins_after = (cand (first (rest out)))
+  & @insert ~ (cand (rest tail_out))
+  & (1 (first tail_out)) ~ out
+
+@init = (n out)
+  & n ~ $([+] $(16777215 nm1))
+  & @init_aux ~ (nm1 ((0 *) out))
+
+@init_aux = (i (acc out))
+  & i ~ {i_use i_switch}
+  & i_switch ~ ?((@init_zero @init_pos) (i_use (acc out)))
+
+@init_zero = (i (acc out))
+  & (1 (i acc)) ~ out
+
+@init_pos = (i_prev (i (acc out)))
+  & @init_aux ~ (i_prev ((1 (i acc)) out))
+
+@list_get = (idx (list out))
+  & idx ~ ?((@idx_zero @idx_pos) (list out))
+
+@idx_zero = (list out)
+  & list ~ (tag payload)
+  & tag ~ ?((@idx_none @idx_head) (payload out))
+
+@idx_none = (payload out)
+  & payload ~ *
+  & 0 ~ out
+
+@idx_head = (* (payload out))
+  & payload ~ (h t)
+  & t ~ *
+  & h ~ out
+
+@idx_pos = (idx_minus (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@idx_none @idx_tail) (payload idx_minus out))
+
+@idx_tail = (* (payload idx_minus out))
+  & payload ~ (h t)
+  & h ~ *
+  & @list_get ~ (idx_minus (t out))
+
+@list_set = (idx (val (list out)))
+  & idx ~ ?((@set_zero @set_pos) (val (list out)))
+
+@set_zero = (val (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@set_none @set_head) (payload val out))
+
+@set_none = (payload val out)
+  & payload ~ *
+  & (0 *) ~ out
+
+@set_head = (* (payload val out))
+  & payload ~ (h t)
+  & (1 (val t)) ~ out
+
+@set_pos = (idx_minus (val (list out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@set_none @set_tail) (payload val idx_minus out))
+
+@set_tail = (* (payload val idx_minus out))
+  & payload ~ (h t)
+  & @list_set ~ (idx_minus (val (t tail_out)))
+  & (1 (h tail_out)) ~ out
+
+@find = (x (parent out))
+  & x ~ {x_get x_rest}
+  & x_rest ~ {x_eq x_ret}
+  & parent ~ {parent_get parent_rec}
+  & @list_get ~ (x_get (parent_get p))
+  & p ~ {p_eq p_step}
+  & @eq ~ (p_eq (x_eq same))
+  & same ~ ?((@find_same @find_diff) (x_ret p_step parent_rec out))
+
+@find_same = (x (p parent out))
+  & x ~ out
+
+@find_diff = (* (x (p parent out)))
+  & @find ~ (p (parent out))
+
+@same_unordered = (a (b (c (d out))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & c ~ {c1 c2}
+  & d ~ {d1 d2}
+  & @eq ~ (a1 (c1 match1_ac))
+  & @eq ~ (b1 (d1 match1_bd))
+  & @eq ~ (a2 (d2 match2_ad))
+  & @eq ~ (b2 (c2 match2_bc))
+  & match1_ac ~ $([&] $(match1_bd match1))
+  & match2_ad ~ $([&] $(match2_bc match2))
+  & match1 ~ $([|] $(match2 out))
+
+@check_mnl = (mnl (ru (rv (parent out))))
+  & mnl ~ (tag payload)
+  & tag ~ ?((@chk_nil @chk_cons) (payload (ru (rv (parent out)))))
+
+@chk_nil = (payload (ru (rv (parent out))))
+  & payload ~ *
+  & 0 ~ out
+
+@chk_cons = (* (payload (ru (rv (parent out)))))
+  & payload ~ (pair tail)
+  & pair ~ (a b)
+  & parent ~ {parent_a parent_b parent_rec}
+  & ru ~ {ru_use ru_rec}
+  & rv ~ {rv_use rv_rec}
+  & @find ~ (a (parent_a ra))
+  & @find ~ (b (parent_b rb))
+  & @same_unordered ~ (ra (rb (ru_use (rv_use same))))
+  & same ~ ?((@chk_next @chk_yes) (tail (ru_rec (rv_rec (parent_rec out)))))
+
+@chk_yes = (* (tail (ru (rv (parent out)))))
+  & 1 ~ out
+
+@chk_next = (tail (ru (rv (parent out))))
+  & @check_mnl ~ (tail (ru (rv (parent out))))
+
+@union = (ru (rv (parent (mx new_parent (new_mx)))))
+  & mx ~ {mx_gru mx_grv mx_setbase}
+  & ru ~ {ru_gmx ru_smx ru_sp}
+  & rv ~ {rv_gmx rv_sp}
+  & @list_get ~ (ru_gmx (mx_gru mx_ru_val))
+  & @list_get ~ (rv_gmx (mx_grv mx_rv_val))
+  & @max2 ~ (mx_ru_val (mx_rv_val new_mx_val))
+  & @list_set ~ (ru_smx (new_mx_val (mx_setbase new_mx)))
+  & @list_set ~ (rv_sp (ru_sp (parent new_parent)))
+
+@process = (cands (n (mnl (parent (mx out)))))
+  & cands ~ (tag payload)
+  & tag ~ ?((@proc_end @proc_cand) (payload (n (mnl (parent (mx out))))))
+
+@proc_end = (payload (n (mnl (parent (mx out)))))
+  & payload ~ *
+  & @make_output ~ (n (parent (mx out)))
+
+@proc_cand = (* (payload (n (mnl (parent (mx out))))))
+  & payload ~ (cand rest)
+  & @handle ~ (cand (rest (n (mnl (parent (mx out))))))
+
+@handle = (cand (rest (n (mnl (parent (mx out))))))
+  & cand ~ (u (v *))
+  & parent ~ {parent_u parent_v parent_rest}
+  & @find ~ (u (parent_u ru))
+  & @find ~ (v (parent_v rv))
+  & @eq ~ (ru (rv same))
+  & same ~ ?((@handle_same @handle_diff) (rest (n (mnl (parent_rest (mx (out (ru rv))))))))
+
+@handle_same = (rest (n (mnl (parent (mx (out (ru rv)))))))
+  & ru ~ *
+  & rv ~ *
+  & @process ~ (rest (n (mnl (parent (mx out)))))
+
+@handle_diff = (* (rest (n (mnl (parent (mx (out (ru rv))))))))
+  & parent ~ {parent_check parent_after}
+  & @check_mnl ~ (mnl (ru (rv (parent_check conflict))))
+  & conflict ~ ?((@handle_no_conflict @handle_skip) (rest (n (mnl (parent_after (mx (out (ru rv))))))))
+
+@handle_skip = (* (rest (n (mnl (parent (mx (out (ru rv))))))))
+  & @process ~ (rest (n (mnl (parent (mx out)))))
+
+@handle_no_conflict = (rest (n (mnl (parent (mx (out (ru rv)))))))
+  & @union ~ (ru (rv (parent (mx new_parent (new_mx)))))
+  & @process ~ (rest (n (mnl (new_parent (new_mx out)))))
+
+@make_output = (n (parent (mx out)))
+  & n ~ $([+] $(16777215 nm1))
+  & @make_from ~ (nm1 (parent (mx out)))
+
+@make_from = (i (parent (mx out)))
+  & i ~ {i_find i_switch}
+  & parent ~ {parent_find parent_rec}
+  & mx ~ {mx_get mx_rec}
+  & @find ~ (i_find (parent_find root))
+  & @list_get ~ (root (mx_get max_val))
+  & i_switch ~ ?((@make_zero @make_pos) (max_val (parent_rec (mx_rec out))))
+
+@make_zero = (max_val (parent (mx out)))
+  & (1 (max_val (0 *))) ~ out
+
+@make_pos = (i_pred (max_val (parent (mx out))))
+  & @make_from ~ (i_pred (parent (mx tail_out)))
+  & (1 (max_val tail_out)) ~ out

@@ -1,0 +1,23 @@
+@max3 = ({$([>] $(a ?((@max3__C0 @max3__C1) (b (c d))))) b} ({a c} d))
+
+@max3__C0 = (* ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f)))
+
+@max3__C1 = (* ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} (* ({a e} f))))
+
+@measure = ((@measure__C3 a) a)
+
+@measure__C0 = (* ($([+0x0000001] a) (b (a b))))
+
+@measure__C1 = (* ($([+0x0000001] a) (* (b (a b)))))
+
+@measure__C2 = (* (a (* (b k))))
+  &!@measure ~ (b ({c {e f}} i))
+  &!@measure ~ (a ({$([>] $(c ?((@measure__C0 @measure__C1) (d (e (j k)))))) {d $([+] $(f g))}} h))
+  & @max3 ~ (g (h (i j)))
+
+@measure__C3 = (?(((0 0) @measure__C2) a) a)
+
+@prog = (a b)
+  & @measure ~ (a (* b))
+
+

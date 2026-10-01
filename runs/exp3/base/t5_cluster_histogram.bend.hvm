@@ -1,0 +1,126 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_parent = ({$([=] $(a ?((@build_parent__C1 (* (* (* 0)))) (b (c d))))) b} ({a c} d))
+
+@build_parent__C0 = ({b $([+] $(a $([:/0x0000002] {c e})))} ({f a} (d g)))
+  &!@build_parent ~ (b (c d))
+  &!@build_parent ~ (e (f g))
+
+@build_parent__C1 = ({$([+0x0000001] $([=] $(a ?((@build_parent__C0 (* (b (* b)))) (c (d e)))))) c} ({a d} e))
+
+@build_sizes = ({$([=] $(a ?((@build_sizes__C1 (* (* (* 0)))) (b (c d))))) b} ({a c} d))
+
+@build_sizes__C0 = ({b $([+] $(a $([:/0x0000002] {c e})))} ({f a} (d g)))
+  &!@build_sizes ~ (b (c d))
+  &!@build_sizes ~ (e (f g))
+
+@build_sizes__C1 = ({$([+0x0000001] $([=] $(a ?((@build_sizes__C0 (* (* (* 1)))) (b (c d)))))) b} ({a c} d))
+
+@count_roots = (c (d ({$([=] $(a ?((@count_roots__C4 (* (* (* (* (* (b b))))))) (c (d (e (f g))))))) e} ({a f} g))))
+
+@count_roots__C0 = ($([:-0x0000001] a) a)
+
+@count_roots__C1 = (* (* 7))
+
+@count_roots__C2 = (a (b ($([+0x0000001] c) d)))
+  & @count_roots ~ (a (b (c d)))
+
+@count_roots__C3 = (* (d ({e a} ({$([+0x0000001] f) c} ({g b} (h m))))))
+  & @count_roots ~ (d (e (f (g (l m)))))
+  & @tree_get ~ (a (0 (b (c {$([>0x0000008] i) j}))))
+  & @increment_at ~ (h (k l))
+  & $(i ?((@count_roots__C0 @count_roots__C1) (j k))) ~ [=0x0000000]
+
+@count_roots__C4 = ({e a} (f ({d {g c}} ({h b} i))))
+  & @tree_get ~ (a (0 (b (c $([=] $(d ?((@count_roots__C2 @count_roots__C3) (e (f (g (h i)))))))))))
+
+@find_compress = ({e a} ({d {f c}} ({g b} i)))
+  & @tree_get ~ (a (0 (b (c {$([=] $(d ?((@find_compress__C2 @find_compress__C3) (e (f (g (h i))))))) h}))))
+
+@find_compress__C0 = (d (c ({a e} (b (a f)))))
+  & @tree_set ~ (b (0 (c (d (e f)))))
+
+@find_compress__C1 = (* (* (* (a (b (a b))))))
+
+@find_compress__C2 = (a (e ({c f} ({b $([=] $(d ?((@find_compress__C0 @find_compress__C1) (e (f (g (h i)))))))} i))))
+  & @find_compress ~ (a (b (c ({d g} h))))
+
+@find_compress__C3 = (* (b (a (* (* (a b))))))
+
+@increment_at = ((@increment_at__C3 a) a)
+
+@increment_at__C0 = ($([:-0x0000001] c) (a (b e)))
+  & @List/Cons ~ (a (d e))
+  & @increment_at ~ (b (c d))
+
+@increment_at__C1 = (* (* ($([+0x0000001] a) b)))
+  & @List/Cons ~ (a b)
+
+@increment_at__C2 = (* (b (c ({$([=0x0000000] ?((@increment_at__C0 @increment_at__C1) (a (b (c d))))) a} d))))
+
+@increment_at__C3 = (?(((* @List/Nil) @increment_at__C2) a) a)
+
+@prog = (({f {i {d b}}} a) r)
+  & @count_roots ~ (g (h (0 (i (q r)))))
+  & @union_all ~ (a (c (e (f (g h)))))
+  & @build_parent ~ (0 (b c))
+  & @build_sizes ~ (0 (d e))
+  & @List/Cons ~ (0 (p q))
+  & @List/Cons ~ (0 (o p))
+  & @List/Cons ~ (0 (n o))
+  & @List/Cons ~ (0 (m n))
+  & @List/Cons ~ (0 (l m))
+  & @List/Cons ~ (0 (k l))
+  & @List/Cons ~ (0 (j k))
+  & @List/Cons ~ (0 (@List/Nil j))
+
+@tree_get = (c ({$([+0x0000001] $([=] $(a ?((@tree_get__C2 (* (b (* (* (* b)))))) (c (d (e f))))))) d} ({a e} f)))
+
+@tree_get__C0 = (* (c (d (b (* (a e))))))
+  & @tree_get ~ (a (b (c (d e))))
+
+@tree_get__C1 = (* (b (* (d (c (a (* e)))))))
+  & @tree_get ~ (a (b (c (d e))))
+
+@tree_get__C2 = ((g h) ({c $([+] $(a $([:/0x0000002] {b f})))} ({d a} ({$([<] $(b ?((@tree_get__C0 @tree_get__C1) (c (d (e (f (g (h i))))))))) e} i))))
+
+@tree_set = (c ({$([+0x0000001] $([=] $(a ?((@tree_set__C2 (* (* (* (* (* (b b))))))) (c (d (e f))))))) d} ({a e} f)))
+
+@tree_set__C0 = (* (d (e (f (c (a (b (a g))))))))
+  & @tree_set ~ (b (c (d (e (f g)))))
+
+@tree_set__C1 = (* (b (* (d (e (c (a (g (f g)))))))))
+  & @tree_set ~ (a (b (c (d (e f)))))
+
+@tree_set__C2 = ((h i) ({c $([+] $(a $([:/0x0000002] {b g})))} ({d a} ({$([<] $(b ?((@tree_set__C0 @tree_set__C1) (c (d (e (f (g (h (i j)))))))))) e} (f j)))))
+
+@union_all = ((@union_all__C6 a) a)
+
+@union_all__C0 = (g ({m {h c}} (a ({i e} (d (b ($([+] $(j k)) (j n))))))))
+  & @union_all ~ (a (f (l (m n))))
+  & @tree_set ~ (b (0 (c (d (e f)))))
+  & @tree_set ~ (g (0 (h (i (k l)))))
+
+@union_all__C1 = (* (g ({m {h c}} (a (d ({i e} (b ($([+] $(j k)) (j n)))))))))
+  & @union_all ~ (a (f (l (m n))))
+  & @tree_set ~ (b (0 (c (d (e f)))))
+  & @tree_set ~ (g (0 (h (i (k l)))))
+
+@union_all__C2 = ({h {d a}} ({i {e b}} (j ({k c} ({l f} (m p))))))
+  & @tree_get ~ (d (0 (e (f {g o}))))
+  & @tree_get ~ (a (0 (b (c {$([<] $(g ?((@union_all__C0 @union_all__C1) (h (i (j (k (l (m (n (o p))))))))))) n}))))
+
+@union_all__C3 = (* (c (d (a (* (* (b e)))))))
+  & @union_all ~ (a (b (c (d e))))
+
+@union_all__C4 = (a (b (* (a b))))
+
+@union_all__C5 = (* ((b e) (j (a (h ({c {f i}} n))))))
+  & @find_compress ~ (d (e (f ({g l} m))))
+  & @find_compress ~ (a (b (c ({$([=] $(g ?((@union_all__C2 @union_all__C3) (h (i (j (k (l (m n))))))))) k} d))))
+
+@union_all__C6 = (?((@union_all__C4 @union_all__C5) a) a)
+
+

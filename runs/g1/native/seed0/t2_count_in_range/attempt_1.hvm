@@ -1,0 +1,24 @@
+// Count list elements satisfying lo <= e <= hi.
+@prog = (input out)
+  & input ~ (lo (hi xs))
+  & @count ~ (xs (lo (hi (0 out))))
+
+@count = ((?((@count_nil @count_cons) (pl (lo (hi (acc out)))) ) pl) (lo (hi (acc out))))
+
+@count_nil = (* (* (* (a a))))
+
+@count_cons = (* ((h t) (lo (hi (acc out)))))
+  & h ~ {hlo hhi}
+  & lo ~ {lo_cmp lo_rec}
+  & hi ~ {hi_cmp hi_rec}
+  & hlo ~ $([<] $(lo_cmp low))
+  & hhi ~ $([>] $(hi_cmp high))
+  & low ~ $([|] $(high bad))
+  & bad ~ ?((@count_good @count_skip) (t (lo_rec (hi_rec (acc out)))))
+
+@count_good = (t (lo (hi (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count ~ (t (lo (hi (acc2 out))))
+
+@count_skip = (* (t (lo (hi (acc out)))))
+  & @count ~ (t (lo (hi (acc out))))

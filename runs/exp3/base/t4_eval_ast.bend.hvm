@@ -1,0 +1,139 @@
+@prog = ((@prog__C43 a) a)
+
+@prog__C0 = (a (c ($([+] $(b $([+] $(d e)))) e)))
+  &!@prog ~ (a b)
+  &!@prog ~ (c d)
+
+@prog__C1 = (* (a (b ($([+] $(d e)) e))))
+  &!@prog ~ (a $([*] $(c d)))
+  &!@prog ~ (b c)
+
+@prog__C10 = (d (f (a (b h))))
+  &!@prog ~ (a $([*] $(c $([+] $(e $([+] $(g h)))))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d e)
+  &!@prog ~ (f g)
+
+@prog__C11 = (* (d (e (a (b h)))))
+  &!@prog ~ (a $([*] $(c $([+] $(g h)))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d $([*] $(f g)))
+  &!@prog ~ (e f)
+
+@prog__C12 = (d (a (b e)))
+  &!@prog ~ (a $([*] $(c $([+] $(d e)))))
+  &!@prog ~ (b c)
+
+@prog__C13 = (?((@prog__C10 @prog__C11) a) a)
+
+@prog__C14 = (?((@prog__C12 @prog__C13) a) a)
+
+@prog__C15 = (a (b ((@prog__C9 (a (b c))) c)))
+
+@prog__C16 = (* (a (b ((@prog__C14 (a (b c))) c))))
+
+@prog__C17 = (a ((@prog__C4 (a b)) b))
+
+@prog__C18 = (?((@prog__C15 @prog__C16) a) a)
+
+@prog__C19 = (?((@prog__C17 @prog__C18) a) a)
+
+@prog__C2 = (a ($([+] $(a b)) b))
+
+@prog__C20 = (a (b ($([*] $(d e)) e)))
+  &!@prog ~ (a $([+] $(c d)))
+  &!@prog ~ (b c)
+
+@prog__C21 = (* (a (b ($([*] $(d e)) e))))
+  &!@prog ~ (a $([*] $(c d)))
+  &!@prog ~ (b c)
+
+@prog__C22 = (a ($([*] $(a b)) b))
+
+@prog__C23 = (?((@prog__C20 @prog__C21) a) a)
+
+@prog__C24 = (?((@prog__C22 @prog__C23) a) a)
+
+@prog__C25 = (d (e (a (b h))))
+  &!@prog ~ (a $([+] $(c $([*] $(g h)))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d $([+] $(f g)))
+  &!@prog ~ (e f)
+
+@prog__C26 = (* (d (e (a (b h)))))
+  &!@prog ~ (a $([+] $(c $([*] $(g h)))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d $([*] $(f g)))
+  &!@prog ~ (e f)
+
+@prog__C27 = (d (a (b e)))
+  &!@prog ~ (a $([+] $(c $([*] $(d e)))))
+  &!@prog ~ (b c)
+
+@prog__C28 = (?((@prog__C25 @prog__C26) a) a)
+
+@prog__C29 = (?((@prog__C27 @prog__C28) a) a)
+
+@prog__C3 = (?((@prog__C0 @prog__C1) a) a)
+
+@prog__C30 = (d (e (a (b h))))
+  &!@prog ~ (a $([*] $(c $([*] $(g h)))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d $([+] $(f g)))
+  &!@prog ~ (e f)
+
+@prog__C31 = (* (d (e (a (b h)))))
+  &!@prog ~ (a $([*] $(c $([*] $(g h)))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d $([*] $(f g)))
+  &!@prog ~ (e f)
+
+@prog__C32 = (d (a (b e)))
+  &!@prog ~ (a $([*] $(c $([*] $(d e)))))
+  &!@prog ~ (b c)
+
+@prog__C33 = (?((@prog__C30 @prog__C31) a) a)
+
+@prog__C34 = (?((@prog__C32 @prog__C33) a) a)
+
+@prog__C35 = (a (b ((@prog__C29 (a (b c))) c)))
+
+@prog__C36 = (* (a (b ((@prog__C34 (a (b c))) c))))
+
+@prog__C37 = (a ((@prog__C24 (a b)) b))
+
+@prog__C38 = (?((@prog__C35 @prog__C36) a) a)
+
+@prog__C39 = (?((@prog__C37 @prog__C38) a) a)
+
+@prog__C4 = (?((@prog__C2 @prog__C3) a) a)
+
+@prog__C40 = ((@prog__C19 a) a)
+
+@prog__C41 = (* ((@prog__C39 a) a))
+
+@prog__C42 = (?((@prog__C40 @prog__C41) a) a)
+
+@prog__C43 = (?(((a a) @prog__C42) b) b)
+
+@prog__C5 = (d (f (a (b h))))
+  &!@prog ~ (a $([+] $(c $([+] $(e $([+] $(g h)))))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d e)
+  &!@prog ~ (f g)
+
+@prog__C6 = (* (d (e (a (b h)))))
+  &!@prog ~ (a $([+] $(c $([+] $(g h)))))
+  &!@prog ~ (b c)
+  &!@prog ~ (d $([*] $(f g)))
+  &!@prog ~ (e f)
+
+@prog__C7 = (d (a (b e)))
+  &!@prog ~ (a $([+] $(c $([+] $(d e)))))
+  &!@prog ~ (b c)
+
+@prog__C8 = (?((@prog__C5 @prog__C6) a) a)
+
+@prog__C9 = (?((@prog__C7 @prog__C8) a) a)
+
+

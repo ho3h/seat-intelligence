@@ -1,0 +1,102 @@
+@prog = ((n (s edges)) out)
+  & @init ~ (n (s (0 dist0)))
+  & @round ~ (edges (dist0 out))
+
+@init = (?((@init_zero @init_succ) ctx) ctx)
+
+@init_zero = (s (i out))
+  & s ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (s (i out)))
+  & s ~ {s_eq s_rec}
+  & i ~ {i_eq i_rec}
+  & s_eq ~ $([=] $(i_eq eq))
+  & i_rec ~ $([+1] i_next)
+  & @init ~ (k (s_rec (i_next tail)))
+  & eq ~ ?((@init_other @init_same) (tail out))
+
+@init_other = (tail out)
+  & out ~ (1 (16777215 tail))
+
+@init_same = (* (tail out))
+  & out ~ (1 (0 tail))
+
+@round = (edges (dist out))
+  & edges ~ {edges_scan edges_next}
+  & @scan ~ (edges_scan (dist (0 scanres)))
+  & scanres ~ (dist2 changed)
+  & changed ~ ?((@round_stop @round_more) (edges_next (dist2 out)))
+
+@round_stop = (edges (dist out))
+  & edges ~ *
+  & out ~ dist
+
+@round_more = (k (edges (dist out)))
+  & k ~ *
+  & @round ~ (edges (dist out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (dist (changed out)))) pl) (dist (changed out)))
+
+@scan_nil = (* (dist (changed out)))
+  & out ~ (dist changed)
+
+@scan_cons = (* (((u v) tail) (dist (changed out))))
+  & @relax ~ (u (v (dist (changed scanres))))
+  & scanres ~ (dist2 changed2)
+  & @scan ~ (tail (dist2 (changed2 out)))
+
+@relax = (u (v (dist (changed out))))
+  & @find ~ (dist (u (du dist2)))
+  & @update ~ (dist2 (v (du (changed out))))
+
+@find = ((?((@find_nil @find_cons) (pl (idx out))) pl) (idx out))
+
+@find_nil = (* (* out))
+  & out ~ 16777215
+
+@find_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@find_here @find_later) (head (tail out)))
+
+@find_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@find_later = (k (head (tail out)))
+  & head ~ *
+  & @find ~ (tail (k out))
+
+@update = ((?((@update_nil @update_cons) (pl (idx (val (changed out)))) pl) (idx (val (changed out))))
+
+@update_nil = (* (idx (val (changed out))))
+  & idx ~ *
+  & val ~ *
+  & out ~ ((0 *) changed)
+
+@update_cons = (* ((head tail) (idx (val (changed out)))))
+  & idx ~ ?((@update_here @update_later) (head (tail (val (changed out))))
+
+@update_here = (head (tail (val (changed out))))
+  & val ~ {val_f val_inc}
+  & val_f ~ $([<] $(16777215 finite))
+  & val_inc ~ $([+1] cand)
+  & cand ~ {cand_cmp cand_out}
+  & head ~ {head_cmp head_keep}
+  & cand_cmp ~ $([<] $(head_cmp less))
+  & less ~ $([&] $(finite change))
+  & change ~ ?((@update_no @update_yes) (tail (head_keep (cand_out (changed out))))
+
+@update_no = (tail (head (cand (changed out))))
+  & cand ~ *
+  & out ~ ((1 (head tail)) changed)
+
+@update_yes = (* (tail (head (cand (changed out)))))
+  & head ~ *
+  & changed ~ *
+  & out ~ ((1 (cand tail)) 1)
+
+@update_later = (k (head (tail (val (changed out)))))
+  & @update ~ (tail (k (val (changed out2))))
+  & out2 ~ (tail2 changed2)
+  & out ~ ((1 (head tail2)) changed2)

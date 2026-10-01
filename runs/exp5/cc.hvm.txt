@@ -1,0 +1,52 @@
+// t3_cc_count (GRAPH-SWING, runs/exp5): min-label propagation on the shared frontier Bellman-Ford core (edges get
+// weight 0, the initial candidate of vertex v is v itself). A component is counted at the leaf whose final label
+// equals its own index (< n).
+@prog = ((n es) out)
+  & n ~ ?((@cc_zero @cc_pos) (es out))
+@cc_zero = (* 0)
+@cc_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @zi ~ (L3 D0)
+  & @idt ~ (L4 (0 C0))
+  & @loop ~ ((G (D0 (C0 (L5 16777215)))) Df)
+  & @ccn ~ (Df (L6 (0 (n out))))
+@cc_step = ((L g) ((u v) (L3 g3)))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @gp ~ (g (u1 (L1 ((v1 0) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 0) g3))))
+@cc_fin = ((* g) g)
+// idt(L, base): trie whose leaf i holds base + i
+@idt = (L (base o))
+  & L ~ ?((@idt_leaf @idt_node) (base o))
+@idt_leaf = (b b)
+@idt_node = (lm (base (a c)))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @idt ~ (l1 (b1 a))
+  & @idt ~ (l2 (bR c))
+// ccn(t, L, base, n): number of leaves i < n with t[i] == i
+@ccn = (t (L (base (n o))))
+  & L ~ ?((@ccn_leaf @ccn_node) (t (base (n o))))
+@ccn_leaf = (x (base (n o)))
+  & base ~ {b1 b2}
+  & x ~ $([=] $(b1 eq))
+  & b2 ~ $([<] $(n inr))
+  & eq ~ $([&] $(inr o))
+@ccn_node = (lm ((a c) (base (n o))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @ccn ~ (a (l1 (b1 (n1 x))))
+  & @ccn ~ (c (l2 (bR (n2 y))))
+  & x ~ $([+] $(y o))

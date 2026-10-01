@@ -1,0 +1,42 @@
+@prog = ((a k) out)
+  & k ~ ?((@kzero @kpos) (a out))
+
+@kzero = (a out)
+  & a ~ *
+  & out ~ (0 *)
+
+@kpos = (km (a out))
+  & km ~ $([+1] k)
+  & @mul ~ (a (k (0 out)))
+
+@mul = (lv1 (k (carry out)))
+  & @mul_cons_lw ~ (lv1 (k (carry out)))
+
+@mul_nil = (pl (k (carry out)))
+  & pl ~ *
+  & k ~ *
+  & @finish ~ (carry out)
+
+@mul_cons = (* (($([*] $(km $([+] $(carry {$([%] $(4096 digit)) $([/] $(4096 nextcarry))})))) t) ({km kr} (carry (1 (digit tailout))))))
+  & @mul_cons_lw ~ (t (kr (nextcarry tailout)))
+
+@finish = (?((@finish_zero @finish_pos) (out *)) out)
+
+@finish_zero = ((0 *) *)
+
+@finish_pos = (cm1 (dest *))
+  & cm1 ~ $([+1] digit)
+  & dest ~ (1 (digit (0 *)))
+
+@mul_cons_lw = (ls60 (q12 (q13 q14)))
+  & ls60 ~ (g51 (e43 (g52 (e44 (g53 (e45 (g54 (e46 (g55 (e47 (g56 (e48 (g57 (e49 (g58 (e50 tk59))))))))))))))))
+  & g51 ~ ?((@mul_nil @mul_cons_la) ((e43 (q16 (q17 q18))) (q12 (q13 q14))))
+  & g52 ~ ?((@mul_nil @mul_cons_la) ((e44 (q20 (q21 q22))) (q16 (q17 q18))))
+  & g53 ~ ?((@mul_nil @mul_cons_la) ((e45 (q24 (q25 q26))) (q20 (q21 q22))))
+  & g54 ~ ?((@mul_nil @mul_cons_la) ((e46 (q28 (q29 q30))) (q24 (q25 q26))))
+  & g55 ~ ?((@mul_nil @mul_cons_la) ((e47 (q32 (q33 q34))) (q28 (q29 q30))))
+  & g56 ~ ?((@mul_nil @mul_cons_la) ((e48 (q36 (q37 q38))) (q32 (q33 q34))))
+  & g57 ~ ?((@mul_nil @mul_cons_la) ((e49 (q40 (q41 q42))) (q36 (q37 q38))))
+  & g58 ~ ?((@mul_nil @mul_cons) ((e50 tk59) (q40 (q41 q42))))
+
+@mul_cons_la = (* (($([*] $(km $([+] $(carry {$([%] $(4096 digit)) $([/] $(4096 nextcarry))})))) (kr (nextcarry tailout))) ({km kr} (carry (1 (digit tailout))))))

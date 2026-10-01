@@ -1,0 +1,54 @@
+{
+ "pid": "t3_budget_reach",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1594,
+    "itrs_median_big": 115362538,
+    "itrs_max": 403163112,
+    "depth_median_big": 25990901,
+    "depth_max": 106020887
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1203,
+    "itrs_median_big": 11631520,
+    "itrs_max": 23260205,
+    "depth_median_big": 2217791,
+    "depth_max": 5696806
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 302722,
+ "best": {
+  "itrs_median_small": 1203,
+  "itrs_median_big": 11631520,
+  "itrs_max": 23260205,
+  "depth_median_big": 2217791,
+  "depth_max": 5696806
+ },
+ "usd": 0.07682409500000001,
+ "free_rejects": 1,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

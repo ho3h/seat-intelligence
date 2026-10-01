@@ -1,0 +1,99 @@
+@prog = ((tau cands) out)
+  & @filter ~ (cands (tau filtered))
+  & @msort ~ (filtered out)
+
+@filter = ((?((@f_nil @f_cons) (payload (tau out))) payload) (tau out))
+
+@f_nil = (payload (tau out))
+  & payload ~ *
+  & tau ~ *
+  & out ~ (0 *)
+
+@f_cons = (* (((u (v score)) tail) (tau out)))
+  & tau ~ {tau_rec tau_cmp}
+  & score ~ {score_keep score_cmp}
+  & @filter ~ (tail (tau_rec rest))
+  & score_cmp ~ $([<] $(tau_cmp low))
+  & low ~ ?((@f_accept @f_reject) ((u (v score_keep)) (rest out)))
+
+@f_accept = (candidate (rest out))
+  & out ~ (1 (candidate rest))
+
+@f_reject = (candidate (rest out))
+  & candidate ~ *
+  & out ~ rest
+
+@msort = ((?((@ms_nil @ms_cons) (payload out)) payload) out)
+
+@ms_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@ms_cons = (* ((head tail) out))
+  & tail ~ (?((@ms_one @ms_many) (head (p out))) p)
+
+@ms_one = (head (p out))
+  & p ~ *
+  & out ~ (1 (head (0 *)))
+
+@ms_many = (* (head (p out)))
+  & @split ~ ((1 (head (1 p))) halves)
+  & halves ~ (left right)
+  & @msort ~ (left sl)
+  & @msort ~ (right sr)
+  & @merge ~ ((sl sr) out)
+
+@split = ((?((@sp_nil @sp_cons) (payload out)) payload) out)
+
+@sp_nil = (payload out)
+  & payload ~ *
+  & out ~ ((0 *) (0 *))
+
+@sp_cons = (* ((head tail) out))
+  & @split ~ (tail halves)
+  & halves ~ (left right)
+  & out ~ ((1 (head right)) left)
+
+@merge = ((?((@mg_nil @mg_lcons) (payload (right out))) payload) (right out))
+
+@mg_nil = (payload (right out))
+  & payload ~ *
+  & out ~ right
+
+@mg_lcons = (* ((a tail) (right out)))
+  & right ~ (?((@mg_rnil @mg_rcons) (rp (a (tail out)))) rp)
+
+@mg_rnil = (rp (a (tail out)))
+  & rp ~ *
+  & out ~ (1 (a tail))
+
+@mg_rcons = (* ((b rtail) (a (tail out))))
+  & @before ~ (a (b before))
+  & before ~ ?((@mg_take_b @mg_take_a) (a (b (tail (rtail out))))
+
+@mg_take_a = (* (a (b (tail (rtail out)))))
+  & @merge ~ ((tail (1 (b rtail))) rest)
+  & out ~ (1 (a rest))
+
+@mg_take_b = (* (a (b (tail (rtail out)))))
+  & @merge ~ (((1 (a tail)) rtail) rest)
+  & out ~ (1 (b rest))
+
+@before = ((cu (cv cs)) ((hu (hv hs)) out))
+  & cs ~ {cs_gt cs_eq}
+  & hs ~ {hs_gt hs_eq}
+  & cs_gt ~ $([>] $(hs_gt sg))
+  & cs_eq ~ $([=] $(hs_eq se))
+  & cu ~ {cu_lt cu_eq}
+  & hu ~ {hu_lt hu_eq}
+  & cu_lt ~ $([<] $(hu_lt ul))
+  & cu_eq ~ $([=] $(hu_eq ue))
+  & cv ~ {cv_lt cv_eq}
+  & hv ~ {hv_lt hv_eq}
+  & cv_lt ~ $([<] $(hv_lt vl))
+  & cv_eq ~ $([=] $(hv_eq ve))
+  & vl ~ $([|] $(ve vle))
+  & ue ~ $([&] $(vle utie))
+  & ul ~ $([|] $(utie ub))
+  & se ~ $([&] $(ub stie))
+  & sg ~ $([|] $(stie out))

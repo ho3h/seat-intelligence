@@ -1,0 +1,124 @@
+// Process queries one at a time, retaining the edge list for each search.
+@prog = (input out)
+  & input ~ (n (pairs queries))
+  & n ~ *
+  & @qloop ~ (queries (pairs out))
+
+@qloop = ((?((@qnil @qcons) (pl (edges out))) pl) (edges out))
+
+@qnil = (pl (edges out))
+  & pl ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@qcons = (* ((a b) (tail (edges out))))
+  & edges ~ {edge_scan edge_next}
+  & @connected ~ (a (b (edge_scan c)))
+  & @qloop ~ (tail (edge_next rest))
+  & out ~ (1 (c rest))
+
+@connected = (a (b (edges out)))
+  & a ~ {a_queue a_visited}
+  & @bfs ~ ((1 (a_queue (0 *))) (b (edges (1 (a_visited (0 *))) out)))
+
+// Search queue, target, edges, visited list, and result.
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (target (edges (visited out))))) pl) (target (edges (visited out))))
+
+@bfs_nil = (pl (target (edges (visited out))))
+  & pl ~ *
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 0
+
+@bfs_cons = (* ((x q) (target (edges (visited out)))))
+  & x ~ {xc xr}
+  & target ~ {tc tr}
+  & xc ~ $([=] $(tc z))
+  & z ~ ?((@bfs_continue @bfs_hit) (xr (q (tr (edges (visited out))))))
+
+@bfs_continue = (* (x (q (target (edges (visited out))))))
+  & edges ~ {escan erecur}
+  & @scan ~ (escan (x (q (target (erecur (visited out))))))
+
+@bfs_hit = (* (x (q (target (edges (visited out))))))
+  & x ~ *
+  & q ~ *
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 1
+
+// Scan each edge for a neighbor of the current queue node.
+@scan = ((?((@scan_nil @scan_cons) (pl (x (q (target (edges (visited out))))))) pl) (x (q (target (edges (visited out))))))
+
+@scan_nil = (pl (x (q (target (edges (visited out))))))
+  & pl ~ *
+  & x ~ *
+  & @bfs ~ (q (target (edges (visited out))))
+
+@scan_cons = (* (((u v) tail) (x (q (target (edges (visited out)))))))
+  & @edge ~ (x (u (v (tail (q (target (edges (visited out))))))))
+
+@edge = (x (u (v (tail (q (target (edges (visited out))))))))
+  & x ~ {xc xr}
+  & u ~ {uc uk}
+  & xc ~ $([=] $(uc z))
+  & z ~ ?((@edge_no_u @edge_yes_u) (xr (uk (v (tail (q (target (edges (visited out)))))))))
+
+@edge_no_u = (x (u (v (tail (q (target (edges (visited out))))))))
+  & @edge_check_v ~ (x (u (v (tail (q (target (edges (visited out))))))))
+
+@edge_yes_u = (* (x (u (v (tail (q (target (edges (visited out)))))))))
+  & u ~ *
+  & @admit ~ (v (x (tail (q (target (edges (visited out)))))))
+
+@edge_check_v = (x (u (v (tail (q (target (edges (visited out))))))))
+  & x ~ {xc xr}
+  & v ~ {vc vk}
+  & xc ~ $([=] $(vc z))
+  & z ~ ?((@edge_no_v @edge_yes_v) (xr (u (vk (tail (q (target (edges (visited out)))))))))
+
+@edge_no_v = (* (x (u (v (tail (q (target (edges (visited out)))))))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (x (q (target (edges (visited out))))))
+
+@edge_yes_v = (* (x (u (v (tail (q (target (edges (visited out)))))))))
+  & v ~ *
+  & @admit ~ (u (x (tail (q (target (edges (visited out)))))))
+
+@admit = (neighbor (x (tail (q (target (edges (visited out)))))))
+  & visited ~ {vtest vkeep}
+  & neighbor ~ {ntest nkeep}
+  & @mem ~ (vtest (ntest m))
+  & m ~ ?((@admit_new @admit_seen) (x (nkeep (tail (q (target (edges (vkeep out))))))))
+
+@admit_new = (* (x (neighbor (tail (q (target (edges (visited out))))))))
+  & neighbor ~ {nq nv}
+  & @scan ~ (tail (x ((1 (nq q)) (target (edges (1 (nv visited)) out)))))
+
+@admit_seen = (* (x (neighbor (tail (q (target (edges (visited out))))))))
+  & neighbor ~ *
+  & @scan ~ (tail (x (q (target (edges (visited out))))))
+
+// Membership test for a number in a list.
+@mem = ((?((@mem_nil @mem_cons) (pl (item out))) pl) (item out))
+
+@mem_nil = (pl (item out))
+  & pl ~ *
+  & item ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (item out)))
+  & item ~ {i1 i2}
+  & i1 ~ $([=] $(h z))
+  & z ~ ?((@mem_no @mem_yes) (i2 (t out)))
+
+@mem_no = (item (tail out))
+  & @mem ~ (tail (item out))
+
+@mem_yes = (* (item (tail out)))
+  & item ~ *
+  & tail ~ *
+  & out ~ 1

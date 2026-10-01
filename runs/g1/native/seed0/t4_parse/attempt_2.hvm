@@ -1,0 +1,131 @@
+// Parse an expression and discard its remainder.
+@prog = (input output)
+  & @expr ~ (input (ast rem))
+  & output ~ ast
+  & rem ~ *
+
+// expr := term ('+' term)*
+@expr = (input out)
+  & @skip ~ (input s)
+  & @term ~ (s (a rem))
+  & @expr_loop ~ ((a rem) out)
+
+@expr_loop = ((acc rem) out)
+  & @skip ~ (rem s)
+  & @plus_check ~ (s (acc out))
+
+@plus_check = ((?((@pl_nil @pl_cons) (pl (acc out))) pl) (acc out))
+
+@pl_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@pl_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(43 z))
+  & z ~ ?((@pl_stop @pl_more) (hr (t (acc out))))
+
+@pl_stop = (h (t (acc out)))
+  & out ~ (acc (1 (h t)))
+
+@pl_more = (* (* (t (acc out))))
+  & @term ~ (t (rhs rem))
+  & @expr_loop ~ (((1 (acc rhs)) rem) out)
+
+// term := factor ('*' factor)*
+@term = (input out)
+  & @skip ~ (input s)
+  & @factor ~ (s (a rem))
+  & @term_loop ~ ((a rem) out)
+
+@term_loop = ((acc rem) out)
+  & @skip ~ (rem s)
+  & @mul_check ~ (s (acc out))
+
+@mul_check = ((?((@ml_nil @ml_cons) (pl (acc out))) pl) (acc out))
+
+@ml_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@ml_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(42 z))
+  & z ~ ?((@ml_stop @ml_more) (hr (t (acc out))))
+
+@ml_stop = (h (t (acc out)))
+  & out ~ (acc (1 (h t)))
+
+@ml_more = (* (* (t (acc out))))
+  & @factor ~ (t (rhs rem))
+  & @term_loop ~ (((2 (acc rhs)) rem) out)
+
+// factor := number | '(' expr ')'
+@factor = (input out)
+  & @skip ~ (input s)
+  & @factor_head ~ (s out)
+
+@factor_head = ((?((@fh_nil @fh_cons) (pl out)) pl) out)
+
+@fh_nil = (* out)
+  & out ~ ((0 0) (0 *))
+
+@fh_cons = (* ((h t) out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(40 z))
+  & z ~ ?((@fh_number @fh_paren) (hr (t out)))
+
+@fh_number = (h (t out))
+  & h ~ $([-] $(48 first))
+  & @num_loop ~ ((first t) (acc_out out))
+  & out ~ ((0 acc_out) rem_out)
+
+@fh_paren = (* (* (t out)))
+  & @expr ~ (t (ast rem1))
+  & @skip ~ (rem1 rem2)
+  & @close ~ (rem2 rem3)
+  & out ~ (ast rem3)
+
+// Read decimal digits into an accumulator; leave the first non-digit unconsumed.
+@num_loop = ((?((@nl_nil @nl_cons) (pl (acc out))) pl) (acc out))
+
+@nl_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@nl_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([>] $(47 z))
+  & z ~ ?((@nl_end @nl_digit) (hr (t (acc out))))
+
+@nl_end = (h (t (acc out)))
+  & out ~ (acc (1 (h t)))
+
+@nl_digit = (* (h (t (acc out))))
+  & h ~ $([-] $(48 d))
+  & acc ~ $([*] $(10 m))
+  & m ~ $([+] $(d next))
+  & @num_loop ~ (t (next out))
+
+// Skip spaces at the beginning of a list.
+@skip = ((?((@sk_nil @sk_cons) (pl out)) pl) out)
+
+@sk_nil = (* out)
+  & out ~ (0 *)
+
+@sk_cons = (* ((h t) out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@sk_keep @sk_space) (hr (t out)))
+
+@sk_keep = (h (t out))
+  & out ~ (1 (h t))
+
+@sk_space = (* (* (t out)))
+  & @skip ~ (t out)
+
+// Consume the closing parenthesis.
+@close = ((?((@cl_nil @cl_cons) (pl out)) pl) out)
+
+@cl_nil = (* out)
+  & out ~ (0 *)
+
+@cl_cons = (* ((* t) out))
+  & out ~ t

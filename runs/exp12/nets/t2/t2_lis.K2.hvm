@@ -1,0 +1,53 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = (lv1 (tails out))
+  & @lis_cons_lw ~ (lv1 (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails (0 out))
+
+@lis_cons = (* ((h t) (tails out)))
+  & @ins ~ (h (tails newtails))
+  & @lis_cons_lw ~ (t (newtails out))
+
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(x1 z))
+  & z ~ ?((@ins_replace @ins_more) (h2 (t (x2 out))))
+
+@ins_replace = (* (t (x out)))
+  & out ~ (1 (x t))
+
+@ins_more = (* (h (t (x out))))
+  & @ins ~ (x (t res))
+  & out ~ (1 (h res))
+
+@len = (lv2 (acc out))
+  & @len_cons_lw ~ (lv2 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) ($([+1] acc2) out)))
+  & @len_cons_lw ~ (t (acc2 out))
+
+@lis_cons_lw = (ls28 (q18 q19))
+  & ls28 ~ (g25 (e23 (g26 (e24 tk27))))
+  & g25 ~ ?((@lis_nil @lis_cons_la) ((e23 (q21 q22)) (q18 q19)))
+  & g26 ~ ?((@lis_nil @lis_cons) ((e24 tk27) (q21 q22)))
+
+@len_cons_lw = (ls40 (q30 q31))
+  & ls40 ~ (g37 (e35 (g38 (e36 tk39))))
+  & g37 ~ ?((@len_nil @len_cons_la) ((e35 (q33 q34)) (q30 q31)))
+  & g38 ~ ?((@len_nil @len_cons) ((e36 tk39) (q33 q34)))
+
+@lis_cons_la = (* ((h (newtails out)) (tails out)))
+  & @ins ~ (h (tails newtails))
+
+@len_cons_la = (* ((* (acc2 out)) ($([+1] acc2) out)))

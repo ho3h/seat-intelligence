@@ -1,0 +1,12 @@
+// @prog receives the list and starts with 0 as the candidate.
+@prog = (l out)
+  & @last ~ (l (0 out))
+
+// Track the most recent head; at Nil, return the candidate.
+@last = ((?((@last_nil @last_cons) (pl (acc out))) pl) (acc out))
+
+@last_nil = (* (a a))
+
+@last_cons = (* ((h t) (acc out)))
+  & acc ~ *
+  & @last ~ (t (h out))

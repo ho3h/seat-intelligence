@@ -1,0 +1,187 @@
+// Generate vertices 0..n-1, then count those whose neighbors are disconnected
+// when that vertex is excluded.
+
+@prog = ((n edges) out)
+  & @range ~ (n ((0 *) verts))
+  & @count ~ (verts (edges (0 out)))
+
+@range = (n (acc out))
+  & n ~ ?((@range_zero @range_succ) (acc out))
+
+@range_zero = (acc out)
+  & acc ~ out
+
+@range_succ = (m (acc out))
+  & m ~ {m1 m2}
+  & @range ~ (m1 ((1 (m2 acc)) out))
+
+@count = ((?((@count_nil @count_cons) (pl (edges (acc out)))) pl) (edges (acc out)))
+
+@count_nil = (* (edges (acc out)))
+  & edges ~ *
+  & acc ~ out
+
+@count_cons = (* ((v tail) (edges (acc out))))
+  & edges ~ {eart erec}
+  & @artcheck ~ (v (eart flag))
+  & flag ~ ?((@count_no @count_yes) (tail (erec (acc out))))
+
+@count_no = (tail (edges (acc out)))
+  & @count ~ (tail (edges (acc out)))
+
+@count_yes = (* (tail (edges (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (edges (acc2 out)))
+
+@artcheck = (v (edges out))
+  & v ~ {vnb vat}
+  & edges ~ {enb eat}
+  & @neighbors ~ (enb (vnb ((0 *) ns)))
+  & @atleast ~ (ns (vat (eat out)))
+
+@neighbors = ((?((@ne_nil @ne_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@ne_nil = (* (target (acc out)))
+  & target ~ *
+  & acc ~ out
+
+@ne_cons = (* (((u v) tail) (target (acc out))))
+  & target ~ {tcmp trec}
+  & tcmp ~ {tu tv}
+  & u ~ {ucmp ukeep}
+  & v ~ {vcmp vkeep}
+  & ucmp ~ $([=] $(tu zu))
+  & vcmp ~ $([=] $(tv zv))
+  & zu ~ ?((@ne_u0 @ne_u1) (zv (trec (ukeep (vkeep (tail (acc out)))))))
+
+@ne_u0 = (zv (trec (ukeep (vkeep (tail (acc out))))))
+  & zv ~ ?((@ne_none @ne_vmatch) (trec (ukeep (vkeep (tail (acc out))))))
+
+@ne_u1 = (* (zv (trec (ukeep (vkeep (tail (acc out)))))))
+  & zv ~ *
+  & ukeep ~ *
+  & @neighbors ~ (tail (trec ((1 (vkeep acc)) out)))
+
+@ne_none = (trec (ukeep (vkeep (tail (acc out)))))
+  & ukeep ~ *
+  & vkeep ~ *
+  & @neighbors ~ (tail (trec (acc out)))
+
+@ne_vmatch = (* (trec (ukeep (vkeep (tail (acc out))))))
+  & vkeep ~ *
+  & @neighbors ~ (tail (trec ((1 (ukeep acc)) out)))
+
+@atleast = ((?((@atleast_nil @atleast_cons) (pl (v (edges out)))) pl) (v (edges out)))
+
+@atleast_nil = (* (v (edges out)))
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@atleast_cons = (* ((first rest) (v (edges out))))
+  & @has_rest ~ (rest (first (v (edges out))))
+
+@has_rest = ((?((@rest_nil @rest_cons) (pl (first (v (edges out))))) pl) (first (v (edges out))))
+
+@rest_nil = (* (first (v (edges out))))
+  & first ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@rest_cons = (* ((second tail) (first (v (edges out)))))
+  & @dfs ~ ((1 (first (0 *))) ((0 *) (v (edges seen))))
+  & @allmem ~ ((1 (second tail)) (seen out))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (pl (seen (excluded (edges out))))) pl) (seen (excluded (edges out))))
+
+@dfs_nil = (* (seen (excluded (edges out))))
+  & excluded ~ *
+  & edges ~ *
+  & out ~ seen
+
+@dfs_cons = (* ((x rest) (seen (excluded (edges out)))))
+  & x ~ {xcheck xkeep}
+  & seen ~ {scheck skeep}
+  & @mem ~ (xcheck (scheck present))
+  & present ~ ?((@dfs_seen @dfs_fresh) (xkeep (rest (skeep (excluded (edges out))))))
+
+@dfs_seen = (xkeep (rest (skeep (excluded (edges out)))))
+  & xkeep ~ *
+  & @dfs ~ (rest (skeep (excluded (edges out))))
+
+@dfs_fresh = (* (xkeep (rest (skeep (excluded (edges out))))))
+  & xkeep ~ {xnb xvis}
+  & edges ~ {enb erec}
+  & excluded ~ {efilt erec_ex}
+  & @neighbors ~ (enb (xnb ((0 *) ns)))
+  & @filter ~ (ns (efilt ((0 *) filtered)))
+  & @append ~ (filtered (rest stack))
+  & @dfs ~ (stack ((1 (xvis skeep)) (erec_ex (erec out))))
+
+@filter = ((?((@filter_nil @filter_cons) (pl (excluded (acc out)))) pl) (excluded (acc out)))
+
+@filter_nil = (* (excluded (acc out)))
+  & excluded ~ *
+  & acc ~ out
+
+@filter_cons = (* ((x tail) (excluded (acc out))))
+  & excluded ~ {ecmp erec}
+  & x ~ {xcmp xkeep}
+  & xcmp ~ $([=] $(ecmp z))
+  & z ~ ?((@filter_eq @filter_ne) (xkeep (tail (erec (acc out)))))
+
+@filter_eq = (xkeep (tail (excluded (acc out))))
+  & xkeep ~ *
+  & @filter ~ (tail (excluded (acc out)))
+
+@filter_ne = (* (xkeep (tail (excluded (acc out)))))
+  & @filter ~ (tail (excluded ((1 (xkeep acc)) out)))
+
+@append = ((?((@append_nil @append_cons) (pl (ys out))) pl) (ys out))
+
+@append_nil = (* (ys out))
+  & out ~ ys
+
+@append_cons = (* ((h t) (ys out)))
+  & @append ~ (t (ys rest))
+  & out ~ (1 (h rest))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_no @mem_yes) (xr (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@allmem = ((?((@allmem_nil @allmem_cons) (pl (seen out))) pl) (seen out))
+
+@allmem_nil = (* (seen out))
+  & seen ~ *
+  & out ~ 1
+
+@allmem_cons = (* ((h t) (seen out)))
+  & seen ~ {s1 s2}
+  & @mem ~ (h (s1 present))
+  & present ~ ?((@allmem_no @allmem_yes) (t (s2 out)))
+
+@allmem_no = (t (seen out))
+  & t ~ *
+  & seen ~ *
+  & out ~ 0
+
+@allmem_yes = (* (t (seen out)))
+  & @allmem ~ (t (seen out))

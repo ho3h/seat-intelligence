@@ -1,0 +1,155 @@
+@prog = ((n edges) out)
+  & @pow2 ~ ((n 1) max_mask)
+  & max_mask ~ (max)
+  & @iterate ~ ((0 max n edges) (0 out))
+
+@pow2 = ((n acc) out)
+  & zero ~ $(n [=] 0)
+  & zero ~ ?((@ret @cont) (acc out))
+
+@ret = (a o) & o ~ a
+
+@cont = (* (a o))
+  & n1 ~ $(n [-] 1)
+  & acc2 ~ $(acc [*] 2)
+  & @pow2 ~ ((n1 acc2) o)
+
+@iterate = ((mask max n edges) (best out))
+  & done ~ $(mask [=] max)
+  & done ~ ?((@finish @step) (best out))
+
+@finish = (b o) & o ~ b
+
+@step = (* (b o))
+  & @is_clique ~ ((mask edges n) (valid ctx))
+  & ctx ~ (b (mask (max (n (edges o)))))
+  & valid ~ ?((@next_mask @count_and_compare) (ctx))
+
+@next_mask = (b (m (x (n (e o)))))
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 x n e) (b o))
+
+@count_and_compare = (* (b (m (x (n (e o))))))
+  & @popcount ~ (m size)
+  & size ~ (sz)
+  & cmp ~ $(sz [>] b)
+  & cmp ~ ?((@next_mask2 @new_best) (b (m (x (n (e o))))))
+
+@next_mask2 = (b (m (x (n (e o)))))
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 x n e) (b o))
+
+@new_best = (* (b (m (x (n (e o))))))
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 x n e) (m o))
+
+@is_clique = ((mask edges n) (result out))
+  & @verify ~ ((mask edges n 0 0) (result out))
+
+@verify = ((mask edges n i j) (result out))
+  & i_done ~ $(i [=] n)
+  & i_done ~ ?((@ret_true @i_loop) (result out))
+
+@ret_true = (r o) & o ~ 1
+
+@i_loop = (* (r o))
+  & j_eq_n ~ $(j [=] n)
+  & j_eq_n ~ ?((@i_inc @j_loop) (result (mask (edges (n (i o))))))
+
+@i_inc = (r (m (e (n (i o)))))
+  & i1 ~ $(i [+] 1)
+  & @verify ~ ((m e n i1 0) (r o))
+
+@j_loop = (* (r (m (e (n (i o))))))
+  & j_gt_i ~ $(j [>] i)
+  & j_gt_i ~ ?((@j_inc @pair_check) (j (m (e (n (i (r o)))))))
+
+@j_inc = (j (m (e (n (i (r o))))))
+  & j1 ~ $(j [+] 1)
+  & @verify ~ ((m e n i j1) (r o))
+
+@pair_check = (* (j (m (e (n (i (r o)))))))
+  & i_in ~ $(i [&] m)
+  & i_in ~ ?((@j_inc2 @check_j) (j (m (e (n (i (r o)))))))
+
+@j_inc2 = (j (m (e (n (i (r o))))))
+  & j1 ~ $(j [+] 1)
+  & @verify ~ ((m e n i j1) (r o))
+
+@check_j = (* (j (m (e (n (i (r o)))))))
+  & j_in ~ $(j [&] m)
+  & j_in ~ ?((@j_inc3 @check_edge) (i (j (m (e (n (r o)))))))
+
+@j_inc3 = (i (j (m (e (n (r o))))))
+  & j1 ~ $(j [+] 1)
+  & @verify ~ ((m e n i j1) (r o))
+
+@check_edge = (* (i (j (m (e (n (r o)))))))
+  & @edge_exists ~ ((i j e) (found ctx))
+  & ctx ~ (i (j (m (e (n (r o))))))
+  & found ~ ?((@edge_fail @j_inc4) (ctx))
+
+@edge_fail = (i (j (m (e (n (r o))))))
+  & r ~ 0
+
+@j_inc4 = (* (i (j (m (e (n (r o)))))))
+  & j1 ~ $(j [+] 1)
+  & @verify ~ ((m e n i j1) (r o))
+
+@edge_exists = ((i j edges) (result out))
+  & @find_edge ~ ((i j edges) (result out))
+
+@find_edge = ((i j edges) (result out))
+  & edges ~ ?((@no_edge @has_edge) (result out))
+
+@no_edge = (r o) & o ~ 0
+
+@has_edge = (* (r o))
+  & edges ~ ((u v) tail)
+  & eq1 ~ $(u [=] i)
+  & eq1 ~ ?((@try_rev @chk_v) (v (i (j (tail (r o))))))
+
+@try_rev = (v (i (j (tail (r o)))))
+  & eq2 ~ $(u [=] j)
+  & eq2 ~ ?((@skip_e @chk_vr) (v (i (tail (r o)))))
+
+@skip_e = (v (i (tail (r o))))
+  & @find_edge ~ ((i j tail) (r o))
+
+@chk_v = (* (v (i (j (tail (r o))))))
+  & eq3 ~ $(v [=] j)
+  & eq3 ~ ?((@skip_e2 @found) (tail (r o)))
+
+@skip_e2 = (tail (r o))
+  & @find_edge ~ ((i j tail) (r o))
+
+@chk_vr = (* (v (i (tail (r o)))))
+  & eq4 ~ $(v [=] i)
+  & eq4 ~ ?((@skip_e3 @found) (tail (r o)))
+
+@skip_e3 = (tail (r o))
+  & @find_edge ~ ((i j tail) (r o))
+
+@found = (* (tail (r o)))
+  & o ~ 1
+
+@popcount = (mask out)
+  & @count_bits ~ ((mask 0) out)
+
+@count_bits = ((mask acc) out)
+  & zero ~ $(mask [=] 0)
+  & zero ~ ?((@ret_cnt @cont_cnt) (acc out))
+
+@ret_cnt = (a o) & o ~ a
+
+@cont_cnt = (* (a o))
+  & bit ~ $(mask [%] 2)
+  & shift ~ $(mask [>>] 1)
+  & bit ~ ?((@skip_bit @inc_bit) (shift (a o)))
+
+@skip_bit = (s (a o))
+  & @count_bits ~ ((s a) o)
+
+@inc_bit = (* (s (a o)))
+  & a1 ~ $(a [+] 1)
+  & @count_bits ~ ((s a1) o)

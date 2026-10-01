@@ -1,0 +1,20 @@
+// Count elements whose values are within the inclusive bounds.
+@prog = (input out)
+  & input ~ (lo (hi xs))
+  & @count ~ (xs (lo (hi out)))
+
+@count = ((?((@count_nil @count_cons) (pl (lo (hi out)))) pl) (lo (hi out)))
+
+@count_nil = (* (* (* out)))
+  & out ~ 0
+
+@count_cons = (* ((h t) (lo (hi out))))
+  & h ~ {hlo hhi}
+  & lo ~ {lo_cmp lo_rec}
+  & hi ~ {hi_cmp hi_rec}
+  & @count ~ (t (lo_rec (hi_rec tail_count)))
+  & hlo ~ $([<] $(lo_cmp low_bad))
+  & hhi ~ $([>] $(hi_cmp hi_bad))
+  & low_bad ~ $([|] $(hi_bad any_bad))
+  & any_bad ~ $([=] $(0 valid))
+  & tail_count ~ $([+] $(valid out))

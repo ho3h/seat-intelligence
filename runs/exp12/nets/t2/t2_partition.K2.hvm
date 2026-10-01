@@ -1,0 +1,29 @@
+@prog = (input out)
+  & input ~ (p xs)
+  & @part ~ (p (xs out))
+
+@part = (p (xs out))
+  & xs ~ lv1
+  & @part_cons_lw ~ (lv1 (p out))
+
+@part_nil = (body (p out))
+  & body ~ *
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* (({$([<] $(p_cmp ?((@part_ge @part_lt) (h_keep (lo (hi out)))))) h_keep} t) ({p_rec p_cmp} out)))
+  & @part_cons_lw ~ (t (p_rec (lo hi)))
+
+@part_ge = (h (lo (hi out)))
+  & out ~ (lo (1 (h hi)))
+
+@part_lt = (ignored (h (lo (hi out))))
+  & ignored ~ *
+  & out ~ ((1 (h lo)) hi)
+
+@part_cons_lw = (ls21 (q11 q12))
+  & ls21 ~ (g18 (e16 (g19 (e17 tk20))))
+  & g18 ~ ?((@part_nil @part_cons_la) ((e16 (q14 q15)) (q11 q12)))
+  & g19 ~ ?((@part_nil @part_cons) ((e17 tk20) (q14 q15)))
+
+@part_cons_la = (* (({$([<] $(p_cmp ?((@part_ge @part_lt) (h_keep (lo (hi out)))))) h_keep} (p_rec (lo hi))) ({p_rec p_cmp} out)))

@@ -1,0 +1,142 @@
+@prog = ((n edges) out)
+  & @all ~ (n (0 (edges (16777215 out))))
+
+@all = (rem (i (edges (best out))))
+  & rem ~ ?((@all_done @all_more) (i (edges (best out))))
+
+@all_done = (* (* (best out)))
+  & best ~ {bcmp bkeep}
+  & bcmp ~ $([=] $(16777215 z))
+  & z ~ ?((@all_has @all_none) (bkeep out))
+
+@all_has = (best out)
+  & out ~ best
+
+@all_none = (* (* out))
+  & out ~ 0
+
+@all_more = (rem (i (edges (best out))))
+  & edges ~ {edge_next edge_bfs}
+  & i ~ {src inc}
+  & inc ~ $([+1] i2)
+  & @bfs ~ (src (edge_bfs (best bfsout)))
+  & @all ~ (rem (i2 (edge_next (bfsout out))))
+
+@bfs = (src (graph (best out)))
+  & src ~ {sq sv}
+  & @bfs_loop ~ ((1 ((sq (0 16777215)) (0 *))) ((1 ((sv (0 16777215)) (0 *))) (graph (best out))))
+
+@bfs_loop = ((?((@bfs_empty @bfs_cons) (payload (visited (graph (best out))))) payload) (visited (graph (best out))))
+
+@bfs_empty = (* (* (* (best out))))
+  & out ~ best
+
+@bfs_cons = (* (((u (du pu)) tail) (visited (graph (best out)))))
+  & graph ~ {cursor saved}
+  & @scan ~ (cursor (u (du (pu (tail (visited (saved (best out))))))))
+
+@scan = ((?((@scan_end @scan_cons) (payload (u (du (pu (tail (visited (graph (best out)))))))) payload) (u (du (pu (tail (visited (graph (best out)))))))))
+
+@scan_end = (* (* (* (* (tail (visited (graph (best out))))))))
+  & @bfs_loop ~ (tail (visited (graph (best out))))
+
+@scan_cons = (* ((a b) (rest (u (du (pu (tail (visited (graph (best out))))))))))
+  & a ~ {ac ak}
+  & u ~ {uc uk}
+  & ac ~ $([=] $(uc z))
+  & z ~ ?((@scan_check_b @scan_a_yes) (ak (b (rest (uk (du (pu (tail (visited (graph (best out)))))))))))
+
+@scan_a_yes = (* (* (b (rest (u (du (pu (tail (visited (graph (best out)))))))))))
+  & @neighbor ~ (b (rest (u (du (pu (tail (visited (graph (best out)))))))))
+
+@scan_check_b = (a (b (rest (u (du (pu (tail (visited (graph (best out))))))))))
+  & b ~ {bc bk}
+  & u ~ {uc uk}
+  & bc ~ $([=] $(uc z))
+  & z ~ ?((@scan_none @scan_b_yes) (a (bk (rest (uk (du (pu (tail (visited (graph (best out)))))))))))
+
+@scan_none = (* (* (rest (u (du (pu (tail (visited (graph (best out))))))))))
+  & @scan ~ (rest (u (du (pu (tail (visited (graph (best out))))))))
+
+@scan_b_yes = (* (a (* (rest (u (du (pu (tail (visited (graph (best out)))))))))))
+  & @neighbor ~ (a (rest (u (du (pu (tail (visited (graph (best out)))))))))
+
+@neighbor = (v (rest (u (du (pu (tail (visited (graph (best out)))))))))
+  & v ~ {vc vk}
+  & u ~ {uc uk}
+  & vc ~ $([=] $(uc z))
+  & z ~ ?((@neighbor_self @neighbor_lookup) (vk (rest (uk (du (pu (tail (visited (graph (best out))))))))))
+
+@neighbor_self = (* (rest (u (du (pu (tail (visited (graph (best out)))))))))
+  & @scan ~ (rest (u (du (pu (tail (visited (graph (best out))))))))
+
+@neighbor_lookup = (* (v (rest (u (du (pu (tail (visited (graph (best out))))))))))
+  & visited ~ {find_list keep_list}
+  & v ~ {find_key keep_key}
+  & @find ~ (find_list (find_key foundres))
+  & foundres ~ (found (fd fp))
+  & found ~ ?((@neighbor_new @neighbor_seen) (keep_key (fd (fp (rest (u (du (pu (tail (keep_list (graph (best out))))))))))))
+
+@neighbor_new = (v (* (* (rest (u (du (pu (tail (visited (graph (best out)))))))))))
+  & du ~ {dc dk}
+  & dc ~ $([+] $(1 dn))
+  & u ~ {up us}
+  & rec ~ {(v (dn up)) rec2}
+  & @append ~ (tail (rec newq))
+  & @scan ~ (rest (us (dk (pu (newq (1 (rec2 visited)) (graph (best out)))))))
+
+@neighbor_seen = (* (v (fd (fp (rest (u (du (pu (tail (visited (graph (best out))))))))))))
+  & v ~ {vc vk}
+  & pu ~ {pc pk}
+  & vc ~ $([=] $(pc z))
+  & z ~ ?((@seen_check_child @seen_skip) (vk (fd (fp (rest (u (du (pk (tail (visited (graph (best out))))))))))))
+
+@seen_skip = (* (* (* (rest (u (du (pu (tail (visited (graph (best out)))))))))))
+  & @scan ~ (rest (u (du (pu (tail (visited (graph (best out))))))))
+
+@seen_check_child = (v (fd (fp (rest (u (du (pu (tail (visited (graph (best out))))))))))
+  & fp ~ {fpc fpk}
+  & u ~ {uc uk}
+  & fpc ~ $([=] $(uc z))
+  & z ~ ?((@seen_candidate @seen_skip_child) (v (fd (fpk (rest (uk (du (pu (tail (visited (graph (best out)))))))))))
+
+@seen_skip_child = (* (* (* (rest (u (du (pu (tail (visited (graph (best out)))))))))
+  & @scan ~ (rest (u (du (pu (tail (visited (graph (best out))))))))
+
+@seen_candidate = (v (fd (fp (rest (u (du (pu (tail (visited (graph (best out))))))))))
+  & du ~ {dc dk}
+  & dc ~ $([+] $(fd $([+1] cand)))
+  & best ~ {bc bk}
+  & bc ~ $([<] $(cand z))
+  & z ~ ?((@candidate_better @candidate_keep) (cand (bk (rest (u (dk (pu (tail (visited (graph (out))))))))))
+
+@candidate_better = (cand (* (rest (u (du (pu (tail (visited (graph (out)))))))))
+  & @scan ~ (rest (u (du (pu (tail (visited (graph (cand out))))))))
+
+@candidate_keep = (* (* (rest (u (du (pu (tail (visited (graph (best out)))))))))
+  & @scan ~ (rest (u (du (pu (tail (visited (graph (best out))))))))
+
+@find = ((?((@find_nil @find_cons) (payload (key out))) payload) (key out))
+
+@find_nil = (* (* out))
+  & out ~ (0 (0 0))
+
+@find_cons = (* ((w (d p)) tail) (key out))
+  & key ~ {key_cmp key_next}
+  & w ~ $([=] $(key_cmp z))
+  & z ~ ?((@find_next @find_yes) (key_next (d (p (tail out)))))
+
+@find_next = (* (* (* (tail (key out))))
+  & @find ~ (tail (key out))
+
+@find_yes = (* (d (p (* out))))
+  & out ~ (1 (d p))
+
+@append = ((?((@append_nil @append_cons) (payload (item out))) payload) (item out))
+
+@append_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@append_cons = (* ((head tail) (item out)))
+  & @append ~ (tail (item newtail))
+  & out ~ (1 (head newtail))

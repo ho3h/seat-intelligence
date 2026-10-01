@@ -1,0 +1,194 @@
+@prog = (input out)
+  & input ~ (c edges)
+  & c ~ {c1 c23}
+  & c23 ~ {c2 c3}
+  & @len ~ (c1 n)
+  & @rewrite ~ (edges (c2 ((0 *) transformed)))
+  & @dedup ~ (transformed ((0 *) unique))
+  & @scan ~ (0 (n (c3 (unique out))))
+
+@len = (list out)
+  & list ~ (tag payload)
+  & tag ~ ?((@len_nil @len_cons) (payload out))
+
+@len_nil = (* out)
+  & 0 ~ out
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t tail_len)
+  & tail_len ~ $([+1] out)
+
+@idx = (list (i out))
+  & list ~ (tag payload)
+  & tag ~ ?((@idx_nil @idx_cons) (payload (i out)))
+
+@idx_nil = (* (i out))
+  & i ~ *
+  & 0 ~ out
+
+@idx_cons = (* ((h t) (i out)))
+  & i ~ ?((@idx_hd @idx_tl) ((h t) out))
+
+@idx_hd = ((h t) out)
+  & h ~ out
+  & t ~ *
+
+@idx_tl = (i_pred ((h t) out))
+  & h ~ *
+  & @idx ~ (t (i_pred out))
+
+@contains = (list (x out))
+  & list ~ (tag payload)
+  & tag ~ ?((@contains_nil @contains_cons) (payload (x out)))
+
+@contains_nil = (* (x out))
+  & x ~ *
+  & 0 ~ out
+
+@contains_cons = (* ((h t) (x out)))
+  & x ~ {x_cmp x_keep}
+  & h ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@contains_no @contains_yes) (t (x_keep out)))
+
+@contains_no = (t (x out))
+  & @contains ~ (t (x out))
+
+@contains_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & 1 ~ out
+
+@pair_contains = (list (p out))
+  & list ~ (tag payload)
+  & tag ~ ?((@pair_cont_nil @pair_cont_cons) (payload (p out)))
+
+@pair_cont_nil = (* (p out))
+  & p ~ *
+  & 0 ~ out
+
+@pair_cont_cons = (* ((hpair tail) (p out)))
+  & p ~ {p_comp p_keep}
+  & p_comp ~ (a b)
+  & hpair ~ (x y)
+  & x ~ $([=] $(a eqx))
+  & y ~ $([=] $(b eqy))
+  & eqx ~ $([&] $(eqy eq))
+  & eq ~ ?((@pair_cont_no @pair_cont_yes) (tail (p_keep out)))
+
+@pair_cont_no = (tail (p out))
+  & @pair_contains ~ (tail (p out))
+
+@pair_cont_yes = (* (tail (p out)))
+  & tail ~ *
+  & p ~ *
+  & 1 ~ out
+
+@rewrite = (edges (c (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@rewrite_nil @rewrite_cons) (payload (c (acc out))))
+
+@rewrite_nil = (* (c (acc out)))
+  & c ~ *
+  & acc ~ out
+
+@rewrite_cons = (* ((edge tail) (c (acc out))))
+  & c ~ {c_curr c_next}
+  & edge ~ (u v)
+  & c_curr ~ {c_u c_v}
+  & @idx ~ (c_u (u cu))
+  & @idx ~ (c_v (v cv))
+  & @rewrite ~ (tail (c_next (acc ret)))
+  & cu ~ {cu_eq cu_keep}
+  & cv ~ {cv_eq cv_keep}
+  & cu_eq ~ $([=] $(cv_eq eq))
+  & eq ~ ?((@rewrite_keep @rewrite_drop) (cu_keep (cv_keep (ret out))))
+
+@rewrite_keep = (cu (cv (ret out)))
+  & cu ~ {cu_lt cu_pair}
+  & cv ~ {cv_lt cv_pair}
+  & cu_lt ~ $([<] $(cv_lt lt))
+  & lt ~ ?((@rewrite_keep_gt @rewrite_keep_lt) (cu_pair (cv_pair (ret out))))
+
+@rewrite_keep_gt = (cu (cv (ret out)))
+  & (1 ((cv cu) ret)) ~ out
+
+@rewrite_keep_lt = (* (cu (cv (ret out))))
+  & (1 ((cu cv) ret)) ~ out
+
+@rewrite_drop = (* (cu (cv (ret out))))
+  & cu ~ *
+  & cv ~ *
+  & ret ~ out
+
+@dedup = (list (acc out))
+  & list ~ (tag payload)
+  & tag ~ ?((@dedup_nil @dedup_cons) (payload (acc out)))
+
+@dedup_nil = (* (acc out))
+  & acc ~ out
+
+@dedup_cons = (* ((p tail) (acc out)))
+  & p ~ {p_check p_keep}
+  & acc ~ {acc_check acc_keep}
+  & @pair_contains ~ (acc_check (p_check found))
+  & found ~ ?((@dedup_add @dedup_skip) (tail (acc_keep (p_keep out))))
+
+@dedup_add = (tail (acc (p out)))
+  & @dedup ~ (tail ((1 (p acc)) out))
+
+@dedup_skip = (* (tail (acc (p out))))
+  & p ~ *
+  & @dedup ~ (tail (acc out))
+
+@cp = (list (x (acc out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@cp_nil @cp_cons) (payload (x (acc out))))
+
+@cp_nil = (* (x (acc out)))
+  & x ~ *
+  & acc ~ out
+
+@cp_cons = (* ((pair tail) (x (acc out))))
+  & pair ~ (a b)
+  & x ~ {x_curr x_next}
+  & x_curr ~ {x_a x_b}
+  & x_a ~ $([=] $(a eqa))
+  & x_b ~ $([=] $(b eqb))
+  & eqa ~ $([|] $(eqb hit))
+  & acc ~ $([+] $(hit new_acc))
+  & @cp ~ (tail (x_next (new_acc out)))
+
+@count_pairs = (list (x out))
+  & @cp ~ (list (x (0 out)))
+
+@scan = (k (n (c (upairs out))))
+  & k ~ {k_cmp k_ctx}
+  & n ~ {n_cmp n_ctx}
+  & n_cmp ~ $([-] $(k_cmp diff))
+  & diff ~ ?((@scan_done @scan_cont) (k_ctx (n_ctx (c (upairs out)))))
+
+@scan_done = (k (n (c (upairs out))))
+  & k ~ *
+  & n ~ *
+  & c ~ *
+  & upairs ~ *
+  & (0 *) ~ out
+
+@scan_cont = (* (k (n (c (upairs out)))))
+  & k ~ {k_rec k_work}
+  & k_rec ~ $([+1] k_next)
+  & k_work ~ {k_mem k_cnt}
+  & c ~ {c_mem c_next}
+  & upairs ~ {up_count up_next}
+  & @scan ~ (k_next (n (c_next (up_next tail))))
+  & @contains ~ (c_mem (k_mem in_c))
+  & @count_pairs ~ (up_count (k_cnt deg))
+  & in_c ~ ?((@scan_skip @scan_put) (deg (tail out)))
+
+@scan_skip = (deg (tail out))
+  & deg ~ *
+  & tail ~ out
+
+@scan_put = (* (deg (tail out)))
+  & (1 (deg tail)) ~ out

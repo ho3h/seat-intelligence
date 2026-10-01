@@ -1,0 +1,138 @@
+@prog = ((n (k pairs)) out)
+  & @count ~ (n (k (pairs (0 out))))
+
+@count = (n (k (edges (acc out))))
+  & n ~ ?((@count_zero @count_pos) (k (edges (acc out))))
+
+@count_zero = (k (edges (acc out)))
+  & k ~ *
+  & edges ~ *
+  & out ~ acc
+
+@count_pos = (i (k (edges (acc out))))
+  & @candidate ~ (i (k (edges (acc out))))
+
+@candidate = (i (k (edges (acc out))))
+  & i ~ {seed rem}
+  & rem ~ {idx eqi}
+  & k ~ {kt kr}
+  & edges ~ {ec er}
+  & @close ~ (ec ((1 (seed (0 *))) closed))
+  & @stats ~ (closed (0 (16777215 stats)))
+  & stats ~ (sz mn)
+  & mn ~ $([=] $(eqi eq))
+  & eq ~ ?((@cand_nonmin @cand_ismin) (sz (idx (kt (kr (er (acc out))))))
+
+@cand_nonmin = (sz (idx (kt (k (edges (acc out))))))
+  & sz ~ *
+  & kt ~ *
+  & @count ~ (idx (k (edges (acc out))))
+
+@cand_ismin = (* (sz (idx (kt (k (edges (acc out)))))))
+  & sz ~ $([<] $(kt lt))
+  & lt ~ ?((@cand_accept @cand_reject) (idx (k (edges (acc out)))))
+
+@cand_accept = (idx (k (edges (acc out))))
+  & acc ~ $([+1] anew)
+  & @count ~ (idx (k (edges (anew out))))
+
+@cand_reject = (* (idx (k (edges (acc out)))))
+  & @count ~ (idx (k (edges (acc out))))
+
+@close = (edges (seen out))
+  & edges ~ {e_scan e_keep}
+  & @scan ~ (e_scan (seen scanres))
+  & scanres ~ (newseen changed)
+  & changed ~ ?((@close_stop @close_repeat) (e_keep (newseen out)))
+
+@close_stop = (edges (seen out))
+  & edges ~ *
+  & out ~ seen
+
+@close_repeat = (* (edges (seen out)))
+  & @close ~ (edges (seen out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (seen (changed out)))) pl) (seen (changed out)))
+
+@scan_nil = (* (seen (changed out)))
+  & out ~ (seen changed)
+
+@scan_cons = (* ((edge tail) (seen (changed out))))
+  & @edge ~ (edge (seen (changed eres)))
+  & eres ~ (s c)
+  & @scan ~ (tail (s (c out)))
+
+@edge = (edge (seen (changed out)))
+  & edge ~ (u v)
+  & u ~ {uc uk}
+  & v ~ {vc vk}
+  & seen ~ {s1 s2}
+  & @mem ~ (s1 (uc hu))
+  & hu ~ ?((@edge_u0 @edge_u1) (vc (uk (vk (s2 (changed out))))))
+
+@edge_u0 = (vc (uk (vk (s (ch out)))))
+  & @mem ~ (s (vc hv))
+  & hv ~ ?((@edge_00 @edge_01) (uk (vk (s (ch out)))))
+
+@edge_u1 = (* (vc (uk (vk (s (ch out))))))
+  & @mem ~ (s (vc hv))
+  & hv ~ ?((@edge_10 @edge_11) (uk (vk (s (ch out)))))
+
+@edge_00 = (uk (vk (s (ch out))))
+  & uk ~ *
+  & vk ~ *
+  & out ~ (s ch)
+
+@edge_01 = (* (uk (vk (s (ch out)))))
+  & vk ~ *
+  & ch ~ *
+  & out ~ ((1 (uk s)) 1)
+
+@edge_10 = (uk (vk (s (ch out))))
+  & uk ~ *
+  & ch ~ *
+  & out ~ ((1 (vk s)) 1)
+
+@edge_11 = (* (uk (vk (s (ch out)))))
+  & uk ~ *
+  & vk ~ *
+  & out ~ (s ch)
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_false @mem_true) (t (xr out)))
+
+@mem_false = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_true = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@stats = ((?((@stats_nil @stats_cons) (pl (size (min out)))) pl) (size (min out)))
+
+@stats_nil = (* (size (min out)))
+  & out ~ (size min)
+
+@stats_cons = (* ((h t) (size (min out))))
+  & h ~ {hc hk}
+  & min ~ {mc mn}
+  & size ~ $([+1] sz)
+  & hc ~ $([<] $(mc z))
+  & z ~ ?((@stats_keep @stats_new) (t (sz (hk (mn out)))))
+
+@stats_keep = (t (sz (candidate (old out))))
+  & candidate ~ *
+  & @stats ~ (t (sz (old out)))
+
+@stats_new = (* (t (sz (candidate (old out)))))
+  & old ~ *
+  & @stats ~ (t (sz (candidate out)))

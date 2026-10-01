@@ -1,0 +1,109 @@
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+@z0 = (?((0 @z0_n) o) o)
+@z0_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @z0 ~ (l1 a)
+  & @z0 ~ (l2 c)
+@c_upd = (t (k (L (P o))))
+  & L ~ ?((@c_upd_leaf @c_upd_node) (t (k (P o))))
+@c_upd_leaf = (t (* (P o)))
+  & @c_upd_act ~ (t (P o))
+@c_upd_act = (* (p p))
+@c_upd_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@c_upd_L @c_upd_R) (t (k2 (l2 (P o)))))
+@c_upd_L = ((l r) (k (L (P (l2 r)))))
+  & @c_upd ~ (l (k (L (P l2))))
+@c_upd_R = (* ((l r) (k (L (P (l r2))))))
+  & @c_upd ~ (r (k (L (P r2))))
+@conf_or = (t (k (L (P o))))
+  & L ~ ?((@conf_or_leaf @conf_or_node) (t (k (P o))))
+@conf_or_leaf = (t (* (P o)))
+  & @conf_or_act ~ (t (P o))
+@conf_or_act = (x (c o))
+  & x ~ $([|] $(c o))
+@conf_or_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@conf_or_L @conf_or_R) (t (k2 (l2 (P o)))))
+@conf_or_L = ((l r) (k (L (P (l2 r)))))
+  & @conf_or ~ (l (k (L (P l2))))
+@conf_or_R = (* ((l r) (k (L (P (l r2))))))
+  & @conf_or ~ (r (k (L (P r2))))
+@get_c = (t (k (L o)))
+  & L ~ ?((@get_c_leaf @get_c_node) (t (k o)))
+@get_c_leaf = (x (* x))
+@get_c_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@get_c_L @get_c_R) (t (k2 (l2 o))))
+@get_c_L = ((l *) (k (L o)))
+  & @get_c ~ (l (k (L o)))
+@get_c_R = (* ((* r) (k (L o))))
+  & @get_c ~ (r (k (L o)))
+@tl_drop = (* (t t))
+@tl_keep = (* (x (t (1 (x t)))))
+@tl = (t (L (base (E (acc o)))))
+  & L ~ ?((@tl_leaf @tl_node) (t (base (E (acc o)))))
+@tl_leaf = (x (i (n (acc o))))
+  & i ~ $([<] $(n keep))
+  & keep ~ ?((@tl_drop @tl_keep) (x (acc o)))
+@tl_node = (lm ((a c) (base (E (acc o)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & E ~ {E1 E2}
+  & @tl ~ (a (l1 (b1 (E1 (mid o)))))
+  & @tl ~ (c (l2 (bR (E2 (acc mid)))))
+@prog = ((c mnl) out)
+  & @z0 ~ (24 ct)
+  & @z0 ~ (24 conf)
+  & @c_fill ~ (c (0 (ct (mnl (24 (conf out))))))
+@c_fill = (c_list (idx (ct (mnl (L (conf out))))))
+  & c_list ~ ?((@c_end @c_next) (idx (ct (mnl (L (conf out))))))
+@c_end = (* (idx (ct (mnl (L (conf out))))))
+  & idx ~ *
+  & @mnl_proc ~ (mnl (L (ct (conf out))))
+@c_next = (* ((val rest) (idx (ct (mnl (L (conf out)))))))
+  & L ~ {L1 {L2 L3}}
+  & idx ~ {i1 {i2 i3}}
+  & @c_upd ~ (ct (i1 (L1 (val ct2))))
+  & i4 ~ $([+1] i2)
+  & @c_fill ~ (rest (i4 (ct2 (mnl (L2 (L3 (conf out)))))))
+@mnl_proc = (mnl (L (ct (conf out))))
+  & L ~ {L1 {L2 L3}}
+  & ct ~ {ct1 ct2}
+  & mnl ~ ?((@mnl_end @mnl_next) (L1 (ct1 (conf out))))
+  & @mnl_stub ~ (L2 (L3 (ct2 (mnl))))
+@mnl_stub = (L2 (L3 (ct2 (mnl))))
+  & mnl ~ *(L2 (L3 (ct2 (*))))
+@mnl_end = (* (L1 (ct1 (conf out))))
+  & @tl ~ (conf (L1 (0 (out))))
+@mnl_next = (* (((a b) rest) (L1 (ct1 (conf out)))))
+  & a ~ {a1 {a2 a3}}
+  & ct2 ~ {ct2a ct2b}
+  & L2 ~ {L2a L2b}
+  & L3 ~ {L3a L3b}
+  & @get_c ~ (ct1 (a1 (L2a (ca))))
+  & @get_c ~ (ct2a (b (L2b (cb))))
+  & ca ~ ?((@conflict @no_conflict) (cb (a3 (rest (L3 (conf out))))))
+@conflict = (cb (a3 (rest (L3 (conf out)))))
+  & L3 ~ {L3a L3b}
+  & @conf_or ~ (conf (ca (L3a (1 (conf2)))))
+  & @mnl_proc ~ (rest (L3b (ct2b (conf2 out))))
+@no_conflict = (* (cb (a3 (rest (L3 (conf out))))))
+  & L3 ~ {L3a L3b}
+  & @mnl_proc ~ (rest (L3b (ct2b (conf out))))

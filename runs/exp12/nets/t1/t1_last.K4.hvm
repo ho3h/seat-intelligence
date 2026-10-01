@@ -1,0 +1,19 @@
+@prog = (l out)
+  & @last ~ (l (0 out))
+
+@last = (lv1 (acc out))
+  & @last_cons_lw ~ (lv1 (acc out))
+
+@last_nil = (* (a a))
+
+@last_cons = (* ((h t) (* out)))
+  & @last_cons_lw ~ (t (h out))
+
+@last_cons_lw = (ls30 (q10 q11))
+  & ls30 ~ (g25 (e21 (g26 (e22 (g27 (e23 (g28 (e24 tk29))))))))
+  & g25 ~ ?((@last_nil @last_cons_la) ((e21 (q13 q14)) (q10 q11)))
+  & g26 ~ ?((@last_nil @last_cons_la) ((e22 (q16 q17)) (q13 q14)))
+  & g27 ~ ?((@last_nil @last_cons_la) ((e23 (q19 q20)) (q16 q17)))
+  & g28 ~ ?((@last_nil @last_cons) ((e24 tk29) (q19 q20)))
+
+@last_cons_la = (* ((h (h out)) (* out)))

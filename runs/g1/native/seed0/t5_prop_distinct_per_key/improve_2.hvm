@@ -1,0 +1,117 @@
+@prog = (input output)
+  & @loop ~ (input (((((0 *) 0) (((0 *) 0) (((0 *) 0) ((0 *) 0)))))) output))
+
+@loop = ((?((@loop_nil @loop_cons) (payload (state out))) payload) (state out))
+
+@loop_nil = (* (((t0 c0) ((t1 c1) ((t2 c2) (t3 c3)))) out))
+  & t0 ~ *
+  & t1 ~ *
+  & t2 ~ *
+  & t3 ~ *
+  & out ~ (1 (c0 (1 (c1 (1 (c2 (1 (c3 (0 *)))))))))
+
+@loop_cons = (* (((node (key value)) tail) (state out)))
+  & node ~ *
+  & key ~ ?((@key0 @keymore) (value (tail (state out))))
+
+@keymore = ( ?((@key1 @keymore2) (v (t (state out)))) (v (t (state out))))
+
+@keymore2 = ( ?((@key2 @key3) (v (t (state out)))) (v (t (state out))))
+
+@key0 = (v (t (((trie count) rest) out)))
+  & @insert ~ (24 (v (trie (ans count))))
+  & ans ~ (newtrie found)
+  & found ~ ?((@k0_add @k0_seen) (newtrie (count (t (rest out)))))
+
+@k0_add = (newtrie (count (t (rest out))))
+  & count ~ $([+1] next)
+  & @loop ~ (t (((newtrie next) rest) out))
+
+@k0_seen = (* (newtrie (count (t (rest out)))))
+  & @loop ~ (t (((newtrie count) rest) out))
+
+@key1 = (v (t ((p0 ((trie count) rest)) out)))
+  & @insert ~ (24 (v (trie (ans count))))
+  & ans ~ (newtrie found)
+  & found ~ ?((@k1_add @k1_seen) (newtrie (count (t (p0 (rest out))))))
+
+@k1_add = (newtrie (count (t (p0 (rest out)))))
+  & count ~ $([+1] next)
+  & @loop ~ (t ((p0 ((newtrie next) rest)) out))
+
+@k1_seen = (* (newtrie (count (t (p0 (rest out))))))
+  & @loop ~ (t ((p0 ((newtrie count) rest)) out))
+
+@key2 = (v (t ((p0 (p1 ((trie count) p3))) out)))
+  & @insert ~ (24 (v (trie (ans count))))
+  & ans ~ (newtrie found)
+  & found ~ ?((@k2_add @k2_seen) (newtrie (count (t (p0 (p1 (p3 out)))))))
+
+@k2_add = (newtrie (count (t (p0 (p1 (p3 out))))))
+  & count ~ $([+1] next)
+  & @loop ~ (t ((p0 (p1 ((newtrie next) p3))) out))
+
+@k2_seen = (* (newtrie (count (t (p0 (p1 (p3 out)))))))
+  & @loop ~ (t ((p0 (p1 ((newtrie count) p3))) out))
+
+@key3 = (* (v (t ((p0 (p1 (p2 (trie count)))) out)))
+  & @insert ~ (24 (v (trie (ans count))))
+  & ans ~ (newtrie found)
+  & found ~ ?((@k3_add @k3_seen) (newtrie (count (t (p0 (p1 (p2 out)))))))
+
+@k3_add = (newtrie (count (t (p0 (p1 (p2 out))))))
+  & count ~ $([+1] next)
+  & @loop ~ (t ((p0 (p1 (p2 (newtrie next)))) out))
+
+@k3_seen = (* (newtrie (count (t (p0 (p1 (p2 out)))))))
+  & @loop ~ (t ((p0 (p1 (p2 (newtrie count)))) out))
+
+@insert = ( ?((@ins_leaf @ins_step) (v (trie out))) (v (trie out)))
+
+@ins_step = (depth (v (trie out)))
+  & v ~ {v_mod v_div}
+  & v_mod ~ $([%] $(2 bit))
+  & v_div ~ $([/] $(2 vnext))
+  & @ins_node ~ (trie (bit (depth (vnext out))))
+
+@ins_leaf = (v (trie out))
+  & @leaf ~ (trie (v out))
+
+@ins_node = ((?((@node_empty @node_full) (payload (bit (depth (v out))))) payload) (bit (depth (v out))))
+
+@node_empty = (payload (bit (depth (v out))))
+  & payload ~ *
+  & bit ~ ?((@empty_left @empty_right) (depth (v out)))
+
+@empty_left = (depth (v out))
+  & @insert ~ (depth (v ((0 *) ans)))
+  & ans ~ (child found)
+  & out ~ ((1 (child (0 *))) found)
+
+@empty_right = (depth (v out))
+  & @insert ~ (depth (v ((0 *) ans)))
+  & ans ~ (child found)
+  & out ~ ((1 ((0 *) child)) found)
+
+@node_full = (* ((left right) (bit (depth (v out)))))
+  & bit ~ ?((@full_left @full_right) (left (right (depth (v out)))))
+
+@full_left = (left (right (depth (v out))))
+  & @insert ~ (depth (v (left ans)))
+  & ans ~ (child found)
+  & out ~ ((1 (child right)) found)
+
+@full_right = (left (right (depth (v out))))
+  & @insert ~ (depth (v (right ans)))
+  & ans ~ (child found)
+  & out ~ ((1 (left child)) found)
+
+@leaf = ((?((@leaf_empty @leaf_full) (payload (v out))) payload) (v out))
+
+@leaf_empty = (payload (v out))
+  & payload ~ *
+  & out ~ ((1 *) 0)
+
+@leaf_full = (* (payload (v out)))
+  & payload ~ *
+  & out ~ ((1 *) 1)

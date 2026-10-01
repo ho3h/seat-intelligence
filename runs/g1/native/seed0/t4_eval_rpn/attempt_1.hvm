@@ -1,0 +1,39 @@
+// Entry point: evaluate with an empty stack.
+@prog = (input out)
+  & @run ~ (input ((0 *) out))
+
+// Dispatch on the list tag.
+@run = ((?((@run_nil @run_cons) (pl (s out))) pl) (s out))
+
+// The final stack contains exactly one value.
+@run_nil = (* ((1 (x *)) x))
+
+// Split the token and dispatch on its kind.
+@run_cons = (* (((?((@push @op) (v (t (s out)))) v) t) (s out))
+
+// Push a number, then continue.
+@push = (v (t (s out)))
+  & @run ~ (t ((1 (v s)) out))
+
+// Pop b and then a; retain the operator code while checking it.
+@op = (* (op (t ((1 (b (1 (a rest)))) out))))
+  & op ~ {op1 op2}
+  & op1 ~ $([=] $(43 is_add))
+  & is_add ~ ?((@check_sub @do_add) (op2 (a (b (rest (t out))))))
+
+// If it was not '+', check for '-'; otherwise use multiplication.
+@check_sub = (opkeep (a (b (rest (t out)))))
+  & opkeep ~ $([=] $(45 is_sub))
+  & is_sub ~ ?((@do_mul @do_sub) (a (b (rest (t out)))))
+
+@do_add = (* (* (a (b (rest (t out))))))
+  & a ~ $([+] $(b result))
+  & @run ~ (t ((1 (result rest)) out))
+
+@do_sub = (* (a (b (rest (t out)))))
+  & a ~ $([-] $(b result))
+  & @run ~ (t ((1 (result rest)) out))
+
+@do_mul = (a (b (rest (t out))))
+  & a ~ $([*] $(b result))
+  & @run ~ (t ((1 (result rest)) out))

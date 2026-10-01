@@ -1,0 +1,17 @@
+@prog = ((xs tgt) out)
+  & @lb ~ (xs (tgt (0 out)))
+
+@lb = ((?((@lb_nil @lb_cons) (pl (tgt (acc out)))) pl) (tgt (acc out)))
+
+@lb_nil = (* (* (a a)))
+
+@lb_cons = (* ((h xs) (tgt (acc out))))
+  & tgt ~ {tc tn}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb_no @lb_yes) (tn (xs (acc out))))
+
+@lb_no = (* (* (acc out)))
+
+@lb_yes = (* (tgt (xs (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @lb ~ (xs (tgt (acc2 out)))

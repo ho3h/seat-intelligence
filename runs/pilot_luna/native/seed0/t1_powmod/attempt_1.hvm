@@ -1,0 +1,37 @@
+// Compute base^exp mod m by binary exponentiation.
+
+@prog = ((b (e m)) out)
+  & m ~ {m_base m_rest}
+  & m_rest ~ {m_init m_pow}
+  & b ~ $([%] $(m_base b0))
+  & 1 ~ $([%] $(m_init acc0))
+  & @pow ~ ((b0 (e (m_pow acc0))) out)
+
+@pow = ((b (e (m acc))) out)
+  & e ~ ?((@pow_zero @pow_more) (b (m (acc out))))
+
+@pow_zero = (* (* (a a)))
+
+@pow_more = (em1 (b (m (acc out))))
+  & em1 ~ $([+1] ecur)
+  & ecur ~ {ediv emod}
+  & ediv ~ $([/] $(2 half))
+  & emod ~ $([%] $(2 odd))
+  & b ~ {b_left b_right}
+  & b_left ~ {b1 b2}
+  & b1 ~ $([*] $(b2 square))
+  & square ~ $([%] $(m_square bnew))
+  & b_right ~ $([*] $(acc_mul raw))
+  & raw ~ $([%] $(m_acc cand))
+  & acc ~ {acc_keep acc_mul}
+  & m ~ {m_square m_rest}
+  & m_rest ~ {m_acc m_rec}
+  & odd ~ ?((@pow_even @pow_odd) (acc_keep (cand (bnew (half (m_rec out))))))
+
+@pow_even = (acc (cand (b (half (m out))))
+  & cand ~ *
+  & @pow ~ ((b (half (m (acc out))))
+
+@pow_odd = (* (acc (cand (b (half (m out)))))
+  & acc ~ *
+  & @pow ~ ((b (half (m (cand out))))

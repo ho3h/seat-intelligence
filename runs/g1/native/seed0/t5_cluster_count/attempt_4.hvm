@@ -1,0 +1,86 @@
+// Build the initial component labels, one distinct label per node.
+@prog = ((n pairs) out)
+  & n ~ {n_build n_count}
+  & @build ~ (n_build labels)
+  & @edges ~ (pairs (labels (n_count out)))
+
+@build = (n out)
+  & n ~ ?((@build_zero @build_succ) out)
+
+@build_zero = out
+  & out ~ (0 *)
+
+@build_succ = (k out)
+  & k ~ {k1 k2}
+  & @build ~ (k1 tail)
+  & out ~ (1 (k2 tail))
+
+// Process each merge edge.
+@edges = ((?((@edges_nil @edges_cons) (pl (labels (count out)))) pl) (labels (count out)))
+
+@edges_nil = (* (* (c c)))
+
+@edges_cons = (* ((u v) (tail (labels (count out)))))
+  & @get_keep ~ (labels (u got1))
+  & got1 ~ (a labels1)
+  & @get_keep ~ (labels1 (v got2))
+  & got2 ~ (b labels2)
+  & @merge_check ~ (a (b (labels2 (tail (count out)))))
+
+@merge_check = (a (b (labels (tail (count out)))))
+  & a ~ {a_cmp a_keep}
+  & b ~ {b_cmp b_keep}
+  & a_cmp ~ $([=] $(b_cmp eq))
+  & eq ~ ?((@merge_no @merge_yes) (a_keep (b_keep (labels (tail (count out))))))
+
+@merge_no = (* (* (labels (tail (count out)))))
+  & @edges ~ (tail (labels (count out)))
+
+@merge_yes = (* (old (new (labels (tail (count out))))))
+  & @replace ~ (labels (old (new mapped)))
+  & count ~ $([-1] count1)
+  & @edges ~ (tail (mapped (count1 out)))
+
+// Return the label at an index and a rebuilt copy of the list.
+@get_keep = ((?((@gk_nil @gk_cons) (pl (idx out))) pl) (idx out))
+
+@gk_nil = (* (* out))
+  & out ~ (0 (0 *))
+
+@gk_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@gk_at @gk_after) (h (t out)))
+
+@gk_at = (h (t out))
+  & h ~ {hv hl}
+  & out ~ (hv (1 (hl t)))
+
+@gk_after = (k (h (t out)))
+  & @get_keep ~ (t (k got))
+  & got ~ (value rebuilt)
+  & out ~ (value (1 (h rebuilt)))
+
+// Replace every occurrence of one component label with another.
+@replace = ((?((@rep_nil @rep_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@rep_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@rep_cons = (* ((h t) (old (new out))))
+  & @rep_step ~ (h (t (old (new out))))
+
+@rep_step = (h (t (old (new out))))
+  & h ~ {h_test h_keep}
+  & old ~ {old_test old_next}
+  & new ~ {new_head new_next}
+  & h_test ~ $([=] $(old_test eq))
+  & eq ~ ?((@rep_no @rep_yes) (h_keep (t (old_next (new_head (new_next out))))))
+
+@rep_no = (h (t (old (new_head (new out)))))
+  & new_head ~ *
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@rep_yes = (* (h (t (old (new_head (new out))))))
+  & h ~ *
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (new_head rest))

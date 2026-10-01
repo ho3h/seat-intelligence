@@ -1,0 +1,21 @@
+// Deduplicate a sorted list, carrying the previous value through the worker.
+// Inline the terminal and keep/skip branch structures to avoid helper calls.
+
+@prog = (input output)
+  & @dedup ~ (input output)
+
+@dedup = ((?(((* (0 *)) @dd_first) (payload output)) payload) output)
+
+@dd_first = (* ((head tail) output))
+  & head ~ {prev emitted}
+  & @dedup_rest ~ (tail (prev rest))
+  & output ~ (1 (emitted rest))
+
+@dedup_rest = ((?(((* (* (0 *))) @dr_cons) (payload (prev output))) payload) (prev output))
+
+@dr_cons = (* ((head tail) (prev output)))
+  & head ~ {cmp copy}
+  & copy ~ {next emitted}
+  & cmp ~ $([=] $(prev equal))
+  & equal ~ ?(((ka (kb (1 (ka kb)))) (* (sx sx))) (emitted (rest output)))
+  & @dedup_rest ~ (tail (next rest))

@@ -1,0 +1,71 @@
+@prog = ((c m) out)
+  & @scan ~ (m (c (0 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@scan_nil = (* (* (acc out)))
+
+@scan_cons = (* ((pair tail) (c (acc out))))
+  & pair ~ (a b)
+  & a ~ {a_get a_keep}
+  & b ~ {b_get b_keep}
+  & c ~ {c_a {c_b c_next}}
+  & @get ~ (c_a (a_get va))
+  & @get ~ (c_b (b_get vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@scan_no @scan_yes) (a_keep (b_keep (tail (c_next (acc out))))))
+
+@scan_no = (* (* (tail (c (acc out)))))
+  & @scan ~ (tail (c (acc out)))
+
+@scan_yes = (* (a (b (tail (c (acc out))))))
+  & @insert ~ ((a b) (acc newacc))
+  & @scan ~ (tail (c (newacc out)))
+
+@insert = ((?((@insert_nil @insert_cons) (pl (item out))) pl) (item out))
+
+@insert_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@insert_cons = (* ((old rest) (item out)))
+  & old ~ (x y)
+  & item ~ (a b)
+  & a ~ {a_cmp a_keep}
+  & b ~ {b_cmp b_keep}
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & @ltpair ~ ((a_cmp b_cmp) ((x_cmp y_cmp) before))
+  & before ~ ?((@insert_before @insert_after) (a_keep (b_keep (x_keep (y_keep (rest out))))))
+
+@insert_before = (a (b (x (y (rest out)))))
+  & out ~ (1 ((a b) (1 ((x y) rest))))
+
+@insert_after = (* (a (b (x (y (rest out))))))
+  & @insert ~ ((a b) (rest sub))
+  & out ~ (1 ((x y) sub))
+
+@ltpair = ((a b) ((x y) out))
+  & a ~ {a_lt a_eq}
+  & x ~ {x_lt x_eq}
+  & a_lt ~ $([<] $(x_lt less_first))
+  & a_eq ~ $([=] $(x_eq equal_first))
+  & b ~ $([<] $(y less_second))
+  & equal_first ~ $([&] $(less_second equal_and_second))
+  & less_first ~ $([|] $(equal_and_second out))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@idx_zero @idx_succ) (head (tail out)))
+
+@idx_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@idx_succ = (n (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (n out))

@@ -1,0 +1,82 @@
+@prog = (input output)
+  & @filter_all ~ (input filtered)
+  & filtered ~ (l0 (l1 (l2 l3)))
+  & @count ~ (l0 c0)
+  & @count ~ (l1 c1)
+  & @count ~ (l2 c2)
+  & @count ~ (l3 c3)
+  & output ~ (1 (c0 (1 (c1 (1 (c2 (1 (c3 (0 *)))))))))
+
+@filter_all = ((?((@fa_nil @fa_cons) (payload out)) payload) out)
+
+@fa_nil = (* out)
+  & out ~ ((0 *) ((0 *) ((0 *) (0 *))))
+
+@fa_cons = (* ((node (key value)) (tail out)))
+  & node ~ *
+  & @filter_all ~ (tail lists)
+  & key ~ ?((@fa0 @dispatch1) (value (lists out)))
+
+@dispatch1 = (k (value (lists out)))
+  & k ~ ?((@fa1 @dispatch2) (value (lists out)))
+
+@dispatch2 = (k (value (lists out)))
+  & k ~ ?((@fa2 @dispatch3) (value (lists out)))
+
+@dispatch3 = (k (value (lists out)))
+  & k ~ ?((@fa3 @fa_invalid) (value (lists out)))
+
+@fa_invalid = (* (value (lists out)))
+
+@fa0 = (value (lists out))
+  & lists ~ (l0 (l1 (l2 l3)))
+  & out ~ ((1 (value l0)) (l1 (l2 l3)))
+
+@fa1 = (value (lists out))
+  & lists ~ (l0 (l1 (l2 l3)))
+  & out ~ (l0 ((1 (value l1)) (l2 l3)))
+
+@fa2 = (value (lists out))
+  & lists ~ (l0 (l1 (l2 l3)))
+  & out ~ (l0 (l1 ((1 (value l2)) l3)))
+
+@fa3 = (value (lists out))
+  & lists ~ (l0 (l1 (l2 l3)))
+  & out ~ (l0 (l1 (l2 (1 (value l3))))
+
+@count = ((?((@count_nil @count_cons) (payload out)) payload) out)
+
+@count_nil = (* out)
+  & out ~ 0
+
+@count_cons = (* ((x tail) out))
+  & tail ~ {search_list count_list}
+  & @member ~ (search_list (x found))
+  & @count ~ (count_list rest_count)
+  & found ~ ?((@count_absent @count_present) (bit *))
+  & rest_count ~ $([+] $(bit out))
+
+@count_absent = (bit *)
+  & bit ~ 1
+
+@count_present = (* (bit *))
+  & bit ~ 0
+
+@member = ((?((@member_nil @member_cons) (payload (x out))) payload) (x out))
+
+@member_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@member_cons = (* ((h tail) (x out)))
+  & x ~ {x_eq x_keep}
+  & h ~ $([=] $(x_eq z))
+  & z ~ ?((@member_no @member_yes) (tail (x_keep out)))
+
+@member_no = (tail (x out))
+  & @member ~ (tail (x out))
+
+@member_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1

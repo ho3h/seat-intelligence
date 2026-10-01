@@ -1,0 +1,55 @@
+// t3_tree_parents, Euler-tour version (GRAPH-SWING-3, runs/exp19). Edge i gives arcs 2i = u->v, 2i+1 = v->u. While
+// reading the edges: push the arc ids onto their tails' out-lists, request dist(2i) and dist(2i+1) (multicast keyed by
+// the known arc ids), and pre-wire two conditional sets P[v] := u if dist(2i) > dist(2i+1), P[u] := v otherwise.
+// Then: successor of each arc in the Euler tour from r (one traversal of the out-lists), lg(2n-1) rounds of pointer
+// jumping (fixed count), and one delivery that fires all the pre-wired sets. No BFS rounds: depth ~ O(lg n) rounds.
+@prog = ((n (r es)) out)
+  & n ~ {n0 nx}
+  & n0 ~ $([-] $(1 nm1))
+  & nm1 ~ ?((@et_one @et_go) (nx (r (es out))))
+@et_one = (* (* (* (1 (16777215 (0 *))))))
+@et_go = (nm2 (n (r (es out))))
+  & nm2 ~ $([+1] nm1)
+  & nm1 ~ {c1 c2}
+  & @lg ~ (c1 L)
+  & c2 ~ $([*] $(2 S))
+  & S ~ {S1 {S2 {S3 S4}}}
+  & @lg ~ (S1 La)
+  & L ~ {L1 {L2 {L3 {L4 L5}}}}
+  & La ~ {A1 {A2 {A3 {A4 A5}}}}
+  & @zl ~ (L1 G0)
+  & @zq ~ (A1 Q0)
+  & @zi ~ (L2 H0)
+  & @w_blk ~ (es ((0 ((L3 A2) (G0 (Q0 H0)))) (G (Q H))))
+  & S2 ~ $([*] $(1024 SS))
+  & @fill ~ (A3 (SS N0))
+  & @vf ~ (G (L4 (0 ((r (S3 A4)) (N0 N1)))))
+  & A5 ~ {A6 {A7 A8}}
+  & @pjl ~ (A6 (N1 ((A7 S4) Pf)))
+  & @dv ~ (Pf (Q A8))
+  & @tl ~ (H (L5 (0 (n ((0 *) out)))))
+@tp_step = ((i (E (g (q h)))) ((u v) (i2 (E2 (g3 (q3 h3))))))
+  & i ~ {i1 ix}
+  & ix ~ $([+1] i2)
+  & i1 ~ $([*] $(2 a0))
+  & a0 ~ {a1 {a2 a3}}
+  & a3 ~ $([+1] b0)
+  & b0 ~ {b1 b2}
+  & E ~ {Ex E2}
+  & Ex ~ (L La)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & La ~ {La1 La2}
+  & u ~ {u1 {u2 u3}}
+  & v ~ {v1 {v2 v3}}
+  & @pn ~ (g (u1 (L1 (a1 g2))))
+  & @pn ~ (g2 (v1 (L2 (b1 g3))))
+  & @pu ~ (q (a2 (La1 (ra q2))))
+  & @pu ~ (q2 (b2 (La2 (rb q3))))
+  & ra ~ $([&] $(1023 da))
+  & rb ~ $([&] $(1023 db))
+  & da ~ $([>] $(db f))
+  & f ~ {f1 f2}
+  & f2 ~ $([^] $(1 f3))
+  & @cs ~ (h (v2 (L3 ((f1 u3) h2))))
+  & @cs ~ (h2 (u2 (L4 ((f3 v3) h3))))
+@tp_fin = ((* (* (g (q h)))) (g (q h)))

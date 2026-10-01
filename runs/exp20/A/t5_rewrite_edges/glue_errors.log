@@ -1,0 +1,30 @@
+--- 05:05:05
+build.py:39: wire `idx` (num, argument `idx` of step of stream `wc`, made at build.py:47) is used a second time (left operand of `+`); it was already used at build.py:37 (update `hadd` (act add) port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(idx, 2)  and use each once.
+--- 05:05:12
+build.py:49: wire `L` (depth, argument `L` of step of stream `wc`, made at build.py:49) is used a second time (returned as `L`); it was already used at build.py:39 (update `hadd` (act add) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:05:20
+fin of stream `wc` must return exactly one value (the result); returned 2
+--- 05:05:55
+@prog (t5_rewrite_edges) (@prog): 2 value(s) never used:
+    `c` (list[num], argument `in0` of @prog (t5_rewrite_edges), made at build.py:69)
+    `edges` (list[(num num)], argument `in1` of @prog (t5_rewrite_edges), made at build.py:69)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:06:35
+build.py:48: wire `L` (depth, output `L` of lg, made at build.py:44) is used a second time (stream `wc` port `init`); it was already used at build.py:45 (const_trie `z0` (leaf 0) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:08:49
+predicate of filter_list `fl` (@fl_p): 2 value(s) never used:
+    `i` (num, argument `i` of predicate of filter_list `fl`, made at build.py:24)
+    `E` (num, argument `E` of predicate of filter_list `fl`, made at build.py:24)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:54
+build.py:62: kind mismatch at update `pk` (act peek) port `t`: expected trie[num], got adj (trie[list[(num num)]]) `c_adj` from argument `c_adj` of step of stream `we` (made at build.py:92).
+--- 05:17:53
+build.py:72: wire `L_out` (depth, argument `L_out` of step of stream `we`, made at build.py:72) is used a second time (returned as `L_out`); it was already used at build.py:61 (update `hadd` (act add) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_out, 2)  and use each once.
+--- 05:22:06
+build.py:76: wire `key` (num, argument `elem` of step of stream `wd`, made at build.py:84) is used a second time (left operand of `&`); it was already used at build.py:75 (left operand of `>>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(key, 2)  and use each once.
+--- 05:22:14
+build.py:90: kind mismatch at stream `wd` port `init`: expected list[(num num)], got (list[any]) ((0 *),).
+--- 05:22:23
+@prog (t5_rewrite_edges) (@prog): 1 value(s) never used:
+    `out` (trie[num], output `out` of stream `wc`, made at build.py:46)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

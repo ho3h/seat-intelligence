@@ -1,0 +1,29 @@
+// Process one list cell, then handle the next cell inline before recursing.
+@prog = (input out)
+  & input ~ (k xs)
+  & @take ~ (k (xs out))
+
+@take = (k (xs out))
+  & xs ~ (tag payload)
+  & tag ~ $([*] $(k flag))
+  & flag ~ ?((@take_end @take_pair) (payload out))
+
+@take_end = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@take_pair = (k (payload out))
+  & payload ~ (head tail)
+  & tail ~ (tag payload2)
+  & out ~ (1 (head rest))
+  & tag ~ $([*] $(k flag))
+  & flag ~ ?((@pair_end @pair_more) (payload2 rest))
+
+@pair_end = (payload rest)
+  & payload ~ *
+  & rest ~ (0 *)
+
+@pair_more = (k (payload rest))
+  & payload ~ (head tail)
+  & @take ~ (k (tail next))
+  & rest ~ (1 (head next))

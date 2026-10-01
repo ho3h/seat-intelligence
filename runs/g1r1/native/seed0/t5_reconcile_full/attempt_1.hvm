@@ -1,0 +1,15 @@
+// This initial net builds the singleton-cluster canonical-id list.
+// It currently returns an empty rewritten edge list.
+@prog = ((n (* (* (* *)))) out)
+  & @gen ~ (n ((0 *) ids))
+  & out ~ (ids (0 *))
+
+@gen = (n (acc out))
+  & n ~ ?((@gen_zero @gen_succ) (acc out))
+
+@gen_zero = (* (a a))
+
+@gen_succ = (n (acc out))
+  & n ~ {n1 n2}
+  & @gen ~ (n1 (acc acc2))
+  & out ~ (1 (n2 acc2))

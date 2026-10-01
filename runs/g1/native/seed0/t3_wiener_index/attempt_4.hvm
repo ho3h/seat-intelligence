@@ -1,0 +1,112 @@
+// For each source, breadth-first search accumulates its distances.
+// The sum over all sources is twice the Wiener index.
+
+@prog = ((n edges) out)
+  & @outer ~ (0 (n (edges (0 all))))
+  & all ~ $([/] $(2 out))
+
+@outer = (i (n (edges (total out))))
+  & i ~ {ic ir}
+  & n ~ {nc nr}
+  & ic ~ $([<] $(nc b))
+  & b ~ ?((@outer_end @outer_step) (ir (nr (edges (total out)))))
+
+@outer_end = (i (n (edges (total out))))
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+  & out ~ total
+
+@outer_step = (* (i (n (edges (total out)))))
+  & i ~ {src1 src2}
+  & edges ~ {eb ef}
+  & @layer ~ ((1 (src1 (0 *))) ((1 (src2 (0 *))) ((0 *) (eb (0 total2)))))
+  & src2 ~ $([+1] nexti)
+  & @outer ~ (nexti (n (ef (total2 out))))
+
+@layer = ((?((@layer_nil @layer_cons) (p (visited (next (edges (depth out)))))) p) (visited (next (edges (depth out)))))
+
+@layer_nil = (p (visited (next (edges (depth out)))))
+  & p ~ *
+  & depth ~ $([+1] dnext)
+  & @layer ~ (next (visited ((0 *) (edges (dnext out)))))
+
+@layer_cons = (* ((h t) (visited (next (edges (depth out))))))
+  & edges ~ {e1 e2}
+  & depth ~ {d1 d2}
+  & @scan ~ (e1 (h (visited (next (d1 scanres)))))
+  & scanres ~ (v2 (n2 sum2))
+  & @layer ~ (t (v2 (n2 (e2 (d2 (sum2 out)))))
+
+@scan = ((?((@scan_nil @scan_cons) (p (vertex (visited (next (depth out)))))) p) (vertex (visited (next (depth out)))))
+
+@scan_nil = (p (vertex (visited (next (depth out)))))
+  & p ~ *
+  & vertex ~ *
+  & depth ~ *
+  & out ~ (visited (next sum))
+
+@scan_cons = (* ((u v) (tail (vertex (visited (next (depth out)))))))
+  & vertex ~ {vx1 vx2}
+  & u ~ {ucheck ucand}
+  & ucheck ~ $([=] $(vx1 b1))
+  & b1 ~ ?((@scan_no_u @scan_yes_u) (ucand (v (tail (vx2 (visited (next (depth out))))))))
+
+@scan_no_u = (ucand (v (tail (vx2 (visited (next (depth out)))))))
+  & vx2 ~ {vcheck vkeep}
+  & v ~ $([=] $(vcheck b2))
+  & b2 ~ ?((@scan_no_v @scan_yes_v) (ucand (tail (vkeep (visited (next (depth out)))))))
+
+@scan_yes_u = (* (ucand (v (tail (vertex (visited (next (depth out))))))))
+  & ucand ~ *
+  & @scan_found ~ (v (tail (vertex (visited (next (depth out))))))
+
+@scan_no_v = (ucand (tail (vertex (visited (next (depth out))))))
+  & ucand ~ *
+  & @scan ~ (tail (vertex (visited (next (depth out)))))
+
+@scan_yes_v = (* (ucand (tail (vertex (visited (next (depth out)))))))
+  & @scan_found ~ (ucand (tail (vertex (visited (next (depth out))))))
+
+@scan_found = (candidate (tail (vertex (visited (next (depth out))))))
+  & depth ~ {dtry drec}
+  & @try ~ (candidate (visited (next (dtry tr))))
+  & tr ~ (v2 (n2 sum2))
+  & @scan ~ (tail (vertex (v2 (n2 (drec out)))))
+
+@try = (candidate (visited (next (depth (sum out)))))
+  & candidate ~ {cm cp}
+  & visited ~ {vm vp}
+  & @mem ~ (vm (cm b))
+  & b ~ ?((@try_new @try_old) (cp (vp (next (depth (sum out))))))
+
+@try_new = (candidate (visited (next (depth (sum out)))))
+  & candidate ~ {c1 c2}
+  & depth ~ $([+1] amount)
+  & sum ~ $([+] $(amount total))
+  & out ~ ((1 (c1 visited)) ((1 (c2 next)) total))
+
+@try_old = (* (candidate (visited (next (depth (sum out))))))
+  & candidate ~ *
+  & depth ~ *
+  & out ~ (visited (next sum))
+
+@mem = ((?((@mem_nil @mem_cons) (p (x out)))) p) (x out))
+
+@mem_nil = (p (x out))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 b))
+  & b ~ ?((@mem_no @mem_yes) (t (x2 out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1

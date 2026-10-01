@@ -1,0 +1,42 @@
+// Carry the patience-tail count so the result does not need a sequential count pass.
+@prog = (l out)
+  & @lis ~ (l ((0 *) (0 out)))
+
+@lis = ((?((@lis_nil @lis_cons) (pl (tails (acc out)))) pl) (tails (acc out)))
+
+@lis_nil = (* (tails (acc out)))
+  & tails ~ *
+  & acc ~ out
+
+@lis_cons = (* ((h t) (tails (acc out))))
+  & @ins ~ (h (tails insres))
+  & insres ~ (newtails inserted)
+  & inserted ~ ?((@lis_added @lis_kept) (newtails (t (acc out))))
+
+@lis_added = (newtails (t (acc out)))
+  & acc ~ $([+1] acc2)
+  & @lis ~ (t (newtails (acc2 out)))
+
+@lis_kept = (* (newtails (t (acc out))))
+  & @lis ~ (t (newtails (acc out)))
+
+// Insert x before the first tail value greater than or equal to x.
+// The second result is 0 when a new tail is appended, and 1 when one is replaced.
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* out))
+  & out ~ ((1 (x (0 *))) 0)
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(x1 z))
+  & z ~ ?((@ins_replace @ins_more) (h2 (t (x2 out))))
+
+@ins_replace = (* (t (x out)))
+  & out ~ ((1 (x t)) 1)
+
+@ins_more = (* (h (t (x out))))
+  & @ins ~ (x (t res))
+  & res ~ (nt found)
+  & out ~ ((1 (h nt)) found)

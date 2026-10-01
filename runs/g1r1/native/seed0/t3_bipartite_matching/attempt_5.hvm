@@ -1,0 +1,170 @@
+@prog = (input out)
+  & input ~ (a (b edges))
+  & b ~ {b_zero b_loop}
+  & @zeros ~ (b_zero match)
+  & @loop ~ (a (b_loop (edges (0 (0 (match out))))))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+@loop = (a (b (edges (i (count (match out))))))
+  & i ~ {i_cmp i_ctx}
+  & a ~ {a_cmp a_ctx}
+  & i_cmp ~ $([=] $(a_cmp eq))
+  & eq ~ ?((@loop_more @loop_done) (a_ctx (b (edges (i_ctx (count (match out)))))))
+
+@loop_done = (junk (a (b (edges (i (count (match out)))))))
+  & junk ~ *
+  & a ~ *
+  & b ~ *
+  & edges ~ *
+  & i ~ *
+  & match ~ *
+  & out ~ count
+
+@loop_more = (a (b (edges (i (count (match out))))))
+  & b ~ {b_zero b_keep}
+  & i ~ {i_dfs i_keep}
+  & edges ~ {edge_dfs edge_next}
+  & @zeros ~ (b_zero visited)
+  & @dfs_start ~ (i_dfs (edge_dfs (match (visited result))))
+  & result ~ (ok (match2 visited2))
+  & visited2 ~ *
+  & ok ~ ?((@loop_fail @loop_succ) (a (b_keep (edge_next (i_keep (count (match2 out)))))))
+
+@loop_fail = (a (b (edges (i (count (match out))))))
+  & i ~ $([+1] i2)
+  & @loop ~ (a (b (edges (i2 (count (match out))))))
+
+@loop_succ = (junk (a (b (edges (i (count (match out)))))))
+  & junk ~ *
+  & i ~ $([+1] i2)
+  & count ~ $([+1] count2)
+  & @loop ~ (a (b (edges (i2 (count2 (match out))))))
+
+@dfs_start = (left (edges (match (vis out))))
+  & edges ~ {all scan}
+  & @try ~ (left (all (scan (match (vis out)))))
+
+@try = (left (all ((?((@try_nil @try_cons) (pl (left (all (match (vis out)))))) pl) (match (vis out)))))
+
+@try_nil = (pl (left (all (match (vis out)))))
+  & pl ~ *
+  & left ~ *
+  & all ~ *
+  & out ~ (0 (match vis))
+
+@try_cons = (junk (payload (left (all (match (vis out))))))
+  & junk ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & left ~ {left_cmp left_keep}
+  & u ~ $([=] $(left_cmp eq))
+  & eq ~ ?((@edge_no @edge_yes) (tail (left_keep (all (v (match (vis out)))))))
+
+@edge_no = (tail (left (all (v (match (vis out))))))
+  & v ~ *
+  & @try ~ (left (all (tail (match (vis out)))))
+
+@edge_yes = (junk (tail (left (all (v (match (vis out)))))))
+  & junk ~ *
+  & v ~ {v_get v_keep}
+  & vis ~ {vis_get vis_keep}
+  & @get ~ (vis_get (v_get seen))
+  & seen ~ ?((@edge_unseen @edge_seen) (tail (left (all (v_keep (match (vis_keep out)))))))
+
+@edge_seen = (junk (tail (left (all (v (match (vis out)))))))
+  & junk ~ *
+  & v ~ *
+  & @try ~ (left (all (tail (match (vis out)))))
+
+@edge_unseen = (tail (left (all (v (match (vis out))))))
+  & @set ~ (vis (v_set (1 vmark)))
+  & v ~ {v_set v_rest}
+  & v_rest ~ {v_get v_keep}
+  & match ~ {match_get match_keep}
+  & @get ~ (match_get (v_get slot))
+  & slot ~ ?((@slot_free @slot_taken) (tail (left (all (v_keep (match_keep (vmark out)))))))
+
+@slot_free = (tail (left (all (v (match (vmark out))))))
+  & tail ~ *
+  & all ~ *
+  & left ~ $([+1] newval)
+  & @set ~ (match (v (newval match2)))
+  & out ~ (1 (match2 vmark))
+
+@slot_taken = (occupant (tail (left (all (v (match (vmark out)))))))
+  & all ~ {edge_in edge_keep}
+  & @dfs_start ~ (occupant (edge_in (match (vmark result))))
+  & result ~ (ok (match_rec vis_rec))
+  & ok ~ ?((@reassign_no @reassign_yes) (tail (left (edge_keep (v (match_rec (vis_rec out)))))))
+
+@reassign_no = (tail (left (edges (v (match (vis out))))))
+  & v ~ *
+  & @try ~ (left (edges (tail (match (vis out)))))
+
+@reassign_yes = (junk (tail (left (edges (v (match (vis out)))))))
+  & junk ~ *
+  & tail ~ *
+  & edges ~ *
+  & left ~ $([+1] newval)
+  & @set ~ (match (v (newval newmatch)))
+  & out ~ (1 (newmatch vis))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (junk (pl (idx out)))
+  & junk ~ *
+  & pl ~ (head tail)
+  & idx ~ {idx_cmp idx_keep}
+  & idx_cmp ~ $([=] $(0 z))
+  & z ~ ?((@get_next @get_head) (head (tail (idx_keep out))))
+
+@get_head = (junk (head (tail (idx out))))
+  & junk ~ *
+  & tail ~ *
+  & idx ~ *
+  & out ~ head
+
+@get_next = (head (tail (idx out)))
+  & head ~ *
+  & idx ~ $([-] $(1 idx2))
+  & @get ~ (tail (idx2 out))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (pl (idx (val out)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (junk (pl (idx (val out))))
+  & junk ~ *
+  & pl ~ (head tail)
+  & idx ~ {idx_cmp idx_keep}
+  & idx_cmp ~ $([=] $(0 z))
+  & z ~ ?((@set_next @set_head) (head (tail (idx_keep (val out)))))
+
+@set_head = (junk (head (tail (idx (val out)))))
+  & junk ~ *
+  & head ~ *
+  & idx ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (head (tail (idx (val out))))
+  & idx ~ $([-] $(1 idx2))
+  & @set ~ (tail (idx2 (val tail2)))
+  & out ~ (1 (head tail2))

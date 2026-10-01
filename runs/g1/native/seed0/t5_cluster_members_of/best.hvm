@@ -1,0 +1,132 @@
+// Connected-component members, returned in ascending order.
+
+@prog = (input out)
+  & @start ~ (input out)
+
+@start = ((n (x pairs)) out)
+  & n ~ {n_min n_build}
+  & pairs ~ {pairs_len pairs_run}
+  & @len ~ (pairs_len m)
+  & @min ~ (m (n_min k))
+  & @round ~ (k (pairs_run ((1 (x (0 *))) (n_build out))))
+
+// Count edges. At most min(n, edge_count) scans are needed for propagation.
+@len = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (* 0)
+
+@len_cons = (* ((head tail) out))
+  & head ~ *
+  & @len ~ (tail rest)
+  & rest ~ $([+1] out)
+
+// Return the smaller of m and n.
+@min = (m (n out))
+  & m ~ {ml mr}
+  & n ~ {nl nr}
+  & ml ~ $([<] $(nl less))
+  & less ~ ?((@min_n @min_m) (mr (nr out)))
+
+@min_n = (* (a a))
+
+@min_m = (* (m (* m)))
+
+// Perform k complete scans; k is bounded by both n and the edge count.
+@round = (?((@round_done @round_more) (pairs (members (n out)))) (pairs (members (n out))))
+
+@round_done = (pairs (members (n out)))
+  & pairs ~ *
+  & @build ~ (n (members out))
+
+@round_more = (k (pairs (members (n out))))
+  & pairs ~ {pscan pnext}
+  & @scan ~ (pscan (members members2))
+  & @round ~ (k (pnext (members2 (n out))))
+
+// Scan every edge, adding its endpoints when either endpoint is in members.
+@scan = ((?((@scan_nil @scan_cons) (pl (members out))) pl) (members out))
+
+@scan_nil = (* (a a))
+
+@scan_cons = (* (((u v) tail) (members out)))
+  & members ~ {mu work0}
+  & u ~ {uq ukeep}
+  & v ~ {vq vkeep}
+  & @mem ~ (mu (uq hu))
+  & work0 ~ {mv work}
+  & @mem ~ (mv (vq hv))
+  & hu ~ $([|] $(hv connected))
+  & connected ~ ?((@scan_no @scan_yes) (tail (ukeep (vkeep (work out)))))
+
+@scan_no = (tail (u (v (work out))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (work out))
+
+@scan_yes = (* (tail (u (v (work out)))))
+  & @insert ~ (work (u tmp))
+  & @insert ~ (tmp (v tmp2))
+  & @scan ~ (tail (tmp2 out))
+
+// Membership test: @mem ~ (members (target result)).
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((head tail) (target out)))
+  & target ~ {te tr}
+  & head ~ $([=] $(te eq))
+  & eq ~ ?((@mem_no @mem_yes) (tail (tr out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (tail (tr out)))
+  & tail ~ *
+  & tr ~ *
+  & out ~ 1
+
+// Insert id into members if it is not already present.
+@insert = (members (id out))
+  & members ~ {mcheck mkeep}
+  & id ~ {iq ikeep}
+  & @mem ~ (mcheck (iq found))
+  & found ~ ?((@insert_no @insert_yes) (mkeep (ikeep out)))
+
+@insert_no = (members (id out))
+  & out ~ (1 (id members))
+
+@insert_yes = (* (members (id out)))
+  & id ~ *
+  & out ~ members
+
+// Check ids from n-1 down to 0, appending selected ids after recursion.
+@build = (?((@build_nil @build_more) (members out)) (members out))
+
+@build_nil = (members out)
+  & members ~ *
+  & out ~ (0 *)
+
+@build_more = (i (members out))
+  & i ~ {iq ikeep}
+  & members ~ {mcheck mkeep}
+  & @mem ~ (mcheck (iq found))
+  & found ~ ?((@build_no @build_yes) (ikeep (mkeep out)))
+
+@build_no = (i (members out))
+  & @build ~ (i (members out))
+
+@build_yes = (* (i (members out)))
+  & i ~ {i_rec i_head}
+  & @build ~ (i_rec (members tmp))
+  & @append ~ (tmp (i_head out))
+
+// Append id to the end of a list.
+@append = ((?((@append_nil @append_cons) (pl (id out))) pl) (id out))
+
+@append_nil = (* (id out))
+  & out ~ (1 (id (0 *)))
+
+@append_cons = (* ((head tail) (id out)))
+  & @append ~ (tail (id rest))
+  & out ~ (1 (head rest))

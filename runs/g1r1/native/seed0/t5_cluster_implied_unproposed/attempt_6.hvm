@@ -1,0 +1,172 @@
+@prog = ((n edges) out)
+  & edges ~ {edges_nodes edges_uniq}
+  & @nodes ~ (n (edges_nodes (0 (0 node_sum))))
+  & @uniq ~ (edges_uniq ((0 *) (0 distinct)))
+  & node_sum ~ $([/] $(2 half))
+  & half ~ $([-] $(distinct out))
+
+@nodes = (n (edges (i (acc out))))
+  & n ~ ?((@nodes_done @nodes_more) (edges (i (acc out))))
+
+@nodes_done = (edges (i (acc out)))
+  & edges ~ *
+  & i ~ *
+  & acc ~ out
+
+@nodes_more = (rem (edges (i (acc out))))
+  & rem ~ {rounds next_rem}
+  & edges ~ {edges_flood edges_next}
+  & i ~ {i_seed i_inc}
+  & i_inc ~ $([+1] next_i)
+  & @flood ~ (rounds (edges_flood ((1 (i_seed (0 *))) seen)))
+  & @length ~ (seen len)
+  & len ~ $([-] $(1 delta))
+  & acc ~ $([+] $(delta acc_next))
+  & @nodes ~ (next_rem (edges_next (next_i (acc_next out))))
+
+@flood = (rounds (edges (seen out)))
+  & rounds ~ ?((@flood_done @flood_more) (edges (seen out)))
+
+@flood_done = (edges (seen out))
+  & edges ~ *
+  & seen ~ out
+
+@flood_more = (rem (edges (seen out)))
+  & edges ~ {edges_scan edges_keep}
+  & @scan ~ (edges_scan (seen seen_next))
+  & @flood ~ (rem (edges_keep (seen_next out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (seen out))) payload) (seen out))
+
+@scan_nil = (payload (seen out))
+  & payload ~ *
+  & seen ~ out
+
+@scan_cons = (* ((edge tail) (seen out)))
+  & edge ~ (u v)
+  & seen ~ {seen_check seen_keep}
+  & u ~ {u_check u_keep}
+  & @mem ~ (seen_check (u_check found))
+  & found ~ ?((@scan_u_no @scan_u_yes) (tail (seen_keep (u_keep (v out)))))
+
+@scan_u_yes = (* (tail (seen (u (v out)))))
+  & u ~ *
+  & seen ~ {seen_check seen_keep}
+  & v ~ {v_check v_keep}
+  & @mem ~ (seen_check (v_check found))
+  & found ~ ?((@scan_v_add @scan_v_keep) (tail (seen_keep (v_keep out))))
+
+@scan_v_add = (* (tail (seen (v out))))
+  & @scan ~ (tail ((1 (v seen)) out))
+
+@scan_v_keep = (* (tail (seen (v out))))
+  & v ~ *
+  & @scan ~ (tail (seen out))
+
+@scan_u_no = (* (tail (seen (u (v out)))))
+  & seen ~ {seen_check seen_keep}
+  & v ~ {v_check v_keep}
+  & @mem ~ (seen_check (v_check found))
+  & found ~ ?((@scan_v_absent @scan_v_present) (tail (seen_keep (u (v_keep out)))))
+
+@scan_v_absent = (* (tail (seen (u (v out)))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (seen out))
+
+@scan_v_present = (* (tail (seen (u (v out)))))
+  & v ~ *
+  & seen ~ {seen_check seen_keep}
+  & u ~ {u_check u_keep}
+  & @mem ~ (seen_check (u_check found))
+  & found ~ ?((@scan_u_add @scan_u_keep) (tail (seen_keep (u_keep out))))
+
+@scan_u_add = (* (tail (seen (u out))))
+  & @scan ~ (tail ((1 (u seen)) out))
+
+@scan_u_keep = (* (tail (seen (u out))))
+  & u ~ *
+  & @scan ~ (tail (seen out))
+
+@mem = ((?((@mem_nil @mem_cons) (payload (x out))) payload) (x out))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (x out)))
+  & x ~ {x_check x_next}
+  & head ~ $([=] $(x_check found))
+  & found ~ ?((@mem_no @mem_yes) (tail (x_next out)))
+
+@mem_no = (* (tail (x out)))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1
+
+@length = ((?((@length_nil @length_cons) (payload out)) payload) out)
+
+@length_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@length_cons = (* ((head tail) out))
+  & head ~ *
+  & @length ~ (tail len)
+  & len ~ $([+1] out)
+
+@uniq = ((?((@uniq_nil @uniq_cons) (payload (seen (count out)))) payload) (seen (count out)))
+
+@uniq_nil = (payload (seen (count out)))
+  & payload ~ *
+  & seen ~ *
+  & count ~ out
+
+@uniq_cons = (* ((edge tail) (seen (count out))))
+  & edge ~ {edge_check edge_keep}
+  & seen ~ {seen_check seen_keep}
+  & @pairmem ~ (seen_check (edge_check found))
+  & found ~ ?((@uniq_new @uniq_repeat) (tail (seen_keep (edge_keep (count out)))))
+
+@uniq_repeat = (* (tail (seen (edge (count out)))))
+  & edge ~ *
+  & @uniq ~ (tail (seen (count out)))
+
+@uniq_new = (* (tail (seen (edge (count out)))))
+  & count ~ $([+1] count_next)
+  & @uniq ~ (tail ((1 (edge seen)) (count_next out)))
+
+@pairmem = ((?((@pm_nil @pm_cons) (payload (target out))) payload) (target out))
+
+@pm_nil = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ 0
+
+@pm_cons = (* ((candidate tail) (target out)))
+  & candidate ~ (x y)
+  & target ~ {target_check target_keep}
+  & target_check ~ (u v)
+  & x ~ $([=] $(u eqx))
+  & eqx ~ ?((@pm_x_no @pm_x_yes) (tail (target_keep (v (y out)))))
+
+@pm_x_no = (* (tail (target (v (y out)))))
+  & v ~ *
+  & y ~ *
+  & @pairmem ~ (tail (target out))
+
+@pm_x_yes = (* (tail (target (v (y out)))))
+  & y ~ $([=] $(v eqy))
+  & eqy ~ ?((@pm_y_no @pm_y_yes) (tail (target out)))
+
+@pm_y_no = (* (tail (target out)))
+  & @pairmem ~ (tail (target out))
+
+@pm_y_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1

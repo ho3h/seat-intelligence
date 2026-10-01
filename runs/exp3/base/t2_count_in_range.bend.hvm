@@ -1,0 +1,49 @@
+@count_in_range = (a (b ((@count_in_range__C10 (a (b c))) c)))
+
+@count_in_range__C0 = ({a {g m}} ({c {i o}} ($([+] $(f $([+] $(l $([+] $(r s)))))) ({$([<] $(a b)) $([>] $(c d))} ({$([<] $(g h)) $([>] $(i j))} ({$([<] $(m n)) $([>] $(o p))} s))))))
+  & $(b $([&] $(e f))) ~ [=0x0000000]
+  & $(d e) ~ [=0x0000000]
+  & $(h $([&] $(k l))) ~ [=0x0000000]
+  & $(j k) ~ [=0x0000000]
+  & $(n $([&] $(q r))) ~ [=0x0000000]
+  & $(p q) ~ [=0x0000000]
+
+@count_in_range__C1 = (* ({$([<] $(v w)) $([>] $(x y))} (c ({a {d {j {p v}}}} ({b {f {l {r x}}}} ($([+] $(i $([+] $(o $([+] $(u $([+] $(ab bb)))))))) ({$([<] $(d e)) $([>] $(f g))} ({$([<] $(j k)) $([>] $(l m))} ({$([<] $(p q)) $([>] $(r s))} cb)))))))))
+  & @count_in_range ~ (a (b (c (bb cb))))
+  & $(e $([&] $(h i))) ~ [=0x0000000]
+  & $(g h) ~ [=0x0000000]
+  & $(k $([&] $(n o))) ~ [=0x0000000]
+  & $(m n) ~ [=0x0000000]
+  & $(q $([&] $(t u))) ~ [=0x0000000]
+  & $(s t) ~ [=0x0000000]
+  & $(w $([&] $(z ab))) ~ [=0x0000000]
+  & $(y z) ~ [=0x0000000]
+
+@count_in_range__C10 = (?(((* (* (a a))) @count_in_range__C9) b) b)
+
+@count_in_range__C2 = (?((@count_in_range__C0 @count_in_range__C1) a) a)
+
+@count_in_range__C3 = ({a g} ({c i} ($([+] $(f $([+] $(l m)))) ({$([<] $(a b)) $([>] $(c d))} ({$([<] $(g h)) $([>] $(i j))} m)))))
+  & $(b $([&] $(e f))) ~ [=0x0000000]
+  & $(d e) ~ [=0x0000000]
+  & $(h $([&] $(k l))) ~ [=0x0000000]
+  & $(j k) ~ [=0x0000000]
+
+@count_in_range__C4 = (* (f ((@count_in_range__C2 (a (b (c (d (e (f g))))))) (a (b (c (d (e g))))))))
+
+@count_in_range__C5 = (?((@count_in_range__C3 @count_in_range__C4) a) a)
+
+@count_in_range__C6 = (a (c ($([+] $(f g)) ({$([<] $(a b)) $([>] $(c d))} g))))
+  & $(b $([&] $(e f))) ~ [=0x0000000]
+  & $(d e) ~ [=0x0000000]
+
+@count_in_range__C7 = (* (e ((@count_in_range__C5 (a (b (c (d (e f)))))) (a (b (c (d f)))))))
+
+@count_in_range__C8 = (?((@count_in_range__C6 @count_in_range__C7) a) a)
+
+@count_in_range__C9 = (* (d ((@count_in_range__C8 (a (b (c (d e))))) (a (b (c e))))))
+
+@prog = ((a (b c)) d)
+  & @count_in_range ~ (a (b (c (0 d))))
+
+

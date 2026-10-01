@@ -1,0 +1,126 @@
+// Entry point and recursive bottom-up fold.
+@prog = (input out)
+  & @fold ~ (input out)
+
+@fold = ((?((@fold_lit @fold_after0) (p out)) p) out)
+
+@fold_lit = (n out)
+  & out ~ (0 n)
+
+@fold_after0 = (n (p out))
+  & n ~ ?((@fold_add @fold_after1) (p out))
+
+@fold_after1 = (n (p out))
+  & n ~ ?((@fold_mul @fold_after2) (p out))
+
+@fold_after2 = (n (p out))
+  & n ~ ?((@fold_var @fold_invalid) (p out))
+
+@fold_var = (i out)
+  & out ~ (3 i)
+
+@fold_invalid = (* (p out))
+  & p ~ *
+  & out ~ *
+
+@fold_add = ((l r) out)
+  & @fold ~ (l a)
+  & @fold ~ (r b)
+  & @add_done ~ (a (b out))
+
+@fold_mul = ((l r) out)
+  & @fold ~ (l a)
+  & @fold ~ (r b)
+  & @mul_done ~ (a (b out))
+
+// Add: inspect the left operand, then the right operand inline.
+@add_done = ((?((@add_a_lit @add_a_nlit) (ap (b out))) ap) (b out))
+
+@add_a_lit = (x (b out))
+  & b ~ (?( (@add_b_lit @add_b_nlit) (bp (x out))) bp)
+
+@add_a_nlit = (n (ap (b out)))
+  & n ~ $([+1] tag)
+  & b ~ (?( (@add_nlit_b_lit @add_nlit_b_nlit) (bp ((tag ap) out))) bp)
+
+@add_b_lit = (y (x out))
+  & x ~ $([+] $(y z))
+  & out ~ (0 z)
+
+@add_b_nlit = (n (bp (x out)))
+  & n ~ $([+1] tag)
+  & x ~ ?((@add_lit_zero @add_lit_pos) ((tag bp) out))
+
+@add_lit_zero = (b out)
+  & out ~ b
+
+@add_lit_pos = (n (b out))
+  & n ~ $([+1] x)
+  & out ~ (1 ((0 x) b))
+
+@add_nlit_b_lit = (y (a out))
+  & y ~ ?((@add_nlit_b_zero @add_nlit_b_pos) (a out))
+
+@add_nlit_b_zero = (a out)
+  & out ~ a
+
+@add_nlit_b_pos = (n (a out))
+  & n ~ $([+1] y)
+  & out ~ (1 (a (0 y)))
+
+@add_nlit_b_nlit = (n (bp (a out)))
+  & n ~ $([+1] tag)
+  & out ~ (1 (a (tag bp)))
+
+// Mul: inspect the left operand, then the right operand inline.
+@mul_done = ((?((@mul_a_lit @mul_a_nlit) (ap (b out))) ap) (b out))
+
+@mul_a_lit = (x (b out))
+  & b ~ (?( (@mul_b_lit @mul_b_nlit) (bp (x out))) bp)
+
+@mul_a_nlit = (n (ap (b out)))
+  & n ~ $([+1] tag)
+  & b ~ (?( (@mul_nlit_b_lit @mul_nlit_b_nlit) (bp ((tag ap) out))) bp)
+
+@mul_b_lit = (y (x out))
+  & x ~ $([*] $(y z))
+  & out ~ (0 z)
+
+@mul_b_nlit = (n (bp (x out)))
+  & n ~ $([+1] tag)
+  & x ~ ?((@mul_x_zero @mul_x_nonzero) ((tag bp) out))
+
+@mul_x_zero = (b out)
+  & b ~ *
+  & out ~ (0 0)
+
+@mul_x_nonzero = (n (b out))
+  & n ~ ?((@mul_x_one @mul_x_other) (b out))
+
+@mul_x_one = (b out)
+  & out ~ b
+
+@mul_x_other = (k (b out))
+  & k ~ $([+] $(2 x))
+  & out ~ (2 ((0 x) b))
+
+@mul_nlit_b_lit = (y (a out))
+  & y ~ ?((@mul_y_zero @mul_y_nonzero) (a out))
+
+@mul_y_zero = (a out)
+  & a ~ *
+  & out ~ (0 0)
+
+@mul_y_nonzero = (n (a out))
+  & n ~ ?((@mul_y_one @mul_y_other) (a out))
+
+@mul_y_one = (a out)
+  & out ~ a
+
+@mul_y_other = (k (a out))
+  & k ~ $([+] $(2 y))
+  & out ~ (2 (a (0 y)))
+
+@mul_nlit_b_nlit = (n (bp (a out)))
+  & n ~ $([+1] tag)
+  & out ~ (2 (a (tag bp)))

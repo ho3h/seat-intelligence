@@ -1,0 +1,89 @@
+@prog = ((n (mnl cands)) out)
+  & n ~ {n1 n2}
+  & @init ~ (n1 labs)
+  & @run ~ (cands (labs (n2 out)))
+  & mnl ~ *
+
+@init = (n out)
+  & n ~ ?((@i0 @iS) out)
+
+@i0 = (0 *)
+
+@iS = (k out)
+  & k ~ {a b}
+  & @init ~ (a tail)
+  & out ~ (1 (b tail))
+
+@run = ((?((@runN @runC) (pl (labs (n out)))) pl) (labs (n out)))
+
+@runN = (* (labs (n out)))
+  & @finish ~ (labs (n out))
+
+@runC = (* ((cand tail) (labs (n out))))
+  & @step ~ (cand (labs newlabs))
+  & @run ~ (tail (newlabs (n out)))
+
+@step = ((u (v *)) (labs out))
+  & u ~ {ug uc}
+  & v ~ {vg vc}
+  & labs ~ {la lb}
+  & la ~ {l1 l2}
+  & @get ~ (l1 (ug lu))
+  & @get ~ (l2 (vg lv))
+  & lu ~ $([=] $(lv same))
+  & same ~ ?((@stepDiff @stepSame) (lb (uc (vc out))))
+
+@stepSame = (lb (* (* lb)))
+
+@stepDiff = (* (lb (uc (vc out))))
+  & @merge ~ (lb (uc (vc out)))
+
+@merge = (labs (u (v out)))
+  & labs ~ {la lb}
+  & la ~ {l1 l2}
+  & @get ~ (l1 (u lu))
+  & @get ~ (l2 (v lv))
+  & lu ~ {lu1 lu2}
+  & lv ~ {lv1 lv2}
+  & lu1 ~ $([<] $(lv1 less))
+  & less ~ ?((@mHigh @mLow) (lb (lu2 (lv2 out))))
+
+@mLow = (* (lb (lu (lv out))))
+  & @replace ~ (lb (lv (lu out)))
+
+@mHigh = (lb (lu (lv out)))
+  & @replace ~ (lb (lu (lv out)))
+
+@get = ((?((@getNil @getCons) (pl (idx out))) pl) (idx out))
+
+@getNil = (* (idx idx))
+
+@getCons = (* ((h t) (idx out)))
+  & idx ~ ?((@getZero @getSucc) (h (t out)))
+
+@getZero = (h (* h))
+
+@getSucc = (k (* (t out)))
+  & @get ~ (t (k out))
+
+@replace = ((?((@rpNil @rpCons) (pl (old (new out)))) pl) (old (new out)))
+
+@rpNil = (* (* (* (0 *))))
+
+@rpCons = (* ((h t) (old (new out))))
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@finish = (labs (n out))
+  & @conv ~ (labs (n out))
+
+@conv = ((?((@cvNil @cvCons) (pl (n out))) pl) (n out))
+
+@cvNil = (* (* (0 *)))
+
+@cvCons = (* ((h t) (n out)))
+  & n ~ {nr nc}
+  & @conv ~ (t (nr rest))
+  & nc ~ $([-] $(1 nm1))
+  & nm1 ~ $([-] $(h val))
+  & out ~ (1 (val rest))

@@ -1,0 +1,159 @@
+@prog = ((n edges) out)
+  & @go ~ (n (0 (edges ((0 *) out))))
+
+@go = (n (v (edges (rev out))))
+  & n ~ ?((@go_nil @go_cons) (v (edges (rev out))))
+
+@go_nil = (v (edges (rev out)))
+  & v ~ *
+  & edges ~ *
+  & @rgo ~ (rev ((0 *) out))
+
+@go_cons = (n (v (edges (rev out))))
+  & edges ~ {escan enext}
+  & v ~ {vscan vstep}
+  & rev ~ {rscan rnext}
+  & @scan ~ (escan (vscan (rscan ((0 *) used))))
+  & @find ~ (0 (used color))
+  & @advance ~ (color (n (vstep (enext (rnext out))))
+
+@advance = (color (n (v (edges (rev out)))))
+  & v ~ $([+1] vnext)
+  & @go ~ (n (vnext (edges (1 (color rev)))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (v (rev (used out))))) pl) (v (rev (used out))))
+
+@scan_nil = (pl (v (rev (used out))))
+  & pl ~ *
+  & v ~ *
+  & rev ~ *
+  & used ~ out
+
+@scan_cons = (* ((a b) (v (rev (used out)))))
+  & v ~ {vc vn}
+  & @edgecheck ~ (a (b (vc res)))
+  & @scan_dispatch ~ (res (tail (vn (rev (used out)))))
+
+@scan_dispatch = ((?((@sd_no @sd_yes) (neighbor (tail (v (rev (used out)))))) neighbor) (tail (v (rev (used out))))
+
+@sd_no = (neighbor (tail (v (rev (used out)))))
+  & neighbor ~ *
+  & @scan ~ (tail (v (rev (used out))))
+
+@sd_yes = (* (neighbor (tail (v (rev (used out))))))
+  & v ~ {vi vs}
+  & rev ~ {rg rn}
+  & vi ~ $([-] $(neighbor diff))
+  & diff ~ $([-] $(1 idx))
+  & @get ~ (idx (rg color))
+  & @scan ~ (tail (vs (rn ((1 (color used)) out))))
+
+@edgecheck = (a (b (v out)))
+  & a ~ {ae al}
+  & b ~ {bf bs}
+  & v ~ {veq vrem}
+  & vrem ~ {vl vrem2}
+  & vrem2 ~ {vr vt}
+  & ae ~ $([=] $(veq eq))
+  & eq ~ ?((@ec_a_no @ec_a_yes) (al (bf (bs (vl (vr (vt out)))))))
+
+@ec_a_no = (al (bf (bs (vl (vr (vt out))))))
+  & al ~ *
+  & vr ~ *
+  & vt ~ *
+  & bf ~ $([<] $(vl lt))
+  & lt ~ ?((@ec_a_no_lt @ec_a_yes_lt) (bs out))
+
+@ec_a_no_lt = (bs out)
+  & bs ~ *
+  & out ~ (0 *)
+
+@ec_a_yes_lt = (* (bs out))
+  & out ~ (1 bs)
+
+@ec_a_yes = (* (al (bf (bs (vl (vr (vt out)))))))
+  & bf ~ *
+  & vl ~ *
+  & bs ~ $([=] $(vr eqb))
+  & eqb ~ ?((@ec_b_no @ec_b_yes) (al (vt out)))
+
+@ec_b_no = (al (vt out))
+  & al ~ *
+  & vt ~ *
+  & out ~ (0 *)
+
+@ec_b_yes = (* (al (vt out)))
+  & @ec_al_lt ~ (al (vt out))
+
+@ec_al_lt = (al (v out))
+  & al ~ {ac ao}
+  & ac ~ $([<] $(v lt))
+  & lt ~ ?((@ec_al_no @ec_al_yes) (ao out))
+
+@ec_al_no = (a out)
+  & a ~ *
+  & out ~ (0 *)
+
+@ec_al_yes = (* (a out))
+  & out ~ (1 a)
+
+@get = (idx ((?((@get_nil @get_cons) (pl (idx out))) pl) out))
+
+@get_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (h (t out)))
+
+@get_zero = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@get_succ = (idx (h (t out)))
+  & h ~ *
+  & @get ~ (idx (t out))
+
+@find = (cand (used out))
+  & cand ~ {cm ck}
+  & used ~ {um ur}
+  & @mem ~ (cm (um present))
+  & present ~ ?((@find_free @find_used) (ck (ur out)))
+
+@find_free = (cand (used out))
+  & cand ~ out
+  & used ~ *
+
+@find_used = (* (cand (used out)))
+  & cand ~ $([+1] next)
+  & @find ~ (next (used out))
+
+@mem = (cand ((?((@mem_nil @mem_cons) (pl (cand out))) pl) out))
+
+@mem_nil = (pl (cand out))
+  & pl ~ *
+  & cand ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (cand out)))
+  & cand ~ {cm cr}
+  & h ~ $([=] $(cm eq))
+  & eq ~ ?((@mem_no @mem_yes) (cr (t out)))
+
+@mem_no = (cand (t out))
+  & @mem ~ (cand (t out))
+
+@mem_yes = (* (cand (t out)))
+  & cand ~ *
+  & t ~ *
+  & out ~ 1
+
+@rgo = ((?((@rnil @rcons) (pl (acc out))) pl) (acc out))
+
+@rnil = (pl (acc out))
+  & pl ~ *
+  & acc ~ out
+
+@rcons = (* ((h t) (acc out)))
+  & @rgo ~ (t (1 (h acc) out))

@@ -1,0 +1,58 @@
+// Process up to four sorted elements per recursive call.
+// Since xs is ascending, the first element greater than t ends the search.
+@prog = ((xs t) out)
+  & @ub ~ (xs (t (0 out)))
+
+@ub = ((?((@ub_nil @ub_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@ub_nil = (* (* (a a)))
+
+@ub_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub1 @ub_stop0) (tail (tr (acc out))))
+
+@ub_stop0 = (* (* (* (a a))))
+
+@ub1 = ((?((@ub1_nil @ub1_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@ub1_nil = (* (* (acc out)))
+  & acc ~ $([+1] out)
+
+@ub1_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub2 @ub1_stop) (tail (tr (acc out))))
+
+@ub1_stop = (* (* (* (acc out))))
+  & acc ~ $([+1] out)
+
+@ub2 = ((?((@ub2_nil @ub2_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@ub2_nil = (* (* (acc out)))
+  & acc ~ $([+2] out)
+
+@ub2_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub3 @ub2_stop) (tail (tr (acc out))))
+
+@ub2_stop = (* (* (* (acc out))))
+  & acc ~ $([+2] out)
+
+@ub3 = ((?((@ub3_nil @ub3_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@ub3_nil = (* (* (acc out)))
+  & acc ~ $([+3] out)
+
+@ub3_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([>] $(tc z))
+  & z ~ ?((@ub_finish @ub3_stop) (tail (tr (acc out))))
+
+@ub3_stop = (* (* (* (acc out))))
+  & acc ~ $([+3] out)
+
+@ub_finish = (tail (t (acc out)))
+  & acc ~ $([+4] acc2)
+  & @ub ~ (tail (t (acc2 out)))

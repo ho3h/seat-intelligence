@@ -1,0 +1,48 @@
+runs/exp/A_native_v1_pool.json
+{
+ "file": "runs/exp/A_native_v1_pool.scored.json",
+ "tasks": 428,
+ "n": 4,
+ "samples": 1712,
+ "outcomes": {
+  "fail": 416,
+  "static": 943,
+  "pass": 346,
+  "noblock": 7
+ },
+ "static_classes": {
+  "wire_once": 744,
+  "undef_ref": 22,
+  "wire_many": 141,
+  "other_static": 8,
+  "brackets": 28
+ },
+ "pass@1": 0.2021,
+ "pass@1_task_boot95": [
+  0.173,
+  0.231
+ ],
+ "pass@1_wilson95_samples(naive)": [
+  0.184,
+  0.222
+ ],
+ "pass@2": 0.285,
+ "pass@4": 0.3575,
+ "static_filter_best_of_4": 0.2827,
+ "static_filter_best_of_n_wilson95": [
+  0.242,
+  0.327
+ ],
+ "pass_given_static_clean": 0.4541,
+ "static_clean_rate": 0.4451,
+ "per_family_pass@1": {
+  "arith": 0.076,
+  "pipeline": 0.125,
+  "position": 0.365,
+  "rangefn": 0.295,
+  "reduce": 0.193,
+  "scan": 0.469,
+  "sortlike": 0.023,
+  "treefold": 0.427
+ }
+}

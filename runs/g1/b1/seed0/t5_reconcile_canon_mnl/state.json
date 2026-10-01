@@ -1,0 +1,59 @@
+{
+ "pid": "t5_reconcile_canon_mnl",
+ "arm": "b1",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1486,
+    "itrs_median_big": 5407520,
+    "itrs_max": 54898721,
+    "depth_median_big": 576055,
+    "depth_max": 6478226
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 3690,
+    "itrs_median_big": 5081965,
+    "itrs_max": 51592287,
+    "depth_median_big": 582919,
+    "depth_max": 6495457
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 12581,
+    "itrs_median_big": 4779874,
+    "itrs_max": 24090285,
+    "depth_median_big": 51774,
+    "depth_max": 313307
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 111823,
+ "best": {
+  "itrs_median_small": 12581,
+  "itrs_median_big": 4779874,
+  "itrs_max": 24090285,
+  "depth_median_big": 51774,
+  "depth_max": 313307
+ },
+ "usd": 0.024799255,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

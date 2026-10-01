@@ -1,0 +1,31 @@
+@prog = ((x xs) out)
+  & @rank ~ (xs (x out))
+
+@rank = (lv1 (x out))
+  & @rank_cons_lw ~ (lv1 (x out))
+
+@rank_nil = (* (* 0))
+
+@rank_cons = (* (($([<] $(x_cmp z)) t) ({x_cmp x_rec} out)))
+  & @rank_cons_lw ~ (t (x_rec $([+] $(z out))))
+
+@rank_cons_lw = (ls90 (q10 q11))
+  & ls90 ~ (g73 (e57 (g74 (e58 (g75 (e59 (g76 (e60 (g77 (e61 (g78 (e62 (g79 (e63 (g80 (e64 (g81 (e65 (g82 (e66 (g83 (e67 (g84 (e68 (g85 (e69 (g86 (e70 (g87 (e71 (g88 (e72 tk89))))))))))))))))))))))))))))))))
+  & g73 ~ ?((@rank_nil @rank_cons_la) ((e57 (q13 q14)) (q10 q11)))
+  & g74 ~ ?((@rank_nil @rank_cons_la) ((e58 (q16 q17)) (q13 q14)))
+  & g75 ~ ?((@rank_nil @rank_cons_la) ((e59 (q19 q20)) (q16 q17)))
+  & g76 ~ ?((@rank_nil @rank_cons_la) ((e60 (q22 q23)) (q19 q20)))
+  & g77 ~ ?((@rank_nil @rank_cons_la) ((e61 (q25 q26)) (q22 q23)))
+  & g78 ~ ?((@rank_nil @rank_cons_la) ((e62 (q28 q29)) (q25 q26)))
+  & g79 ~ ?((@rank_nil @rank_cons_la) ((e63 (q31 q32)) (q28 q29)))
+  & g80 ~ ?((@rank_nil @rank_cons_la) ((e64 (q34 q35)) (q31 q32)))
+  & g81 ~ ?((@rank_nil @rank_cons_la) ((e65 (q37 q38)) (q34 q35)))
+  & g82 ~ ?((@rank_nil @rank_cons_la) ((e66 (q40 q41)) (q37 q38)))
+  & g83 ~ ?((@rank_nil @rank_cons_la) ((e67 (q43 q44)) (q40 q41)))
+  & g84 ~ ?((@rank_nil @rank_cons_la) ((e68 (q46 q47)) (q43 q44)))
+  & g85 ~ ?((@rank_nil @rank_cons_la) ((e69 (q49 q50)) (q46 q47)))
+  & g86 ~ ?((@rank_nil @rank_cons_la) ((e70 (q52 q53)) (q49 q50)))
+  & g87 ~ ?((@rank_nil @rank_cons_la) ((e71 (q55 q56)) (q52 q53)))
+  & g88 ~ ?((@rank_nil @rank_cons) ((e72 tk89) (q55 q56)))
+
+@rank_cons_la = (* (($([<] $(x_cmp z)) (x_rec $([+] $(z out)))) ({x_cmp x_rec} out)))

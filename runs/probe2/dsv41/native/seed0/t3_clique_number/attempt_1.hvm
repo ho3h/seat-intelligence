@@ -1,0 +1,135 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {n1 n2}
+  & @build_adj ~ (n1 (edges adj))
+  & @make_vertices ~ (n2 verts)
+  & @mc ~ (adj (verts (0 (0 out))))
+
+@build_adj = (n (edges out))
+  & @make_list ~ (n adj)
+  & @process_edges ~ (edges (adj out))
+
+@make_list = (n out)
+  & n ~ ?((@make_list_zero @make_list_succ) out)
+
+@make_list_zero = (0 *)
+
+@make_list_succ = (nm1 out)
+  & @make_list ~ (nm1 tail)
+  & out ~ (1 ((0 *) tail))
+
+@process_edges = ((?((@pe_nil @pe_cons) (pl (adj out))) pl) (adj out))
+
+@pe_nil = (pl (adj out))
+  & pl ~ *
+  & out ~ adj
+
+@pe_cons = (* (((u v) t) (adj out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @add_at ~ (adj (u1 (v1 adj1)))
+  & @add_at ~ (adj1 (v2 (u2 adj2)))
+  & @process_edges ~ (t (adj2 out))
+
+@add_at = (lst (idx (val out)))
+  & idx ~ ?((@add_at_zero @add_at_succ) (lst (val out)))
+
+@add_at_zero = ((1 (h t)) (val out))
+  & out ~ (1 ((1 (val h)) t))
+
+@add_at_succ = (idxm1 ((1 (h t)) (val out)))
+  & @add_at ~ (t (idxm1 (val newtail)))
+  & out ~ (1 (h newtail))
+
+@make_vertices = (n out)
+  & n ~ ?((@mv_zero @mv_succ) out)
+
+@mv_zero = (0 *)
+
+@mv_succ = (x out)
+  & x ~ {xa xb}
+  & @make_vertices ~ (xa tail)
+  & out ~ (1 (xb tail))
+
+@mc = (adj ((?((@mc_nil @mc_cons) (pl (curr (best out)))) pl) (curr (best out))))
+
+@mc_nil = (pl (curr (best out)))
+  & pl ~ *
+  & @max ~ (best (curr out))
+
+@mc_cons = (* ((v rest) (curr (best out))))
+  & adj ~ {adj_get adj_rest}
+  & adj_rest ~ {adj_inc adj_exc}
+  & @get ~ (adj_get (v neigh))
+  & rest ~ {rest_inc rest_exc}
+  & curr ~ {curr_inc curr_exc}
+  & @intersect ~ (rest_inc (neigh newcands))
+  & curr_inc ~ $([+1] newcurr)
+  & @mc ~ (adj_inc (newcands (newcurr (best best1))))
+  & @mc ~ (adj_exc (rest_exc (curr_exc (best1 out))))
+
+@get = (lst (idx out))
+  & idx ~ ?((@get_zero @get_succ) (lst out))
+
+@get_zero = ((1 (h t)) out)
+  & t ~ *
+  & out ~ h
+
+@get_succ = (idxm1 ((1 (h t)) out))
+  & h ~ *
+  & @get ~ (t (idxm1 out))
+
+@intersect = ((?((@inter_nil @inter_cons) (pl (neigh out))) pl) (neigh out))
+
+@inter_nil = (pl (neigh out))
+  & pl ~ *
+  & neigh ~ *
+  & out ~ (0 *)
+
+@inter_cons = (* ((u t) (neigh out)))
+  & u ~ {u_mem u_ctx}
+  & neigh ~ {neigh1 neigh2}
+  & @mem ~ (u_mem (neigh1 res))
+  & res ~ ?((@inter_drop @inter_keep) (t (neigh2 (u_ctx out))))
+
+@inter_drop = (t (neigh (u out)))
+  & u ~ *
+  & @intersect ~ (t (neigh out))
+
+@inter_keep = (* (t (neigh (u out))))
+  & @intersect ~ (t (neigh tail))
+  & out ~ (1 (u tail))
+
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x_mem x_ctx}
+  & h ~ $([=] $(x_mem eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (x_ctx out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@max = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 c))
+  & c ~ ?((@max_false @max_true) (a2 (b2 out)))
+
+@max_false = (a (b out))
+  & b ~ *
+  & out ~ a
+
+@max_true = (0 (a (b out)))
+  & a ~ *
+  & out ~ b

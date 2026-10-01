@@ -1,0 +1,76 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@merge = ((@merge__C8 a) a)
+
+@merge__C0 = (b (c (a (d f))))
+  & @List/Cons ~ (a (e f))
+  & @merge_x ~ (b (c (d e)))
+
+@merge__C1 = (* (a (b (* (c e)))))
+  & @List/Cons ~ (a (d e))
+  & @merge ~ (b (c d))
+
+@merge__C2 = ({$([=] $(a ?((@merge__C0 @merge__C1) (b (c (d e)))))) b} (c ({a d} e)))
+
+@merge__C3 = (* (a (b (c (d f)))))
+  & @List/Cons ~ (a (e f))
+  & @merge_y ~ (b (c (d e)))
+
+@merge__C4 = a
+  & @List/Cons ~ a
+
+@merge__C5 = (* ({a d} (e ({$([<] $(a ?((@merge__C2 @merge__C3) (b (c (d (e f))))))) b} (c f)))))
+
+@merge__C6 = (?((@merge__C4 @merge__C5) a) a)
+
+@merge__C7 = (* (a (b ((@merge__C6 (a (b c))) c))))
+
+@merge__C8 = (?(((a a) @merge__C7) b) b)
+
+@merge_x = (a (b ((@merge_x__C6 (a (b c))) c)))
+
+@merge_x__C0 = (b (c (a (d f))))
+  & @List/Cons ~ (a (e f))
+  & @merge_x ~ (b (c (d e)))
+
+@merge_x__C1 = (* (a (b (* (c e)))))
+  & @List/Cons ~ (a (d e))
+  & @merge ~ (b (c d))
+
+@merge_x__C2 = ({$([=] $(a ?((@merge_x__C0 @merge_x__C1) (b (c (d e)))))) b} (c ({a d} e)))
+
+@merge_x__C3 = (* (a (b (c (d f)))))
+  & @List/Cons ~ (a (e f))
+  & @merge_y ~ (b (c (d e)))
+
+@merge_x__C4__M_merge_y__C4 = a
+  & @List/Cons ~ a
+
+@merge_x__C5 = (* ({a d} (e ({$([<] $(a ?((@merge_x__C2 @merge_x__C3) (b (c (d (e f))))))) b} (c f)))))
+
+@merge_x__C6 = (?((@merge_x__C4__M_merge_y__C4 @merge_x__C5) a) a)
+
+@merge_y = ((@merge_y__C6 a) a)
+
+@merge_y__C0 = (a (d (b (c f))))
+  & @List/Cons ~ (a (e f))
+  & @merge_x ~ (b (c (d e)))
+
+@merge_y__C1 = (* (* (c (a (b e)))))
+  & @List/Cons ~ (a (d e))
+  & @merge ~ (b (c d))
+
+@merge_y__C2 = ({a b} (c ({$([=] $(a ?((@merge_y__C0 @merge_y__C1) (b (c (d e)))))) d} e)))
+
+@merge_y__C3 = (* (c (d (a (b f)))))
+  & @List/Cons ~ (a (e f))
+  & @merge_y ~ (b (c (d e)))
+
+@merge_y__C5 = (* ({$([<] $(a ?((@merge_y__C2 @merge_y__C3) (b (c (d (e f))))))) d} (e ({a b} (c f)))))
+
+@merge_y__C6 = (?((@merge_x__C4__M_merge_y__C4 @merge_y__C5) a) a)
+
+@prog = ((a b) c)
+  & @merge ~ (a (b c))
+
+

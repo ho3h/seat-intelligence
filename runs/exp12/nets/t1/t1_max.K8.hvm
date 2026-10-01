@@ -1,0 +1,56 @@
+@prog = (lv1 out)
+  & @first_cons_lw ~ (lv1 out)
+
+@first_nil = (* 0)
+
+@first_cons = (* ((h t) out))
+  & @max_cons_lw ~ (t (h out))
+
+@max = (lv2 (acc out))
+  & @max_cons_lw ~ (lv2 (acc out))
+
+@max_nil = (* (a a))
+
+@max_cons = (* (({$([>] $(acc_cmp z11)) h_ctx} t) ({acc_cmp acc_ctx} out)))
+  & z11 ~ ?((@max_keep_hz @max_take_hz) (h_ctx (xw28 (acc_ctx out))))
+  & @max_cons_lw ~ (t xw28)
+
+@max_keep = (h (t (acc out)))
+  & h ~ *
+  & @max ~ (t (acc out))
+
+@max_take = (* (h (t (acc out))))
+  & acc ~ *
+  & @max ~ (t (h out))
+
+@first_cons_lw = (ls71 q32)
+  & ls71 ~ (g62 (e54 (g63 (e55 (g64 (e56 (g65 (e57 (g66 (e58 (g67 (e59 (g68 (e60 (g69 (e61 tk70))))))))))))))))
+  & g62 ~ ?((@first_nil @first_cons_la) ((e54 (q34 q35)) q32))
+  & g63 ~ ?((@max_nil @max_cons_la) ((e55 (q37 q38)) (q34 q35)))
+  & g64 ~ ?((@max_nil @max_cons_la) ((e56 (q40 q41)) (q37 q38)))
+  & g65 ~ ?((@max_nil @max_cons_la) ((e57 (q43 q44)) (q40 q41)))
+  & g66 ~ ?((@max_nil @max_cons_la) ((e58 (q46 q47)) (q43 q44)))
+  & g67 ~ ?((@max_nil @max_cons_la) ((e59 (q49 q50)) (q46 q47)))
+  & g68 ~ ?((@max_nil @max_cons_la) ((e60 (q52 q53)) (q49 q50)))
+  & g69 ~ ?((@max_nil @max_cons) ((e61 tk70) (q52 q53)))
+
+@max_cons_lw = (ls113 (q73 q74))
+  & ls113 ~ (g104 (e96 (g105 (e97 (g106 (e98 (g107 (e99 (g108 (e100 (g109 (e101 (g110 (e102 (g111 (e103 tk112))))))))))))))))
+  & g104 ~ ?((@max_nil @max_cons_la) ((e96 (q76 q77)) (q73 q74)))
+  & g105 ~ ?((@max_nil @max_cons_la) ((e97 (q79 q80)) (q76 q77)))
+  & g106 ~ ?((@max_nil @max_cons_la) ((e98 (q82 q83)) (q79 q80)))
+  & g107 ~ ?((@max_nil @max_cons_la) ((e99 (q85 q86)) (q82 q83)))
+  & g108 ~ ?((@max_nil @max_cons_la) ((e100 (q88 q89)) (q85 q86)))
+  & g109 ~ ?((@max_nil @max_cons_la) ((e101 (q91 q92)) (q88 q89)))
+  & g110 ~ ?((@max_nil @max_cons_la) ((e102 (q94 q95)) (q91 q92)))
+  & g111 ~ ?((@max_nil @max_cons) ((e103 tk112) (q94 q95)))
+
+@first_cons_la = (* ((h (h out)) out))
+
+@max_keep_hz = (* (hw19 (q14 q15)))
+  & hw19 ~ (q14 q15)
+
+@max_take_hz = (* (q20 (hw27 (* q23))))
+  & hw27 ~ (q20 q23)
+
+@max_cons_la = (* (({$([>] $(acc_cmp ?((@max_keep_hz @max_take_hz) (h_ctx (xw28 (acc_ctx out)))))) h_ctx} xw28) ({acc_cmp acc_ctx} out)))

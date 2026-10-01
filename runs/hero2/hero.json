@@ -1,0 +1,185 @@
+{
+ "H1 group ; filter  vs  filter ; group (should commute)": {
+  "proved": true,
+  "tier": "S",
+  "reason": "canonical forms coincide",
+  "agree": 300,
+  "disagree": 0,
+  "stats": {
+   "itrsA": 4,
+   "itrsB": 4,
+   "residA": {
+    "F": 2,
+    "C": 3,
+    "S": 1,
+    "R": 2
+   },
+   "residB": {
+    "F": 2,
+    "C": 3,
+    "S": 1,
+    "R": 2
+   },
+   "defs": 12,
+   "classes": 5,
+   "def_fuel_fallbacks": 0,
+   "code_sha256": "5a72c70c7bf14e87"
+  }
+ },
+ "H2 three independent stages in a different order (should commute)": {
+  "proved": true,
+  "tier": "D",
+  "reason": "canonical forms coincide",
+  "agree": 300,
+  "disagree": 0,
+  "stats": {
+   "itrsA": 4,
+   "itrsB": 4,
+   "residA": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "residB": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "defs": 12,
+   "classes": 5,
+   "def_fuel_fallbacks": 0,
+   "code_sha256": "77ace48f8bebcbbd"
+  }
+ },
+ "H3 the filter reads the group key (should NOT commute)": {
+  "proved": false,
+  "tier": null,
+  "reason": "residual nets differ (A 12 nodes, B 12 nodes)",
+  "agree": 73,
+  "disagree": 227,
+  "stats": {
+   "itrsA": 4,
+   "itrsB": 4,
+   "residA": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "residB": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "defs": 12,
+   "classes": 9,
+   "def_fuel_fallbacks": 0
+  }
+ },
+ "H4 the group key is made from a company that another stage changes (should NOT commute)": {
+  "proved": false,
+  "tier": null,
+  "reason": "residual nets differ (A 12 nodes, B 12 nodes)",
+  "agree": 39,
+  "disagree": 261,
+  "stats": {
+   "itrsA": 4,
+   "itrsB": 4,
+   "residA": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "residB": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "defs": 12,
+   "classes": 9,
+   "def_fuel_fallbacks": 0
+  }
+ },
+ "H5 two filters, other order (equal, but needs commutativity of *, which normalization does not know)": {
+  "proved": false,
+  "tier": null,
+  "reason": "residual nets differ (A 12 nodes, B 12 nodes)",
+  "agree": 300,
+  "disagree": 0,
+  "stats": {
+   "itrsA": 4,
+   "itrsB": 4,
+   "residA": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "residB": {
+    "F": 2,
+    "C": 5,
+    "S": 1,
+    "R": 1,
+    "E": 2,
+    "N": 1
+   },
+   "defs": 12,
+   "classes": 9,
+   "def_fuel_fallbacks": 0
+  }
+ },
+ "H6 as H1 but one list pass per stage (equal, but needs loop fusion, out of reach)": {
+  "proved": false,
+  "tier": null,
+  "reason": "residual nets differ (A 32 nodes, B 32 nodes)",
+  "agree": 300,
+  "disagree": 0,
+  "stats": {
+   "itrsA": 8,
+   "itrsB": 8,
+   "residA": {
+    "F": 2,
+    "C": 15,
+    "S": 3,
+    "R": 3,
+    "E": 6,
+    "N": 3
+   },
+   "residB": {
+    "F": 2,
+    "C": 15,
+    "S": 3,
+    "R": 3,
+    "E": 6,
+    "N": 3
+   },
+   "defs": 24,
+   "classes": 11,
+   "def_fuel_fallbacks": 0
+  }
+ },
+ "real_chart": {
+  "n": 34,
+  "same": true,
+  "kept": 26
+ }
+}

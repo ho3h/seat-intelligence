@@ -1,0 +1,57 @@
+@prog = (a b)
+  & @scan ~ (a (0 (0 b)))
+
+@scan = ((@scan__C21 a) a)
+
+@scan__C0 = ($([+0x0000001] a) (b (a b)))
+
+@scan__C1 = (* (a ($([:-0x0000001] b) (a b))))
+
+@scan__C10 = (a ({$([<0x0000001] ?((@scan__C6 @scan__C7) (a (b c)))) b} c))
+
+@scan__C11 = (* (a ({$([<0x0000000] ?((@scan__C8 @scan__C9) (a (b c)))) b} c)))
+
+@scan__C12 = (b (c (a d)))
+  & @scan ~ (a (b (c d)))
+
+@scan__C13 = (* (b ($([+0x0000002] c) (a d))))
+  & @scan ~ (a (b (c d)))
+
+@scan__C14 = (a (b ($([=0x0000028] ?((@scan__C10 @scan__C11) (a (b c)))) c)))
+
+@scan__C15 = (* (a (b ($([=0x0000028] ?((@scan__C12 @scan__C13) (a (b c)))) c))))
+
+@scan__C16 = (a (b ($([=0x0000028] ?((@scan__C2 @scan__C3) (a (b c)))) c)))
+
+@scan__C17 = (* (c (d (a (b ($([=0x0000028] ?((@scan__C14 @scan__C15) (a (b (c (d e)))))) e))))))
+
+@scan__C18 = (?((@scan__C16 @scan__C17) a) a)
+
+@scan__C19 = (a (b (a b)))
+
+@scan__C2 = (a ({$([<0x0000000] ?((@scan__C0 @scan__C1) (a (b c)))) b} c))
+
+@scan__C20 = (* (c ((@scan__C18 (a (b (c d)))) (a (b d)))))
+
+@scan__C21 = (?((@scan__C19 @scan__C20) a) a)
+
+@scan__C3 = (* (a ($([+0x0000001] b) (a b))))
+
+@scan__C4 = ($([+0x0000002] b) (a c))
+  & @scan ~ (a (b (0 c)))
+
+@scan__C5 = (* ($([+0x0000001] b) (a c)))
+  & @scan ~ (a (b (0 c)))
+
+@scan__C6 = (a ($([=0x0000001] ?((@scan__C4 @scan__C5) (a b))) b))
+
+@scan__C7 = (* (b ($([:-0x0000002] c) (a d))))
+  & @scan ~ (a (b (c d)))
+
+@scan__C8 = ($([+0x0000001] b) ($([+0x0000001] c) (a d)))
+  & @scan ~ (a (b (c d)))
+
+@scan__C9 = (* (b (c (a d))))
+  & @scan ~ (a (b (c d)))
+
+

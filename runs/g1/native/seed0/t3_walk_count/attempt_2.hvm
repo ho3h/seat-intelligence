@@ -1,0 +1,123 @@
+// Validate the endpoints before constructing the dynamic-programming vector.
+@prog = (input out)
+  & @check ~ (input out)
+
+@check = (n (s (t (k (edges out)))))
+  & n ~ {n_s n_rest}
+  & n_rest ~ {n_t n_init}
+  & s ~ {s_cmp s_keep}
+  & t ~ {t_cmp t_keep}
+  & s_cmp ~ $([<] $(n_s b1))
+  & t_cmp ~ $([<] $(n_t b2))
+  & b1 ~ $([&] $(b2 good))
+  & good ~ ?((@bad @good) (n_init (s_keep (t_keep (k (edges out))))))
+
+@bad = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@good = (n (s (t (k (edges out)))))
+  & n ~ {n_vec n_steps}
+  & @zeros ~ (n_vec vec)
+  & @set ~ (vec (s (1 curr)))
+  & @steps ~ (k (n_steps (t (edges (curr out))))
+
+// Build a list of n zeroes.
+@zeros = (n out)
+  & n ~ ?((@zeros_zero @zeros_succ) out)
+
+@zeros_zero = out
+  & out ~ (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Set vec[idx] to val.
+@set = (vec (idx (val out)))
+  & vec ~ (tag payload)
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (val out))))
+
+@set_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & @set ~ (tail (idx (val newtail)))
+  & out ~ (1 (head newtail))
+
+// Read vec[idx], returning zero if idx is beyond the list.
+@lookup = (vec (idx out))
+  & vec ~ (tag payload)
+  & tag ~ ?((@lookup_nil @lookup_cons) (payload (idx out)))
+
+@lookup_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@lookup_zero @lookup_succ) (head (tail out)))
+
+@lookup_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@lookup_succ = (idx (head (tail out)))
+  & head ~ *
+  & @lookup ~ (tail (idx out))
+
+// For each edge u -> v, add old[u] into acc[v] when v is in range.
+@scan = (edges (old (acc (n out))))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (payload (old (acc (n out))))
+
+@scan_nil = (payload (old (acc (n out))))
+  & payload ~ *
+  & old ~ *
+  & n ~ *
+  & out ~ acc
+
+@scan_cons = (* ((edge tail) (old (acc (n out)))))
+  & edge ~ (u v)
+  & n ~ {n_cmp n_next}
+  & v ~ {v_cmp v_set}
+  & v_cmp ~ $([<] $(n_cmp valid))
+  & valid ~ ?((@scan_invalid @scan_valid) (u (v_set (tail (old (acc (n_next out))))))
+
+@scan_invalid = (u (v (tail (old (acc (n out))))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (old (acc (n out))))
+
+@scan_valid = (* (u (v (tail (old (acc (n out)))))))
+  & old ~ {old_lookup old_next}
+  & acc ~ {acc_lookup acc_set}
+  & @lookup ~ (old_lookup (u oldval))
+  & @lookup ~ (acc_lookup (v accval))
+  & accval ~ $([+] $(oldval sum))
+  & @set ~ (acc_set (v (sum next)))
+  & @scan ~ (tail (old_next (next (n out))))
+
+// Perform rem propagation rounds, then read the target's count.
+@steps = (rem (n (t (edges (curr out)))))
+  & rem ~ ?((@steps_zero @steps_succ) (n (t (edges (curr out)))))
+
+@steps_zero = (n (t (edges (curr out))))
+  & n ~ *
+  & edges ~ *
+  & @lookup ~ (curr (t out))
+
+@steps_succ = (rem (n (t (edges (curr out)))))
+  & n ~ {n_zero n_rest}
+  & n_rest ~ {n_scan n_next}
+  & edges ~ {edges_scan edges_next}
+  & @zeros ~ (n_zero zeroes)
+  & @scan ~ (edges_scan (curr (zeroes (n_scan next))))
+  & @steps ~ (rem (n_next (t (edges_next (next out)))))

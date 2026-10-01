@@ -1,0 +1,50 @@
+@prog = (input out)
+  & input ~ (i xs)
+  & @nth ~ (i (xs out))
+
+@nth = (i (xs out))
+  & i ~ ?((@nth_zero @nth_more) (xs out))
+
+@nth_zero = (xs out)
+  & @nth_second ~ (xs out)
+
+@nth_more = (i (xs out))
+  & xs ~ (?((@nth_nil @nth_first) (pl (i out))) pl)
+
+@nth_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@nth_first = (d (pl (i out)))
+  & d ~ *
+  & pl ~ (h t)
+  & h ~ *
+  & i ~ ?((@nth_second @nth_third) (t out))
+
+@nth_second = (xs out)
+  & xs ~ (?((@nth_end @nth_head) (pl out)) pl)
+
+@nth_end = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@nth_head = (d (pl out))
+  & d ~ *
+  & pl ~ (h t)
+  & t ~ *
+  & out ~ h
+
+@nth_third = (d (xs out))
+  & xs ~ (?((@nth_end3 @nth_skip) (pl (d out))) pl)
+
+@nth_end3 = (pl (d out))
+  & pl ~ *
+  & d ~ *
+  & out ~ 0
+
+@nth_skip = (n (pl (d out)))
+  & n ~ *
+  & pl ~ (h t)
+  & h ~ *
+  & @nth ~ (d (t out))

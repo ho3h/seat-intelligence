@@ -1,0 +1,46 @@
+runs/exp/F1_probe.json
+{
+ "file": "runs/exp/F1_probe.scored.json",
+ "tasks": 60,
+ "n": 4,
+ "samples": 240,
+ "outcomes": {
+  "pass": 57,
+  "fail": 77,
+  "static": 106
+ },
+ "static_classes": {
+  "wire_once": 79,
+  "wire_many": 13,
+  "brackets": 2,
+  "undef_ref": 12
+ },
+ "pass@1": 0.2375,
+ "pass@1_task_boot95": [
+  0.154,
+  0.325
+ ],
+ "pass@1_wilson95_samples(naive)": [
+  0.188,
+  0.295
+ ],
+ "pass@2": 0.3167,
+ "pass@4": 0.4,
+ "static_filter_best_of_4": 0.3333,
+ "static_filter_best_of_n_wilson95": [
+  0.227,
+  0.459
+ ],
+ "pass_given_static_clean": 0.4254,
+ "static_clean_rate": 0.5583,
+ "per_family_pass@1": {
+  "arith": 0.0,
+  "pipeline": 0.229,
+  "position": 0.531,
+  "rangefn": 0.15,
+  "reduce": 0.229,
+  "scan": 0.125,
+  "sortlike": 0.0,
+  "treefold": 0.458
+ }
+}

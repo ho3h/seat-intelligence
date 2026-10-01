@@ -1,0 +1,80 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@count_value = ((@count_value__C3 a) a)
+
+@count_value__C0 = (b (c (a d)))
+  & @count_value ~ (a (b (c d)))
+
+@count_value__C1 = (* (b ($([+0x0000001] c) (a d))))
+  & @count_value ~ (a (b (c d)))
+
+@count_value__C2 = (* ($([=] $(a ?((@count_value__C0 @count_value__C1) (b (c (d e)))))) (d ({a b} (c e)))))
+
+@count_value__C3 = (?(((* (a a)) @count_value__C2) b) b)
+
+@get_at = ((@get_at__C2 a) a)
+
+@get_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_at ~ (a (b c))
+
+@get_at__C1 = (* (c (d ({$([=0x0000000] ?((@get_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@largest_cluster = ((@largest_cluster__C3 a) a)
+
+@largest_cluster__C0 = (b (a (* c)))
+  & @largest_cluster ~ (a (b c))
+
+@largest_cluster__C1 = (* (* a))
+  & @largest_cluster ~ a
+
+@largest_cluster__C2 = (* ({a d} ({g b} ({e f} i))))
+  & @count_value ~ (c (d (0 {$([>] $(e ?((@largest_cluster__C0 @largest_cluster__C1) (f (g (h i)))))) h})))
+  & @List/Cons ~ (a (b c))
+
+@largest_cluster__C3 = (?(((a a) @largest_cluster__C2) b) b)
+
+@make_labels = ({a b} ({$([=] $(a ?((@make_labels__C0 (* (* (* @List/Nil)))) (b (c d))))) c} d))
+
+@make_labels__C0 = (b ({a $([+0x0000001] c)} e))
+  & @List/Cons ~ (a (d e))
+  & @make_labels ~ (b (c d))
+
+@merge_edges = ((@merge_edges__C3 a) a)
+
+@merge_edges__C0 = (b (a (d (c f))))
+  & @merge_edges ~ (a (e f))
+  & @replace_all ~ (b (c (d e)))
+
+@merge_edges__C1 = (* (b (a (* (* c)))))
+  & @merge_edges ~ (a (b c))
+
+@merge_edges__C2 = (* ((b d) (g ({f {c a}} j))))
+  & @get_at ~ (c (d {e i}))
+  & @get_at ~ (a (b {$([=] $(e ?((@merge_edges__C0 @merge_edges__C1) (f (g (h (i j))))))) h}))
+
+@merge_edges__C3 = (?(((a a) @merge_edges__C2) b) b)
+
+@prog = ((b a) e)
+  & @largest_cluster ~ (d (0 e))
+  & @merge_edges ~ (a (c d))
+  & @make_labels ~ (b (0 c))
+
+@replace_all = ((@replace_all__C3 a) a)
+
+@replace_all__C0 = (c (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @replace_all ~ (b (c (d e)))
+
+@replace_all__C1 = (* (c ({a d} (* (b f)))))
+  & @List/Cons ~ (a (e f))
+  & @replace_all ~ (b (c (d e)))
+
+@replace_all__C2 = (* ({$([=] $(a ?((@replace_all__C0 @replace_all__C1) (b (c (d (e f))))))) d} (e ({a b} (c f)))))
+
+@replace_all__C3 = (?(((* (* @List/Nil)) @replace_all__C2) a) a)
+
+

@@ -1,0 +1,22 @@
+// Sum pairs of list elements before combining each pair with the
+// recursively computed remainder.
+@prog = (l out)
+  & @sum ~ (l out)
+
+@sum = ((?((@sum_nil @sum_first) (pl out)) pl) out)
+
+@sum_nil = (* (pl out))
+  & pl ~ *
+  & out ~ 0
+
+@sum_first = (* ((h t) out))
+  & t ~ (?( (@sum_one @sum_two) (tp (h out))) tp)
+
+@sum_one = (* (tp (h out)))
+  & tp ~ *
+  & h ~ out
+
+@sum_two = (* ((h2 t2) (h out)))
+  & @sum ~ (t2 rem)
+  & h ~ $([+] $(h2 pair))
+  & pair ~ $([+] $(rem out))

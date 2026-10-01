@@ -1,0 +1,130 @@
+@prog = ((n edges) out)
+  & @copy_edges ~ (edges ecopy)
+  & @make ~ (n (0 verts))
+  & @loop ~ (verts ((0 *) (0 (ecopy (0 out)))))
+
+@make = (?((@make_nil @make_succ) (d out)) (d out))
+
+@make_nil = (* out)
+  & out ~ (0 *)
+
+@make_succ = (pred (d out))
+  & d ~ *
+  & pred ~ {pn ph}
+  & @make ~ (pn (0 tail))
+  & out ~ (1 (ph tail))
+
+@copy_edges = ((?((@ce_nil @ce_cons) (p out)) p) out)
+
+@ce_nil = (* out)
+  & out ~ (0 *)
+
+@ce_cons = (* ((edge tail) out))
+  & edge ~ (u v)
+  & @copy_edges ~ (tail tailcopy)
+  & out ~ (1 ((u v) tailcopy))
+
+@loop = ((?((@loop_nil @loop_cons) (p (chosen (size (edges (best out)))))) p) (chosen (size (edges (best out))))
+
+@loop_nil = (* (chosen (size (edges (best out)))))
+  & chosen ~ *
+  & edges ~ *
+  & size ~ {szcmp szctx}
+  & best ~ {bcmp bctx}
+  & szcmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@takebest @takesize) (szctx (bctx out)))
+
+@takebest = (* (best out))
+  & best ~ out
+
+@takesize = (* (size (* out)))
+  & size ~ out
+
+@loop_cons = (* ((v rest) (chosen (size (edges (best out))))))
+  & chosen ~ {chcheck chctx}
+  & edges ~ {echeck ectx}
+  & v ~ {vcheck vctx}
+  & @alladj ~ (chcheck (vcheck (echeck ok)))
+  & ok ~ ?((@loop_no @loop_yes) (vctx (rest (chctx (size (ectx (best out)))))))
+
+@loop_no = (* (rest (chosen (size (edges (best out))))))
+  & @loop ~ (rest (chosen (size (edges (best out)))))
+
+@loop_yes = (* (v (rest (chosen (size (edges (best out)))))))
+  & rest ~ {r_ex r_keep0}
+  & chosen ~ {c_ex c_inc}
+  & size ~ {s_ex s_inc}
+  & edges ~ {e_ex e_inc}
+  & @loop ~ (r_ex (c_ex (s_ex (e_ex (best b1)))))
+  & r_keep0 ~ {r_len r_keep}
+  & @len ~ (r_len len)
+  & s_inc ~ $([+1] splus)
+  & splus ~ {s_cmp s_keep}
+  & s_cmp ~ $([+] $(len upper))
+  & b1 ~ {bcmp bctx}
+  & upper ~ $([>] $(bcmp can))
+  & can ~ ?((@loop_skip @loop_do) (v (r_keep (c_inc (s_keep (e_inc (bctx out)))))))
+
+@loop_skip = (v (rest (chosen (size (edges (best out)))))
+  & v ~ *
+  & rest ~ *
+  & chosen ~ *
+  & size ~ *
+  & edges ~ *
+  & best ~ out
+
+@loop_do = (v (rest (chosen (size (edges (best out)))))
+  & @loop ~ (rest ((1 (v chosen)) (size (edges (best out)))))
+
+@len = ((?((@len_nil @len_cons) (p out)) p) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t n1)
+  & n1 ~ $([+1] out)
+
+@alladj = ((?((@aa_nil @aa_cons) (p (v (e out)))) p) (v (e out)))
+
+@aa_nil = (* (* (* (1 out))))
+
+@aa_cons = (* ((u tail) (v (e out))))
+  & e ~ {echeck erest}
+  & v ~ {vcheck vrest}
+  & @hasedge ~ (echeck (vcheck (u found)))
+  & found ~ ?((@aa_no @aa_yes) (tail (vrest (erest out))))
+
+@aa_no = (* (* (* (0 out))))
+
+@aa_yes = (* (tail (v (e out))))
+  & @alladj ~ (tail (v (e out)))
+
+@hasedge = ((?((@he_nil @he_cons) (p (v (u out)))) p) (v (u out)))
+
+@he_nil = (* (* (* (0 out))))
+
+@he_cons = (* ((edge tail) (v (u out))))
+  & v ~ {vp vc}
+  & u ~ {up uc}
+  & @pm ~ (edge (vp (up matched)))
+  & matched ~ ?((@he_no @he_yes) (tail (vc (uc out))))
+
+@he_no = (tail (v (u out)))
+  & @hasedge ~ (tail (v (u out)))
+
+@he_yes = (* (* (* (* (1 out)))))
+
+@pm = ((a b) (v (u out)))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & v ~ {v1 v2}
+  & u ~ {u1 u2}
+  & a1 ~ $([=] $(v1 eq1))
+  & b1 ~ $([=] $(u1 eq2))
+  & a2 ~ $([=] $(u2 eq3))
+  & b2 ~ $([=] $(v2 eq4))
+  & eq1 ~ $([*] $(eq2 fwd))
+  & eq3 ~ $([*] $(eq4 rev))
+  & fwd ~ $([|] $(rev out))

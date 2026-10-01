@@ -1,0 +1,65 @@
+@prog = (({n_check n_use} ({$($(n_check ?((@bad @good) (n_use (s_use (b (edges out)))))) [<]) s_use} (b edges))) out)
+
+@bad = (* (* (* (* 0))))
+
+@good = (* ({?((@init_nil (k_q133 ({$([=] $(s_test_q133 ?(((?((@init_nil (k_q140 ({$([=] $(s_test_q140 ?(((?((@init_nil @init_succ) (i_q144 (s_q144 tail_q144))) (i_q144 (s_q144 (1 ((0 0) tail_q144))))) @init_match) (k_q140 (i_next_q140 (s_rec_q140 out_q140)))))) $([+1] i_next_q140)} ({s_test_q140 s_rec_q140} out_q140)))) (i_q136 (s_q136 tail_q136))) (i_q136 (s_q136 (1 ((0 0) tail_q136))))) @init_match) (k_q133 (i_next_q133 (s_rec_q133 out_q133)))))) $([+1] i_next_q133)} ({s_test_q133 s_rec_q133} out_q133)))) (0 (s d0_q109))) ?((@passes_done @passes_more) (d0_q109 (edges (?((@count_nil @count_cons) (pl_q112 (b (0 out)))) pl_q112))))} (s (b (edges out)))))
+
+@init_nil = (* (* (0 *)))
+
+@init_succ = (k ({$([=] $(s_test ?((@init_other @init_match) (k (i_next (s_rec out)))))) $([+1] i_next)} ({s_test s_rec} out)))
+
+@init_other = (?((@init_nil @init_succ) (i (s tail))) (i (s (1 ((0 0) tail)))))
+
+@init_match = (* (?((@init_nil @init_succ) (i (s tail))) (i (s (1 ((1 0) tail))))))
+
+@passes_done = (d (* d))
+
+@passes_more = (k (d ({(?((@scan_nil @scan_cons) (pl_q115 (d (0 (d_next ?((@passes_stop @passes_repeat) (k (d_next (e_more out))))))))) pl_q115) e_more} out)))
+
+@passes_stop = (* (d (* d)))
+
+@passes_repeat = (* (?((@passes_done @passes_more) (d (edges out))) (d (edges out))))
+
+@scan_nil = (* (d (changed (d changed))))
+
+@scan_cons = (* ((({u1_q117 {dst_get_i12_q117 dst_keep_i12_q117}} ({{dst_get_i11_q117 dst_keep_i11_q117} v2_q117} {w1_q117 w2_q117})) (?((@scan_nil @scan_cons) (pl_q118 (d_next (changed_next out)))) pl_q118)) ({(?((@get_nil (* ((h_q148 t_q148) (?((@get_head @get_next) (h_q148 (t_q148 out_q148))) out_q148)))) (pl_q119 (u1_q117 (?((@tr_src_no @tr_src_yes) (ds_i10_i11_q117 (ft_i10_i11_q117 (dt_i10_i11_q117 (d_set_i11_q117 (dst_keep_i11_q117 (w1_q117 (changed ({(?((@get_nil (* ((h_q153 t_q153) (?((@get_head @get_next) (h_q153 (t_q153 out_q153))) out_q153)))) (pl_q121 (v2_q117 (?((@tr_src_no @tr_src_yes) (ds_i10_i12_q117 (ft_i10_i12_q117 (dt_i10_i12_q117 (d_set_i12_q117 (dst_keep_i12_q117 (w2_q117 (changed_next_q117 (d_next changed_next))))))))) ds_i10_i12_q117)))) pl_q121) {(?((@get_nil @get_cons) (pl_q122 (dst_get_i12_q117 (ft_i10_i12_q117 dt_i10_i12_q117)))) pl_q122) d_set_i12_q117}} changed_next_q117))))))))) ds_i10_i11_q117)))) pl_q119) {(?((@get_nil @get_cons) (pl_q120 (dst_get_i11_q117 (ft_i10_i11_q117 dt_i10_i11_q117)))) pl_q120) d_set_i11_q117}} (changed out))))
+
+@get_nil = (* (* (0 0)))
+
+@get_cons = (* ((h t) (?((@get_head @get_next) (h (t out))) out)))
+
+@get_head = (h (* h))
+
+@get_next = (i (* ((?((@get_nil @get_cons) (pl_q123 (i out))) pl_q123) out)))
+
+@set_nil = (* (* (* (0 *))))
+
+@set_cons = (* ((h t) (?((@set_zero @set_next) (h (t (v out)))) (v out))))
+
+@set_zero = (* (t (v (1 (v t)))))
+
+@set_next = (i (h ((?((@set_nil @set_cons) (pl_q124 (i (v tail)))) pl_q124) (v (1 (h tail))))))
+
+@tr_src_no = (* (* (* (d (* (* (changed (d changed))))))))
+
+@tr_src_yes = (* ({$([+] $(w {$([<] $(ds_check ?((({cand_compare_q125_q147 cand_keep_q125_q147} (?((@tr_empty @tr_full) (cand_compare_q125_q147 (cand_keep_q125_q147 (dt_q147 (d_q147 (dst_q147 (changed_q147 out_q147))))))) (dt_q147 (d_q147 (dst_q147 (changed_q147 out_q147)))))) @tr_over) (cand_pass (ft (dt (d (dst (changed out))))))))) cand_pass})) ds_check} (ft (dt (d (dst (w (changed out))))))))
+
+@tr_over = (* (* (* (* (d (* (changed (d changed))))))))
+
+@tr_empty = (* (cand_keep (* ((?((@set_nil @set_cons) (pl_q126 (dst (cand_keep d_next)))) pl_q126) (dst (* (d_next 1)))))))
+
+@tr_full = (* ($([<] $(dt ?(((* (d_q150 (* (changed_q150 (d_q150 changed_q150))))) @tr_less) (cand_keep (d (dst (changed out))))))) (cand_keep (dt (d (dst (changed out)))))))
+
+@tr_less = (* (cand_keep ((?((@set_nil @set_cons) (pl_q127 (dst (cand_keep d_next)))) pl_q127) (dst (* (d_next 1))))))
+
+@count_nil = (* (* (acc acc)))
+
+@count_cons = (* (((?((@count_unreachable @count_reachable) (val (t (b (acc out))))) val) t) (b (acc out))))
+
+@count_unreachable = (* ((?((@count_nil @count_cons) (pl_q128 (b (acc out)))) pl_q128) (b (acc out))))
+
+@count_reachable = (* ($([>] $(b_cmp ?((@count_in @count_out) (t (b_ctx (acc out)))))) (t ({b_cmp b_ctx} (acc out)))))
+
+@count_in = ((?((@count_nil @count_cons) (pl_q129 (b (acc_next out)))) pl_q129) (b ($([+1] acc_next) out)))
+
+@count_out = (* ((?((@count_nil @count_cons) (pl_q130 (b (acc out)))) pl_q130) (b (acc out))))

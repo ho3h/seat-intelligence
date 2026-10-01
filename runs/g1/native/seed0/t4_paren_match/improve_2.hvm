@@ -1,0 +1,34 @@
+// Scan each balanced region recursively. The continuation carries the output
+// after the region, so matching indices are emitted without list appends.
+@prog = (input output)
+  & @scan ~ (input (0 ((0 *) result)))
+  & result ~ (output (rest endidx))
+  & rest ~ *
+  & endidx ~ *
+
+@scan = ((?((@scan_nil @scan_cons) (pl (idx (tail out)))) pl) (idx (tail out)))
+
+@scan_nil = (* (idx (tail out)))
+  & out ~ (tail ((0 *) idx))
+
+@scan_cons = (* ((h t) (idx (tail out))))
+  & h ~ $([=] $(40 z))
+  & z ~ ?((@scan_close @scan_open) (h (t (idx (tail out)))))
+
+@scan_close = (h (t (idx (tail out))))
+  & out ~ (tail ((1 (h t)) idx))
+
+@scan_open = (h (t (idx (tail out))))
+  & h ~ *
+  & idx ~ {oi next}
+  & next ~ $([+1] start)
+  & @scan ~ (t (start (open_tail inner_result)))
+  & inner_result ~ (inner_answers (close_list close_idx))
+  & close_list ~ (1 (close_char after_close))
+  & close_char ~ *
+  & close_idx ~ {matched close_step}
+  & close_step ~ $([+1] suffix_idx)
+  & @scan ~ (after_close (suffix_idx (tail suffix_result)))
+  & suffix_result ~ (suffix_answers (final_rest final_idx))
+  & open_tail ~ (1 (oi suffix_answers))
+  & out ~ ((1 (matched inner_answers)) (final_rest final_idx))

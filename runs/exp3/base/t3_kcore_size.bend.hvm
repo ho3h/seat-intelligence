@@ -1,0 +1,116 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_records = ({a b} ({$([=] $(a ?((@build_records__C2 (* (* (* (* (* (@List/Nil @List/Nil))))))) (b (c d))))) c} d))
+
+@build_records__C0 = (* (b (a (c (e (d e))))))
+  & @List/Cons ~ ((a (1 b)) (c d))
+
+@build_records__C1 = (* (e (b (a (c (f (d g)))))))
+  & @List/Cons ~ ((a (2 b)) (c d))
+  & @List/Cons ~ (e (f g))
+
+@build_records__C2 = (c ({a {$([+0x0000001] d) h}} ({b e} ({f g} m))))
+  & @build_records ~ (c (d (e (f (k l)))))
+  & @collect_neighbors ~ (a (b (@List/Nil (0 (i {$([<] $(g ?((@build_records__C0 @build_records__C1) (h (i (j (k (l m)))))))) j})))))
+
+@collect_neighbors = (a ((@collect_neighbors__C6 (a b)) b))
+
+@collect_neighbors__C0 = (a (c (d (b (* e)))))
+  & @collect_neighbors ~ (a (b (c (d e))))
+
+@collect_neighbors__C1 = (* (a (d ($([+0x0000001] f) (b (c g))))))
+  & @collect_neighbors ~ (a (b (e (f g))))
+  & @List/Cons ~ (c (d e))
+
+@collect_neighbors__C2 = ({a b} (c (d (e (f ($([=] $(a ?((@collect_neighbors__C0 @collect_neighbors__C1) (b (c (d (e (f g)))))))) g))))))
+
+@collect_neighbors__C3 = (* (a (d ($([+0x0000001] f) (b (* (c g)))))))
+  & @collect_neighbors ~ (a (b (e (f g))))
+  & @List/Cons ~ (c (d e))
+
+@collect_neighbors__C4 = (* (a (b (a b))))
+
+@collect_neighbors__C5 = (* (({$([=] $(a ?((@collect_neighbors__C2 @collect_neighbors__C3) (b (c (d (e (f (g h))))))))) f} g) (e ({a b} (c (d h))))))
+
+@collect_neighbors__C6 = (?((@collect_neighbors__C4 @collect_neighbors__C5) a) a)
+
+@count_alive = ((@count_alive__C3 a) a)
+
+@count_alive__C0 = (b (a c))
+  & @count_alive ~ (a (b c))
+
+@count_alive__C1 = (* ($([+0x0000001] b) (a c)))
+  & @count_alive ~ (a (b c))
+
+@count_alive__C2 = (* ((* ($([=0x0000001] ?((@count_alive__C0 @count_alive__C1) (a (b c)))) *)) (b (a c))))
+
+@count_alive__C3 = (?(((a a) @count_alive__C2) b) b)
+
+@lower_degree = ({a c} ({b d} (e (f i))))
+  & @record_at ~ (a (b (g ($([=0x0000001] ?((@lower_degree__C2 @lower_degree__C3) (c (d (e (f (g (h i)))))))) h))))
+
+@lower_degree__C0 = (a (d (f (c (b (e f))))))
+  & @replace_record ~ (a ((b (1 c)) (d e)))
+
+@lower_degree__C1 = (* ({f a} (d (g (c (b (e h)))))))
+  & @replace_record ~ (a ((b (2 c)) (d e)))
+  & @List/Cons ~ (f (g h))
+
+@lower_degree__C2 = (* (a (b (* (* (* (a b)))))))
+
+@lower_degree__C3 = (* (b (c (d (a ($([:-0x0000001] {$([<] $(a ?((@lower_degree__C0 @lower_degree__C1) (b (c (d (e (f g)))))))) f}) (e g)))))))
+
+@peel = (a ((@peel__C2 (a b)) b))
+
+@peel__C0 = (a (* b))
+  & @count_alive ~ (a (0 b))
+
+@peel__C1 = (* ({a d} (i ({b g} ({j m} n)))))
+  & @peel ~ (k (l (m n)))
+  & @peel_neighbors ~ (c (h (i (j (k l)))))
+  & @record_at ~ (a (b (e (* {c f}))))
+  & @replace_record ~ (d ((e (0 f)) (g h)))
+
+@peel__C2 = (?((@peel__C0 @peel__C1) a) a)
+
+@peel_neighbors = ((@peel_neighbors__C2 a) a)
+
+@peel_neighbors__C0 = (a (b (* (a b))))
+
+@peel_neighbors__C1 = (* (a (e (b (c ({d h} i))))))
+  & @peel_neighbors ~ (e (f (g (h i))))
+  & @lower_degree ~ (a (b (c (d (f g)))))
+
+@peel_neighbors__C2 = (?((@peel_neighbors__C0 @peel_neighbors__C1) a) a)
+
+@prog = ((b ({$([=0x0000000] ?((@prog__C0 (* (a (* (* a))))) (b (c (d e))))) c} d)) e)
+
+@prog__C0 = (a ({c f} (b g)))
+  & @peel ~ (d (e (f g)))
+  & @build_records ~ (a (0 (b (c (d e)))))
+
+@record_at = (a ((@record_at__C2 (a b)) b))
+
+@record_at__C0 = ($([:-0x0000001] a) (* b))
+  & @record_at ~ (a b)
+
+@record_at__C1 = (* (c (d ({$([=0x0000000] ?((@record_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@record_at__C2 = (?(((* (0 (0 @List/Nil))) @record_at__C1) a) a)
+
+@replace_record = (a (b ((@replace_record__C3 (a (b c))) c)))
+
+@replace_record__C0 = ($([:-0x0000001] b) (c (a (d f))))
+  & @List/Cons ~ (a (e f))
+  & @replace_record ~ (b (c (d e)))
+
+@replace_record__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@replace_record__C2 = (* (c (d ({$([=0x0000000] ?((@replace_record__C0 @replace_record__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@replace_record__C3 = (?(((* (* @List/Nil)) @replace_record__C2) a) a)
+
+

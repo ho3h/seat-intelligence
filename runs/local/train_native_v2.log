@@ -1,0 +1,16 @@
+Calling `python -m mlx_lm.lora...` directly is deprecated. Use `mlx_lm.lora...` or `python -m mlx_lm lora ...` instead.
+Loading configuration file /tmp/lora_v2.yaml
+Loading pretrained model
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 134511.21it/s]
+Loading datasets
+Training
+Trainable parameters: 1.095% (44.040M/4022.468M)
+Starting training..., iters: 700
+Calculating loss...:   0%|          | 0/15 [00:00<?, ?it/s]Calculating loss...:   7%|▋         | 1/15 [00:01<00:21,  1.53s/it]Calculating loss...:  13%|█▎        | 2/15 [00:03<00:24,  1.90s/it]Calculating loss...:  20%|██        | 3/15 [00:05<00:21,  1.76s/it]Calculating loss...:  27%|██▋       | 4/15 [00:07<00:19,  1.80s/it]Calculating loss...:  33%|███▎      | 5/15 [00:09<00:20,  2.01s/it]Calculating loss...:  40%|████      | 6/15 [00:12<00:21,  2.36s/it]Calculating loss...:  47%|████▋     | 7/15 [00:14<00:18,  2.26s/it]Calculating loss...:  53%|█████▎    | 8/15 [00:16<00:15,  2.16s/it]Calculating loss...:  60%|██████    | 9/15 [00:19<00:15,  2.52s/it]Calculating loss...:  67%|██████▋   | 10/15 [00:21<00:11,  2.24s/it]Calculating loss...:  73%|███████▎  | 11/15 [00:24<00:09,  2.38s/it]Calculating loss...:  80%|████████  | 12/15 [00:26<00:06,  2.30s/it]Calculating loss...:  87%|████████▋ | 13/15 [00:28<00:04,  2.41s/it]Calculating loss...:  93%|█████████▎| 14/15 [00:31<00:02,  2.39s/it]Calculating loss...: 100%|██████████| 15/15 [00:33<00:00,  2.26s/it]Calculating loss...: 100%|██████████| 15/15 [00:33<00:00,  2.22s/it]
+[WARNING] Some sequences are longer than 1536 tokens. The longest sentence 1561 will be truncated to 1536. Consider pre-splitting your data to save memory.
+Iter 1: Val loss 1.829, Val took 33.275s
+Iter 10: Train loss 1.145, Learning Rate 1.000e-04, It/sec 0.103, Tokens/sec 180.835, Trained Tokens 17634, Peak mem 11.244 GB
+Iter 20: Train loss 0.506, Learning Rate 1.000e-04, It/sec 0.117, Tokens/sec 213.380, Trained Tokens 35868, Peak mem 11.244 GB
+Iter 30: Train loss 0.335, Learning Rate 1.000e-04, It/sec 0.069, Tokens/sec 116.872, Trained Tokens 52836, Peak mem 11.244 GB
+/Users/tedsandtads/.local/share/uv/python/cpython-3.11.15-macos-aarch64-none/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

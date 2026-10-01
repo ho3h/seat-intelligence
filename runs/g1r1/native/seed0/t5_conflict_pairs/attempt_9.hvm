@@ -1,0 +1,72 @@
+@prog = ((c mnl) out)
+  & @filter ~ (mnl (c ((0 *) out)))
+
+@filter = ((?((@filter_nil @filter_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@filter_nil = (* (* (a a)))
+
+@filter_cons = (* ((pair tail) (c (acc out))))
+  & pair ~ (a b)
+  & c ~ {cnext ctmp}
+  & ctmp ~ {ca cb}
+  & a ~ {a_lookup a_keep}
+  & b ~ {b_lookup b_keep}
+  & @get ~ (ca (a_lookup va))
+  & @get ~ (cb (b_lookup vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@filter_no @filter_yes) (a_keep (b_keep (tail (cnext (acc out))))))
+
+@filter_no = (* (* (tail (c (acc out)))))
+  & @filter ~ (tail (c (acc out)))
+
+@filter_yes = (* (a (b (tail (c (acc out))))))
+  & @insert ~ (acc ((a b) newacc))
+  & @filter ~ (tail (c (newacc out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@idx_zero @idx_succ) (head (tail out)))
+
+@idx_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@idx_succ = (n (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (n out))
+
+@insert = ((?((@ins_nil @ins_cons) (pl (item out))) pl) (item out))
+
+@ins_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@ins_cons = (* ((old rest) (item out)))
+  & old ~ (oa ob)
+  & item ~ (ia ib)
+  & oa ~ {oac oak}
+  & ob ~ {obc obk}
+  & ia ~ {iac iak}
+  & ib ~ {ibc ibk}
+  & @ltpair ~ ((iac ibc) ((oac obc) less))
+  & less ~ ?((@ins_after @ins_before) (rest ((iak ibk) ((oak obk) out))))
+
+@ins_after = (rest ((ia ib) ((oa ob) out)))
+  & @insert ~ (rest ((ia ib) sub))
+  & out ~ (1 ((oa ob) sub))
+
+@ins_before = (* (rest ((ia ib) ((oa ob) out))))
+  & out ~ (1 ((ia ib) (1 ((oa ob) rest))))
+
+@ltpair = ((a b) ((x y) out))
+  & a ~ {alt aeq}
+  & x ~ {xlt xeq}
+  & alt ~ $([<] $(xlt firstlt))
+  & aeq ~ $([=] $(xeq firsteq))
+  & b ~ $([<] $(y secondlt))
+  & firsteq ~ $([&] $(secondlt both))
+  & firstlt ~ $([|] $(both out))

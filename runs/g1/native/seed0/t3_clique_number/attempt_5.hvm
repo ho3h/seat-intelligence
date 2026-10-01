@@ -1,0 +1,126 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & @loop ~ (0 (n ((0 *) (0 (edges out)))))
+
+@loop = (v (n (chosen (size (edges out)))))
+  & v ~ {v_cmp v_ctx}
+  & n ~ {n_cmp n_ctx}
+  & v_cmp ~ $([<] $(n_cmp test))
+  & test ~ ?((@loop_base @loop_step) (v_ctx (n_ctx (chosen (size (edges out))))))
+
+@loop_base = (v (n (chosen (size (edges out)))))
+  & v ~ *
+  & n ~ *
+  & chosen ~ *
+  & edges ~ *
+  & size ~ out
+
+@loop_step = (* (v (n (chosen (size (edges out))))))
+  & v ~ {v_inc v_rest}
+  & v_rest ~ {v_valid v_cons}
+  & v_inc ~ $([+1] next)
+  & next ~ {next_ex next_ctx}
+  & n ~ {n_ex n_ctx}
+  & chosen ~ {chosen_ex chosen_rest}
+  & chosen_rest ~ {chosen_valid chosen_inc}
+  & size ~ {size_ex size_inc}
+  & size_inc ~ $([+1] size_next)
+  & edges ~ {edges_ex edges_rest}
+  & edges_rest ~ {edges_valid edges_ctx}
+  & @loop ~ (next_ex (n_ex (chosen_ex (size_ex (edges_ex ex)))))
+  & @valid ~ (chosen_valid (v_valid (edges_valid ok)))
+  & ok ~ ?((@step_bad @step_good) (ex (next_ctx (v_cons (n_ctx (chosen_inc (size_next (edges_ctx out))))))))
+
+@step_bad = (ex (next (v (n (chosen (size (edges out)))))))
+  & ex ~ out
+  & next ~ *
+  & v ~ *
+  & n ~ *
+  & chosen ~ *
+  & size ~ *
+  & edges ~ *
+
+@step_good = (* (ex (next (v (n (chosen (size (edges out))))))))
+  & @loop ~ (next (n ((1 (v chosen)) (size (edges inc)))))
+  & @max ~ (ex (inc out))
+
+@valid = (l (v (edges out)))
+  & l ~ (?((@valid_nil @valid_cons) (payload (v (edges out)))) payload)
+
+@valid_nil = (payload (v (edges out)))
+  & payload ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 1
+
+@valid_cons = (* (payload (v (edges out))))
+  & payload ~ (h t)
+  & v ~ {v_has v_rec}
+  & edges ~ {edges_has edges_rec}
+  & @has ~ (edges_has (h (v_has hit)))
+  & hit ~ ?((@valid_no @valid_yes) (t (v_rec (edges_rec out))))
+
+@valid_no = (t (v (edges out)))
+  & t ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@valid_yes = (* (t (v (edges out))))
+  & @valid ~ (t (v (edges out)))
+
+@has = (l (a (b out)))
+  & l ~ (?((@has_nil @has_cons) (payload (a (b out)))) payload)
+
+@has_nil = (payload (a (b out)))
+  & payload ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@has_cons = (* (payload (a (b out))))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & a ~ {a_hit a_rec}
+  & b ~ {b_hit b_rec}
+  & @edgehit ~ (u (v (a_hit (b_hit hit)))
+  & hit ~ ?((@has_more @has_yes) (tail (a_rec (b_rec out))))
+
+@has_more = (tail (a (b out)))
+  & @has ~ (tail (a (b out)))
+
+@has_yes = (* (tail (a (b out))))
+  & tail ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@edgehit = (u (v (a (b out))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & @eq ~ (u1 (a1 e1))
+  & @eq ~ (v1 (b1 e2))
+  & @eq ~ (u2 (b2 e3))
+  & @eq ~ (v2 (a2 e4))
+  & e1 ~ $([&] $(e2 p))
+  & e3 ~ $([&] $(e4 q))
+  & p ~ $([|] $(q out))
+
+@eq = (a (b out))
+  & a ~ $([=] $(b out))
+
+@max = (a (b out))
+  & a ~ {a_cmp a_ctx}
+  & b ~ {b_cmp b_ctx}
+  & a_cmp ~ $([>] $(b_cmp test))
+  & test ~ ?((@max_b @max_a) (a_ctx (b_ctx out)))
+
+@max_a = (* (a (b out)))
+  & a ~ out
+  & b ~ *
+
+@max_b = (a (b out))
+  & a ~ *
+  & b ~ out

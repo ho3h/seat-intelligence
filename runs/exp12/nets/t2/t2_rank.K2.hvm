@@ -1,0 +1,17 @@
+@prog = ((x xs) out)
+  & @rank ~ (xs (x out))
+
+@rank = (lv1 (x out))
+  & @rank_cons_lw ~ (lv1 (x out))
+
+@rank_nil = (* (* 0))
+
+@rank_cons = (* (($([<] $(x_cmp z)) t) ({x_cmp x_rec} out)))
+  & @rank_cons_lw ~ (t (x_rec $([+] $(z out))))
+
+@rank_cons_lw = (ls20 (q10 q11))
+  & ls20 ~ (g17 (e15 (g18 (e16 tk19))))
+  & g17 ~ ?((@rank_nil @rank_cons_la) ((e15 (q13 q14)) (q10 q11)))
+  & g18 ~ ?((@rank_nil @rank_cons) ((e16 tk19) (q13 q14)))
+
+@rank_cons_la = (* (($([<] $(x_cmp z)) (x_rec $([+] $(z out)))) ({x_cmp x_rec} out)))

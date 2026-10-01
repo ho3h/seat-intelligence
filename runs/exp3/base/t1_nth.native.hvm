@@ -1,0 +1,21 @@
+// @prog receives (index, list) and returns the indexed element.
+@prog = (inp out)
+  & inp ~ (i xs)
+  & @nth ~ (xs (i out))
+
+// Dispatch on the list tag.
+@nth = ((?((@nth_nil @nth_cons) (pl (i out))) pl) (i out))
+
+// Empty list: erase the payload and index, return 0.
+@nth_nil = (* (* 0))
+
+// Nonempty list: if the index is zero, return the head;
+// otherwise recurse on the tail with the decremented index.
+@nth_cons = (* ((h t) (i out)))
+  & i ~ ?((@nth_found @nth_more) (h (t out)))
+
+@nth_found = (x (* x))
+
+@nth_more = (n (h (t out)))
+  & h ~ *
+  & @nth ~ (t (n out))

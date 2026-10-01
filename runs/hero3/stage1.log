@@ -1,0 +1,44 @@
+sum                      assoc       accept=[True, True, True] reasons=[] comm=True 3.2s
+product                  assoc       accept=[True, True, True] reasons=[] comm=True 3.3s
+length                   assoc       accept=[True, True, True] reasons=[] comm=True 3.0s
+max                      assoc       accept=[True, True, True] reasons=[] comm=True 3.5s
+min                      assoc       accept=[True, True, True] reasons=[] comm=True 4.6s
+count_even               assoc       accept=[True, True, True] reasons=[] comm=True 4.3s
+argmax_first             assoc       accept=[True, True, True] reasons=[] comm=False 9.9s
+argmin_first             assoc       accept=[True, True, True] reasons=[] comm=False 10.0s
+second_largest           assoc       accept=[True, True, True] reasons=[] comm=True 5.6s
+longest_run              assoc       accept=[True, True, True] reasons=[] comm=False 19.6s
+is_sorted                assoc       accept=[True, True, True] reasons=[] comm=False 14.1s
+last                     assoc       accept=[True, True, True] reasons=[] comm=False 7.2s
+xor_all                  assoc       accept=[True, True, True] reasons=[] comm=True 5.2s
+category_set             assoc       accept=[True, True, True] reasons=[] comm=True 6.5s
+all_positive             assoc       accept=[True, True, True] reasons=[] comm=True 4.7s
+any_zero                 assoc       accept=[True, True, True] reasons=[] comm=True 3.9s
+count_gt500              assoc       accept=[True, True, True] reasons=[] comm=True 4.0s
+sum_squares              assoc       accept=[True, True, True] reasons=[] comm=True 5.2s
+gcd                      assoc       accept=[True, True, True] reasons=[] comm=True 4.6s
+lexmin_pair              assoc       accept=[True, True, True] reasons=[] comm=True 10.7s
+top3_merge               assoc       accept=[True, True, True] reasons=[] comm=True 16.2s
+sat_sum_cap              assoc       accept=[True, True, True] reasons=[] comm=True 6.8s
+sat_sum_24               assoc       accept=[True, True, True] reasons=[] comm=True 6.4s
+minmax_pair              assoc       accept=[True, True, True] reasons=[] comm=True 9.0s
+mean_floor               assoc       accept=[True, True, True] reasons=[] comm=True 11.9s
+hash_affine              assoc       accept=[True, True, True] reasons=[] comm=False 13.0s
+adjacent_equal           assoc       accept=[True, True, True] reasons=[] comm=False 16.2s
+category_counts          assoc       accept=[True, True, True] reasons=[] comm=True 22.0s
+max_priority_guest       assoc       accept=[True, True, True] reasons=[] comm=True 8.1s
+first_violation          assoc       accept=[True, True, True] reasons=[] comm=False 7.8s
+section_fill_cap6        assoc       accept=[True, True, True] reasons=[] comm=True 5.8s
+sub_fold                 nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_left'] comm=False 6.2s
+hash31                   nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_right'] comm=False 7.7s
+abs_diff                 nonassoc    accept=[False, False, False] reasons=['assoc'] comm=True 6.1s
+alternating              nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_right'] comm=False 6.6s
+sat_sub                  nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_left'] comm=False 6.6s
+horner_square            nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_right'] comm=False 8.7s
+xorshift_hash            nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_right'] comm=False 9.5s
+midpoint                 nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_left', 'identity_right'] comm=True 6.4s
+sat_sum_unclamped        nonassoc    accept=[False, False, False] reasons=['identity_left', 'identity_right'] comm=True 6.4s
+glitch_1e3               nonassoc    accept=[False, False, False] reasons=['assoc'] comm=False 7.1s
+planted_point            adversarial accept=[True, True, True] reasons=[] comm=True 6.0s
+avg_wrong_merge          nonassoc    accept=[False, False, False] reasons=['assoc', 'identity_left', 'identity_right', 'hom'] comm=True 8.2s
+adjacent_equal_wrong     nonassoc    accept=[False, False, False] reasons=['assoc'] comm=False 10.4s

@@ -1,0 +1,35 @@
+// t3_max_degree_vertex (GRAPH-SWING-2, runs/exp9): degree trie by keyed increments while streaming the edges, then
+// one argmax tree reduction (ties go to the left = smaller id).
+@prog = ((n es) out)
+  & n ~ ?((@md_zero @md_pos) (es out))
+@md_zero = (* 16777215)
+@md_pos = (nm1 (es out))
+  & @lg ~ (nm1 L)
+  & L ~ {L1 {L2 L3}}
+  & @zt ~ (L1 T0)
+  & @w_blk ~ (es ((L2 T0) T))
+  & @amx ~ (T (L3 (0 (* out))))
+@md_step = ((L t) ((u v) (L3 t2)))
+  & L ~ {L1 {L2 L3}}
+  & @ad ~ (t (u (L1 (1 t1))))
+  & @ad ~ (t1 (v (L2 (1 t2))))
+@md_fin = ((* t) t)
+// amx(T, L, base) -> (max leaf, its index), ties to the left
+@amx = (t (L (base o)))
+  & L ~ ?((@amx_leaf @amx_node) (t (base o)))
+@amx_leaf = (d (i (d i)))
+@amx_node = (lm ((a b) (base o)))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @amx ~ (a (l1 (b1 ma)))
+  & @amx ~ (b (l2 (bR mb)))
+  & @axsel ~ (ma (mb o))
+@axsel = ((ma ia) ((mb ib) o))
+  & ma ~ {ma1 ma2}
+  & mb ~ {mb1 mb2}
+  & ma1 ~ $([<] $(mb1 lt))
+  & lt ~ ?((@as_l @as_r) ((ma2 ia) ((mb2 ib) o)))
+@as_l = (a (* a))
+@as_r = (* (* (b b)))

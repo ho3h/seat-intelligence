@@ -1,0 +1,106 @@
+@prog = ((n (s edges)) out)
+  & s ~ {sq ss}
+  & @bfs ~ ((1 (sq (0 *))) (n (edges ((1 (ss (0 *))) ((0 *) out))))
+
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (n (edges (seen (acc out)))))) pl) (n (edges (seen (acc out))))
+
+@bfs_nil = (* (* (* (* (a a)))))
+
+@bfs_cons = (* ((u rest) (n (edges (seen (acc out))))))
+  & u ~ {uout uscan}
+  & @snoc ~ (acc (uout acc2))
+  & @scan ~ (0 (n (edges (uscan (rest (seen (acc2 out)))))))
+
+@snoc = ((?((@snoc_nil @snoc_cons) (pl (x out))) pl) (x out))
+
+@snoc_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@snoc_cons = (* ((h t) (x out)))
+  & @snoc ~ (t (x rest))
+  & out ~ (1 (h rest))
+
+@scan = (v (n (edges (u (q (seen (acc out))))))
+  & v ~ {vc vw}
+  & n ~ {nt nr}
+  & vc ~ $([<] $(nt test))
+  & test ~ ?((@scan_done @scan_more) (vw (nr (edges (u (q (seen (acc out))))))))
+
+@scan_done = (* (n (edges (u (q (seen (acc out)))))))
+  & u ~ *
+  & @bfs ~ (q (n (edges (seen (acc out)))))
+
+@scan_more = (* (v (n (edges (u (q (seen (acc out))))))))
+  & v ~ {va vb}
+  & u ~ {ua ub}
+  & edges ~ {ea ek}
+  & @adj ~ (ea (ua (va adj)))
+  & adj ~ ?((@scan_no @scan_yes) (vb (n (ek (ub (q (seen (acc out))))))))
+
+@scan_no = (v (n (edges (u (q (seen (acc out))))))
+  & @scan_next ~ (v (n (edges (u (q (seen (acc out)))))))
+
+@scan_yes = (* (v (n (edges (u (q (seen (acc out))))))))
+  & v ~ {vm vk}
+  & seen ~ {sm sk}
+  & @mem ~ (sm (vm found))
+  & found ~ ?((@scan_unseen @scan_seen) (vk (n (edges (u (q (sk (acc out))))))))
+
+@scan_unseen = (v (n (edges (u (q (seen (acc out))))))
+  & v ~ {vq {vs vi}}
+  & @snoc ~ (q (vq q2))
+  & vi ~ $([+1] vn)
+  & @scan ~ (vn (n (edges (u (q2 ((1 (vs seen)) (acc out)))))))
+
+@scan_seen = (* (v (n (edges (u (q (seen (acc out))))))))
+  & @scan_next ~ (v (n (edges (u (q (seen (acc out)))))))
+
+@scan_next = (v (n (edges (u (q (seen (acc out))))))
+  & v ~ $([+1] vn)
+  & @scan ~ (vn (n (edges (u (q (seen (acc out)))))))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (* out))
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & xc ~ $([=] $(h z))
+  & z ~ ?((@mem_no @mem_yes) (t (xr out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@adj = ((?((@adj_nil @adj_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@adj_nil = (* (* (* out)))
+  & out ~ 0
+
+@adj_cons = (* ((a b) (u (v out))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u ~ {u1 {u2 uk}}
+  & v ~ {v1 {v2 vk}}
+  & a1 ~ $([=] $(u1 e1))
+  & b1 ~ $([=] $(v1 e2))
+  & a2 ~ $([=] $(v2 e3))
+  & b2 ~ $([=] $(u2 e4))
+  & e1 ~ $([&] $(e2 direct))
+  & e3 ~ $([&] $(e4 reverse))
+  & direct ~ $([|] $(reverse found))
+  & found ~ ?((@adj_no @adj_yes) (tail (uk (vk out))))
+
+@adj_no = (tail (u (v out)))
+  & @adj ~ (tail (u (v out)))
+
+@adj_yes = (* (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1

@@ -1,0 +1,84 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@merge_top = (a (b ({$([=0x0000000] ?((@merge_top__C8 (* (* (* (* @List/Nil))))) (a (b (c d))))) c} d)))
+
+@merge_top__C0 = ($([:-0x0000001] f) (b (c (a (e h)))))
+  & @List/Cons ~ (a (g h))
+  & @merge_top ~ (d (e (f g)))
+  & @List/Cons ~ (b (c d))
+
+@merge_top__C1 = (* ($([:-0x0000001] f) (a (b (c (d h))))))
+  & @List/Cons ~ (a (g h))
+  & @merge_top ~ (b (e (f g)))
+  & @List/Cons ~ (c (d e))
+
+@merge_top__C2 = (d (a (b e)))
+  & @take_n ~ (c (d e))
+  & @List/Cons ~ (a (b c))
+
+@merge_top__C3 = (* ({a f} (g (c ({$([<] $(a b)) d} (e h))))))
+  & $(b ?((@merge_top__C0 @merge_top__C1) (c (d (e (f (g h))))))) ~ [=0x0000000]
+
+@merge_top__C4 = (?((@merge_top__C2 @merge_top__C3) a) a)
+
+@merge_top__C5 = a
+  & @take_n ~ a
+
+@merge_top__C6 = (* (b (c ((@merge_top__C4 (a (b (c d)))) (a d)))))
+
+@merge_top__C7 = (?((@merge_top__C5 @merge_top__C6) a) a)
+
+@merge_top__C8 = ((@merge_top__C7 a) a)
+
+@prog = ((b a) c)
+  & @sort_top ~ (a (b c))
+
+@sort_top = (a ({$([=0x0000000] ?((@sort_top__C5 (* (* (* @List/Nil)))) (a (b c)))) b} c))
+
+@sort_top__C0 = (* (a (* b)))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@sort_top__C1 = (* (* (* ({j {h e}} (a (b k))))))
+  & @merge_top ~ (f (i (j k)))
+  & @split_alt ~ (c (d g))
+  & @List/Cons ~ (a (b c))
+  &!@sort_top ~ (d (e f))
+  &!@sort_top ~ (g (h i))
+
+@sort_top__C2 = (?((@sort_top__C0 @sort_top__C1) a) a)
+
+@sort_top__C3 = (* (b ({(@sort_top__C2 (a (b (c d)))) c} (a d))))
+
+@sort_top__C4 = (?(((* @List/Nil) @sort_top__C3) a) a)
+
+@sort_top__C5 = ((@sort_top__C4 a) a)
+
+@split_alt = ((@split_alt__C4 a) a)
+
+@split_alt__C0 = (a (b @List/Nil))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@split_alt__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split_alt ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split_alt__C2 = (?((@split_alt__C0 @split_alt__C1) a) a)
+
+@split_alt__C3 = (* (a ((@split_alt__C2 (a b)) b)))
+
+@split_alt__C4 = (?(((@List/Nil @List/Nil) @split_alt__C3) a) a)
+
+@take_n = (a ({$([=0x0000000] ?((@take_n__C2 (* (* (* @List/Nil)))) (a (b c)))) b} c))
+
+@take_n__C0 = (* (a (b ($([:-0x0000001] c) e))))
+  & @List/Cons ~ (a (d e))
+  & @take_n ~ (b (c d))
+
+@take_n__C1 = (?(((* @List/Nil) @take_n__C0) a) a)
+
+@take_n__C2 = ((@take_n__C1 a) a)
+
+

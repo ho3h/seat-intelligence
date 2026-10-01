@@ -1,0 +1,102 @@
+@prog = ((n (s edges)) out)
+  & n ~ {ni nr}
+  & @init ~ (ni (s (0 dist0)))
+  & @round ~ (nr (edges (dist0 out)))
+
+@init = (n (s (i out)))
+  & n ~ ?((@init_zero @init_succ) (s (i out)))
+
+@init_zero = (s (i out))
+  & s ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (s (i out)))
+  & s ~ {s_cmp s_next}
+  & i ~ {i_cmp i_step}
+  & i_step ~ $([+1] i_next)
+  & i_cmp ~ $([=] $(s_cmp eq))
+  & @init ~ (k (s_next (i_next tail)))
+  & eq ~ ?((@init_other @init_same) (tail out))
+
+@init_other = (tail out)
+  & out ~ (1 (16777215 tail))
+
+@init_same = (tail out)
+  & out ~ (1 (0 tail))
+
+@round = (n (edges (dist out)))
+  & n ~ ?((@round_zero @round_succ) (edges (dist out)))
+
+@round_zero = (edges (dist out))
+  & edges ~ *
+  & out ~ dist
+
+@round_succ = (k (edges (dist out)))
+  & edges ~ {edges_now edges_next}
+  & @scan ~ (edges_now (dist dist2))
+  & @round ~ (k (edges_next (dist2 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (dist out))) pl) (dist out))
+
+@scan_nil = (* (dist out))
+  & out ~ dist
+
+@scan_cons = (* (((u v) tail) (dist out)))
+  & @relax ~ (u (v (dist dist2)))
+  & @scan ~ (tail (dist2 out))
+
+@relax = (u (v (dist out)))
+  & v ~ {v_get v_set}
+  & dist ~ {d1 {d2 d3}}
+  & @get ~ (d1 (u du))
+  & @get ~ (d2 (v_get dv))
+  & du ~ {du_finite du_inc}
+  & du_finite ~ $([<] $(16777215 finite))
+  & du_inc ~ $([+1] cand)
+  & cand ~ {cand_test cand_set}
+  & cand_test ~ $([<] $(dv less))
+  & less ~ $([&] $(finite change))
+  & change ~ ?((@relax_no @relax_yes) (d3 (v_set (cand_set out))))
+
+@relax_no = (dist (v (cand out)))
+  & v ~ *
+  & cand ~ *
+  & out ~ dist
+
+@relax_yes = (dist (v (cand out)))
+  & @set ~ (dist (v (cand out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (* out))
+  & out ~ 16777215
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_here @get_later) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_later = (k (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (k out))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_here @set_later) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_later = (k (head (tail (val out))))
+  & @set ~ (tail (k (val tail2)))
+  & out ~ (1 (head tail2))

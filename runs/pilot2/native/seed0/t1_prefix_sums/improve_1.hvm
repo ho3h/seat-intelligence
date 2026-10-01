@@ -1,0 +1,22 @@
+// Prefix sums modulo 2^24, processing two list cells per recursive call.
+@prog = (l out)
+  & @scan ~ (l (0 out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (acc out))) pl) (acc out))
+
+@scan_nil = (* (* (0 *)))
+
+@scan_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h s1))
+  & s1 ~ {v1 carry}
+  & t ~ (?( (@scan2_nil @scan2_cons) (pl (v1 (carry out))) ) pl)
+
+@scan2_nil = (* (v1 (carry out)))
+  & carry ~ *
+  & out ~ (1 (v1 (0 *)))
+
+@scan2_cons = (* ((h2 t2) (v1 (carry out))))
+  & carry ~ $([+] $(h2 s2))
+  & s2 ~ {v2 carry2}
+  & @scan ~ (t2 (carry2 rest))
+  & out ~ (1 (v1 (1 (v2 rest))))

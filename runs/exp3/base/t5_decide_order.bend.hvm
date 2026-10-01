@@ -1,0 +1,81 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@before = ((b (c {$([=] $(a ?((@before__C2 @before__C3) (b (c (d (e (f (g h))))))))) d})) ((e (f {a g})) h))
+
+@before__C0 = ($([<] $(a b)) (* (a (* b))))
+
+@before__C1 = (* (* ($([>] $(a b)) (* (a c)))))
+  & $(b c) ~ [=0x0000000]
+
+@before__C2 = (* (* ($([>] $(a b)) (* (* (a b))))))
+
+@before__C3 = (* ({$([=] $(a ?((@before__C0 @before__C1) (b (c (d (e f))))))) b} (c (* ({a d} (e (* f)))))))
+
+@filter = ((@filter__C2 a) a)
+
+@filter__C0 = (* a)
+  & @List/Cons ~ a
+
+@filter__C1 = (* ({(* (* $([<] $(a b)))) d} (e ({a f} h))))
+  & $(b ?(((* (c c)) @filter__C0) (d (g h)))) ~ [=0x0000000]
+  & @filter ~ (e (f g))
+
+@filter__C2 = (?(((* @List/Nil) @filter__C1) a) a)
+
+@merge = ((@merge__C6 a) a)
+
+@merge__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge__C2 = a
+  & @List/Cons ~ a
+
+@merge__C3 = (* ({b e} (f ({a c} (d g)))))
+  & @before ~ (a (b ?((@merge__C0 @merge__C1) (c (d (e (f g)))))))
+
+@merge__C4 = (?((@merge__C2 @merge__C3) a) a)
+
+@merge__C5 = (* (a (b ((@merge__C4 (a (b c))) c))))
+
+@merge__C6 = (?(((a a) @merge__C5) b) b)
+
+@prog = ((b a) d)
+  & @sort ~ (c d)
+  & @filter ~ (a (b c))
+
+@sort = ((@sort__C4 a) a)
+
+@sort__C0 = a
+  & @List/Cons ~ a
+
+@sort__C1 = (* (* (* (a (b h)))))
+  & @merge ~ (e (g h))
+  & @split ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@sort ~ (d e)
+  &!@sort ~ (f g)
+
+@sort__C2 = (?((@sort__C0 @sort__C1) a) a)
+
+@sort__C3 = (* (a ({(@sort__C2 (a (b c))) b} c)))
+
+@sort__C4 = (?((@List/Nil @sort__C3) a) a)
+
+@split = ((@split__C1 a) a)
+
+@split__C0 = (* (b (a (d e))))
+  & @List/Cons ~ (b (c d))
+  & @split ~ (a (e c))
+
+@split__C1 = (?(((@List/Nil @List/Nil) @split__C0) a) a)
+
+

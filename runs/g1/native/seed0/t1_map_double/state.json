@@ -1,0 +1,54 @@
+{
+ "pid": "t1_map_double",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 96,
+    "itrs_median_big": 3084,
+    "itrs_max": 3084,
+    "depth_median_big": 1801,
+    "depth_max": 1801
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 80,
+    "itrs_median_big": 2570,
+    "itrs_max": 2570,
+    "depth_median_big": 1800,
+    "depth_max": 1800
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": null,
+    "itrs_median_big": null,
+    "itrs_max": 40,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 132541,
+ "best": {
+  "itrs_median_small": 80,
+  "itrs_median_big": 2570,
+  "itrs_max": 2570,
+  "depth_median_big": 1800,
+  "depth_max": 1800
+ },
+ "usd": 0.034382905,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

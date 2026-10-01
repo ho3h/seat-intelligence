@@ -1,0 +1,53 @@
+// Alternating-split merge sort.
+@prog = (input output)
+  & @msort ~ (input output)
+
+@msort = ((?((@msort_nil @msort_cons) (payload out)) payload) out)
+
+@msort_nil = (* out)
+  & out ~ (0 *)
+
+@msort_cons = (* ((h t) out))
+  & @split ~ (t halves)
+  & halves ~ (a b)
+  & @msort ~ ((1 (h b)) left_sorted)
+  & @msort ~ (a right_sorted)
+  & @merge ~ (left_sorted (right_sorted out))
+
+// Split into alternating elements while preserving order within each half.
+@split = ((?((@split_nil @split_cons) (payload out)) payload) out)
+
+@split_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split ~ (t halves)
+  & halves ~ (a b)
+  & out ~ ((1 (h b)) a)
+
+// Merge two descending lists.
+@merge = ((?((@merge_nil @merge_cons) (payload (right out))) payload) (right out))
+
+@merge_nil = (* (right out))
+
+@merge_cons = (* ((x xs) (right out)))
+  & @merge_right ~ (right (x (xs out)))
+
+@merge_right = ((?((@mr_nil @mr_cons) (payload (x (xs out)))) payload) (x (xs out)))
+
+@mr_nil = (* (x (xs out)))
+  & out ~ (1 (x xs))
+
+@mr_cons = (* ((y ys) (x (xs out))))
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & x_cmp ~ $([>] $(y_cmp z))
+  & z ~ ?((@mr_yfirst @mr_xfirst) (x_keep (y_keep (xs (ys out))))
+
+@mr_yfirst = (x (y (xs (ys out))))
+  & @merge ~ ((1 (x xs)) (ys rest))
+  & out ~ (1 (y rest))
+
+@mr_xfirst = (* (x (y (xs (ys out)))))
+  & @merge ~ (xs ((1 (y ys)) rest))
+  & out ~ (1 (x rest))

@@ -1,0 +1,118 @@
+@prog = (input output)
+  & input ~ (n (r edges))
+  & @tp_build ~ (n (r (edges output)))
+
+@tp_build = (n (r (edges out)))
+  & @tp_dfs ~ (r (16777215 (edges records)))
+  & @tp_emit ~ (n (0 (records out)))
+
+@tp_dfs = (v (p (edges out)))
+  & v ~ {vscan vrecord}
+  & p ~ {pscan precord}
+  & edges ~ {erem efull}
+  & @tp_scan ~ (erem (vscan (pscan (efull kids))))
+  & out ~ (1 ((vrecord precord) kids))
+
+@tp_scan = ((?((@tp_scan_nil @tp_scan_cons) (payload (v (p (full out))))) payload) (v (p (full out))))
+
+@tp_scan_nil = (* (v (p (full out))))
+  & v ~ *
+  & p ~ *
+  & full ~ *
+  & out ~ (0 *)
+
+@tp_scan_cons = (* ((edge tail) (v (p (full out)))))
+  & edge ~ (u w)
+  & v ~ {vtest vscan}
+  & vtest ~ {vu vw}
+  & p ~ {pcheck pscan}
+  & full ~ {fchild fscan}
+  & u ~ {utest ucand}
+  & w ~ {wtest wcand}
+  & @tp_scan ~ (tail (vscan (pscan (fscan rest))))
+  & utest ~ $([=] $(vu eq))
+  & eq ~ ?((@tp_scan_u_no @tp_scan_u_yes) (ucand (wtest (wcand (vw (pcheck (fchild (rest out)))))))
+
+@tp_scan_u_yes = (* (ucand (wtest (wcand (vw (pcheck (fchild (rest out))))))))
+  & ucand ~ *
+  & wtest ~ *
+  & vw ~ *
+  & @tp_visit ~ (wcand (pcheck (fchild (rest out))))
+
+@tp_scan_u_no = (ucand (wtest (wcand (vw (pcheck (fchild (rest out)))))))
+  & wtest ~ $([=] $(vw eq2))
+  & eq2 ~ ?((@tp_scan_w_no @tp_scan_w_yes) (ucand (wcand (pcheck (fchild (rest out))))))
+
+@tp_scan_w_no = (ucand (wcand (pcheck (fchild (rest out)))))
+  & ucand ~ *
+  & wcand ~ *
+  & pcheck ~ *
+  & fchild ~ *
+  & out ~ rest
+
+@tp_scan_w_yes = (* (ucand (wcand (pcheck (fchild (rest out))))))
+  & wcand ~ *
+  & @tp_visit ~ (ucand (pcheck (fchild (rest out))))
+
+@tp_visit = (child (parent (full (rest out))))
+  & child ~ {childtest childkeep}
+  & parent ~ {parenttest parentkeep}
+  & childtest ~ $([=] $(parenttest eq))
+  & eq ~ ?((@tp_visit_different @tp_visit_same) (childkeep (parentkeep (full (rest out)))))
+
+@tp_visit_same = (* (childkeep (parentkeep (full (rest out)))))
+  & childkeep ~ *
+  & parentkeep ~ *
+  & full ~ *
+  & out ~ rest
+
+@tp_visit_different = (childkeep (parentkeep (full (rest out))))
+  & @tp_dfs ~ (childkeep (parentkeep (full childrecords)))
+  & @tp_append ~ (childrecords (rest out))
+
+@tp_append = ((?((@tp_append_nil @tp_append_cons) (payload (right out))) payload) (right out))
+
+@tp_append_nil = (* (right out))
+  & out ~ right
+
+@tp_append_cons = (* ((head tail) (right out)))
+  & @tp_append ~ (tail (right suffix))
+  & out ~ (1 (head suffix))
+
+@tp_emit = (n (idx (records out)))
+  & n ~ ?((@tp_emit_nil @tp_emit_cons) (idx (records out)))
+
+@tp_emit_nil = (idx (records out))
+  & idx ~ *
+  & records ~ *
+  & out ~ (0 *)
+
+@tp_emit_cons = (remain (idx (records out)))
+  & idx ~ {idxfind idxnext}
+  & records ~ {recordsfind recordsnext}
+  & @tp_find ~ (recordsfind (idxfind parent))
+  & idxnext ~ $([+1] idx2)
+  & @tp_emit ~ (remain (idx2 (recordsnext tailout)))
+  & out ~ (1 (parent tailout))
+
+@tp_find = ((?((@tp_find_nil @tp_find_cons) (payload (idx out))) payload) (idx out))
+
+@tp_find_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@tp_find_cons = (* ((entry tail) (idx out)))
+  & entry ~ (v parent)
+  & idx ~ {idxcheck idxnext}
+  & v ~ $([=] $(idxcheck eq))
+  & eq ~ ?((@tp_find_no @tp_find_yes) (parent (tail (idxnext out))))
+
+@tp_find_no = (parent (tail (idxnext out)))
+  & parent ~ *
+  & @tp_find ~ (tail (idxnext found))
+  & out ~ found
+
+@tp_find_yes = (* (parent (tail (idxnext out))))
+  & tail ~ *
+  & idxnext ~ *
+  & out ~ parent

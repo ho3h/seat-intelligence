@@ -1,0 +1,29 @@
+@prog = ((c mnl) out)
+  & @walk_mnl ~ (c (mnl (0 out)))
+@walk_mnl = (c (mnl (cnt out)))
+  & mnl ~ ?(((@mnl_nil @mnl_cons) c) (cnt out))
+@mnl_nil = (c (cnt out))
+  & c ~ *
+  & cnt ~ out
+@mnl_cons = (* (((a (b *)) rest) (c (cnt out))))
+  & c ~ {c1 {c2 c3}}
+  & @read_idx ~ (c1 (a (ca *)))
+  & @read_idx ~ (c2 (b (cb *)))
+  & ca ~ $([=] $(cb eq))
+  & eq ~ ?((@skip @inc) (rest (c3 (cnt out))))
+@skip = (rest (c (cnt out)))
+  & @walk_mnl ~ (c (rest (cnt out)))
+@inc = (* (rest (c (cnt out))))
+  & cnt ~ $([+1] cnt2)
+  & @walk_mnl ~ (c (rest (cnt2 out)))
+@read_idx = (c (idx (val out)))
+  & idx ~ ?((@idx_zero @idx_dec) val)
+@idx_zero = (val (val *))
+@idx_dec = (* (idx_pred (c_rest (val out))))
+  & c ~ ?(((@c_nil @c_cons) idx_pred) out)
+@c_nil = (idx (val out))
+  & idx ~ *
+  & val ~ 0
+@c_cons = (* (((h t) idx_pred) (val out)))
+  & h ~ *
+  & @read_idx ~ (t (idx_pred (val out)))

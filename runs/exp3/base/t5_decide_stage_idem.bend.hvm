@@ -1,0 +1,79 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@has_ledger_block = ((@has_ledger_block__C9 a) a)
+
+@has_ledger_block__C0 = (b (c (a d)))
+  & @has_ledger_block ~ (a (b (c d)))
+
+@has_ledger_block__C1 = (* (* (* (* 1))))
+
+@has_ledger_block__C2 = (a (b (c ($([=0x0000001] ?((@has_ledger_block__C0 @has_ledger_block__C1) (a (b (c d))))) d))))
+
+@has_ledger_block__C3 = (* (* (* (* (* 1)))))
+
+@has_ledger_block__C4 = (b (c (a (* d))))
+  & @has_ledger_block ~ (a (b (c d)))
+
+@has_ledger_block__C5 = (* (a (b (c ({$([=0x0000000] ?((@has_ledger_block__C2 @has_ledger_block__C3) (a (b (c (d e)))))) d} e)))))
+
+@has_ledger_block__C6 = (b (c (a (* (* d)))))
+  & @has_ledger_block ~ (a (b (c d)))
+
+@has_ledger_block__C7 = (* (b ({a c} (d ($([=] $(a ?((@has_ledger_block__C4 @has_ledger_block__C5) (b (c (d e)))))) e)))))
+
+@has_ledger_block__C8 = (* (($([=] $(a ?((@has_ledger_block__C6 @has_ledger_block__C7) (b (c (d (e (f g)))))))) (e f)) (d ({a b} (c g)))))
+
+@has_ledger_block__C9 = (?(((* (* 0)) @has_ledger_block__C8) a) a)
+
+@has_pair = ((@has_pair__C4 a) a)
+
+@has_pair__C0 = (b (c (a d)))
+  & @has_pair ~ (a (b (c d)))
+
+@has_pair__C1 = (b (c (a (* d))))
+  & @has_pair ~ (a (b (c d)))
+
+@has_pair__C2 = (* (b ({a c} (d ($([=] $(a ?((@has_pair__C0 (* (* (* (* 1))))) (b (c (d e)))))) e)))))
+
+@has_pair__C3 = (* (($([=] $(a ?((@has_pair__C1 @has_pair__C2) (b (c (d (e f))))))) e) (d ({a b} (c f)))))
+
+@has_pair__C4 = (?(((* (* 0)) @has_pair__C3) a) a)
+
+@process = (a ((@process__C5 (a b)) b))
+
+@process__C0 = (a (d (c (b f))))
+  & @process ~ (a (b (e f)))
+  & @List/Cons ~ (c (d e))
+
+@process__C1 = (* (a (c (* (b d)))))
+  & @process ~ (a (b (c d)))
+
+@process__C2 = (a (b (c (d ($([=0x0000001] ?((@process__C0 @process__C1) (a (b (c (d e)))))) e)))))
+
+@process__C3 = (* (a (c (* (b (* d))))))
+  & @process ~ (a (b (c d)))
+
+@process__C4 = (* ({({i b} {j c}) f} (g ({d a} ({e h} l)))))
+  & @has_ledger_block ~ (a (b (c $([=0x0000001] ?((@process__C2 @process__C3) (d (e (f (g (k l))))))))))
+  & @has_pair ~ (h (i (j k)))
+
+@process__C5 = (?(((* (a a)) @process__C4) b) b)
+
+@prog = ((a b) d)
+  & @reverse ~ (c d)
+  & @process ~ (a (b (@List/Nil c)))
+
+@reverse = (a b)
+  & @reverse_acc ~ (a (@List/Nil b))
+
+@reverse_acc = ((@reverse_acc__C1 a) a)
+
+@reverse_acc__C0 = (* (b (a (c e))))
+  & @reverse_acc ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@reverse_acc__C1 = (?(((a a) @reverse_acc__C0) b) b)
+
+

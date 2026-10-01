@@ -1,0 +1,36 @@
+@prog = ((xs ys) out)
+  & @merge ~ (xs (ys out))
+
+@merge = ((?((@merge_nil @merge_cons) (p (ys out))) p) (ys out))
+
+@merge_nil = (* (a a))
+
+@merge_cons = (* ((h t) ((?((@merge_y_nil @merge_y_cons) (p (h (t out)))) p) out)))
+
+@merge_y_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@merge_y_cons = (* ((y yt) (h (t out))))
+  & h ~ {hc hk}
+  & y ~ {yc yk}
+  & hc ~ $([<] $(yc lt))
+  & lt ~ ?((@merge_notless @merge_less) (hk (t (yk (yt out)))))
+
+@merge_less = (* (h (t (y (yt out)))))
+  & @merge ~ (t ((1 (y yt)) tail))
+  & out ~ (1 (h tail))
+
+@merge_notless = (h (t (y (yt out))))
+  & h ~ {hc hk}
+  & y ~ {yc yk}
+  & hc ~ $([=] $(yc eq))
+  & eq ~ ?((@merge_greater @merge_equal) (hk (t (yk (yt out)))))
+
+@merge_greater = (h (t (y (yt out))))
+  & @merge ~ ((1 (h t)) (yt tail))
+  & out ~ (1 (y tail))
+
+@merge_equal = (* (h (t (y (yt out)))))
+  & y ~ *
+  & @merge ~ (t (yt tail))
+  & out ~ (1 (h tail))

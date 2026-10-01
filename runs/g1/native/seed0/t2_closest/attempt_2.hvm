@@ -1,0 +1,66 @@
+// Task t2_closest
+@prog = (inp out)
+  & inp ~ (x xs)
+  & @scan ~ (xs (x (0 (0 (0 out)))))
+
+@scan = ((?((@nil @cons) (pl (x (have (best (bd out)))))) pl) (x (have (best (bd out)))))
+
+@nil = (* (x (have (best (bd out)))))
+  & x ~ *
+  & have ~ ?((@nil_empty @nil_some) (best (bd out)))
+
+@nil_empty = (* (* out))
+  & out ~ 0
+
+@nil_some = (* (a (bd a)))
+  & bd ~ *
+
+@cons = (* ((h t) (x (have (best (bd out))))))
+  & x ~ {xc xh}
+  & h ~ {hc hh}
+  & xc ~ $([<] $(hc lt))
+  & lt ~ ?((@diff_ge @diff_lt) (xh (hh (t (have (best (bd out)))))))
+
+@diff_ge = (xh (hh (t (have (best (bd out)))))
+  & xh ~ {xa xn}
+  & hh ~ {ha hn}
+  & xa ~ $([-] $(ha d))
+  & @after ~ (d (hn (t (xn (have (best (bd out)))))))
+
+@diff_lt = (* (xh (hh (t (have (best (bd out))))))
+  & xh ~ {xa xn}
+  & hh ~ {ha hn}
+  & ha ~ $([-] $(xa d))
+  & @after ~ (d (hn (t (xn (have (best (bd out)))))))
+
+@after = (d (h (t (x (have (best (bd out))))))
+  & have ~ ?((@first @existing) (d (h (t (x (best (bd out)))))))
+
+@first = (d (h (t (x (best (bd out)))))
+  & best ~ *
+  & bd ~ *
+  & @scan ~ (t (x (1 (h (d out)))))
+
+@existing = (* (d (h (t (x (best (bd out)))))))
+  & d ~ {dl dr}
+  & dr ~ {de ds}
+  & bd ~ {bl br}
+  & br ~ {be bds}
+  & h ~ {hc hs}
+  & best ~ {bc bs}
+  & dl ~ $([<] $(bl less))
+  & de ~ $([=] $(be equal))
+  & hc ~ $([<] $(bc hless))
+  & equal ~ $([&] $(hless tie))
+  & less ~ $([|] $(tie update))
+  & update ~ ?((@keep @replace) (t (x (hs (ds (bs (bds out)))))))
+
+@keep = (t (x (h (d (best (bd out))))))
+  & h ~ *
+  & d ~ *
+  & @scan ~ (t (x (1 (best (bd out)))))
+
+@replace = (* (t (x (h (d (best (bd out)))))))
+  & best ~ *
+  & bd ~ *
+  & @scan ~ (t (x (1 (h (d out)))))

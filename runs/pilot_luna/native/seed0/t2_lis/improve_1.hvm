@@ -1,0 +1,146 @@
+// Patience-sorting tails represented by a sparse 24-level binary trie.
+// For each value, query the maximum stored at a strictly smaller value,
+// then update that value's leaf. Trie nodes store the maximum of their children.
+
+@prog = (input output)
+  & @lis ~ (input (0 *output))
+
+@lis = ((tag payload) (tree output))
+  & tag ~ ?((@lis_nil @lis_cons) (payload (tree output)))
+
+@lis_nil = (payload (tree output))
+  & payload ~ *
+  & @maxof ~ (tree output)
+
+@lis_cons = (* ((head tail) (tree output)))
+  & tree ~ {query_tree update_tree}
+  & head ~ {query_head update_head}
+  & @query ~ (query_tree (query_head (8388608 (0 query_result))))
+  & query_result ~ $([+] $(1 value))
+  & @update ~ (update_tree (update_head (8388608 (value update_result))))
+  & update_result ~ (new_tree maximum)
+  & maximum ~ *
+  & @lis ~ (tail (new_tree output))
+
+// Query the maximum stored at coordinates strictly less than x.
+// mask starts at the high bit and is halved at each trie level.
+@query = (tree (x (mask (acc output))))
+  & x ~ {x_bit x_keep}
+  & mask ~ {mask_ops mask_check}
+  & mask_ops ~ {mask_div mask_and}
+  & mask_div ~ $([/] $(2 half))
+  & x_bit ~ $([&] $(mask_and bit))
+  & mask_check ~ $([=] $(0 zero))
+  & zero ~ ?((@query_done @query_step) (bit (half (tree (x_keep (acc output))))))
+
+@query_done = (bit (half (tree (x (acc output)))))
+  & bit ~ *
+  & half ~ *
+  & tree ~ *
+  & x ~ *
+  & output ~ acc
+
+@query_step = (* (bit (half (tree (x (acc output))))))
+  & tree ~ (tag payload)
+  & tag ~ ?((@query_empty @query_node) (payload (bit (half (x (acc output))))))
+
+@query_empty = (payload (bit (half (x (acc output)))))
+  & payload ~ *
+  & bit ~ *
+  & half ~ *
+  & x ~ *
+  & output ~ acc
+
+@query_node = (* ((maximum (left right)) (bit (half (x (acc output))))))
+  & maximum ~ *
+  & bit ~ $([=] $(0 zero))
+  & zero ~ ?((@query_left @query_right) (left (right (half (x (acc output))))))
+
+@query_left = (left (right (half (x (acc output)))))
+  & right ~ *
+  & @query ~ (left (x (half (acc output))))
+
+@query_right = (* (left (right (half (x (acc output))))))
+  & @maxof ~ (left left_max)
+  & @max2 ~ (acc (left_max next_acc))
+  & @query ~ (right (x (half (next_acc output))))
+
+// Return the aggregate maximum of a sparse trie node; Nil has maximum 0.
+@maxof = ((tag payload) output)
+  & tag ~ ?((@max_nil @max_node) payload)
+
+@max_nil = (payload output)
+  & payload ~ *
+  & output ~ 0
+
+@max_node = (* (payload output))
+  & payload ~ (maximum (children))
+  & children ~ (left right)
+  & left ~ *
+  & right ~ *
+  & output ~ maximum
+
+// Update the x leaf to value and return (updated_tree, subtree_maximum).
+@update = (tree (x (mask (value output))))
+  & x ~ {x_bit x_keep}
+  & mask ~ {mask_ops mask_check}
+  & mask_ops ~ {mask_div mask_and}
+  & mask_div ~ $([/] $(2 half))
+  & x_bit ~ $([&] $(mask_and bit))
+  & mask_check ~ $([=] $(0 zero))
+  & zero ~ ?((@update_leaf @update_step) (bit (half (tree (x_keep (value output))))))
+
+@update_leaf = (bit (half (tree (x (value output)))))
+  & bit ~ *
+  & half ~ *
+  & tree ~ *
+  & x ~ *
+  & value ~ {stored returned}
+  & output ~ ((1 (stored ((0 *) (0 *)))) returned)
+
+@update_step = (* (bit (half (tree (x (value output))))))
+  & tree ~ (tag payload)
+  & tag ~ ?((@update_empty @update_node) (payload (bit (half (x (value output))))))
+
+@update_empty = (payload (bit (half (x (value output)))))
+  & payload ~ *
+  & @update_branch ~ ((0 *) ((0 *) (bit (half (x (value output))))))
+
+@update_node = (* ((maximum (left right)) (bit (half (x (value output))))))
+  & maximum ~ *
+  & @update_branch ~ (left (right (bit (half (x (value output))))))
+
+@update_branch = (left (right (bit (half (x (value output))))))
+  & bit ~ $([=] $(0 zero))
+  & zero ~ ?((@update_left @update_right) (left (right (half (x (value output))))))
+
+@update_left = (left (right (half (x (value output)))))
+  & right ~ {right_for_max right_for_tree}
+  & @update ~ (left (x (half (value child_result))))
+  & child_result ~ (new_left child_max)
+  & @maxof ~ (right_for_max right_max)
+  & @max2 ~ (child_max (right_max aggregate))
+  & aggregate ~ {aggregate_for_tree aggregate_for_output}
+  & output ~ ((1 (aggregate_for_tree (new_left right_for_tree))) aggregate_for_output)
+
+@update_right = (* (left (right (half (x (value output))))))
+  & left ~ {left_for_max left_for_tree}
+  & @update ~ (right (x (half (value child_result))))
+  & child_result ~ (new_right child_max)
+  & @maxof ~ (left_for_max left_max)
+  & @max2 ~ (left_max (child_max aggregate))
+  & aggregate ~ {aggregate_for_tree aggregate_for_output}
+  & output ~ ((1 (aggregate_for_tree (left_for_tree new_right))) aggregate_for_output)
+
+// Numeric maximum.
+@max2 = (a (b output))
+  & a ~ $([>] $(b greater))
+  & greater ~ ?((@max2_b @max2_a) (a (b output)))
+
+@max2_b = (a (b output))
+  & a ~ *
+  & output ~ b
+
+@max2_a = (* (a (b output)))
+  & b ~ *
+  & output ~ a

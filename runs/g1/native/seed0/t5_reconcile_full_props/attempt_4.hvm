@@ -1,0 +1,40 @@
+// Singleton-cluster result: preserve properties and remove self-loop edges.
+@prog = (inp out)
+  & inp ~ (n (tau (mnl (cands (edges attrs)))))
+  & out ~ (c (e p))
+  & @range ~ (n ((0 *) c))
+  & @filter ~ (edges e)
+  & p ~ attrs
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@range = (?((@rzero @rsucc) ctx) ctx)
+
+@rzero = (acc out)
+  & acc ~ out
+
+@rsucc = (k (acc out))
+  & k ~ {x y}
+  & @range ~ (y ((1 (x acc)) out))
+
+@filter = ((?((@filnil @fcons) (pl out)) pl) out)
+
+@filnil = (* out)
+  & out ~ (0 *)
+
+@fcons = (* ((edge rest) out))
+  & edge ~ (u v)
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([=] $(v1 eq))
+  & @filter ~ (rest tail)
+  & eq ~ ?((@fkeep @fdrop) (u2 (v2 (tail out))))
+
+// Equality is false: keep the edge. The zero branch receives the context directly.
+@fkeep = (u (v (tail out)))
+  & out ~ (1 ((u v) tail))
+
+// Equality is true: discard the edge. The successor branch also receives a leading zero.
+@fdrop = (* (* (* (tail out))))
+  & tail ~ out

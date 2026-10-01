@@ -1,0 +1,58 @@
+@prog = (({?((@rep_nil (?((@rep_nil (?((@rep_nil (?((@rep_nil @rep_cons) (x_tail_q270 tail_q270)) ({x_head_q270 x_tail_q270} (1 (x_head_q270 tail_q270))))) (x_tail_q253 tail_q253)) ({x_head_q253 x_tail_q253} (1 (x_head_q253 tail_q253))))) (x_tail_q250 tail_q250)) ({x_head_q250 x_tail_q250} (1 (x_head_q250 tail_q250))))) (1 {status_edges_q219 (?((@lht_nil @lht_cons) (payload_i19_q222 (?((@bs_nil @bs_cons) (tag_deg_q222 (s_q222 (d_q222 (tail_stat_q222 (tail_deg_q222 (k0_q219 (?((@stable @again) (new_status_q219 (n_next_q219 (k_next_q219 (edges_next_q219 out))))) new_status_q219)))))))) (s_q222 tail_stat_q222)))) payload_i19_q222)})) {?((@rep_nil @rep_cons) (0 degrees0_q219)) n_next_q219}} ({k0_q219 k_next_q219} {(?((@pe_nil @pe_cons) (payload_q221 (status_edges_q219 (degrees0_q219 (?((@lht_nil @lht_cons) (payload_i20_q222 (tag_deg_q222 (d_q222 tail_deg_q222)))) payload_i20_q222))))) payload_q221) edges_next_q219})) out)
+
+@replicate = (?((@rep_nil @rep_cons) (x out)) (x out))
+
+@rep_nil = (* (0 *))
+
+@rep_cons = (?((@rep_nil @rep_cons) (x_tail tail)) ({x_head x_tail} (1 (x_head tail))))
+
+@coa_nil = (* (acc acc))
+
+@coa_cons = (* ((h (?((@coa_nil @coa_cons) (payload_q224 (acc2 out))) payload_q224)) ($([+] $(h acc2)) out)))
+
+@lht_nil = (* (0 (* *)))
+
+@lht_cons = (* ((h t) (1 (h t))))
+
+@get_zero = ((?((@lht_nil @lht_cons) (payload_i15 (* ({h_val h_head} t)))) payload_i15) (h_val (1 (h_head t))))
+
+@get_more = (np ((?((@lht_nil (* ((h_q258 t_q258) (1 (h_q258 t_q258))))) (payload_i16 (?((@get_invalid @get_more_cons) (h (np (t out)))) (h t)))) payload_i16) out))
+
+@get_invalid = (* (* (* (0 (0 *)))))
+
+@get_more_cons = (* (h (?((@get_zero @get_more) (t (value newt))) (t (value (1 (h newt)))))))
+
+@inc_zero = ((?((@lht_nil @lht_cons) (payload_i17 (* ($([+1] h2) t)))) payload_i17) (1 (h2 t)))
+
+@inc_more = (np ((?((@lht_nil @lht_cons) (payload_i18 (?((@inc_invalid @inc_more_cons) (h (np (t out)))) (h t)))) payload_i18) out))
+
+@inc_invalid = (* (* (* (0 *))))
+
+@inc_more_cons = (* (h (?((@inc_zero (np_q266 ((?((@lht_nil @lht_cons) (payload_i18_q266 (?((@inc_invalid @inc_more_cons) (h_q266 (np_q266 (t_q266 out_q266)))) (h_q266 t_q266)))) payload_i18_q266) out_q266))) (t newt)) (t (1 (h newt))))))
+
+@process_edges = ((?((@pe_nil @pe_cons) (payload (status (degrees out)))) payload) (status (degrees out)))
+
+@pe_nil = (* (* (degrees degrees)))
+
+@pe_cons = (* ((({?((@get_zero @get_more) (status ($([&] $(sv_q227 ?((@no_inc @do_inc) (u_later_q227 (v_later_q227 (tail (status2_q227 (degrees out)))))))) status1_q227))) u_later_q227} {?((@get_zero @get_more) (status1_q227 (sv_q227 status2_q227))) v_later_q227}) tail) (status (degrees out))))
+
+@no_inc = (* (* (tail (status2 (degrees out)))))
+  & @process_edges ~ (tail (status2 (degrees out)))
+
+@do_inc = (* (?((@inc_zero @inc_more) (degrees deg_u)) (?((@inc_zero @inc_more) (deg_u deg_v)) ((?((@pe_nil @pe_cons) (payload_q236 (status2 (deg_v out)))) payload_q236) (status2 (degrees out))))))
+
+@build_status = ((?((@lht_nil @lht_cons) (payload_i19 (?((@bs_nil @bs_cons) (tag_deg (s (d (tail_stat (tail_deg (k out))))))) (s tail_stat)))) payload_i19) ((?((@lht_nil @lht_cons) (payload_i20 (tag_deg (d tail_deg)))) payload_i20) (k out)))
+
+@bs_nil = (* (* (* (* (* (* (0 (0 *))))))))
+
+@bs_cons = (* (* ($([&] $(less_flag $([+] $(rem_tail total_rem)))) ($([<] $(k_less {$([=0] new_bit) less_flag})) ((?((@lht_nil @lht_cons) (payload_i19_q238 (?((@bs_nil @bs_cons) (tag_deg_q238 (s_q238 (d_q238 (tail_stat_q238 (tail_deg_q238 (k_rec (rem_tail new_tail)))))))) (s_q238 tail_stat_q238)))) payload_i19_q238) ((?((@lht_nil @lht_cons) (payload_i20_q238 (tag_deg_q238 (d_q238 tail_deg_q238)))) payload_i20_q238) ({k_less k_rec} (total_rem (1 (new_bit new_tail))))))))))
+
+@loop = ({n0 n_next} ({k0 k_next} ({edges0 edges_next} ({status_edges status_old} out))))
+  & @replicate ~ (n0 (0 degrees0))
+  & @process_edges ~ (edges0 (status_edges (degrees0 degrees)))
+  & @build_status ~ (status_old (degrees (k0 (?((@stable @again) (new_status (n_next (k_next (edges_next out))))) new_status))))
+
+@stable = ((?((@coa_nil @coa_cons) (payload_q243 (0 out))) payload_q243) (* (* (* out))))
+
+@again = (* (new_status (n (k (edges out)))))
+  & @loop ~ (n (k (edges (new_status out))))

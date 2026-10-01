@@ -1,0 +1,52 @@
+@prog = ((?((@range_zero ({head_q170 ?((@range_zero ({head_q173 ?((@range_zero ({head_q177 ?((@range_zero ({head_q182 ?((@range_zero @range_more) (0 tail_q182))} (* (1 (head_q182 tail_q182))))) (0 tail_q177))} (* (1 (head_q177 tail_q177))))) (0 tail_q173))} (* (1 (head_q173 tail_q173))))) (0 tail_q170))} (* (1 (head_q170 tail_q170))))) (0 (?((@components_nil @components_cons) (pl_q147 (edges (0 out)))) pl_q147))) edges) out)
+
+@range_zero = (* (0 *))
+
+@range_more = ({head ?((@range_zero @range_more) (0 tail))} (* (1 (head tail))))
+
+@components_nil = (* (* (best best)))
+
+@components_cons = (* ((start (?((@filter_nil @filter_cons) (pl_q151 (cfilt (?((@components_nil @components_cons) (pl_q152 (enext (bestnext out)))) pl_q152)))) pl_q151)) ({{(?((@scan_nil @scan_cons) (pl_q153 ((1 (start (0 *))) {(?((@count_nil @count_cons) (pl_q154 {$([=1] ?((@sweep_again @sweep_done) (enext_q149 (nextseen_q149 (anext_q149 {(?((@count_nil @count_cons) (pl_q150 {$([>] $(bcmp_i5 ?((@max_no @max_yes) (stake_i5 (bkeep_i5 bestnext))))) stake_i5})) pl_q150) cfilt}))))) anext_q149})) pl_q154) nextseen_q149}))) pl_q153) enext_q149} enext} ({bcmp_i5 bkeep_i5} out))))
+
+@sweep_again = ({(?((@scan_nil @scan_cons) (pl_q155_q157 (seen {(?((@count_nil @count_cons) (pl_q156_q157 {$([=] $(prev ?((@sweep_again @sweep_done) (enext_q157 (nextseen_q157 (anext_q157 out)))))) anext_q157})) pl_q156_q157) nextseen_q157}))) pl_q155_q157) enext_q157} (seen (prev out)))
+
+@sweep_done = (* (* (seen (* seen))))
+
+@scan_nil = (* (seen seen))
+
+@scan_cons = (* ((({u1_q158 u2_q158} {v1_q158 v2_q158}) (?((@scan_nil @scan_cons) (pl_q159 (seen2 out))) pl_q159)) ({(?((@mem_nil @mem_cons) (pl_q160 (v1_q158 ?((@addif_no @addif_yes) (u1_q158 (skeep_i6_q158 {(?((@mem_nil @mem_cons) (pl_q161 (u2_q158 ?((@addif_no @addif_yes) (v2_q158 (skeep_i7_q158 seen2)))))) pl_q161) skeep_i7_q158})))))) pl_q160) skeep_i6_q158} out)))
+
+@addif_no = (* (seen seen))
+
+@addif_yes = (* ({dmem dhead} ({(?((@mem_nil @mem_cons) (pl_q162 (dmem ?((@addif_new @addif_old) (dhead (dkeep out)))))) pl_q162) dkeep} out)))
+
+@addif_new = (dst (seen (1 (dst seen))))
+
+@addif_old = (* (* (seen seen)))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* (($([=] $(xcmp ?((@mem_no @mem_yes) (tail (xkeep out))))) tail) ({xcmp xkeep} out)))
+
+@mem_no = ((?((@mem_nil @mem_cons) (pl_q163 (x out))) pl_q163) (x out))
+
+@mem_yes = (* (* (* 1)))
+
+@count_nil = (* 0)
+
+@count_cons = (* ((* (?((@count_nil @count_cons) (pl_q164 $([+1] out))) pl_q164)) out))
+
+@filter = ((?((@filter_nil @filter_cons) (pl (comp out))) pl) (comp out))
+
+@filter_nil = (* (* (0 *)))
+
+@filter_cons = (* (({xmem xkeep} tail) ({(?((@mem_nil @mem_cons) (pl_q165 (xmem ?((@filter_absent @filter_present) (xkeep (tail (cnext out))))))) pl_q165) cnext} out)))
+
+@filter_absent = (x (tail (comp (1 (x rest)))))
+  & @filter ~ (tail (comp rest))
+
+@filter_present = (* (* ((?((@filter_nil @filter_cons) (pl_q167 (comp out))) pl_q167) (comp out))))
+
+@max_no = (* (best best))
+
+@max_yes = (* (size (* size)))

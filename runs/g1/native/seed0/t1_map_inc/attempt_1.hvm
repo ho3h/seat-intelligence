@@ -1,0 +1,10 @@
+@prog = (l out)
+  & @mi ~ (l out)
+
+@mi = ((?((@mi_nil @mi_cons) (pl out)) pl) out)
+
+@mi_nil = (* (0 *))
+
+@mi_cons = (* ((h t) (1 (hp outt))))
+  & h ~ $([+1] hp)
+  & @mi ~ (t outt)

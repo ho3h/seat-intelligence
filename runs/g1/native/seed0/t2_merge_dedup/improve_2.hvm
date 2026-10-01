@@ -1,0 +1,60 @@
+// Fused sorted merge and adjacent deduplication.
+@prog = ((xs ys) out)
+  & @merge ~ (xs (ys ((0 0) out)))
+
+@merge = ((?((@mxnil @mxcons) (px (ys (st out)))) px) (ys (st out)))
+
+@mxnil = (* (ys (st out)))
+  & @drain ~ (ys (st out))
+
+@mxcons = (* ((h t) (ys (st out))))
+  & @merge_y ~ (ys (h (t (st out))))
+
+@merge_y = ((?((@mynil @mycons) (py (h (t (st out))))) py) (h (t (st out))))
+
+@mynil = (* (h (t (st out))))
+  & @put ~ (h (t ((0 *) (st out))))
+
+@mycons = (* ((g u) (h (t (st out)))))
+  & h ~ {hc hs}
+  & g ~ {gc gs}
+  & hc ~ $([<] $(gc z))
+  & z ~ ?((@myg @myh) (hs (gs (t (u (st out))))))
+
+@myg = (hs (gs (t (u (st out)))))
+  & @put ~ (gs ((1 (hs t)) (u (st out))))
+
+@myh = (hs (gs (t (u (st out)))))
+  & @put ~ (hs (t ((1 (gs u)) (st out))))
+
+@drain = ((?((@dnil @dcons) (py (st out))) py) (st out))
+
+@dnil = (* (st out))
+  & st ~ *
+  & out ~ (0 *)
+
+@dcons = (* ((h t) (st out)))
+  & @put ~ (h ((0 *) (t (st out))))
+
+@put = (v (xs (ys (((?((@pf @pc) (v (xs (ys (p out))))) p) out))))
+
+@pf = (v (xs (ys (p out))))
+  & p ~ *
+  & v ~ {emit prev}
+  & @merge ~ (xs (ys ((1 prev) rest)))
+  & out ~ (1 (emit rest))
+
+@pc = (* (v (xs (ys (p out)))))
+  & v ~ {vc vv}
+  & p ~ {pc pp}
+  & vc ~ $([=] $(pc z))
+  & z ~ ?((@pdiff @psame) (vv (xs (ys (pp out))))
+
+@pdiff = (vv (xs (ys (pp out))))
+  & pp ~ *
+  & vv ~ {emit prev}
+  & @merge ~ (xs (ys ((1 prev) rest)))
+  & out ~ (1 (emit rest))
+
+@psame = (* (vv (xs (ys (pp out)))))
+  & @merge ~ (xs (ys ((1 pp) out)))

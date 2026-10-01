@@ -1,0 +1,205 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & {n_zero n_rest} ~ n
+  & {n_greedy n_search} ~ n_rest
+  & @zeros ~ (n_zero adj0)
+  & @build_edges ~ (edges adj0 adj)
+  & {adj_greedy adj_search} ~ adj
+  & @greedy ~ (0 n_greedy adj_greedy 0 0 best0)
+  & @search ~ (0 n_search adj_search 0 0 best0 out)
+
+@zeros = (n out)
+  & n ~ ?((@zeros_zero @zeros_pos) out)
+
+@zeros_zero = out
+  & out ~ (0 *)
+
+@zeros_pos = (n_minus out)
+  & @zeros ~ (n_minus tail)
+  & out ~ (1 (0 tail))
+
+@build_edges = (edges adj out)
+  & edges ~ (tag payload)
+  & tag ~ ?((@be_nil @be_cons) (payload (adj out)))
+
+@be_nil = (payload (adj out))
+  & payload ~ *
+  & adj ~ out
+
+@be_cons = (* (payload (adj out)))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & @pow2 ~ (v1 bit_v)
+  & @pow2 ~ (u1 bit_u)
+  & @set_bit ~ (adj u2 bit_v adj1)
+  & @set_bit ~ (adj1 v2 bit_u adj2)
+  & @build_edges ~ (tail adj2 out)
+
+@set_bit = (lst idx bit out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (bit out))))
+
+@set_nil = (payload (idx (bit out)))
+  & payload ~ *
+  & idx ~ *
+  & bit ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (payload (idx (bit out))))
+  & payload ~ (h t)
+  & idx ~ ?((@set_idx0 @set_idxpos) (h (t (bit out))))
+
+@set_idx0 = (h (t (bit out)))
+  & h ~ $([|] $(bit newh))
+  & out ~ (1 (newh t))
+
+@set_idxpos = (idx_minus (h (t (bit out))))
+  & @set_bit ~ (t idx_minus bit newtail)
+  & out ~ (1 (h newtail))
+
+@nth = (lst idx out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@nth_nil @nth_cons) (idx (payload out)))
+
+@nth_nil = (idx (payload out))
+  & idx ~ *
+  & payload ~ *
+  & out ~ 0
+
+@nth_cons = (* (idx (payload out)))
+  & payload ~ (head tail)
+  & idx ~ ?((@nth_zero @nth_pos) (head (tail out)))
+
+@nth_zero = (head (tail out))
+  & tail ~ *
+  & head ~ out
+
+@nth_pos = (idx_minus (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail idx_minus out)
+
+@is_subset = (a b out)
+  & {a1 a2} ~ a
+  & a1 ~ $([&] $(b and_ab))
+  & a2 ~ $([=] $(and_ab eq))
+  & eq ~ out
+
+@max = (a b out)
+  & {a1 a2} ~ a
+  & {b1 b2} ~ b
+  & a1 ~ $([>] $(b1 gt))
+  & gt ~ ?((@max_b @max_a) (a2 (b2 out)))
+
+@max_b = (a (b out))
+  & a ~ *
+  & b ~ out
+
+@max_a = (* (a (b out)))
+  & b ~ *
+  & a ~ out
+
+@pow2 = (i out)
+  & 1 ~ $([<<] $(i out))
+
+@greedy = (i n adj cur size out)
+  & {i_cmp i_ctx} ~ i
+  & {n_cmp n_ctx} ~ n
+  & i_cmp ~ $([<] $(n_cmp cmp))
+  & cmp ~ ?((@greedy_done @greedy_step) (i_ctx (n_ctx (adj (cur (size out))))))
+
+@greedy_done = (i n adj cur size out)
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & cur ~ *
+  & size ~ out
+
+@greedy_step = (* (i n adj cur size out))
+  & {i_add i_work} ~ i
+  & {i_idx i_bit} ~ i_work
+  & i_add ~ $([+1] iplus)
+  & {adj_nth adj_recur} ~ adj
+  & {cur_check cur_new} ~ cur
+  & @pow2 ~ (i_bit bit)
+  & @nth ~ (adj_nth i_idx mask_i)
+  & @is_subset ~ (cur_check mask_i incl)
+  & @greedy_maybe ~ (incl cur_new size bit iplus n adj_recur out)
+
+@greedy_maybe = (incl cur size bit i n adj out)
+  & incl ~ ?((@greedy_no @greedy_yes) (cur (size (bit (i (n (adj out)))))))
+
+@greedy_no = (cur size bit i n adj out)
+  & bit ~ *
+  & @greedy ~ (i n adj cur size out)
+
+@greedy_yes = (* (cur size bit i n adj out))
+  & cur ~ $([|] $(bit new_cur))
+  & size ~ $([+1] new_size)
+  & @greedy ~ (i n adj new_cur new_size out)
+
+@search = (i n adj cur size best out)
+  & {i_cmp i_ctx} ~ i
+  & {n_cmp n_ctx} ~ n
+  & i_cmp ~ $([<] $(n_cmp cmp))
+  & cmp ~ ?((@search_done @search_step) (i_ctx (n_ctx (adj (cur (size (best out)))))))
+
+@search_done = (i n adj cur size best out)
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & cur ~ *
+  & @max ~ (best size out)
+
+@search_step = (* (i n adj cur size best out))
+  & {i_bound i_work} ~ i
+  & {n_bound n_work} ~ n
+  & {size_bound size_work} ~ size
+  & {best_bound best_work} ~ best
+  & n_bound ~ $([-] $(i_bound rem))
+  & rem ~ $([+] $(size_bound bound))
+  & bound ~ $([>] $(best_bound gt))
+  & gt ~ ?((@search_prune @search_continue) (i_work (n_work (adj (cur (size_work (best_work out)))))))
+
+@search_prune = (i n adj cur size best out)
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & cur ~ *
+  & size ~ *
+  & best ~ out
+
+@search_continue = (* (i n adj cur size best out))
+  & {i_add i_work2} ~ i
+  & {i_idx i_bit} ~ i_work2
+  & i_add ~ $([+1] iplus)
+  & {iplus_excl iplus_incl} ~ iplus
+  & {n_excl n_incl} ~ n
+  & {adj_nth adj_rest} ~ adj
+  & {adj_excl adj_incl} ~ adj_rest
+  & {cur_excl cur_work} ~ cur
+  & {cur_check cur_new} ~ cur_work
+  & {size_excl size_incl} ~ size
+  & @pow2 ~ (i_bit bit)
+  & @nth ~ (adj_nth i_idx mask_i)
+  & @search ~ (iplus_excl n_excl adj_excl cur_excl size_excl best out_excl)
+  & @is_subset ~ (cur_check mask_i incl)
+  & @maybe_include ~ (incl cur_new size_incl bit out_excl iplus_incl n_incl adj_incl out)
+
+@maybe_include = (incl cur size bit best i n adj out)
+  & incl ~ ?((@no_include @yes_include) (cur (size (bit (best (i (n (adj out))))))))
+
+@no_include = (cur (size (bit (best (i (n (adj out)))))))
+  & cur ~ *
+  & size ~ *
+  & bit ~ *
+  & i ~ *
+  & n ~ *
+  & adj ~ *
+  & best ~ out
+
+@yes_include = (* (cur (size (bit (best (i (n (adj out))))))))
+  & cur ~ $([|] $(bit new_cur))
+  & size ~ $([+1] new_size)
+  & @search ~ (i n adj new_cur new_size best out)

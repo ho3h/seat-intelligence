@@ -1,0 +1,45 @@
+// Entry point: emit the expression directly onto the empty list tail.
+@prog = (expr out)
+  & @emit ~ (expr ((0 *) out))
+
+// Emit an expression onto a supplied list tail.
+@emit = ((tag payload) (tail out))
+  & tag ~ ?((@emit_lit @emit_nonlit) (payload (tail out)))
+
+@emit_lit = (n (tail out))
+  & @digits ~ (n (tail out))
+
+@emit_nonlit = (idx (payload (tail out)))
+  & idx ~ ?((@emit_add @emit_mul) (payload (tail out)))
+
+@emit_add = ((left right) (tail out))
+  & @emit_binary ~ (left (right (43 (tail out))))
+
+@emit_mul = (* ((left right) (tail out)))
+  & @emit_binary ~ (left (right (42 (tail out))))
+
+// Emit "(" ++ left ++ op ++ right ++ ")" ++ tail.
+@emit_binary = (left (right (op (tail out))))
+  & @emit ~ (right (closing right_result))
+  & closing ~ (1 (41 tail))
+  & after_op ~ (1 (op right_result))
+  & @emit ~ (left (after_op left_result))
+  & out ~ (1 (40 left_result))
+
+// Convert an unsigned number to decimal digits directly onto tail.
+@digits = (n (tail out))
+  & n ~ {n_test n_value}
+  & n_test ~ $([<] $(10 is_small))
+  & is_small ~ ?((@digit_large @digit_small) (n_value (tail out)))
+
+@digit_small = (* (n (tail out)))
+  & n ~ $([+48] char)
+  & out ~ (1 (char tail))
+
+@digit_large = (n (tail out))
+  & n ~ {quotient_source remainder_source}
+  & quotient_source ~ $([/] $(10 quotient))
+  & remainder_source ~ $([%] $(10 remainder))
+  & remainder ~ $([+48] char)
+  & next_tail ~ (1 (char tail))
+  & @digits ~ (quotient (next_tail out))

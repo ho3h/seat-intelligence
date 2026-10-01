@@ -1,0 +1,92 @@
+// Entry point: compute the positive normal form.
+@prog = (input output)
+  & @P ~ (input output)
+
+@P = (x out)
+  & x ~ (tag payload)
+  & tag ~ ?((@P0 @P1) (payload out))
+
+@P1 = (n ctx)
+  & n ~ ?((@P1c @P2) ctx)
+
+@P2 = (n ctx)
+  & n ~ ?((@P2c @P3) ctx)
+
+@P3 = (n ctx)
+  & n ~ ?((@P3c @P4) ctx)
+
+@P4 = (n ctx)
+  & n ~ ?((@P4c @P5) ctx)
+
+@P0 = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@P1c = (payload out)
+  & payload ~ *
+  & out ~ (1 *)
+
+@P2c = (payload out)
+  & out ~ (2 payload)
+
+@P3c = (payload out)
+  & @Q ~ (payload out)
+
+@P4c = (payload out)
+  & payload ~ (a b)
+  & out ~ (4 (oa ob))
+  & @P ~ (a oa)
+  & @P ~ (b ob)
+
+@P5 = (n ctx)
+  & n ~ *
+  & ctx ~ (payload out)
+  & payload ~ (a b)
+  & out ~ (5 (oa ob))
+  & @P ~ (a oa)
+  & @P ~ (b ob)
+
+// Negated normal form.
+@Q = (x out)
+  & x ~ (tag payload)
+  & tag ~ ?((@Q0 @Q1) (payload out))
+
+@Q1 = (n ctx)
+  & n ~ ?((@Q1c @Q2) ctx)
+
+@Q2 = (n ctx)
+  & n ~ ?((@Q2c @Q3) ctx)
+
+@Q3 = (n ctx)
+  & n ~ ?((@Q3c @Q4) ctx)
+
+@Q4 = (n ctx)
+  & n ~ ?((@Q4c @Q5) ctx)
+
+@Q0 = (payload out)
+  & payload ~ *
+  & out ~ (1 *)
+
+@Q1c = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@Q2c = (payload out)
+  & out ~ (3 (2 payload))
+
+@Q3c = (payload out)
+  & @P ~ (payload out)
+
+@Q4c = (payload out)
+  & payload ~ (a b)
+  & out ~ (5 (oa ob))
+  & @Q ~ (a oa)
+  & @Q ~ (b ob)
+
+@Q5 = (n ctx)
+  & n ~ *
+  & ctx ~ (payload out)
+  & payload ~ (a b)
+  & out ~ (4 (oa ob))
+  & @Q ~ (a oa)
+  & @Q ~ (b ob)

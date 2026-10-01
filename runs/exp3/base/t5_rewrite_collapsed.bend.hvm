@@ -1,0 +1,142 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_tree = (a ({$([=0x0000000] ?((@build_tree__C4 @build_tree__C5) (a (b c)))) b} c))
+
+@build_tree__C0 = (* (a (b (a b))))
+
+@build_tree__C1 = (?(((0 @List/Nil) @build_tree__C0) a) a)
+
+@build_tree__C2 = (a ({$([-] $(e f)) $([:/0x0000002] {b e})} ((c g) h)))
+  &!@build_tree ~ (d (f (g h)))
+  &!@build_tree ~ (a (b (c d)))
+
+@build_tree__C3 = (* ((@build_tree__C1 a) (* a)))
+
+@build_tree__C4 = (a ({$([=0x0000001] ?((@build_tree__C2 @build_tree__C3) (a (b c)))) b} c))
+
+@build_tree__C5 = (* (a (* (0 a))))
+
+@collect = ((@collect__C6 a) a)
+
+@collect__C0 = (a (b ($([*] $(a $([+] $(b c)))) c)))
+
+@collect__C1 = (* (a ($([*] $(a $([+] $(b c)))) (b c))))
+
+@collect__C2 = (b ({c e} (i ($([+0x0000001] k) (a ({$([<] $(d ?((@collect__C0 @collect__C1) (e (f (g h)))))) f} ({d g} l)))))))
+  & @collect ~ (a (b (c (j (k l)))))
+  & @List/Cons ~ (h (i j))
+
+@collect__C3 = (* (b (c (d ($([+0x0000001] e) (a (* (* f))))))))
+  & @collect ~ (a (b (c (d (e f)))))
+
+@collect__C4 = (* (* (a (b (a b)))))
+
+@collect__C5 = (* ((b e) (l ({h {d a}} ({i {f c}} (j (k o)))))))
+  & @tree_at ~ (d (e (f {g n})))
+  & @tree_at ~ (a (b (c {$([=] $(g ?((@collect__C2 @collect__C3) (h (i (j (k (l (m (n o)))))))))) m})))
+
+@collect__C6 = (?((@collect__C4 @collect__C5) a) a)
+
+@count_unique = ((@count_unique__C5 a) a)
+
+@count_unique__C0 = (* (c ($([+0x0000001] d) (b (a e)))))
+  & @count_unique ~ (a (b (c (d e))))
+
+@count_unique__C1 = (* (b (c (d (* (a e))))))
+  & @count_unique ~ (a (b (c (d e))))
+
+@count_unique__C2 = ({a b} (c (d ({$([=] $(a ?((@count_unique__C0 @count_unique__C1) (b (c (d (e f))))))) e} f))))
+
+@count_unique__C3 = (* (* (* ($([+0x0000001] c) (b (a d))))))
+  & @count_unique ~ (a (b (1 (c d))))
+
+@count_unique__C4 = (* (d (e (a ({$([=0x0000000] ?((@count_unique__C2 @count_unique__C3) (a (b (c (d (e f))))))) b} (c f))))))
+
+@count_unique__C5 = (?(((* (* (a a))) @count_unique__C4) b) b)
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @length ~ (a b)
+
+@length__C1 = (?((0 @length__C0) a) a)
+
+@merge = ((@merge__C6 a) a)
+
+@merge__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge__C2 = a
+  & @List/Cons ~ a
+
+@merge__C3 = (* ({a d} (e ({$([<] $(a ?((@merge__C0 @merge__C1) (b (c (d (e f))))))) b} (c f)))))
+
+@merge__C4 = (?((@merge__C2 @merge__C3) a) a)
+
+@merge__C5 = (* (a (b ((@merge__C4 (a (b c))) c))))
+
+@merge__C6 = (?(((a a) @merge__C5) b) b)
+
+@prog = (({b a} d) j)
+  & @collect ~ (d (e (f (@List/Nil (0 (g $([-] $(i j))))))))
+  & @build_tree ~ (b (c (e *)))
+  & @length ~ (a {c f})
+  & @count_unique ~ (h (0 (0 (0 i))))
+  & @sort ~ (g h)
+
+@sort = ((@sort__C4 a) a)
+
+@sort__C0 = a
+  & @List/Cons ~ a
+
+@sort__C1 = (* (* (* (a (b h)))))
+  & @merge ~ (e (g h))
+  & @split_alt ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@sort ~ (d e)
+  &!@sort ~ (f g)
+
+@sort__C2 = (?((@sort__C0 @sort__C1) a) a)
+
+@sort__C3 = (* (a ({(@sort__C2 (a (b c))) b} c)))
+
+@sort__C4 = (?((@List/Nil @sort__C3) a) a)
+
+@split_alt = ((@split_alt__C4 a) a)
+
+@split_alt__C0 = (a (b @List/Nil))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@split_alt__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split_alt ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split_alt__C2 = (?((@split_alt__C0 @split_alt__C1) a) a)
+
+@split_alt__C3 = (* (a ((@split_alt__C2 (a b)) b)))
+
+@split_alt__C4 = (?(((@List/Nil @List/Nil) @split_alt__C3) a) a)
+
+@tree_at = (c (d ({$([<0x0000001] a) e} f)))
+  & $(a ?((@tree_at__C2 (* (b (* (* b))))) (c (d (e f))))) ~ [=0x0000000]
+
+@tree_at__C0 = ($([-] $(b c)) ($([-] $(d e)) (* (a ({b d} f)))))
+  & @tree_at ~ (a (c (e f)))
+
+@tree_at__C1 = (* (b (* (a (* c)))))
+  & @tree_at ~ (a (b c))
+
+@tree_at__C2 = ((d e) ({$([<] $(a ?((@tree_at__C0 @tree_at__C1) (b (c (d (e (f g)))))))) b} ({c $([:/0x0000002] {a f})} g)))
+
+

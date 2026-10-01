@@ -1,0 +1,29 @@
+// @prog = (input output)
+@prog = (l out)
+  & @arg ~ (l (0 (0 (0 out))))
+
+@arg = ((?((@arg_nil @arg_cons) (p (i (b (bi out))))) p) (i (b (bi out))))
+
+@arg_nil = (p (i (b (bi out))))
+  & p ~ *
+  & i ~ *
+  & b ~ *
+  & bi ~ out
+
+@arg_cons = (* ((h t) (i (b (bi out)))))
+  & h ~ {hcmp hctx}
+  & b ~ {bcmp bctx}
+  & hcmp ~ $([>] $(bcmp z))
+  & z ~ ?((@arg_keep @arg_update) (hctx (t (i (bctx (bi out))))))
+
+@arg_keep = (h (t (i (b (bi out)))))
+  & h ~ *
+  & i ~ $([+1] i2)
+  & @arg ~ (t (i2 (b (bi out))))
+
+@arg_update = (* ((h t) (i (b (bi out)))))
+  & b ~ *
+  & bi ~ *
+  & i ~ {incidx newbi}
+  & incidx ~ $([+1] nextidx)
+  & @arg ~ (t (nextidx (h (newbi out))))

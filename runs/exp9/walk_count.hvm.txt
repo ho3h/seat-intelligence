@@ -1,0 +1,37 @@
+// t3_walk_count (GRAPH-SWING-2, runs/exp9): k UNGATED push rounds over tries (new template `rounds`). The round count
+// is an input, so no convergence test sits between rounds: every vertex pushes its count to all out-neighbours
+// every round (keyed nav adds into a fresh zero trie), and because each round's control flow depends only on the
+// adjacency and k, round r+1's structure expands while round r's numbers are still flowing.
+@prog = ((n (s (t (k es)))) out)
+  & n ~ ?((@wc_zero @wc_pos) (s (t (k (es out)))))
+@wc_zero = (* (* (* (* 0))))
+@wc_pos = (nm1 (s (t (k (es out)))))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & s ~ {s1 s2}
+  & s1 ~ $([<] $(n1 inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & @zt ~ (L3 Z)
+  & @ad ~ (Z (key (L4 (i2 C0))))
+  & @wr ~ (k (G (C0 (L5 Cf))))
+  & @getd ~ (Cf (t (n2 (L6 (0 out)))))
+@wc_step = ((L g) ((u v) (L2 g2)))
+  & L ~ {L1 L2}
+  & @pn ~ (g (u (L1 (v g2))))
+@wc_fin = ((* g) g)
+@re_zero = (L z)
+  & @zt ~ (L z)
+@re_emit = ((?((@wm_nil @wm_cons) (p (c (z (l2 (zo Lf)))))) p) (c (z (l2 (zo Lf)))))
+@wm_nil = (* (* (z ((0 *) (z *)))))
+@wm_cons = (* ((v rest) (c (z ((1 (v2 rest2)) (zo Lf))))))
+  & v ~ {v1 v2}
+  & c ~ {c1 c2}
+  & Lf ~ {f1 f2}
+  & @ad ~ (z (v1 (f1 (c1 zm))))
+  & @re_emit ~ (rest (c2 (zm (rest2 (zo f2)))))

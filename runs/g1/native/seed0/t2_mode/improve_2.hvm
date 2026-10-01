@@ -1,0 +1,118 @@
+@prog = (input output)
+  & @sort ~ (input sorted)
+  & @scan ~ (sorted output)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @split_a ~ ((1 (h t)) pair)
+  & pair ~ (a b)
+  & @sort ~ (a sa)
+  & @sort ~ (b sb)
+  & @merge ~ (sa (sb out))
+
+@split_a = ((?((@split_a_nil @split_a_cons) (pl out)) pl) out)
+
+@split_a_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_a_cons = (* ((h t) out))
+  & @split_b ~ (t pair)
+  & pair ~ (a b)
+  & out ~ ((1 (h a)) b)
+
+@split_b = ((?((@split_b_nil @split_b_cons) (pl out)) pl) out)
+
+@split_b_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_b_cons = (* ((h t) out))
+  & @split_a ~ (t pair)
+  & pair ~ (a b)
+  & out ~ (a (1 (h b)))
+
+@merge = ((?((@merge_nil @merge_cons) (pl (b out))) pl) (b out))
+
+@merge_nil = (pl (b out))
+  & pl ~ *
+  & out ~ b
+
+@merge_cons = (* ((h t) (b out)))
+  & @merge_right ~ (b (h (t out)))
+
+@merge_right = ((?((@merge_b_nil @merge_b_cons) (bp (h (t out)))) bp) (h (t out)))
+
+@merge_b_nil = (bp (h (t out)))
+  & bp ~ *
+  & out ~ (1 (h t))
+
+@merge_b_cons = (* ((hb bt) (h (t out))))
+  & h ~ {hk hc}
+  & hb ~ {hbk hbc}
+  & hc ~ $([<] $(hbc lt))
+  & lt ~ ?((@merge_take_a @merge_take_b) (hk (hbk (t (bt out))))
+
+@merge_take_a = (hk (hbk (t (bt out))))
+  & @merge ~ (t ((1 (hbk bt)) rest))
+  & out ~ (1 (hk rest))
+
+@merge_take_b = (* (hk (hbk (t (bt out)))))
+  & @merge ~ ((1 (hk t)) (bt rest))
+  & out ~ (1 (hbk rest))
+
+@scan = ((?((@scan_nil @scan_cons) (pl out)) pl) out)
+
+@scan_nil = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@scan_cons = (* ((h t) out))
+  & @run ~ (t (h (1 (0 (0 out))))
+
+@run = ((?((@run_nil @run_cons) (pl (cur (cnt (best (bc out))))) pl) (cur (cnt (best (bc out)))))
+
+@run_nil = (pl (cur (cnt (best (bc out)))))
+  & pl ~ *
+  & cnt ~ $([>] $(bc gt))
+  & gt ~ ?((@run_nil_keep @run_nil_take) (cur (best out)))
+
+@run_nil_keep = (cur (best out))
+  & cur ~ *
+  & out ~ best
+
+@run_nil_take = (* (cur (best out)))
+  & best ~ *
+  & out ~ cur
+
+@run_cons = (* ((x t) (cur (cnt (best (bc out))))))
+  & x ~ {xkeep xcmp}
+  & cur ~ {curkeep curcmp}
+  & xcmp ~ $([=] $(curcmp eq))
+  & eq ~ ?((@run_same @run_diff) (xkeep (curkeep (t (cnt (best (bc out))))))
+
+@run_same = (x (cur (t (cnt (best (bc out))))))
+  & x ~ *
+  & cnt ~ $([+1] nc)
+  & @run ~ (t (cur (nc (best (bc out)))))
+
+@run_diff = (x (cur (t (cnt (best (bc out))))))
+  & cnt ~ {ccmp cntkeep}
+  & bc ~ {bcmp bkeep}
+  & ccmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@run_diff_keep @run_diff_take) (x (t (cur (cntkeep (best (bkeep out))))))
+
+@run_diff_keep = (x (t (cur (cnt (best (bc out))))))
+  & cur ~ *
+  & cnt ~ *
+  & @run ~ (t (x (1 (best (bc out)))))
+
+@run_diff_take = (* (x (t (cur (cnt (best (bc out)))))))
+  & best ~ *
+  & bc ~ *
+  & @run ~ (t (x (1 (cur (cnt out)))))

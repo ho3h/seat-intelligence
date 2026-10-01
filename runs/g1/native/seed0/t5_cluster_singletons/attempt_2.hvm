@@ -1,0 +1,52 @@
+// Count each node with no incident edge.
+@prog = (input out)
+  & input ~ (n edges)
+  & @loop ~ (n (0 (edges (0 out))))
+
+@loop = (n (i (edges (acc out))))
+  & n ~ ?((@loop_done @loop_step) (i (edges (acc out))))
+
+@loop_done = (i (edges (acc out)))
+  & i ~ *
+  & edges ~ *
+  & acc ~ out
+
+@loop_step = (rem (i (edges (acc out))))
+  & edges ~ {scan rest}
+  & i ~ {iscan inext}
+  & @has ~ (scan (iscan hit))
+  & acc ~ $([+] $(hit acc2))
+  & inext ~ $([+1] inext2)
+  & @loop ~ (rem (inext2 (rest (acc2 out))))
+
+// Return 1 if the vertex does not occur in the edge list, else 0.
+@has = ((?((@has_nil @has_cons) (payload (i out))) payload) (i out))
+
+@has_nil = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & out ~ 1
+
+@has_cons = (* ((u v) (tail (i out))))
+  & i ~ {iu ir}
+  & u ~ $([=] $(iu eq))
+  & eq ~ ?((@has_u_no @has_u_yes) (v (tail (ir out))))
+
+@has_u_no = (v (tail (ir out)))
+  & ir ~ {iv ir2}
+  & v ~ $([=] $(iv eq2))
+  & eq2 ~ ?((@has_recurse @has_v_yes) (tail (ir2 out)))
+
+@has_u_yes = (* (v (tail (ir out))))
+  & v ~ *
+  & tail ~ *
+  & ir ~ *
+  & out ~ 0
+
+@has_v_yes = (* (tail (ir2 out)))
+  & tail ~ *
+  & ir2 ~ *
+  & out ~ 0
+
+@has_recurse = (tail (ir2 out))
+  & @has ~ (tail (ir2 out))

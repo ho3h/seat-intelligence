@@ -1,0 +1,18 @@
+@prog = (l out)
+  & @am ~ (l (0 (0 (0 out))))
+
+@am = ((?((@am_nil @am_cons) (pl (i (b (bi out))))) pl) (i (b (bi out))))
+
+@am_nil = (* (* (* (x x))))
+
+@am_cons = (* (({h1 h2} t) (i ({b1 b2} (bi out)))))
+  & h1 ~ $([>] $(b1 z))
+  & z ~ ?((@am_no @am_yes) (h2 (b2 (i (bi (t out))))))
+
+@am_no = (* (b (i (bi (t out)))))
+  & i ~ $([+1] i2)
+  & @am ~ (t (i2 (b (bi out))))
+
+@am_yes = (* (h (* ({i1 i2} (* (t out))))))
+  & i1 ~ $([+1] i3)
+  & @am ~ (t (i3 (h (i2 out))))

@@ -1,0 +1,39 @@
+// Tree minimum and maximum.
+@prog = (tree out)
+  & @tm ~ (tree out)
+
+@tm = ((?((@tm_leaf @tm_node) (p out)) p) out)
+
+@tm_leaf = (* (16777215 0))
+
+@tm_node = (* ((l (v r)) out))
+  & @tm ~ (l (lm lx))
+  & @tm ~ (r (rm rx))
+  & v ~ {vmin vmax}
+  & @min2 ~ (lm (vmin midmin))
+  & @min2 ~ (midmin (rm minout))
+  & @max2 ~ (lx (vmax midmax))
+  & @max2 ~ (midmax (rx maxout))
+  & out ~ (minout maxout)
+
+// Return the smaller of a and b.
+@min2 = (a (b out))
+  & a ~ {ac as}
+  & b ~ {bc bs}
+  & ac ~ $([<] $(bc cmp))
+  & cmp ~ ?((@min2_b @min2_a) (as (bs out)))
+
+@min2_b = (* (x x))
+
+@min2_a = (* (a (* a)))
+
+// Return the larger of a and b.
+@max2 = (a (b out))
+  & a ~ {ac as}
+  & b ~ {bc bs}
+  & ac ~ $([>] $(bc cmp))
+  & cmp ~ ?((@max2_b @max2_a) (as (bs out)))
+
+@max2_b = (* (x x))
+
+@max2_a = (* (a (* a)))

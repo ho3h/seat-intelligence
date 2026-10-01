@@ -1,0 +1,24 @@
+// The zero branch is inlined to avoid an extra reference expansion.
+@prog = ((?(((* 0) @amin_init) (pl out)) pl) out)
+
+@amin_init = (* ((h t) out))
+  & @scan ~ (t (1 (h (0 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (idx (best (bi out))))) pl) (idx (best (bi out))))
+
+@scan_nil = (* (* (* (r r))))
+
+@scan_cons = (* ((h t) (idx (best (bi out)))))
+  & h ~ {hc hh}
+  & best ~ {bc bb}
+  & hc ~ $([<] $(bc cmp))
+  & cmp ~ ?((@scan_keep @scan_replace) (hh (t (idx (bb (bi out))))))
+
+@scan_keep = (* (t (idx (best (bi out)))))
+  & idx ~ $([+1] idx2)
+  & @scan ~ (t (idx2 (best (bi out))))
+
+@scan_replace = (* (h (t (idx (* (* out))))))
+  & idx ~ {idx_inc idx_bi}
+  & idx_inc ~ $([+1] idx2)
+  & @scan ~ (t (idx2 (h (idx_bi out))))

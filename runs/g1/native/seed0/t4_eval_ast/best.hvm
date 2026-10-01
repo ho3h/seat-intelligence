@@ -1,0 +1,22 @@
+// Match the input expression directly at the program root.
+@prog = ((tag payload) out)
+  & tag ~ ?((@lit @nonlit) (payload out))
+
+@ev = (e out)
+  & e ~ (tag payload)
+  & tag ~ ?((@lit @nonlit) (payload out))
+
+@lit = (n n)
+
+// The positive tag is decremented by the switch: 0 means Add, 1 means Mul.
+@nonlit = (k (payload out))
+  & k ~ ?((@add @mul) (payload out))
+
+@add = ((left right) out)
+  & @ev ~ (left $([+] $(y out)))
+  & @ev ~ (right y)
+
+@mul = (z ((left right) out))
+  & z ~ *
+  & @ev ~ (left $([*] $(y out)))
+  & @ev ~ (right y)

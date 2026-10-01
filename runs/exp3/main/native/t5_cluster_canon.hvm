@@ -1,0 +1,57 @@
+@prog = ((?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero ({?((@init_zero @init_more) ((?((@ap_nil (* ((h_q331 (?((@ap_nil @ap_cons) (pl_q291_q331 (x_q331 mid_q331))) pl_q291_q331)) (x_q331 (1 (h_q331 mid_q331)))))) (pl_q290_q323 (m2_q323 out_q323))) pl_q290_q323) *)) m2_q323} (out_q323 *))) ((?((@ap_nil @ap_cons) (pl_q290_q322 (m2_q322 out_q322))) pl_q290_q322) *)) m2_q322} (out_q322 *))) ((?((@ap_nil @ap_cons) (pl_q290_q321 (m2_q321 out_q321))) pl_q290_q321) *)) m2_q321} (out_q321 *))) ((?((@ap_nil @ap_cons) (pl_q290_q320 (m2_q320 out_q320))) pl_q290_q320) *)) m2_q320} (out_q320 *))) ((?((@ap_nil @ap_cons) (pl_q290_q319 (m2_q319 out_q319))) pl_q290_q319) *)) m2_q319} (out_q319 *))) ((?((@ap_nil @ap_cons) (pl_q290_q318 (m2_q318 out_q318))) pl_q290_q318) *)) m2_q318} (out_q318 *))) ((?((@ap_nil @ap_cons) (pl_q290_q317 (m2_q317 out_q317))) pl_q290_q317) *)) m2_q317} (out_q317 *))) ((?((@ap_nil @ap_cons) (pl_q290_q316 (m2_q316 out_q316))) pl_q290_q316) *)) m2_q316} (out_q316 *))) ((?((@ap_nil @ap_cons) (pl_q290_q315 (m2_q315 out_q315))) pl_q290_q315) *)) m2_q315} (out_q315 *))) ((?((@ap_nil @ap_cons) (pl_q290_q314 (m2_q314 out_q314))) pl_q290_q314) *)) m2_q314} (out_q314 *))) ((?((@ap_nil @ap_cons) (pl_q290_q313 (m2_q313 out_q313))) pl_q290_q313) *)) m2_q313} (out_q313 *))) ((?((@ap_nil (* ((h_q326 (?((@ap_nil @ap_cons) (pl_q291_q326 (x_q326 mid_q326))) pl_q291_q326)) (x_q326 (1 (h_q326 mid_q326)))))) (pl_q290_q312 (m2_q312 out_q312))) pl_q290_q312) *)) m2_q312} (out_q312 *))) ((?((@ap_nil @ap_cons) (pl_q290_q311 (m2_q311 out_q311))) pl_q290_q311) *)) m2_q311} (out_q311 *))) ((?((@ap_nil @ap_cons) (pl_q290_q310 (m2_q310 out_q310))) pl_q290_q310) *)) m2_q310} (out_q310 *))) ((?((@ap_nil @ap_cons) (pl_q290_q309 (m2_q309 out_q309))) pl_q290_q309) *)) m2_q309} (out_q309 *))) ((?((@ap_nil @ap_cons) (pl_q290_q308 (m2_q308 out_q308))) pl_q290_q308) *)) m2_q308} (out_q308 *))) ((?((@ap_nil @ap_cons) (pl_q290_q307 (m2_q307 out_q307))) pl_q290_q307) *)) m2_q307} (out_q307 *))) ((?((@ap_nil @ap_cons) (pl_q290_q306 (m2_q306 out_q306))) pl_q290_q306) *)) m2_q306} (out_q306 *))) ((?((@ap_nil (* ((h_q328 (?((@ap_nil @ap_cons) (pl_q291_q328 (x_q328 mid_q328))) pl_q291_q328)) (x_q328 (1 (h_q328 mid_q328)))))) (pl_q290_q305 (m2_q305 out_q305))) pl_q290_q305) *)) m2_q305} (out_q305 *))) ((?((@ap_nil @ap_cons) (pl_q290_q304 (m2_q304 out_q304))) pl_q290_q304) *)) m2_q304} (out_q304 *))) (parents *)) (?((@sw_nil @sw_cons) (pl_q287 (parents {(?((@labels_nil @labels_cons) (pl_q288 (lookup out))) pl_q288) lookup}))) pl_q287)) out)
+
+@init_zero = (out *)
+  & out ~ (0 *)
+
+@init_more = ({?((@init_zero @init_more) ((?((@ap_nil @ap_cons) (pl_q290 (m2 out))) pl_q290) *)) m2} (out *))
+
+@ap_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ap_cons = (* ((h (?((@ap_nil @ap_cons) (pl_q291 (x mid))) pl_q291)) (x (1 (h mid)))))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ *
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_head @get_tail) (h (t out)))
+
+@get_head = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@get_tail = (idx (* ((?((@get_nil @get_cons) (pl_q292 (idx out))) pl_q292) out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ *
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_head (idx_q334 (h_q334 ((?((@set_nil @set_cons) (pl_q293_q334 (idx_q334 (val_q334 mid_q334)))) pl_q293_q334) (val_q334 (1 (h_q334 mid_q334))))))) (h (t (val out))))
+
+@set_head = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@find_next = (* ({(?((@get_nil @get_cons) (pl_q294_q295 (iget_q295 {$([=] $(icmp_q295 ?((@find_next @find_same) (ib_q295 (prest_q295 (vnext_q295 out)))))) vnext_q295}))) pl_q294_q295) prest_q295} ({iget_q295 {icmp_q295 ib_q295}} out)))
+
+@find_same = (* (idx (parents (val out))))
+  & parents ~ *
+  & val ~ *
+  & out ~ idx
+
+@edge_le = (a (b ((?((@set_nil @set_cons) (pl_q298 (a (b out)))) pl_q298) out)))
+
+@edge_gt = (* (a (b ((?((@set_nil @set_cons) (pl_q299 (b (a out)))) pl_q299) out))))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((({iget_q296_q300 {icmp_q296_q300 ib_q296_q300}} {iget_q297_q300 {icmp_q297_q300 ib_q297_q300}}) (?((@sw_nil @sw_cons) (pl_q301 (mid out))) pl_q301)) ({{(?((@get_nil @get_cons) (pl_q294_q296_q300 (iget_q296_q300 {$([=] $(icmp_q296_q300 ?((@find_next @find_same) (ib_q296_q300 (prest_q296_q300 (vnext_q296_q300 {$([>] $(bc_q300 ?((@edge_le @edge_gt) (ar_q300 (br_q300 (pset_q300 mid)))))) ar_q300})))))) vnext_q296_q300}))) pl_q294_q296_q300) prest_q296_q300} {{(?((@get_nil @get_cons) (pl_q294_q297_q300 (iget_q297_q300 {$([=] $(icmp_q297_q300 ?((@find_next @find_same) (ib_q297_q300 (prest_q297_q300 (vnext_q297_q300 {bc_q300 br_q300})))))) vnext_q297_q300}))) pl_q294_q297_q300) prest_q297_q300} pset_q300}} out)))
+
+@labels_nil = (* (parents out))
+  & parents ~ *
+  & out ~ (0 *)
+
+@labels_cons = (* (({iget_q302 {icmp_q302 ib_q302}} (?((@labels_nil @labels_cons) (pl_q303 (prest mid))) pl_q303)) ({{(?((@get_nil @get_cons) (pl_q294_q302 (iget_q302 {$([=] $(icmp_q302 ?((@find_next @find_same) (ib_q302 (prest_q302 (vnext_q302 root)))))) vnext_q302}))) pl_q294_q302) prest_q302} prest} (1 (root mid)))))

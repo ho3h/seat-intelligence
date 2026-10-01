@@ -1,0 +1,171 @@
+@prog = (input out)
+  & input ~ (n (s edges))
+  & s ~ {s_seen s_queue}
+  & @force_list ~ (edges edges_eval)
+  & @bfs ~ ((1 (s_queue (0 *))) ((1 (s_seen (0 *))) (edges_eval (n ((0 *) out)))))
+
+@force_list = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@force_nil @force_cons) (payload out))
+
+@force_nil = (p out)
+  & p ~ *
+  & out ~ (0 *)
+
+@force_cons = (* (p out))
+  & p ~ (e t)
+  & @force_list ~ (t tail_out)
+  & out ~ (1 (e tail_out))
+
+@bfs = (queue (seen (edges (n (rev out)))))
+  & queue ~ (tag payload)
+  & tag ~ ?((@bfs_nil @bfs_cons) (payload (seen (edges (n (rev out))))))
+
+@bfs_nil = (p (seen (edges (n (rev out)))))
+  & p ~ *
+  & seen ~ *
+  & edges ~ *
+  & n ~ *
+  & @reverse ~ (rev out)
+
+@bfs_cons = (* (p (seen (edges (n (rev out))))))
+  & p ~ (u tail)
+  & u ~ {u_neigh u_out}
+  & edges ~ {edges_neigh edges_rest}
+  & @neighbors ~ (u_neigh (edges_neigh neigh))
+  & @process ~ (neigh (tail (seen (edges_rest (n ((1 (u_out rev)) out))))))
+
+@process = (neigh (queue (seen (edges (n (rev out))))))
+  & neigh ~ (tag payload)
+  & tag ~ ?((@process_nil @process_cons) (payload (queue (seen (edges (n (rev out)))))))
+
+@process_nil = (p (queue (seen (edges (n (rev out))))))
+  & p ~ *
+  & @bfs ~ (queue (seen (edges (n (rev out)))))
+
+@process_cons = (* (p (queue (seen (edges (n (rev out)))))))
+  & p ~ (y neigh_tail)
+  & seen ~ {seen_check seen_rest}
+  & y ~ {y_check y_add}
+  & @contains ~ (seen_check (y_check cmp))
+  & cmp ~ ?((@add_y @skip_y) (y_add (neigh_tail (queue (seen_rest (edges (n (rev out))))))))
+
+@skip_y = (* (y_add (neigh_tail (queue (seen_rest (edges (n (rev out))))))))
+  & y_add ~ *
+  & @process ~ (neigh_tail (queue (seen_rest (edges (n (rev out))))))
+
+@add_y = (y_add (neigh_tail (queue (seen_rest (edges (n (rev out)))))))
+  & y_add ~ {y_app y_seen}
+  & @append ~ (queue (y_app new_queue))
+  & @process ~ (neigh_tail (new_queue ((1 (y_seen seen_rest)) (edges (n (rev out))))))
+
+@neighbors = (u (edges out))
+  & @scan_edges ~ (u (edges ((0 *) out)))
+
+@scan_edges = (u (edges (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (u (payload (acc out))))
+
+@scan_nil = (u (p (acc out)))
+  & u ~ *
+  & p ~ *
+  & out ~ acc
+
+@scan_cons = (* (u (p (acc out))))
+  & p ~ (e t)
+  & e ~ (a b)
+  & u ~ {u_a u_rest}
+  & a ~ {a_cmp a_rest}
+  & a_cmp ~ $([=] $(u_a eqa))
+  & eqa ~ ?((@scan_a_no @scan_a_yes) (u_rest (a_rest (b (t (acc out))))))
+
+@scan_a_yes = (* (u_rest (a_rest (b (t (acc out))))))
+  & a_rest ~ *
+  & @insert ~ (b (acc newacc))
+  & @scan_edges ~ (u_rest (t (newacc out)))
+
+@scan_a_no = (u_rest (a_rest (b (t (acc out)))))
+  & u_rest ~ {u_b u_next}
+  & b ~ $([=] $(u_b eqb))
+  & eqb ~ ?((@scan_none @scan_b_yes) (u_next (a_rest (t (acc out)))))
+
+@scan_b_yes = (* (u_next (a_rest (t (acc out)))))
+  & @insert ~ (a_rest (acc newacc))
+  & @scan_edges ~ (u_next (t (newacc out)))
+
+@scan_none = (u_next (a_rest (t (acc out))))
+  & a_rest ~ *
+  & @scan_edges ~ (u_next (t (acc out)))
+
+@contains = (lst (x out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@contains_nil @contains_cons) (x (payload out)))
+
+@contains_nil = (x (p out))
+  & x ~ *
+  & p ~ *
+  & out ~ 0
+
+@contains_cons = (* (x (p out)))
+  & p ~ (h t)
+  & x ~ {x_cmp x_rest}
+  & h ~ $([=] $(x_cmp cmp))
+  & cmp ~ ?((@contains_no @contains_yes) (x_rest (t out)))
+
+@contains_no = (x_rest (t out))
+  & @contains ~ (t (x_rest out))
+
+@contains_yes = (* (x_rest (t out)))
+  & x_rest ~ *
+  & t ~ *
+  & out ~ 1
+
+@append = (lst (x out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@append_nil @append_cons) (x (payload out)))
+
+@append_nil = (x (p out))
+  & p ~ *
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* (x (p out)))
+  & p ~ (h t)
+  & @append ~ (t (x tail_out))
+  & out ~ (1 (h tail_out))
+
+@insert = (y (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@insert_nil @insert_cons) (y (payload out)))
+
+@insert_nil = (y (p out))
+  & p ~ *
+  & out ~ (1 (y (0 *)))
+
+@insert_cons = (* (y (p out)))
+  & p ~ (h t)
+  & y ~ {y_cmp y_rest}
+  & h ~ {h_cmp h_rest}
+  & y_cmp ~ $([<] $(h_cmp cmp))
+  & cmp ~ ?((@insert_ge @insert_lt) (y_rest (h_rest (t out))))
+
+@insert_lt = (* (y_rest (h_rest (t out))))
+  & out ~ (1 (y_rest (1 (h_rest t))))
+
+@insert_ge = (y_rest (h_rest (t out)))
+  & @insert ~ (y_rest (t inserted_out))
+  & out ~ (1 (h_rest inserted_out))
+
+@reverse = (lst out)
+  & @rev_acc ~ (lst ((0 *) out))
+
+@rev_acc = (lst (acc out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@rev_nil @rev_cons) (payload (acc out)))
+
+@rev_nil = (p (acc out))
+  & p ~ *
+  & out ~ acc
+
+@rev_cons = (* (p (acc out)))
+  & p ~ (h t)
+  & @rev_acc ~ (t ((1 (h acc)) out))

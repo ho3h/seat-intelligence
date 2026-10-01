@@ -1,0 +1,33 @@
+// @fib returns (F_n, F_(n+1)).
+@prog = (n out)
+  & @fib ~ (n (out *))
+
+@fib = (?((@fib_zero @fib_succ) ctx) ctx)
+
+@fib_zero = out
+  & out ~ (0 1)
+
+@fib_succ = (m out)
+  & m ~ $([+1] n)
+  & n ~ {n1 n2}
+  & n1 ~ $([/] $(2 half))
+  & n2 ~ $([%] $(2 parity))
+  & @fib ~ (half (a b))
+  & a ~ {a1 ar}
+  & ar ~ {a2 ar2}
+  & ar2 ~ {a3 a4}
+  & b ~ {b1 br}
+  & br ~ {b2 b3}
+  & b1 ~ $([*2] $([-] $(a1 term)))
+  & a2 ~ $([*] $(term c))
+  & a3 ~ $([*] $(a4 asq))
+  & b2 ~ $([*] $(b3 bsq))
+  & asq ~ $([+] $(bsq d))
+  & parity ~ ?((@fib_even @fib_odd) (c (d out)))
+
+@fib_even = (c (d out))
+  & out ~ (c d)
+
+@fib_odd = (* (c (d out)))
+  & c ~ $([+] $(d sum))
+  & out ~ (d sum)

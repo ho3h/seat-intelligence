@@ -1,0 +1,90 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@bigger = ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f))
+
+@combine_children = ((@combine_children__C6 a) a)
+
+@combine_children__C0 = ({b e} (f (g ({c h} ($([+] $(i j)) ($([+] $(m n)) (o (a (d r)))))))))
+  & @combine_children ~ (d (e (f (g (h (j (n (q r))))))))
+  & @tree_dp ~ (a (b (1 (c (k ({l i} p))))))
+  & @bigger ~ (k (l m))
+  & @join ~ (o (p q))
+
+@combine_children__C1 = (* (b (c (d (e (f (g (h (* (a i))))))))))
+  & @combine_children ~ (a (b (c (d (e (f (g (h i))))))))
+
+@combine_children__C2 = ({b e} (f (g ({c h} ($([+] $(i j)) ($([+] $(m n)) (o (a (d r)))))))))
+  & @combine_children ~ (d (e (f (g (h (j (n (q r))))))))
+  & @tree_dp ~ (a (b (1 (c (k ({l i} p))))))
+  & @bigger ~ (k (l m))
+  & @join ~ (o (p q))
+
+@combine_children__C3 = (* (b ({a c} (d (e (f (g (h ({$([=] $(a ?((@combine_children__C0 @combine_children__C1) (b (c (d (e (f (g (h (i j))))))))))) i} j)))))))))
+
+@combine_children__C4 = (* (* (* (* (a (b (c (a (b c)))))))))
+
+@combine_children__C5 = (* (h (i (a (b ({$([=0x0000001] ?((@combine_children__C2 @combine_children__C3) (a (b (c (d (e (f (g (h (i j))))))))))) c} (d (e (f (g j))))))))))
+
+@combine_children__C6 = (?((@combine_children__C4 @combine_children__C5) a) a)
+
+@contains = ((@contains__C2 a) a)
+
+@contains__C0 = (b (a c))
+  & @contains ~ (a (b c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@get_neighbors = (a ((@get_neighbors__C5 (a b)) b))
+
+@get_neighbors__C0 = (a (b (* c)))
+  & @get_neighbors ~ (a (b c))
+
+@get_neighbors__C1 = (* (b (c (a e))))
+  & @List/Cons ~ (a (d e))
+  & @get_neighbors ~ (b (c d))
+
+@get_neighbors__C2 = ({a b} (c (d ($([=] $(a ?((@get_neighbors__C0 @get_neighbors__C1) (b (c (d e)))))) e))))
+
+@get_neighbors__C3 = (* (b (c (* (a e)))))
+  & @List/Cons ~ (a (d e))
+  & @get_neighbors ~ (b (c d))
+
+@get_neighbors__C4 = (* (({$([=] $(a ?((@get_neighbors__C2 @get_neighbors__C3) (b (c (d (e f))))))) d} e) (c ({a b} f))))
+
+@get_neighbors__C5 = (?(((* @List/Nil) @get_neighbors__C4) a) a)
+
+@join = ((@join__C1 a) a)
+
+@join__C0 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @join ~ (b (c d))
+
+@join__C1 = (?(((a a) @join__C0) b) b)
+
+@prog = ((a b) c)
+  & @visit_roots ~ (0 (a (b (@List/Nil (0 c)))))
+
+@tree_dp = ({d {h a}} (e (f ({g b} j))))
+  & @combine_children ~ (c (d (e (f (g (1 (0 (i j))))))))
+  & @get_neighbors ~ (a (b c))
+  & @List/Cons ~ (h (@List/Nil i))
+
+@visit_roots = ({$([=] $(a ?((@visit_roots__C2 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@visit_roots__C0 = ({a $([+0x0000001] c)} (d ({b e} (f ($([+] $(k l)) m)))))
+  & @visit_roots ~ (c (d (e (h (l m)))))
+  & @tree_dp ~ (a (0 (0 (b (i (j g))))))
+  & @join ~ (f (g h))
+  & @bigger ~ (i (j k))
+
+@visit_roots__C1 = (* ($([+0x0000001] a) b))
+  & @visit_roots ~ (a b)
+
+@visit_roots__C2 = ({b c} (d (e ({a f} g))))
+  & @contains ~ (a (b $([=0x0000001] ?((@visit_roots__C0 @visit_roots__C1) (c (d (e (f g))))))))
+
+

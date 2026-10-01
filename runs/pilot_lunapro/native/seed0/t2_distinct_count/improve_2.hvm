@@ -1,0 +1,61 @@
+// Trie nodes are Empty = (0 *), Branch = (1 (left right)), and Present = (2 *).
+@prog = (l out)
+  & @dc ~ (l ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (trie (acc out)))) pl) (trie (acc out)))
+
+@dc_nil = (pl (trie (acc out)))
+  & pl ~ *
+  & trie ~ *
+  & acc ~ out
+
+@dc_cons = (* ((h t) (trie (acc out))))
+  & @ins ~ (h (trie (24 (newtrie added))))
+  & acc ~ $([+] $(added acc2))
+  & @dc ~ (t (newtrie (acc2 out)))
+
+// Insert key at the current bit depth; return (updated trie, 0-or-1 added).
+@ins = (key (trie (depth out)))
+  & depth ~ ?((@ins_end @ins_step) (key (trie out)))
+
+@ins_end = (key (trie out))
+  & trie ~ (?( (@end_empty @end_present) (payload (key out))) payload)
+
+@end_empty = (payload (key out))
+  & payload ~ *
+  & key ~ *
+  & out ~ ((2 *) 1)
+
+@end_present = (* (payload (key out)))
+  & payload ~ *
+  & key ~ *
+  & out ~ ((2 *) 0)
+
+@ins_step = (prev (key (trie out)))
+  & key ~ {k1 k2}
+  & k1 ~ $([&] $(1 bit))
+  & k2 ~ $([>>] $(1 shifted))
+  & trie ~ (?( (@node_empty @node_branch) (payload (bit shifted prev out))) payload)
+
+@node_empty = (payload (bit (shifted (prev out))))
+  & payload ~ *
+  & bit ~ ?((@empty_zero @empty_one) (shifted (prev out)))
+
+@empty_zero = (shifted (prev out))
+  & @ins ~ (shifted ((0 *) (prev (newchild added))))
+  & out ~ ((1 (newchild (0 *))) added)
+
+@empty_one = (* (shifted (prev out)))
+  & @ins ~ (shifted ((0 *) (prev (newchild added))))
+  & out ~ ((1 ((0 *) newchild)) added)
+
+@node_branch = (* ((left right) (bit (shifted (prev out)))))
+  & bit ~ ?((@branch_zero @branch_one) (left (right (shifted (prev out)))))
+
+@branch_zero = (left (right (shifted (prev out))))
+  & @ins ~ (shifted (left (prev (newchild added))))
+  & out ~ ((1 (newchild right)) added)
+
+@branch_one = (* (left (right (shifted (prev out)))))
+  & @ins ~ (shifted (right (prev (newchild added))))
+  & out ~ ((1 (left newchild)) added)

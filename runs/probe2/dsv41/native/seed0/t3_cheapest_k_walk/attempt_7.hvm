@@ -1,0 +1,163 @@
+@prog = ((n (s (t (k edges)))) out)
+  & n ~ {na nb}
+  & na ~ {na1 na2}
+  & s ~ {sa sb}
+  & t ~ {ta tb}
+  & sa ~ $([<] $(na1 c1))
+  & ta ~ $([<] $(na2 c2))
+  & c1 ~ $([&] $(c2 c3))
+  & c3 ~ ?((@prog_invalid @prog_valid) (nb (sb (tb (k (edges out))))))
+
+@prog_invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@prog_valid = (* (n (s (t (k (edges out))))))
+  & n ~ {n1 n2}
+  & n1 ~ {n1a n1b}
+  & @init_dist ~ (n1a (s dist))
+  & @iterate ~ (k (n1b (edges (dist fdist))))
+  & n2 ~ $([-] $(1 nm1))
+  & nm1 ~ $([-] $(t idx))
+  & @get ~ (fdist (idx out))
+
+@init_dist = (n (s out))
+  & n ~ $([-] $(1 i0))
+  & @build ~ (i0 (s out))
+
+@build = (i (s out))
+  & i ~ ?((@build_zero @build_step) (s out))
+
+@build_zero = (s out)
+  & s ~ $([=] $(0 eq))
+  & eq ~ ?((@build_zero_no @build_zero_yes) out)
+
+@build_zero_no = out
+  & out ~ (1 (16777215 (0 *)))
+
+@build_zero_yes = (* out)
+  & out ~ (1 (0 (0 *)))
+
+@build_step = (im1 (s out))
+  & im1 ~ {i1 i2}
+  & s ~ {s1 s2}
+  & i1 ~ $([+1] i)
+  & i ~ $([=] $(s1 eq))
+  & @build ~ (i2 (s2 rest))
+  & eq ~ ?((@build_step_no @build_step_yes) (rest out))
+
+@build_step_no = (rest out)
+  & out ~ (1 (16777215 rest))
+
+@build_step_yes = (* (rest out))
+  & out ~ (1 (0 rest))
+
+@iterate = (k (n (edges (dist out))))
+  & k ~ ?((@iterate_done @iterate_step) (n (edges (dist out))))
+
+@iterate_done = (n (edges (dist out)))
+  & out ~ dist
+  & n ~ *
+  & edges ~ *
+
+@iterate_step = (km1 (n (edges (dist out))))
+  & n ~ {n1 n2}
+  & edges ~ {e1 e2}
+  & @step ~ (n1 (e1 (dist ndist)))
+  & @iterate ~ (km1 (n2 (e2 (ndist out))))
+
+@step = (n (edges (dist out)))
+  & n ~ {n1 n2}
+  & n1 ~ $([-] $(1 i0))
+  & @step_build ~ (i0 (n2 (edges (dist out))))
+
+@step_build = (i (n (edges (dist out))))
+  & i ~ ?((@step_zero @step_step) (n (edges (dist out))))
+
+@step_zero = (n (edges (dist out)))
+  & @calc_v ~ (0 (n (edges (dist mv))))
+  & out ~ (1 (mv (0 *)))
+
+@step_step = (im1 (n (edges (dist out))))
+  & im1 ~ {i1 i2}
+  & n ~ {n1 n2}
+  & edges ~ {e1 e2}
+  & dist ~ {d1 d2}
+  & i1 ~ $([+1] i)
+  & @calc_v ~ (i (n1 (e1 (d1 mv))))
+  & @step_build ~ (i2 (n2 (e2 (d2 rest))))
+  & out ~ (1 (mv rest))
+
+@calc_v = (v (n (edges (dist out))))
+  & @scan ~ (v (n (edges (dist (16777215 out)))))
+
+@scan = (v (n (edges (dist (acc out)))))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (payload (v (n (dist (acc out))))))
+
+@scan_nil = (payload (v (n (dist (acc out)))))
+  & payload ~ *
+  & v ~ *
+  & n ~ *
+  & dist ~ *
+  & out ~ acc
+
+@scan_cons = (* ((head tail) (v (n (dist (acc out))))))
+  & head ~ (u (vtx w))
+  & v ~ {v1 v2}
+  & vtx ~ $([=] $(v1 eq))
+  & eq ~ ?((@scan_no @scan_yes) (u (w (tail (v2 (n (dist (acc out))))))))
+
+@scan_no = (u (w (tail (v (n (dist (acc out)))))))
+  & u ~ *
+  & w ~ *
+  & @scan ~ (v (n (tail (dist (acc out)))))
+
+@scan_yes = (* (u (w (tail (v (n (dist (acc out))))))))
+  & dist ~ {dg dr}
+  & n ~ {n1 n2}
+  & n1 ~ $([-] $(1 nm1))
+  & nm1 ~ $([-] $(u idx))
+  & @get ~ (dg (idx du))
+  & du ~ $([+] $(w cand))
+  & @min ~ (acc (cand nacc))
+  & @scan ~ (v (n2 (tail (dr (nacc out)))))
+
+@get = (list (i out))
+  & list ~ (tag payload)
+  & tag ~ ?((@get_nil @get_cons) (i (payload out)))
+
+@get_nil = (i (payload out))
+  & payload ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@get_cons = (* (i (payload out)))
+  & payload ~ (head tail)
+  & i ~ ?((@get_zero @get_step) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_step = (im1 (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (im1 out))
+
+@min = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 c))
+  & c ~ ?((@min_false @min_true) (a2 (b2 out)))
+
+@min_false = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_true = (* (a (b out)))
+  & b ~ *
+  & out ~ a

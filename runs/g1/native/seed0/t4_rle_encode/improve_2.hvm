@@ -1,0 +1,24 @@
+@prog = ((?((@start_nil @start_cons) (pl out)) pl) out)
+
+@start_nil = (* out)
+  & out ~ (0 *)
+
+@start_cons = (* ((h t) out))
+  & @loop ~ (t (h (1 out)))
+
+@loop = ((?((@done (* ((lh lt) (lc (ln lo))))) (pl (cur (cnt out)))) pl) (cur (cnt out)))
+  & lh ~ {lhe lhn}
+  & lc ~ {lce lck}
+  & lhe ~ $([=] $(lce lz))
+  & lz ~ ?((@different @same) (lhn (lt (lck (ln lo)))))
+
+@done = (* (cur (cnt out)))
+  & out ~ (1 ((cur cnt) (0 *)))
+
+@different = (h_next (t (cur_keep (cnt out))))
+  & @loop ~ (t (h_next (1 rest)))
+  & out ~ (1 ((cur_keep cnt) rest))
+
+@same = (* (* (t (cur_keep (cnt out)))))
+  & cnt ~ $([+1] nextcnt)
+  & @loop ~ (t (cur_keep (nextcnt out)))

@@ -1,0 +1,139 @@
+// Merge sort all candidates, then take the first k.
+@prog = ((k cands) out)
+  & @ms ~ (cands sorted)
+  & @take ~ (k (sorted out))
+
+// Merge sort. A singleton list is already sorted.
+@ms = ((?((@ms_nil @ms_cons) (pl out)) pl) out)
+
+@ms_nil = (* out)
+  & out ~ (0 *)
+
+@ms_cons = (* ((h t) out))
+  & @tail_test ~ (t (h out))
+
+@tail_test = ((?((@ms_one @ms_many) (pl (h out))) pl) (h out))
+
+@ms_one = (* (pl (h out)))
+  & pl ~ *
+  & out ~ (1 (h (0 *)))
+
+// Split the nonempty tail alternately, add h to the left half,
+// recursively sort both halves, then merge.
+@ms_many = (* (pl (h out)))
+  & @split_odd ~ ((1 pl) pair)
+  & pair ~ (left right)
+  & @ms ~ ((1 (h left)) sl)
+  & @ms ~ (right sr)
+  & @merge ~ (sl (sr out))
+
+// Alternating split: odd positions go to the right, even to the left.
+@split_odd = ((?((@sp_nil @sp_odd_cons) (pl out)) pl) out)
+@split_even = ((?((@sp_nil @sp_even_cons) (pl out)) pl) out)
+
+@sp_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@sp_odd_cons = (* ((h t) out))
+  & @split_even ~ (t pair)
+  & pair ~ (left right)
+  & out ~ (left (1 (h right)))
+
+@sp_even_cons = (* ((h t) out))
+  & @split_odd ~ (t pair)
+  & pair ~ (left right)
+  & out ~ ((1 (h left)) right)
+
+// Merge two sorted lists.
+@merge = ((?((@merge_a_nil @merge_a_cons) (pl (b out))) pl) (b out))
+
+@merge_a_nil = (* (pl (b out)))
+  & pl ~ *
+  & out ~ b
+
+@merge_a_cons = (* ((ha ta) (b out)))
+  & @merge_b ~ (b ((ha ta) out))
+
+@merge_b = ((?((@merge_b_nil @merge_b_cons) (pl (adata out))) pl) (adata out))
+
+@merge_b_nil = (* (pl (adata out)))
+  & pl ~ *
+  & adata ~ (ha ta)
+  & out ~ (1 (ha ta))
+
+@merge_b_cons = (* (((hb tb) (adata out)))
+  & adata ~ (ha ta)
+  & @before ~ (ha (hb before))
+  & before ~ ?((@merge_take_b @merge_take_a) (ha (ta (hb (tb out))))
+
+@merge_take_a = (ha (ta (hb (tb out))))
+  & @merge ~ (ta ((1 (hb tb)) rest))
+  & out ~ (1 (ha rest))
+
+@merge_take_b = (ha (ta (hb (tb out))))
+  & @merge ~ ((1 (ha ta)) (tb rest))
+  & out ~ (1 (hb rest))
+
+// Return 1 if cand sorts before head: descending score, then ascending u and v.
+@before = (cand (head out))
+  & cand ~ (cu (cv cs))
+  & head ~ (hu (hv hs))
+  & cs ~ {csg cse}
+  & hs ~ {hsg hse}
+  & csg ~ $([>] $(hsg gt))
+  & cse ~ $([=] $(hse eq))
+  & gt ~ ?((@before_score_no @before_true) (payload out))
+  & payload ~ (eq (cu (cv (hu hv))))
+
+@before_score_no = (payload out)
+  & payload ~ (eq (cu (cv (hu hv))))
+  & eq ~ ?((@before_false @before_score_equal) (payload2 out))
+  & payload2 ~ (cu (cv (hu hv)))
+
+@before_score_equal = (* (payload out))
+  & payload ~ (cu (cv (hu hv)))
+  & cu ~ {cult cueq}
+  & hu ~ {hult hueq}
+  & cult ~ $([<] $(hult lt))
+  & cueq ~ $([=] $(hueq eq))
+  & lt ~ ?((@before_u_no @before_true) (payload2 out))
+  & payload2 ~ (eq (cv hv))
+
+@before_u_no = (payload out)
+  & payload ~ (eq (cv hv))
+  & eq ~ ?((@before_false @before_u_equal) (payload2 out))
+  & payload2 ~ (cv hv)
+
+@before_u_equal = (* (payload out))
+  & payload ~ (cv hv)
+  & cv ~ $([<] $(hv lt))
+  & lt ~ ?((@before_false @before_true) (* out))
+
+@before_true = (* (payload out))
+  & payload ~ *
+  & out ~ 1
+
+@before_false = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+// Truncate to the first k elements.
+@take = (k (list out))
+  & k ~ ?((@take_zero @take_pos) (list out))
+
+@take_zero = (list out)
+  & list ~ *
+  & out ~ (0 *)
+
+@take_pos = (n (list out))
+  & @take_list ~ (list (n out))
+
+@take_list = ((?((@take_nil @take_cons) (pl (n out))) pl) (n out))
+
+@take_nil = (* (n out))
+  & n ~ *
+  & out ~ (0 *)
+
+@take_cons = (* ((head tail) (n out)))
+  & @take ~ (n (tail rest))
+  & out ~ (1 (head rest))

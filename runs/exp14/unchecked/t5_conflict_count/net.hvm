@@ -1,0 +1,29 @@
+@prog = ((c mnl) out)
+  & @walk_pairs ~ (c (mnl (0 out)))
+@walk_pairs = (c (mnl (cnt out)))
+  & mnl ~ ?(((@pair_nil @pair_cons) c) (cnt out))
+@pair_nil = (c (cnt out))
+  & c ~ *
+  & cnt ~ out
+@pair_cons = (* (((a (b *)) rest) (c (cnt out))))
+  & c ~ {c1 {c2 c3}}
+  & @get_c ~ (c1 (a (ca *)))
+  & @get_c ~ (c2 (b (cb *)))
+  & ca ~ $([=] $(cb eq))
+  & eq ~ ?((@vio_no @vio_yes) (rest (c3 (cnt out))))
+@vio_no = (rest (c (cnt out)))
+  & @walk_pairs ~ (c (rest (cnt out)))
+@vio_yes = (* (rest (c (cnt out))))
+  & cnt ~ $([+1] cnt2)
+  & @walk_pairs ~ (c (rest (cnt2 out)))
+@get_c = (lst (idx (val res)))
+  & idx ~ ?((@gc_zero @gc_succ) val)
+@gc_zero = (val (val *))
+@gc_succ = (* (idx_pred (lst_tail (val res))))
+  & lst ~ ?(((@gc_empty @gc_item) idx_pred) res)
+@gc_empty = (idx (val res))
+  & idx ~ *
+  & val ~ 0
+@gc_item = (* (((v t) idx_pred) (val res)))
+  & v ~ *
+  & @get_c ~ (t (idx_pred (val res)))

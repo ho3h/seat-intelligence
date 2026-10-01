@@ -1,0 +1,126 @@
+@prog = (inp out)
+  & @sort ~ (inp out)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & t ~ (?( (@sort_one @sort_many) (h (pl out))) pl)
+
+@sort_one = (h (pl out))
+  & pl ~ *
+  & @canon ~ (h c)
+  & out ~ (1 (c (0 *)))
+
+@sort_many = (* (h (pl out)))
+  & @split ~ ((1 (h (1 pl))) halves)
+  & @sort_halves ~ (halves out)
+
+@sort_halves = ((l r) out)
+  & @sort ~ (l sl)
+  & @sort ~ (r sr)
+  & @merge ~ (sl (sr out))
+
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split ~ (t r)
+  & r ~ (a b)
+  & out ~ ((1 (h b)) a)
+
+@canon = ((u (v s)) out)
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & u1 ~ $([<] $(v1 z))
+  & z ~ ?((@canon_swap @canon_keep) (u2 (v2 (s out))))
+
+@canon_keep = (* (u (v (s out))))
+  & out ~ (1 (u (v s)))
+
+@canon_swap = (* (u (v (s out))))
+  & out ~ (1 (v (u s)))
+
+@merge = ((?((@merge_nil @merge_cons) (pl (r out))) pl) (r out))
+
+@merge_nil = (* (r out))
+  & out ~ r
+
+@merge_cons = (* ((h t) (r out)))
+  & r ~ (?( (@merge_rnil @merge_rcons) (h (t (pl out)))) pl)
+
+@merge_rnil = (h (t (pl out)))
+  & pl ~ *
+  & out ~ (1 (h t))
+
+@merge_rcons = (* (h (t (pl out))))
+  & pl ~ (p t2)
+  & h ~ {h1 h2}
+  & p ~ {p1 p2}
+  & @keylt ~ (h1 (p1 z))
+  & z ~ ?((@merge_ge @merge_lt) (h2 (p2 (t (t2 out))))
+
+@merge_lt = (* (h (p (t (t2 out)))))
+  & @merge ~ (t ((1 (p t2)) r))
+  & out ~ (1 (h r))
+
+@merge_ge = (h (p (t (t2 out))))
+  & h ~ {h1 h2}
+  & p ~ {p1 p2}
+  & @keylt ~ (p1 (h1 z2))
+  & z2 ~ ?((@merge_eq @merge_gt) (h2 (p2 (t (t2 out))))
+
+@merge_gt = (* (h (p (t (t2 out)))))
+  & @merge ~ ((1 (h t)) (t2 r))
+  & out ~ (1 (p r))
+
+@merge_eq = (* (h (p (t (t2 out)))))
+  & h ~ (u (v s))
+  & p ~ (a (b q))
+  & a ~ *
+  & b ~ *
+  & s ~ {s1 s2}
+  & q ~ {q1 q2}
+  & s1 ~ $([>] $(q1 z))
+  & z ~ ?((@merge_eq_no @merge_eq_yes) (u (v (s2 (q2 (t (t2 out))))))
+
+@merge_eq_no = (u (v (s (q (t (t2 out))))))
+  & s ~ *
+  & @merge ~ (t (t2 r))
+  & out ~ (1 ((u (v q)) r))
+
+@merge_eq_yes = (* (u (v (s (q (t (t2 out)))))))
+  & q ~ *
+  & @merge ~ (t (t2 r))
+  & out ~ (1 ((u (v s)) r))
+
+@keylt = ((u (v s)) ((a (b q)) out))
+  & s ~ *
+  & q ~ *
+  & u ~ {ul ue}
+  & a ~ {al ae}
+  & ul ~ $([<] $(al z))
+  & z ~ ?((@kl_ge @kl_lt) (ue (ae (v (b out))))
+
+@kl_lt = (* (ue (ae (v (b out)))))
+  & ue ~ *
+  & ae ~ *
+  & v ~ *
+  & b ~ *
+  & out ~ 1
+
+@kl_ge = (ue (ae (v (b out))))
+  & ue ~ $([=] $(ae z2))
+  & z2 ~ ?((@kl_neq @kl_eq) (v (b out)))
+
+@kl_neq = (v (b out))
+  & v ~ *
+  & b ~ *
+  & out ~ 0
+
+@kl_eq = (v (b out))
+  & v ~ $([<] $(b out))

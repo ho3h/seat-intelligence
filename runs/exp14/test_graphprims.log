@@ -1,0 +1,30 @@
+PASS  lg                           44/44   largest case: depth 197, itrs 272
+PASS  const_trie+to_list           21/21   largest case: depth 120, itrs 8219
+PASS  iota_trie                    13/13   largest case: depth 121, itrs 9874
+PASS  update[set1]+stream          31/31   largest case: depth 1192, itrs 81816
+PASS  update[set]+stream           31/31   largest case: depth 1191, itrs 81517
+PASS  update[inc]+stream           31/31   largest case: depth 1192, itrs 81816
+PASS  update[add]+stream           31/31   largest case: depth 1193, itrs 82115
+PASS  update[or]+stream            31/31   largest case: depth 1193, itrs 82115
+PASS  update[min]+stream           31/31   largest case: depth 1201, itrs 85124
+PASS  update[max]+stream           31/31   largest case: depth 1200, itrs 85150
+PASS  update[push]+stream          31/31   largest case: depth 1191, itrs 81528
+PASS  get                          24/24   largest case: depth 230, itrs 7469
+PASS  reduce[+,idx,env]            31/31   largest case: depth 1206, itrs 81432
+PASS  reduce[max,idx,env]          31/31   largest case: depth 1252, itrs 82671
+PASS  reduce[min,idx,env]          31/31   largest case: depth 1250, itrs 82677
+PASS  filter_list                  31/31   largest case: depth 1162, itrs 80771
+PASS  scatter(histogram)           8/8   largest case: depth 881, itrs 83261
+PASS  zip2                         5/5   largest case: depth 108, itrs 8293
+PASS  mc_request+deliver           16/16   largest case: depth 745, itrs 49816
+PASS  sssp(frontier+relax)         16/16   largest case: depth 2878, itrs 314225
+PASS  relax(maximize)              15/15   largest case: depth 1979, itrs 341612
+PASS  update[dec]+stream           31/31   largest case: depth 1192, itrs 82115
+PASS  mc_deliver_keep              8/8   largest case: depth 930, itrs 69998
+PASS  zip2e                        4/4   largest case: depth 112, itrs 8803
+PASS  bcast                        12/12   largest case: depth 89, itrs 3714
+PASS  mapreduce[min]               31/31   largest case: depth 1251, itrs 89919
+PASS  iterate                      5/5   largest case: depth 135, itrs 245
+PASS  update[peek]                 5/5   largest case: depth 363, itrs 19084
+PASS  POP24 (in reduce)            6/6   largest case: depth 472, itrs 23620
+ALL PASS

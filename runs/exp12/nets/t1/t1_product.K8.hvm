@@ -1,0 +1,44 @@
+@prog = (l out)
+  & @prod ~ (l out)
+
+@prod = (lv1 out)
+  & @prod_cons_lw ~ (lv1 out)
+
+@prod_nil = (* 1)
+
+@prod_cons = (* ((h t) out))
+  & @prod2_cons_lw ~ (t (h out))
+
+@prod2 = (lv2 (h out))
+  & @prod2_cons_lw ~ (lv2 (h out))
+
+@prod2_nil = (* (a a))
+
+@prod2_cons = (* ((h2 t2) ($([*] $(h2 $([*] $(rest out)))) out)))
+  & @prod_cons_lw ~ (t2 rest)
+
+@prod_cons_lw = (ls52 q16)
+  & ls52 ~ (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 (g48 (e40 (g49 (e41 (g50 (e42 tk51))))))))))))))))
+  & g43 ~ ?((@prod_nil @prod_cons_la) ((e35 (q18 q19)) q16))
+  & g44 ~ ?((@prod2_nil @prod2_cons_la) ((e36 q21) (q18 q19)))
+  & g45 ~ ?((@prod_nil @prod_cons_la) ((e37 (q23 q24)) q21))
+  & g46 ~ ?((@prod2_nil @prod2_cons_la) ((e38 q26) (q23 q24)))
+  & g47 ~ ?((@prod_nil @prod_cons_la) ((e39 (q28 q29)) q26))
+  & g48 ~ ?((@prod2_nil @prod2_cons_la) ((e40 q31) (q28 q29)))
+  & g49 ~ ?((@prod_nil @prod_cons_la) ((e41 (q33 q34)) q31))
+  & g50 ~ ?((@prod2_nil @prod2_cons) ((e42 tk51) (q33 q34)))
+
+@prod2_cons_lw = (ls90 (q54 q55))
+  & ls90 ~ (g81 (e73 (g82 (e74 (g83 (e75 (g84 (e76 (g85 (e77 (g86 (e78 (g87 (e79 (g88 (e80 tk89))))))))))))))))
+  & g81 ~ ?((@prod2_nil @prod2_cons_la) ((e73 q57) (q54 q55)))
+  & g82 ~ ?((@prod_nil @prod_cons_la) ((e74 (q59 q60)) q57))
+  & g83 ~ ?((@prod2_nil @prod2_cons_la) ((e75 q62) (q59 q60)))
+  & g84 ~ ?((@prod_nil @prod_cons_la) ((e76 (q64 q65)) q62))
+  & g85 ~ ?((@prod2_nil @prod2_cons_la) ((e77 q67) (q64 q65)))
+  & g86 ~ ?((@prod_nil @prod_cons_la) ((e78 (q69 q70)) q67))
+  & g87 ~ ?((@prod2_nil @prod2_cons_la) ((e79 q72) (q69 q70)))
+  & g88 ~ ?((@prod_nil @prod_cons) ((e80 tk89) q72))
+
+@prod_cons_la = (* ((h (h out)) out))
+
+@prod2_cons_la = (* ((h2 rest) ($([*] $(h2 $([*] $(rest out)))) out)))

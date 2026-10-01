@@ -1,0 +1,69 @@
+// Accumulator: (tp (fp (fn out)).
+@prog = ((p t) out)
+  & @outer ~ (p (t (0 (0 (0 out)))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (t (tp (fp (fn out)))))) pl) (t (tp (fp (fn out)))))
+
+@outer_nil = (* (t (tp (fp (fn out)))))
+  & t ~ *
+  & out ~ (tp (fp fn))
+
+@outer_cons = (* ((h pt) (t (tp (fp (fn out))))))
+  & @truthstep ~ (t (h (pt (tp (fp (fn out))))))
+
+@truthstep = ((?((@truth_nil @truth_cons) (pl (h (pt (tp (fp (fn out))))))) pl) (h (pt (tp (fp (fn out)))))
+
+@truth_nil = (* (h (pt (tp (fp (fn out))))))
+  & h ~ *
+  & pt ~ *
+  & out ~ (tp (fp fn))
+
+@truth_cons = (* ((k tt) (h (pt (tp (fp (fn out)))))))
+  & @inner ~ (pt (tt (h (k (tp (fp (fn rr)))))))
+  & rr ~ (pn (tn (tp2 (fp2 (fn2 out))))
+  & @outer ~ (pn (tn (tp2 (fp2 (fn2 out)))))
+
+@inner = ((?((@inner_nil @inner_cons) (pl (t (h (k (tp (fp (fn out)))))))) pl) (t (h (k (tp (fp (fn out)))))))
+
+@inner_nil = (* (pl (t (h (k (tp (fp (fn out))))))))
+  & pl ~ *
+  & t ~ *
+  & h ~ *
+  & k ~ *
+  & out ~ ((0 *) ((0 *) (tp (fp fn))))
+
+@inner_cons = (* ((u pt) (t (h (k (tp (fp (fn out))))))))
+  & @inner_truth ~ (t (u (pt (h (k (tp (fp (fn out))))))))
+
+@inner_truth = ((?((@it_nil @it_cons) (pl (u (pt (h (k (tp (fp (fn out))))))))) pl) (u (pt (h (k (tp (fp (fn out)))))))
+
+@it_nil = (* (pl (u (pt (h (k (tp (fp (fn out)))))))))
+  & pl ~ *
+  & u ~ *
+  & pt ~ *
+  & h ~ *
+  & k ~ *
+  & out ~ ((0 *) ((0 *) (tp (fp fn))))
+
+@it_cons = (* ((v tt) (u (pt (h (k (tp (fp (fn out)))))))))
+  & u ~ {ucmp urest}
+  & v ~ {vcmp vrest}
+  & h ~ {hcmp hrest}
+  & k ~ {kcmp krest}
+  & hcmp ~ $([=] $(ucmp eqh))
+  & kcmp ~ $([=] $(vcmp eqk))
+  & eqh ~ {eha ehx}
+  & ehx ~ {ehb ehc}
+  & eqk ~ {eka ekx}
+  & ekx ~ {ekb ekc}
+  & ehc ~ $([^] $(1 nh))
+  & ekc ~ $([^] $(1 nk))
+  & eha ~ $([&] $(eka btp))
+  & ehb ~ $([&] $(nk bfp))
+  & ekb ~ $([&] $(nh bfn))
+  & tp ~ $([+] $(btp tp2))
+  & fp ~ $([+] $(bfp fp2))
+  & fn ~ $([+] $(bfn fn2))
+  & @inner ~ (pt (tt (hrest (krest (tp2 (fp2 (fn2 rr)))))))
+  & rr ~ (pnew (tnew (tp3 (fp3 (fn3 out)))))
+  & out ~ ((1 (urest pnew)) ((1 (vrest tnew)) (tp3 (fp3 fn3))))

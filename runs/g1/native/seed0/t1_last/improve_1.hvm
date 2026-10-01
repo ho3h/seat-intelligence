@@ -1,0 +1,12 @@
+// @prog receives the list and returns its last element, or 0 for Nil.
+@prog = (l out)
+  & @last ~ (l out)
+
+@last = ((tag payload) out)
+  & tag ~ ?((@last_nil @last_cons) (payload out))
+
+@last_nil = (* 0)
+
+@last_cons = (* ((h t) out))
+  & h ~ *
+  & @last ~ (t out)

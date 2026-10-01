@@ -1,0 +1,78 @@
+// Compute the formula's 8-bit truth table, then use a parallel bit-count.
+@prog = (input out)
+  & @mask ~ (input mask)
+  & @pop ~ (mask out)
+
+@mask = ((?((@m_false @m_ge1) (payload out)) payload) out)
+
+@m_false = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@m_ge1 = (n ctx)
+  & n ~ ?((@m_true @m_ge2) ctx)
+
+@m_true = (payload out)
+  & payload ~ *
+  & out ~ 255
+
+@m_ge2 = (n ctx)
+  & n ~ ?((@m_var @m_ge3) ctx)
+
+@m_var = (i out)
+  & i ~ ?((@m_v0 @m_vpos) out)
+
+@m_v0 = out
+  & out ~ 170
+
+@m_vpos = (n out)
+  & n ~ ?((@m_v1 @m_v2) out)
+
+@m_v1 = out
+  & out ~ 204
+
+@m_v2 = (n out)
+  & n ~ *
+  & out ~ 240
+
+@m_ge3 = (n ctx)
+  & n ~ ?((@m_not @m_ge4) ctx)
+
+@m_not = (child out)
+  & @mask ~ (child value)
+  & value ~ $([^] $(255 out))
+
+@m_ge4 = (n ctx)
+  & n ~ ?((@m_and @m_ge5) ctx)
+
+@m_and = ((a b) out)
+  & @mask ~ (a x)
+  & @mask ~ (b y)
+  & x ~ $([&] $(y out))
+
+@m_ge5 = (n ctx)
+  & n ~ ?((@m_or @m_bad) ctx)
+
+@m_or = ((a b) out)
+  & @mask ~ (a x)
+  & @mask ~ (b y)
+  & x ~ $([|] $(y out))
+
+@m_bad = (n ctx)
+  & n ~ *
+  & ctx ~ *
+
+@pop = (x out)
+  & x ~ {x0 x1}
+  & x0 ~ $([-] $(b c))
+  & x1 ~ $([>>] $(1 s1))
+  & s1 ~ $([&] $(85 b))
+  & c ~ {c0 c1}
+  & c0 ~ $([&] $(51 d))
+  & c1 ~ $([>>] $(2 s2))
+  & s2 ~ $([&] $(51 e))
+  & d ~ $([+] $(e g))
+  & g ~ {g0 g1}
+  & g0 ~ $([+] $(h i))
+  & g1 ~ $([>>] $(4 h))
+  & i ~ $([&] $(15 out))

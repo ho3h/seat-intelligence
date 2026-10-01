@@ -1,0 +1,54 @@
+@prog = ((?((@halt (* (((?(((arg_q282 ((?((@halt (* (((?((@push @dispatch) (arg_q285 (tail_q285 (pc_q285 (stk_q285 out_q285))))) arg_q285) tail_q285) (pc_q285 (stk_q285 out_q285))))) (payload_q267_q282 (pc1_q282 ((1 (arg_q282 stk_q282)) out_q282)))) payload_q267_q282) ($([+1] pc1_q282) (stk_q282 out_q282)))) @dispatch) (arg_q280 (tail_q280 (pc_q280 (stk_q280 out_q280))))) arg_q280) tail_q280) (pc_q280 (stk_q280 out_q280))))) (payload_q266 (0 ((0 *) output)))) payload_q266) output)
+
+@run = ((?((@halt @step) (payload (pc (stk out)))) payload) (pc (stk out)))
+
+@halt = (* (* ((?((@top_empty (* ((out_q294 *) out_q294))) (payload_i40 out)) payload_i40) out)))
+
+@step = (* (((?((@push @dispatch) (arg (tail (pc (stk out))))) arg) tail) (pc (stk out))))
+
+@top_empty = (* 0)
+
+@push = (arg ((?((@halt @step) (payload_q267 (pc1 ((1 (arg stk)) out)))) payload_q267) ($([+1] pc1) (stk out))))
+
+@add = (* ((?((@halt @step) (payload_q268 (pc1 ((1 (sum rest)) out)))) payload_q268) ($([+1] pc1) ((* (b (* ($([+] $(b sum)) rest)))) out))))
+
+@mul = (* ((?((@halt @step) (payload_q269 (pc1 ((1 (product rest)) out)))) payload_q269) ($([+1] pc1) ((* (b (* ($([*] $(b product)) rest)))) out))))
+
+@dup = (* ((?((@halt @step) (payload_q270 (pc1 ((1 (a1 (1 (a2 rest)))) out)))) payload_q270) ($([+1] pc1) ((* ({a1 a2} rest)) out))))
+
+@swap = (* ((?((@halt @step) (payload_q271 (pc1 ((1 (b (1 (a rest)))) out)))) payload_q271) ($([+1] pc1) ((* (a (* (b rest)))) out))))
+
+@pop = (* ((?((@halt @step) (payload_q272 (pc1 (rest out)))) payload_q272) ($([+1] pc1) ((* (* rest)) out))))
+
+@jz = (arg (tail (pc ((* ($([=0] ?((@jz_nonzero @jz_zero) (arg (tail (pc (rest out)))))) rest)) out))))
+
+@jz_nonzero = (* ((?((@halt @step) (payload_q273 (pc1 (rest out)))) payload_q273) ($([+1] pc1) (rest out))))
+
+@jz_zero = (* ({$([-] $(nextpc skipn)) arg2} (tail ($([+1] nextpc) (rest out)))))
+  & @skip ~ (skipn (tail (arg2 (rest out))))
+
+@sub = (* ((?((@halt @step) (payload_q275 (pc1 ((1 (difference rest)) out)))) payload_q275) ($([+1] pc1) ((* (b (* ($([-] $(b difference)) rest)))) out))))
+
+@dispatch = (?((@add @dispatch2) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@dispatch2 = (?((@mul @dispatch3) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@dispatch3 = (?((@dup @dispatch4) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@dispatch4 = (?((@swap @dispatch5) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@dispatch5 = (?((@pop @dispatch6) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@dispatch6 = (?((@jz @dispatch7) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@dispatch7 = (?((@sub @bad) (arg (tail (pc (stk out))))) (arg (tail (pc (stk out)))))
+
+@bad = (* *)
+
+@skip = (?((@skip_done @skip_more) ctx) ctx)
+
+@skip_done = (program (target (stk out)))
+  & @run ~ (program (target (stk out)))
+
+@skip_more = (count ((* (* tail)) (target (stk out))))
+  & @skip ~ (count (tail (target (stk out))))

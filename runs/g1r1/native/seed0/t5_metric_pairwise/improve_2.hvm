@@ -1,0 +1,45 @@
+// Initialize empty history and zero counts: tp, predicted-equal pairs, true-equal pairs.
+@prog = (input out)
+  & input ~ (pred truth)
+  & @walk ~ (pred (truth ((0 *) (0 (0 (0 out))))))
+
+// Process aligned prediction and truth lists.
+@walk = ((?((@wnil @wcons) (pl (truth (hist (tp (pc (tc out))))))) pl) (truth (hist (tp (pc (tc out))))))
+
+@wnil = (* (* (* (tp (pc (tc out))))))
+  & tp ~ {tpout tpcalc}
+  & tpcalc ~ {tp_fp tp_fn}
+  & pc ~ $([-] $(tp_fp fp))
+  & tc ~ $([-] $(tp_fn fn))
+  & out ~ (tpout (fp fn))
+
+@wcons = (* ((h pt) (truth (hist (tp (pc (tc out)))))))
+  & truth ~ (1 (th tt))
+  & h ~ {hs hk}
+  & th ~ {ts tk}
+  & @scan ~ (hist (hs (ts (tp (pc (tc sout))))))
+  & sout ~ (newhist (stp (spc (stc))))
+  & @walk ~ (pt (tt ((1 ((hk tk) newhist)) (stp (spc (stc out))))))
+
+// Scan prior pairs, accumulating true-positive and label-agreement counts.
+@scan = ((?((@snil @scons) (pl (p (t (tp (pc (tc out))))))) pl) (p (t (tp (pc (tc out))))))
+
+@snil = (* (* (* (tp (pc (tc out))))))
+  & out ~ ((0 *) (tp (pc tc)))
+
+@scons = (* (((prevp prevt) rest) (p (t (tp (pc (tc out)))))))
+  & prevp ~ {oldp keep_p}
+  & prevt ~ {oldt keep_t}
+  & p ~ {peq nextp}
+  & t ~ {teq nextt}
+  & peq ~ $([=] $(oldp ep))
+  & teq ~ $([=] $(oldt et))
+  & ep ~ {ep_mul ep_cnt}
+  & et ~ {et_mul et_cnt}
+  & ep_mul ~ $([*] $(et_mul inc_tp))
+  & tp ~ $([+] $(inc_tp next_tp))
+  & pc ~ $([+] $(ep_cnt next_pc))
+  & tc ~ $([+] $(et_cnt next_tc))
+  & @scan ~ (rest (nextp (nextt (next_tp (next_pc (next_tc sout))))))
+  & sout ~ (newrest (rtp (rpc rtc)))
+  & out ~ ((1 ((keep_p keep_t) newrest)) (rtp (rpc rtc)))

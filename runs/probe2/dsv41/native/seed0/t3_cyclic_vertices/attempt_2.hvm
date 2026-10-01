@@ -1,0 +1,117 @@
+@prog = ((n edges) out)
+  & @count_loop ~ (n (edges (0 out)))
+
+@count_loop = (n (edges (acc out)))
+  & n ~ ?((@count_base @count_succ) (edges (acc out)))
+
+@count_base = (* (acc out))
+  & out ~ acc
+
+@count_succ = (v (edges (acc out)))
+  & v ~ {v_check v_rec}
+  & edges ~ {edges_check edges_rec}
+  & @check ~ (v_check (edges_check res))
+  & res ~ ?((@count_noinc @count_inc) (v_rec (edges_rec (acc out))))
+
+@count_noinc = (v_rec (edges_rec (acc out)))
+  & @count_loop ~ (v_rec (edges_rec (acc out)))
+
+@count_inc = (* (v_rec (edges_rec (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count_loop ~ (v_rec (edges_rec (acc2 out)))
+
+@check = (v (edges out))
+  & v ~ {v_neigh v_dfs}
+  & edges ~ {edges_neigh edges_dfs}
+  & @neighbors ~ (v_neigh (edges_neigh neigh))
+  & @dfs ~ (neigh ((0 *) (v_dfs (edges_dfs out))))
+
+@neighbors = (u (edges out))
+  & edges ~ (?( (@neighbors_nil @neighbors_cons) (pl (u out)) ) pl)
+
+@neighbors_nil = (* (* out))
+  & out ~ (0 *)
+
+@neighbors_cons = (* ( ((a b) tail) (u out) ))
+  & u ~ {u_cmp u_rec}
+  & a ~ $([=] $(u_cmp eq))
+  & eq ~ ?((@neighbors_no @neighbors_yes) (b (tail (u_rec out))))
+
+@neighbors_no = (* (tail (u_rec out)))
+  & @neighbors ~ (u_rec (tail out))
+
+@neighbors_yes = (* (b (tail (u_rec out))))
+  & @neighbors ~ (u_rec (tail rest))
+  & out ~ (1 (b rest))
+
+@member = (x (list out))
+  & list ~ (?( (@member_nil @member_cons) (pl (x out)) ) pl)
+
+@member_nil = (* (* out))
+  & out ~ 0
+
+@member_cons = (* ((h t) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@member_no @member_yes) (t (x_rec out)))
+
+@member_no = (t (x_rec out))
+  & @member ~ (x_rec (t out))
+
+@member_yes = (* (t (x_rec out)))
+  & out ~ 1
+  & t ~ *
+  & x_rec ~ *
+
+@append = (l1 (l2 out))
+  & l1 ~ (?( (@append_nil @append_cons) (pl (l2 out)) ) pl)
+
+@append_nil = (* (l2 out))
+  & out ~ l2
+
+@append_cons = (* ((h t) (l2 out)))
+  & @append ~ (t (l2 rest))
+  & out ~ (1 (h rest))
+
+@dfs = (stack (visited (v (edges out))))
+  & stack ~ (?( (@dfs_nil @dfs_cons) (pl (visited (v (edges out)))) ) pl)
+
+@dfs_nil = (* (visited (v (edges out))))
+  & out ~ 0
+  & visited ~ *
+  & v ~ *
+  & edges ~ *
+
+@dfs_cons = (* ((u rest) (visited (v (edges out)))))
+  & u ~ {u_cmp u_rest}
+  & u_rest ~ {u_mem u_rest2}
+  & u_rest2 ~ {u_add u_neigh}
+  & v ~ {v_cmp v_dfs}
+  & u_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@dfs_not_v @dfs_is_v) (u_mem (u_add (u_neigh (rest (visited (v_dfs (edges out))))))))
+
+@dfs_is_v = (* (u_mem (u_add (u_neigh (rest (visited (v_dfs (edges out))))))))
+  & out ~ 1
+  & u_mem ~ *
+  & u_add ~ *
+  & u_neigh ~ *
+  & rest ~ *
+  & visited ~ *
+  & v_dfs ~ *
+  & edges ~ *
+
+@dfs_not_v = (u_mem (u_add (u_neigh (rest (visited (v_dfs (edges out)))))))
+  & visited ~ {visited_m visited_new}
+  & @member ~ (u_mem (visited_m mem_res))
+  & mem_res ~ ?((@dfs_not_visited @dfs_is_visited) (u_add (u_neigh (rest (visited_new (v_dfs (edges out)))))))
+
+@dfs_is_visited = (* (u_add (u_neigh (rest (visited_new (v_dfs (edges out)))))))
+  & @dfs ~ (rest (visited_new (v_dfs (edges out))))
+  & u_add ~ *
+  & u_neigh ~ *
+
+@dfs_not_visited = (u_add (u_neigh (rest (visited_new (v_dfs (edges out))))))
+  & edges ~ {edges_n edges_d}
+  & @neighbors ~ (u_neigh (edges_n neigh))
+  & @append ~ (neigh (rest new_stack))
+  & @dfs ~ (new_stack ((1 (u_add visited_new)) (v_dfs (edges_d out))))

@@ -1,0 +1,148 @@
+@prog = ((n es) out)
+  & n ~ ?((@pz @pp) (es out))
+@pz = (* 0)
+@pp = (nm1 (es out))
+  & nm1 ~ {na nb}
+  & na ~ $([+1] n)
+  & @lg ~ (nb L)
+  & L ~ {L1 L2}
+  & @zt ~ (L1 T0)
+  & @sg_blk ~ (es ((L2 T0) (L3 T)))
+  & @cnt ~ (T (L3 c))
+  & n ~ $([-] $(c out))
+@sg_step = ((L t) ((u v) (L3 t2)))
+  & L ~ {L1 {L2 L3}}
+  & @ins ~ (t (u (L1 t1)))
+  & @ins ~ (t1 (v (L2 t2)))
+@sg_fin = ((L t) (L t))
+@sg_blk = (t (S0 o0))
+  & t ~ (T1 (E1 (T2 (E2 (T3 (E3 (T4 (E4 (T5 (E5 (T6 (E6 (T7 (E7 (T8 (E8 (T9 (E9 (T10 (E10 (T11 (E11 (T12 (E12 (T13 (E13 (T14 (E14 (T15 (E15 (T16 (E16 t16))))))))))))))))))))))))))))))))
+  & T1 ~ ?((@sg_nil @sg_cons) (S0 (o0 (E1 (S1 o1)))))
+  & T2 ~ ?((@sg_nil @sg_cons) (S1 (o1 (E2 (S2 o2)))))
+  & T3 ~ ?((@sg_nil @sg_cons) (S2 (o2 (E3 (S3 o3)))))
+  & T4 ~ ?((@sg_nil @sg_cons) (S3 (o3 (E4 (S4 o4)))))
+  & T5 ~ ?((@sg_nil @sg_cons) (S4 (o4 (E5 (S5 o5)))))
+  & T6 ~ ?((@sg_nil @sg_cons) (S5 (o5 (E6 (S6 o6)))))
+  & T7 ~ ?((@sg_nil @sg_cons) (S6 (o6 (E7 (S7 o7)))))
+  & T8 ~ ?((@sg_nil @sg_cons) (S7 (o7 (E8 (S8 o8)))))
+  & T9 ~ ?((@sg_nil @sg_cons) (S8 (o8 (E9 (S9 o9)))))
+  & T10 ~ ?((@sg_nil @sg_cons) (S9 (o9 (E10 (S10 o10)))))
+  & T11 ~ ?((@sg_nil @sg_cons) (S10 (o10 (E11 (S11 o11)))))
+  & T12 ~ ?((@sg_nil @sg_cons) (S11 (o11 (E12 (S12 o12)))))
+  & T13 ~ ?((@sg_nil @sg_cons) (S12 (o12 (E13 (S13 o13)))))
+  & T14 ~ ?((@sg_nil @sg_cons) (S13 (o13 (E14 (S14 o14)))))
+  & T15 ~ ?((@sg_nil @sg_cons) (S14 (o14 (E15 (S15 o15)))))
+  & T16 ~ ?((@sg_nil @sg_last) (S15 (o15 (E16 t16))))
+@sg_nil = (S (o *))
+  & @sg_fin ~ (S o)
+@sg_cons = (* (S (o (E (S2 o)))))
+  & @sg_step ~ (S (E S2))
+@sg_last = (* (S (o (E t))))
+  & @sg_step ~ (S (E S2))
+  & @sg_blk ~ (t (S2 o))
+// mx(a, b) = max, mn(a, b) = min
+@mx = (a (b o))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@mx_a @mx_b) (a2 (b2 o)))
+@mx_a = (a (* a))
+@mx_b = (* (* (b b)))
+@mn = (a (b o))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@mx_b0 @mx_a0) (a2 (b2 o)))
+@mx_a0 = (* (a (* a)))
+@mx_b0 = (* (b b))
+// mk(L, base, stride): trie of depth L whose leaf i is (base + i*stride, [])
+@mk = (L (base (st o)))
+  & L ~ ?((@mk_leaf @mk_node) (base (st o)))
+@mk_leaf = (b (* (b (0 *))))
+@mk_node = (lm (base (st (a c))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & st ~ {s1 {s2 s3}}
+  & 1 ~ $([<<] $(l3 half))
+  & half ~ $([*] $(s3 off))
+  & b2 ~ $([+] $(off bR))
+  & @mk ~ (l1 (b1 (s1 a)))
+  & @mk ~ (l2 (bR (s2 c)))
+@zl = (?(((0 *) @zl_node) o) o)
+@zl_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zl ~ (l1 a)
+  & @zl ~ (l2 b)
+// cp: push a channel pair onto leaf k's channel list
+@cp_act = ((x lst) (P (x (1 (P lst)))))
+// cq: push (r P): P is pushed iff r == 0 (r = "rejected"); a rejected channel is erased at both ends
+@cq_act = ((x lst) ((r P) (x l2)))
+  & r ~ ?(((q (m (1 (q m)))) (* (* (k k)))) (P (lst l2)))
+@cp = (t (k (L (P o))))
+  & L ~ ?((@cp_leaf @cp_node) (t (k (P o))))
+@cp_leaf = (t (* (P o)))
+  & @cp_act ~ (t (P o))
+@cp_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@cp_L @cp_R) (t (k2 (l2 (P o)))))
+@cp_L = ((l r) (k (L (P (l2 r)))))
+  & @cp ~ (l (k (L (P l2))))
+@cp_R = (* ((l r) (k (L (P (l r2))))))
+  & @cp ~ (r (k (L (P r2))))
+@cq = (t (k (L (P o))))
+  & L ~ ?((@cq_leaf @cq_node) (t (k (P o))))
+@cq_leaf = (t (* (P o)))
+  & @cq_act ~ (t (P o))
+@cq_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@cq_L @cq_R) (t (k2 (l2 (P o)))))
+@cq_L = ((l r) (k (L (P (l2 r)))))
+  & @cq ~ (l (k (L (P l2))))
+@cq_R = (* ((l r) (k (L (P (l r2))))))
+  & @cq ~ (r (k (L (P r2))))
+// ---- shared trie primitives (depth-L complete binary trie, leaves are numbers, keyed by bits of the key, high bit first)
+// lg(x) = number of bits of x (0 for 0): trie depth for keys 0..x
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+// zt(L): trie of depth L with all leaves 0
+@zt = (?((0 @zt_node) o) o)
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+// cnt(t, L): sum of the leaves
+@cnt = (t (L o))
+  & L ~ ?((@cnt_leaf @cnt_node) (t o))
+@cnt_leaf = (x x)
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+// ins(t, k, L): set leaf k to 1. Control flow depends on k and L only, so it expands before t exists.
+@ins = (t (k (L o)))
+  & L ~ ?((@ins_leaf @ins_node) (t (k o)))
+@ins_leaf = (* (* 1))
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))

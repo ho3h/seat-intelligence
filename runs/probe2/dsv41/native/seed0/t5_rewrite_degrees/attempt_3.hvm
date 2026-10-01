@@ -1,0 +1,137 @@
+@prog = ((c edges) out)
+  & c ~ {c1 c2}
+  & @length ~ (c1 n)
+  & @main_loop ~ (c2 (edges (0 n out)))
+
+@length = ((?((@len_nil @len_cons) (pl out)) pl) out)
+
+@len_nil = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@len_cons = (* (pl out))
+  & pl ~ (h t)
+  & h ~ *
+  & @length ~ (t out)
+
+@main_loop = (c (edges (i (n out))))
+  & i ~ {i1 i2}
+  & n ~ {n1 n2}
+  & i1 ~ $([=] $(n1 eq))
+  & eq ~ ?((@ml_cont @ml_done) (c (edges (i2 n2 out))))
+
+@ml_done = (* (c (edges (i n out))))
+  & c ~ *
+  & edges ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ (0 *)
+
+@ml_cont = (c (edges (i n out)))
+  & c ~ {c1 c2}
+  & i ~ {i1 i2}
+  & i2 ~ {i3 i4}
+  & @nth ~ (c1 (i1 ci))
+  & ci ~ $([=] $(i3 eq2))
+  & eq2 ~ ?((@ml_skip @ml_add) (c2 (edges (i4 n out))))
+
+@ml_skip = (c (edges (i n out)))
+  & i ~ $([+1] i_next)
+  & @main_loop ~ (c (edges (i_next n out)))
+
+@ml_add = (* (c (edges (i n out))))
+  & c ~ {c1 c2}
+  & edges ~ {e1 e2}
+  & i ~ {i1 i2}
+  & @degree ~ (c1 (e1 (i1 deg)))
+  & i2 ~ $([+1] i_next)
+  & @main_loop ~ (c2 (e2 (i_next n rest)))
+  & out ~ (1 (deg rest))
+
+@degree = (c (edges (i out)))
+  & @scan_edges ~ (c (edges (i ((0 *) neigh))))
+  & @length ~ (neigh out)
+
+@scan_edges = (c ((?((@scan_nil @scan_cons) (c (pl (i (acc out))))) pl) (i (acc out))))
+
+@scan_nil = (c (pl (i (acc out))))
+  & c ~ *
+  & pl ~ *
+  & i ~ *
+  & acc ~ out
+
+@scan_cons = (* (c (((u v) rest) (i (acc out)))))
+  & c ~ {c12 c_ctx}
+  & c12 ~ {c1 c2}
+  & @nth ~ (c1 (u cu))
+  & @nth ~ (c2 (v cv))
+  & i ~ {i_p i_ctx}
+  & i_p ~ {i_p2 i_sum}
+  & i_p2 ~ {i1 i2}
+  & cu ~ {cu1 cu2 cu3}
+  & cv ~ {cv1 cv2 cv3}
+  & cu1 ~ $([=] $(i1 eqA))
+  & cv1 ~ $([=] $(i2 eqB))
+  & eqA ~ $([|] $(eqB orAB))
+  & cu2 ~ $([!] $(cv2 neq))
+  & cu3 ~ $([+] $(cv3 sum))
+  & orAB ~ $([&] $(neq cond))
+  & sum ~ $([-] $(i_sum other))
+  & cond ~ ?((@sc_no @sc_yes) (c_ctx (i_ctx (other (acc (rest out))))))
+
+@sc_no = (c (i (other (acc (rest out)))))
+  & other ~ *
+  & @scan_edges ~ (c (rest (i (acc out))))
+
+@sc_yes = (* (c (i (other (acc (rest out))))))
+  & other ~ {o1 o2}
+  & acc ~ {a1 a2}
+  & @member ~ (a1 (o1 mem))
+  & mem ~ ?((@sc_yes_add @sc_yes_keep) (c (i (a2 (o2 (rest out))))))
+
+@sc_yes_add = (c (i (acc (other (rest out)))))
+  & @scan_edges ~ (c (rest (i ((1 (other acc)) out))))
+
+@sc_yes_keep = (* (c (i (acc (other (rest out))))))
+  & other ~ *
+  & @scan_edges ~ (c (rest (i (acc out))))
+
+@member = ((?((@mem_nil @mem_cons) (x (pl out))) pl) (x out))
+
+@mem_nil = (x (pl out))
+  & x ~ *
+  & pl ~ *
+  & out ~ 0
+
+@mem_cons = (* (x (pl out)))
+  & pl ~ (h t)
+  & x ~ {xa xb}
+  & h ~ $([=] $(xa eq))
+  & eq ~ ?((@mem_no @mem_yes) (xb (t out)))
+
+@mem_no = (x (t out))
+  & @member ~ (t (x out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@nth = ((?((@nth_nil @nth_cons) (idx (pl out))) pl) (idx out))
+
+@nth_nil = (idx (pl out))
+  & idx ~ *
+  & pl ~ *
+  & out ~ 0
+
+@nth_cons = (* (idx (pl out)))
+  & pl ~ (h t)
+  & idx ~ ?((@nth_ret @nth_rec) (h (t out)))
+
+@nth_ret = (h (t out))
+  & t ~ *
+  & h ~ out
+
+@nth_rec = (im1 (h (t out)))
+  & h ~ *
+  & @nth ~ (t (im1 out))

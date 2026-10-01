@@ -1,0 +1,31 @@
+// t3_kcore_size (GRAPH-SWING-2, runs/exp9): synchronous peeling rounds over tries (new template `peel`, same shape
+// as the exp5 frontier core). State leaf = current degree while alive, 16777215 once deleted. One round = one
+// pre-expanded traversal of (adjacency, state, decrements): s' = s - dec; a live leaf with s' < k dies, becomes
+// 16777215 and emits +1 decrements (keyed nav adds) to all its neighbours into the next round's decrement trie;
+// flags are OR-reduced and the loop runs while anything died. Answer = number of live leaves (< 2^23; dead leaves may absorb later decrements) (padding leaves
+// have degree 0 and die in round 1). k = 0 short-circuits to n.
+@prog = ((n (k es)) out)
+  & k ~ ?((@kc_k0 @kc_kp) (n (es out)))
+@kc_k0 = (n (* n))
+@kc_kp = (km1 (n (es out)))
+  & km1 ~ $([+1] k)
+  & n ~ ?((@kc_zero @kc_pos) (k (es out)))
+@kc_zero = (* (* 0))
+@kc_pos = (nm1 (k (es out)))
+  & @lg ~ (nm1 L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & @zl ~ (L1 G0)
+  & @zt ~ (L2 S0)
+  & @w_blk ~ (es ((L3 (G0 S0)) (G S)))
+  & @zt ~ (L4 C0)
+  & @pl ~ ((G (S (C0 (L5 k)))) Sf)
+  & @cfa ~ (Sf (L6 out))
+@kc_step = ((L (g t)) ((u v) (L5 (g3 t3))))
+  & L ~ {L1 {L2 {L3 {L4 L5}}}}
+  & u ~ {u1 {u2 u3}}
+  & v ~ {v1 {v2 v3}}
+  & @pn ~ (g (u1 (L1 (v1 g2))))
+  & @pn ~ (g2 (v2 (L2 (u2 g3))))
+  & @ad ~ (t (u3 (L3 (1 t2))))
+  & @ad ~ (t2 (v3 (L4 (1 t3))))
+@kc_fin = ((* s) s)

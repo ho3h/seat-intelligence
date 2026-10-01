@@ -1,0 +1,28 @@
+@lca = (a (b ((@lca__C9 (a (b c))) c)))
+
+@lca__C0 = (* (* (* (a a))))
+
+@lca__C1 = (* (a (b (c (* d)))))
+  & @lca ~ (a (b (c d)))
+
+@lca__C2 = (* (* (* (a a))))
+
+@lca__C3 = (* (b ({$([>] $(a ?((@lca__C0 @lca__C1) (b (c (d (e f))))))) c} (d ({a e} f)))))
+
+@lca__C4 = (* (* (* (a a))))
+
+@lca__C5 = (* (a (b (c (* d)))))
+  & @lca ~ (a (b (c d)))
+
+@lca__C6 = ({$([>] $(a ?((@lca__C2 @lca__C3) (b (c (d (e f))))))) b} (c (* (d ({a e} f)))))
+
+@lca__C7 = (* (b ({$([<] $(a ?((@lca__C4 @lca__C5) (b (c (d (e f))))))) c} (d (* ({a e} f))))))
+
+@lca__C8 = (* (d ({a f} (e ({$([<] $(a ?((@lca__C6 @lca__C7) (b (c (d (e (f g)))))))) b} (c g))))))
+
+@lca__C9 = (?(((* (* 0)) @lca__C8) a) a)
+
+@prog = ((a (b c)) d)
+  & @lca ~ (a (b (c d)))
+
+

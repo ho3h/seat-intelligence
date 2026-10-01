@@ -1,0 +1,16 @@
+@prog = ((k ($([*] $(k ?((@take_end @take_pair) (payload_q30 out)))) payload_q30)) out)
+
+@take_end = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@take_pair = (k (payload out))
+  & payload ~ (head tail)
+  & tail ~ (tag payload2)
+  & out ~ (1 (head rest))
+  & tag ~ $([*] $(k flag))
+  & flag ~ ?((@pair_end (k_q32 ((head_q32 ($([*] $(k_q32 ?((@take_end @take_pair) (payload_q31_q32 next_q32)))) payload_q31_q32)) (1 (head_q32 next_q32))))) (payload2 rest))
+
+@pair_end = (payload rest)
+  & payload ~ *
+  & rest ~ (0 *)

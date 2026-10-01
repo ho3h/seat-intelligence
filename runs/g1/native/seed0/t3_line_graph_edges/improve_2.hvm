@@ -1,0 +1,41 @@
+// Scan the edge list once per vertex. For each incident edge, add the
+// number of earlier incident edges; sum the resulting counts over vertices.
+@prog = (input out)
+  & input ~ (n edges)
+  & @verts ~ (n (edges out))
+
+@verts = (?((@verts_nil @verts_step) (edges out)) (edges out))
+
+@verts_nil = (edges out)
+  & edges ~ *
+  & out ~ 0
+
+@verts_step = (k (edges out))
+  & k ~ {vertex next_k}
+  & edges ~ {scan_edges next_edges}
+  & @scan ~ (scan_edges (vertex (0 (0 local))))
+  & @verts ~ (next_k (next_edges rest))
+  & local ~ $([+] $(rest out))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (vertex (degree (wedge out))))) payload) (vertex (degree (wedge out))))
+
+@scan_nil = (* (vertex (degree (wedge out))))
+  & vertex ~ *
+  & degree ~ *
+  & wedge ~ out
+
+@scan_cons = (* (((a b) tail) (vertex (degree (wedge out)))))
+  & vertex ~ {va {vb vnext}}
+  & va ~ $([=] $(a eq_a))
+  & vb ~ $([=] $(b eq_b))
+  & eq_a ~ $([|] $(eq_b match))
+  & match ~ ?((@scan_no @scan_yes) (tail (vnext (degree (wedge out)))))
+
+@scan_no = (* (tail (vertex (degree (wedge out)))))
+  & @scan ~ (tail (vertex (degree (wedge out))))
+
+@scan_yes = (* (tail (vertex (degree (wedge out)))))
+  & degree ~ {d_inc d_wedge}
+  & d_inc ~ $([+1] degree_next)
+  & wedge ~ $([+] $(d_wedge wedge_next))
+  & @scan ~ (tail (vertex (degree_next (wedge_next out))))

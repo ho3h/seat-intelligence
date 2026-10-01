@@ -1,0 +1,66 @@
+@List/Nil = ((0 a) a)
+
+@finish = ((($([+] $(a $([+] $(b $([+] $(c d)))))) ($([+] $(e $([+] $(f $([+] $(g h)))))) ($([+] $(i $([+] $(j $([+] $(k l)))))) $([+] $(m $([+] $(n $([+] $(o p))))))))) (($([+] $(q $([+] $(r $([+] $(s t)))))) ($([+] $(u $([+] $(v $([+] $(w x)))))) ($([+] $(y $([+] $(z $([+] $(ab bb)))))) $([+] $(cb $([+] $(db $([+] $(eb fb))))))))) (($([+] $(gb $([+] $(hb $([+] $(ib jb)))))) ($([+] $(kb $([+] $(lb $([+] $(mb nb)))))) ($([+] $(ob $([+] $(pb $([+] $(qb rb)))))) $([+] $(sb $([+] $(tb $([+] $(ub vb))))))))) ($([+] $(wb $([+] $(xb $([+] $(yb zb)))))) ($([+] $(ac $([+] $(bc $([+] $(cc dc)))))) ($([+] $(ec $([+] $(fc $([+] $(gc hc)))))) $([+] $(ic $([+] $(jc $([+] $(kc lc)))))))))))) (((a (e (i m))) ((q (u (y cb))) ((gb (kb (ob sb))) (wb (ac (ec ic)))))) (((b (f (j n))) ((r (v (z db))) ((hb (lb (pb tb))) (xb (bc (fc jc)))))) (((c (g (k o))) ((s (w (ab eb))) ((ib (mb (qb ub))) (yb (cc (gc kc)))))) ((1 (d (((1 (h (((1 (l (((1 (p (((1 (t (((1 (x (((1 (bb (((1 (fb (((1 (jb (((1 (nb (((1 (rb (((1 (vb (((1 (zb (((1 (dc (((1 (hc (((1 (lc (@List/Nil c_i25))) c_i25) c_i24))) c_i24) c_i23))) c_i23) c_i22))) c_i22) c_i21))) c_i21) c_i20))) c_i20) c_i19))) c_i19) c_i18))) c_i18) c_i17))) c_i17) c_i16))) c_i16) c_i15))) c_i15) c_i14))) c_i14) c_i13))) c_i13) c_i12))) c_i12) c_i11))) c_i11) c_i10))) c_i10)))))
+
+@histogram__C0 = (b (e ((b_q88 (c_q88 (d_q88 e_q88))) (j (a (d ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a_q88 (b_q88 (c_q88 (d_q88 (e_q88 i))))))) a_q88} k)))))))
+  & @finish ~ (c (f (i (j k))))
+  & @inc16 ~ (a (b c))
+  & @inc16 ~ (d (e f))
+
+@histogram__C1 = (* ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a_q69 (b_q69 (c_q69 (d_q69 (e_q69 m))))))) a_q69} (((?((@finish @histogram__C10) a_q89) a_q89) (d (g (j (m n))))) ((b_q54 (c_q54 (d_q54 e_q54))) ((b_q59 (c_q59 (d_q59 e_q59))) ((b_q64 (c_q64 (d_q64 e_q64))) ((b_q69 (c_q69 (d_q69 e_q69))) ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a_q54 (b_q54 (c_q54 (d_q54 (e_q54 d))))))) a_q54} ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a_q59 (b_q59 (c_q59 (d_q59 (e_q59 g))))))) a_q59} ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a_q64 (b_q64 (c_q64 (d_q64 (e_q64 j))))))) a_q64} n))))))))))
+
+@histogram__C10 = (* (e ((@histogram__C8 (a (b (c (d (e f)))))) (a (b (c (d f)))))))
+
+@histogram__C11 = (?((@histogram__C9 @histogram__C10) a) a)
+
+@histogram__C3 = (b (e (g (h (a (d i))))))
+  & @finish ~ (c (f (g (h i))))
+  & @inc16 ~ (a (b c))
+  & @inc16 ~ (d (e f))
+
+@histogram__C4 = (* (g (((?((@histogram__C0 @histogram__C1) a_q91) a_q91) (a (b (c (d (e (f (g h)))))))) (a (b (c (d (e (f h)))))))))
+
+@histogram__C5 = (?((@histogram__C3 @histogram__C4) a) a)
+
+@histogram__C6 = (b (d (e (f (a g)))))
+  & @finish ~ (c (d (e (f g))))
+  & @inc16 ~ (a (b c))
+
+@histogram__C7 = (* (f ((@histogram__C5 (a (b (c (d (e (f g))))))) (a (b (c (d (e g))))))))
+
+@histogram__C8 = (?((@histogram__C6 @histogram__C7) a) a)
+
+@histogram__C9 = @finish
+
+@inc16 = ({$([>0x0000004] ?((@inc16__C4 @inc16__C5) (a (b (c (d (e f))))))) a} ((b (c (d e))) f))
+
+@inc16__C0 = ($([:-0x000000C] {?((@inc4__C5_z @inc4__C4_s) (a_q79 (b_q79 (c_q79 (d_q79 (e_q79 f)))))) a_q79}) (a (b (c ((b_q79 (c_q79 (d_q79 e_q79))) (a (b (c f))))))))
+
+@inc16__C1 = (* ($([:-0x0000008] {?((@inc4__C5_z @inc4__C4_s) (a_q87 (b_q87 (c_q87 (d_q87 (e_q87 e)))))) a_q87}) (a (b ((b_q87 (c_q87 (d_q87 e_q87))) (f (a (b (e f)))))))))
+
+@inc16__C2 = ({$([>0x000000C] ?((@inc16__C0 @inc16__C1) (a b))) a} b)
+
+@inc16__C3 = (* ($([:-0x0000004] b) (a (c (e (f (a (d (e f)))))))))
+  & @inc4 ~ (b (c d))
+
+@inc16__C4 = ({$([>0x0000008] ?((@inc16__C2 @inc16__C3) (a b))) a} b)
+
+@inc16__C5 = (* (a (b (d (e (f (c (d (e f)))))))))
+  & @inc4 ~ (a (b c))
+
+@inc4 = ({?((@inc4__C5_z @inc4__C4_s) (a (b (c (d (e f)))))) a} ((b (c (d e))) f))
+
+@inc4__C0 = (a (b (c ($([+0x0000001] d) (a (b (c d)))))))
+
+@inc4__C1 = (* (a (b ($([+0x0000001] c) (d (a (b (c d))))))))
+
+@inc4__C2 = ($([=0x0000002] ?((@inc4__C0 @inc4__C1) a)) a)
+
+@inc4__C3 = (* (* (a ($([+0x0000001] b) (c (d (a (b (c d)))))))))
+
+@prog = ((@histogram__C11 (b (c (d (e f))))) f)
+  & ((0 (0 (0 0))) ((0 (0 (0 0))) ((0 (0 (0 0))) (0 (0 (0 0)))))) ~ {b {c {d e}}}
+
+@inc4__C5_z = (* ($([+0x0000001] a) (b (c (d (a (b (c d))))))))
+
+@inc4__C4_s = (* ({$([=0x0000001] ?((@inc4__C2 @inc4__C3) (a b))) a} b))

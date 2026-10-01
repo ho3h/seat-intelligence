@@ -1,0 +1,85 @@
+@prog = (input output)
+  & @scan ~ (input ((0 0) ((0 *) output)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl ((flag val) (acc out)))) pl) ((flag val) (acc out)))
+
+@scan_nil = (* ((flag val) (acc out)))
+  & flag ~ ?((@scan_end_empty @scan_end_num) (val (acc out)))
+
+@scan_end_empty = (val (acc out))
+  & val ~ *
+  & @rev ~ (acc out)
+
+@scan_end_num = (* (val (acc out)))
+  & @rev ~ ((1 ((0 val) acc)) out)
+
+@scan_cons = (* ((h t) ((flag val) (acc out))))
+  & h ~ {hc hk}
+  & hc ~ $([>] $(47 gt))
+  & gt ~ ?((@scan_non_digit @scan_check_upper) (hk (t ((flag val) (acc out)))))
+
+@scan_check_upper = (* (h (t ((flag val) (acc out)))))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(58 lt))
+  & lt ~ ?((@scan_non_digit @scan_digit) (hk (t ((flag val) (acc out)))))
+
+@scan_digit = (* (h (t ((flag val) (acc out)))))
+  & h ~ $([-] $(48 digit))
+  & val ~ $([*] $(10 tenval))
+  & tenval ~ $([+] $(digit newval))
+  & flag ~ *
+  & @scan ~ (t ((1 newval) (acc out)))
+
+@scan_non_digit = (h (t ((flag val) (acc out))))
+  & flag ~ ?((@scan_no_num @scan_has_num) (h (t (val (acc out)))))
+
+@scan_no_num = (h (t (val (acc out))))
+  & @classify ~ (h (t (0 (val (acc out)))))
+
+@scan_has_num = (* (h (t (val (acc out)))))
+  & @classify ~ (h (t (1 (val (acc out)))))
+
+@classify = (h (t (flag (val (acc out)))))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(32 eq))
+  & eq ~ ?((@classify_not_space @classify_space) (hk (t (flag (val (acc out)))))
+
+@classify_space = (* (h (t (flag (val (acc out))))))
+  & flag ~ ?((@space_no_num @space_has_num) (h (t (val (acc out)))))
+
+@space_no_num = (h (t (val (acc out))))
+  & h ~ *
+  & val ~ *
+  & @scan ~ (t ((0 0) (acc out)))
+
+@space_has_num = (* (h (t (val (acc out)))))
+  & h ~ *
+  & @scan ~ (t ((0 0) ((1 ((0 val) acc)) out)))
+
+@classify_not_space = (h (t (flag (val (acc out)))))
+  & h ~ {hc hk}
+  & hc ~ $([>] $(41 gt))
+  & gt ~ ?((@scan_paren @scan_operator) (hk (t (flag (val (acc out)))))
+
+@scan_paren = (h (t (flag (val (acc out)))))
+  & @emit_symbol ~ (2 (h (t (flag (val (acc out))))))
+
+@scan_operator = (* (h (t (flag (val (acc out))))))
+  & @emit_symbol ~ (1 (h (t (flag (val (acc out))))))
+
+@emit_symbol = (kind (h (t (flag (val (acc out))))))
+  & flag ~ ?((@emit_no_num @emit_has_num) (kind (h (t (val (acc out))))))
+
+@emit_no_num = (kind (h (t (val (acc out)))))
+  & val ~ *
+  & @scan ~ (t ((0 0) ((1 ((kind h) acc)) out)))
+
+@emit_has_num = (* (kind (h (t (val (acc out))))))
+  & @scan ~ (t ((0 0) ((1 ((kind h) (1 ((0 val) acc)))) out)))
+
+@rev = ((?((@rev_nil @rev_cons) (pl (acc out))) pl) (acc out))
+
+@rev_nil = (* (a a))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

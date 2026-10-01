@@ -1,0 +1,106 @@
+// Entry point and vertex validation
+@prog = (input out)
+  & @check ~ (input out)
+
+@check = (n (s (t (k (edges out)))))
+  & n ~ {n_s n_rest}
+  & n_rest ~ {n_t n_ctx}
+  & s ~ {s_cmp s_ctx}
+  & t ~ {t_cmp t_ctx}
+  & s_cmp ~ $([<] $(n_s b1))
+  & t_cmp ~ $([<] $(n_t b2))
+  & b1 ~ $([&] $(b2 good))
+  & good ~ ?((@bad @good) (n_ctx (s_ctx (t_ctx (k (edges out)))))
+
+@bad = (* (n (s (t (k (edges out))))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@good = (* (n (s (t (k (edges out))))))
+  & n ~ {n_init n_steps}
+  & @zeros ~ (n_init zeroes)
+  & @set ~ (zeroes (t (1 dp)))
+  & @steps ~ (k (n_steps (dp (edges (s out))))
+
+// Construct a list of n zeroes.
+@zeros = (n out)
+  & n ~ ?((@zeros_zero @zeros_succ) out)
+
+@zeros_zero = (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Set vector[index] = value.
+@set = (vec (idx (val out)))
+  & vec ~ (tag payload)
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (val out))))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_zero @set_succ) (head (tail (val out))))
+
+@set_zero = (head (tail (val out)))
+  & head ~ $([+] $(val sum))
+  & out ~ (1 (sum tail))
+
+@set_succ = (idx (head (tail (val out))))
+  & @set ~ (tail (idx (val newtail)))
+  & out ~ (1 (head newtail))
+
+// Read vector[index].
+@lookup = (vec (idx out))
+  & vec ~ (tag payload)
+  & tag ~ ?((@lookup_nil @lookup_cons) (payload (idx out)))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@lookup_zero @lookup_succ) (head (tail out)))
+
+@lookup_zero = (head (tail head))
+  & tail ~ *
+
+@lookup_succ = (idx (head (tail out)))
+  & @lookup ~ (tail (idx out))
+  & head ~ *
+
+// Accumulate old[v] into acc[u] for every edge u -> v.
+@scan = (edges (old (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (payload (old (acc out))))
+
+@scan_nil = (* (* (a a)))
+
+@scan_cons = (* (((u v) tail) (old (acc out))))
+  & old ~ {old_lookup old_next}
+  & @lookup ~ (old_lookup (v value))
+  & @set ~ (acc (u (value next)))
+  & @scan ~ (tail (old_next (next out)))
+
+// Repeat the edge accumulation k times.
+@steps = (rem (n (dp (edges (s out)))))
+  & rem ~ ?((@steps_zero @steps_succ) (n (dp (edges (s out))))
+
+@steps_zero = (n (dp (edges (s out))))
+  & n ~ *
+  & edges ~ *
+  & @lookup ~ (dp (s out))
+
+@steps_succ = (rem (n (dp (edges (s out)))))
+  & n ~ {n_zero n_next}
+  & edges ~ {edges_scan edges_next}
+  & @zeros ~ (n_zero zeroes)
+  & @scan ~ (edges_scan (dp (zeroes next)))
+  & @steps ~ (rem (n_next (next (edges_next (s out))))

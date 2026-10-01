@@ -1,0 +1,49 @@
+// @prog input is the pair (pred, truth); the accumulator is (tp, fp, fn, out).
+@prog = ((p t) out)
+  & @outer ~ (p (t (0 (0 (0 out)))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (t (tp (fp (fn out)))))) pl) (t (tp (fp (fn out)))))
+
+@outer_nil = (* (* (tp (fp (fn out)))))
+  & out ~ (tp (fp fn))
+
+@outer_cons = (* ((h pt) (t (tp (fp (fn out))))))
+  & @read_truth ~ (t (h (pt (tp (fp (fn out))))))
+
+@read_truth = ((?((@rt_nil @rt_cons) (pl (h (pt (tp (fp (fn out))))))) pl) (h (pt (tp (fp (fn out)))))
+
+@rt_nil = (* (* (* (tp (fp (fn out))))))
+  & out ~ (tp (fp fn))
+
+@rt_cons = (* ((k {qi qo}) (h ({pi po} (tp (fp (fn out)))))))
+  & @inner ~ (pi (qi (h (k (po (qo (tp (fp (fn out))))))))
+
+@inner = ((?((@in_nil @in_cons) (pl (q (h (k (po (qo (tp (fp (fn out))))))))) pl) (q (h (k (po (qo (tp (fp (fn out))))))))
+
+@in_nil = (* (* (* (* (po (qo (tp (fp (fn out))))))))
+  & @outer ~ (po (qo (tp (fp (fn out)))))
+
+@in_cons = (* ((u pt) (q (h (k (po (qo (tp (fp (fn out)))))))))
+  & @inner_truth ~ (q (u (pt (h (k (po (qo (tp (fp (fn out))))))))
+
+@inner_truth = ((?((@it_nil @it_cons) (pl (u (pt (h (k (po (qo (tp (fp (fn out))))))))))) pl) (u (pt (h (k (po (qo (tp (fp (fn out))))))))
+
+@it_nil = (* (* (* (* (* (po (qo (tp (fp (fn out)))))))))
+  & @outer ~ (po (qo (tp (fp (fn out)))))
+
+@it_cons = (* ((v qt) (u (pt ({he hr} ({ke kr} (po (qo (tp (fp (fn out))))))))))
+  & he ~ $([=] $(u pe))
+  & ke ~ $([=] $(v te))
+  & pe ~ {pea pec}
+  & pea ~ {petp pefp}
+  & te ~ {tea tec}
+  & tea ~ {tetp tefn}
+  & petp ~ $([&] $(tetp btp))
+  & tec ~ $([^] $(1 nte))
+  & pefp ~ $([&] $(nte bfp))
+  & pec ~ $([^] $(1 npe))
+  & tefn ~ $([&] $(npe bfn))
+  & tp ~ $([+] $(btp tp2))
+  & fp ~ $([+] $(bfp fp2))
+  & fn ~ $([+] $(bfn fn2))
+  & @inner ~ (pt (qt (hr (kr (po (qo (tp2 (fp2 (fn2 out))))))))

@@ -1,0 +1,129 @@
+// Entry point: initialize the result to Nil and traverse the edges.
+@prog = ((c edges) out)
+  & @walk ~ (edges (c ((0 *) out)))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@walk_nil = (* (c (acc out)))
+  & c ~ *
+  & acc ~ out
+
+// A Cons payload is (edge tail), and edge is (u v).
+@walk_cons = (* (((u v) tail) (c (acc out))))
+  & c ~ {cu c1}
+  & c1 ~ {cv cn}
+  & @get ~ (cu (u mu))
+  & @get ~ (cv (v mv))
+  & mu ~ {mu_eq mu_order}
+  & mv ~ {mv_eq mv_order}
+  & mu_eq ~ $([=] $(mv_eq z))
+  & z ~ ?((@walk_diff @walk_same) (mu_order (mv_order (tail (cn (acc out))))))
+
+@walk_same = (* (mu_order (mv_order (tail (cn (acc out))))))
+  & mu_order ~ *
+  & mv_order ~ *
+  & @walk ~ (tail (cn (acc out)))
+
+@walk_diff = (mu_order (mv_order (tail (cn (acc out)))))
+  & mu_order ~ {mu_cmp mu_keep}
+  & mv_order ~ {mv_cmp mv_keep}
+  & mu_cmp ~ $([<] $(mv_cmp z))
+  & z ~ ?((@norm_ge @norm_lt) (mu_keep (mv_keep (tail (cn (acc out))))))
+
+@norm_ge = (mu_keep (mv_keep (tail (cn (acc out)))))
+  & @ins ~ (((mv_keep mu_keep) acc) newacc)
+  & @walk ~ (tail (cn (newacc out)))
+
+@norm_lt = (* (mu_keep (mv_keep (tail (cn (acc out))))))
+  & @ins ~ (((mu_keep mv_keep) acc) newacc)
+  & @walk ~ (tail (cn (newacc out)))
+
+// Look up an index in the clustering list.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (i out))
+  & i ~ *
+  & out ~ *
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_zero @get_succ) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_succ = (j (h (t out)))
+  & h ~ *
+  & @get ~ (t (j out))
+
+// Compare two pairs lexicographically: 0 equal, 1 first is less, 2 first is greater.
+@paircmp = ((p q) out)
+  & p ~ (a b)
+  & q ~ (x y)
+  & a ~ {al ag}
+  & x ~ {xl xg}
+  & al ~ $([<] $(xl z))
+  & z ~ ?((@pc_nlt @pc_lt) (ag (xg (b (y out)))))
+
+@pc_lt = (* (ag (xg (b (y out)))))
+  & ag ~ *
+  & xg ~ *
+  & b ~ *
+  & y ~ *
+  & out ~ 1
+
+@pc_nlt = (ag (xg (b (y out))))
+  & ag ~ $([>] $(xg z))
+  & z ~ ?((@pc_negt @pc_gt) (b (y out)))
+
+@pc_gt = (* (b (y out)))
+  & b ~ *
+  & y ~ *
+  & out ~ 2
+
+@pc_negt = (b (y out))
+  & b ~ {bl bg}
+  & y ~ {yl yg}
+  & bl ~ $([<] $(yl z))
+  & z ~ ?((@pc_nbl @pc_bl) (bg (yg out)))
+
+@pc_bl = (* (bg (yg out)))
+  & bg ~ *
+  & yg ~ *
+  & out ~ 1
+
+@pc_nbl = (bg (yg out))
+  & bg ~ $([>] $(yg z))
+  & z ~ ?((@pc_eq @pc_bg) out)
+
+@pc_eq = out
+  & out ~ 0
+
+@pc_bg = (* out)
+  & out ~ 2
+
+// Insert a pair into a sorted list, keeping it distinct.
+@ins = ((p (?((@ins_nil @ins_cons) (pl (p out))) pl)) out)
+
+@ins_nil = (* (p out))
+  & out ~ (1 (p (0 *)))
+
+@ins_cons = (* ((item tail) (p out)))
+  & p ~ {p_cmp p_save}
+  & item ~ {i_cmp i_save}
+  & @paircmp ~ ((p_cmp i_cmp) cmp)
+  & cmp ~ ?((@ins_equal @ins_not_equal) (p_save (i_save (tail out))))
+
+@ins_equal = (p_save (i_save (tail out)))
+  & p_save ~ *
+  & out ~ (1 (i_save tail))
+
+@ins_not_equal = (* (p_save (i_save (tail out))))
+  & r ~ ?((@ins_before @ins_after) (p_save (i_save (tail out))))
+
+@ins_before = (p_save (i_save (tail out)))
+  & out ~ (1 (p_save (1 (i_save tail))))
+
+@ins_after = (* (p_save (i_save (tail out))))
+  & @ins ~ ((p_save tail) rest)
+  & out ~ (1 (i_save rest))

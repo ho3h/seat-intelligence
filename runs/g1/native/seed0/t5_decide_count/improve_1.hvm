@@ -1,0 +1,39 @@
+@prog = (input out)
+  & @t5_init ~ (input out)
+
+@t5_init = ((tau cands) out)
+  & @t5_count ~ (cands (tau (0 out)))
+
+@t5_count = ((?((@t5_nil @t5_cons) (pl (tau (acc out)))) pl) (tau (acc out)))
+
+@t5_nil = (* (* (a a)))
+
+@t5_cons = (* (((u (v score)) tail) (tau (acc out))))
+  & u ~ *
+  & v ~ *
+  & tau ~ {tc tn}
+  & score ~ $([<] $(tc z))
+  & z ~ ?((@t5_first_ge @t5_first_lt) (tail (tn (acc out))))
+
+@t5_first_ge = (tail (tau (acc out)))
+  & acc ~ $([+] $(1 acc2))
+  & @t5_next ~ (tail (tau (acc2 out)))
+
+@t5_first_lt = (tail (tau (acc out)))
+  & @t5_next ~ (tail (tau (acc out)))
+
+@t5_next = ((?((@t5_nil @t5_second) (pl (tau (acc out)))) pl) (tau (acc out)))
+
+@t5_second = (* (((u (v score)) tail) (tau (acc out))))
+  & u ~ *
+  & v ~ *
+  & tau ~ {tc tn}
+  & score ~ $([<] $(tc z))
+  & z ~ ?((@t5_second_ge @t5_second_lt) (tail (tn (acc out))))
+
+@t5_second_ge = (tail (tau (acc out)))
+  & acc ~ $([+] $(1 acc2))
+  & @t5_count ~ (tail (tau (acc2 out)))
+
+@t5_second_lt = (tail (tau (acc out)))
+  & @t5_count ~ (tail (tau (acc out)))

@@ -1,0 +1,35 @@
+// Returns 1 when s == t and both vertices are in range; otherwise returns 0.
+@prog = ((n (s (t edges))) out)
+  & @check_s ~ (n (s (t (edges out))))
+
+@check_s = (n (s (t (edges out))))
+  & n ~ {n_op n_ctx}
+  & s ~ {s_op s_ctx}
+  & s_op ~ $([<] $(n_op c))
+  & c ~ ?((@bad @check_t) (n_ctx (s_ctx (t (edges out)))))
+
+@check_t = (* (n (s (t (edges out)))))
+  & n ~ {n_op n_ctx}
+  & t ~ {t_op t_ctx}
+  & t_op ~ $([<] $(n_op c))
+  & c ~ ?((@bad @check_eq) (n_ctx (s (t_ctx (edges out)))))
+
+@check_eq = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ $([=] $(t eq))
+  & eq ~ ?((@not_same @same) (edges out))
+
+@bad = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@not_same = (* (edges out))
+  & edges ~ *
+  & out ~ 0
+
+@same = (* (edges out))
+  & edges ~ *
+  & out ~ 1

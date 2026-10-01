@@ -1,0 +1,207 @@
+// Entry point
+@prog = ((c attrs) out)
+  & @build ~ (attrs (c ((0 *) out)))
+
+@build = ((?((@build_nil @build_cons) (p (c (hist out)))) p) (c (hist out)))
+
+@build_nil = (* (c (hist out)))
+  & @walk ~ (c (0 (hist out)))
+
+@build_cons = (* ((h t) (c (hist out))))
+  & h ~ (node (key val))
+  & c ~ {cg cr}
+  & @get ~ (node (cg cl))
+  & @upd ~ (hist (cl (key (val h2))))
+  & @build ~ (t (cr h2 out))
+
+// Look up list[index].
+@get = (i (l out))
+  & i ~ ?((@get_zero @get_succ) (l out))
+
+@get_zero = (l out)
+  & @get_list ~ (l out)
+
+@get_list = ((?((@get_list_nil @get_list_cons) (p out)) p) out)
+
+@get_list_nil = (* out)
+  & out ~ *
+
+@get_list_cons = (* ((h t) out))
+  & out ~ h
+  & t ~ *
+
+@get_succ = (i (l out))
+  & @get_tail ~ (l (i out))
+
+@get_tail = ((?((@get_tail_nil @get_tail_cons) (p (i out))) p) (i out))
+
+@get_tail_nil = (* (i out))
+  & i ~ *
+  & out ~ *
+
+@get_tail_cons = (* ((h t) (i out)))
+  & h ~ *
+  & @get ~ (i (t out))
+
+// Insert a (cluster,key,value) count into the histogram.
+@upd = ((?((@upd_nil @upd_cons) (p (cl (key (val out))))) p) (cl (key (val out))))
+
+@upd_nil = (* (cl (key (val out))))
+  & out ~ (1 ((cl (key (val 1))) (0 *)))
+
+@upd_cons = (* ((entry tail) (cl (key (val out)))))
+  & @upd_check ~ (entry (tail (cl (key (val out)))))
+
+@upd_check = (entry (tail (cl (key (val out)))))
+  & entry ~ (oc (ok (ov cnt)))
+  & oc ~ {oc1 oc2}
+  & ok ~ {ok1 ok2}
+  & ov ~ {ov1 ov2}
+  & cl ~ {cl1 cl2}
+  & key ~ {key1 key2}
+  & val ~ {val1 val2}
+  & @same ~ (oc1 (cl1 e1))
+  & @same ~ (ok1 (key1 e2))
+  & @same ~ (ov1 (val1 e3))
+  & e1 ~ $([&] $(e2 e12))
+  & e12 ~ $([&] $(e3 all))
+  & all ~ ?((@upd_miss @upd_hit) (oc2 (ok2 (ov2 (cnt (tail (cl2 (key2 (val2 out))))))))
+
+@upd_miss = (* (oc (ok (ov (cnt (tail (cl (key (val out))))))))
+  & @upd ~ (tail (cl (key (val nt))))
+  & out ~ (1 ((oc (ok (ov cnt))) nt)
+
+@upd_hit = (* (oc (ok (ov (cnt (tail (cl (key (val out))))))))
+  & cl ~ *
+  & key ~ *
+  & val ~ *
+  & cnt ~ $([+1] cnt2)
+  & out ~ (1 ((oc (ok (ov cnt2))) tail)
+
+// Number equality.
+@same = (a (b out))
+  & a ~ $([=] $(b out))
+
+// Emit clusters in ascending order.
+@walk = ((?((@walk_nil @walk_cons) (p (i (hist out)))) p) (i (hist out)))
+
+@walk_nil = (* (i (hist out)))
+  & i ~ *
+  & hist ~ *
+  & out ~ (0 *)
+
+@walk_cons = (* ((head tail) (i (hist out))))
+  & @walk_tail ~ (head (tail (i (hist out))))
+
+@walk_tail = (head (tail (i (hist out))))
+  & head ~ {hc ho}
+  & i ~ {ic ir}
+  & hist ~ {hr hk}
+  & ir ~ $([+1] inext)
+  & @walk ~ (tail (inext (hr rest)))
+  & hc ~ $([=] $(ic eq))
+  & eq ~ ?((@walk_notcanon @walk_canon) (hk (ho (rest out))))
+
+@walk_notcanon = (* (hk (ho (rest out))))
+  & hk ~ *
+  & ho ~ *
+  & out ~ rest
+
+@walk_canon = (* (hk (ho (rest out))))
+  & @keys ~ (hk (ho (rest out)))
+
+// For one cluster, compute and emit keys in ascending order.
+@keys = (hist (cl (tailout out)))
+  & hist ~ {h0 h123}
+  & h123 ~ {h1 h23}
+  & h23 ~ {h2 h3}
+  & cl ~ {c0 c123}
+  & c123 ~ {c1 c23}
+  & c23 ~ {c2 c3}
+  & @onekey ~ (h3 (c3 (3 (tailout r3))))
+  & @onekey ~ (h2 (c2 (2 (r3 r2))))
+  & @onekey ~ (h1 (c1 (1 (r2 r1))))
+  & @onekey ~ (h0 (c0 (0 (r1 out))))
+
+// Find the most frequent value for one cluster and key.
+@onekey = (hist (cl (key (tailout out))))
+  & cl ~ {cl1 cl2}
+  & key ~ {key1 key2}
+  & @best ~ (hist (cl1 (key1 (0 (0 (0 st))))))
+  & st ~ (found (bv bc))
+  & bc ~ *
+  & found ~ ?((@onekey_no @onekey_yes) (cl2 (key2 (bv (tailout out))))
+
+@onekey_no = (* (cl (key (bv (tailout out)))))
+  & cl ~ *
+  & key ~ *
+  & bv ~ *
+  & out ~ tailout
+
+@onekey_yes = (* (cl (key (bv (tailout out)))))
+  & out ~ (1 ((cl (key bv)) tailout))
+
+@best = ((?((@best_nil @best_cons) (p (cl (key (found (bv (bc out)))))) p) (cl (key (found (bv (bc out))))))
+
+@best_nil = (* (cl (key (found (bv (bc out))))))
+  & out ~ (found (bv bc))
+
+@best_cons = (* ((entry tail) (cl (key (found (bv (bc out)))))))
+  & @best_item ~ (entry (tail (cl (key (found (bv (bc out)))))))
+
+@best_item = (entry (tail (cl (key (found (bv (bc out))))))
+  & entry ~ (oc (ok (ov cnt)))
+  & cl ~ {cl1 cl2}
+  & key ~ {key1 key2}
+  & @same ~ (oc (cl1 ecl))
+  & @same ~ (ok (key1 ek))
+  & ecl ~ $([&] $(ek both))
+  & both ~ ?((@best_skip @best_match) (ov (cnt (tail (cl2 (key2 (found (bv (bc out))))))))
+
+@best_skip = (* (ov (cnt (tail (cl (key (found (bv (bc out))))))))
+  & @best ~ (tail (cl (key (found (bv (bc out))))))
+
+@best_match = (* (ov (cnt (tail (cl (key (found (bv (bc out))))))))
+  & @consider ~ (ov (cnt (found (bv (bc st)))))
+  & st ~ (nf (nv nc))
+  & @best ~ (tail (cl (key (nf (nv (nc out))))))
+
+// Choose a candidate if it has a larger count, or ties with a smaller value.
+@consider = (ov (cnt (found (bv (bc out))))
+  & found ~ ?((@take_new @consider_old) (ov (cnt (bv (bc out))))
+
+@take_new = (* (ov (cnt (bv (bc out)))))
+  & bv ~ *
+  & bc ~ *
+  & out ~ (1 (ov cnt))
+
+@consider_old = (* (ov (cnt (bv (bc out)))))
+  & cnt ~ {cnt1 cnt2}
+  & bc ~ {bc1 bc2}
+  & cnt1 ~ $([>] $(bc1 gt))
+  & gt ~ ?((@consider_tie @consider_take) (ov (cnt2 (bv (bc2 out))))
+
+@consider_take = (* (ov (cnt (bv (bc out)))))
+  & bv ~ *
+  & bc ~ *
+  & out ~ (1 (ov cnt))
+
+@consider_tie = (* (ov (cnt (bv (bc out)))))
+  & ov ~ {ov1 ov2}
+  & cnt ~ {cnt1 cnt2}
+  & bv ~ {bv1 bv2}
+  & bc ~ {bc1 bc2}
+  & cnt1 ~ $([=] $(bc1 eq))
+  & ov1 ~ $([<] $(bv1 lt))
+  & eq ~ $([&] $(lt both))
+  & both ~ ?((@consider_keep @consider_tie_take) (ov2 (cnt2 (bv2 (bc2 out))))
+
+@consider_keep = (* (ov (cnt (bv (bc out)))))
+  & ov ~ *
+  & cnt ~ *
+  & out ~ (1 (bv bc))
+
+@consider_tie_take = (* (ov (cnt (bv (bc out)))))
+  & bv ~ *
+  & bc ~ *
+  & out ~ (1 (ov cnt))

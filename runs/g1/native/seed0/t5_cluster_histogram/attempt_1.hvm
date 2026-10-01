@@ -1,0 +1,189 @@
+@prog = ((n edges) out)
+  & n ~ {nmk nhist}
+  & @mk ~ (nmk (0 labels))
+  & @edges ~ (edges (labels final))
+  & @hist ~ (nhist (final out))
+
+@mk = (n (i out))
+  & n ~ ?((@mk_zero @mk_succ) (i out))
+
+@mk_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@mk_succ = (rem (i out))
+  & i ~ {head_i next_i}
+  & next_i ~ $([+1] next)
+  & @mk ~ (rem (next tailout))
+  & out ~ (1 (head_i tailout))
+
+@at = ((?((@at_nil @at_cons) (payload (idx out))) payload) (idx out))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@at_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@at_here @at_next) (head (tail out)))
+
+@at_here = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@at_next = (idxrem (head (tail out)))
+  & head ~ *
+  & @at ~ (tail (idxrem out))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (u (v out)))) payload) (u (v out)))
+
+@scan_nil = (* (u (v out)))
+  & u ~ *
+  & v ~ *
+  & out ~ (0 (0 (0 *)))
+
+@scan_cons = (* ((head tail) (u (v out))))
+  & u ~ ?((@scan_at @scan_more) (head (tail (v out))))
+
+@scan_at = (head (tail (v out)))
+  & head ~ {ha hrest}
+  & hrest ~ {hseek hlist}
+  & v ~ $([-] $(1 vm1))
+  & @seekv ~ (tail (vm1 (hseek sr)))
+  & sr ~ (b rebuilt)
+  & out ~ (ha (b (1 (hlist rebuilt))))
+
+@scan_more = (um (head (tail (v out))))
+  & v ~ $([-] $(1 vm1))
+  & @scan ~ (tail (um (vm1 sr)))
+  & sr ~ (a (b rebuilt))
+  & out ~ (a (b (1 (head rebuilt))))
+
+@seekv = ((?((@seek_nil @seek_cons) (payload (idx (a out)))) payload) (idx (a out)))
+
+@seek_nil = (* (idx (a out)))
+  & idx ~ *
+  & a ~ *
+  & out ~ (0 (0 *))
+
+@seek_cons = (* ((head tail) (idx (a out))))
+  & idx ~ ?((@seek_here @seek_next) (head (tail (a out))))
+
+@seek_here = (head (tail (a out)))
+  & head ~ {h1 h2}
+  & a ~ *
+  & out ~ (h1 (1 (h2 tail)))
+
+@seek_next = (idxrem (head (tail (a out))))
+  & @seekv ~ (tail (idxrem (a sr)))
+  & sr ~ (b rebuilt)
+  & out ~ (b (1 (head rebuilt)))
+
+@edges = ((?((@edges_nil @edges_cons) (payload (labels out))) payload) (labels out))
+
+@edges_nil = (* (labels out))
+  & out ~ labels
+
+@edges_cons = (* ((u v) (labels out)))
+  & @scan ~ (labels (u (v sr)))
+  & sr ~ (lu (lv labels2))
+  & @apply_edge ~ (lu (lv (labels2 (tail out))))
+
+@apply_edge = (lu (lv (labels (tail out))))
+  & @replace ~ (labels (lv (lu newlabels)))
+  & @edges ~ (tail (newlabels out))
+
+@replace = ((?((@rep_nil @rep_cons) (payload (from (to out)))) payload) (from (to out)))
+
+@rep_nil = (* (from (to out)))
+  & from ~ *
+  & to ~ *
+  & out ~ (0 *)
+
+@rep_cons = (* ((head tail) (from (to out))))
+  & from ~ {from_eq from_rec}
+  & to ~ {to_head to_rec}
+  & head ~ {h_eq h_ctx}
+  & h_eq ~ $([=] $(from_eq eq))
+  & eq ~ ?((@rep_no @rep_yes) (h_ctx (tail (from_rec (to_head (to_rec out)))))
+
+@rep_no = (h_ctx (tail (from_rec (to_head (to_rec out)))))
+  & @replace ~ (tail (from_rec (to_rec newtail)))
+  & out ~ (1 (to_head newtail))
+
+@rep_yes = (* (h_ctx (tail (from_rec (to_head (to_rec out))))))
+  & to_head ~ *
+  & @replace ~ (tail (from_rec (to_rec newtail)))
+  & out ~ (1 (h_ctx newtail))
+
+@count = ((?((@count_nil @count_cons) (payload (id out))) payload) (id out))
+
+@count_nil = (* (id out))
+  & id ~ *
+  & out ~ (0 (0 *))
+
+@count_cons = (* ((head tail) (id out)))
+  & head ~ {h_eq h_out}
+  & id ~ {id_eq id_rec}
+  & @count ~ (tail (id_rec cr))
+  & cr ~ (freq tail2)
+  & h_eq ~ $([=] $(id_eq same))
+  & freq ~ $([+] $(same sum))
+  & out ~ (sum (1 (h_out tail2)))
+
+@bin = (n (id (labels (target (acc out)))))
+  & n ~ ?((@bin_zero @bin_succ) (id (labels (target (acc out)))))
+
+@bin_zero = (id (labels (target (acc out))))
+  & id ~ *
+  & target ~ *
+  & out ~ (acc labels)
+
+@bin_succ = (* (id (labels (target (acc out)))))
+  & id ~ {id_count id_rec}
+  & target ~ {t_eq t_rec}
+  & @count ~ (labels (id_count cr))
+  & cr ~ (freq labels2)
+  & freq ~ {f_eq f_gt}
+  & f_eq ~ $([=] $(t_eq eq))
+  & f_gt ~ $([>] $(7 gt))
+  & t_eq ~ $([=] $(8 is8))
+  & is8 ~ $([&] $(gt big))
+  & big ~ $([|] $(eq cond))
+  & id_rec ~ $([+1] idnext)
+  & acc ~ $([+] $(cond accnext))
+  & @bin ~ (rem (idnext (labels2 (t_rec (accnext out)))))
+
+@hist = (n (labels out))
+  & n ~ {n1 nr1}
+  & nr1 ~ {n2 nr2}
+  & nr2 ~ {n3 nr3}
+  & nr3 ~ {n4 nr4}
+  & nr4 ~ {n5 nr5}
+  & nr5 ~ {n6 nr6}
+  & nr6 ~ {n7 n8}
+  & @bin ~ (n1 (0 (labels (1 (0 r1)))))
+  & r1 ~ (c1 l1)
+  & @bin ~ (n2 (0 (l1 (2 (0 r2)))))
+  & r2 ~ (c2 l2)
+  & @bin ~ (n3 (0 (l2 (3 (0 r3)))))
+  & r3 ~ (c3 l3)
+  & @bin ~ (n4 (0 (l3 (4 (0 r4)))))
+  & r4 ~ (c4 l4)
+  & @bin ~ (n5 (0 (l4 (5 (0 r5)))))
+  & r5 ~ (c5 l5)
+  & @bin ~ (n6 (0 (l5 (6 (0 r6)))))
+  & r6 ~ (c6 l6)
+  & @bin ~ (n7 (0 (l6 (7 (0 r7)))))
+  & r7 ~ (c7 l7)
+  & @bin ~ (n8 (0 (l7 (8 (0 r8)))))
+  & r8 ~ (c8 l8)
+  & l8 ~ *
+  & out ~ (1 (c1 rest1))
+  & rest1 ~ (1 (c2 rest2))
+  & rest2 ~ (1 (c3 rest3))
+  & rest3 ~ (1 (c4 rest4))
+  & rest4 ~ (1 (c5 rest5))
+  & rest5 ~ (1 (c6 rest6))
+  & rest6 ~ (1 (c7 rest7))
+  & rest7 ~ (1 (c8 nil))
+  & nil ~ (0 *)

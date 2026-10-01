@@ -1,0 +1,143 @@
+@prog = ((k (key (cl attrs))) out)
+  & @filter ~ (attrs (k (key (cl filtered))))
+  & @rm ~ (24 (filtered result))
+  & @rm_take ~ (result out)
+
+@filter = ((?((@filter_nil @filter_cons) (payload (k (key (cl out))))) payload) (k (key (cl out))))
+
+@filter_nil = (* (k (key (cl out))))
+  & k ~ *
+  & key ~ *
+  & cl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (((node (akey val)) tail) (k (key (cl out)))))
+  & k ~ {kt kr}
+  & key ~ {keyt keyr}
+  & cl ~ {clt clr}
+  & @eligkey ~ (kt (keyt (clt (node (akey ok)))))
+  & @filter ~ (tail (kr (keyr (clr filtered))))
+  & @filter_join ~ (ok (val (filtered out)))
+
+@filter_join = (ok (val (filtered out)))
+  & ok ~ ?((@filter_drop @filter_keep) (val (filtered out)))
+
+@filter_drop = (val (filtered out))
+  & val ~ *
+  & out ~ filtered
+
+@filter_keep = (* (val (filtered out)))
+  & out ~ (1 (val filtered))
+
+@eligkey = (k (key (cl (node (akey out)))))
+  & @get ~ (node (cl cid))
+  & akey ~ $([=] $(key eq1))
+  & cid ~ $([=] $(k eq2))
+  & eq1 ~ $([&] $(eq2 out))
+
+@get = (idx ((?((@get_nil @get_cons) (payload (idx out))) payload) out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_head @get_step) (head (tail out)))
+
+@get_head = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_step = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (idx (tail out))
+
+@rm = ({rdrop rctx} ((?((@rm_empty @rm_nonempty) (rctx (payload out))) payload) out))
+  & rdrop ~ *
+
+@rm_empty = (rem (* out))
+  & rem ~ *
+  & out ~ (0 16777215)
+
+@rm_nonempty = (* (rem ((head tail) out)))
+  & rem ~ ?((@rm_base @rm_step) ((1 (head tail)) out))
+
+@rm_base = (lst out)
+  & lst ~ {lc lh}
+  & @len ~ (lc len)
+  & @base_dispatch ~ (lh (len out))
+
+@base_dispatch = ((?((@rb_nil @rb_cons) (payload (len out))) payload) (len out))
+
+@rb_nil = (* (len out))
+  & len ~ *
+  & out ~ (0 16777215)
+
+@rb_cons = (* ((head tail) (len out)))
+  & tail ~ *
+  & out ~ (len head)
+
+@len = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((head tail) out))
+  & head ~ *
+  & @len ~ (tail len)
+  & len ~ $([+1] out)
+
+@rm_step = (rem (lst out))
+  & rem ~ {splitbit rpair}
+  & rpair ~ {rzero rone}
+  & @splitnum ~ (splitbit (lst (zeros ones)))
+  & @rm ~ (rzero (zeros zr))
+  & @rm ~ (rone (ones or))
+  & @rm_pick ~ (zr (or out))
+
+@rm_pick = ((zc zv) ((oc ov) out))
+  & zc ~ {zgt zeq}
+  & oc ~ {ogt oeq}
+  & zgt ~ $([>] $(ogt gt))
+  & zeq ~ $([=] $(oeq eq))
+  & gt ~ $([|] $(eq win))
+  & win ~ ?((@rm_pick_one @rm_pick_zero) (zc (zv (oc (ov out)))))
+
+@rm_pick_zero = (zc (zv (oc (ov out))))
+  & oc ~ *
+  & ov ~ *
+  & out ~ (zc zv)
+
+@rm_pick_one = (zc (zv (oc (ov out))))
+  & zc ~ *
+  & zv ~ *
+  & out ~ (oc ov)
+
+@rm_take = ((cnt val) out)
+  & cnt ~ *
+  & out ~ val
+
+@splitnum = ({drop bctx} ((?((@sn_nil @sn_cons) (bctx (payload (z o)))) payload) (z o)))
+  & drop ~ *
+
+@sn_nil = (bit (* (z o)))
+  & bit ~ *
+  & z ~ (0 *)
+  & o ~ (0 *)
+
+@sn_cons = (* (bit ((val tail) (z o))))
+  & bit ~ {btest brec}
+  & val ~ {vtest vkeep}
+  & vtest ~ $([>>] $(btest shifted))
+  & shifted ~ $([&] $(1 bitval))
+  & @splitnum ~ (brec (tail (zs os)))
+  & @sn_route ~ (bitval (vkeep (zs (os (z o)))))
+
+@sn_route = (bit (val (zs (os out))))
+  & bit ~ ?((@sn_zero @sn_one) (val (zs (os out))))
+
+@sn_zero = (val (zs (os out)))
+  & out ~ ((1 (val zs)) os)
+
+@sn_one = (val (zs (os out)))
+  & out ~ (zs (1 (val os)))

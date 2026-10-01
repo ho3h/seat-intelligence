@@ -1,0 +1,21 @@
+@prog = ((xs ys) out)
+  & @merge ~ (xs (ys out))
+
+@merge = ((?((@m_xnil @m_xcons) (pl (ys out))) pl) (ys out))
+
+@m_xnil = (* (ys ys))
+
+@m_xcons = (* ((x xt) (ys out)))
+  & ys ~ (?((@m_ynil @m_ycons) (py (x (xt out)))) py)
+
+@m_ynil = (* (x (xt (1 (x xt)))))
+
+@m_ycons = (* (({y1 y2} yt) ({x1 x2} (xt out))))
+  & y1 ~ $([<] $(x1 c))
+  & c ~ ?((@m_takex @m_takey) (x2 (xt (y2 (yt out)))))
+
+@m_takex = (x (xt (y (yt (1 (x rest))))))
+  & @merge ~ (xt ((1 (y yt)) rest))
+
+@m_takey = (* (x (xt (y (yt (1 (y rest)))))))
+  & @merge ~ ((1 (x xt)) (yt rest))

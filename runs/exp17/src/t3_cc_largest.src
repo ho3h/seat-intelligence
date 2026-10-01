@@ -1,0 +1,10 @@
+# t3_cc_largest: components by channel label propagation (lib/chan), sizes by a chain of keyed increments (scatter-count,
+# lib/sizes), balanced max.
+#include base
+#include chan
+#include hooks_cc
+#include sizes
+def prog(x):
+  (n, es) = x
+  (F, z, l, m) = chan_cc(n, es, 0, 3)
+  return z + tmax(scat(F, l, l, m, 0, n, zt(l)), l)

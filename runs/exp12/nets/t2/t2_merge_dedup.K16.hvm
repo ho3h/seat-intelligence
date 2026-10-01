@@ -1,0 +1,98 @@
+@prog = ((xs ys) out)
+  & @merge ~ (xs (ys merged))
+  & @dedup ~ (merged (0 (0 out)))
+
+@merge = ((?((@mxnil @mxcons) (px (ys out))) px) (ys out))
+
+@mxnil = (* (ys out))
+  & ys ~ out
+
+@mxcons = (* ((h t) (ys out)))
+  & @merge_y ~ (ys (h (t out)))
+
+@merge_y = ((?((@mynil @mycons) (py (h (t out)))) py) (h (t out)))
+
+@mynil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@mycons = (* ((g u) (h (t out))))
+  & h ~ {hc hs}
+  & g ~ {gc gs}
+  & hc ~ $([<] $(gc z))
+  & z ~ ?((@my_ge @my_lt) (hs (gs (t (u out)))))
+
+@my_ge = (hs (gs (t (u out))))
+  & @merge ~ ((1 (hs t)) (u r))
+  & out ~ (1 (gs r))
+
+@my_lt = (* (hs (gs (t (u out)))))
+  & @merge ~ (t ((1 (gs u)) r))
+  & out ~ (1 (hs r))
+
+@dedup = (lv1 (have (prev out)))
+  & @dcons_lw ~ (lv1 (have (prev out)))
+
+@dnil = (* (have (prev out)))
+  & have ~ *
+  & prev ~ *
+  & out ~ (0 *)
+
+@dcons = (* ((h t) (z6 (prev out))))
+  & z6 ~ ?((@dfirst_hz @dmore_hz) (h (xw52 (prev out))))
+  & @dcons_lw ~ (t xw52)
+
+@dfirst = (h (t (prev out)))
+  & prev ~ *
+  & h ~ {emit newprev}
+  & @dedup ~ (t (1 (newprev rest)))
+  & out ~ (1 (emit rest))
+
+@dmore = (* (h (t (prev out))))
+  & h ~ {hc hkeep}
+  & prev ~ {pc pkeep}
+  & hc ~ $([=] $(pc z))
+  & z ~ ?((@ddiff @dsame) (hkeep (pkeep (t out))))
+
+@dsame = (* (hkeep (pkeep (t out))))
+  & hkeep ~ *
+  & @dedup ~ (t (1 (pkeep out)))
+
+@ddiff = (hkeep (pkeep (t out)))
+  & pkeep ~ *
+  & hkeep ~ {emit newprev}
+  & @dedup ~ (t (1 (newprev rest)))
+  & out ~ (1 (emit rest))
+
+@dcons_lw = (ls151 (q55 (q56 q57)))
+  & ls151 ~ (g134 (e118 (g135 (e119 (g136 (e120 (g137 (e121 (g138 (e122 (g139 (e123 (g140 (e124 (g141 (e125 (g142 (e126 (g143 (e127 (g144 (e128 (g145 (e129 (g146 (e130 (g147 (e131 (g148 (e132 (g149 (e133 tk150))))))))))))))))))))))))))))))))
+  & g134 ~ ?((@dnil @dcons_la) ((e118 (q59 (q60 q61))) (q55 (q56 q57))))
+  & g135 ~ ?((@dnil @dcons_la) ((e119 (q63 (q64 q65))) (q59 (q60 q61))))
+  & g136 ~ ?((@dnil @dcons_la) ((e120 (q67 (q68 q69))) (q63 (q64 q65))))
+  & g137 ~ ?((@dnil @dcons_la) ((e121 (q71 (q72 q73))) (q67 (q68 q69))))
+  & g138 ~ ?((@dnil @dcons_la) ((e122 (q75 (q76 q77))) (q71 (q72 q73))))
+  & g139 ~ ?((@dnil @dcons_la) ((e123 (q79 (q80 q81))) (q75 (q76 q77))))
+  & g140 ~ ?((@dnil @dcons_la) ((e124 (q83 (q84 q85))) (q79 (q80 q81))))
+  & g141 ~ ?((@dnil @dcons_la) ((e125 (q87 (q88 q89))) (q83 (q84 q85))))
+  & g142 ~ ?((@dnil @dcons_la) ((e126 (q91 (q92 q93))) (q87 (q88 q89))))
+  & g143 ~ ?((@dnil @dcons_la) ((e127 (q95 (q96 q97))) (q91 (q92 q93))))
+  & g144 ~ ?((@dnil @dcons_la) ((e128 (q99 (q100 q101))) (q95 (q96 q97))))
+  & g145 ~ ?((@dnil @dcons_la) ((e129 (q103 (q104 q105))) (q99 (q100 q101))))
+  & g146 ~ ?((@dnil @dcons_la) ((e130 (q107 (q108 q109))) (q103 (q104 q105))))
+  & g147 ~ ?((@dnil @dcons_la) ((e131 (q111 (q112 q113))) (q107 (q108 q109))))
+  & g148 ~ ?((@dnil @dcons_la) ((e132 (q115 (q116 q117))) (q111 (q112 q113))))
+  & g149 ~ ?((@dnil @dcons) ((e133 tk150) (q115 (q116 q117))))
+
+@dfirst_hz = ({q11 q12} (hw18 (* (1 (q11 q13)))))
+  & hw18 ~ (1 (q12 q13))
+
+@ddiff_hz = ({q33 q34} (* (hw40 (1 (q33 q35)))))
+  & hw40 ~ (1 (q34 q35))
+
+@dsame_hz = (* (* (q42 (hw49 q44))))
+  & hw49 ~ (1 (q42 q44))
+
+@dmore_hz = (* ({$([=] $(q25 z28)) q24} (hw51 ({q25 q26} q22))))
+  & z28 ~ ?((@ddiff_hz @dsame_hz) (q24 (q26 (xw50 q22))))
+  & hw51 ~ xw50
+
+@dcons_la = (* ((h xw52) (?((@dfirst_hz @dmore_hz) (h (xw52 (prev out)))) (prev out))))

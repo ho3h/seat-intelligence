@@ -1,0 +1,115 @@
+// Build labels [0, 1, ..., n-1], process each edge once, then count equal labels.
+@prog = ((n edges) out)
+  & @mklabels ~ (n (0 labs))
+  & @ep ~ (edges (labs done))
+  & @count ~ (done out)
+
+@mklabels = (?((@mk_nil @mk_succ) c) c)
+
+@mk_nil = (* (0 *))
+
+@mk_succ = (pred (i out))
+  & i ~ {ix iy}
+  & iy ~ $([+1] ni)
+  & @mklabels ~ (pred (ni tl))
+  & out ~ (1 (ix tl))
+
+// Apply every edge once.
+@ep = ((?((@ep_nil @ep_cons) (pl (labs out))) pl) (labs out))
+
+@ep_nil = (* (a a))
+
+@ep_cons = (* (((u v) t) (labs out)))
+  & @merge ~ (labs (u (v merged)))
+  & @ep ~ (t (merged out))
+
+// Find endpoint labels; skip the full-list rewrite when they already match.
+@merge = (labs (u (v out)))
+  & labs ~ {ltemp lreplace}
+  & ltemp ~ {ll1 ll2}
+  & @lookup ~ (ll1 (u lu))
+  & @lookup ~ (ll2 (v lv))
+  & lu ~ {luc lu_keep}
+  & lv ~ {lvc lv_keep}
+  & luc ~ $([=] $(lvc z))
+  & z ~ ?((@merge_same @merge_diff) (lreplace (lu_keep (lv_keep out))))
+
+@merge_same = (labs (a (b out)))
+  & a ~ *
+  & b ~ *
+  & out ~ labs
+
+@merge_diff = (labs (old (new out)))
+  & @replace_all ~ (labs (old (new out)))
+
+// Look up the label at an index.
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@lookup_here @lookup_next) (head (tail out)))
+
+@lookup_here = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@lookup_next = (idx (head (tail out)))
+  & head ~ *
+  & @lookup ~ (tail (idx out))
+
+// Replace all occurrences of old with new in a list.
+@replace_all = ((?((@ra_nil @ra_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@ra_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@ra_cons = (* ((head tail) (old (new out))))
+  & head ~ {hc hk}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & @replace_all ~ (tail (or (nr tailout)))
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@ra_no @ra_yes) (hk (nc (tailout out))))
+
+@ra_no = (head (new (tailout out)))
+  & new ~ *
+  & out ~ (1 (head tailout))
+
+@ra_yes = (* (head (new (tailout out))))
+  & head ~ *
+  & out ~ (1 (new tailout))
+
+// Count unordered pairs of equal labels.
+@count = ((?((@count_nil @count_cons) (pl out)) pl) out)
+
+@count_nil = (* out)
+  & out ~ 0
+
+@count_cons = (* ((h t) out))
+  & t ~ {t1 t2}
+  & @eqtail ~ (t1 (h eqn))
+  & @count ~ (t2 rest)
+  & eqn ~ $([+] $(rest out))
+
+// Count occurrences of x in a list.
+@eqtail = ((?((@eq_nil @eq_cons) (pl (x out))) pl) (x out))
+
+@eq_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@eq_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & @eqtail ~ (t (x1 tailcount))
+  & h ~ $([=] $(x2 z))
+  & z ~ ?((@eq_no @eq_yes) (tailcount out))
+
+@eq_no = (a a)
+
+@eq_yes = (* (c out))
+  & c ~ $([+1] out)

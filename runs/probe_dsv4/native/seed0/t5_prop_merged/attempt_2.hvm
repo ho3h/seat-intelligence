@@ -1,0 +1,258 @@
+@less = (a (b out))
+  & a ~ $([<] $(b out))
+
+@eq = (a (b out))
+  & a ~ $([=] $(b out))
+
+@gt = (a (b out))
+  & a ~ $([>] $(b out))
+
+@less_eq = (a (b out))
+  & {a a_lt a_eq} ~ a
+  & {b b_lt b_eq} ~ b
+  & a_lt ~ $([<] $(b_lt lt))
+  & a_eq ~ $([=] $(b_eq eq))
+  & lt ~ $([|] $(eq out))
+
+@and = (a (b out))
+  & a ~ $([&] $(b out))
+
+@or = (a (b out))
+  & a ~ $([|] $(b out))
+
+@triple_le = (x (y out))
+  & x ~ (a1 (k1 v1))
+  & y ~ (a2 (k2 v2))
+  & {a1 a1_lt a1_eq} ~ a1
+  & {a2 a2_lt a2_eq} ~ a2
+  & {k1 k1_lt k1_eq} ~ k1
+  & {k2 k2_lt k2_eq} ~ k2
+  & @less ~ (a1_lt (a2_lt lt_a))
+  & @eq ~ (a1_eq (a2_eq eq_a))
+  & @less ~ (k1_lt (k2_lt lt_k))
+  & @eq ~ (k1_eq (k2_eq eq_k))
+  & @less_eq ~ (v1 (v2 le_v))
+  & @and ~ (eq_k (le_v and_kv))
+  & @or ~ (lt_k (and_kv inner_k))
+  & @and ~ (eq_a (inner_k and_a))
+  & @or ~ (lt_a (and_a out))
+
+@insert = (x (sl out))
+  & sl ~ ?((@insert_nil @insert_cons) (sl_payload (x out))) sl_payload
+
+@insert_nil = (sl_payload (x out))
+  & sl_payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@insert_cons = (* (sl_payload (x out)))
+  & sl_payload ~ (head tail)
+  & {x x_cmp x_ctx} ~ x
+  & {head head_cmp head_ctx} ~ head
+  & @triple_le ~ (x_cmp (head_cmp le))
+  & le ~ ?((@insert_gt @insert_le) (x_ctx (head_ctx tail out)))
+
+@insert_gt = (x (head tail out))
+  & @insert ~ (x (tail new_tail))
+  & out ~ (1 (head new_tail))
+
+@insert_le = (* (x (head tail out)))
+  & out ~ (1 (x (1 (head tail))))
+
+@sort = (unsorted out)
+  & @sort_acc ~ (unsorted (0 *) out)
+
+@sort_acc = (unsorted (acc out))
+  & unsorted ~ ?((@sort_nil @sort_cons) (unsorted_payload (acc out))) unsorted_payload
+
+@sort_nil = (* (unsorted_payload (acc out)))
+  & unsorted_payload ~ *
+  & acc ~ out
+
+@sort_cons = (* (unsorted_payload (acc out)))
+  & unsorted_payload ~ (head tail)
+  & @insert ~ (head (acc new_acc))
+  & @sort_acc ~ (tail (new_acc out))
+
+@reverse = (list out)
+  & @rev_acc ~ (list (0 *) out)
+
+@rev_acc = (list (acc out))
+  & list ~ ?((@rev_nil @rev_cons) (list_payload (acc out))) list_payload
+
+@rev_nil = (* (list_payload (acc out)))
+  & list_payload ~ *
+  & acc ~ out
+
+@rev_cons = (* (list_payload (acc out)))
+  & list_payload ~ (head tail)
+  & @rev_acc ~ (tail ((1 (head acc)) out))
+
+@lookup = (node (c out))
+  & node ~ ?((@lookup_zero @lookup_pos) (c out))
+
+@lookup_zero = (c out)
+  & c ~ (head tail)
+  & tail ~ *
+  & head ~ out
+
+@lookup_pos = (node (c out))
+  & c ~ (head tail)
+  & head ~ *
+  & @lookup ~ (node (tail out))
+
+@resolve_attr = (attr (c acc out))
+  & attr ~ (node (key value))
+  & @lookup ~ (node (c canon))
+  & out ~ (1 ((canon (key value)) acc))
+
+@resolve_all = (attrs (c acc out))
+  & attrs ~ ?((@resolve_all_nil @resolve_all_cons) (attrs_payload (c acc out))) attrs_payload
+
+@resolve_all_nil = (* (attrs_payload (c acc out)))
+  & attrs_payload ~ *
+  & acc ~ out
+
+@resolve_all_cons = (* (attrs_payload (c acc out)))
+  & attrs_payload ~ (head tail)
+  & @resolve_attr ~ (head (c acc new_acc))
+  & @resolve_all ~ (tail (c new_acc out))
+
+@pick_winner = (values out)
+  & values ~ ?((@pw_error @pw_start) (values_payload out)) values_payload
+
+@pw_error = (values_payload out)
+  & values_payload ~ *
+  & out ~ 0
+
+@pw_start = (* (values_payload out))
+  & values_payload ~ (head tail)
+  & @pw_loop ~ ((head (1 (head (1 tail)))) out)
+
+@pw_loop = (state out)
+  & state ~ (cv (cc (bv (bc rem))))
+  & rem ~ ?((@pw_done @pw_next) (rem_payload (cv (cc (bv (bc out)))))) rem_payload
+
+@pw_done = (ctx)
+  & ctx ~ (rem_payload (cv (cc (bv (bc out)))))
+  & rem_payload ~ *
+  & @pw_final ~ (cv (cc (bv (bc out))))
+
+@pw_next = (* (ctx))
+  & ctx ~ (rem_payload (cv (cc (bv (bc out)))))
+  & rem_payload ~ (h t)
+  & @eq ~ (h (cv eq_hc))
+  & eq_hc ~ ?((@pw_next_diff @pw_next_same) (h (t (cv (cc (bv (bc out)))))))
+
+@pw_next_same = (* (ctx))
+  & ctx ~ (h (t (cv (cc (bv (bc out))))))
+  & h ~ *
+  & cc ~ $([+1] new_cc)
+  & @pw_loop ~ ((cv (new_cc (bv (bc t)))) out)
+
+@pw_next_diff = (ctx)
+  & ctx ~ (h (t (cv (cc (bv (bc out))))))
+  & {cc cc_cmp1 cc_ctx} ~ cc
+  & {cc_cmp1 cc_gt cc_eq} ~ cc_cmp1
+  & {bc bc_cmp1 bc_ctx} ~ bc
+  & {bc_cmp1 bc_gt bc_eq} ~ bc_cmp1
+  & @gt ~ (cc_gt (bc_gt gt))
+  & @eq ~ (cc_eq (bc_eq eq))
+  & @or ~ (gt (eq ge))
+  & ge ~ ?((@pw_diff_keep @pw_diff_replace) (h (t (cv (cc_ctx (bv (bc_ctx out)))))))
+
+@pw_diff_keep = (ctx)
+  & ctx ~ (h (t (cv (cc (bv (bc out))))))
+  & cv ~ *
+  & cc ~ *
+  & @pw_loop ~ ((h (1 bv (bc t))) out)
+
+@pw_diff_replace = (* (ctx))
+  & ctx ~ (h (t (cv (cc (bv (bc out))))))
+  & bv ~ *
+  & bc ~ *
+  & @pw_loop ~ ((h (1 cv (cc t))) out)
+
+@pw_final = (cv (cc (bv (bc out))))
+  & {cc cc_gt cc_eq} ~ cc
+  & {bc bc_gt bc_eq} ~ bc
+  & @gt ~ (cc_gt (bc_gt gt))
+  & @eq ~ (cc_eq (bc_eq eq))
+  & @or ~ (gt (eq ge))
+  & ge ~ ?((@pw_final_no @pw_final_yes) (cv (bv out)))
+
+@pw_final_no = (cv (bv out))
+  & cv ~ *
+  & bv ~ out
+
+@pw_final_yes = (* (cv (bv out)))
+  & bv ~ *
+  & cv ~ out
+
+@ps_acc = (rem (state out))
+  & rem ~ ?((@ps_nil @ps_cons) (rem_payload (state out))) rem_payload
+
+@ps_nil = (ctx)
+  & ctx ~ (rem_payload (state out))
+  & rem_payload ~ *
+  & @ps_finish ~ (state out)
+
+@ps_cons = (* (ctx))
+  & ctx ~ (rem_payload (state out))
+  & rem_payload ~ (head tail)
+  & head ~ (a (k v))
+  & @ps_process ~ (a (k (v (tail (state out)))))
+
+@ps_process = (a (k (v (tail (state out)))))
+  & state ~ (has (clu (key (vals acc))))
+  & has ~ ?((@ps_first @ps_notfirst) (a (k (v (tail (clu (key (vals acc out))))))))
+
+@ps_first = (ctx)
+  & ctx ~ (a (k (v (tail (clu (key (vals acc out)))))))
+  & clu ~ *
+  & key ~ *
+  & vals ~ *
+  & @ps_acc ~ (tail ((1 (a (k ((1 (v (0 *))) acc)))) out))
+
+@ps_notfirst = (* (ctx))
+  & ctx ~ (a (k (v (tail (clu (key (vals acc out)))))))
+  & {a a_eq a_ctx} ~ a
+  & {k k_eq k_ctx} ~ k
+  & {clu clu_eq clu_ctx} ~ clu
+  & {key key_eq key_ctx} ~ key
+  & @eq ~ (a_eq (clu_eq eq_a))
+  & @eq ~ (k_eq (key_eq eq_k))
+  & @and ~ (eq_a (eq_k same))
+  & same ~ ?((@ps_diff @ps_same) (a_ctx (k_ctx (v (tail (clu_ctx (key_ctx (vals acc out))))))))
+
+@ps_same = (* (ctx))
+  & ctx ~ (a (k (v (tail (clu (key (vals acc out)))))))
+  & a ~ *
+  & k ~ *
+  & @ps_acc ~ (tail ((1 (clu (key ((1 (v vals)) acc)))) out))
+
+@ps_diff = (ctx)
+  & ctx ~ (a (k (v (tail (clu (key (vals acc out)))))))
+  & @pick_winner ~ (vals winner)
+  & @ps_acc ~ (tail ((1 (a (k ((1 (v (0 *))) (1 ((clu (key winner)) acc)))))) out))
+
+@ps_finish = (state out)
+  & state ~ (has (clu (key (vals acc))))
+  & has ~ ?((@ps_finish_empty @ps_finish_group) (clu (key (vals acc out))))
+
+@ps_finish_empty = (ctx)
+  & ctx ~ (clu (key (vals acc out)))
+  & clu ~ *
+  & key ~ *
+  & vals ~ *
+  & @reverse ~ (acc out)
+
+@ps_finish_group = (* (ctx))
+  & ctx ~ (clu (key (vals acc out)))
+  & @pick_winner ~ (vals winner)
+  & @reverse ~ ((1 ((clu (key winner)) acc)) out)
+
+@prog = (input out)
+  & input ~ (c attrs)
+  & @resolve_all ~ (attrs (c (0 *) resolved))
+  & @sort ~ (resolved sorted)
+  & @ps_acc ~ (sorted ((0 (0 (0 ((0 *) (0 *))))) out))

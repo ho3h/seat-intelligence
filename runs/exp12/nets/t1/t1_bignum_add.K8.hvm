@@ -1,0 +1,57 @@
+@prog = ((a b) out)
+  & @add ~ (a (b (0 out)))
+
+@add = ((?((@add_anil @add_acon) (pa (b (c out)))) pa) (b (c out)))
+
+@add_anil = (* (b (c out)))
+  & @tail ~ (b (c out))
+
+@add_acon = (* ((h t) ((?((@add_cons_bnil @add_cons_bcon) (pb (h (t (c out))))) pb) (c out))))
+
+@add_cons_bnil = (* (h (t (c out))))
+  & h ~ $([+] $(c s))
+  & s ~ {s1 s2}
+  & s1 ~ $([&] $(4095 d))
+  & s2 ~ $([>>] $(12 k))
+  & @tail ~ (t (k r))
+  & out ~ (1 (d r))
+
+@add_cons_bcon = (* ((g u) (h (t (c out)))))
+  & @step ~ (h (g (c (t (u out)))))
+
+@tail = (lv1 (c out))
+  & @tail_cons_lw ~ (lv1 (c out))
+
+@tail_nil = (* (c out))
+  & @finish ~ (c out)
+
+@tail_cons = (* (($([+] $(c {$([&] $(4095 e)) $([>>] $(12 k))})) t) (c (1 (e r)))))
+  & @tail_cons_lw ~ (t (k r))
+
+@step = (x (y (c (ta (tb out)))))
+  & x ~ $([+] $(y q))
+  & q ~ $([+] $(c s))
+  & s ~ {s1 s2}
+  & s1 ~ $([&] $(4095 d))
+  & s2 ~ $([>>] $(12 k))
+  & @add ~ (ta (tb (k r)))
+  & out ~ (1 (d r))
+
+@finish = (?((@finish_zero @finish_carry) (* out)) out)
+
+@finish_zero = (* (0 *))
+
+@finish_carry = (* (* (1 (1 (0 *)))))
+
+@tail_cons_lw = (ls50 (q10 q11))
+  & ls50 ~ (g41 (e33 (g42 (e34 (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 (g48 (e40 tk49))))))))))))))))
+  & g41 ~ ?((@tail_nil @tail_cons_la) ((e33 (q13 q14)) (q10 q11)))
+  & g42 ~ ?((@tail_nil @tail_cons_la) ((e34 (q16 q17)) (q13 q14)))
+  & g43 ~ ?((@tail_nil @tail_cons_la) ((e35 (q19 q20)) (q16 q17)))
+  & g44 ~ ?((@tail_nil @tail_cons_la) ((e36 (q22 q23)) (q19 q20)))
+  & g45 ~ ?((@tail_nil @tail_cons_la) ((e37 (q25 q26)) (q22 q23)))
+  & g46 ~ ?((@tail_nil @tail_cons_la) ((e38 (q28 q29)) (q25 q26)))
+  & g47 ~ ?((@tail_nil @tail_cons_la) ((e39 (q31 q32)) (q28 q29)))
+  & g48 ~ ?((@tail_nil @tail_cons) ((e40 tk49) (q31 q32)))
+
+@tail_cons_la = (* (($([+] $(c {$([&] $(4095 e)) $([>>] $(12 k))})) (k r)) (c (1 (e r)))))

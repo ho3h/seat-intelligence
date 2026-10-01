@@ -1,0 +1,120 @@
+// Fused schoolbook multiplication: each row digit is multiplied and added
+// directly into the partial product.
+@prog = (input output)
+  & input ~ (a b)
+  & @outer ~ (a (b ((0 *) raw)))
+  & @trim ~ (raw output)
+
+// Process one digit of a at a time. acc is the un-emitted high suffix.
+@outer = ((?((@outer_nil @outer_cons) (p (b (acc out)))) p) (b (acc out)))
+
+@outer_nil = (p (b (acc out)))
+  & p ~ *
+  & b ~ *
+  & acc ~ out
+
+@outer_cons = (* ((h t) (b (acc out))))
+  & b ~ {b1 b2}
+  & @rowadd ~ (b1 (h (acc (0 row))))
+  & @splitfirst ~ (row pair)
+  & pair ~ (digit suffix)
+  & @outer ~ (t (b2 (suffix rest)))
+  & out ~ (1 (digit rest))
+
+// Split a list into its first digit and remaining suffix.
+// An empty list supplies a zero digit.
+@splitfirst = ((?((@sf_nil @sf_cons) (p out)) p) out)
+
+@sf_nil = (p out)
+  & p ~ *
+  & out ~ (0 (0 *))
+
+@sf_cons = (* ((h t) out))
+  & out ~ (h t)
+
+// Add h*b and the existing accumulator, one digit at a time.
+@rowadd = ((?((@ra_nil @ra_cons) (pl (h (acc (c out))))) pl) (h (acc (c out))))
+
+@ra_nil = (pl (h (acc (c out))))
+  & pl ~ *
+  & @carryadd ~ (acc (c out))
+
+@ra_cons = (* ((x xs) (h (acc (c out)))))
+  & acc ~ (?( (@rac_nil @rac_cons) (ap (x (xs (h (c out))))) ) ap)
+
+@rac_nil = (ap (x (xs (h (c out)))))
+  & ap ~ *
+  & h ~ {h1 h2}
+  & @mulstep ~ (x (h1 (0 (c (digit c2))))
+  & @rowadd ~ (xs (h2 ((0 *) (c2 tail))))
+  & out ~ (1 (digit tail))
+
+@rac_cons = (* (ap (x (xs (h (c out))))))
+  & ap ~ (y yt)
+  & h ~ {h1 h2}
+  & @mulstep ~ (x (h1 (y (c (digit c2))))
+  & @rowadd ~ (xs (h2 (yt (c2 tail))))
+  & out ~ (1 (digit tail))
+
+// digit = (x*h + y + c) mod 4096; carry = floor((x*h+y+c)/4096).
+@mulstep = (x (h (y (c (digit carry))))
+  & x ~ $([*] $(h $([+] $(y $([+] $(c v))))))
+  & v ~ {v1 v2}
+  & v1 ~ $([%] $(4096 digit))
+  & v2 ~ $([/] $(4096 carry))
+
+// Add carry to the remaining accumulator. If carry is zero, return it as-is.
+@carryadd = (acc (c out))
+  & c ~ {c1 c2}
+  & c1 ~ $([=] $(0 z))
+  & z ~ ?((@ca_zero @ca_nonzero) (c2 (acc out)))
+
+@ca_zero = (c (acc out))
+  & c ~ *
+  & acc ~ out
+
+@ca_nonzero = (c (acc out))
+  & @ca_loop ~ (acc (c out))
+
+@ca_loop = ((?((@cal_nil @cal_cons) (p (c out))) p) (c out))
+
+@cal_nil = (p (c out))
+  & p ~ *
+  & out ~ (1 (c (0 *)))
+
+@cal_cons = (* ((h t) (c out)))
+  & h ~ $([+] $(c v))
+  & v ~ {v1 v2}
+  & v1 ~ $([%] $(4096 digit))
+  & v2 ~ $([/] $(4096 carry))
+  & @carryadd ~ (t (carry tail))
+  & out ~ (1 (digit tail))
+
+// Remove high zero limbs to produce the canonical list encoding.
+@trim = ((?((@trim_nil @trim_cons) (p out)) p) out)
+
+@trim_nil = (p out)
+  & p ~ *
+  & out ~ (0 *)
+
+@trim_cons = (* ((h t) out))
+  & @trim ~ (t q)
+  & @trim_join ~ (q (h out))
+
+@trim_join = ((?((@tj_nil @tj_cons) (p (h out))) p) (h out))
+
+@tj_nil = (p (h out))
+  & p ~ *
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(0 z))
+  & z ~ ?((@tj_zero @tj_nonzero) (h2 out))
+
+@tj_cons = (* ((qh qt) (h out)))
+  & out ~ (1 (h (1 (qh qt))))
+
+@tj_zero = (h out)
+  & h ~ *
+  & out ~ (0 *)
+
+@tj_nonzero = (* (h out))
+  & out ~ (1 (h (0 *)))

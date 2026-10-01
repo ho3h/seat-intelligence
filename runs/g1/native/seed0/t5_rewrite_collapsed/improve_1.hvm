@@ -1,0 +1,147 @@
+// Traverse edges, mapping endpoints to cluster IDs and inserting rewritten pairs
+// into a 24-level persistent binary trie.
+@prog = (input out)
+  & input ~ (c edges)
+  & @walk ~ (edges (c ((0 *) (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (c (trie (acc out))))) pl) (c (trie (acc out))))
+
+@walk_nil = (pl (c (trie (acc out))))
+  & pl ~ *
+  & c ~ *
+  & trie ~ *
+  & acc ~ out
+
+@walk_cons = (* ((edge tail) (c (trie (acc out)))))
+  & @edge_start ~ (edge (tail (c (trie (acc out)))))
+
+@edge_start = (edge (tail (c (trie (acc out)))))
+  & edge ~ (u v)
+  & c ~ {c1 ctemp}
+  & ctemp ~ {c2 cnext}
+  & @get ~ (c1 (u x))
+  & @after_x ~ (v (x (c2 (tail (cnext (trie (acc out)))))))
+
+@after_x = (v (x (c2 (tail (c (trie (acc out))))))
+  & @get ~ (c2 (v y))
+  & @compare ~ (x (y (tail (c (trie (acc out))))))
+
+@compare = (x (y (tail (c (trie (acc out))))))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & xc ~ $([=] $(yc eq))
+  & eq ~ ?((@not_loop @loop) (xkeep (ykeep (tail (c (trie (acc out)))))))
+
+@loop = (* (x (y (tail (c (trie (acc out)))))))
+  & x ~ *
+  & y ~ *
+  & acc ~ $([+1] acc2)
+  & @walk ~ (tail (c (trie (acc2 out))))
+
+@not_loop = (x (y (tail (c (trie (acc out))))))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & xc ~ $([<] $(yc lt))
+  & lt ~ ?((@order_reverse @order_forward) (xkeep (ykeep (tail (c (trie (acc out)))))))
+
+@order_reverse = (x (y (tail (c (trie (acc out))))))
+  & @make_key ~ (y (x (tail (c (trie (acc out))))))
+
+@order_forward = (* (x (y (tail (c (trie (acc out)))))))
+  & @make_key ~ (x (y (tail (c (trie (acc out))))))
+
+@make_key = (x (y (tail (c (trie (acc out))))))
+  & x ~ $([<<] $(12 xshift))
+  & xshift ~ $([|] $(y key))
+  & @insert ~ (24 (trie (key (updated found))))
+  & found ~ ?((@fresh_pair @duplicate_pair) (tail (c (updated (acc out)))))
+
+@fresh_pair = (tail (c (updated (acc out))))
+  & @walk ~ (tail (c (updated (acc out))))
+
+@duplicate_pair = (* (tail (c (updated (acc out)))))
+  & acc ~ $([+1] acc2)
+  & @walk ~ (tail (c (updated (acc2 out))))
+
+// Insert a packed pair key. The trie uses (0 *) for empty and
+// (1 (left right)) for internal nodes; a leaf is (1 *).
+@insert = (?((@insert_leaf @insert_more) (trie (key (out found)))) (trie (key (out found))))
+
+@insert_leaf = (trie (key (out found)))
+  & trie ~ (tag payload)
+  & tag ~ ?((@leaf_empty @leaf_full) (payload (key (out found))))
+
+@leaf_empty = (payload (key (out found)))
+  & payload ~ *
+  & key ~ *
+  & out ~ (1 *)
+  & found ~ 0
+
+@leaf_full = (zero (payload (key (out found))))
+  & zero ~ *
+  & payload ~ *
+  & key ~ *
+  & out ~ (1 *)
+  & found ~ 1
+
+@insert_more = (d (trie (key (out found))))
+  & d ~ {dshift dkeep}
+  & key ~ {key_shift keykeep}
+  & key_shift ~ $([>>] $(dshift shifted))
+  & shifted ~ $([&] $(1 bit))
+  & @insert_tag ~ (trie (bit (dkeep (keykeep (out found)))))
+
+@insert_tag = (trie (bit (d (key (out found)))))
+  & trie ~ (tag payload)
+  & tag ~ ?((@insert_empty @insert_branch) (payload (bit (d (key (out found))))))
+
+@insert_empty = (payload (bit (d (key (out found)))))
+  & payload ~ *
+  & bit ~ ?((@empty_left @empty_right) (d (key (out found))))
+
+@empty_left = (d (key (out found)))
+  & @insert ~ (d ((0 *) (key (child f))))
+  & f ~ *
+  & out ~ (1 (child (0 *)))
+  & found ~ 0
+
+@empty_right = (zero (d (key (out found))))
+  & zero ~ *
+  & @insert ~ (d ((0 *) (key (child f))))
+  & f ~ *
+  & out ~ (1 ((0 *) child))
+  & found ~ 0
+
+@insert_branch = (zero (payload (bit (d (key (out found))))))
+  & zero ~ *
+  & payload ~ (left right)
+  & bit ~ ?((@branch_left @branch_right) (left (right (d (key (out found))))))
+
+@branch_left = (left (right (d (key (out found)))))
+  & @insert ~ (d (left (key (child f))))
+  & out ~ (1 (child right))
+  & found ~ f
+
+@branch_right = (zero (left (right (d (key (out found))))))
+  & zero ~ *
+  & @insert ~ (d (right (key (child f))))
+  & out ~ (1 (left child))
+  & found ~ f
+
+// Look up an element of the cluster list at a valid index.
+@get = (l (idx out))
+  & idx ~ ?((@get_zero @get_succ) (l out))
+
+@get_zero = (l out)
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (idx (l out))
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @get ~ (tail (idx out))

@@ -1,0 +1,22 @@
+--- 05:01:23
+build.py:29: wire `c1` (list[num], output `c1` of recipe list_length_and_copy `list_len`, made at build.py:25) belongs to @prog (t5_metric_rand) (@prog), but is used in branch zero case of @prog (t5_metric_rand) (@prog_b1z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:01:42
+build.py:90: <prim lg> is not a glue value (a wire, an int, a Lit, or a tuple of these)
+--- 05:01:58
+leaf of zip2 `z2_pt` must return exactly one value; returned 2
+--- 05:02:50
+build.py:33: wire `nm1` (num, argument `cm1` of branch nonzero case of @prog (t5_metric_rand), made at build.py:45) belongs to branch nonzero case of @prog (t5_metric_rand) (@prog_b1s), but is used in @prog (t5_metric_rand) (@prog) (left operand of `+`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:03:30
+build.py:31: wire `size` (num, argument `x` of leaf of reduce `r_count_w` (+), made at build.py:34) is used a second time (left operand of `*`); it was already used at build.py:30 (left operand of `-`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(size, 2)  and use each once.
+--- 05:03:49
+build.py:46: wire `nm1` (num, argument `cm1` of branch nonzero case of @prog (t5_metric_rand), made at build.py:108) is used a second time (lg port `x`); it was already used at build.py:42 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(nm1, 2)  and use each once.
+--- 05:04:08
+build.py:56: wire `t` (trie[num], output `t` of recipe list_to_trie `ltt_p`, made at build.py:38) belongs to branch nonzero case of @prog (t5_metric_rand) (@prog_b1s), but is used in step of stream `stream_pack` (@stream_pack_step) (get `get_p` port `t`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:04:31
+build.py:58: wire `idx` (num, argument `elem` of step of stream `stream_pack`, made at build.py:70) is used a second time (get `get_t` port `k`); it was already used at build.py:57 (get `get_p` port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(idx, 2)  and use each once.
+--- 05:04:50
+build.py:62: fill_cons needs a hole[list[...]]; got list[num]
+--- 05:05:10
+build.py:74: wire `pred_t` (trie[num], argument `pt` of step of stream `stream_pack`, made at build.py:74) is used a second time (returned as `pt`); it was already used at build.py:61 (get `get_p` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:05:35
+build.py:65: fanout(w, n) needs n >= 2 (got 1); a single use needs no fanout

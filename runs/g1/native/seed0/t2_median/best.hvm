@@ -1,0 +1,55 @@
+// Sort the list while carrying its length, then select index len // 2.
+@prog = (input out)
+  & @sl ~ (input res)
+  & res ~ (sorted len)
+  & len ~ $([/] $(2 idx))
+  & @sel ~ (sorted (idx out))
+
+// Return (sorted_list, length).
+@sl = ((?((@sl_nil @sl_cons) (payload out)) payload) out)
+
+@sl_nil = (* out)
+  & out ~ ((0 *) 0)
+
+@sl_cons = (* ((head tail) out))
+  & @sl ~ (tail res)
+  & res ~ (sorted len)
+  & @ins ~ (head (sorted sorted2))
+  & len ~ $([+1] len1)
+  & out ~ (sorted2 len1)
+
+// Insert x into an ascending sorted list.
+@ins = (x ((?((@ins_nil @ins_cons) (payload (x out))) payload) out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((head tail) (x out)))
+  & x ~ {xcmp xctx}
+  & head ~ {hcmp hctx}
+  & xcmp ~ $([<] $(hcmp cmp))
+  & cmp ~ ?((@ins_ge @ins_lt) (hctx (tail (xctx out))))
+
+// x >= head: keep head, then insert into the tail.
+@ins_ge = (head (tail (x out)))
+  & @ins ~ (x (tail rec))
+  & out ~ (1 (head rec))
+
+// x < head: place x before the original list.
+@ins_lt = (* (head (tail (x out))))
+  & out ~ (1 (x (1 (head tail))))
+
+// Select the element at index idx; an empty list yields zero.
+@sel = ((?((@sel_nil @sel_cons) (payload (idx out))) payload) (idx out))
+
+@sel_nil = (* (* out))
+  & out ~ 0
+
+@sel_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@sel_here @sel_next) (head (tail out)))
+
+@sel_here = (head (* out))
+  & out ~ head
+
+@sel_next = (idx (* (tail out)))
+  & @sel ~ (tail (idx out))

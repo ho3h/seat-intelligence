@@ -1,0 +1,11 @@
+@prog = ((?(((* 0) (* ((h_q48 (?((@scan_nil @scan_cons) (pl_q45_q48 (1 (h_q48 (0 out_q48))))) pl_q45_q48)) out_q48))) (pl out)) pl) out)
+
+@scan_nil = (* (* (* (r r))))
+
+@scan_cons = (* ((h t) (idx (best (bi out)))))
+  & h ~ {hc hh}
+  & best ~ {bc bb}
+  & hc ~ $([<] $(bc cmp))
+  & cmp ~ ?(((* ((?((@scan_nil @scan_cons) (pl_q46_q50 (idx2_q50 (best_q50 (bi_q50 out_q50))))) pl_q46_q50) ($([+1] idx2_q50) (best_q50 (bi_q50 out_q50))))) @scan_replace) (hh (t (idx (bb (bi out))))))
+
+@scan_replace = (* (h ((?((@scan_nil @scan_cons) (pl_q47 (idx2 (h (idx_bi out))))) pl_q47) ({$([+1] idx2) idx_bi} (* (* out))))))

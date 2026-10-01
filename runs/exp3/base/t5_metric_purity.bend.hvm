@@ -1,0 +1,128 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@consume_pairs = ((@consume_pairs__C16 a) a)
+
+@consume_pairs__C0 = (* (a ($([+] $(a b)) b)))
+
+@consume_pairs__C1 = (* (a (* ($([+] $(a b)) b))))
+
+@consume_pairs__C10 = (* (* ({$([>] $(d ?((@consume_pairs__C4 @consume_pairs__C5) (e (f (g h)))))) e} ({d f} (g (a (b (c i))))))))
+  & @consume_pairs ~ (a (1 (b (c (1 (0 (h i)))))))
+
+@consume_pairs__C11 = (* (b ({a c} (d (e (f (g (* ({$([=] $(a ?((@consume_pairs__C8 @consume_pairs__C9) (b (c (d (e (f (g (h i)))))))))) h} i)))))))))
+
+@consume_pairs__C12 = ({a b} (c (d (e (f (g ({$([=] $(a ?((@consume_pairs__C10 @consume_pairs__C11) (b (c (d (e (f (g (h i)))))))))) h} i)))))))
+
+@consume_pairs__C13 = (* (* (* (* (* (d (a (b (c e)))))))))
+  & @consume_pairs ~ (a (1 (b (c (1 (0 (d e)))))))
+
+@consume_pairs__C14 = ($([=0x0000000] ?((@consume_pairs__C2 @consume_pairs__C3) a)) (* (* a)))
+
+@consume_pairs__C15 = (* ((g h) (f ($([=0x0000000] ?((@consume_pairs__C12 @consume_pairs__C13) (a (b (c (d (e (f (g (h i)))))))))) (a (b (c (d (e i)))))))))
+
+@consume_pairs__C16 = (?((@consume_pairs__C14 @consume_pairs__C15) a) a)
+
+@consume_pairs__C2 = ({$([>] $(a ?((@consume_pairs__C0 @consume_pairs__C1) (b (c d))))) b} ({a c} d))
+
+@consume_pairs__C3 = (* (* (* (a a))))
+
+@consume_pairs__C4 = (* (a ($([+] $(a b)) b)))
+
+@consume_pairs__C5 = (* (a (* ($([+] $(a b)) b))))
+
+@consume_pairs__C6 = (b (* (d (e (a (c f))))))
+  & @consume_pairs ~ (a (1 (b (c (1 (d (e f)))))))
+
+@consume_pairs__C7 = (* (b (d (* (e (a (c f)))))))
+  & @consume_pairs ~ (a (1 (b (c (1 (d (e f)))))))
+
+@consume_pairs__C8 = (b (* ({$([>] $(a ?((@consume_pairs__C6 @consume_pairs__C7) (b (c (d e)))))) c} ({a d} e))))
+
+@consume_pairs__C9 = (* (b (c ($([+0x0000001] d) (e (f (a (* g))))))))
+  & @consume_pairs ~ (a (1 (b (c (d (e (f g)))))))
+
+@make_pairs = ((@make_pairs__C3 a) a)
+
+@make_pairs__C0 = (* (b (d (a (c f)))))
+  & @List/Cons ~ ((a b) (e f))
+  & @make_pairs ~ (c (d e))
+
+@make_pairs__C1 = (?(((* (* @List/Nil)) @make_pairs__C0) a) a)
+
+@make_pairs__C2 = (* (a (b ((@make_pairs__C1 (a (b c))) c))))
+
+@make_pairs__C3 = (?(((* @List/Nil) @make_pairs__C2) a) a)
+
+@merge_pairs = ((@merge_pairs__C6 a) a)
+
+@merge_pairs__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_pairs__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_pairs__C2 = a
+  & @List/Cons ~ a
+
+@merge_pairs__C3 = (* ({b e} (f ({a c} (d g)))))
+  & @pair_less ~ (a (b $([=0x0000001] ?((@merge_pairs__C0 @merge_pairs__C1) (c (d (e (f g))))))))
+
+@merge_pairs__C4 = (?((@merge_pairs__C2 @merge_pairs__C3) a) a)
+
+@merge_pairs__C5 = (* (a (b ((@merge_pairs__C4 (a (b c))) c))))
+
+@merge_pairs__C6 = (?(((a a) @merge_pairs__C5) b) b)
+
+@merge_sort = ((@merge_sort__C4 a) a)
+
+@merge_sort__C0 = a
+  & @List/Cons ~ a
+
+@merge_sort__C1 = (* (* (* (a (b h)))))
+  & @merge_pairs ~ (e (g h))
+  & @split_pairs ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@merge_sort ~ (d e)
+  &!@merge_sort ~ (f g)
+
+@merge_sort__C2 = (?((@merge_sort__C0 @merge_sort__C1) a) a)
+
+@merge_sort__C3 = (* (a ({b (@merge_sort__C2 (a (b c)))} c)))
+
+@merge_sort__C4 = (?((@List/Nil @merge_sort__C3) a) a)
+
+@pair_less = (({$([<] $(a ?((@pair_less__C1 (* (* (* (* (* 1)))))) (b (c (d (e f))))))) b} c) (({a d} e) f))
+
+@pair_less__C0 = ($([>] $(a b)) (a c))
+  & $(b ?((0 (* 1)) c)) ~ [=0x0000000]
+
+@pair_less__C1 = ($([>] $(a ?((@pair_less__C0 (* (* (* 0)))) (b c)))) (b (a c)))
+
+@prog = ((a b) e)
+  & @consume_pairs ~ (d (0 (0 (0 (0 (0 (0 e)))))))
+  & @merge_sort ~ (c d)
+  & @make_pairs ~ (a (b c))
+
+@split_pairs = ((@split_pairs__C4 a) a)
+
+@split_pairs__C0 = (a (b @List/Nil))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@split_pairs__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split_pairs ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split_pairs__C2 = (?((@split_pairs__C0 @split_pairs__C1) a) a)
+
+@split_pairs__C3 = (* (a ((@split_pairs__C2 (a b)) b)))
+
+@split_pairs__C4 = (?(((@List/Nil @List/Nil) @split_pairs__C3) a) a)
+
+

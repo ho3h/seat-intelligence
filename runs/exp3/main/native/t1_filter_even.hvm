@@ -1,0 +1,12 @@
+@prog = ((?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q3 (rest_q3 out_q3)))) h_keep_q3} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q6 (rest_q6 out_q6)))) h_keep_q6} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q10 (rest_q10 out_q10)))) h_keep_q10} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q15 (rest_q15 out_q15)))) h_keep_q15} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q21 (rest_q21 out_q21)))) h_keep_q21} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q28 (rest_q28 out_q28)))) h_keep_q28} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q36 (rest_q36 out_q36)))) h_keep_q36} (?((@filter_nil (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep_q37 (rest_q37 out_q37)))) h_keep_q37} (?((@filter_nil @filter_cons) (pl_q1_q37 rest_q37)) pl_q1_q37)) out_q37))) (pl_q1_q36 rest_q36)) pl_q1_q36)) out_q36))) (pl_q1_q28 rest_q28)) pl_q1_q28)) out_q28))) (pl_q1_q21 rest_q21)) pl_q1_q21)) out_q21))) (pl_q1_q15 rest_q15)) pl_q1_q15)) out_q15))) (pl_q1_q10 rest_q10)) pl_q1_q10)) out_q10))) (pl_q1_q6 rest_q6)) pl_q1_q6)) out_q6))) (pl_q1_q3 rest_q3)) pl_q1_q3)) out_q3))) (pl_q0 out)) pl_q0) out)
+
+@filter_nil = (* (0 *))
+
+@filter_cons = (* (({$([:%2] ?((@filter_even @filter_odd) (h_keep (rest out)))) h_keep} (?((@filter_nil @filter_cons) (pl_q1 rest)) pl_q1)) out))
+
+@filter_even = (h (rest out))
+  & out ~ (1 (h rest))
+
+@filter_odd = (* (h (rest out)))
+  & h ~ *
+  & out ~ rest

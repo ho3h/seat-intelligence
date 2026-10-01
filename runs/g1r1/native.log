@@ -1,0 +1,113 @@
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 603, in _get_chunk_left
+    chunk_left = self._read_next_chunk_size()
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 561, in _read_next_chunk_size
+    return int(line, 16)
+ValueError: invalid literal for int() with base 16: b''
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 621, in _read_chunked
+    while (chunk_left := self._get_chunk_left()) is not None:
+                         ~~~~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 605, in _get_chunk_left
+    raise IncompleteRead(b'')
+http.client.IncompleteRead: IncompleteRead(0 bytes read)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 203, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 169, in <module>
+    if __name__ == "__main__": main(sys.argv[1:])
+                               ~~~~^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 164, in main
+    list(ex.map(lambda pid: run_program(a.arm, pid, a.seed, a.model, key, b, a.out, a.thinking,
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        provider=a.provider, reasoning=a.reasoning), ids))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 645, in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 312, in _result_or_cancel
+    return fut.result(timeout)
+           ~~~~~~~~~~^^^^^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 454, in result
+    return self.__get_result()
+           ~~~~~~~~~~~~~~~~~^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py", line 396, in __get_result
+    raise self._exception
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 86, in run
+    result = ctx.run(self.task)
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/thread.py", line 73, in run
+    return fn(*args, **kwargs)
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 164, in <lambda>
+    list(ex.map(lambda pid: run_program(a.arm, pid, a.seed, a.model, key, b, a.out, a.thinking,
+                            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                        provider=a.provider, reasoning=a.reasoning), ids))
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 120, in run_program
+    net, res = submit(k + 1 + free, "attempt")
+               ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 108, in submit
+    r = chat(provider, model, messages, key, thinking, reasoning)
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 91, in chat
+    if provider == "openrouter": return call_openrouter(model, messages, key, reasoning=reasoning)
+                                        ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tedsandtads/Genome/genome/author_api.py", line 52, in call_openrouter
+    with urllib.request.urlopen(req, timeout=900) as r: d = json.load(r)
+                                                            ~~~~~~~~~^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 298, in load
+    return loads(fp.read(),
+                 ~~~~~~~^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 488, in read
+    return self._read_chunked(amt)
+           ~~~~~~~~~~~~~~~~~~^^^^^
+  File "/usr/local/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/client.py", line 633, in _read_chunked
+    raise IncompleteRead(b''.join(value)) from exc
+http.client.IncompleteRead: IncompleteRead(352 bytes read)
+native seed0 t1_dot: PASS attempts=4 tokens=156660 usd=0.0381
+native seed0 t3_bridges: PASS attempts=5 tokens=283929 usd=0.0635
+native seed0 t3_cc_largest: PASS attempts=5 tokens=340556 usd=0.0808
+native seed0 t3_budget_reach: PASS attempts=4 tokens=302722 usd=0.0768
+native seed0 t3_bipartite_matching: PASS attempts=7 tokens=474692 usd=0.0986
+native seed0 t3_cheapest_k_walk: FAIL attempts=9 tokens=575972 usd=0.1141
+native seed0 t3_bfs_dist: PASS attempts=7 tokens=528209 usd=0.1300
+native seed0 t3_articulation_points: FAIL attempts=7 tokens=490884 usd=0.1198
+native seed0 t3_bfs_order: FAIL attempts=9 tokens=617836 usd=0.1250
+native seed0 t3_articulation: FAIL attempts=9 tokens=696600 usd=0.1496
+native seed0 t3_cyclic_vertices: PASS attempts=4 tokens=244802 usd=0.0601
+native seed0 t3_clique_number: FAIL attempts=9 tokens=688162 usd=0.1554
+native seed0 t3_bipartite_comps: FAIL attempts=9 tokens=934407 usd=0.2168
+native seed0 t3_girth: FAIL attempts=9 tokens=575306 usd=0.0982
+native seed0 t3_count_shortest_paths: FAIL attempts=8 tokens=659269 usd=0.1500
+native seed0 t3_lex_shortest_path: FAIL attempts=6 tokens=469997 usd=0.0935
+native seed0 t3_euler_start: FAIL attempts=9 tokens=787496 usd=0.1599
+native seed0 t3_cc_count: PASS attempts=10 tokens=785156 usd=0.1742
+native seed0 t3_dag_longest: PASS attempts=7 tokens=528689 usd=0.1317
+native seed0 t3_khop: PASS attempts=7 tokens=458316 usd=0.1012
+native seed0 t3_max_flow: FAIL attempts=9 tokens=772142 usd=0.1247
+native seed0 t3_forest_mis: PASS attempts=9 tokens=772103 usd=0.1658
+native seed0 t3_greedy_coloring: FAIL attempts=9 tokens=724181 usd=0.1607
+native seed0 t3_mst_second: FAIL attempts=9 tokens=675586 usd=0.1220
+native seed0 t3_kcore_size: FAIL attempts=9 tokens=708587 usd=0.1605
+native seed0 t3_reach_queries: PASS attempts=6 tokens=397372 usd=0.0972
+native seed0 t3_scc_count: FAIL attempts=8 tokens=545038 usd=0.1170
+native seed0 t3_topo_order: PASS attempts=4 tokens=349758 usd=0.0930
+native seed0 t3_sources_sinks: PASS attempts=7 tokens=439821 usd=0.1082
+native seed0 t3_walk_count: PASS attempts=4 tokens=241371 usd=0.0581
+native seed0 t4_brackets3: PASS attempts=5 tokens=236308 usd=0.0511
+native seed0 t3_sp_len: FAIL attempts=9 tokens=567736 usd=0.1153
+native seed0 t4_tokenize: PASS attempts=3 tokens=146091 usd=0.0363
+native seed0 t3_triangle_count: PASS attempts=4 tokens=347605 usd=0.0891
+native seed0 t3_tree_parents: FAIL attempts=9 tokens=604708 usd=0.1269
+native seed0 t5_cluster_count: PASS attempts=4 tokens=293772 usd=0.0760
+native seed0 t5_cluster_closure_pairs: PASS attempts=5 tokens=334046 usd=0.0830
+native seed0 t3_wiener_index: PASS attempts=6 tokens=524326 usd=0.1292
+native seed0 t3_wsp_dist: PASS attempts=9 tokens=639160 usd=0.1352
+native seed0 t5_cluster_largest: PASS attempts=6 tokens=522928 usd=0.1360
+native seed0 t5_cluster_count_ge: PASS attempts=8 tokens=569694 usd=0.1266
+native seed0 t5_cluster_implied_unproposed: FAIL attempts=9 tokens=638181 usd=0.1263
+native seed0 t5_cluster_histogram: PASS attempts=11 tokens=1022929 usd=0.2101

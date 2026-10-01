@@ -1,0 +1,85 @@
+// Create the initial component labels 0..n-1.
+@prog = ((n edges) out)
+  & @mk ~ (n (0 labs))
+  & @go ~ (edges (labs (0 out)))
+
+@mk = (k (i out))
+  & k ~ ?((@mk_nil @mk_more) (i out))
+
+@mk_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@mk_more = (pred (i out))
+  & i ~ {ih it}
+  & it ~ $([+1] inext)
+  & @mk ~ (pred (inext rest))
+  & out ~ (1 (ih rest))
+
+// Look up the label at an index.
+@get = (idx ((?((@get_nil @get_cons) (pl (idx out))) pl) out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_next = (pred (head (tail out)))
+  & head ~ *
+  & @get ~ (pred (tail out))
+
+// Replace every occurrence of old with new in a label list.
+@replace = ((?((@rep_nil @rep_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@rep_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rep_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hk}
+  & old ~ {oc ok}
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@rep_diff @rep_same) (hk (t (ok (new out)))))
+
+@rep_diff = (h (t (old (new out))))
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@rep_same = (* (h (t (old (new out)))))
+  & h ~ *
+  & new ~ {new_head new_rec}
+  & @replace ~ (t (old (new_rec rest)))
+  & out ~ (1 (new_head rest))
+
+// Count edges whose endpoints already have the same component label.
+@go = ((?((@go_nil @go_cons) (pl (labs (acc out)))) pl) (labs (acc out)))
+
+@go_nil = (* (labs (acc out)))
+  & labs ~ *
+  & out ~ acc
+
+@go_cons = (* (((u v) tail) (labs (acc out))))
+  & labs ~ {lu {lv lr}}
+  & @get ~ (u (lu ru))
+  & @get ~ (v (lv rv))
+  & ru ~ {ru_cmp ru_keep}
+  & rv ~ {rv_cmp rv_keep}
+  & ru_cmp ~ $([=] $(rv_cmp z))
+  & z ~ ?((@go_diff @go_same) (tail (lr (acc (out (ru_keep rv_keep))))))
+
+@go_diff = (tail (lr (acc (out (ru rv)))))
+  & @replace ~ (lr (rv (ru updated)))
+  & @go ~ (tail (updated (acc out)))
+
+@go_same = (* (tail (lr (acc (out (ru rv))))))
+  & ru ~ *
+  & rv ~ *
+  & acc ~ $([+] $(1 acc2))
+  & @go ~ (tail (lr (acc2 out)))

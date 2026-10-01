@@ -1,0 +1,33 @@
+// Count in parallel down the tail; add one on the way back for each match.
+@prog = (input out)
+  & input ~ (lo (hi xs))
+  & @count ~ (xs (lo (hi out)))
+
+@count = ((?((@count_nil @count_cons) (pl (lo (hi out)))) pl) (lo (hi out)))
+
+@count_nil = (* (lo (hi out)))
+  & lo ~ *
+  & hi ~ *
+  & out ~ 0
+
+@count_cons = (* ((h t) (lo (hi out))))
+  & h ~ {hlo hhi}
+  & lo ~ {lo_cmp lo_rec}
+  & hi ~ {hi_cmp hi_rec}
+  & @count ~ (t (lo_rec (hi_rec tail_count)))
+  & hlo ~ $([<] $(lo_cmp low))
+  & hhi ~ $([>] $(hi_cmp high))
+  & low ~ ?((@count_check_hi @count_skip_low) (high (tail_count out)))
+
+@count_check_hi = (high (tail_count out))
+  & high ~ ?((@count_hit @count_skip_high) (tail_count out))
+
+@count_skip_low = (* (high (tail_count out)))
+  & high ~ *
+  & tail_count ~ out
+
+@count_skip_high = (* (tail_count out))
+  & tail_count ~ out
+
+@count_hit = (tail_count out)
+  & tail_count ~ $([+] $(1 out))

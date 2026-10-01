@@ -1,0 +1,12 @@
+--- 05:30:25
+build.py:23: unknown operator '!='; use one of ! % & * + - / < << = > >> ^ |
+--- 05:30:31
+wrong arity: @prog (t5_rewrite_sameas_cycle) is called as f(d, input:list[num]), i.e. d plus 1 value(s); your function `prog` takes 3 parameter(s) (d, n, p).
+--- 05:31:01
+build.py:56: wire `p_after_len` (list[num], argument `passed[0]` of branch nonzero case of @prog (t5_rewrite_sameas_cycle), made at build.py:69) is used a second time (recipe list_to_trie `tri` port `list`); it was already used at build.py:49 (recipe list_length_and_copy `lc` port `list`). A wire has exactly two ends. A list[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:31:47
+build.py:63: wire `n` (num, output `n` of recipe count_where `cw`, made at build.py:60) belongs to branch nonzero case of @prog (t5_rewrite_sameas_cycle) (@prog_b2s), but is used in @prog (t5_rewrite_sameas_cycle) (@prog) (select condition). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:31:57
+branch nonzero case of @prog (t5_rewrite_sameas_cycle) (@prog_b2s): 1 value(s) never used:
+    `nm12` (num, copy 2 of `nm1`, made at build.py:44)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

@@ -1,0 +1,194 @@
+@prog = ((c edges) out)
+  & c ~ {cA cB}
+  & @dedup ~ (cA (edges ((0 *) P)))
+  & @count_heads ~ (cB (0 (P out)))
+
+@nth = (l (ix out))
+  & l ~ (?(cases ctx) pl)
+  & cases ~ (@nth_nil @nth_cons)
+  & ctx ~ (pl (ix out))
+
+@nth_nil = (pl (ix out))
+  & pl ~ *
+  & ix ~ *
+  & out ~ 0
+
+@nth_cons = (z (pl (ix out)))
+  & z ~ *
+  & pl ~ (h t)
+  & ix ~ ?((@nth_ret @nth_rec) (h (t out)))
+
+@nth_ret = (h (t out))
+  & t ~ *
+  & h ~ out
+
+@nth_rec = (im1 (h (t out)))
+  & h ~ *
+  & @nth ~ (t (im1 out))
+
+@dedup = (c (edges (seen out)))
+  & edges ~ (?(cases ctx) pl)
+  & cases ~ (@dedup_nil @dedup_cons)
+  & ctx ~ (pl (c (seen out)))
+
+@dedup_nil = (pl (c (seen out)))
+  & pl ~ *
+  & c ~ *
+  & seen ~ out
+
+@dedup_cons = (z (pl (c (seen out))))
+  & z ~ *
+  & pl ~ ((u v) rest)
+  & c ~ {c1 c2}
+  & c1 ~ {c1a c1b}
+  & @nth ~ (c1a (u cu))
+  & @nth ~ (c1b (v cv))
+  & @canon ~ (cu (cv (rest (c2 (seen out)))))
+
+@canon = (cu (cv (rest (c (seen out)))))
+  & cu ~ {cu1 cu2}
+  & cv ~ {cv1 cv2}
+  & cu1 ~ $([=] $(cv1 eq))
+  & eq ~ ?((@canon_skip @canon_do) (cu2 (cv2 (rest (c (seen out))))))
+
+@canon_skip = (cu (cv (rest (c (seen out)))))
+  & cu ~ *
+  & cv ~ *
+  & @dedup ~ (c (rest (seen out)))
+
+@canon_do = (z (cu (cv (rest (c (seen out))))))
+  & z ~ *
+  & cu ~ {cu_l cu_r}
+  & cv ~ {cv_l cv_r}
+  & cu_l ~ $([<] $(cv_l islt))
+  & islt ~ ?((@pair_xy @pair_yx) (cu_r (cv_r (rest (c (seen out))))))
+
+@pair_xy = (x (y (rest (c (seen out)))))
+  & @do_pair ~ (x (y (rest (c (seen out)))))
+
+@pair_yx = (z (x (y (rest (c (seen out))))))
+  & z ~ *
+  & @do_pair ~ (y (x (rest (c (seen out)))))
+
+@do_pair = (x (y (rest (c (seen out)))))
+  & x ~ {x1 x2}
+  & y ~ {y1 y2}
+  & x1 ~ $([<<] $(10 xn))
+  & y1 ~ $([|] $(xn num))
+  & num ~ {num1 num2}
+  & @contains ~ (num1 (seen found))
+  & found ~ ?((@do_exists @do_new) (x2 (y2 (rest (c (num2 (seen out)))))))
+
+@do_exists = (x (y (rest (c (num (seen out))))))
+  & x ~ *
+  & y ~ *
+  & num ~ *
+  & @dedup ~ (c (rest (seen out)))
+
+@do_new = (z0 (x (y (rest (c (num (seen out)))))))
+  & z0 ~ *
+  & x ~ *
+  & y ~ *
+  & @dedup ~ (c (rest ((num seen) out)))
+
+@contains = (num (seen out))
+  & seen ~ (?(cases ctx) pl)
+  & cases ~ (@contains_nil @contains_cons)
+  & ctx ~ (pl (num out))
+
+@contains_nil = (pl (num out))
+  & pl ~ *
+  & num ~ *
+  & out ~ 0
+
+@contains_cons = (z (pl (num out)))
+  & z ~ *
+  & pl ~ (h t)
+  & num ~ {num1 num2}
+  & h ~ $([=] $(num1 eq))
+  & eq ~ ?((@contains_no @contains_yes) (num2 (t out)))
+
+@contains_no = (num (t out))
+  & @contains ~ (num (t out))
+
+@contains_yes = (z (num (t out)))
+  & z ~ *
+  & num ~ *
+  & t ~ *
+  & out ~ 1
+
+@count_heads = (c (i (P out)))
+  & c ~ (?(cases ctx) pl)
+  & cases ~ (@ch_nil @ch_cons)
+  & ctx ~ (pl (i (P out)))
+
+@ch_nil = (pl (i (P out)))
+  & pl ~ *
+  & i ~ *
+  & P ~ *
+  & out ~ (0 *)
+
+@ch_cons = (z (pl (i (P out))))
+  & z ~ *
+  & pl ~ (ci t)
+  & ci ~ {ci1 ci2}
+  & i ~ {i1 i2}
+  & i1 ~ $([=] $(ci1 eq))
+  & eq ~ ?((@ch_skip @ch_do) (t (i2 (ci2 (P out)))))
+
+@ch_skip = (t (i (ci (P out))))
+  & ci ~ *
+  & i ~ $([+1] i_next)
+  & @count_heads ~ (t (i_next (P out)))
+
+@ch_do = (z (t (i (ci (P out)))))
+  & z ~ *
+  & ci ~ *
+  & P ~ {P1 P2}
+  & i ~ {i1 i2}
+  & @deg ~ (i1 (P1 deg))
+  & i2 ~ $([+1] i_next)
+  & @count_heads ~ (t (i_next (P2 rest)))
+  & out ~ (1 (deg rest))
+
+@deg = (i (P out))
+  & @deg_go ~ (i (P (0 out)))
+
+@deg_go = (i (P (acc out)))
+  & P ~ (?(cases ctx) pl)
+  & cases ~ (@dg_nil @dg_cons)
+  & ctx ~ (pl (i (acc out)))
+
+@dg_nil = (pl (i (acc out)))
+  & pl ~ *
+  & i ~ *
+  & acc ~ out
+
+@dg_cons = (z (pl (i (acc out))))
+  & z ~ *
+  & pl ~ (num t)
+  & i ~ {i_cur i_next}
+  & num ~ {num1 num2}
+  & num1 ~ $([&] $(1023 low))
+  & num2 ~ $([>>] $(10 hi))
+  & low ~ {low1 low2}
+  & hi ~ {hi1 hi2}
+  & i_cur ~ {ic1 ic2}
+  & ic1 ~ $([=] $(low1 eqlow))
+  & ic2 ~ $([=] $(hi1 eqhi))
+  & eqlow ~ {el1 el2}
+  & eqhi ~ {eh1 eh2}
+  & el1 ~ $([|] $(eh1 iscont))
+  & iscont ~ ?((@dg_skip @dg_inc) (el2 (eh2 (t (i_next (acc out))))))
+
+@dg_skip = (el (eh (t (i (acc out)))))
+  & el ~ *
+  & eh ~ *
+  & @deg_go ~ (i (t (acc out)))
+
+@dg_inc = (z (el (eh (t (i (acc out))))))
+  & z ~ *
+  & el ~ *
+  & eh ~ *
+  & acc ~ $([+1] acc_next)
+  & @deg_go ~ (i (t (acc_next out)))

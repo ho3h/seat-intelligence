@@ -1,0 +1,19 @@
+@prog = ((?((@many_nil @many_cons) (p_q207 (0 (output (* (* *)))))) p_q207) output)
+
+@many_nil = (* (* ((0 *) *)))
+
+@many_cons = (* ((h t) (idx out)))
+  & h ~ $([=40] z)
+  & z ~ ?((@many_close @many_open) (t (idx out)))
+
+@many_close = (t (idx out))
+  & idx ~ {keep step}
+  & step ~ $([+1] next)
+  & out ~ ((0 *) (next (t keep)))
+
+@many_open = (* ((?((@many_nil @many_cons) (p_q208 (start ((?((@ap_nil @ap_cons) (p_q210 ((1 (open_ix after)) merged))) p_q210) (after_open ((?((@many_nil @many_cons) (p_q209 (after_open (after (final_idx (final_rest final_close)))))) p_q209) close)))))) p_q208) ({open_ix $([+1] start)} ((1 (close merged)) (final_idx (final_rest final_close))))))
+
+@ap_nil = (* (b out))
+  & out ~ b
+
+@ap_cons = (* ((h (?((@ap_nil (* ((h_q213 (?((@ap_nil @ap_cons) (p_q211_q213 (b_q213 tail_q213))) p_q211_q213)) (b_q213 (1 (h_q213 tail_q213)))))) (p_q211 (b tail))) p_q211)) (b (1 (h tail)))))

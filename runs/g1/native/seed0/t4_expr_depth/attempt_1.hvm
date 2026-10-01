@@ -1,0 +1,37 @@
+// @prog receives an expression and returns its depth.
+@prog = (input output)
+  & @depth ~ (input output)
+
+@depth = (expr output)
+  & expr ~ (tag payload)
+  & tag ~ ?((@lit @nonzero) (payload output))
+
+@lit = (payload output)
+  & payload ~ *
+  & output ~ 1
+
+@nonzero = (n (payload output))
+  & n ~ ?((@add @mul) (payload output))
+
+@add = (payload output)
+  & @binary ~ (payload output)
+
+@mul = (zero (payload output))
+  & zero ~ *
+  & @binary ~ (payload output)
+
+@binary = (payload output)
+  & payload ~ (left right)
+  & @depth ~ (left {left_cmp left_sel})
+  & @depth ~ (right {right_cmp right_sel})
+  & left_cmp ~ $([>] $(right_cmp cmp))
+  & cmp ~ ?((@take_right @take_left) (left_sel (right_sel output)))
+
+@take_right = (left (right output))
+  & left ~ *
+  & right ~ $([+1] output)
+
+@take_left = (zero (left (right output)))
+  & zero ~ *
+  & right ~ *
+  & left ~ $([+1] output)

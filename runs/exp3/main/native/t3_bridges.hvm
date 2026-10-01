@@ -1,0 +1,54 @@
+@prog = ((* {(?((@loop_nil @loop_cons) (pl_q88 (all (0 out)))) pl_q88) all}) out)
+
+@loop = ((?((@loop_nil @loop_cons) (pl (all (acc out)))) pl) (all (acc out)))
+
+@loop_nil = (* (* (acc acc)))
+
+@loop_cons = (* ((({s1_i1 {s2_i1 s3_i1}} v) tail) ({g_scan g_next} (acc out))))
+  & @dfs ~ ((1 (s1_i1 (0 *))) (g_scan (s3_i1 (v ((1 (s2_i1 (0 *))) ?((@is_bridge @not_bridge) (tail (g_next (acc out)))))))))
+
+@is_bridge = (tail (g_next ($([+1] acc2) out)))
+  & @loop ~ (tail (g_next (acc2 out)))
+
+@not_bridge = (* (tail (g_next (acc out))))
+  & @loop ~ (tail (g_next (acc out)))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* (($([=] $(xc ?((@mem_no @mem_yes) (t (xk out))))) t) ({xc xk} out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (* (* 1)))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (pl (graph (bu (bv (visited out)))))) pl) (graph (bu (bv (visited out)))))
+
+@dfs_nil = (* (* (* (bv (visited out)))))
+  & @mem ~ (visited (bv out))
+
+@dfs_cons = (* ((cur tail) ({g_scan g_next} ({u_scan u_next} ({v_scan v_next} (visited out))))))
+  & @scan ~ (g_scan (cur (u_scan (v_scan (tail (visited (stack2 visited2)))))))
+  & @dfs ~ (stack2 (g_next (u_next (v_next (visited2 out)))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cur (bu (bv (stack (visited out))))))) pl) (cur (bu (bv (stack (visited out))))))
+
+@scan_nil = (* (* (* (* (stack (visited (stack visited)))))))
+
+@scan_cons = (* ((({{$([=] $(u1_i4 $([*] $(y_i4 $([+] $(q_i4 ?((@edge_nonmatch @edge_match) (ap_i4 (bp_i4 (c_edge (stack (visited (s2 v2))))))))))))) $([=] $(v2_i4 $([*] $(w_i4 q_i4))))} ap_i4} {{$([=] $(v1_i4 y_i4)) $([=] $(u2_i4 w_i4))} bp_i4}) tail) ({c_edge c_next} ({{u1_i4 u2_i4} u_next} ({{v1_i4 v2_i4} v_next} (stack (visited out)))))))
+  & @scan ~ (tail (c_next (u_next (v_next (s2 (v2 out))))))
+
+@edge_match = (* (* (* (* (stack (visited (stack visited)))))))
+
+@edge_nonmatch = ({$([=] $(c1 ?((@try_no @try_yes) (b1 (stack (visited (s v))))))) a2} ({b1 $([=] $(c2 ?((@try_no @try_yes) (a2 (s (v out))))))} ({c1 c2} (stack (visited out)))))
+
+@try_no = (* (stack (visited (stack visited))))
+
+@try_yes = (* ({n_mem n_after} (stack ({v_mem v_after} out))))
+  & @mem ~ (v_mem (n_mem ?((@try_add @try_seen) (n_after (stack (v_after out))))))
+
+@try_add = ({n_stack n_visit} (stack (visited ((1 (n_stack stack)) (1 (n_visit visited))))))
+
+@try_seen = (* (* (stack (visited (stack visited)))))

@@ -1,0 +1,67 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_unique = ({a d} ({b e} f))
+  & @contains ~ (a (b ?((@add_unique__C0 (* (c (* c)))) (d (e f)))))
+
+@add_unique__C0 = (b (a c))
+  & @List/Cons ~ (a (b c))
+
+@contains = ((@contains__C2 a) a)
+
+@contains__C0 = (b (a c))
+  & @contains ~ (a (b c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @length ~ (a b)
+
+@length__C1 = (?((0 @length__C0) a) a)
+
+@process = ((@process__C8 a) a)
+
+@process__C0 = (b (c (d (e (a (f h))))))
+  & @process ~ (a (b (c (d (g h)))))
+  & @add_unique ~ (e (f g))
+
+@process__C1 = (* (b (c (d (g (a (e h)))))))
+  & @process ~ (a (b (c (f (g h)))))
+  & @add_unique ~ (d (e f))
+
+@process__C2 = (a (b (c (d (e ($([=0x0000002] ?((@process__C0 @process__C1) (a (b (c (d (e f))))))) f))))))
+
+@process__C3 = (* (b (c (f (g (a (* (d h))))))))
+  & @process ~ (a (b (e (f (g h)))))
+  & @add_unique ~ (c (d e))
+
+@process__C4 = (a (b (c (d (e ({$([=0x0000001] ?((@process__C2 @process__C3) (a (b (c (d (e (f g)))))))) f} g))))))
+
+@process__C5 = (* (b (e (f (g (a (* (c h))))))))
+  & @process ~ (a (d (e (f (g h)))))
+  & @add_unique ~ (b (c d))
+
+@process__C6 = (a (c (e (g l))))
+  & @List/Cons ~ (b (k l))
+  & @length ~ (a b)
+  & @List/Cons ~ (d (j k))
+  & @length ~ (c d)
+  & @List/Cons ~ (f (i j))
+  & @length ~ (e f)
+  & @List/Cons ~ (h (@List/Nil i))
+  & @length ~ (g h)
+
+@process__C7 = (* ((* ({$([=0x0000000] ?((@process__C4 @process__C5) (a (b (c (d (e (f (g h))))))))) f} g)) (e (a (b (c (d h)))))))
+
+@process__C8 = (?((@process__C6 @process__C7) a) a)
+
+@prog = (a b)
+  & @process ~ (a (@List/Nil (@List/Nil (@List/Nil (@List/Nil b)))))
+
+

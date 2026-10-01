@@ -1,0 +1,31 @@
+@List/Nil = ((0 a) a)
+
+@build__C0 = (((?(((* (* 0)) (* ($([=0x0000028] ?((@find_backward__C1 @find_backward__C2) (a_q261 (b_q261 (c_q261 d_q261))))) (c_q261 (a_q261 (b_q261 d_q261)))))) a_q260) a_q260) (b (1 c))) ($([:-0x0000001] b) (* c)))
+
+@build__C1 = (* (* ($([+0x0000001] b) (((?(((* (* 0)) (* ($([=0x0000028] ?((@find_forward__C1 @find_forward__C2) (a_q267 (b_q267 (c_q267 d_q267))))) (c_q267 (a_q267 (b_q267 d_q267)))))) a_q264) a_q264) (b (1 c))) c))))
+
+@build__C2 = (* ({f $([=0x0000028] ?((@build__C0 @build__C1) (a (b (c d)))))} ({((?(((* (* @List/Nil)) @build__C2) a_q272) a_q272) (((1 (f (g c_i35))) c_i35) (i j))) c} ({g a} ({$([+0x0000001] i) b} ((1 (d (j c_i34))) c_i34))))))
+
+@build__C3 = (?(((* (* @List/Nil)) @build__C2) a) a)
+
+@find_backward__C0 = ($([:-0x0000001] b) ($([:-0x0000001] c) (((?(((* (* 0)) (* ($([=0x0000028] ?((@find_backward__C1 @find_backward__C2) (a_q286 (b_q286 (c_q286 d_q286))))) (c_q286 (a_q286 (b_q286 d_q286)))))) a_q279) a_q279) (b (c d))) d)))
+
+@find_backward__C1 = ($([:-0x0000001] b) ($([+0x0000001] c) ((@find_backward__C4 (b (c d))) d)))
+
+@find_backward__C2 = (* (b ({$([=0x0000001] ?((@find_backward__C0 (* (a (* (* a))))) (b (c d)))) c} d)))
+
+@find_backward__C3 = (* ($([=0x0000028] ?((@find_backward__C1 @find_backward__C2) (a (b (c d))))) (c (a (b d)))))
+
+@find_backward__C4 = (?(((* (* 0)) @find_backward__C3) a) a)
+
+@find_forward__C0 = ($([+0x0000001] b) ($([:-0x0000001] c) ((@find_forward__C4 (b (c d))) d)))
+
+@find_forward__C1 = (b ({$([=0x0000001] ?((@find_forward__C0 (* (a (* (* a))))) (b (c d)))) c} d))
+
+@find_forward__C2 = (* ($([+0x0000001] b) ($([+0x0000001] c) ((@find_forward__C4 (b (c d))) d))))
+
+@find_forward__C3 = (* ($([=0x0000028] ?((@find_forward__C1 @find_forward__C2) (a (b (c d))))) (c (a (b d)))))
+
+@find_forward__C4 = (?(((* (* 0)) @find_forward__C3) a) a)
+
+@prog = ((@build__C3 (@List/Nil (0 b))) b)

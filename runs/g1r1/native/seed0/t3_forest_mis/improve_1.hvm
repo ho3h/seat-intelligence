@@ -1,0 +1,207 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & @mkverts ~ (n (0 verts))
+  & @solve ~ (verts (edges (0 output)))
+
+@mkverts = (n (i out))
+  & n ~ ?((@mkv_nil @mkv_succ) (i out))
+
+@mkv_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@mkv_succ = (n (i out))
+  & i ~ {i_out i_inc}
+  & out ~ (1 (i_out tail))
+  & i_inc ~ $([+1] i_next)
+  & @mkverts ~ (n (i_next tail))
+
+@solve = (verts ((?((@solve_empty @solve_nonempty) (verts (payload (acc out)))) payload) (acc out)))
+
+@solve_empty = (verts (payload (acc out)))
+  & payload ~ *
+  & @vcount ~ (verts (acc out))
+
+@solve_nonempty = (* (verts (payload (acc out))))
+  & @core ~ (verts ((1 payload) (acc out)))
+
+@vcount = ((?((@vc_nil @vc_cons) (payload (acc out))) payload) (acc out))
+
+@vc_nil = (payload (acc out))
+  & payload ~ *
+  & out ~ acc
+
+@vc_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+1] acc2)
+  & @vcount ~ (t (acc2 out))
+
+@core = (verts (edges (acc out)))
+  & verts ~ {v_scan v_keep}
+  & edges ~ {e_scan e_keep}
+  & @find ~ (v_scan (e_scan found))
+  & @peel ~ (found (v_keep (e_keep (acc out))))
+
+@peel = ((?((@peel_done @peel_found) (payload (verts (edges (acc out))))) payload) (verts (edges (acc out))))
+
+@peel_done = (payload (verts (edges (acc out))))
+  & payload ~ *
+  & verts ~ *
+  & edges ~ *
+  & out ~ acc
+
+@peel_found = (* (payload (verts (edges (acc out)))))
+  & payload ~ (v d)
+  & d ~ ?((@peel_iso @peel_pair) (v (verts (edges (acc out)))))
+
+@peel_iso = (v (verts (edges (acc out))))
+  & v ~ {v_vf v_ef}
+  & @fverts ~ (verts (v_vf verts2))
+  & @fedges ~ (edges (v_ef edges2))
+  & acc ~ $([+1] acc2)
+  & @solve ~ (verts2 (edges2 (acc2 out)))
+
+@peel_pair = (* (v (verts (edges (acc out)))))
+  & v ~ {v_n v_rest}
+  & v_rest ~ {v_vf v_ef}
+  & edges ~ {e_n e_f}
+  & @neighbor ~ (v_n (e_n nb))
+  & nb ~ {nb_vf nb_ef}
+  & @fverts ~ (verts (v_vf verts1))
+  & @fverts ~ (verts1 (nb_vf verts2))
+  & @fedges ~ (e_f (v_ef edges1))
+  & @fedges ~ (edges1 (nb_ef edges2))
+  & acc ~ $([+1] acc2)
+  & @solve ~ (verts2 (edges2 (acc2 out)))
+
+@find = ((?((@find_nil @find_cons) (pl (edges out))) pl) (edges out))
+
+@find_nil = (pl (edges out))
+  & pl ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@find_cons = (* ((v vs) (edges out)))
+  & v ~ {v_degree v_keep}
+  & edges ~ {e_degree e_rec}
+  & @degree ~ (v_degree (e_degree degree))
+  & degree ~ {d_test d_keep}
+  & d_test ~ $([<] $(2 z))
+  & z ~ ?((@find_next @find_yes) (v_keep (d_keep (vs (e_rec out)))))
+
+@find_next = (v (d (vs (edges out))))
+  & v ~ *
+  & d ~ *
+  & @find ~ (vs (edges out))
+
+@find_yes = (* (v (d (vs (edges out)))))
+  & vs ~ *
+  & edges ~ *
+  & out ~ (1 (v d))
+
+@degree = (target (edges out))
+  & @degloop ~ (edges (target (0 out)))
+
+@degloop = ((?((@dl_nil @dl_cons) (pl (target (count out)))) pl) (target (count out)))
+
+@dl_nil = (pl (target (count out)))
+  & pl ~ *
+  & target ~ *
+  & out ~ count
+
+@dl_cons = (* (((u v) tail) (target (count out))))
+  & target ~ {t_u t_rest}
+  & t_rest ~ {t_v t_next}
+  & u ~ $([=] $(t_u z_u))
+  & v ~ $([=] $(t_v z_v))
+  & z_u ~ $([+] $(z_v inc))
+  & count ~ $([+] $(inc count2))
+  & @degloop ~ (tail (t_next (count2 out)))
+
+@neighbor = (target (edges out))
+  & @nloop ~ (edges (target out))
+
+@nloop = ((?((@nl_nil @nl_cons) (pl (target out))) pl) (target out))
+
+@nl_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ 0
+
+@nl_cons = (* (((u v) tail) (target out)))
+  & target ~ {t_u t_rest}
+  & t_rest ~ {t_v t_rec}
+  & u ~ {u_cmp u_ret}
+  & v ~ {v_cmp v_ret}
+  & u_cmp ~ $([=] $(t_u z_u))
+  & z_u ~ ?((@nl_check_v @nl_hit_u) (v_cmp (t_v (t_rec (tail (u_ret (v_ret out)))))))
+
+@nl_check_v = (v_cmp (t_v (t_rec (tail (u_ret (v_ret out))))))
+  & v_cmp ~ $([=] $(t_v z_v))
+  & z_v ~ ?((@nl_next @nl_hit_v) (t_rec (tail (u_ret (v_ret out)))))
+
+@nl_hit_u = (* (v_cmp (t_v (t_rec (tail (u_ret (v_ret out)))))))
+  & v_cmp ~ *
+  & t_v ~ *
+  & t_rec ~ *
+  & tail ~ *
+  & u_ret ~ *
+  & out ~ v_ret
+
+@nl_next = (t_rec (tail (u_ret (v_ret out))))
+  & u_ret ~ *
+  & v_ret ~ *
+  & @nloop ~ (tail (t_rec out))
+
+@nl_hit_v = (* (t_rec (tail (u_ret (v_ret out)))))
+  & t_rec ~ *
+  & tail ~ *
+  & v_ret ~ *
+  & out ~ u_ret
+
+@fverts = ((?((@fv_nil @fv_cons) (pl (target out))) pl) (target out))
+
+@fv_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@fv_cons = (* ((x xs) (target out)))
+  & x ~ {x_cmp x_keep}
+  & target ~ {target_cmp target_rec}
+  & x_cmp ~ $([=] $(target_cmp z))
+  & z ~ ?((@fv_keep @fv_drop) (x_keep (xs (target_rec out))))
+
+@fv_keep = (x (xs (target out)))
+  & out ~ (1 (x tail))
+  & @fverts ~ (xs (target tail))
+
+@fv_drop = (* (x (xs (target out))))
+  & x ~ *
+  & @fverts ~ (xs (target out))
+
+@fedges = ((?((@fe_nil @fe_cons) (pl (target out))) pl) (target out))
+
+@fe_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@fe_cons = (* (((u v) xs) (target out)))
+  & target ~ {t_u t_rest}
+  & t_rest ~ {t_v t_next}
+  & u ~ {u_cmp u_keep}
+  & v ~ {v_cmp v_keep}
+  & u_cmp ~ $([=] $(t_u zu))
+  & v_cmp ~ $([=] $(t_v zv))
+  & zu ~ $([|] $(zv rm))
+  & rm ~ ?((@fe_keep @fe_drop) (u_keep (v_keep (xs (t_next out)))))
+
+@fe_keep = (u (v (xs (target out))))
+  & out ~ (1 ((u v) tail))
+  & @fedges ~ (xs (target tail))
+
+@fe_drop = (* (u (v (xs (target out)))))
+  & u ~ *
+  & v ~ *
+  & @fedges ~ (xs (target out))

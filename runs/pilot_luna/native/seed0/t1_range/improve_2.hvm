@@ -1,0 +1,46 @@
+// Build the range as recursively split, open-ended list segments.
+@prog = (n out)
+  & @rg ~ (n (0 ((0 *) out)))
+
+@rg = (n (i (tail out)))
+  & n ~ ?((@rg_nil @rg_pos) (i (tail out)))
+
+@rg_nil = (i (tail out))
+  & i ~ *
+  & out ~ tail
+
+@rg_pos = (m (i (tail out)))
+  & m ~ {mtest mkeep}
+  & mtest ~ $([>] $(7 b))
+  & b ~ ?((@rg_leaf @rg_split) (mkeep (i (tail out))))
+
+// For segments of at most eight elements, emit the first and finish sequentially.
+@rg_leaf = (m (i (tail out)))
+  & out ~ (1 (i rest))
+  & i ~ $([+1] i2)
+  & @seq ~ (m (i2 (tail rest)))
+
+// Split a longer segment into two parallel segments.
+@rg_split = (z (m (i (tail out))))
+  & z ~ *
+  & m ~ $([+1] n)
+  & n ~ {n1 n2}
+  & n1 ~ $([/] $(2 h))
+  & n2 ~ $([-] $(h second))
+  & h ~ {hcount hoff}
+  & i ~ $([+] $(hoff i2))
+  & @rg ~ (hcount (i (mid out)))
+  & @rg ~ (second (i2 (tail mid)))
+
+// Emit the remaining elements of a short segment.
+@seq = (n (i (tail out)))
+  & n ~ ?((@seq_nil @seq_succ) (i (tail out)))
+
+@seq_nil = (i (tail out))
+  & i ~ *
+  & out ~ tail
+
+@seq_succ = (m (i (tail out)))
+  & out ~ (1 (i rest))
+  & i ~ $([+1] i2)
+  & @seq ~ (m (i2 (tail rest)))

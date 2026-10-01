@@ -1,0 +1,29 @@
+// 24-bit SWAR population count.
+@prog = (input output)
+  & @pc1 ~ (input v1)
+  & @pc2 ~ (v1 v2)
+  & @pc3 ~ (v2 v3)
+  & @pc4 ~ (v3 output)
+
+@pc1 = (n out)
+  & n ~ {a b}
+  & b ~ $([>>] $(1 sh))
+  & sh ~ $([&] $(5592405 mask))
+  & a ~ $([-] $(mask out))
+
+@pc2 = (n out)
+  & n ~ {a b}
+  & a ~ $([&] $(3355443 aa))
+  & b ~ $([>>] $(2 sh))
+  & sh ~ $([&] $(3355443 bb))
+  & aa ~ $([+] $(bb out))
+
+@pc3 = (n out)
+  & n ~ {a b}
+  & b ~ $([>>] $(4 sh))
+  & a ~ $([+] $(sh sum))
+  & sum ~ $([&] $(986895 out))
+
+@pc4 = (n out)
+  & n ~ $([*] $(65793 prod))
+  & prod ~ $([>>] $(16 out))

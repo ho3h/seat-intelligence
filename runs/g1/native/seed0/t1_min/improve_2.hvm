@@ -1,0 +1,21 @@
+// Match the input list directly, avoiding a separate @mn_start call.
+@prog = ((?(((* 16777215) @mn_start_cons) (pl out)) pl) out)
+
+@mn_start_cons = (* ((h t) out))
+  & @mn ~ (t (h out))
+
+@mn = ((?(((* (a a)) @mn_cons) (pl (acc out))) pl) (acc out))
+
+@mn_cons = (* ((h t) (acc out)))
+  & acc ~ {acmp actx}
+  & h ~ {hcmp hctx}
+  & hcmp ~ $([<] $(acmp cmp))
+  & cmp ~ ?((@mn_keep @mn_take) (t (hctx (actx out))))
+
+@mn_keep = (t (h (acc out)))
+  & @mn ~ (t (acc out))
+  & h ~ *
+
+@mn_take = (* (t (h (acc out))))
+  & acc ~ *
+  & @mn ~ (t (h out))

@@ -1,0 +1,43 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a ($([+0x0000001] b) c))))
+  & @length ~ (a (b c))
+
+@length__C1 = (?(((a a) @length__C0) b) b)
+
+@lis = ((@lis__C2 a) a)
+
+@lis__C0 = (a b)
+  & @length ~ (a (0 b))
+
+@lis__C1 = (* (c (a (b e))))
+  & @lis ~ (a (d e))
+  & @place ~ (b (c d))
+
+@lis__C2 = (?((@lis__C0 @lis__C1) a) a)
+
+@place = ((@place__C4 a) a)
+
+@place__C0 = (c (a (b e)))
+  & @List/Cons ~ (a (d e))
+  & @place ~ (b (c d))
+
+@place__C1 = (* (a (* b)))
+  & @List/Cons ~ (a b)
+
+@place__C2 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@place__C3 = (* ({a d} (e ({$([>] $(a b)) c} f))))
+  & $(b ?((@place__C0 @place__C1) (c (d (e f))))) ~ [=0x0000000]
+
+@place__C4 = (?((@place__C2 @place__C3) a) a)
+
+@prog = (a b)
+  & @lis ~ (a (@List/Nil b))
+
+

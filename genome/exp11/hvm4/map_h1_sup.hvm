@@ -1,0 +1,23 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@sel = λ{ 0: λa. λb. b; _: λc. λa. λb. a }
+@min = λ&a. λ&b. @sel((a < b), a, b)
+@max = λ&a. λ&b. @sel((a < b), b, a)
+@ev = λ{
+  #X: λx. x
+  #K: λk. λx. k
+  #Mod: λm. λe. λx. (@ev(e, x) % m)
+  #Add: λl. λr. λ&x. (@ev(l, x) + @ev(r, x))
+  #Sub: λl. λr. λ&x. (@ev(l, x) - @ev(r, x))
+  #Mul: λl. λr. λ&x. (@ev(l, x) * @ev(r, x))
+  #Xor: λl. λr. λ&x. (@ev(l, x) ^ @ev(r, x))
+  #And: λl. λr. λ&x. (@ev(l, x) && @ev(r, x))
+  #Min: λl. λr. λ&x. @min(@ev(l, x), @ev(r, x))
+  #Max: λl. λr. λ&x. @max(@ev(l, x), @ev(r, x))
+  #Lt: λl. λr. λ&x. (@ev(l, x) < @ev(r, x))
+  #Eq: λl. λr. λ&x. (@ev(l, x) == @ev(r, x))
+}
+
+@chk = λ{ []: λys. λp. p; <>: λx. λxs. λ{ <>: λy. λys. λ&p. @g((@ev(p, x) == y), @chk(xs, ys, p)); []: λp. &{} } }
+@P = &LA{&LB{#X{},&LC{#K{0},#K{1}}},&LD{&LE{#K{2},#K{3}},&LF{#K{4},#K{5}}}}
+@main = @chk([17,8,32,15,63,57,60,48,26,12], [17,8,32,15,63,57,60,48,26,12], @P)

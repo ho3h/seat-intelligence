@@ -1,0 +1,112 @@
+// Initialize labels [0, ..., n-1], then relax all accepted edges n times.
+@prog = ((n (tau cands)) out)
+  & n ~ {n_init n_round}
+  & @init ~ (n_init (0 labs))
+  & @rounds ~ (n_round (cands (tau (labs out))))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (k (i out))
+  & i ~ {ih ii}
+  & ii ~ $([+1] inext)
+  & @init ~ (k (inext tail))
+  & out ~ (1 (ih tail))
+
+@rounds = (k (cands (tau (labs out))))
+  & k ~ ?((@round_nil @round_more) (cands (tau (labs out))))
+
+@round_nil = (cands (tau (labs out)))
+  & cands ~ *
+  & tau ~ *
+  & out ~ labs
+
+@round_more = (k (cands (tau (labs out))))
+  & cands ~ {cscan crecur}
+  & tau ~ {tscan trecur}
+  & @scan ~ (cscan (tscan (labs labs2)))
+  & @rounds ~ (k (crecur (trecur (labs2 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (tau (labs out)))) pl) (tau (labs out)))
+
+@scan_nil = (pl (tau (labs out)))
+  & pl ~ *
+  & tau ~ *
+  & out ~ labs
+
+@scan_cons = (* ((edge tail) (tau (labs out))))
+  & tau ~ {te tr}
+  & @edge ~ (edge (te (labs labs2)))
+  & @scan ~ (tail (tr (labs2 out)))
+
+@edge = ((u (v score)) (tau (labs out)))
+  & score ~ $([<] $(tau lt))
+  & lt ~ ?((@edge_accept @edge_reject) (u (v (labs out))))
+
+@edge_reject = (u (v (labs out)))
+  & u ~ *
+  & v ~ *
+  & out ~ labs
+
+@edge_accept = (u (v (labs out)))
+  & u ~ {ug us}
+  & v ~ {vg vs}
+  & @getkeep ~ (labs (ug (labs1 lu)))
+  & @getkeep ~ (labs1 (vg (labs2 lv)))
+  & lu ~ {luc lus}
+  & lv ~ {lvc lvs}
+  & luc ~ $([>] $(lvc gt))
+  & gt ~ ?((@take_v @take_u) (us (vs (lus (lvs (labs2 out))))))
+
+@take_v = (us (vs (lus (lvs (labs out)))))
+  & lus ~ *
+  & lvs ~ {v1 v2}
+  & @set ~ (labs (us (v1 mid)))
+  & @set ~ (mid (vs (v2 out)))
+
+@take_u = (* (us (vs (lus (lvs (labs out))))))
+  & lvs ~ *
+  & lus ~ {u1 u2}
+  & @set ~ (labs (us (u1 mid)))
+  & @set ~ (mid (vs (u2 out)))
+
+@getkeep = ((?((@gk_nil @gk_cons) (pl (idx out))) pl) (idx out))
+
+@gk_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ ((0 *) 0)
+
+@gk_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@gk_here @gk_next) (h (t out)))
+
+@gk_here = (h (t out))
+  & h ~ {hlist hval}
+  & out ~ ((1 (hlist t)) hval)
+
+@gk_next = (k (h (t out)))
+  & @getkeep ~ (t (k (tailnew val)))
+  & out ~ ((1 (h tailnew)) val)
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (pl (idx (val out)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (k (h (t (val out))))
+  & @set ~ (t (k (val tailout)))
+  & out ~ (1 (h tailout))

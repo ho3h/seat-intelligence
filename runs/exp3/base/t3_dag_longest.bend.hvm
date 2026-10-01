@@ -1,0 +1,102 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_graph = ((@build_graph__C1 a) a)
+
+@build_graph__C0 = (* (({b i} {e {q k}}) (g ({a {d h}} ({c {f {w {r j}}}} x)))))
+  & @build_graph ~ (g (v (w x)))
+  & @tree_get ~ (d (e (f (s ($([+0x0000001] t) u)))))
+  & @tree_get ~ (a (b (c (l n))))
+  & @tree_set ~ (p (q (r ((s (t u)) v))))
+  & @tree_set ~ (h (i (j ((m n) p))))
+  & @List/Cons ~ (k (l m))
+
+@build_graph__C1 = (?(((a (* a)) @build_graph__C0) b) b)
+
+@build_tree = ({$([=0x0000001] ?((@build_tree__C0 (* (* (@List/Nil (0 0))))) (a b))) a} b)
+
+@build_tree__C0 = ($([:/0x0000002] {a c}) (b d))
+  &!@build_tree ~ (a b)
+  &!@build_tree ~ (c d)
+
+@find_sources = ({$([=] $(a ?((@find_sources__C2 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@find_sources__C0 = ($([+0x0000001] a) b)
+  & @find_sources ~ (a b)
+
+@find_sources__C1 = (* ({$([+0x0000001] a) e} (b (c (d (f h))))))
+  & @find_sources ~ (a (b (c (d (g h)))))
+  & @List/Cons ~ (e (f g))
+
+@find_sources__C2 = ({b d} (e ({a f} ({c g} h))))
+  & @tree_get ~ (a (b (c (* ($([=0x0000000] ?((@find_sources__C0 @find_sources__C1) (d (e (f (g h)))))) *)))))
+
+@process_neighbors = ((@process_neighbors__C8 a) a)
+
+@process_neighbors__C0 = (a (* a))
+
+@process_neighbors__C1 = (* (* (a a)))
+
+@process_neighbors__C2 = (a (* a))
+
+@process_neighbors__C3 = (* (b (a c)))
+  & @List/Cons ~ (a (b c))
+
+@process_neighbors__C4 = (a (* a))
+
+@process_neighbors__C5 = (* (* (a a)))
+
+@process_neighbors__C6 = (* (a (* (b (c (a (b c)))))))
+
+@process_neighbors__C7 = (* ({b {r g}} (d ({e $([+0x0000001] {$([>] $(t ?((@process_neighbors__C0 @process_neighbors__C1) (u (v w))))) {v {$([>] $(k ?((@process_neighbors__C4 @process_neighbors__C5) (l (m n))))) m}}})} ({a f} ({c {p h}} (q ({t u} x))))))))
+  & @process_neighbors ~ (d (e (o (p (s (w x))))))
+  & @tree_get ~ (a (b (c (i ($([:-0x0000001] {$([=0x0000000] ?((@process_neighbors__C2 @process_neighbors__C3) (q (r s)))) j}) {k l})))))
+  & @tree_set ~ (f (g (h ((i (j n)) o))))
+
+@process_neighbors__C8 = (?((@process_neighbors__C6 @process_neighbors__C7) a) a)
+
+@process_queue = ((@process_queue__C2 a) a)
+
+@process_queue__C0 = (a (* (b (a b))))
+
+@process_queue__C1 = (* (b (h ({a f} ({c {g l}} (i n))))))
+  & @process_queue ~ (j (k (l (m n))))
+  & @process_neighbors ~ (d (e (f (g (h (i (k (j m))))))))
+  & @tree_get ~ (a (b (c (d (* e)))))
+
+@process_queue__C2 = (?((@process_queue__C0 @process_queue__C1) a) a)
+
+@prog = (({f a} b) l)
+  & @process_queue ~ (i (j (k (0 (* l)))))
+  & @build_graph ~ (b (d (e {j g})))
+  & @tree_size ~ (a (1 {k {h {e c}}}))
+  & @build_tree ~ (c d)
+  & @find_sources ~ (0 (f (g (h (@List/Nil i)))))
+
+@tree_get = (b (c ({$([=0x0000001] ?((@tree_get__C2 (* (a (* (* a))))) (b (c (d e))))) d} e)))
+
+@tree_get__C0 = ($([-] $(b c)) ({b d} (* (a e))))
+  & @tree_get ~ (a (c (d e)))
+
+@tree_get__C1 = (* (b (c (a (* d)))))
+  & @tree_get ~ (a (b (c d)))
+
+@tree_get__C2 = ((d e) ({$([<] $(a ?((@tree_get__C0 @tree_get__C1) (b (c (d (e f))))))) b} ($([:/0x0000002] {a c}) f)))
+
+@tree_set = (b (c ({$([=0x0000001] ?((@tree_set__C2 (* (* (* (* (a a)))))) (b (c (d e))))) d} e)))
+
+@tree_set__C0 = ($([-] $(c d)) (f ({c e} (a (b (a g))))))
+  & @tree_set ~ (b (d (e (f g))))
+
+@tree_set__C1 = (* (b (d (c (a (f (e f)))))))
+  & @tree_set ~ (a (b (c (d e))))
+
+@tree_set__C2 = ((e f) ({$([<] $(a ?((@tree_set__C0 @tree_set__C1) (b (c (d (e (f g)))))))) b} ($([:/0x0000002] {a d}) (c g))))
+
+@tree_size = ({a c} ({$([<] $(a ?(((* (b b)) @tree_size__C0) (c (d e))))) d} e))
+
+@tree_size__C0 = (* (a ($([*0x0000002] b) c)))
+  & @tree_size ~ (a (b c))
+
+

@@ -1,0 +1,121 @@
+// Pair the predicted and true label lists.
+@prog = (input output)
+  & input ~ (pred truth)
+  & @zip ~ (pred (truth zipped))
+  & zipped ~ {walk original}
+  & @outer ~ (walk (original (0 output)))
+
+@zip = ((?((@zip_nil @zip_cons) (pl (truth out))) pl) (truth out))
+
+@zip_nil = (* (truth out))
+  & truth ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((phead ptail) (truth out)))
+  & @zip_truth ~ (truth (phead (ptail out)))
+
+@zip_truth = ((?((@zip_tnil @zip_tcons) (tl (phead (ptail out)))) tl) (phead (ptail out)))
+
+@zip_tnil = (* (tl (phead (ptail out))))
+  & tl ~ *
+  & phead ~ *
+  & ptail ~ *
+  & out ~ (0 *)
+
+@zip_tcons = (* ((thead ttail) (phead (ptail out))))
+  & @zip ~ (ptail (ttail zipped))
+  & out ~ (1 ((phead thead) zipped))
+
+// Process one predicted-label group at a time.
+@outer = ((?((@outer_nil @outer_cons) (pl (original (acc out)))) pl) (original (acc out)))
+
+@outer_nil = (* (original (acc out)))
+  & original ~ *
+  & out ~ acc
+
+@outer_cons = (* (((p t) tail) (original (acc out))))
+  & original ~ {orig_mx orig_next}
+  & p ~ {p_head p_part}
+  & p_head ~ {p_item p_cluster}
+  & @part ~ (tail (p_part part))
+  & part ~ (matches others)
+  & @mx ~ ((1 ((p_item t) matches)) (orig_mx (p_cluster (0 best))))
+  & acc ~ $([+] $(best acc2))
+  & @outer ~ (others (orig_next (acc2 out)))
+
+// Partition a list into items matching p and items not matching p.
+@part = ((?((@part_nil @part_cons) (pl (p out))) pl) (p out))
+
+@part_nil = (* (p out))
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* (((hp ht) tail) (p out)))
+  & hp ~ {hp_keep hp_cmp}
+  & p ~ {p_cmp p_rec}
+  & hp_cmp ~ $([=] $(p_cmp z))
+  & z ~ ?((@part_no @part_yes) (hp_keep (ht (m (r out)))))
+  & @part ~ (tail (p_rec part))
+  & part ~ (m r)
+
+@part_no = (hp (ht (m (r out))))
+  & out ~ (m (1 ((hp ht) r)))
+
+@part_yes = (* (hp (ht (m (r out)))))
+  & out ~ ((1 ((hp ht) m)) r)
+
+// Find the largest true-label count among this group's candidates.
+@mx = ((?((@mx_nil @mx_cons) (pl (original (cluster (best out))))) pl) (original (cluster (best out))))
+
+@mx_nil = (* (original (cluster (best out))))
+  & original ~ *
+  & cluster ~ *
+  & out ~ best
+
+@mx_cons = (* (((cp ct) tail) (original (cluster (best out)))))
+  & cp ~ *
+  & original ~ {orig_count orig_next}
+  & cluster ~ {cluster_count cluster_next}
+  & @countpair ~ (orig_count (cluster_count (ct (0 cnt))))
+  & cnt ~ {cnt_cmp cnt_ctx}
+  & best ~ {best_cmp best_ctx}
+  & cnt_cmp ~ $([>] $(best_cmp z))
+  & z ~ ?((@mx_no @mx_yes) (cnt_ctx (best_ctx (tail (orig_next (cluster_next out)))))
+
+@mx_no = (cnt (best (tail (original (cluster out)))))
+  & cnt ~ *
+  & @mx ~ (tail (original (cluster (best out))))
+
+@mx_yes = (* (cnt (best (tail (original (cluster out))))))
+  & best ~ *
+  & @mx ~ (tail (original (cluster (cnt out))))
+
+// Count occurrences of (cluster, target) in a list of label pairs.
+@countpair = ((?((@cp_nil @cp_cons) (pl (cluster (target (acc out))))) pl) (cluster (target (acc out))))
+
+@cp_nil = (* (cluster (target (acc out))))
+  & cluster ~ *
+  & target ~ *
+  & out ~ acc
+
+@cp_cons = (* (((p t) tail) (cluster (target (acc out)))))
+  & cluster ~ {cluster_pred cluster_rec}
+  & target ~ {target_truth target_rec}
+  & p ~ $([=] $(cluster_pred eqp))
+  & eqp ~ ?((@cp_no @cp_yes) (t (tail (cluster_rec (target_truth (target_rec (acc out))))))
+
+@cp_no = (t (tail (cluster (target_truth (target (acc out))))))
+  & t ~ *
+  & target_truth ~ *
+  & @countpair ~ (tail (cluster (target (acc out))))
+
+@cp_yes = (* (t (tail (cluster (target_truth (target (acc out)))))))
+  & t ~ $([=] $(target_truth eqt))
+  & eqt ~ ?((@cp2_no @cp2_yes) (tail (cluster (target (acc out))))
+
+@cp2_no = (tail (cluster (target (acc out))))
+  & @countpair ~ (tail (cluster (target (acc out))))
+
+@cp2_yes = (* (tail (cluster (target (acc out)))))
+  & acc ~ $([+] $(1 acc2))
+  & @countpair ~ (tail (cluster (target (acc2 out))))

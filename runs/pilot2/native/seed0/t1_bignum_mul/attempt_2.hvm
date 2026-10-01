@@ -1,0 +1,115 @@
+// Multiply little-endian base-4096 limb lists, then canonicalize the result.
+@prog = ((a b) out)
+  & @mul ~ (a (b raw))
+  & @canon ~ (raw out)
+
+@mul = (a ((?((@mul_nil @mul_cons) (p (a out))) p) out))
+
+@mul_nil = (* (a out))
+  & a ~ *
+  & out ~ (1 (0 (0 *)))
+
+@mul_cons = (* ((d tail) (a out)))
+  & a ~ {ar as}
+  & @mul ~ (ar (tail rec))
+  & @scale ~ (as (d (0 part)))
+  & @add ~ (part ((1 (0 rec)) (0 out)))
+
+// Scale a limb list by d, carrying in base 4096.
+@scale = ((?((@scale_nil @scale_cons) (p (d (c out)))) p) (d (c out)))
+
+@scale_nil = (* (d (c out)))
+  & d ~ *
+  & out ~ (1 (c (0 *)))
+
+@scale_cons = (* ((h t) (d (c out))))
+  & d ~ {d1 d2}
+  & h ~ $([*] $(d1 prod))
+  & prod ~ $([+] $(c sum))
+  & sum ~ {s1 s2}
+  & s1 ~ $([%] $(4096 rem))
+  & s2 ~ $([/] $(4096 c2))
+  & @scale ~ (t (d2 (c2 rest)))
+  & out ~ (1 (rem rest))
+
+// Add two limb lists with an initial carry.
+@add = ((?((@add_anil @add_acon) (p (b (c out)))) p) (b (c out)))
+
+@add_anil = (* (b (c out)))
+  & @add_a_nil ~ (b (c out))
+
+@add_acon = (* ((h t) (b (c out))))
+  & @add_a_cons ~ (h (t (b (c out))))
+
+// A is exhausted; add B and the carry.
+@add_a_nil = ((?((@add_a_nil_nil @add_a_nil_cons) (p (c out))) p) (c out))
+
+@add_a_nil_nil = (* (c out))
+  & out ~ (1 (c (0 *)))
+
+@add_a_nil_cons = (* ((b t) (c out)))
+  & b ~ $([+] $(c total))
+  & total ~ {u v}
+  & u ~ $([%] $(4096 rem))
+  & v ~ $([/] $(4096 c2))
+  & @add_a_nil ~ (t (c2 rest))
+  & out ~ (1 (rem rest))
+
+@add_a_cons = (h (t ((?((@add_a_cons_nil @add_a_cons_cons) (p (h (t (c out))))) p) (c out))))
+
+@add_a_cons_nil = (* (h (t (c out))))
+  & h ~ $([+] $(c total))
+  & total ~ {u v}
+  & u ~ $([%] $(4096 rem))
+  & v ~ $([/] $(4096 c2))
+  & @add ~ (t ((0 *) (c2 rest)))
+  & out ~ (1 (rem rest))
+
+@add_a_cons_cons = (* ((b bt) (h (t (c out)))))
+  & h ~ $([+] $(b s))
+  & s ~ $([+] $(c total))
+  & total ~ {u v}
+  & u ~ $([%] $(4096 rem))
+  & v ~ $([/] $(4096 c2))
+  & @add ~ (t (bt (c2 rest)))
+  & out ~ (1 (rem rest))
+
+// Remove high zero limbs, using Nil internally to represent an all-zero list.
+@canon = (l out)
+  & @norm0 ~ (l n)
+  & @canon_check ~ (n out)
+
+@norm0 = ((?((@norm0_nil @norm0_cons) (p out)) p) out)
+
+@norm0_nil = (* out)
+  & out ~ (0 *)
+
+@norm0_cons = (* ((h t) out))
+  & @norm0 ~ (t nt)
+  & @norm_join ~ (h (nt out))
+
+@norm_join = (h ((?((@norm_join_nil @norm_join_cons) (p (h out))) p) out))
+
+@norm_join_nil = (* (h out))
+  & h ~ {hx hy}
+  & hx ~ $([=] $(0 z))
+  & z ~ ?((@norm_join_keep @norm_join_drop) (hy out))
+
+@norm_join_keep = (h out)
+  & out ~ (1 (h (0 *)))
+
+@norm_join_drop = (* (h out))
+  & h ~ *
+  & out ~ (0 *)
+
+@norm_join_cons = (* (p (h out)))
+  & out ~ (1 (h (1 p)))
+
+// Convert the all-zero Nil sentinel to the canonical single zero limb.
+@canon_check = ((?((@canon_nil @canon_cons) (p out)) p) out)
+
+@canon_nil = (* out)
+  & out ~ (1 (0 (0 *)))
+
+@canon_cons = (* (p out))
+  & out ~ (1 p)

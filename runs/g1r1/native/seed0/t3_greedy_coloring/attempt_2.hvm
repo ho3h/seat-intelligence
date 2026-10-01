@@ -1,0 +1,133 @@
+// Greedy colouring in increasing vertex order.
+// Colours are kept in reverse order while vertices are processed.
+
+@prog = ((n edges) out)
+  & @loop ~ (n (0 (edges ((0 *) out))))
+
+@loop = (?((@done @more) ctx) ctx)
+
+@done = (v (edges (colors out)))
+  & v ~ *
+  & edges ~ *
+  & @rev ~ (colors out)
+
+@more = (rem (v (edges (colors out))))
+  & {edges_scan edges_next} ~ edges
+  & {colors_scan colors_next} ~ colors
+  & {v_scan v_inc} ~ v
+  & v_inc ~ $([+] $(1 v_next))
+  & @scan ~ (edges_scan (v_scan (colors_scan ((0 *) forbid))))
+  & @small ~ (forbid (0 chosen))
+  & @loop ~ (rem (v_next (edges_next ((1 (chosen colors_next)) out))))
+
+// Scan edges and collect the colours of prior neighbours.
+@scan = ((?((@scan_nil @scan_cons) (payload (v (colors (bad out))))) payload) (v (colors (bad out))))
+
+@scan_nil = (* (* (* (a a))))
+
+@scan_cons = (* ((edge tail) (v (colors (bad out)))))
+  & @edge ~ (edge (tail (v (colors (bad out)))))
+
+@edge = ((u w) (tail (v (colors (bad out)))))
+  & {u_cmp u_keep} ~ u
+  & {v_cmp v_keep} ~ v
+  & u_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@edge_u_ne @edge_u_eq) (u_keep (w (v_keep (tail (colors (bad out))))))
+
+@edge_u_ne = (u (w (v (tail (colors (bad out))))))
+  & {w_cmp w_keep} ~ w
+  & {v_cmp v_keep} ~ v
+  & w_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@edge_w_ne @edge_w_eq) (u (w_keep (v_keep (tail (colors (bad out))))))
+
+@edge_u_eq = (* (u (w (v (tail (colors (bad out))))))
+  & u ~ *
+  & @prior ~ (w (v (tail (colors (bad out)))))
+
+@edge_w_ne = (u (w (v (tail (colors (bad out))))))
+  & u ~ *
+  & w ~ *
+  & @scan ~ (tail (v (colors (bad out))))
+
+@edge_w_eq = (* (u (w (v (tail (colors (bad out))))))
+  & w ~ *
+  & @prior ~ (u (v (tail (colors (bad out)))))
+
+@prior = (neighbor (v (tail (colors (bad out)))))
+  & {nei_cmp nei_keep} ~ neighbor
+  & {v_cmp v_keep} ~ v
+  & nei_cmp ~ $([<] $(v_cmp z))
+  & z ~ ?((@prior_skip @prior_yes) (nei_keep (v_keep (tail (colors (bad out))))))
+
+@prior_skip = (neighbor (v (tail (colors (bad out)))))
+  & neighbor ~ *
+  & @scan ~ (tail (v (colors (bad out))))
+
+@prior_yes = (* (neighbor (v (tail (colors (bad out))))))
+  & {v_calc v_scan} ~ v
+  & {colors_get colors_scan} ~ colors
+  & v_calc ~ $([-] $(1 vm1))
+  & vm1 ~ $([-] $(neighbor idx))
+  & @nth ~ (colors_get (idx got))
+  & @scan ~ (tail (v_scan (colors_scan (1 (got (bad out))))))
+
+// Look up an index in the reversed colour list.
+@nth = ((?((@nth_nil @nth_cons) (payload (idx out))) payload) (idx out))
+
+@nth_nil = (* (* out))
+  & out ~ 0
+
+@nth_cons = (* ((head tail) (idx out)))
+  & {idx_cmp idx_keep} ~ idx
+  & idx_cmp ~ $([=] $(0 z))
+  & z ~ ?((@nth_nonzero @nth_zero) (head (tail (idx_keep out))))
+
+@nth_zero = (* (head (tail (idx out))))
+  & head ~ out
+  & tail ~ *
+  & idx ~ *
+
+@nth_nonzero = (head (tail (idx out)))
+  & head ~ *
+  & idx ~ $([-] $(1 idx_next))
+  & @nth ~ (tail (idx_next out))
+
+// Choose the smallest colour not present in the forbidden list.
+@small = (forbid (c out))
+  & {forbid_test forbid_keep} ~ forbid
+  & {c_test c_keep} ~ c
+  & @contains ~ (forbid_test (c_test has))
+  & has ~ ?((@small_take @small_inc) (forbid_keep (c_keep out)))
+
+@small_take = (forbid (c out))
+  & forbid ~ *
+  & c ~ out
+
+@small_inc = (* (forbid (c out)))
+  & c ~ $([+] $(1 next))
+  & @small ~ (forbid (next out))
+
+@contains = ((?((@contains_nil @contains_cons) (payload (c out))) payload) (c out))
+
+@contains_nil = (* (* out))
+  & out ~ 0
+
+@contains_cons = (* ((h t) (c out)))
+  & {h_cmp h_keep} ~ h
+  & {c_cmp c_keep} ~ c
+  & h_cmp ~ $([=] $(c_cmp eq))
+  & eq ~ ?((@contains_no @contains_yes) (h_keep (t (c_keep out))))
+
+@contains_no = (* (t (c out)))
+  & @contains ~ (t (c out))
+
+@contains_yes = (* (* (* (* out))))
+  & out ~ 1
+
+// Reverse the accumulated colours into vertex order.
+@rev = ((?((@rev_nil @rev_cons) (payload (acc out))) payload) (acc out))
+
+@rev_nil = (* (a a))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))

@@ -1,0 +1,35 @@
+// Binary-list traversal with a carried target and index.
+@prog = ((xs target) out)
+  & @search ~ (xs (target (0 out)))
+
+@search = ((?((@search_nil @search_cons) (pl (target (idx out)))) pl) (target (idx out)))
+
+@search_nil = (* (target (idx out)))
+  & target ~ *
+  & out ~ 16777215
+
+@search_cons = (* ((head tail) (target (idx out))))
+  & head ~ {head_eq head_gt}
+  & target ~ {target_eq target_gt}
+  & head_eq ~ $([=] $(target_eq equal))
+  & equal ~ ?((@search_ne @search_found) (head_gt (tail (target_gt (idx out)))))
+
+@search_found = (* (head (tail (target (idx out)))))
+  & head ~ *
+  & tail ~ *
+  & target ~ *
+  & out ~ idx
+
+@search_ne = (* (head (tail (target (idx out)))))
+  & target ~ {target_cmp target_rec}
+  & head ~ $([>] $(target_cmp greater))
+  & greater ~ ?((@search_less @search_stop) (tail (target_rec (idx out))))
+
+@search_less = (* (tail (target (idx out))))
+  & idx ~ $([+1] next_idx)
+  & @search ~ (tail (target (next_idx out)))
+
+@search_stop = (* (tail (target (idx out))))
+  & tail ~ *
+  & target ~ *
+  & out ~ 16777215

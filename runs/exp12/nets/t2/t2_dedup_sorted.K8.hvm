@@ -1,0 +1,53 @@
+@prog = (input output)
+  & @dedup ~ (input output)
+
+@dedup = (lv1 output)
+  & @dd_first_lw ~ (lv1 output)
+
+@dd_nil = (* output)
+  & output ~ (0 *)
+
+@dd_first = (* (({prev emitted} tail) (1 (emitted rest))))
+  & @dr_cons_lw ~ (tail (prev rest))
+
+@dedup_rest = (lv2 (prev output))
+  & @dr_cons_lw ~ (lv2 (prev output))
+
+@dr_nil = (* (prev output))
+  & prev ~ *
+  & output ~ (0 *)
+
+@dr_cons = (* (({$([=] $(prev ?((@dr_keep @dr_skip) (emitted (rest output))))) {next emitted}} tail) (prev output)))
+  & @dr_cons_lw ~ (tail (next rest))
+
+@dr_keep = (emitted (rest output))
+  & output ~ (1 (emitted rest))
+
+@dr_skip = (* (emitted (rest rest)))
+  & emitted ~ *
+
+@dd_first_lw = (ls56 q17)
+  & ls56 ~ (g47 (e39 (g48 (e40 (g49 (e41 (g50 (e42 (g51 (e43 (g52 (e44 (g53 (e45 (g54 (e46 tk55))))))))))))))))
+  & g47 ~ ?((@dd_nil @dd_first_la) ((e39 (q19 q20)) q17))
+  & g48 ~ ?((@dr_nil @dr_cons_la) ((e40 (q22 q23)) (q19 q20)))
+  & g49 ~ ?((@dr_nil @dr_cons_la) ((e41 (q25 q26)) (q22 q23)))
+  & g50 ~ ?((@dr_nil @dr_cons_la) ((e42 (q28 q29)) (q25 q26)))
+  & g51 ~ ?((@dr_nil @dr_cons_la) ((e43 (q31 q32)) (q28 q29)))
+  & g52 ~ ?((@dr_nil @dr_cons_la) ((e44 (q34 q35)) (q31 q32)))
+  & g53 ~ ?((@dr_nil @dr_cons_la) ((e45 (q37 q38)) (q34 q35)))
+  & g54 ~ ?((@dr_nil @dr_cons) ((e46 tk55) (q37 q38)))
+
+@dr_cons_lw = (ls98 (q58 q59))
+  & ls98 ~ (g89 (e81 (g90 (e82 (g91 (e83 (g92 (e84 (g93 (e85 (g94 (e86 (g95 (e87 (g96 (e88 tk97))))))))))))))))
+  & g89 ~ ?((@dr_nil @dr_cons_la) ((e81 (q61 q62)) (q58 q59)))
+  & g90 ~ ?((@dr_nil @dr_cons_la) ((e82 (q64 q65)) (q61 q62)))
+  & g91 ~ ?((@dr_nil @dr_cons_la) ((e83 (q67 q68)) (q64 q65)))
+  & g92 ~ ?((@dr_nil @dr_cons_la) ((e84 (q70 q71)) (q67 q68)))
+  & g93 ~ ?((@dr_nil @dr_cons_la) ((e85 (q73 q74)) (q70 q71)))
+  & g94 ~ ?((@dr_nil @dr_cons_la) ((e86 (q76 q77)) (q73 q74)))
+  & g95 ~ ?((@dr_nil @dr_cons_la) ((e87 (q79 q80)) (q76 q77)))
+  & g96 ~ ?((@dr_nil @dr_cons) ((e88 tk97) (q79 q80)))
+
+@dd_first_la = (* (({prev emitted} (prev rest)) (1 (emitted rest))))
+
+@dr_cons_la = (* (({$([=] $(prev ?((@dr_keep @dr_skip) (emitted (rest output))))) {next emitted}} (next rest)) (prev output)))

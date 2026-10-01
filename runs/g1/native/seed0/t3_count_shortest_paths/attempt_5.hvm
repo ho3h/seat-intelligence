@@ -1,0 +1,95 @@
+@prog = ((n (s (t edges))) out)
+  & n ~ {n_cmp n_keep}
+  & s ~ {s_cmp s_keep}
+  & s_cmp ~ $([<] $(n_cmp bs))
+  & bs ~ ?((@zero @valid_t) (n_keep (s_keep (t (edges out)))))
+
+@zero = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@valid_t = (* (n (s (t (edges out)))))
+  & n ~ {n_cmp n_keep}
+  & t ~ {t_cmp t_keep}
+  & t_cmp ~ $([<] $(n_cmp bt))
+  & bt ~ ?((@zero @different) (n_keep (s (t_keep (edges out)))))
+
+@different = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ {s_cmp s_keep}
+  & t ~ {t_cmp t_keep}
+  & s_cmp ~ $([=] $(t_cmp eq))
+  & eq ~ ?((@scan_start @same_yes) (n (s_keep (t_keep (edges out)))))
+
+@same_yes = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 1
+
+@scan_start = (* (n (s (t (edges out)))))
+  & n ~ *
+  & @scan ~ (edges (s (t out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (s (t out)))) payload) (s (t out)))
+
+@scan_nil = (* (payload (s (t out))))
+  & payload ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ 0
+
+@scan_cons = (* ((edge tail) (s (t out))))
+  & @edge ~ (edge (s (t hit)))
+  & hit ~ ?((@scan_next @scan_hit) (tail (s (t out))))
+
+@scan_next = (* (tail (s (t out))))
+  & @scan ~ (tail (s (t out)))
+
+@scan_hit = (* (tail (s (t out))))
+  & tail ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ 1
+
+@edge = ((u v) (s (t out)))
+  & u ~ {u_cmp u_keep}
+  & s ~ {s_cmp s_keep}
+  & u_cmp ~ $([=] $(s_cmp e1))
+  & e1 ~ ?((@edge_reverse @edge_forward) (u_keep (v (s_keep (t out)))))
+
+@edge_forward = (* (u (v (s (t out)))))
+  & u ~ *
+  & v ~ {v_cmp v_keep}
+  & t ~ {t_cmp t_keep}
+  & v_cmp ~ $([=] $(t_cmp e2))
+  & e2 ~ ?((@edge_no @edge_yes) (v_keep (s (t_keep out))))
+
+@edge_reverse = (* (u (v (s (t out)))))
+  & u ~ {u_cmp u_keep}
+  & t ~ {t_cmp t_keep}
+  & u_keep ~ *
+  & u_cmp ~ $([=] $(t_cmp e3))
+  & e3 ~ ?((@edge_no @edge_reverse_v) (v (s (t_keep out))))
+
+@edge_reverse_v = (* (v (s (t out))))
+  & v ~ {v_cmp v_keep}
+  & s ~ {s_cmp s_keep}
+  & v_cmp ~ $([=] $(s_cmp e4))
+  & e4 ~ ?((@edge_no @edge_yes) (v_keep (s_keep (t out))))
+
+@edge_yes = (* (v (s (t out))))
+  & v ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ 1
+
+@edge_no = (* (v (s (t out))))
+  & v ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ 0

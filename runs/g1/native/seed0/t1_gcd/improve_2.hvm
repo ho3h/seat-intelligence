@@ -1,0 +1,10 @@
+// Euclidean algorithm. The switch's successor branch applies the recursive
+// call directly, avoiding a separate successor helper.
+@prog = (input out)
+  & input ~ (a b)
+  & @gcd ~ ((a b) out)
+
+@gcd = ((a b) out)
+  & b ~ {test {div nexta}}
+  & test ~ ?(((v ((* *) v)) (* (aa @gcd))) (a ((nexta rem) out)))
+  & aa ~ $([%] $(div rem))

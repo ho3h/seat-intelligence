@@ -1,0 +1,188 @@
+@member = (x (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@member_nil @member_cons) (x (payload out)))
+
+@member_nil = (x (payload out))
+  & x ~ *
+  & payload ~ *
+  & out ~ 0
+
+@member_cons = (* (x (payload out)))
+  & payload ~ (h t)
+  & x ~ {x1 x2}
+  & x1 ~ $([=] $(h eq))
+  & eq ~ ?((@member_no @member_yes) (x2 (t out)))
+
+@member_no = (x2 (t out))
+  & @member ~ (x2 (t out))
+
+@member_yes = (* (x2 (t out)))
+  & x2 ~ *
+  & t ~ *
+  & out ~ 1
+
+@append = (a (b out))
+  & a ~ (tag payload)
+  & tag ~ ?((@append_nil @append_cons) (payload (b out)))
+
+@append_nil = (payload (b out))
+  & payload ~ *
+  & out ~ b
+
+@append_cons = (* (payload (b out)))
+  & payload ~ (h t)
+  & @append ~ (t (b tail))
+  & out ~ (1 (h tail))
+
+@lookup = (x (map out))
+  & map ~ (tag payload)
+  & tag ~ ?((@lookup_nil @lookup_cons) (x (payload out)))
+
+@lookup_nil = (x (payload out))
+  & x ~ *
+  & payload ~ *
+  & out ~ (0 0)
+
+@lookup_cons = (* (x (payload out)))
+  & payload ~ (entry tail)
+  & entry ~ (v c)
+  & x ~ {x1 x2}
+  & x1 ~ $([=] $(v eq))
+  & eq ~ ?((@lookup_no @lookup_yes) (x2 (tail (c out))))
+
+@lookup_no = (x2 (tail (c out)))
+  & c ~ *
+  & @lookup ~ (x2 (tail out))
+
+@lookup_yes = (* (x2 (tail (c out))))
+  & x2 ~ *
+  & tail ~ *
+  & out ~ (1 c)
+
+@not = (c out)
+  & 1 ~ $([-] $(c out))
+
+@bfs = (queue (map (visited (bip (edges out)))))
+  & queue ~ (tag payload)
+  & tag ~ ?((@bfs_nil @bfs_cons) (payload (map (visited (bip (edges out))))))
+
+@bfs_nil = (payload (map (visited (bip (edges out)))))
+  & payload ~ *
+  & map ~ *
+  & edges ~ *
+  & out ~ (bip visited)
+
+@bfs_cons = (* (payload (map (visited (bip (edges out))))))
+  & payload ~ (u rest)
+  & u ~ {u_lkp u_scan}
+  & map ~ {map_lkp map_keep}
+  & edges ~ {edges_scan edges_future}
+  & @lookup ~ (u_lkp (map_lkp lookup_res))
+  & lookup_res ~ (found color)
+  & found ~ *
+  & @scan_edges ~ (u_scan (color (edges_scan (map_keep (rest (visited (bip (edges_future out))))))))
+
+@scan_edges = (u (cu (edges (map (queue (visited (bip (future out))))))))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (payload (u (cu (map (queue (visited (bip (future out)))))))))
+
+@scan_nil = (payload (u (cu (map (queue (visited (bip (future out))))))))
+  & payload ~ *
+  & u ~ *
+  & cu ~ *
+  & @bfs ~ (queue (map (visited (bip (future out)))))
+
+@scan_cons = (* (payload (u (cu (map (queue (visited (bip (future out)))))))))
+  & payload ~ (edge rest_edges)
+  & edge ~ (a b)
+  & u ~ {u1 u2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([=] $(u1 eqa))
+  & eqa ~ ?((@scan_a_no @scan_a_yes) (b1 (a2 (b2 (u2 (cu (rest_edges (map (queue (visited (bip (future out))))))))))))
+
+@scan_a_yes = (* (b1 (a2 (b2 (u2 (cu (rest_edges (map (queue (visited (bip (future out))))))))))))
+  & a2 ~ *
+  & b2 ~ *
+  & @process_neighbor ~ (b1 (u2 (cu (rest_edges (map (queue (visited (bip (future out)))))))))
+
+@scan_a_no = (b1 (a2 (b2 (u2 (cu (rest_edges (map (queue (visited (bip (future out)))))))))))
+  & b1 ~ *
+  & u2 ~ {u2_comp u2_future}
+  & b2 ~ $([=] $(u2_comp eqb))
+  & eqb ~ ?((@scan_b_no @scan_b_yes) (a2 (u2_future (cu (rest_edges (map (queue (visited (bip (future out))))))))))
+
+@scan_b_yes = (* (a2 (u2_future (cu (rest_edges (map (queue (visited (bip (future out))))))))))
+  & @process_neighbor ~ (a2 (u2_future (cu (rest_edges (map (queue (visited (bip (future out)))))))))
+
+@scan_b_no = (a2 (u2_future (cu (rest_edges (map (queue (visited (bip (future out)))))))))
+  & a2 ~ *
+  & @scan_edges ~ (u2_future (cu (rest_edges (map (queue (visited (bip (future out))))))))
+
+@process_neighbor = (v (u (cu (rest_edges (map (queue (visited (bip (future out)))))))))
+  & v ~ {v_lkp v_state}
+  & cu ~ {cu_use cu_future}
+  & map ~ {map_lkp map_keep}
+  & @lookup ~ (v_lkp (map_lkp lookup_res))
+  & lookup_res ~ (found color)
+  & found ~ ?((@proc_not @proc_found) (color (v_state (u (cu_use (cu_future (rest_edges (map_keep (queue (visited (bip (future out))))))))))))
+
+@proc_not = (color (v_state (u (cu_use (cu_future (rest_edges (map_keep (queue (visited (bip (future out)))))))))))
+  & color ~ *
+  & @not ~ (cu_use new_color)
+  & v_state ~ {v1 v2}
+  & v1 ~ {v1a v1b}
+  & @scan_edges ~ (u (cu_future (rest_edges ((1 ((v2 new_color) map_keep)) ((1 (v1a queue)) ((1 (v1b visited)) (bip (future out))))))))
+
+@proc_found = (* (color (v_state (u (cu_use (cu_future (rest_edges (map_keep (queue (visited (bip (future out))))))))))))
+  & v_state ~ *
+  & color ~ $([=] $(cu_use same))
+  & same ~ ?((@proc_found_no @proc_found_yes) (u (cu_future (rest_edges (map_keep (queue (visited (bip (future out)))))))))
+
+@proc_found_no = (u (cu_future (rest_edges (map_keep (queue (visited (bip (future out))))))))
+  & @scan_edges ~ (u (cu_future (rest_edges (map_keep (queue (visited (bip (future out))))))))
+
+@proc_found_yes = (* (u (cu_future (rest_edges (map_keep (queue (visited (bip (future out)))))))))
+  & bip ~ *
+  & @scan_edges ~ (u (cu_future (rest_edges (map_keep (queue (visited (0 (future out))))))))
+
+@comp = (start (edges out))
+  & start ~ {s1 s2}
+  & s1 ~ {s1q s1v}
+  & @bfs ~ ((1 (s1q (0 *))) ((1 ((s2 0) (0 *))) ((1 (s1v (0 *))) (1 (edges out)))))
+
+@iter = (i (n (visited (edges (count out)))))
+  & i ~ {i1 i2}
+  & n ~ {n1 n2}
+  & i1 ~ $([=] $(n1 eq))
+  & eq ~ ?((@iter_step @iter_done) (i2 (n2 (visited (edges (count out))))))
+
+@iter_done = (* (i2 (n2 (visited (edges (count out))))))
+  & i2 ~ *
+  & n2 ~ *
+  & visited ~ *
+  & edges ~ *
+  & out ~ count
+
+@iter_step = (i2 (n2 (visited (edges (count out)))))
+  & i2 ~ {i_member i_use}
+  & visited ~ {visited_member visited_keep}
+  & @member ~ (i_member (visited_member memb_out))
+  & memb_out ~ ?((@iter_not_visited @iter_visited) (i_use (n2 (visited_keep (edges (count out))))))
+
+@iter_visited = (* (i_use (n2 (visited_keep (edges (count out))))))
+  & i_use ~ $([+1] next_i)
+  & @iter ~ (next_i (n2 (visited_keep (edges (count out)))))
+
+@iter_not_visited = (i_use (n2 (visited_keep (edges (count out)))))
+  & i_use ~ {i_comp i_next}
+  & edges ~ {edges_comp edges_future}
+  & @comp ~ (i_comp (edges_comp comp_out))
+  & comp_out ~ (bip new_visited)
+  & @append ~ (new_visited (visited_keep merged_visited))
+  & i_next ~ $([+1] next_i)
+  & count ~ $([+] $(bip new_count))
+  & @iter ~ (next_i (n2 (merged_visited (edges_future (new_count out)))))
+
+@prog = ((n edges) out)
+  & @iter ~ (0 (n ((0 *) (edges (0 out)))))

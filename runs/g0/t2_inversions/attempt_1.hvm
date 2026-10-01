@@ -1,0 +1,22 @@
+@prog = (l out)
+  & @go ~ (l (0 ((0 *) out)))
+
+@go = ((?((@go_nil @go_cons) (pl (acc (seen out)))) pl) (acc (seen out)))
+
+@go_nil = (* (a (* a)))
+
+@go_cons = (* ((h t) (acc (seen out))))
+  & h ~ {h1 h2}
+  & @cnt ~ (seen (h1 (acc (seen2 acc2))))
+  & @go ~ (t (acc2 ((1 (h2 seen2)) out)))
+
+@cnt = ((?((@cnt_nil @cnt_cons) (pl (y (acc (so ao))))) pl) (y (acc (so ao))))
+
+@cnt_nil = (* (* (a ((0 *) a))))
+
+@cnt_cons = (* ((x t) (y (acc ((1 (x2 so2)) ao)))))
+  & x ~ {x1 x2}
+  & y ~ {y1 y2}
+  & x1 ~ $([>] $(y1 g))
+  & acc ~ $([+] $(g acc2))
+  & @cnt ~ (t (y2 (acc2 (so2 ao))))

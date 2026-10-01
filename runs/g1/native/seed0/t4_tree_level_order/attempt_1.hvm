@@ -1,0 +1,40 @@
+// Breadth-first traversal using a front queue and a reversed rear queue.
+// Values are accumulated in reverse and reversed once the queue is empty.
+
+@prog = (input out)
+  & @bfs ~ ((1 (input (0 *))) ((0 *) ((0 *) out)))
+
+@bfs = ((?((@bfs_empty @bfs_cons) (qpayload (rear (acc out)))) qpayload) (rear (acc out)))
+
+@bfs_empty = (* (rear (acc out)))
+  & @normalize ~ (rear (acc out))
+
+@bfs_cons = (* ((tree tail) (rear (acc out))))
+  & @visit ~ (tree (tail (rear (acc out))))
+
+@visit = ((?((@visit_leaf @visit_node) (payload (tail (rear (acc out))))) payload) (tail (rear (acc out))))
+
+@visit_leaf = (* (tail (rear (acc out))))
+  & @bfs ~ (tail (rear (acc out)))
+
+@visit_node = (* ((left (value right)) (tail (rear (acc out)))))
+  & @bfs ~ (tail ((1 (right (1 (left rear)))) ((1 (value acc)) out)))
+
+@normalize = ((?((@normal_nil @normal_cons) (payload (acc out))) payload) (acc out))
+
+@normal_nil = (* (acc out))
+  & @rev ~ (acc ((0 *) out))
+
+@normal_cons = (* ((head tail) (acc out)))
+  & @rev ~ ((1 (head tail)) ((0 *) front))
+  & @resume ~ (front (acc out))
+
+@resume = (front (acc out))
+  & @bfs ~ (front ((0 *) (acc out)))
+
+@rev = ((?((@rev_nil @rev_cons) (payload (acc out))) payload) (acc out))
+
+@rev_nil = (* (x x))
+
+@rev_cons = (* ((head tail) (acc out)))
+  & @rev ~ (tail ((1 (head acc)) out))

@@ -1,0 +1,338 @@
+@prog = ((n (s (t edges))) out)
+  & @valid_s ~ (n (s (t (edges out))))
+
+@valid_s = (n (s (t (edges out))))
+  & n ~ {n1 n2}
+  & s ~ {s1 s2}
+  & s1 ~ $([<] $(n1 b))
+  & b ~ ?((@invalid @valid_s_yes) (n2 (s2 (t (edges out)))))
+
+@valid_s_yes = (* (n (s (t (edges out)))))
+  & @valid_t ~ (n (s (t (edges out))))
+
+@valid_t = (n (s (t (edges out))))
+  & n ~ {n1 n2}
+  & t ~ {t1 t2}
+  & t1 ~ $([<] $(n1 b))
+  & b ~ ?((@invalid @valid_t_yes) (n2 (s (t2 (edges out)))))
+
+@valid_t_yes = (* (n (s (t (edges out)))))
+  & @solve ~ (n (s (t (edges out))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@solve = (n (s (t (edges out))))
+  & n ~ {nm ni}
+  & @mk ~ (0 (nm (s labels0)))
+  & @copy_edges ~ (edges ecopy)
+  & @copy_labels ~ (labels0 labels)
+  & @iter ~ (ni (ecopy (labels (t out))))
+
+@mk = (i (n (s out)))
+  & i ~ {ix ic}
+  & n ~ {nx nc}
+  & ix ~ $([<] $(nx b))
+  & b ~ ?((@mk_stop @mk_more) (ic (nc (s out))))
+
+@mk_stop = (i (n (s out)))
+  & i ~ *
+  & n ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@mk_more = (* (i (n (s out))))
+  & i ~ {il ir}
+  & s ~ {sl sr}
+  & @mk_label ~ (il (sl lab))
+  & ir ~ $([+1] ix)
+  & @mk ~ (ix (n (sr tail)))
+  & out ~ (1 (lab tail))
+
+@mk_label = (i (s out))
+  & i ~ {ix ic}
+  & s ~ {sx sc}
+  & ix ~ $([=] $(sx b))
+  & b ~ ?((@ml_no @ml_yes) (ic (sc out)))
+
+@ml_no = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 (0 (0 (0 *))))
+
+@ml_yes = (* (i (s out)))
+  & i ~ *
+  & out ~ (1 (0 (0 (1 (s (0 *))))))
+
+@copy_edges = ((?((@ce_nil @ce_cons) (pl out)) pl) out)
+
+@ce_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@ce_cons = (* ((edge tail) out))
+  & edge ~ (u (v w))
+  & @copy_edges ~ (tail tail2)
+  & out ~ (1 ((u (v w)) tail2))
+
+@copy_labels = ((?((@cl_nil @cl_cons) (pl out)) pl) out)
+
+@cl_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@cl_cons = (* ((lab tail) out))
+  & lab ~ (r (d (h path)))
+  & @copy_path ~ (path path2)
+  & @copy_labels ~ (tail tail2)
+  & out ~ (1 ((r (d (h path2))) tail2))
+
+@copy_path = ((?((@cp_nil @cp_cons) (pl out)) pl) out)
+
+@cp_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@cp_cons = (* ((h tail) out))
+  & @copy_path ~ (tail tail2)
+  & out ~ (1 (h tail2))
+
+@iter = (k (edges (labels (t out))))
+  & k ~ ?((@iter_done @iter_more) (edges (labels (t out))))
+
+@iter_done = (edges (labels (t out)))
+  & edges ~ *
+  & @finish ~ (labels (t out))
+
+@iter_more = (k (edges (labels (t out))))
+  & edges ~ {escan erec}
+  & @scan ~ (escan (labels ls))
+  & @iter ~ (k (erec (ls (t out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (labels out))) pl) (labels out))
+
+@scan_nil = (pl (labels out))
+  & pl ~ *
+  & out ~ labels
+
+@scan_cons = (* ((u (v w)) (tail (labels out))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @relax ~ (u1 (v1 (w1 (labels l1))))
+  & @relax ~ (v2 (u2 (w2 (l1 l2))))
+  & @scan ~ (tail (l2 out))
+
+@relax = (u (v (w (labels out))))
+  & labels ~ {la {lb lc}}
+  & v ~ {vg vr}
+  & @get ~ (u (la src))
+  & @get ~ (vg (lb dst))
+  & @r_src ~ (src (dst (vr (w (lc out)))))
+
+@r_src = (src (dst (v (w (base out)))))
+  & src ~ (sr (sd (sh sp)))
+  & sr ~ ?((@rs_no @rs_yes) (sd (sh (sp (dst (v (w (base out))))))))
+
+@rs_no = (sd (sh (sp (dst (v (w (base out)))))))
+  & sd ~ *
+  & sh ~ *
+  & sp ~ *
+  & dst ~ *
+  & v ~ *
+  & w ~ *
+  & out ~ base
+
+@rs_yes = (* (sd (sh (sp (dst (v (w (base out))))))))
+  & v ~ {va vb}
+  & sd ~ $([+] $(w cd))
+  & sh ~ $([+1] ch)
+  & @append ~ (sp (va cp))
+  & @cmp ~ ((1 (cd (ch cp))) (dst (vb (base out))))
+
+@get = (i ((?((@get_nil @get_cons) (pl (i out))) pl) out))
+
+@get_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ (0 (0 (0 (0 *))))
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_next = (i (h (t out)))
+  & h ~ *
+  & @get ~ (i (t out))
+
+@set = (i ((?((@set_nil @set_cons) (pl (i (val out)))) pl) (val out)))
+
+@set_nil = (pl (i (val out)))
+  & pl ~ *
+  & i ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (i (val out))))
+  & i ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (i (h (t (val out))))
+  & h ~ *
+  & @set ~ (i (t (val out)))
+
+@append = ((?((@app_nil @app_cons) (pl (x out))) pl) (x out))
+
+@app_nil = (pl (x out))
+  & pl ~ *
+  & out ~ (1 (x (0 *)))
+
+@app_cons = (* ((h t) (x out)))
+  & @append ~ (t (x tail))
+  & out ~ (1 (h tail))
+
+@cmp = (cand (cur (v (base out))))
+  & cur ~ (cr (dd (dh dp)))
+  & cr ~ ?((@cmp_empty @cmp_present) (cand (dd (dh (dp (v (base out)))))))
+
+@cmp_empty = (cand (dd (dh (dp (v (base out))))))
+  & dd ~ *
+  & dh ~ *
+  & dp ~ *
+  & @set ~ (v (base (cand out)))
+
+@cmp_present = (* (cand (dd (dh (dp (v (base out)))))))
+  & cand ~ {cc cn}
+  & @better ~ (cc ((1 (dd (dh dp))) better))
+  & better ~ ?((@cmp_keep @cmp_replace) (cn (v (base out))))
+
+@cmp_keep = (cn (v (base out)))
+  & cn ~ *
+  & v ~ *
+  & out ~ base
+
+@cmp_replace = (* (cn (v (base out))))
+  & @set ~ (v (base (cn out)))
+
+@better = (cand (cur out))
+  & cand ~ (cr (cd (ch cp)))
+  & cur ~ (rr (dd (dh dp)))
+  & cr ~ *
+  & rr ~ *
+  & @ord_dist ~ (cd (dd (ch (dh (cp (dp out))))))
+
+@ord_dist = (a (b (x (y (p (q out))))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 less))
+  & less ~ ?((@od_notless @od_yes) (a2 (b2 (x (y (p (q out)))))))
+
+@od_yes = (* (a (b (x (y (p (q out)))))))
+  & a ~ *
+  & b ~ *
+  & x ~ *
+  & y ~ *
+  & p ~ *
+  & q ~ *
+  & out ~ 1
+
+@od_notless = (a (b (x (y (p (q out))))))
+  & a ~ $([=] $(b eq))
+  & eq ~ ?((@ode_no @ode_yes) (x (y (p (q out)))))
+
+@ode_no = (x (y (p (q out))))
+  & x ~ *
+  & y ~ *
+  & p ~ *
+  & q ~ *
+  & out ~ 0
+
+@ode_yes = (* (x (y (p (q out)))))
+  & @ord_hops ~ (x (y (p (q out))))
+
+@ord_hops = (x (y (p (q out))))
+  & x ~ {x1 x2}
+  & y ~ {y1 y2}
+  & x1 ~ $([<] $(y1 less))
+  & less ~ ?((@oh_notless @oh_yes) (x2 (y2 (p (q out)))))
+
+@oh_yes = (* (x (y (p (q out)))))
+  & x ~ *
+  & y ~ *
+  & p ~ *
+  & q ~ *
+  & out ~ 1
+
+@oh_notless = (x (y (p (q out))))
+  & x ~ $([=] $(y eq))
+  & eq ~ ?((@ohe_no @ohe_yes) (p (q out)))
+
+@ohe_no = (p (q out))
+  & p ~ *
+  & q ~ *
+  & out ~ 0
+
+@ohe_yes = (* (p (q out)))
+  & @lex ~ (p (q out))
+
+@lex = ((?((@lex_nil @lex_cons) (pl (b out))) pl) (b out))
+
+@lex_nil = (pl (b out))
+  & pl ~ *
+  & b ~ *
+  & out ~ 0
+
+@lex_cons = (* ((ah at) (b out)))
+  & b ~ (bh bt)
+  & @lex_heads ~ (ah (at (bh (bt out))))
+
+@lex_heads = (ah (at (bh (bt out))))
+  & ah ~ {a1 a2}
+  & bh ~ {b1 b2}
+  & a1 ~ $([<] $(b1 less))
+  & less ~ ?((@lh_notless @lh_yes) (a2 (b2 (at (bt out)))))
+
+@lh_yes = (* (a (b (at (bt out)))))
+  & a ~ *
+  & b ~ *
+  & at ~ *
+  & bt ~ *
+  & out ~ 1
+
+@lh_notless = (a (b (at (bt out))))
+  & a ~ $([=] $(b eq))
+  & eq ~ ?((@lh_ne @lh_eq) (at (bt out)))
+
+@lh_ne = (at (bt out))
+  & at ~ *
+  & bt ~ *
+  & out ~ 0
+
+@lh_eq = (* (at (bt out)))
+  & @lex ~ (at (bt out))
+
+@finish = (labels (t out))
+  & @get ~ (t (labels lab))
+  & lab ~ (r (d (h path)))
+  & r ~ ?((@fin_no @fin_yes) (d (h (path out))))
+
+@fin_no = (d (h (path out)))
+  & d ~ *
+  & h ~ *
+  & path ~ *
+  & out ~ (0 *)
+
+@fin_yes = (* (d (h (path out))))
+  & d ~ *
+  & h ~ *
+  & out ~ path

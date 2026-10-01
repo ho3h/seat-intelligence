@@ -1,0 +1,17 @@
+// @pre returns an open list as (head, tail), with head == tail for an empty list.
+@prog = (tree out)
+  & @pre ~ (tree (head tail))
+  & head ~ out
+  & tail ~ (0 *)
+
+@pre = ((?((@pre_leaf @pre_node) (payload (head tail))) payload) (head tail))
+
+@pre_leaf = (* (head tail))
+  & head ~ tail
+
+@pre_node = (* ((l (v r)) (head tail)))
+  & @pre ~ (l (lh lt))
+  & @pre ~ (r (rh rt))
+  & lt ~ rh
+  & head ~ (1 (v lh))
+  & tail ~ rt

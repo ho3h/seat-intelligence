@@ -1,0 +1,141 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {n_src n_words}
+  & n_words ~ $([+] $(23 nplus))
+  & nplus ~ $([/] $(24 wc))
+  & @mkwords ~ (wc zero)
+  & @srcs ~ (n_src (0 (edges (zero (0 out)))))
+
+@mkwords = (count out)
+  & count ~ ?((@mw_nil @mw_succ) out)
+
+@mw_nil = (out)
+  & out ~ (0 *)
+
+@mw_succ = (prev out)
+  & @mkwords ~ (prev tail)
+  & out ~ (1 (0 tail))
+
+@srcs = (remaining (i (edges (zero (acc out))))
+  & remaining ~ ?((@src_nil @src_succ) (i (edges (zero (acc out)))))
+
+@src_nil = (i (edges (zero (acc out))))
+  & i ~ *
+  & edges ~ *
+  & zero ~ *
+  & acc ~ out
+
+@src_succ = (prev (i (edges (zero (acc out)))))
+  & i ~ {src mark_i}
+  & mark_i ~ {mark_q mark_r}
+  & mark_q ~ $([/] $(24 q))
+  & mark_r ~ $([%] $(24 rem))
+  & 1 ~ $([<<] $(rem mask))
+  & zero ~ {zero_mark zero_next}
+  & @bitset ~ (zero_mark (q (mask bits1)))
+  & edges ~ {edges_pass edges_next}
+  & @passes ~ (edges_pass (bits1 (0 done)))
+  & done ~ $([+] $(acc acc2))
+  & src ~ $([+1] i2)
+  & @srcs ~ (prev (i2 (edges_next (zero_next (acc2 out))))
+
+@passes = (edges (bits (count out)))
+  & edges ~ {edges_run edges_repeat}
+  & @pass ~ (edges_run (bits (count (0 result))))
+  & result ~ (bits2 (count2 changed))
+  & changed ~ ?((@pass_done @pass_more) (edges_repeat (bits2 (count2 out))))
+
+@pass_done = (edges (bits (count out)))
+  & edges ~ *
+  & bits ~ *
+  & count ~ out
+
+@pass_more = (prev (edges (bits (count out))))
+  & prev ~ *
+  & @passes ~ (edges (bits (count out)))
+
+@pass = (edges (bits (count (changed out))))
+  & edges ~ ?((@pass_nil @pass_cons) (pl (bits (count (changed out)))))
+
+@pass_nil = (pl (bits (count (changed out))))
+  & pl ~ *
+  & out ~ (bits (count changed))
+
+@pass_cons = (* ((edge tail) (bits (count (changed out)))))
+  & edge ~ (u v)
+  & u ~ {u_q u_r}
+  & u_q ~ $([/] $(24 uq))
+  & u_r ~ $([%] $(24 ur))
+  & 1 ~ $([<<] $(ur umask))
+  & bits ~ {bits_u bits_keep}
+  & @bitget ~ (bits_u (uq (umask u_seen)))
+  & u_seen ~ ?((@pass_skip @pass_u_yes) (tail (v (bits_keep (count (changed out)))))
+
+@pass_skip = (tail (v (bits (count (changed out)))))
+  & v ~ *
+  & @pass ~ (tail (bits (count (changed out))))
+
+@pass_u_yes = (prev (tail (v (bits (count (changed out))))))
+  & prev ~ *
+  & v ~ {v_q v_r}
+  & v_q ~ $([/] $(24 vq))
+  & v_r ~ $([%] $(24 vr))
+  & 1 ~ $([<<] $(vr vmask))
+  & bits ~ {bits_v bits_keep}
+  & @bitget ~ (bits_v (vq (vmask v_seen)))
+  & v_seen ~ ?((@pass_already @pass_add) (tail (bits_keep (count (changed (vq vmask))))))
+
+@pass_already = (tail (bits (count (changed (q mask)))))
+  & q ~ *
+  & mask ~ *
+  & @pass ~ (tail (bits (count (changed out))))
+
+@pass_add = (prev (tail (bits (count (changed (q mask))))))
+  & prev ~ *
+  & changed ~ *
+  & @bitset ~ (bits (q (mask updated)))
+  & count ~ $([+1] count2)
+  & @pass ~ (tail (updated (count2 (1 out))))
+
+@bitget = (words (q (mask out)))
+  & words ~ ?((@bg_nil @bg_cons) (pl (q (mask out))))
+
+@bg_nil = (pl (q (mask out)))
+  & pl ~ *
+  & q ~ *
+  & mask ~ *
+  & out ~ 0
+
+@bg_cons = (* (pl (q (mask out))))
+  & pl ~ (word tail)
+  & q ~ ?((@bg_here @bg_next) (word (tail (mask out))))
+
+@bg_here = (word (tail (mask out)))
+  & tail ~ *
+  & word ~ $([&] $(mask anded))
+  & anded ~ $([>] $(0 out))
+
+@bg_next = (prev (word (tail (mask out))))
+  & word ~ *
+  & @bitget ~ (tail (prev (mask out)))
+
+@bitset = (words (q (mask out)))
+  & words ~ ?((@bs_nil @bs_cons) (pl (q (mask out))))
+
+@bs_nil = (pl (q (mask out)))
+  & pl ~ *
+  & q ~ *
+  & mask ~ *
+  & out ~ (0 *)
+
+@bs_cons = (* (pl (q (mask out))))
+  & pl ~ (word tail)
+  & q ~ ?((@bs_here @bs_next) (word (tail (mask out))))
+
+@bs_here = (word (tail (mask out)))
+  & word ~ $([|] $(mask word2))
+  & out ~ (1 (word2 tail))
+
+@bs_next = (prev (word (tail (mask out))))
+  & @bitset ~ (tail (prev (mask updated)))
+  & out ~ (1 (word updated))

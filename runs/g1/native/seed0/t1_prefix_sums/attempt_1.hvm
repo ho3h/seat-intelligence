@@ -1,0 +1,13 @@
+// Prefix sums over a list of u24 values.
+@prog = (l out)
+  & @ps ~ (l (0 out))
+
+@ps = ((?((@ps_nil @ps_cons) (pl (acc out))) pl) (acc out))
+
+@ps_nil = (* (* (0 *)))
+
+@ps_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h sum))
+  & sum ~ {headacc nextacc}
+  & out ~ (1 (headacc rest))
+  & @ps ~ (t (nextacc rest))

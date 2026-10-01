@@ -1,0 +1,49 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @length ~ (a b)
+
+@length__C1 = (?((0 @length__C0) a) a)
+
+@partition_bits = ((@partition_bits__C4 a) a)
+
+@partition_bits__C0 = (b (c (e (g (d (a h))))))
+  & @partition_bits ~ (a (b (c (f (g h)))))
+  & @List/Cons ~ (d (e f))
+
+@partition_bits__C1 = (* (b (d (f ($([+0x0000001] g) (c (a h)))))))
+  & @partition_bits ~ (a (b (e (f (g h)))))
+  & @List/Cons ~ (c (d e))
+
+@partition_bits__C2 = (* (a (b (c ((a b) c)))))
+
+@partition_bits__C3 = (* ({$([&] $(a $([=0x0000000] ?((@partition_bits__C0 @partition_bits__C1) (b (c (d (e (f (g h)))))))))) f} (g ({a b} (c (d (e h)))))))
+
+@partition_bits__C4 = (?((@partition_bits__C2 @partition_bits__C3) a) a)
+
+@prog = ({a b} d)
+  & @radix_select ~ (a (c (8388608 d)))
+  & @length ~ (b $([:/0x0000002] c))
+
+@radix_select = ((@radix_select__C4 a) a)
+
+@radix_select__C0 = ($([-] $(b c)) ($([:>>0x0000001] d) (b (* (a e)))))
+  & @radix_select ~ (a (c (d e)))
+
+@radix_select__C1 = (* (b ($([:>>0x0000001] c) (* (a (* d))))))
+  & @radix_select ~ (a (b (c d)))
+
+@radix_select__C2 = ({$([<] $(e ?((@radix_select__C0 @radix_select__C1) (f (g (h (i (j k)))))))) f} ({d g} (a (b k))))
+  & @partition_bits ~ (c (d (@List/Nil (@List/Nil (0 ((i j) {e h}))))))
+  & @List/Cons ~ (a (b c))
+
+@radix_select__C3 = (* (d (e (b ({$([=0x0000000] ?((@radix_select__C2 (* (* (* (a (* a)))))) (b (c (d (e f)))))) c} f)))))
+
+@radix_select__C4 = (?(((* (* 0)) @radix_select__C3) a) a)
+
+

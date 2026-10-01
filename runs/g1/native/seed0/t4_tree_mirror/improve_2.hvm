@@ -1,0 +1,9 @@
+// Mirror a tree recursively. Construct the Node result directly in the helper root.
+@prog = (input out)
+  & @mirror ~ (input out)
+
+@mirror = ((?(((* (0 *)) @m_node) (p out)) p) out)
+
+@m_node = (* ((l (v r)) (1 (mr (v ml)))))
+  & @mirror ~ (l ml)
+  & @mirror ~ (r mr)

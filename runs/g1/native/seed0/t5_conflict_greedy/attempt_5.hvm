@@ -1,0 +1,287 @@
+@prog = ((n (mnl cands)) out)
+  & @init ~ (n (0 labs))
+  & @sort ~ (cands sorted)
+  & @process ~ (sorted (mnl (labs out)))
+
+@init = (n (i out))
+  & n ~ ?((@iEnd @iMore) (i out))
+
+@iEnd = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@iMore = (* (k (i out)))
+  & i ~ {iv ix}
+  & ix ~ $([+] $(1 inext))
+  & @init ~ (k (inext tail))
+  & out ~ (1 (iv tail))
+
+@sort = ((?((@sortNil @sortCons) (pl out)) pl) out)
+
+@sortNil = out
+  & out ~ (0 *)
+
+@sortCons = (* ((h t) out))
+  & @sort ~ (t sorted)
+  & @insert ~ (sorted (h out))
+
+@insert = ((?((@insertNil @insertCons) (pl (x out))) pl) (x out))
+
+@insertNil = (x out)
+  & out ~ (1 (x (0 *)))
+
+@insertCons = (* ((y ys) (x out)))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & @before ~ (xc (yc before))
+  & before ~ ?((@insertAfter @insertBefore) (xkeep (ykeep (ys out))))
+
+@insertAfter = (x (y (ys out)))
+  & @insert ~ (ys (x rest))
+  & out ~ (1 (y rest))
+
+@insertBefore = (* (x (y (ys out))))
+  & out ~ (1 (x (1 (y ys))))
+
+@before = ((u1 (v1 s1)) ((u2 (v2 s2)) out))
+  & s1 ~ {s1a s1b}
+  & s2 ~ {s2a s2b}
+  & s1a ~ $([>] $(s2a gt))
+  & gt ~ ?((@beforeScoreNo @beforeScoreYes) (s1b (s2b (u1 (v1 (u2 (v2 out))))))
+
+@beforeScoreYes = (* (s1 (s2 (u1 (v1 (u2 (v2 out)))))))
+  & s1 ~ *
+  & s2 ~ *
+  & u1 ~ *
+  & v1 ~ *
+  & u2 ~ *
+  & v2 ~ *
+  & out ~ 1
+
+@beforeScoreNo = (s1 (s2 (u1 (v1 (u2 (v2 out))))))
+  & s1 ~ $([=] $(s2 eq))
+  & eq ~ ?((@beforeScoreUnequal @beforeScoreEqual) (u1 (v1 (u2 (v2 out))))
+
+@beforeScoreUnequal = (u1 (v1 (u2 (v2 out))))
+  & u1 ~ *
+  & v1 ~ *
+  & u2 ~ *
+  & v2 ~ *
+  & out ~ 0
+
+@beforeScoreEqual = (* (u1 (v1 (u2 (v2 out)))))
+  & @beforeUV ~ (u1 (v1 (u2 (v2 out))))
+
+@beforeUV = (u1 (v1 (u2 (v2 out))))
+  & u1 ~ {u1a u1b}
+  & u2 ~ {u2a u2b}
+  & u1a ~ $([<] $(u2a less))
+  & less ~ ?((@beforeUNotLess @beforeULess) (u1b (u2b (v1 (v2 out))))
+
+@beforeULess = (* (u1 (u2 (v1 (v2 out)))))
+  & u1 ~ *
+  & u2 ~ *
+  & v1 ~ *
+  & v2 ~ *
+  & out ~ 1
+
+@beforeUNotLess = (u1 (u2 (v1 (v2 out))))
+  & u1 ~ $([=] $(u2 eq))
+  & eq ~ ?((@beforeUUnequal @beforeUEqual) (v1 (v2 out)))
+
+@beforeUUnequal = (v1 (v2 out))
+  & v1 ~ *
+  & v2 ~ *
+  & out ~ 0
+
+@beforeUEqual = (* (v1 (v2 out)))
+  & v1 ~ $([<] $(v2 less))
+  & less ~ ?((@beforeVNo @beforeVYes) out)
+
+@beforeVNo = out
+  & out ~ 0
+
+@beforeVYes = (* out)
+  & out ~ 1
+
+@process = ((?((@processNil @processCons) (pl (mnl (labs out)))) pl) (mnl (labs out)))
+
+@processNil = (mnl (labs out))
+  & mnl ~ *
+  & out ~ labs
+
+@processCons = (* ((cand tail) (mnl (labs out))))
+  & @attempt ~ (cand (mnl (labs result)))
+  & result ~ (newlabs newmnl)
+  & @process ~ (tail (newmnl (newlabs out)))
+
+@attempt = ((u (v score)) (mnl (labs out)))
+  & score ~ *
+  & labs ~ {gbase remain}
+  & gbase ~ {g1 g2}
+  & remain ~ {lc lm}
+  & @get ~ (g1 (u lu))
+  & @get ~ (g2 (v lv))
+  & lu ~ {eqLu rootLu}
+  & lv ~ {eqLv rootLv}
+  & eqLu ~ $([=] $(eqLv same))
+  & same ~ ?((@attemptDifferent @attemptSame) (mnl (lc (lm (rootLu (rootLv out))))))
+
+@attemptSame = (mnl (lc (lm (lu (lv out)))))
+  & lc ~ *
+  & lu ~ *
+  & lv ~ *
+  & out ~ (lm mnl)
+
+@attemptDifferent = (* (mnl (lc (lm (lu (lv out))))))
+  & lu ~ {confLu mergeLu}
+  & lv ~ {confLv mergeLv}
+  & @conflict ~ (mnl (lc (confLu (confLv confResult))))
+  & confResult ~ (hasConflict rebuiltMnl)
+  & hasConflict ~ ?((@attemptClear @attemptBlocked) (lm (rebuiltMnl (mergeLu (mergeLv out))))
+
+@attemptBlocked = (* (lm (rebuiltMnl (lu (lv out)))))
+  & lu ~ *
+  & lv ~ *
+  & out ~ (lm rebuiltMnl)
+
+@attemptClear = (lm (rebuiltMnl (lu (lv out))))
+  & @mergeLabs ~ (lm (lu (lv updatedLabs)))
+  & out ~ (updatedLabs rebuiltMnl)
+
+@conflict = ((?((@conflictNil @conflictCons) (pl (labs (A (B out))))) pl) (labs (A (B out)))
+
+@conflictNil = (labs (A (B out)))
+  & labs ~ *
+  & A ~ *
+  & B ~ *
+  & out ~ (0 (0 *))
+
+@conflictCons = (* (((a b) tail) (labs (A (B out)))))
+  & labs ~ {labsGet labsRec}
+  & labsGet ~ {getA getB}
+  & A ~ {Ah Arec}
+  & B ~ {Bh Brec}
+  & a ~ {alocal akeep}
+  & b ~ {blocal bkeep}
+  & @get ~ (getA (alocal la))
+  & @get ~ (getB (blocal lb))
+  & @cross ~ (la (lb (Ah (Bh crossFlag))))
+  & @conflict ~ (tail (labsRec (Arec (Brec recResult))))
+  & recResult ~ (recFlag rebuiltTail)
+  & crossFlag ~ $([+] $(recFlag total))
+  & total ~ $([>] $(0 flag))
+  & out ~ (flag (1 ((akeep bkeep) rebuiltTail)))
+
+@cross = (la (lb (A (B out))))
+  & la ~ {la1 la2}
+  & lb ~ {lb1 lb2}
+  & A ~ {A1 A2}
+  & B ~ {B1 B2}
+  & la1 ~ $([=] $(A1 eq1))
+  & eq1 ~ ?((@crossFirstNo @crossFirstYes) (lb1 (B1 (la2 (lb2 (A2 (B2 out))))))
+
+@crossFirstNo = (lb (B (la (lb2 (A (B2 out))))))
+  & lb ~ *
+  & B ~ *
+  & @crossRev ~ (la (lb2 (A (B2 out))))
+
+@crossFirstYes = (* (lb (B (la (lb2 (A (B2 out))))))
+  & lb ~ $([=] $(B eq2))
+  & eq2 ~ ?((@crossABNo @crossABYes) (la (lb2 (A (B2 out))))
+
+@crossABNo = (la (lb (A (B out))))
+  & @crossRev ~ (la (lb (A (B out))))
+
+@crossABYes = (* (la (lb (A (B out)))))
+  & la ~ *
+  & lb ~ *
+  & A ~ *
+  & B ~ *
+  & out ~ 1
+
+@crossRev = (la (lb (A (B out))))
+  & la ~ {lac lal}
+  & B ~ {bc bk}
+  & lac ~ $([=] $(bc eq1))
+  & eq1 ~ ?((@crossRevNo @crossRevYes) (lal (lb (A (bk out))))
+
+@crossRevNo = (lal (lb (A (bk out))))
+  & lal ~ *
+  & lb ~ *
+  & A ~ *
+  & bk ~ *
+  & out ~ 0
+
+@crossRevYes = (* (lal (lb (A (bk out)))))
+  & lal ~ *
+  & bk ~ *
+  & lb ~ {lbc lbk}
+  & A ~ {ac ak}
+  & lbc ~ $([=] $(ac eq2))
+  & eq2 ~ ?((@crossRevSecondNo @crossRevSecondYes) (lbk (ak out)))
+
+@crossRevSecondNo = (lb (A out))
+  & lb ~ *
+  & A ~ *
+  & out ~ 0
+
+@crossRevSecondYes = (* (lb (A out)))
+  & lb ~ *
+  & A ~ *
+  & out ~ 1
+
+@mergeLabs = (labs (A (B out)))
+  & A ~ {Acmp Akeep}
+  & B ~ {Bcmp Bkeep}
+  & Acmp ~ $([<] $(Bcmp less))
+  & less ~ ?((@mergeLowerB @mergeLowerA) (labs (Akeep (Bkeep out))))
+
+@mergeLowerA = (* (labs (A (B out))))
+  & @replaceAll ~ (labs (A (B updated)))
+  & out ~ updated
+
+@mergeLowerB = (labs (A (B out)))
+  & @replaceAll ~ (labs (B (A updated)))
+  & out ~ updated
+
+@get = ((?((@getNil @getCons) (pl (idx out))) pl) (idx out))
+
+@getNil = (idx out)
+  & idx ~ *
+  & out ~ 0
+
+@getCons = (* ((h t) (idx out)))
+  & idx ~ ?((@getZero @getSucc) (h (t out)))
+
+@getZero = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@getSucc = (k (h (t out)))
+  & h ~ *
+  & @get ~ (t (k out))
+
+@replaceAll = ((?((@replaceNil @replaceCons) (pl (old (new out)))) pl) (old (new out)))
+
+@replaceNil = (old (new out))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replaceCons = (* ((h t) (old (new out))))
+  & h ~ {hc hk}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@replaceNo @replaceYes) (t (or (nr (hk (nc out))))))
+
+@replaceNo = (t (old (new (h n out))))
+  & n ~ *
+  & @replaceAll ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@replaceYes = (* (t (old (new (h n out)))))
+  & h ~ *
+  & @replaceAll ~ (t (old (new rest)))
+  & out ~ (1 (n rest))

@@ -1,0 +1,23 @@
+// When cap < 2, every candidate joins two distinct singleton clusters
+// and is skipped. Otherwise this fallback returns no skips.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & mnl ~ *
+  & cap ~ $([<] $(2 b))
+  & b ~ ?((@prog_no @prog_yes) (cands out))
+
+@prog_no = (* out)
+  & out ~ (0 *)
+
+@prog_yes = (z (cands out))
+  & z ~ *
+  & @pairs ~ (cands out)
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl out)) pl) out)
+
+@pairs_nil = (* out)
+  & out ~ (0 *)
+
+@pairs_cons = (* (((u (v *)) tail) out))
+  & @pairs ~ (tail rest)
+  & out ~ (1 ((u v) rest))

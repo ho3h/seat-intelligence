@@ -1,0 +1,353 @@
+@prog = (input out)
+  & input ~ (n (cap (mnl cands)))
+  & n ~ {n_gen n_ones}
+  & @gen_desc ~ (n_gen ((0 *) desc))
+  & @reverse ~ (desc ((0 *) parents))
+  & @ones ~ (n_ones ((0 *) sizes))
+  & @init_buckets ~ (1001 ((0 *) buckets))
+  & @fill_buckets ~ (cands (buckets filled))
+  & @collect ~ (1000 (filled ((0 *) sorted)))
+  & @proc ~ (sorted (cap (mnl (parents (sizes ((0 *) out))))))
+
+@gen_desc = (n (acc out))
+  & n ~ ?((@gen_zero @gen_pos) (acc out))
+
+@gen_zero = (acc out)
+  & acc ~ out
+
+@gen_pos = (n_minus1 (acc out))
+  & n_minus1 ~ {n_rec n_val}
+  & @gen_desc ~ (n_rec ((1 (n_val acc)) out))
+
+@reverse = (lst (acc out))
+  & lst ~ (?((@rev_nil @rev_cons) (payload (acc out))) payload)
+
+@rev_nil = (payload (acc out))
+  & acc ~ out
+  & payload ~ *
+
+@rev_cons = (tagminus ((h t) (acc out)))
+  & tagminus ~ *
+  & @reverse ~ (t ((1 (h acc)) out))
+
+@ones = (n (acc out))
+  & n ~ ?((@ones_zero @ones_pos) (acc out))
+
+@ones_zero = (acc out)
+  & acc ~ out
+
+@ones_pos = (n_minus1 (acc out))
+  & @ones ~ (n_minus1 ((1 (1 acc)) out))
+
+@init_buckets = (m (acc out))
+  & m ~ ?((@ib_zero @ib_pos) (acc out))
+
+@ib_zero = (acc out)
+  & acc ~ out
+
+@ib_pos = (m_minus1 (acc out))
+  & @init_buckets ~ (m_minus1 ((1 ((0 *) acc)) out))
+
+@get = (lst (idx out))
+  & lst ~ (?((@get_nil @get_cons) (payload (idx out))) payload)
+
+@get_nil = (payload (idx out))
+  & 0 ~ out
+  & payload ~ *
+  & idx ~ *
+
+@get_cons = (tagminus ((h t) (idx out)))
+  & tagminus ~ *
+  & idx ~ ?((@get_zero @get_pos) (h (t out)))
+
+@get_zero = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@get_pos = (idx_minus1 (h (t out)))
+  & @get ~ (t (idx_minus1 out))
+  & h ~ *
+
+@set_at = (lst (idx (value out)))
+  & lst ~ (?((@set_nil @set_cons) (payload (idx (value out)))) payload)
+
+@set_nil = (payload (idx (value out)))
+  & (0 *) ~ out
+  & payload ~ *
+  & idx ~ *
+  & value ~ *
+
+@set_cons = (tagminus ((h t) (idx (value out))))
+  & tagminus ~ *
+  & idx ~ ?((@set_zero @set_pos) (h (t (value out))))
+
+@set_zero = (h (t (value out)))
+  & (1 (value t)) ~ out
+  & h ~ *
+
+@set_pos = (idx_minus1 (h (t (value out))))
+  & @set_at ~ (t (idx_minus1 (value new_tail)))
+  & (1 (h new_tail)) ~ out
+
+@replace_all = (old (new (lst out)))
+  & old ~ {old_comp old_rest}
+  & new ~ {new_comp new_rest}
+  & lst ~ (?((@rep_nil @rep_cons) (payload (old_comp (new_comp (old_rest (new_rest out)))))) payload)
+
+@rep_nil = (payload (old_comp (new_comp (old_rest (new_rest out)))))
+  & (0 *) ~ out
+  & payload ~ *
+  & old_comp ~ *
+  & new_comp ~ *
+  & old_rest ~ *
+  & new_rest ~ *
+
+@rep_cons = (tagminus ((h t) (old_comp (new_comp (old_rest (new_rest out))))))
+  & tagminus ~ *
+  & h ~ {h_comp h_val}
+  & h_comp ~ $([=] $(old_comp eq))
+  & eq ~ ?((@rep_ne @rep_eq) (h_val (t (new_comp (old_rest (new_rest out))))))
+
+@rep_ne = (h_val (t (new_comp (old_rest (new_rest out)))))
+  & @replace_all ~ (old_rest (new_rest (t new_tail)))
+  & (1 (h_val new_tail)) ~ out
+  & new_comp ~ *
+
+@rep_eq = (tagminus (h_val (t (new_comp (old_rest (new_rest out))))))
+  & tagminus ~ *
+  & @replace_all ~ (old_rest (new_rest (t new_tail)))
+  & (1 (new_comp new_tail)) ~ out
+  & h_val ~ *
+
+@bucket_add = (idx (cand (lst out)))
+  & lst ~ (?((@badd_nil @badd_cons) (payload (idx (cand out)))) payload)
+
+@badd_nil = (payload (idx (cand out)))
+  & (0 *) ~ out
+  & payload ~ *
+  & idx ~ *
+  & cand ~ *
+
+@badd_cons = (tagminus ((h t) (idx (cand out))))
+  & tagminus ~ *
+  & idx ~ ?((@badd_zero @badd_pos) (h (t (cand out))))
+
+@badd_zero = (h (t (cand out)))
+  & (1 ((1 (cand h)) t)) ~ out
+
+@badd_pos = (idx_minus1 (h (t (cand out))))
+  & @bucket_add ~ (idx_minus1 (cand (t new_tail)))
+  & (1 (h new_tail)) ~ out
+
+@fill_buckets = (cands (buckets out))
+  & cands ~ (?((@fill_nil @fill_cons) (payload (buckets out))) payload)
+
+@fill_nil = (payload (buckets out))
+  & buckets ~ out
+  & payload ~ *
+
+@fill_cons = (tagminus ((cand tail) (buckets out)))
+  & tagminus ~ *
+  & cand ~ (u (v s_inner))
+  & s_inner ~ {s_idx s_val}
+  & @bucket_add ~ (s_idx ((u (v s_val)) (buckets next_buckets)))
+  & @fill_buckets ~ (tail (next_buckets out))
+
+@get_key = (cand out)
+  & cand ~ (u (v s))
+  & u ~ $([*256] $(v key))
+  & key ~ out
+  & s ~ *
+
+@insert_key = (cand_key (cand (sorted out)))
+  & sorted ~ (?((@ins_nil @ins_cons) (payload (cand_key (cand out)))) payload)
+
+@ins_nil = (payload (cand_key (cand out)))
+  & (1 (cand (0 *))) ~ out
+  & payload ~ *
+  & cand_key ~ *
+
+@ins_cons = (tagminus ((head tail) (cand_key (cand out))))
+  & tagminus ~ *
+  & head ~ {head_key head_val}
+  & @get_key ~ (head_key hk)
+  & cand_key ~ {ck_comp ck_rec}
+  & ck_comp ~ $([<] $(hk lt))
+  & lt ~ ?((@ins_tail @ins_here) (head_val (tail (cand (ck_rec out)))))
+
+@ins_tail = (head (tail (cand (ck_rec out))))
+  & @insert_key ~ (ck_rec (cand (tail new_tail)))
+  & (1 (head new_tail)) ~ out
+
+@ins_here = (tagminus (head (tail (cand (ck_rec out)))))
+  & tagminus ~ *
+  & (1 (cand (1 (head tail)))) ~ out
+  & ck_rec ~ *
+
+@sort_bucket = (bucket (acc out))
+  & bucket ~ (?((@sort_nil @sort_cons) (payload (acc out))) payload)
+
+@sort_nil = (payload (acc out))
+  & acc ~ out
+  & payload ~ *
+
+@sort_cons = (tagminus ((cand tail) (acc out)))
+  & tagminus ~ *
+  & cand ~ {cand_key_arg cand_val}
+  & @get_key ~ (cand_key_arg cand_key)
+  & @insert_key ~ (cand_key (cand_val (acc new_acc)))
+  & @sort_bucket ~ (tail (new_acc out))
+
+@append = (a (b out))
+  & a ~ (?((@app_nil @app_cons) (payload (b out))) payload)
+
+@app_nil = (payload (b out))
+  & b ~ out
+  & payload ~ *
+
+@app_cons = (tagminus ((h t) (b out)))
+  & tagminus ~ *
+  & @append ~ (t (b tail_out))
+  & (1 (h tail_out)) ~ out
+
+@collect = (score (buckets (acc out)))
+  & score ~ {score_sw score_ctx}
+  & score_sw ~ ?((@collect_zero @collect_pos) (score_ctx (buckets (acc out))))
+
+@collect_zero = (score (buckets (acc out)))
+  & @get ~ (buckets (score bucket))
+  & @sort_bucket ~ (bucket ((0 *) sorted))
+  & @append ~ (acc (sorted out))
+
+@collect_pos = (score_minus1 (score (buckets (acc out))))
+  & buckets ~ {buckets_now buckets_rec}
+  & @get ~ (buckets_now (score bucket))
+  & @sort_bucket ~ (bucket ((0 *) sorted))
+  & @append ~ (acc (sorted new_acc))
+  & @collect ~ (score_minus1 (buckets_rec (new_acc out)))
+
+@proc = (cands (cap (mnl (roots (sizes (acc out))))))
+  & cands ~ (?((@proc_nil @proc_cons) (payload (cap (mnl (roots (sizes (acc out))))))) payload)
+
+@proc_nil = (payload (cap (mnl (roots (sizes (acc out))))))
+  & @reverse ~ (acc ((0 *) out))
+  & payload ~ *
+  & cap ~ *
+  & mnl ~ *
+  & roots ~ *
+  & sizes ~ *
+
+@proc_cons = (tagminus ((cand tail) (cap (mnl (roots (sizes (acc out)))))))
+  & tagminus ~ *
+  & cand ~ (u (v s))
+  & @handle ~ (u (v (s (tail (cap (mnl (roots (sizes (acc out)))))))))
+
+@handle = (u (v (s (tail (cap (mnl (roots (sizes (acc out)))))))))
+  & s ~ *
+  & u ~ {u_get u_ctx}
+  & v ~ {v_get v_ctx}
+  & roots ~ {roots_u roots_tmp}
+  & roots_tmp ~ {roots_v roots_ctx}
+  & @get ~ (roots_u (u_get ru1))
+  & @get ~ (roots_v (v_get rv1))
+  & ru1 ~ $([=] $(rv1 eq))
+  & eq ~ ?((@handle_ne @handle_same) (u_ctx (v_ctx (tail (cap (mnl (roots_ctx (sizes (acc out)))))))))
+
+@handle_same = (* (u (v (tail (cap (mnl (roots (sizes (acc out)))))))))
+  & @proc ~ (tail (cap (mnl (roots (sizes (acc out))))))
+  & u ~ *
+  & v ~ *
+
+@handle_ne = (u (v (tail (cap (mnl (roots (sizes (acc out))))))))
+  & u ~ {u_get u_ctx}
+  & v ~ {v_get v_ctx}
+  & mnl ~ {mnl_check mnl_ctx}
+  & roots ~ {roots_u roots_tmp}
+  & roots_tmp ~ {roots_v roots_tmp2}
+  & roots_tmp2 ~ {roots_mnl roots_ctx}
+  & @get ~ (roots_u (u_get ru))
+  & @get ~ (roots_v (v_get rv))
+  & @has_mnl ~ (mnl_check (ru (rv (roots_mnl conflict))))
+  & conflict ~ ?((@ne_no_mnl @ne_skip) (u_ctx (v_ctx (tail (cap (mnl_ctx (roots_ctx (sizes (acc out)))))))))
+
+@ne_skip = (* (u (v (tail (cap (mnl (roots (sizes (acc out)))))))))
+  & @proc ~ (tail (cap (mnl (roots (sizes ((1 ((u v) acc)) out))))))
+
+@ne_no_mnl = (u (v (tail (cap (mnl (roots (sizes (acc out))))))))
+  & u ~ {u_get u_ctx}
+  & v ~ {v_get v_ctx}
+  & cap ~ {cap_cmp cap_ctx}
+  & roots ~ {roots_ru roots_tmp}
+  & roots_tmp ~ {roots_rv roots_ctx}
+  & sizes ~ {sizes_ru sizes_tmp}
+  & sizes_tmp ~ {sizes_rv sizes_ctx}
+  & @get ~ (roots_ru (u_get ru2))
+  & @get ~ (roots_rv (v_get rv2))
+  & @get ~ (sizes_ru (ru2 size_ru))
+  & @get ~ (sizes_rv (rv2 size_rv))
+  & size_ru ~ $([+] $(size_rv sum))
+  & sum ~ $([>] $(cap_cmp overflow))
+  & overflow ~ ?((@ne_merge @ne_skip) (u_ctx (v_ctx (tail (cap_ctx (mnl (roots_ctx (sizes_ctx (acc out)))))))))
+
+@ne_merge = (u (v (tail (cap (mnl (roots (sizes (acc out))))))))
+  & roots ~ {roots_ru roots_tmp}
+  & roots_tmp ~ {roots_rv roots_ctx}
+  & sizes ~ {sizes_ru sizes_tmp}
+  & sizes_tmp ~ {sizes_rv sizes_for_set}
+  & @get ~ (roots_ru (u ru))
+  & @get ~ (roots_rv (v rv))
+  & ru ~ {ru_size ru_tmp}
+  & ru_tmp ~ {ru_replace ru_setidx}
+  & rv ~ {rv_size rv_tmp}
+  & rv_tmp ~ {rv_replace rv_setidx}
+  & @get ~ (sizes_ru (ru_size size_ru))
+  & @get ~ (sizes_rv (rv_size size_rv))
+  & size_ru ~ $([+] $(size_rv new_size_ru))
+  & @replace_all ~ (rv_replace (ru_replace (roots_ctx new_roots)))
+  & @set_at ~ (sizes_for_set (ru_setidx (new_size_ru sizes1)))
+  & @set_at ~ (sizes1 (rv_setidx (0 sizes2)))
+  & @proc ~ (tail (cap (mnl (new_roots (sizes2 (acc out))))))
+
+@has_mnl = (mnl (ru (rv (roots out))))
+  & mnl ~ (?((@mnl_nil @mnl_cons) (payload (ru (rv (roots out))))) payload)
+
+@mnl_nil = (payload (ru (rv (roots out))))
+  & 0 ~ out
+  & payload ~ *
+  & ru ~ *
+  & rv ~ *
+  & roots ~ *
+
+@mnl_cons = (tagminus ((pair tail) (ru (rv (roots out)))))
+  & tagminus ~ *
+  & pair ~ (a b)
+  & @check_pair ~ (a (b (tail (ru (rv (roots out))))))
+
+@check_pair = (a (b (tail (ru (rv (roots out))))))
+  & roots ~ {roots_a roots_tmp}
+  & roots_tmp ~ {roots_b roots_rec}
+  & ru ~ {ru_t1 ru_tmp}
+  & ru_tmp ~ {ru_t2 ru_rec}
+  & rv ~ {rv_t1 rv_tmp}
+  & rv_tmp ~ {rv_t2 rv_rec}
+  & @get ~ (roots_a (a ra))
+  & @get ~ (roots_b (b rb))
+  & ra ~ $([*256] $(rb key0))
+  & key0 ~ {key1 key2}
+  & ru_t1 ~ $([*256] $(rv_t1 target1))
+  & rv_t2 ~ $([*256] $(ru_t2 target2))
+  & key1 ~ $([=] $(target1 eq1))
+  & key2 ~ $([=] $(target2 eq2))
+  & eq1 ~ $([|] $(eq2 cross))
+  & cross ~ ?((@cross_next @cross_found) (tail (ru_rec (rv_rec (roots_rec out)))))
+
+@cross_next = (tail (ru (rv (roots out))))
+  & @has_mnl ~ (tail (ru (rv (roots out))))
+
+@cross_found = (tagminus (tail (ru (rv (roots out)))))
+  & 1 ~ out
+  & tagminus ~ *
+  & tail ~ *
+  & ru ~ *
+  & rv ~ *
+  & roots ~ *

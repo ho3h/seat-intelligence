@@ -1,0 +1,125 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & edges ~ {edges_deg edges_conn}
+  & @build ~ (n (n (edges_deg (0 *) info_out)))
+  & @scan_info ~ (info_out ((0 *) ((0 *) result_pair)))
+  & @decide ~ (result_pair (edges_conn output))
+
+@build = (k (n (edges acc out)))
+  & k ~ {k1 k2}
+  & k2 ~ ?((@build_done @build_continue) (k1 (n (edges acc out))))
+
+@build_done = (* (* (* (o o))))
+
+@build_continue = (new_k (k1 (n (edges acc out))))
+  & k1 ~ $([-1] current)
+  & current ~ {cur_deg cur_info}
+  & edges ~ {edges_deg edges_rest}
+  & @degree_count ~ (cur_deg (edges_deg deg))
+  & @build ~ (new_k (n (edges_rest ((cur_info deg) acc) out)))
+
+@degree_count = (v (edges out))
+  & @deg_loop ~ (edges (v (0 out)))
+
+@deg_loop = ((?((@deg_nil @deg_cons) (pl (v (acc out)))) pl) (v (acc out)))
+
+@deg_nil = (* (* (o o)))
+
+@deg_cons = (* ((h t) (v (acc out))))
+  & v ~ {vA vB}
+  & vA ~ {v1 v2}
+  & v1 ~ $([=] $(h eqh))
+  & v2 ~ $([=] $(t eqt))
+  & eqh ~ $([+] $(eqt add))
+  & acc ~ $([+] $(add new_acc))
+  & @deg_loop ~ (t (vB (new_acc out)))
+
+@scan_info = ((?((@scan_nil @scan_cons) (pl (active_acc (odd_acc out)))) pl) (active_acc (odd_acc out)))
+
+@scan_nil = (* (active_acc (odd_acc out)))
+  & out ~ (active_acc odd_acc)
+
+@scan_cons = (* (((i deg) tail) (active_acc (odd_acc out))))
+  & deg ~ {deg_cmp deg_keep}
+  & deg_cmp ~ $([>] $(0 is_pos))
+  & is_pos ~ ?((@scan_skip @scan_active) (i (deg_keep (tail (active_acc (odd_acc out))))))
+
+@scan_skip = (* (* (tail (active_acc (odd_acc out)))))
+  & @scan_info ~ (tail (active_acc (odd_acc out)))
+
+@scan_active = (* (i (deg_keep (tail (active_acc (odd_acc out))))))
+  & deg_keep ~ $([%] $(2 rem))
+  & rem ~ ?((@scan_active_even @scan_active_odd) (i (tail (active_acc (odd_acc out)))))
+
+@scan_active_even = (* (i (tail (active_acc (odd_acc out)))))
+  & @scan_info ~ (tail ((i active_acc) (odd_acc out)))
+
+@scan_active_odd = (* (i (tail (active_acc (odd_acc out)))))
+  & i ~ {i_active i_odd}
+  & @scan_info ~ (tail ((i_active active_acc) ((i_odd odd_acc) out)))
+
+@decide = (pair (edges_conn out))
+  & pair ~ (active odd)
+  & @process_active ~ (active (odd (edges_conn out)))
+
+@process_active = (active (odd (edges_conn out)))
+  & active ~ {active_check active_conn}
+  & @check_active ~ (active_check (odd (edges_conn (active_conn out))))
+
+@check_active = ((?((@active_nil @active_cons) (pl (odd (edges_conn (active_conn out))))) pl) (odd (edges_conn (active_conn out))))
+
+@active_nil = (* (* (* (* out))))
+  & out ~ 16777215
+
+@active_cons = (* ((h t) (odd (edges_conn (active_conn out)))))
+  & @min_from ~ (t (h (odd (edges_conn (active_conn out)))))
+
+@min_from = ((?((@min_nil @min_cons) (pl (min (odd (edges_conn (active_conn out)))))) pl) (min (odd (edges_conn (active_conn out)))))
+
+@min_nil = (* (min (odd (edges_conn (active_conn out)))))
+  & @odd_check ~ (min (odd (edges_conn (active_conn out))))
+
+@min_cons = (* ((v t) (min (odd (edges_conn (active_conn out))))))
+  & @min_from ~ (t (v (odd (edges_conn (active_conn out)))))
+
+@odd_check = (min (odd (edges_conn (active_conn out))))
+  & @odd_stats ~ (odd (0 (0 (min (edges_conn (active_conn out))))))
+
+@odd_stats = ((?((@odd_nil @odd_cons) (pl (cnt (last (min (edges_conn (active_conn out))))))) pl) (cnt (last (min (edges_conn (active_conn out))))))
+
+@odd_nil = (* (cnt (last (min (edges_conn (active_conn out))))))
+  & @finalize ~ (cnt (last (min (edges_conn (active_conn out)))))
+
+@odd_cons = (* ((v t) (cnt (last (min (edges_conn (active_conn out)))))))
+  & cnt ~ $([+1] cnt2)
+  & @odd_stats ~ (t (cnt2 (v (min (edges_conn (active_conn out))))))
+
+@finalize = (cnt (last (min (edges_conn (active_conn out)))))
+  & cnt ~ {cnt0 cnt2}
+  & cnt0 ~ $([=] $(0 is0))
+  & is0 ~ ?((@finalize_not0 @finalize_0) (cnt2 (last (min (edges_conn (active_conn out))))))
+
+@finalize_0 = (* (cnt2 (last (min (edges_conn (active_conn out))))))
+  & cnt2 ~ *
+  & last ~ *
+  & @connected ~ (min (edges_conn (active_conn out)))
+
+@finalize_not0 = (cnt2 (last (min (edges_conn (active_conn out)))))
+  & cnt2 ~ $([=] $(2 is2))
+  & is2 ~ ?((@finalize_not2 @finalize_2) (last (min (edges_conn (active_conn out)))))
+
+@finalize_2 = (* (last (min (edges_conn (active_conn out)))))
+  & min ~ *
+  & @connected ~ (last (edges_conn (active_conn out)))
+
+@finalize_not2 = (last (min (edges_conn (active_conn out))))
+  & last ~ *
+  & min ~ *
+  & edges_conn ~ *
+  & active_conn ~ *
+  & out ~ 16777215
+
+@connected = (start (edges (active out)))
+  & edges ~ *
+  & active ~ *
+  & out ~ start

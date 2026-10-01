@@ -1,0 +1,147 @@
+@prog = (input output)
+  & input ~ (clustering (edges out))
+  & @solve ~ (clustering (edges output))
+
+@solve = (clustering (edges out))
+  & @collect_rewritten ~ (clustering (edges (0 (0 out))))
+
+@collect_rewritten = (clustering (edges deg_acc cluster_acc))
+  & edges ~ ?((@done @process_edge) ((clustering (deg_acc cluster_acc))))
+
+@done = (ctx)
+  & ctx ~ (clustering (deg_acc cluster_acc))
+  & clustering ~ *
+  & @output_degrees ~ ((deg_acc cluster_acc))
+
+@process_edge = (ctx_with_edge)
+  & ctx_with_edge ~ (edge (clustering (deg_acc cluster_acc)))
+  & edge ~ (u v)
+  & {c1 c2} ~ clustering
+  & @at ~ (c1 (u (cu _cu)))
+  & _cu ~ *
+  & cu ~ (cu2 (v_lookup (c2 (deg_acc cluster_acc))))
+  & v_lookup ~ (v (c2_copy (deg_acc cluster_acc)))
+  & c2_copy ~ c2_new
+  & {c2_new c3} ~ c2
+  & @at ~ (c3 (v (cv _cv)))
+  & _cv ~ *
+  & cv ~ (cv2 (compare_ctx))
+  & compare_ctx ~ (cu2 (deg_acc cluster_acc))
+  & cu2 ~ ?((@same_cluster @diff_cluster) ((cv2 (deg_acc cluster_acc))))
+
+@same_cluster = (ctx)
+  & ctx ~ (cv (deg_acc cluster_acc))
+  & cv ~ *
+  & @collect_rewritten ~ ((deg_acc cluster_acc))
+
+@diff_cluster = (cv_m_ctx)
+  & cv_m_ctx ~ (cv_m (cv (deg_acc cluster_acc)))
+  & cv_m ~ *
+  & cu2_val ~ cu2
+  & cu2_val ~ ?((@cu_smaller @cu_larger) ((cv (deg_acc cluster_acc))))
+
+@cu_smaller = (ctx)
+  & ctx ~ (cv (deg_acc cluster_acc))
+  & @add_edge ~ ((cu2_v cv) ((deg_acc cluster_acc)))
+  & cu2_v ~ cu2
+
+@cu_larger = (cv_m_ctx2)
+  & cv_m_ctx2 ~ (cv_m2 (cv (deg_acc cluster_acc)))
+  & cv_m2 ~ *
+  & @add_edge ~ ((cv cu2_v) ((deg_acc cluster_acc)))
+  & cu2_v ~ cu2
+
+@add_edge = (edge (deg_and_clusters))
+  & edge ~ (x y)
+  & deg_and_clusters ~ (deg_acc cluster_acc)
+  & {deg1 deg2} ~ deg_acc
+  & {c1 c2} ~ cluster_acc
+  & deg_with_x ~ (1 (x deg2))
+  & cluster_with_x ~ (1 (x c2))
+  & deg_with_x ~ (1_d (x2 (deg_with_y deg_acc2)))
+  & x2 ~ x
+  & 1_d ~ deg3
+  & deg_with_y ~ (1 (y deg3))
+  & cluster_with_x ~ (1_c (y2 (cluster_with_y cluster_acc2)))
+  & y2 ~ y
+  & 1_c ~ cluster3
+  & cluster_with_y ~ (1 (y cluster3))
+  & deg_acc2 ~ deg_with_y
+  & cluster_acc2 ~ cluster_with_y
+  & @collect_rewritten ~ (deg_acc2 cluster_acc2)
+
+@at = (list (index result))
+  & index ~ ?((@at_zero @at_succ) ((list result)))
+
+@at_zero = (ctx)
+  & ctx ~ (list result)
+  & list ~ (head tail)
+  & head ~ result
+  & tail ~ *
+
+@at_succ = (ctx_with_pred)
+  & ctx_with_pred ~ (pred (list result))
+  & pred ~ *
+  & list ~ (head tail)
+  & head ~ *
+  & @at ~ (tail (pred result_inner))
+  & result ~ result_inner
+
+@output_degrees = (degree_cluster_ctx)
+  & degree_cluster_ctx ~ (degrees clusters)
+  & @count_degrees ~ (clusters (degrees (0 final)))
+
+@count_degrees = (clusters (degrees (count result)))
+  & clusters ~ ?((@cd_nil @cd_cons) ((degrees (count result))))
+
+@cd_nil = (ctx)
+  & ctx ~ (degrees (count result))
+  & degrees ~ *
+  & result ~ count
+
+@cd_cons = (ctx_with_cluster)
+  & ctx_with_cluster ~ (cluster (degrees (count result)))
+  & @count_edges ~ (degrees (cluster (0 degree_val)))
+  & degree_val ~ (count_next (count_acc))
+  & count_next ~ count
+  & {count_acc result_next} ~ result
+  & result_next ~ (1 (count_acc final_result))
+  & final_result ~ result2
+  & @count_degrees ~ (result2)
+
+@count_edges = (degrees (cluster (acc result)))
+  & degrees ~ ?((@ce_nil @ce_cons) ((cluster (acc result))))
+
+@ce_nil = (ctx)
+  & ctx ~ (cluster (acc result))
+  & cluster ~ *
+  & result ~ acc
+
+@ce_cons = (ctx_with_edge)
+  & ctx_with_edge ~ (edge (cluster (acc result)))
+  & edge ~ (u v)
+  & u ~ ?((@no_u @yes_u) ((v (cluster (acc result)))))
+
+@no_u = (ctx)
+  & ctx ~ (v (cluster (acc result)))
+  & v ~ ?((@no_v @yes_v) ((cluster (acc result))))
+
+@no_v = (ctx2)
+  & ctx2 ~ (cluster (acc result))
+  & cluster ~ *
+  & @count_edges ~ (acc result)
+
+@yes_v = (ctx2)
+  & ctx2 ~ (cluster (acc_m result))
+  & acc_m ~ *
+  & acc_inc ~ $([+] $(1 acc_new))
+  & acc_new ~ acc
+  & @count_edges ~ (cluster (acc_inc result))
+
+@yes_u = (ctx)
+  & ctx ~ (v (cluster (acc result)))
+  & v ~ *
+  & acc_inc ~ $([+] $(1 acc_new))
+  & acc_new ~ acc
+  & cluster ~ *
+  & @count_edges ~ (acc_inc result)

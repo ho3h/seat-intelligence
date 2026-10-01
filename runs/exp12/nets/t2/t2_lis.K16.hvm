@@ -1,0 +1,81 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = (lv1 (tails out))
+  & @lis_cons_lw ~ (lv1 (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails (0 out))
+
+@lis_cons = (* ((h t) (tails out)))
+  & @ins ~ (h (tails newtails))
+  & @lis_cons_lw ~ (t (newtails out))
+
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(x1 z))
+  & z ~ ?((@ins_replace @ins_more) (h2 (t (x2 out))))
+
+@ins_replace = (* (t (x out)))
+  & out ~ (1 (x t))
+
+@ins_more = (* (h (t (x out))))
+  & @ins ~ (x (t res))
+  & out ~ (1 (h res))
+
+@len = (lv2 (acc out))
+  & @len_cons_lw ~ (lv2 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) ($([+1] acc2) out)))
+  & @len_cons_lw ~ (t (acc2 out))
+
+@lis_cons_lw = (ls98 (q18 q19))
+  & ls98 ~ (g81 (e65 (g82 (e66 (g83 (e67 (g84 (e68 (g85 (e69 (g86 (e70 (g87 (e71 (g88 (e72 (g89 (e73 (g90 (e74 (g91 (e75 (g92 (e76 (g93 (e77 (g94 (e78 (g95 (e79 (g96 (e80 tk97))))))))))))))))))))))))))))))))
+  & g81 ~ ?((@lis_nil @lis_cons_la) ((e65 (q21 q22)) (q18 q19)))
+  & g82 ~ ?((@lis_nil @lis_cons_la) ((e66 (q24 q25)) (q21 q22)))
+  & g83 ~ ?((@lis_nil @lis_cons_la) ((e67 (q27 q28)) (q24 q25)))
+  & g84 ~ ?((@lis_nil @lis_cons_la) ((e68 (q30 q31)) (q27 q28)))
+  & g85 ~ ?((@lis_nil @lis_cons_la) ((e69 (q33 q34)) (q30 q31)))
+  & g86 ~ ?((@lis_nil @lis_cons_la) ((e70 (q36 q37)) (q33 q34)))
+  & g87 ~ ?((@lis_nil @lis_cons_la) ((e71 (q39 q40)) (q36 q37)))
+  & g88 ~ ?((@lis_nil @lis_cons_la) ((e72 (q42 q43)) (q39 q40)))
+  & g89 ~ ?((@lis_nil @lis_cons_la) ((e73 (q45 q46)) (q42 q43)))
+  & g90 ~ ?((@lis_nil @lis_cons_la) ((e74 (q48 q49)) (q45 q46)))
+  & g91 ~ ?((@lis_nil @lis_cons_la) ((e75 (q51 q52)) (q48 q49)))
+  & g92 ~ ?((@lis_nil @lis_cons_la) ((e76 (q54 q55)) (q51 q52)))
+  & g93 ~ ?((@lis_nil @lis_cons_la) ((e77 (q57 q58)) (q54 q55)))
+  & g94 ~ ?((@lis_nil @lis_cons_la) ((e78 (q60 q61)) (q57 q58)))
+  & g95 ~ ?((@lis_nil @lis_cons_la) ((e79 (q63 q64)) (q60 q61)))
+  & g96 ~ ?((@lis_nil @lis_cons) ((e80 tk97) (q63 q64)))
+
+@len_cons_lw = (ls180 (q100 q101))
+  & ls180 ~ (g163 (e147 (g164 (e148 (g165 (e149 (g166 (e150 (g167 (e151 (g168 (e152 (g169 (e153 (g170 (e154 (g171 (e155 (g172 (e156 (g173 (e157 (g174 (e158 (g175 (e159 (g176 (e160 (g177 (e161 (g178 (e162 tk179))))))))))))))))))))))))))))))))
+  & g163 ~ ?((@len_nil @len_cons_la) ((e147 (q103 q104)) (q100 q101)))
+  & g164 ~ ?((@len_nil @len_cons_la) ((e148 (q106 q107)) (q103 q104)))
+  & g165 ~ ?((@len_nil @len_cons_la) ((e149 (q109 q110)) (q106 q107)))
+  & g166 ~ ?((@len_nil @len_cons_la) ((e150 (q112 q113)) (q109 q110)))
+  & g167 ~ ?((@len_nil @len_cons_la) ((e151 (q115 q116)) (q112 q113)))
+  & g168 ~ ?((@len_nil @len_cons_la) ((e152 (q118 q119)) (q115 q116)))
+  & g169 ~ ?((@len_nil @len_cons_la) ((e153 (q121 q122)) (q118 q119)))
+  & g170 ~ ?((@len_nil @len_cons_la) ((e154 (q124 q125)) (q121 q122)))
+  & g171 ~ ?((@len_nil @len_cons_la) ((e155 (q127 q128)) (q124 q125)))
+  & g172 ~ ?((@len_nil @len_cons_la) ((e156 (q130 q131)) (q127 q128)))
+  & g173 ~ ?((@len_nil @len_cons_la) ((e157 (q133 q134)) (q130 q131)))
+  & g174 ~ ?((@len_nil @len_cons_la) ((e158 (q136 q137)) (q133 q134)))
+  & g175 ~ ?((@len_nil @len_cons_la) ((e159 (q139 q140)) (q136 q137)))
+  & g176 ~ ?((@len_nil @len_cons_la) ((e160 (q142 q143)) (q139 q140)))
+  & g177 ~ ?((@len_nil @len_cons_la) ((e161 (q145 q146)) (q142 q143)))
+  & g178 ~ ?((@len_nil @len_cons) ((e162 tk179) (q145 q146)))
+
+@lis_cons_la = (* ((h (newtails out)) (tails out)))
+  & @ins ~ (h (tails newtails))
+
+@len_cons_la = (* ((* (acc2 out)) ($([+1] acc2) out)))

@@ -1,0 +1,107 @@
+@prog = (inp out)
+  & inp ~ (n (s (t edges)))
+  & @check_eq ~ (n (s (t (edges out))))
+
+@check_eq = (n (s (t (edges out))))
+  & s ~ {s_cmp s_keep}
+  & t ~ {t_cmp t_keep}
+  & s_cmp ~ $([=] $(t_cmp z))
+  & z ~ ?((@check_bounds @zero_out) (n (s_keep (t_keep (edges out))))
+
+@check_bounds = (n (s (t (edges out))))
+  & n ~ {n_cmp n_keep}
+  & s ~ {s_cmp s_keep}
+  & s_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@zero_out @check_t) (n_keep (s_keep (t (edges out))))
+
+@check_t = (* (n (s (t (edges out)))))
+  & n ~ {n_cmp n_keep}
+  & t ~ {t_cmp t_keep}
+  & t_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@zero_out @begin) (n_keep (s (t_keep (edges out))))
+
+@begin = (* (n (s (t (edges out)))))
+  & n ~ {n_shift n_keep}
+  & 1 ~ $([<<] $(n_shift limit))
+  & @enum ~ (0 (limit (16777215 (edges (n_keep (s (t out))))))
+
+@zero_out = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@enum = (mask (limit (best (edges (n (s (t out))))))
+  & mask ~ {mask_cmp mask_keep}
+  & limit ~ {limit_cmp limit_keep}
+  & mask_cmp ~ $([<] $(limit_cmp z))
+  & z ~ ?((@enum_done @enum_step) (mask_keep (limit_keep (best (edges (n (s (t out))))))
+
+@enum_done = (mask (limit (best (edges (n (s (t out))))))
+  & mask ~ *
+  & limit ~ *
+  & edges ~ *
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & out ~ best
+
+@enum_step = (* (mask (limit (best (edges (n (s (t out)))))))
+  & mask ~ {mask_scan mask_consider}
+  & edges ~ {edges_scan edges_keep}
+  & @scan ~ (edges_scan (mask_scan (0 sum)))
+  & @consider ~ (mask_consider (sum (best (limit (edges_keep (n (s (t out))))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (mask (acc out)))) pl) (mask (acc out)))
+
+@scan_nil = (* (mask (acc out)))
+  & mask ~ *
+  & acc ~ out
+
+@scan_cons = (* (((u (v w)) tail) (mask (acc out))))
+  & mask ~ {mu mtmp}
+  & mtmp ~ {mv mask_keep}
+  & mu ~ $([>>] $(u ru))
+  & ru ~ $([&] $(1 bu))
+  & mv ~ $([>>] $(v rv))
+  & rv ~ $([&] $(1 bv))
+  & 1 ~ $([-] $(bv invbv))
+  & bu ~ $([*] $(invtb contrib))
+  & w ~ $([*] $(contrib add))
+  & acc ~ $([+] $(add acc2))
+  & @scan ~ (tail (mask_keep (acc2 out)))
+
+@consider = (mask (sum (best (limit (edges (n (s (t out)))))))
+  & mask ~ {m_s mtmp}
+  & mtmp ~ {m_t mask_keep}
+  & s ~ {s_cmp s_keep}
+  & t ~ {t_cmp t_keep}
+  & m_s ~ $([>>] $(s_cmp rs))
+  & rs ~ $([&] $(1 sb))
+  & m_t ~ $([>>] $(t_cmp rt))
+  & rt ~ $([&] $(1 tb))
+  & 1 ~ $([-] $(tb invtb))
+  & sb ~ $([*] $(invtb valid))
+  & valid ~ ?((@skip @valid) (mask_keep (sum (best (limit (edges (n (s_keep (t_keep out))))))))
+
+@valid = (* (mask (sum (best (limit (edges (n (s (t out))))))))
+  & sum ~ {sum_test sum_keep}
+  & best ~ {best_test best_keep}
+  & sum_test ~ $([<] $(best_test z))
+  & z ~ ?((@no_update @update) (mask (sum_keep (best_keep (limit (edges (n (s (t out))))))))
+
+@skip = (* (mask (sum (best (limit (edges (n (s (t out))))))))
+  & sum ~ *
+  & mask ~ $([+1] nextmask)
+  & @enum ~ (nextmask (limit (best (edges (n (s (t out))))))
+
+@no_update = (mask (sum (best (limit (edges (n (s (t out)))))))
+  & sum ~ *
+  & mask ~ $([+1] nextmask)
+  & @enum ~ (nextmask (limit (best (edges (n (s (t out))))))
+
+@update = (* (mask (sum (best (limit (edges (n (s (t out))))))))
+  & best ~ *
+  & mask ~ $([+1] nextmask)
+  & @enum ~ (nextmask (limit (sum (edges (n (s (t out))))))

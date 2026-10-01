@@ -1,0 +1,33 @@
+@prog = (input out)
+  & input ~ (tau probs)
+  & @scan ~ (probs (tau (0 (0 (0 out)))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (tau (idx (best (bestidx out)))))) pl) (tau (idx (best (bestidx out)))))
+
+@scan_nil = (* (tau (idx (best (bestidx out)))))
+  & idx ~ *
+  & best ~ $([<] $(tau z))
+  & z ~ ?((@nil_yes @nil_no) (bestidx out))
+
+@nil_yes = (x x)
+
+@nil_no = (* (bestidx 6))
+  & bestidx ~ *
+
+@scan_cons = (* ((h t) (tau (idx (best (bestidx out))))))
+  & h ~ {hc hx}
+  & best ~ {bc bd}
+  & idx ~ {ic ix}
+  & ic ~ $([+1] nextidx)
+  & hc ~ $([>] $(bc z))
+  & z ~ ?((@scan_no @scan_yes) (hx (t (tau (nextidx (bd (bestidx (ix out))))))))
+
+@scan_no = (hx (t (tau (nextidx (bd (bestidx (ix out)))))))
+  & hx ~ *
+  & ix ~ *
+  & @scan ~ (t (tau (nextidx (bd (bestidx out)))))
+
+@scan_yes = (hx (t (tau (nextidx (bd (bestidx (ix out)))))))
+  & bd ~ *
+  & bestidx ~ *
+  & @scan ~ (t (tau (nextidx (hx (ix out)))))

@@ -1,0 +1,35 @@
+// Sort recursively, then insert the head into the sorted tail.
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = ((?((@sort_nil @sort_cons) (payload out)) payload) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @sort ~ (t sorted)
+  & @insert ~ (sorted (h out))
+
+// Insert x into a descending list.
+@insert = ((?((@ins_nil @ins_cons) (x (payload out))) payload) (x out))
+
+@ins_nil = (x (payload out))
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((y ys) out)))
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & y_cmp ~ $([>] $(x_cmp z))
+  & z ~ ?((@ins_before @ins_after) (x_keep (y_keep (ys out))))
+
+// If y <= x, put x before y.
+@ins_before = (x (y (ys out)))
+  & out ~ (1 (x (1 (y ys))))
+
+// If y > x, keep y first and insert x into the tail.
+// The switch supplies the predecessor zero as the leading argument.
+@ins_after = (* (x (y (ys out))))
+  & @insert ~ (ys (x rest))
+  & out ~ (1 (y rest))

@@ -1,0 +1,47 @@
+@prog = ((?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil (?((@mk_nil @mk_more) (inext_q179 rest_q179)) ({ih_q179 $([+1] inext_q179)} (1 (ih_q179 rest_q179))))) (inext_q178 rest_q178)) ({ih_q178 $([+1] inext_q178)} (1 (ih_q178 rest_q178))))) (inext_q177 rest_q177)) ({ih_q177 $([+1] inext_q177)} (1 (ih_q177 rest_q177))))) (inext_q176 rest_q176)) ({ih_q176 $([+1] inext_q176)} (1 (ih_q176 rest_q176))))) (inext_q175 rest_q175)) ({ih_q175 $([+1] inext_q175)} (1 (ih_q175 rest_q175))))) (inext_q174 rest_q174)) ({ih_q174 $([+1] inext_q174)} (1 (ih_q174 rest_q174))))) (inext_q173 rest_q173)) ({ih_q173 $([+1] inext_q173)} (1 (ih_q173 rest_q173))))) (inext_q172 rest_q172)) ({ih_q172 $([+1] inext_q172)} (1 (ih_q172 rest_q172))))) (inext_q171 rest_q171)) ({ih_q171 $([+1] inext_q171)} (1 (ih_q171 rest_q171))))) (inext_q170 rest_q170)) ({ih_q170 $([+1] inext_q170)} (1 (ih_q170 rest_q170))))) (inext_q169 rest_q169)) ({ih_q169 $([+1] inext_q169)} (1 (ih_q169 rest_q169))))) (inext_q168 rest_q168)) ({ih_q168 $([+1] inext_q168)} (1 (ih_q168 rest_q168))))) (inext_q167 rest_q167)) ({ih_q167 $([+1] inext_q167)} (1 (ih_q167 rest_q167))))) (inext_q166 rest_q166)) ({ih_q166 $([+1] inext_q166)} (1 (ih_q166 rest_q166))))) (inext_q165 rest_q165)) ({ih_q165 $([+1] inext_q165)} (1 (ih_q165 rest_q165))))) (inext_q164 rest_q164)) ({ih_q164 $([+1] inext_q164)} (1 (ih_q164 rest_q164))))) (inext_q163 rest_q163)) ({ih_q163 $([+1] inext_q163)} (1 (ih_q163 rest_q163))))) (inext_q162 rest_q162)) ({ih_q162 $([+1] inext_q162)} (1 (ih_q162 rest_q162))))) (inext_q161 rest_q161)) ({ih_q161 $([+1] inext_q161)} (1 (ih_q161 rest_q161))))) (inext_q160 rest_q160)) ({ih_q160 $([+1] inext_q160)} (1 (ih_q160 rest_q160))))) (inext_q159 rest_q159)) ({ih_q159 $([+1] inext_q159)} (1 (ih_q159 rest_q159))))) (inext_q158 rest_q158)) ({ih_q158 $([+1] inext_q158)} (1 (ih_q158 rest_q158))))) (inext_q157 rest_q157)) ({ih_q157 $([+1] inext_q157)} (1 (ih_q157 rest_q157))))) (inext_q156 rest_q156)) ({ih_q156 $([+1] inext_q156)} (1 (ih_q156 rest_q156))))) (inext_q155 rest_q155)) ({ih_q155 $([+1] inext_q155)} (1 (ih_q155 rest_q155))))) (inext_q154 rest_q154)) ({ih_q154 $([+1] inext_q154)} (1 (ih_q154 rest_q154))))) (0 labs)) (?((@go_nil @go_cons) (pl_q144 (labs (0 out)))) pl_q144)) out)
+
+@mk_nil = (* *)
+
+@mk_more = (?((@mk_nil (?((@mk_nil @mk_more) (inext_q184 rest_q184)) ({ih_q184 $([+1] inext_q184)} (1 (ih_q184 rest_q184))))) (inext rest)) ({ih $([+1] inext)} (1 (ih rest))))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_here @get_next) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_next = (pred (* ((?((@get_nil @get_cons) (pl_q146 (pred out))) pl_q146) out)))
+
+@rep_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rep_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hk}
+  & old ~ {oc ok}
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@rep_diff @rep_same) (hk (t (ok (new out)))))
+
+@rep_diff = (h ((?((@rep_nil @rep_cons) (pl_q147 (old (new rest)))) pl_q147) (old (new (1 (h rest))))))
+
+@rep_same = (* (* ((?((@rep_nil @rep_cons) (pl_q148 (old (new_rec rest)))) pl_q148) (old ({new_head new_rec} (1 (new_head rest)))))))
+
+@go = ((?((@go_nil @go_cons) (pl (labs (acc out)))) pl) (labs (acc out)))
+
+@go_nil = (* (labs (acc out)))
+  & labs ~ *
+  & out ~ acc
+
+@go_cons = (* (((u v) tail) ({(?((@get_nil @get_cons) (pl_q149 (u {$([=] $(rv_cmp ?((((?((@go_nil @go_cons) (pl_q152_q186 (updated_q186 (acc_q186 out_q186)))) pl_q152_q186) ((?((@rep_nil @rep_cons) (pl_q151_q186 (rv_q186 (ru_q186 updated_q186)))) pl_q151_q186) (acc_q186 (out_q186 (ru_q186 rv_q186))))) @go_same) (tail (lr (acc (out (ru_keep rv_keep)))))))) ru_keep}))) pl_q149) {(?((@get_nil @get_cons) (pl_q150 (v {rv_cmp rv_keep}))) pl_q150) lr}} (acc out))))
+
+@go_same = (* (tail (lr (acc (out (ru rv))))))
+  & ru ~ *
+  & rv ~ *
+  & acc ~ $([+] $(1 acc2))
+  & @go ~ (tail (lr (acc2 out)))

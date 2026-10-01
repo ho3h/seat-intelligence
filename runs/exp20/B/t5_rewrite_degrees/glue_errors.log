@@ -1,0 +1,32 @@
+--- 05:39:30
+recipes.py:54: pred of select_sorted `sel` must be a Python function (d, ...) -> value(s); got num
+--- 05:39:49
+build.py:82: kind mismatch at step of stream `count_walker` result `H`: expected trie[num], got depth `L3` from copy 3 of `L` (made at build.py:73).
+--- 05:40:10
+step of stream `count_walker` (@count_walker_step): 1 value(s) never used:
+    `a2` (num, copy 2 of `a`, made at build.py:74)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:40:18
+branch nonzero case of @prog (t5_rewrite_degrees) (@prog_b3s): 2 value(s) never used:
+    `L9` (depth, copy 9 of `L`, made at build.py:55)
+    `r2` (num, copy 2 of `r`, made at build.py:90)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:47:45
+recipes.py:54: pred of select_sorted `sel` must be a Python function (d, ...) -> value(s); got num
+--- 05:47:52
+branch nonzero case of @prog (t5_rewrite_degrees) (@prog_b3s): 3 value(s) never used:
+    `L3` (depth, copy 3 of `L`, made at build.py:57)
+    `L4` (depth, copy 4 of `L`, made at build.py:57)
+    `L7` (depth, copy 7 of `L`, made at build.py:57)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:48:54
+build.py:65: wire `L3` (depth, copy 3 of `L`, made at build.py:50) is used a second time (recipe select_sorted `sel` port `L`); it was already used at build.py:62 (recipe reduce_by_key `rb` (set1) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L3, 2)  and use each once.
+--- 05:49:22
+build.py:86: wire `r` (num, result of `+`, made at build.py:46) is used a second time (to_list `tl` port `n`); it was already used at recipes.py:154 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:49:35
+build.py:83: wire `r` (num, result of `+`, made at build.py:46) is used a second time (fanout into 2); it was already used at recipes.py:154 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:49:48
+branch nonzero case of @prog (t5_rewrite_degrees) (@prog_b3s): 2 value(s) never used:
+    `nm11` (num, copy 1 of `nm1`, made at build.py:45)
+    `L10` (depth, copy 10 of `L`, made at build.py:55)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

@@ -1,0 +1,70 @@
+@prog = ((c m) out)
+  & @scan ~ (m (c (0 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@scan_nil = (* (c (acc acc)))
+  & c ~ *
+
+@scan_cons = (* ((pair tail) (c (acc out))))
+  & pair ~ (a b)
+  & c ~ {cnext clook}
+  & clook ~ {ca cb}
+  & a ~ {aidx akeep}
+  & b ~ {bidx bkeep}
+  & @get ~ (ca (aidx va))
+  & @get ~ (cb (bidx vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@scan_no @scan_yes) (akeep (bkeep (tail (cnext (acc out))))))
+
+@scan_no = (a (b (tail (c (acc out)))))
+  & a ~ *
+  & b ~ *
+  & @scan ~ (tail (c (acc out)))
+
+@scan_yes = (* (a (b (tail (c (acc out))))))
+  & @ins ~ ((a b) (acc newacc))
+  & @scan ~ (tail (c (newacc out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (head (tail out)))
+
+@get_zero = (v (tail v))
+  & tail ~ *
+
+@get_succ = (n (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (n out))
+
+@ins = ((?((@ins_nil @ins_cons) (pl (item out))) pl) (item out))
+
+@ins_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@ins_cons = (* ((old rest) (item out)))
+  & old ~ {oldkeep oldcmp}
+  & item ~ {itemkeep itemcmp}
+  & @ltpair ~ (itemcmp (oldcmp less))
+  & less ~ ?((@ins_after @ins_before) (itemkeep (oldkeep (rest out))))
+
+@ins_after = (item (old (rest out)))
+  & @ins ~ (rest (item sub))
+  & out ~ (1 (old sub))
+
+@ins_before = (* (item (old (rest out))))
+  & out ~ (1 (item (1 (old rest))))
+
+@ltpair = ((a b) ((x y) out))
+  & a ~ {alt aeq}
+  & x ~ {xlt xeq}
+  & alt ~ $([<] $(xlt firstlt))
+  & aeq ~ $([=] $(xeq firsteq))
+  & b ~ $([<] $(y secondlt))
+  & firsteq ~ $([&] $(secondlt andval))
+  & firstlt ~ $([|] $(andval out))

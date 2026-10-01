@@ -1,0 +1,91 @@
+// Entry point.
+@prog = (input output)
+  & input ~ (xs ys)
+  & @ix ~ (xs (ys output))
+
+// Begin by taking the next value from xs.
+@ix = ((?((@ix_nil @ix_cons) (px (ys out))) px) (ys out))
+
+@ix_nil = (px (ys out))
+  & px ~ *
+  & ys ~ *
+  & out ~ (0 *)
+
+@ix_cons = (* ((x xt) (ys out)))
+  & @iy ~ (ys (x (xt out)))
+
+// Scan ys while retaining the current x.
+@iy = ((?((@iy_nil @iy_cons) (py (x (xt out)))) py) (x (xt out)))
+
+@iy_nil = (py (x (xt out)))
+  & py ~ *
+  & x ~ *
+  & xt ~ *
+  & out ~ (0 *)
+
+@iy_cons = (* ((y yt) (x (xt out))))
+  & x ~ {xa xb}
+  & y ~ {ya yb}
+  & xa ~ $([<] $(ya lt))
+  & lt ~ ?((@iy_ge @ix_y_lt) (xb (yb (xt (yt out))))
+
+// x < y: keep y in hand while advancing xs.
+@ix_y_lt = (* (xb (yb (xt (yt out)))))
+  & xb ~ *
+  & @ix_y ~ (xt (yb (yt out)))
+
+// x >= y: test equality.
+@iy_ge = (xb (yb (xt (yt out))))
+  & xb ~ {xeq xhold}
+  & yb ~ {yeq yhold}
+  & xeq ~ $([=] $(yeq eq))
+  & eq ~ ?((@iy_gt @iy_eq) (xhold (yhold (xt (yt out))))
+
+// x > y: advance ys, retaining x.
+@iy_gt = (xhold (yhold (xt (yt out))))
+  & yhold ~ *
+  & @iy ~ (yt (xhold (xt out)))
+
+// x == y: emit x and advance both lists.
+@iy_eq = (* (xhold (yhold (xt (yt out)))))
+  & yhold ~ *
+  & @ix ~ (xt (yt rest))
+  & out ~ (1 (xhold rest))
+
+// Scan xs while retaining the current y; avoids rebuilding and rescanning y.
+@ix_y = ((?((@ix_y_nil @ix_y_cons) (px (y (yt out)))) px) (y (yt out)))
+
+@ix_y_nil = (px (y (yt out)))
+  & px ~ *
+  & y ~ *
+  & yt ~ *
+  & out ~ (0 *)
+
+@ix_y_cons = (* ((x xt) (y (yt out))))
+  & x ~ {xa xb}
+  & y ~ {ya yb}
+  & xa ~ $([<] $(ya lt))
+  & lt ~ ?((@ix_y_ge @ix_y_lt2) (xb (yb (xt (yt out))))
+
+// x < y: continue scanning xs with y unchanged.
+@ix_y_lt2 = (* (xb (yb (xt (yt out)))))
+  & xb ~ *
+  & @ix_y ~ (xt (yb (yt out)))
+
+// x >= y: test equality.
+@ix_y_ge = (xb (yb (xt (yt out))))
+  & xb ~ {xeq xhold}
+  & yb ~ {yeq yhold}
+  & xeq ~ $([=] $(yeq eq))
+  & eq ~ ?((@ix_y_gt @ix_y_eq) (xhold (yhold (xt (yt out))))
+
+// x > y: advance ys, retaining x.
+@ix_y_gt = (xhold (yhold (xt (yt out))))
+  & yhold ~ *
+  & @iy ~ (yt (xhold (xt out)))
+
+// x == y: emit x and continue with both tails.
+@ix_y_eq = (* (xhold (yhold (xt (yt out)))))
+  & yhold ~ *
+  & @ix ~ (xt (yt rest))
+  & out ~ (1 (xhold rest))

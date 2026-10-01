@@ -1,0 +1,114 @@
+@absdiff = ({$([<] $(a b)) c} ({a d} e))
+  & $(b ?((@absdiff__C0 @absdiff__C1) (c (d e)))) ~ [=0x0000000]
+
+@absdiff__C0 = (a ($([-] $(a b)) b))
+
+@absdiff__C1 = (* ($([-] $(a b)) (a b)))
+
+@pick = ({d a} (b (e ({c f} h))))
+  & @absdiff ~ (a (b {$([<] $(c ?((@pick__C4 @pick__C5) (d (e (f (g h))))))) g}))
+
+@pick__C0 = (* (a (b (* (a b)))))
+
+@pick__C1 = (* (a (* (* (b (a b))))))
+
+@pick__C2 = (* (a (b (* (a b)))))
+
+@pick__C3 = (* ({$([<] $(a ?((@pick__C0 @pick__C1) (b (c d))))) b} ({a c} d)))
+
+@pick__C4 = (b (c ({a d} ({$([=] $(a ?((@pick__C2 @pick__C3) (b (c (d (e f))))))) e} f))))
+
+@pick__C5 = (* (a (* (* (b (a b))))))
+
+@prog = ((a (@prog__C1 (a b))) b)
+
+@prog__C0 = (* ({c d} (a ({b e} g))))
+  & @scan16 ~ (a (b (c (f g))))
+  & @absdiff ~ (d (e f))
+
+@prog__C1 = (?(((* 0) @prog__C0) a) a)
+
+@scan16 = ((@scan16__C31 a) a)
+
+@scan16__C0 = (* (a (e ({b f} (c (d i))))))
+  & @scan16 ~ (e (f (g (h i))))
+  & @pick ~ (a (b (c (d (g h)))))
+
+@scan16__C1 = (?(((* (a (* a))) @scan16__C0) b) b)
+
+@scan16__C10 = (* (a ((@scan16__C9 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C11 = (?(((* (a (* a))) @scan16__C10) b) b)
+
+@scan16__C12 = (* (a ((@scan16__C11 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C13 = (?(((* (a (* a))) @scan16__C12) b) b)
+
+@scan16__C14 = (* (a ((@scan16__C13 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C15 = (?(((* (a (* a))) @scan16__C14) b) b)
+
+@scan16__C16 = (* (a ((@scan16__C15 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C17 = (?(((* (a (* a))) @scan16__C16) b) b)
+
+@scan16__C18 = (* (a ((@scan16__C17 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C19 = (?(((* (a (* a))) @scan16__C18) b) b)
+
+@scan16__C2 = (* (a ((@scan16__C1 (e (f (g h)))) (d ({b e} (c h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C20 = (* (a ((@scan16__C19 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C21 = (?(((* (a (* a))) @scan16__C20) b) b)
+
+@scan16__C22 = (* (a ((@scan16__C21 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C23 = (?(((* (a (* a))) @scan16__C22) b) b)
+
+@scan16__C24 = (* (a ((@scan16__C23 (e (f (g h)))) (c ({b e} (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C25 = (?(((a (* (* a))) @scan16__C24) b) b)
+
+@scan16__C26 = (* (a ((@scan16__C25 (e (f (g h)))) ({b f} (c (d h))))))
+  & @pick ~ (a (b (c (d (e g)))))
+
+@scan16__C27 = (?(((* (a (* a))) @scan16__C26) b) b)
+
+@scan16__C28 = (* (a ((@scan16__C27 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C29 = (?(((* (a (* a))) @scan16__C28) b) b)
+
+@scan16__C3 = (?(((* (* (a a))) @scan16__C2) b) b)
+
+@scan16__C30 = (* (a ((@scan16__C29 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C31 = (?(((* (a (* a))) @scan16__C30) b) b)
+
+@scan16__C4 = (* (a ((@scan16__C3 (e (f (g h)))) ({b f} (c (d h))))))
+  & @pick ~ (a (b (c (d (g e)))))
+
+@scan16__C5 = (?(((* (a (* a))) @scan16__C4) b) b)
+
+@scan16__C6 = (* (a ((@scan16__C5 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C7 = (?(((* (a (* a))) @scan16__C6) b) b)
+
+@scan16__C8 = (* (a ((@scan16__C7 (e (f (g h)))) ({b e} (c (d h))))))
+  & @pick ~ (a (b (c (d (f g)))))
+
+@scan16__C9 = (?(((* (a (* a))) @scan16__C8) b) b)
+
+

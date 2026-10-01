@@ -1,0 +1,20 @@
+// Singleton-cluster result, preserving the input properties.
+@prog = (inp out)
+  & inp ~ (n (tau (mnl (cands (edges attrs)))))
+  & out ~ (c (e p))
+  & @range ~ (n ((0 *) c))
+  & e ~ (0 *)
+  & p ~ attrs
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & edges ~ *
+
+@range = (?((@rzero @rsucc) ctx) ctx)
+
+@rzero = (acc out)
+  & acc ~ out
+
+@rsucc = (k (acc out))
+  & k ~ {x y}
+  & @range ~ (y ((1 (x acc)) out))

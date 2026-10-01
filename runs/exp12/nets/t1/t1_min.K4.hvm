@@ -1,0 +1,51 @@
+@prog = (l out)
+  & @mn_start ~ (l (* out))
+
+@mn_start = (lv1 (unused out))
+  & @mn_start_cons_lw ~ (lv1 (unused out))
+
+@mn_start_nil = (* (* 16777215))
+
+@mn_start_cons = (* ((h t) (* out)))
+  & @mn_cons_lw ~ (t (h out))
+
+@mn = (lv2 (acc out))
+  & @mn_cons_lw ~ (lv2 (acc out))
+
+@mn_nil = (* (a a))
+
+@mn_cons = (* (({$([<] $(acmp z12)) hctx} t) ({acmp actx} out)))
+  & z12 ~ ?((@mn_keep_hz @mn_take_hz) (xw29 (hctx (actx out))))
+  & @mn_cons_lw ~ (t xw29)
+
+@mn_keep = (t (h (acc out)))
+  & @mn ~ (t (acc out))
+  & h ~ *
+
+@mn_take = (* (t (h (acc out))))
+  & acc ~ *
+  & @mn ~ (t (h out))
+
+@mn_start_cons_lw = (ls53 (q33 q34))
+  & ls53 ~ (g48 (e44 (g49 (e45 (g50 (e46 (g51 (e47 tk52))))))))
+  & g48 ~ ?((@mn_start_nil @mn_start_cons_la) ((e44 (q36 q37)) (q33 q34)))
+  & g49 ~ ?((@mn_nil @mn_cons_la) ((e45 (q39 q40)) (q36 q37)))
+  & g50 ~ ?((@mn_nil @mn_cons_la) ((e46 (q42 q43)) (q39 q40)))
+  & g51 ~ ?((@mn_nil @mn_cons) ((e47 tk52) (q42 q43)))
+
+@mn_cons_lw = (ls75 (q55 q56))
+  & ls75 ~ (g70 (e66 (g71 (e67 (g72 (e68 (g73 (e69 tk74))))))))
+  & g70 ~ ?((@mn_nil @mn_cons_la) ((e66 (q58 q59)) (q55 q56)))
+  & g71 ~ ?((@mn_nil @mn_cons_la) ((e67 (q61 q62)) (q58 q59)))
+  & g72 ~ ?((@mn_nil @mn_cons_la) ((e68 (q64 q65)) (q61 q62)))
+  & g73 ~ ?((@mn_nil @mn_cons) ((e69 tk74) (q64 q65)))
+
+@mn_start_cons_la = (* ((h (h out)) (* out)))
+
+@mn_keep_hz = (hw20 (* (q15 q16)))
+  & hw20 ~ (q15 q16)
+
+@mn_take_hz = (* (hw28 (q22 (* q24))))
+  & hw28 ~ (q22 q24)
+
+@mn_cons_la = (* (({$([<] $(acmp ?((@mn_keep_hz @mn_take_hz) (xw29 (hctx (actx out)))))) hctx} xw29) ({acmp actx} out)))

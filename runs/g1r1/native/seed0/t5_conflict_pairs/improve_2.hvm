@@ -1,0 +1,104 @@
+@prog = ((c mnl) out)
+  & @map ~ (mnl (c unsorted))
+  & @sort ~ (unsorted out)
+
+@map = ((?((@map_nil @map_cons) (pl (c out))) pl) (c out))
+
+@map_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@map_cons = (* ((pair tail) (c out)))
+  & pair ~ (a b)
+  & a ~ {a_lookup a_keep}
+  & b ~ {b_lookup b_keep}
+  & p_keep ~ (a_keep b_keep)
+  & c ~ {c_next c_lookup}
+  & @getpair ~ (c_lookup (a_lookup (b_lookup vals)))
+  & vals ~ (va vb)
+  & va ~ $([=] $(vb eq))
+  & @map ~ (tail (c_next rest))
+  & eq ~ ?((@map_no @map_yes) (p_keep (rest out)))
+
+@map_no = (p (rest out))
+  & p ~ *
+  & out ~ rest
+
+@map_yes = (* (p (rest out)))
+  & out ~ (1 (p rest))
+
+@getpair = ((?((@getpair_nil @getpair_cons) (pl (a (b out)))) pl) (a (b out)))
+
+@getpair_nil = (* (a (b out)))
+  & a ~ *
+  & b ~ *
+  & out ~ (0 0)
+
+@getpair_cons = (* ((head tail) (a (b out))))
+  & a ~ ?((@getpair_at @getpair_before) (head (tail (b out))))
+
+@getpair_before = (n (head (tail (b out))))
+  & head ~ *
+  & b ~ $([-] $(1 bnext))
+  & @getpair ~ (tail (n (bnext out)))
+
+@getpair_at = (head (tail (b out)))
+  & b ~ $([-] $(1 bnext))
+  & @getpair_end ~ (tail (bnext (head out)))
+
+@getpair_end = ((?((@getpair_end_nil @getpair_end_cons) (pl (saved out))) pl) (saved out))
+
+@getpair_end_nil = (* (saved out))
+  & saved ~ *
+  & out ~ (0 0)
+
+@getpair_end_cons = (* ((head tail) (idx (saved out))))
+  & idx ~ ?((@getpair_end_at @getpair_end_before) (head (tail (saved out))))
+
+@getpair_end_at = (head (tail (saved out)))
+  & tail ~ *
+  & out ~ (saved head)
+
+@getpair_end_before = (n (head (tail (saved out))))
+  & head ~ *
+  & @getpair_end ~ (tail (n (saved out)))
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((item tail) out))
+  & @sort ~ (tail sorted)
+  & @insert ~ (sorted (item out))
+
+@insert = ((?((@ins_nil @ins_cons) (pl (item out))) pl) (item out))
+
+@ins_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@ins_cons = (* ((old rest) (item out)))
+  & old ~ (oa ob)
+  & item ~ (ia ib)
+  & oa ~ {oac oak}
+  & ob ~ {obc obk}
+  & ia ~ {iac iak}
+  & ib ~ {ibc ibk}
+  & @ltpair ~ ((iac ibc) ((oac obc) less))
+  & less ~ ?((@ins_after @ins_before) (rest ((iak ibk) ((oak obk) out))))
+
+@ins_after = (rest ((ia ib) ((oa ob) out)))
+  & @insert ~ (rest ((ia ib) sub))
+  & out ~ (1 (old sub))
+
+@ins_before = (* (rest ((ia ib) ((oa ob) out))))
+  & out ~ (1 ((ia ib) (1 ((oa ob) rest))))
+
+@ltpair = ((a b) ((x y) out))
+  & a ~ {alt aeq}
+  & x ~ {xlt xeq}
+  & alt ~ $([<] $(xlt less_first))
+  & aeq ~ $([=] $(xeq equal_first))
+  & b ~ $([<] $(y less_second))
+  & equal_first ~ $([&] $(less_second both))
+  & less_first ~ $([|] $(both out))

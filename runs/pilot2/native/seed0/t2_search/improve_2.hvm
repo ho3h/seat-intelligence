@@ -1,0 +1,168 @@
+// Search in blocks of sixteen, advancing the index once per completed block.
+@prog = (input out)
+  & input ~ (xs target)
+  & @walk ~ (xs (target (0 out)))
+
+@walk = ((?((@empty @step0) (pl (target (idx out)))) pl) (target (idx out)))
+@scan1 = ((?((@empty @step1) (pl (target (idx out)))) pl) (target (idx out)))
+@scan2 = ((?((@empty @step2) (pl (target (idx out)))) pl) (target (idx out)))
+@scan3 = ((?((@empty @step3) (pl (target (idx out)))) pl) (target (idx out)))
+@scan4 = ((?((@empty @step4) (pl (target (idx out)))) pl) (target (idx out)))
+@scan5 = ((?((@empty @step5) (pl (target (idx out)))) pl) (target (idx out)))
+@scan6 = ((?((@empty @step6) (pl (target (idx out)))) pl) (target (idx out)))
+@scan7 = ((?((@empty @step7) (pl (target (idx out)))) pl) (target (idx out)))
+@scan8 = ((?((@empty @step8) (pl (target (idx out)))) pl) (target (idx out)))
+@scan9 = ((?((@empty @step9) (pl (target (idx out)))) pl) (target (idx out)))
+@scan10 = ((?((@empty @step10) (pl (target (idx out)))) pl) (target (idx out)))
+@scan11 = ((?((@empty @step11) (pl (target (idx out)))) pl) (target (idx out)))
+@scan12 = ((?((@empty @step12) (pl (target (idx out)))) pl) (target (idx out)))
+@scan13 = ((?((@empty @step13) (pl (target (idx out)))) pl) (target (idx out)))
+@scan14 = ((?((@empty @step14) (pl (target (idx out)))) pl) (target (idx out)))
+@scan15 = ((?((@empty @step15) (pl (target (idx out)))) pl) (target (idx out)))
+
+@empty = (* (* (* out)))
+  & out ~ 16777215
+
+@step0 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss0 @hit0) (tail (tr (idx out))))
+@miss0 = (tail (tr (idx out)))
+  & @scan1 ~ (tail (tr (idx out)))
+@hit0 = (* (* (* (v v))))
+
+@step1 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss1 @hit1) (tail (tr (idx out))))
+@miss1 = (tail (tr (idx out)))
+  & @scan2 ~ (tail (tr (idx out)))
+@hit1 = (* (* (* (idx out))))
+  & idx ~ $([+] $(1 out))
+
+@step2 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss2 @hit2) (tail (tr (idx out))))
+@miss2 = (tail (tr (idx out)))
+  & @scan3 ~ (tail (tr (idx out)))
+@hit2 = (* (* (* (idx out))))
+  & idx ~ $([+] $(2 out))
+
+@step3 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss3 @hit3) (tail (tr (idx out))))
+@miss3 = (tail (tr (idx out)))
+  & @scan4 ~ (tail (tr (idx out)))
+@hit3 = (* (* (* (idx out))))
+  & idx ~ $([+] $(3 out))
+
+@step4 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss4 @hit4) (tail (tr (idx out))))
+@miss4 = (tail (tr (idx out)))
+  & @scan5 ~ (tail (tr (idx out)))
+@hit4 = (* (* (* (idx out))))
+  & idx ~ $([+] $(4 out))
+
+@step5 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss5 @hit5) (tail (tr (idx out))))
+@miss5 = (tail (tr (idx out)))
+  & @scan6 ~ (tail (tr (idx out)))
+@hit5 = (* (* (* (idx out))))
+  & idx ~ $([+] $(5 out))
+
+@step6 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss6 @hit6) (tail (tr (idx out))))
+@miss6 = (tail (tr (idx out)))
+  & @scan7 ~ (tail (tr (idx out)))
+@hit6 = (* (* (* (idx out))))
+  & idx ~ $([+] $(6 out))
+
+@step7 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss7 @hit7) (tail (tr (idx out))))
+@miss7 = (tail (tr (idx out)))
+  & @scan8 ~ (tail (tr (idx out)))
+@hit7 = (* (* (* (idx out))))
+  & idx ~ $([+] $(7 out))
+
+@step8 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss8 @hit8) (tail (tr (idx out))))
+@miss8 = (tail (tr (idx out)))
+  & @scan9 ~ (tail (tr (idx out)))
+@hit8 = (* (* (* (idx out))))
+  & idx ~ $([+] $(8 out))
+
+@step9 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss9 @hit9) (tail (tr (idx out))))
+@miss9 = (tail (tr (idx out)))
+  & @scan10 ~ (tail (tr (idx out)))
+@hit9 = (* (* (* (idx out))))
+  & idx ~ $([+] $(9 out))
+
+@step10 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss10 @hit10) (tail (tr (idx out))))
+@miss10 = (tail (tr (idx out)))
+  & @scan11 ~ (tail (tr (idx out)))
+@hit10 = (* (* (* (idx out))))
+  & idx ~ $([+] $(10 out))
+
+@step11 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss11 @hit11) (tail (tr (idx out))))
+@miss11 = (tail (tr (idx out)))
+  & @scan12 ~ (tail (tr (idx out)))
+@hit11 = (* (* (* (idx out))))
+  & idx ~ $([+] $(11 out))
+
+@step12 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss12 @hit12) (tail (tr (idx out))))
+@miss12 = (tail (tr (idx out)))
+  & @scan13 ~ (tail (tr (idx out)))
+@hit12 = (* (* (* (idx out))))
+  & idx ~ $([+] $(12 out))
+
+@step13 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss13 @hit13) (tail (tr (idx out))))
+@miss13 = (tail (tr (idx out)))
+  & @scan14 ~ (tail (tr (idx out)))
+@hit13 = (* (* (* (idx out))))
+  & idx ~ $([+] $(13 out))
+
+@step14 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss14 @hit14) (tail (tr (idx out))))
+@miss14 = (tail (tr (idx out)))
+  & @scan15 ~ (tail (tr (idx out)))
+@hit14 = (* (* (* (idx out))))
+  & idx ~ $([+] $(14 out))
+
+@step15 = (* ((h tail) (t (idx out))))
+  & h ~ $([=] $(tc eq))
+  & t ~ {tc tr}
+  & eq ~ ?((@miss15 @hit15) (tail (tr (idx out))))
+@miss15 = (tail (tr (idx out)))
+  & idx ~ $([+] $(16 idx2))
+  & @walk ~ (tail (tr (idx2 out)))
+@hit15 = (* (* (* (idx out))))
+  & idx ~ $([+] $(15 out))

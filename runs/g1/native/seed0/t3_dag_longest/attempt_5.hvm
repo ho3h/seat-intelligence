@@ -1,0 +1,125 @@
+// Freeze the input edge list into an ordinary constructor list before it is reused.
+@prog = ((n edges) out)
+  & n ~ {nz nr}
+  & @freeze ~ (edges fedges)
+  & @zeros ~ (nz dist)
+  & @rounds ~ (nr (fedges (dist out)))
+
+@freeze = ((?((@freeze_nil @freeze_cons) (payload out)) payload) out)
+
+@freeze_nil = (* out)
+  & out ~ (0 *)
+
+@freeze_cons = ((edge tail) out)
+  & edge ~ (u v)
+  & @freeze ~ (tail rest)
+  & out ~ (1 ((u v) rest))
+
+@zeros = (?((@zeros_nil @zeros_more) out) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_more = (k out)
+  & @zeros ~ (k tail)
+  & out ~ (1 (0 tail))
+
+// Relax every edge once per round; n rounds suffice for a DAG.
+@rounds = (?((@rounds_done @rounds_more) ctx) ctx)
+
+@rounds_done = (edges (dist out))
+  & edges ~ *
+  & @max ~ (dist out)
+
+@rounds_more = (k (edges (dist out)))
+  & edges ~ {scan save}
+  & @sweep ~ (scan (dist dist2))
+  & @rounds ~ (k (save (dist2 out)))
+
+@sweep = ((?((@sweep_nil @sweep_cons) (payload (dist out))) payload) (dist out))
+
+@sweep_nil = (* (dist out))
+  & dist ~ out
+
+@sweep_cons = (* ((edge tail) (dist out)))
+  & edge ~ (u v)
+  & v ~ {vlookup vctx}
+  & @getkeep ~ (dist (u (du dist1)))
+  & du ~ $([+] $(1 cand))
+  & @getkeep ~ (dist1 (vlookup (dv dist2)))
+  & cand ~ {cand_cmp cand_keep}
+  & dv ~ {dv_cmp dv_keep}
+  & cand_cmp ~ $([>] $(dv_cmp gt))
+  & gt ~ ?((@sweep_old @sweep_new) (dv_keep (cand_keep (vctx (dist2 (tail out))))))
+
+@sweep_old = (dv (cand (idx (dist (tail out)))))
+  & cand ~ *
+  & @set ~ (idx (dv (dist updated)))
+  & @sweep ~ (tail (updated out))
+
+@sweep_new = (k (dv (cand (idx (dist (tail out))))))
+  & k ~ *
+  & dv ~ *
+  & @set ~ (idx (cand (dist updated)))
+  & @sweep ~ (tail (updated out))
+
+// Look up list[idx], returning both the value and a reconstructed list.
+@getkeep = ((?((@gk_nil @gk_cons) (payload (idx (val copy)))) payload) (idx (val copy)))
+
+@gk_nil = (* (idx (val copy)))
+  & idx ~ *
+  & val ~ 0
+  & copy ~ (0 *)
+
+@gk_cons = (* ((head tail) (idx (val copy))))
+  & idx ~ ?((@gk_zero @gk_more) (head (tail (val copy))))
+
+@gk_zero = (head (tail (val copy)))
+  & head ~ {hval hcopy}
+  & hval ~ val
+  & copy ~ (1 (hcopy tail))
+
+@gk_more = (k (head (tail (val copy))))
+  & @getkeep ~ (tail (k (val restcopy)))
+  & copy ~ (1 (head restcopy))
+
+// Set list[idx] = value.
+@set = ((?((@set_nil @set_cons) (payload (idx (value out)))) payload) (idx (value out)))
+
+@set_nil = (* (idx (value out)))
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (value out))))
+  & idx ~ ?((@set_zero @set_more) (head (tail (value out))))
+
+@set_zero = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@set_more = (k (head (tail (value out))))
+  & @set ~ (k (value (tail rest)))
+  & out ~ (1 (head rest))
+
+// Return the maximum number in a list.
+@max = ((?((@max_nil @max_cons) (payload out)) payload) out)
+
+@max_nil = (* out)
+  & out ~ 0
+
+@max_cons = (* ((head tail) out))
+  & @max ~ (tail rest)
+  & head ~ {hc hk}
+  & rest ~ {rc rk}
+  & hc ~ $([>] $(rc gt))
+  & gt ~ ?((@max_rest @max_head) (rk (hk out)))
+
+@max_rest = (rest (head out))
+  & head ~ *
+  & out ~ rest
+
+@max_head = (k (rest (head out)))
+  & k ~ *
+  & rest ~ *
+  & out ~ head

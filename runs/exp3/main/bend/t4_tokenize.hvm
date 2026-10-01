@@ -1,0 +1,72 @@
+@List/Nil = ((0 a) a)
+
+@parse = (((?((@List/Nil (* ({$([>0x0000030] ?((({$([<0x0000039] ?((($([:-0x0000030] b_q269) (((?((@read_digits__C18 (* ({$([>0x0000030] ?(((b_q277 ({$([<0x0000039] ?((($([*0x000000A] $([+] $(a_q280 $([:-0x0000030] b_q280)))) (a_q280 (((?((@read_digits__C11 (* ({$([>0x0000030] ?((@read_digits__C10_z @read_digits__C9_s) (b_q287 (c_q287 (d_q287 e_q287))))) c_q287} (d_q287 (b_q287 e_q287))))) a_q283) a_q283) (b_q280 c_q280)) c_q280))) @read_digits__C14_s) (b_q277 (c_q277 d_q277)))) c_q277} d_q277)) @read_digits__C16_s) (b_q274 (c_q274 (d_q274 e_q274))))) c_q274} (d_q274 (b_q274 e_q274))))) a_q271) a_q271) (b_q269 (c_q269 (@parse__C5 e_q269)))) ((1 ((0 c_q269) (e_q269 c_i70_q269))) c_i70_q269))) @parse__C0_s) (b_q267 c_q267))) b_q267} c_q267) @parse__C2_s) (b_q265 c_q265))) b_q265} c_q265))) a_q263) a_q263) a) a)
+
+@parse__C4 = (* ({$([>0x0000030] ?((@parse__C3_z @parse__C2_s) (b c))) b} c))
+
+@parse__C5 = (?((@List/Nil @parse__C4) a) a)
+
+@parse_char = (a ({$([=0x0000020] ?((@parse_char__C4 @parse_char__C5) (a (b c)))) b} c))
+
+@parse_char__C0 = ((@parse__C5 c) (a ((1 ((1 a) (c c_i71))) c_i71)))
+
+@parse_char__C1 = (* (((?((@List/Nil @parse__C4) a_q292) a_q292) c) (a ((1 ((2 a) (c c_i72))) c_i72))))
+
+@parse_char__C2 = (a ({$([=0x0000029] ?((@parse_char__C0 @parse_char__C1) (a (b c)))) b} c))
+
+@parse_char__C3 = (* ((@parse__C5 c) (a ((1 ((2 a) (c c_i73))) c_i73))))
+
+@parse_char__C4 = (a ({$([=0x0000028] ?((@parse_char__C2 @parse_char__C3) (a (b c)))) b} c))
+
+@parse_char__C5 = (* (((?((@List/Nil @parse__C4) a_q291) a_q291) b) (* b)))
+
+@prog = @parse
+
+@read_digits__C11 = (a (a @List/Nil))
+
+@read_digits__C12 = (* ({$([>0x0000030] ?((@read_digits__C10_z @read_digits__C9_s) (b (c (d e))))) c} (d (b e))))
+
+@read_digits__C13 = (?((@read_digits__C11 @read_digits__C12) a) a)
+
+@read_digits__C18 = (a (a @List/Nil))
+
+@read_digits__C19 = (* ({$([>0x0000030] ?((@read_digits__C17_z @read_digits__C16_s) (b (c (d e))))) c} (d (b e))))
+
+@read_digits__C20 = (?((@read_digits__C18 @read_digits__C19) a) a)
+
+@read_digits__C4 = (a (a @List/Nil))
+
+@read_digits__C5 = (* ({$([>0x0000030] ?((@read_digits__C3_z @read_digits__C2_s) (b c))) b} c))
+
+@parse__C1_z = ($([:-0x0000030] b) ((@read_digits__C20 (b (c (@parse__C5 e)))) ((1 ((0 c) (e c_i70))) c_i70)))
+
+@parse__C0_s = (* (b (a c)))
+  & @parse_char ~ (a (b c))
+
+@parse__C3_z = ({$([<0x0000039] ?((@parse__C1_z @parse__C0_s) (b c))) b} c)
+
+@parse__C2_s = (* ({$([=0x0000020] ?((@parse_char__C4 @parse_char__C5) (a (b_q259 c)))) b_q259} (a c)))
+
+@read_digits__C8_z = ($([*0x000000A] $([+] $(a $([:-0x0000030] b)))) (a (((?((@read_digits__C4 @read_digits__C5) a_q293) a_q293) (b c)) c)))
+
+@read_digits__C7_s = (* (a (b (c (a ((1 (b (c c_i78))) c_i78))))))
+
+@read_digits__C10_z = (b ({$([<0x0000039] ?((@read_digits__C8_z @read_digits__C7_s) (b (c d)))) c} d))
+
+@read_digits__C9_s = (* (a (b (c (a ((1 (b (c c_i79))) c_i79))))))
+
+@read_digits__C15_z = ($([*0x000000A] $([+] $(a $([:-0x0000030] b)))) (a ((@read_digits__C13 (b c)) c)))
+
+@read_digits__C14_s = (* (a (b (c (a ((1 (b (c c_i75))) c_i75))))))
+
+@read_digits__C17_z = (b ({$([<0x0000039] ?((@read_digits__C15_z @read_digits__C14_s) (b (c d)))) c} d))
+
+@read_digits__C16_s = (* (a (b (c (a ((1 (b (c c_i76))) c_i76))))))
+
+@read_digits__C1_z = (b ((@read_digits__C20 (c d)) ($([*0x000000A] $([+] $(b $([:-0x0000030] c)))) d)))
+
+@read_digits__C0_s = (* (b (c (a (a ((1 (b (c c_i74))) c_i74))))))
+
+@read_digits__C3_z = ({$([<0x0000039] ?((@read_digits__C1_z @read_digits__C0_s) (b c))) b} c)
+
+@read_digits__C2_s = (* (b (c (a (a ((1 (b (c c_i77))) c_i77))))))

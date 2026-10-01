@@ -1,0 +1,72 @@
+@prog = (input out)
+  & @scan ~ (input ((0 *) (0 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (stack (i out)))) payload) (stack (i out)))
+
+@scan_nil = (payload (stack (i out)))
+  & payload ~ *
+  & @end ~ (stack (i out))
+
+@scan_cons = (* ((h t) (stack (i out))))
+  & @dispatch ~ (h (t (stack (i out))))
+
+@end = ((?((@end_empty @end_nonempty) (payload (i out))) payload) (i out))
+
+@end_empty = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & out ~ 0
+
+@end_nonempty = (* (payload (i out)))
+  & payload ~ *
+  & i ~ $([+1] out)
+
+@dispatch = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([&] $(1 z))
+  & z ~ ?((@open @closing_branch) (h2 (t (stack (i out)))))
+
+@closing_branch = (* (h (t (stack (i out)))))
+  & @close ~ (stack (h (t (i out))))
+
+@open = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(60 z))
+  & z ~ ?((@open_other @open_paren) (h2 (t (stack (i out)))))
+
+@open_other = (h (t (stack (i out))))
+  & @push2 ~ (h (t (stack (i out))))
+
+@open_paren = (* (h (t (stack (i out)))))
+  & @push1 ~ (h (t (stack (i out))))
+
+@push1 = (h (t (stack (i out))))
+  & h ~ $([+1] expected)
+  & @scan ~ (t ((1 (expected stack)) (i1 out)))
+  & i ~ $([+1] i1)
+
+@push2 = (h (t (stack (i out))))
+  & h ~ $([+2] expected)
+  & @scan ~ (t ((1 (expected stack)) (i1 out)))
+  & i ~ $([+1] i1)
+
+@close = ((?((@close_empty @close_nonempty) (payload (h (t (i out))))) payload) (h (t (i out))))
+
+@close_empty = (payload (h (t (i out))))
+  & payload ~ *
+  & h ~ *
+  & t ~ *
+  & i ~ $([+1] out)
+
+@close_nonempty = (* ((expected rest) (h (t (i out)))))
+  & h ~ $([=] $(expected z))
+  & z ~ ?((@mismatch @matched) (rest (t (i out))))
+
+@mismatch = (rest (t (i out)))
+  & rest ~ *
+  & t ~ *
+  & i ~ $([+1] out)
+
+@matched = (* (rest (t (i out))))
+  & @scan ~ (t (rest (i1 out)))
+  & i ~ $([+1] i1)

@@ -1,0 +1,98 @@
+/Users/tedsandtads/Genome/genome/exp4/wire.py:94: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(el, layers); self.norm = nn.LayerNorm(d)
+{
+ "random": {
+  "nets": 157,
+  "defs": 1178,
+  "def_exact": 0.2207,
+  "net_exact": 0.0127,
+  "exec_pass": 0.0127,
+  "exec_pass_not_exact": 0,
+  "exec_by_family": {
+   "arith": "0/5",
+   "pipeline": "0/45",
+   "position": "0/35",
+   "rangefn": "0/4",
+   "reduce": "2/48",
+   "scan": "0/9",
+   "sortlike": "0/2",
+   "treefold": "0/9"
+  }
+ },
+ "nearest": {
+  "nets": 157,
+  "defs": 1178,
+  "def_exact": 0.1995,
+  "net_exact": 0.0,
+  "exec_pass": 0.0,
+  "exec_pass_not_exact": 0,
+  "exec_by_family": {
+   "arith": "0/5",
+   "pipeline": "0/45",
+   "position": "0/35",
+   "rangefn": "0/4",
+   "reduce": "0/48",
+   "scan": "0/9",
+   "sortlike": "0/2",
+   "treefold": "0/9"
+  }
+ },
+ "lookup": {
+  "nets": 157,
+  "defs": 1178,
+  "def_exact": 0.7122,
+  "net_exact": 0.1338,
+  "exec_pass": 0.1592,
+  "exec_pass_not_exact": 4,
+  "exec_by_family": {
+   "arith": "0/5",
+   "pipeline": "4/45",
+   "position": "5/35",
+   "rangefn": "1/4",
+   "reduce": "14/48",
+   "scan": "1/9",
+   "sortlike": "0/2",
+   "treefold": "0/9"
+  }
+ },
+ "model": {
+  "nets": 157,
+  "defs": 1178,
+  "def_exact": 0.6265,
+  "net_exact": 0.1465,
+  "exec_pass": 0.2357,
+  "exec_pass_not_exact": 14,
+  "exec_by_family": {
+   "arith": "0/5",
+   "pipeline": "2/45",
+   "position": "13/35",
+   "rangefn": "1/4",
+   "reduce": "17/48",
+   "scan": "1/9",
+   "sortlike": "0/2",
+   "treefold": "3/9"
+  }
+ },
+ "hybrid": {
+  "nets": 157,
+  "defs": 1178,
+  "def_exact": 0.7445,
+  "net_exact": 0.1975,
+  "exec_pass": 0.2866,
+  "exec_pass_not_exact": 14,
+  "exec_by_family": {
+   "arith": "0/5",
+   "pipeline": "11/45",
+   "position": "8/35",
+   "rangefn": "2/4",
+   "reduce": "20/48",
+   "scan": "2/9",
+   "sortlike": "0/2",
+   "treefold": "2/9"
+  }
+ },
+ "hybrid_lookup_stats": {
+  "lookup_miss": 201,
+  "lookup_hit": 977
+ }
+}

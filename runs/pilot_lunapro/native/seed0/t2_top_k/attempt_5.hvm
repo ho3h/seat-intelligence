@@ -1,0 +1,53 @@
+// Sort the input in descending order, then take the first k elements.
+@prog = ((k xs) out)
+  & @sort ~ (xs ((0 *) sorted))
+  & @take ~ (k (sorted out))
+
+// Sort xs into accumulator acc; return the result through out.
+@sort = ((?((@sort_nil @sort_cons) (pl (acc out))) pl) (acc out))
+
+@sort_nil = (* (a a))
+
+@sort_cons = (* ((h t) (acc out)))
+  & @insert ~ (h (acc acc2))
+  & @sort ~ (t (acc2 out))
+
+// Insert x into an already descending list.
+@insert = ((?((@ins_nil @ins_cons) (pl (x out))) pl) (x out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((h t) (x out)))
+  & x ~ {xc xb}
+  & h ~ {hc hb}
+  & xc ~ $([>] $(hc z))
+  & z ~ ?((@ins_le (* @ins_gt)) (xb (hb (t out))))
+
+// x <= h: insert x into the tail.
+@ins_le = (x (h (t out)))
+  & @insert ~ (x (t newtail))
+  & out ~ (1 (h newtail))
+
+// x > h: put x before the existing list.
+@ins_gt = (x (h (t out)))
+  & out ~ (1 (x (1 (h t))))
+
+// Take at most k elements from xs.
+@take = (?((@tk_zero @tk_succ) (xs out)) (xs out))
+
+@tk_zero = (xs out)
+  & xs ~ *
+  & out ~ (0 *)
+
+@tk_succ = (n (xs out))
+  & @take_list ~ (xs (n out))
+
+@take_list = ((?((@tl_nil @tl_cons) (pl (n out))) pl) (n out))
+
+@tl_nil = (* (* out))
+  & out ~ (0 *)
+
+@tl_cons = (* ((h t) (n out)))
+  & @take ~ (n (t tail))
+  & out ~ (1 (h tail))

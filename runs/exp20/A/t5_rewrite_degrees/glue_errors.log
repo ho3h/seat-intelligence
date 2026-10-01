@@ -1,0 +1,60 @@
+--- 05:02:31
+fin of stream `sct` must return exactly one value (the result); returned 2
+--- 05:02:49
+fin of stream `sct` must return exactly one value (the result); returned 2
+--- 05:03:02
+fin of stream `sct` must return exactly one value (the result); returned 2
+--- 05:03:37
+step of stream `scat` (@scat_step): 1 value(s) never used:
+    `L3` (depth, copy 3 of `L`, made at build.py:21)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:03:45
+fin of stream `scat` (@scat_fin): 1 value(s) never used:
+    `count` (num, argument `count` of fin of stream `scat`, made at build.py:34)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:03:53
+step of stream `sc` (@sc_step): 1 value(s) never used:
+    `x` (num, argument `elem` of step of stream `sc`, made at build.py:47)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:04:01
+wrong arity: step of stream `se` is called as f(d, L:depth, G:adj (trie[list[(num num)]]), c_t:trie[num], e0:num, e1:num), i.e. d plus 5 value(s); your function `stream_edges_step` takes 5 parameter(s) (b, L, G, c_t, edge).
+--- 05:04:07
+build.py:59: wire `c_t` (trie[num], argument `c_t` of step of stream `se`, made at build.py:103) is used a second time (get `gt` port `t`); it was already used at build.py:58 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:05:23
+build.py:88: wire `L` (depth, argument `L` of step of stream `se`, made at build.py:95) is used a second time (erased); it was already used at build.py:43 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:05:38
+build.py:52: split needs a tuple wire or an explicit n; `out` is list[num]
+--- 05:05:55
+build.py:36: wire `ct` (trie[num], argument `ct` of fin of stream `cl`, made at build.py:36) is used a second time (returned value 0); it was already used at build.py:30 (update `hadd` (act add) port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:06:03
+build.py:30: wire `L` (depth, argument `L` of fin of stream `cl`, made at build.py:34) is used a second time (erased); it was already used at build.py:29 (update `hadd` (act add) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:08:35
+wrong arity: leaf of reduce `rc` (+) is called as f(d, x:num), i.e. d plus 1 value(s); your function `<lambda>` takes 3 parameter(s) (d, x, i).
+--- 05:08:41
+fin of stream `cc` (@cc_fin): 2 value(s) never used:
+    `L` (depth, argument `L` of fin of stream `cc`, made at build.py:33)
+    `pos` (num, argument `pos` of fin of stream `cc`, made at build.py:33)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:47
+build.py:72: wire `v` (num, argument `e1` of step of stream `pe`, made at build.py:80) is used a second time (adjacency `gl_adj` port `u`); it was already used at build.py:71 (adjacency `gl_adj` port `v`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(v, 2)  and use each once.
+--- 05:09:02
+build.py:82: wire `L2` (depth, copy 2 of `L`, made at build.py:68) is used a second time (returned as `L`); it was already used at build.py:74 (adjacency `gl_adj` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L2, 2)  and use each once.
+--- 05:09:10
+build.py:114: kind mismatch at @prog (t5_rewrite_degrees) result `out`: expected list[num], got list[list[(num num)]] `o` from output `o` of to_list `tl` (made at build.py:110).
+--- 05:17:54
+leaf of mapreduce `mc` (+) (@mc_leaf): 2 value(s) never used:
+    `neighbors_list` (num, argument `x` of leaf of mapreduce `mc` (+), made at build.py:28)
+    `i` (num, argument `i` of leaf of mapreduce `mc` (+), made at build.py:28)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:18:02
+build.py:120: kind mismatch at mapreduce `mc` (+) port `t`: expected trie[num], got adj (trie[list[(num num)]]) `out` from output `out` of stream `pe` (made at build.py:114).
+--- 05:18:20
+build.py:122: wire `out` (trie[num], output `out` of stream `cc`, made at build.py:109) is used a second time (get `gt` port `t`); it was already used at build.py:114 (stream `pe` port `init`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:18:35
+build.py:127: wire `out` (trie[num], output `out` of stream `cc`, made at build.py:109) is used a second time (erased); it was already used at build.py:114 (stream `pe` port `init`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:24:10
+wrong arity: branch zero case of @prog (t5_rewrite_degrees) is called as f(d, passed[0]:list[(num num)]), i.e. d plus 1 value(s); your function `handle_empty` takes 3 parameter(s) (b, is_empty_val, edges_val).
+--- 05:24:27
+build.py:128: wire `o` (num, output `o` of get `gt`, made at build.py:113) belongs to @prog (t5_rewrite_degrees) (@prog), but is used in branch nonzero case of @prog (t5_rewrite_degrees) (@prog_b1s) (to_list `tl` port `n`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:24:44
+build.py:133: wire `o` (num, output `o` of get `gt`, made at build.py:113) is used a second time (branch passed[0]); it was already used at build.py:116 (left operand of `=`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(o, 2)  and use each once.

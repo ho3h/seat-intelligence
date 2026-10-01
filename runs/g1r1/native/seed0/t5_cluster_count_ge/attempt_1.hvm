@@ -1,0 +1,182 @@
+@prog = ((n (k pairs)) out)
+  & n ~ {nlab nround}
+  & @lab ~ (nlab (0 labs))
+  & @rounds ~ (nround (pairs (labs done)))
+  & @count ~ (done (k out))
+
+@lab = (rem (i out))
+  & rem ~ ?((@lab0 @lab1) (i out))
+
+@lab0 = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@lab1 = (rem (i out))
+  & i ~ $([+1] i1)
+  & @lab ~ (rem (i1 tail))
+  & out ~ (1 (i tail))
+
+@rounds = (rem (edges (labels out)))
+  & rem ~ ?((@round0 @round1) (edges (labels out)))
+
+@round0 = (edges (labels out))
+  & edges ~ *
+  & out ~ labels
+
+@round1 = (rem (edges (labels out)))
+  & edges ~ {e1 e2}
+  & @pass ~ (e1 (labels labels2))
+  & @rounds ~ (rem (e2 (labels2 out)))
+
+@pass = ((?((@pass_nil @pass_cons) (payload (labels out))) payload) (labels out))
+
+@pass_nil = (payload (labels out))
+  & payload ~ *
+  & out ~ labels
+
+@pass_cons = (zero (payload (labels out)))
+  & zero ~ *
+  & payload ~ (pair tail)
+  & pair ~ (u v)
+  & @edge ~ (u (v (tail (labels out))))
+
+@edge = (u (v (tail (labels out))))
+  & u ~ {ug us}
+  & v ~ {vg vs}
+  & labels ~ {lu lv}
+  & @get ~ (lu (ug a))
+  & @edge_a ~ (a (us (vg (vs (tail (lv out))))))
+
+@edge_a = (a (u (vget (vset (tail (labels out)))))
+  & labels ~ {lb ls}
+  & @get ~ (lb (vget b))
+  & @min ~ (a (b (u (vset (tail (ls out))))))
+
+@min = (a (b (u (v (tail (labels out)))))
+  & a ~ {ac ak}
+  & b ~ {bc bk}
+  & ac ~ $([<] $(bc flag))
+  & flag ~ ?((@min_b @min_a) (ak (bk (u (v (tail (labels out)))))))
+
+@min_b = (a (b (u (v (tail (labels out)))))
+  & a ~ *
+  & b ~ {vb1 vb2}
+  & @set ~ (labels (u (vb1 labels1)))
+  & @set ~ (labels1 (v (vb2 labels2)))
+  & @pass ~ (tail (labels2 out))
+
+@min_a = (zero (a (b (u (v (tail (labels out))))))
+  & zero ~ *
+  & b ~ *
+  & a ~ {va1 va2}
+  & @set ~ (labels (u (va1 labels1)))
+  & @set ~ (labels1 (v (va2 labels2)))
+  & @pass ~ (tail (labels2 out))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (zero (payload (idx out)))
+  & zero ~ *
+  & payload ~ (head tail)
+  & @get_idx ~ (idx (head (tail out)))
+
+@get_idx = (idx (head (tail out)))
+  & idx ~ ?((@get_here @get_later) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_later = (rem (head (tail out)))
+  & @get ~ (tail (rem result))
+  & out ~ result
+
+@set = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (zero (payload (idx (val out))))
+  & zero ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@set_here @set_later) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_later = (rem (head (tail (val out))))
+  & @set ~ (tail (rem (val newtail)))
+  & out ~ (1 (head newtail))
+
+@count = (labels (k out))
+  & labels ~ {walk all}
+  & @walk ~ (walk (all (k (0 (0 out)))))
+
+@walk = ((?((@walk_nil @walk_cons) (payload (all (k (i (acc out))))) payload) (all (k (i (acc out)))))
+
+@walk_nil = (payload (all (k (i (acc out)))))
+  & payload ~ *
+  & all ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ acc
+
+@walk_cons = (zero (payload (all (k (i (acc out))))))
+  & zero ~ *
+  & payload ~ (h tail)
+  & i ~ {icheck ikeep}
+  & h ~ $([=] $(icheck flag))
+  & flag ~ ?((@walk_no @walk_yes) (tail (all (k (ikeep (acc out)))))
+
+@walk_no = (tail (all (k (i (acc out)))))
+  & i ~ $([+1] i1)
+  & @walk ~ (tail (all (k (i1 (acc out)))))
+
+@walk_yes = (tail (all (k (i (acc out)))))
+  & all ~ {freqlist nextall}
+  & i ~ {target nexti}
+  & k ~ {kcmp kkeep}
+  & @freq ~ (freqlist (target (0 f)))
+  & f ~ $([<] $(kcmp flag))
+  & flag ~ ?((@qual_take @qual_skip) (tail (nextall (kkeep (nexti (acc out)))))
+
+@qual_take = (tail (all (k (i (acc out)))))
+  & i ~ $([+1] i1)
+  & acc ~ $([+1] acc1)
+  & @walk ~ (tail (all (k (i1 (acc1 out)))))
+
+@qual_skip = (zero (tail (all (k (i (acc out))))))
+  & zero ~ *
+  & i ~ $([+1] i1)
+  & @walk ~ (tail (all (k (i1 (acc out)))))
+
+@freq = ((?((@freq_nil @freq_cons) (payload (target (cnt out)))) payload) (target (cnt out)))
+
+@freq_nil = (payload (target (cnt out)))
+  & payload ~ *
+  & target ~ *
+  & out ~ cnt
+
+@freq_cons = (zero (payload (target (cnt out))))
+  & zero ~ *
+  & payload ~ (h tail)
+  & target ~ {tcmp tkeep}
+  & h ~ $([=] $(tcmp flag))
+  & flag ~ ?((@freq_skip @freq_match) (tail (tkeep (cnt out))))
+
+@freq_skip = (zero (tail (target (cnt out))))
+  & zero ~ *
+  & @freq ~ (tail (target (cnt out)))
+
+@freq_match = (tail (target (cnt out)))
+  & cnt ~ $([+1] cnt1)
+  & @freq ~ (tail (target (cnt1 out)))

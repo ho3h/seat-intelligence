@@ -1,0 +1,63 @@
+@prog = (({?((@init_nil @init_cons) (0 labels)) ?((@scan_nil @scan_more) (0 (done ((1 (0 (1 (0 (1 (0 (1 (0 (1 (0 (1 (0 (1 (0 (1 (0 (0 *))))))))))))))))) out))))} (?((@edges_nil @edges_cons) (pl_q320 (labels done))) pl_q320)) out)
+
+@init_nil = (* (0 *))
+
+@init_cons = (?((@init_nil @init_cons) (next tail)) ({ih $([+1] next)} (1 (ih tail))))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (labels out))) pl) (labels out))
+
+@edges_nil = (* (labels labels))
+
+@edges_cons = (* (((?((@lookup_zero @lookup_more) (l1 {$([<] $(bc_q325 ?((@merge_notless @merge_less) (aa_q325 (bb_q325 (tail (l3 out))))))) aa_q325})) ?((@lookup_zero @lookup_more) (l2 {bc_q325 bb_q325}))) tail) ({l1 {l2 l3}} out)))
+
+@lookup_zero = ((1 (head *)) head)
+
+@lookup_more = (?((@lookup_zero @lookup_more) (tail out)) ((1 (* tail)) out))
+
+@merge_less = (* (aa (bb ((?((@edges_nil @edges_cons) (pl_q328 (repl out))) pl_q328) ((?((@replace_nil @replace_cons) (pl_q327 (bb (aa repl)))) pl_q327) out)))))
+
+@merge_notless = ({$([=] $(be ?((@merge_unequal @merge_equal) (ao (bn (tail (labels out))))))) ao} ({be bn} (tail (labels out))))
+
+@merge_unequal = (ao (bn (tail (labels out))))
+  & @replace ~ (labels (ao (bn repl)))
+  & @edges ~ (tail (repl out))
+
+@merge_equal = (* (* (* ((?((@edges_nil @edges_cons) (pl_q331 (labels out))) pl_q331) (labels out)))))
+
+@replace = ((?((@replace_nil @replace_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@replace_nil = (* (* (* (0 *))))
+
+@replace_cons = (* (({$([=] $(oc ?((@replace_no @replace_yes) (hv (or (nc (nr (tail out)))))))) hv} tail) ({oc or} ({nc nr} out))))
+
+@replace_no = (hv (or (* (nr ((?((@replace_nil @replace_cons) (pl_q334 (or (nr rest)))) pl_q334) (1 (hv rest)))))))
+
+@replace_yes = (* (* (or (nc (nr ((?((@replace_nil @replace_cons) (pl_q337 (or (nr rest)))) pl_q337) (1 (nc rest))))))))
+
+@scan_nil = (* (* (hist hist)))
+
+@scan_more = (rem ({?((@lookup_zero @lookup_more) (ll {$([=] $(icmp ?((@scan_nonroot @scan_root) (rem (next (lr (vtarget (hist out)))))))) vtarget})) {icmp $([+1] next)}} ({ll lr} (hist out))))
+
+@scan_nonroot = (?((@scan_nil @scan_more) (next (labs (hist out)))) (next (labs (* (hist out)))))
+
+@scan_root = (* (?((@scan_nil @scan_more) (next (lr (nhist out)))) (next ({(?((@count_nil @count_cons) (pl_q346 (target (0 {$([>] $(7 ?((@hinc_small @hinc_large) (skeep_i53 (hist nhist))))) skeep_i53})))) pl_q346) lr} (target (hist out))))))
+
+@count_nil = (* (* (acc acc)))
+
+@count_cons = (* (($([=] $(tc ?((@count_no @count_yes) (tr (tail (acc out)))))) tail) ({tc tr} (acc out))))
+
+@count_no = (tr ((?((@count_nil @count_cons) (pl_q352 (tr (acc out)))) pl_q352) (acc out)))
+
+@count_yes = (* (tr ((?((@count_nil (* (($([=] $(tc_q365 ?((@count_no @count_yes) (tr_q365 (tail_q365 (acc_q365 out_q365)))))) tail_q365) ({tc_q365 tr_q365} (acc_q365 out_q365))))) (pl_q355 (tr (acc2 out)))) pl_q355) ($([+1] acc2) out))))
+
+@hinc_small = ($([:-1] idx) (hist out))
+  & @inc_at ~ (idx (hist out))
+
+@hinc_large = (* (* (hist out)))
+  & @inc_at ~ (7 (hist out))
+
+@inc_at = (?((@inc_zero @inc_more) (hist out)) (hist out))
+
+@inc_zero = ((1 ($([+1] head2) tail)) (1 (head2 tail)))
+
+@inc_more = (?((@inc_zero @inc_more) (tail sub)) ((1 (head tail)) (1 (head sub))))

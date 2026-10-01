@@ -1,0 +1,61 @@
+@prog = ((c m) out)
+  & @outer ~ (c (m (0 out)))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (m (a out)))) pl) (m (a out)))
+
+@outer_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@outer_cons = (* ((ca ct) (m (a out))))
+  & ct ~ {ctrow ctouter}
+  & m ~ {mrow mouter}
+  & a ~ {arow astep}
+  & astep ~ $([+1] an)
+  & an ~ {bstart aouter}
+  & @outer ~ (ctouter (mouter (aouter future)))
+  & @row ~ (ctrow (mrow (arow (ca (bstart (future out))))))
+
+@row = ((?((@row_nil @row_cons) (pl (m (a (ca (b (tail out))))))) pl) (m (a (ca (b (tail out))))))
+
+@row_nil = (* (* (* (* (* (tail out))))))
+  & tail ~ out
+
+@row_cons = (* ((cb rest) (m (a (ca (b (tail out)))))))
+  & m ~ {mc mr}
+  & a ~ {am atmp}
+  & atmp ~ {ar ao}
+  & b ~ {bm btmp}
+  & btmp ~ {bstep bo}
+  & bstep ~ $([+1] bn)
+  & ca ~ {cc cr}
+  & @row ~ (rest (mr (ar (cr (bn (tail rout))))))
+  & @mem ~ (mc (am (bm has)))
+  & cc ~ $([=] $(cb eq))
+  & has ~ $([*] $(eq both))
+  & both ~ ?((@row_skip @row_take) (ao (bo (rout out))))
+
+@row_skip = (* (* (* (* (r out)))))
+  & r ~ out
+
+@row_take = (* (a (b (r out))))
+  & out ~ (1 ((a b) r))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (a (b out)))) pl) (a (b out)))
+
+@mem_nil = (* (* (* out)))
+  & out ~ 0
+
+@mem_cons = (* ((p tl) (a (b out))))
+  & p ~ (x y)
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & x ~ $([=] $(ac ex))
+  & y ~ $([=] $(bc ey))
+  & ex ~ $([*] $(ey both))
+  & both ~ ?((@mem_no @mem_yes) (tl (ar (br out))))
+
+@mem_no = (* (tl (ar (br out))))
+  & @mem ~ (tl (ar (br out)))
+
+@mem_yes = (* (* (* (* out)))
+  & out ~ 1

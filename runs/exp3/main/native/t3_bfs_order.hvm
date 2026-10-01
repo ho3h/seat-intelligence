@@ -1,0 +1,50 @@
+@prog = ((n ({s_seen s_queue} edges)) out)
+  & ?((@bfs_nil @bfs_cons) ((s_queue (0 *)) ((1 (s_seen (0 *))) (edges (n ((0 *) out)))))) ~ 1
+
+@bfs_nil = (* (* (* (* ((?((@rev_nil (* ((h_q143 (?((@rev_nil (* ((h_q146 (?((@rev_nil (* ((h_q150 (?((@rev_nil (* ((h_q155 (?((@rev_nil (* ((h_q161 (?((@rev_nil @rev_cons) (payload_q140_q161 ((1 (h_q161 acc_q161)) out_q161))) payload_q140_q161)) (acc_q161 out_q161)))) (payload_q140_q155 ((1 (h_q155 acc_q155)) out_q155))) payload_q140_q155)) (acc_q155 out_q155)))) (payload_q140_q150 ((1 (h_q150 acc_q150)) out_q150))) payload_q140_q150)) (acc_q150 out_q150)))) (payload_q140_q146 ((1 (h_q146 acc_q146)) out_q146))) payload_q140_q146)) (acc_q146 out_q146)))) (payload_q140_q143 ((1 (h_q143 acc_q143)) out_q143))) payload_q140_q143)) (acc_q143 out_q143)))) (payload_q124 ((0 *) out))) payload_q124) out)))))
+
+@bfs_cons = (* (({u_neigh u_out} tail) (seen ({(?((@scan_nil @scan_cons) (u_neigh (payload_q125 ((0 *) (?((@process_nil @process_cons) (payload_q126 (tail (seen (edges_rest (n ((1 (u_out rev)) out))))))) payload_q126))))) payload_q125) edges_rest} (n (rev out))))))
+
+@process_nil = (* ((?((@bfs_nil @bfs_cons) (payload_q127 (seen (edges (n (rev out)))))) payload_q127) (seen (edges (n (rev out))))))
+
+@process_cons = (* (({y_check y_add} neigh_tail) (queue ({(?((@contains_nil (* ({x_cmp_q162 x_rest_q162} (($([=] $(x_cmp_q162 ?((@contains_no @contains_yes) (x_rest_q162 (t_q162 out_q162))))) t_q162) out_q162)))) (y_check (payload_q128 ?((@add_y @skip_y) (y_add (neigh_tail (queue (seen_rest (edges (n (rev out))))))))))) payload_q128) seen_rest} (edges (n (rev out)))))))
+
+@skip_y = (* (* ((?((@process_nil @process_cons) (payload_q129 (queue (seen_rest (edges (n (rev out))))))) payload_q129) (queue (seen_rest (edges (n (rev out))))))))
+
+@add_y = ({y_app y_seen} ((?((@process_nil @process_cons) (payload_q131 (new_queue ((1 (y_seen seen_rest)) (edges (n (rev out))))))) payload_q131) ((?((@append_nil @append_cons) (y_app (payload_q130 new_queue))) payload_q130) (seen_rest (edges (n (rev out)))))))
+
+@scan_nil = (* (* (acc acc)))
+
+@scan_cons = (* ({u_a u_rest} ((({$([=] $(u_a ?((@scan_a_no @scan_a_yes) (u_rest (a_rest (b (t (acc out)))))))) a_rest} b) t) (acc out))))
+
+@scan_a_yes = (* (u_rest (* (b ((?((@scan_nil @scan_cons) (u_rest (payload_q133 (newacc out)))) payload_q133) ((?((@insert_nil @insert_cons) (b (payload_q132 newacc))) payload_q132) out))))))
+
+@scan_a_no = ({u_b u_next} (a_rest ($([=] $(u_b ?((@scan_none @scan_b_yes) (u_next (a_rest (t (acc out))))))) (t (acc out)))))
+
+@scan_b_yes = (* (u_next (a_rest ((?((@scan_nil @scan_cons) (u_next (payload_q135 (newacc out)))) payload_q135) ((?((@insert_nil @insert_cons) (a_rest (payload_q134 newacc))) payload_q134) out)))))
+
+@scan_none = (u_next (* ((?((@scan_nil @scan_cons) (u_next (payload_q136 (acc out)))) payload_q136) (acc out))))
+
+@contains_nil = (* (* 0))
+
+@contains_cons = (* ({x_cmp x_rest} (($([=] $(x_cmp ?((@contains_no @contains_yes) (x_rest (t out))))) t) out)))
+
+@contains_no = (x_rest ((?((@contains_nil @contains_cons) (x_rest (payload_q137 out))) payload_q137) out))
+
+@contains_yes = (* (* (* 1)))
+
+@append_nil = (x (* (1 (x (0 *)))))
+
+@append_cons = (* (x ((h (?((@append_nil @append_cons) (x (payload_q138 tail_out))) payload_q138)) (1 (h tail_out)))))
+
+@insert_nil = (y (* (1 (y (0 *)))))
+
+@insert_cons = (* ({$([<] $(h_cmp ?((@insert_ge @insert_lt) (y_rest (h_rest (t out)))))) y_rest} (({h_cmp h_rest} t) out)))
+
+@insert_lt = (* (y_rest (h_rest (t (1 (y_rest (1 (h_rest t))))))))
+
+@insert_ge = (y_rest (h_rest ((?((@insert_nil @insert_cons) (y_rest (payload_q139 inserted_out))) payload_q139) (1 (h_rest inserted_out)))))
+
+@rev_nil = (* (acc acc))
+
+@rev_cons = (* ((h (?((@rev_nil @rev_cons) (payload_q140 ((1 (h acc)) out))) payload_q140)) (acc out)))

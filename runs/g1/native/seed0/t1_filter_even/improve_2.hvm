@@ -1,0 +1,20 @@
+// Filter the tail in parallel with testing the head.
+@prog = (l out)
+  & @filter ~ (l out)
+
+@filter = ((?((@filter_nil @filter_cons) (pl out)) pl) out)
+
+@filter_nil = (* (0 *))
+
+@filter_cons = (* ((h t) out))
+  & @filter ~ (t rest)
+  & h ~ {h_test h_keep}
+  & h_test ~ $([%2] rem)
+  & rem ~ ?((@filter_even @filter_odd) (h_keep (rest out)))
+
+@filter_even = (h (rest out))
+  & out ~ (1 (h rest))
+
+@filter_odd = (* (h (rest out)))
+  & h ~ *
+  & out ~ rest

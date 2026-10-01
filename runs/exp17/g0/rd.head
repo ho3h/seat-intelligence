@@ -1,0 +1,55 @@
+# t5_rewrite_degrees: as rewrite_collapsed (position-keyed c tree, edge walk in parallel with return-address
+# sinks at u and v, every c value wired into its sinks), but each rewritten pair sets both bits (x, y) and
+# (y, x) of a row bitset (tree keyed by (row, word), 16-bit words). The delivery pass also marks the fixed
+# points c[i] == i (= the canonical ids); the output lists popcount(row x) for them, right to left.
+def prog(x):
+  (c, es) = x
+  n = len(c)
+  (l, m) = lvl(n, 0, 1)
+  (lw, mw) = lvl((n + 15) / 16, 0, 1)
+  L = l + lw
+  C = cwalk(c, 0, zt(l), l, m)
+  (Q, B) = ewalk(es, zl(l), zt(L), l, m, L, top(L), lw)
+  (F, z) = dlv(C, Q, l, 0, n)
+  return seq(z, outl(F, B, l, lw, []))
+
+def ewalk(es, Q, B, l, m, L, M, lw):
+  match es:
+    case List/Nil:
+      return (Q, B)
+    case List/Cons:
+      (u, v) = es.head
+      Q2 = push(push(Q, u, l, m, lambda $cu: 0), v, l, m, lambda $cv: 0)
+      (x, y) = minmax($cu, $cv)
+      d = x != y
+      B2 = setb(setb(B, (x << lw) | (y >> 4), L, M, d << (y & 15)), (y << lw) | (x >> 4), L, M, d << (x & 15))
+      return ewalk(es.tail, Q2, B2, l, m, L, M, lw)
+
+def minmax(a, b):
+  t = b < a
+  return (a + t * (b - a), b + t * (a - b))
+
+def dlv(C, Q, l, base, n):
+  switch l:
+    case 0:
+      return ((C == base) & (base < n), deliver(C, Q))
+    case _:
+      (c1, c2) = C
+      (q1, q2) = Q
+      h = 1 << (l-1)
+      (f1, z1) = dlv(c1, q1, l-1, base, n)
+      (f2, z2) = dlv(c2, q2, l-1, base + h, n)
+      return ((f1, f2), z1 + z2)
+
+def outl(F, B, l, lw, tl):
+  switch l:
+    case 0:
+      if F:
+        return List/Cons(pcount(B, lw), tl)
+      else:
+        return tl
+    case _:
+      (f1, f2) = F
+      (b1, b2) = B
+      return outl(f1, b1, l-1, lw, outl(f2, b2, l-1, lw, tl))
+

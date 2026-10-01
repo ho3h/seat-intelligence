@@ -1,0 +1,32 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@label_at__C1 = (* (c (d ({?(((* (a (* a))) (* ($([:-0x0000001] b_q159) (* (((?(((* 0) @label_at__C1) a_q160) a_q160) (b_q159 c_q159)) c_q159))))) (b (c (d e)))) b} e))))
+
+@label_at__C2 = (?(((* 0) @label_at__C1) a) a)
+
+@make_labels__C0 = ({a $([+0x0000001] {$([=] $(a_q143 ?((({a_q161 $([+0x0000001] {$([=] $(a_q143_q161 ?((@make_labels__C0 (* (* (* @List/Nil)))) (b_q143_q161 (c_q143_q161 d_q161))))) b_q143_q161})} ({a_q143_q161 c_q143_q161} ((1 (a_q161 (d_q161 c_i12_q161))) c_i12_q161))) (* (* (* @List/Nil)))) (b_q143 (c_q143 d))))) b_q143})} ({a_q143 c_q143} ((1 (a (d c_i12))) c_i12)))
+
+@process_edges = ((@process_edges__C3 a) a)
+
+@process_edges__C0 = (((?(((* (* @List/Nil)) (* ({$([=] $(a_q170 ?((@relabel__C0 @relabel__C1) (b_q170 (c_q170 (g_q170 h_q170)))))) c_q170} (((?(((* (* @List/Nil)) @relabel__C2) a_q177) a_q177) (e_q170 (f_q170 g_q170))) ({a_q170 e_q170} ({b_q170 f_q170} h_q170)))))) a_q165) a_q165) (c (d e))) (f ((@process_edges__C3 (e (f g))) (d (c g)))))
+
+@process_edges__C1 = (* (b ($([+0x0000001] c) (a (* (* d))))))
+  & @process_edges ~ (a (b (c d)))
+
+@process_edges__C2 = (* ((b d) (h ({f {(@label_at__C2 (d {e j})) (@label_at__C2 (b {$([=] $(e ?((@process_edges__C0 @process_edges__C1) (f (g (h (i (j k)))))))) i}))}} (g k)))))
+
+@process_edges__C3 = (?(((* (a a)) @process_edges__C2) b) b)
+
+@prog = (({?(((* (* @List/Nil)) @make_labels__C0_s) (0 (c_q153 c))) c_q153} (@process_edges__C3 (c (0 d)))) d)
+
+@relabel__C0 = (* @List/Cons)
+
+@relabel__C1 = (* (a (* (b_i13 ((1 (a (b_i13 c_i13))) c_i13)))))
+
+@relabel__C2 = (* ({$([=] $(a ?((@relabel__C0 @relabel__C1) (b (c (g h)))))) c} ((@relabel__C3 (e (f g))) ({a e} ({b f} h)))))
+
+@relabel__C3 = (?(((* (* @List/Nil)) @relabel__C2) a) a)
+
+@make_labels__C0_s = (* ({a $([+0x0000001] {$([=] $(a_q143 ?((({a_q161 $([+0x0000001] {$([=] $(a_q143_q161 ?((@make_labels__C0 (* (* (* @List/Nil)))) (b_q143_q161 (c_q143_q161 d_q161))))) b_q143_q161})} ({a_q143_q161 c_q143_q161} ((1 (a_q161 (d_q161 c_i12_q161))) c_i12_q161))) (* (* (* @List/Nil)))) (b_q143 (c_q143 d))))) b_q143})} ({a_q143 c_q143} ((1 (a (d c_i12))) c_i12))))

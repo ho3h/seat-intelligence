@@ -1,0 +1,40 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@degrees = ((@degrees__C2 a) a)
+
+@degrees__C0 = (a (b (a b)))
+
+@degrees__C1 = (* ((f c) (a (b (e h)))))
+  & @degrees ~ (a (d (g h)))
+  & @inc ~ (b (c d))
+  & @inc ~ (e (f g))
+
+@degrees__C2 = (?((@degrees__C0 @degrees__C1) a) a)
+
+@inc = ((@inc__C3 a) a)
+
+@inc__C0 = ($([:-0x0000001] c) (a (b e)))
+  & @List/Cons ~ (a (d e))
+  & @inc ~ (b (c d))
+
+@inc__C1 = (* (* ($([+0x0000001] a) b)))
+  & @List/Cons ~ (a b)
+
+@inc__C2 = (* (b (c ({$([=0x0000000] ?((@inc__C0 @inc__C1) (a (b (c d))))) a} d))))
+
+@inc__C3 = (?(((* @List/Nil) @inc__C2) a) a)
+
+@prog = (({d b} a) f)
+  & @degrees ~ (a (c (e f)))
+  & @zeros ~ (b c)
+  & @zeros ~ (d e)
+
+@zeros = (?((@List/Nil @zeros__C0) a) a)
+
+@zeros__C0 = ($([+0x0000001] $([:-0x0000001] a)) c)
+  & @List/Cons ~ (0 (b c))
+  & @zeros ~ (a b)
+
+

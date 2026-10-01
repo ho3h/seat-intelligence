@@ -1,0 +1,12 @@
+Nudge policy (same for A and B, as in exp14): an author that stops before PASS with attempts left gets ONE message to continue.
+A/t5_prop_conflicts: stopped after 1 attempt -> nudged once
+A/t5_decide_stage_cap: stopped with 0 attempts (build never compiled) -> nudged once
+B/t5_metric_pairwise: stopped with 0 recorded attempts -> nudged once
+Harness change (applies to both conditions, mid-run): per-case verify timeout 60 s -> 10 s; identical-to-previous nets and duplicate queued submissions refused without using an attempt. Reason: hanging nets held the global lock for many minutes and authors re-submitted the same net after their 600 s tool timeout. Killed duplicate queued (never-verified, uncounted) calls: A/t5_decide_normalise x2, A/t5_decide_stage_idem x2, A/t5_prop_conflicts x1.
+Nudged once (stopped early with attempts left): A/t5_rewrite_edges, A/t5_rewrite_degrees, A/t5_rewrite_weighted, A/t5_decide_drop_known
+Harness corrections (author believed attempts were used, but the calls were killed while queued on the lock and never verified; told the recorded count, no hint): B/t5_metric_pairwise (0 recorded), B/t5_decide_drop_known (0 recorded), A/t5_decide_normalise (1 recorded), A/t5_prop_conflicts (1 recorded), A/t5_decide_stage_idem (1 recorded)
+Harness corrections: B/t5_rewrite_collapsed (2 recorded; believed 5), A/t5_rewrite_weighted (1 recorded). Launched items 16-22 so far. Note: two old-code queued calls for B/t5_decide_stage_idem both logged as attempt 1 (race before the under-lock recount); counted as 2 attempts.
+Harness change 2 (mid-run, both conditions): prescreen on the contract's edge examples (5 s each) before the full verify; a failing edge example is reported in verify's format without running the full suite. PASS still only via unmodified verify.
+Nudged once: A/t5_rewrite_sameas_cycle (2 recorded), A/t5_metric_rand (1 recorded). Launched items 23-30.
+Launched items 31-32 (all 32 launched). Nudged once: A/t5_prop_majority (1), A/t5_metric_pairwise (3), A/t5_decide_order (2), B/t5_rewrite_degrees (3). Correction: A/t5_decide_normalise told 5 recorded (1 left).
+09:01 resumed after API rate limit: A/t5_conflict_pairs (0 recorded) and B/t5_rewrite_weighted (3 recorded) interrupted by rate limit, resumed via message. Nudged once: B/t5_decide_normalise (3 recorded).

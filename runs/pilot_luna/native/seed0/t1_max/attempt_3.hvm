@@ -1,0 +1,19 @@
+// Largest element of a list; the accumulator starts at zero.
+@prog = (l out)
+  & @mx ~ (l (0 out))
+
+@mx = ((?((@mx_nil @mx_cons) (pl (acc out))) pl) (acc out))
+
+@mx_nil = (* (a a))
+
+@mx_cons = (* ((h t) (acc out)))
+  & h ~ $([>] $(acc z))
+  & z ~ ?((@mx_no @mx_yes) (t (h (acc out))))
+
+@mx_no = (t (h (acc out)))
+  & h ~ *
+  & @mx ~ (t (acc out))
+
+@mx_yes = (t (h (acc out)))
+  & acc ~ *
+  & @mx ~ (t (h out))

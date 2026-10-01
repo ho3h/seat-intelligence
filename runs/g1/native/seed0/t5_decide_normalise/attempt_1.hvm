@@ -1,0 +1,65 @@
+// @prog processes candidates into a sorted, deduplicated accumulator.
+@prog = (input out)
+  & @walk ~ (input (0 out))
+
+@walk = ((?((@walk_nil @walk_cons) (p (acc out))) p) (acc out))
+
+@walk_nil = (* (a a))
+
+@walk_cons = (* ((triple tail) (acc out)))
+  & @normal ~ (triple (tail (acc out)))
+
+@normal = (({u_cmp u} ({v_cmp v} s)) (tail (acc out)))
+  & u_cmp ~ $([<] $(v_cmp z))
+  & z ~ ?((@norm_rev @norm_fwd) (u (v (s (tail (acc out)))))
+
+@norm_rev = (u (v (s (tail (acc out)))))
+  & @ins ~ (acc (v (u (s mid))))
+  & @walk ~ (tail (mid out))
+
+@norm_fwd = (* (u (v (s (tail (acc out))))))
+  & @ins ~ (acc (u (v (s mid))))
+  & @walk ~ (tail (mid out))
+
+// Insert (u, v, s) into the sorted accumulator.
+@ins = ((?((@ins_nil @ins_cons) (p (u (v (s out))))) p) (u (v (s out))))
+
+@ins_nil = (* (u (v (s out))))
+  & out ~ (1 ((u (v s)) (0 *)))
+
+@ins_cons = (* ((h t) (u (v (s out)))))
+  & @scan ~ (u (v (s (h (t out))))
+
+// Compare the candidate key with the current head.
+@scan = ({u_cmp u} (v (s (({hu_cmp hu} (hv hs)) (t out)))))
+  & u_cmp ~ $([<] $(hu_cmp z))
+  & z ~ ?((@scan_ge @scan_less) (u (v (s ((hu (hv hs)) (t out)))))
+
+@scan_less = (* (u (v (s ((hu (hv hs)) (t out))))))
+  & out ~ (1 ((u (v s)) (1 ((hu (hv hs)) t))))
+
+@scan_ge = ({u_cmp u} (v (s (({hu_cmp hu} (hv hs)) (t out)))))
+  & u_cmp ~ $([=] $(hu_cmp z))
+  & z ~ ?((@scan_neq @scan_eq) (u (v (s ((hu (hv hs)) (t out)))))
+
+@scan_neq = (u (v (s ((hu (hv hs)) (t out)))))
+  & @ins ~ (t (u (v (s rest))))
+  & rest ~ (1 ((hu (hv hs)) out))
+
+@scan_eq = (u ({v_cmp v} (s ((hu ({hv_cmp hv} hs)) (t out)))))
+  & v_cmp ~ $([<] $(hv_cmp z))
+  & z ~ ?((@scan_vge @scan_less) (u (v (s ((hu (hv hs)) (t out)))))
+
+@scan_vge = (u ({v_cmp v} (s ((hu ({hv_cmp hv} hs)) (t out)))))
+  & v_cmp ~ $([=] $(hv_cmp z))
+  & z ~ ?((@scan_neq @scan_veq) (u (v (s ((hu (hv hs)) (t out)))))
+
+@scan_veq = (u (v ({s_cmp s} ((hu (hv {hs_cmp hs})) (t out)))))
+  & s_cmp ~ $([>] $(hs_cmp z))
+  & z ~ ?((@scan_score_old @scan_score_new) (u (v (s ((hu (hv hs)) (t out)))))
+
+@scan_score_old = (* (* (* ((hu (hv hs)) (t out)))))
+  & out ~ (1 ((hu (hv hs)) t))
+
+@scan_score_new = (* (* (* (s ((hu (hv *)) (t out))))))
+  & out ~ (1 ((hu (hv s)) t))

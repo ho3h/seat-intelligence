@@ -1,0 +1,118 @@
+// Split into alternating subsequences, sort them, and merge.
+@prog = (list out)
+  & @sort ~ (list out)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @split_a ~ ((1 (h t)) (a b))
+  & @sort ~ (a sa)
+  & @sort ~ (b sb)
+  & @merge ~ (sa (sb out))
+
+@split_a = ((?((@split_a_nil @split_a_cons) (pl out)) pl) out)
+
+@split_a_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_a_cons = (* ((h t) out))
+  & @split_b ~ (t (b a))
+  & out ~ ((1 (h a)) b)
+
+@split_b = ((?((@split_b_nil @split_b_cons) (pl out)) pl) out)
+
+@split_b_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_b_cons = (* ((h t) out))
+  & @split_a ~ (t (a b))
+  & out ~ ((1 (h b)) a)
+
+// Merge two ascending lists.
+@merge = (a (b out))
+  & @merge_a ~ (a (b out))
+
+@merge_a = ((?((@merge_a_nil @merge_a_cons) (pl (b out))) pl) (b out))
+
+@merge_a_nil = (* (b out))
+  & out ~ b
+
+@merge_a_cons = (* ((h t) (b out)))
+  & @merge_b ~ (b (h (t out)))
+
+@merge_b = ((?((@merge_b_nil @merge_b_cons) (pl (h (t out)))) pl) (h (t out)))
+
+@merge_b_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@merge_b_cons = (* ((j u) (h (t out))))
+  & h ~ {hx hr}
+  & j ~ {jx jr}
+  & hx ~ $([<] $(jx z))
+  & z ~ ?((@mb_ge @mb_lt) (hr (jr (t (u out))))
+
+@mb_lt = (* (hr (jr (t (u out)))))
+  & @merge ~ (t ((1 (jr u)) rest))
+  & out ~ (1 (hr rest))
+
+@mb_ge = (* (hr (jr (t (u out)))))
+  & @merge ~ ((1 (hr t)) (u rest))
+  & out ~ (1 (jr rest))
+
+// Find the most frequent value in the sorted list.
+@mode = ((?((@mode_nil @mode_cons) (pl out)) pl) out)
+
+@mode_nil = (* out)
+  & out ~ 0
+
+@mode_cons = (* ((x t) out))
+  & x ~ {xc xb}
+  & @runs ~ (t (xc (1 (xb (0 out)))))
+
+@runs = ((?((@runs_nil @runs_cons) (pl (cur (cnt (best (bc out)))))) pl) (cur (cnt (best (bc out))))
+
+@runs_nil = (* (cur (cnt (best (bc out)))))
+  & cnt ~ {cn cr}
+  & bc ~ {bn br}
+  & cn ~ $([>] $(bn z))
+  & cr ~ *
+  & br ~ *
+  & z ~ ?((@runs_end_no @runs_end_yes) (cur (best out)))
+
+@runs_end_no = (* (cur (best out)))
+  & cur ~ *
+  & best ~ out
+
+@runs_end_yes = (* (cur (best out)))
+  & best ~ *
+  & cur ~ out
+
+@runs_cons = (* ((x t) (cur (cnt (best (bc out))))))
+  & x ~ {xc xr}
+  & cur ~ {cc cr}
+  & xc ~ $([=] $(cc z))
+  & z ~ ?((@runs_diff @runs_same) (t (xr (cr (cnt (best (bc out))))))
+
+@runs_same = (* (t (xr (cur (cnt (best (bc out)))))))
+  & xr ~ *
+  & cnt ~ $([+1] cnew)
+  & @runs ~ (t (cur (cnew (best (bc out)))))
+
+@runs_diff = (* (t (xnew (oldcur (cnt (best (bc out)))))))
+  & cnt ~ {cn cr}
+  & bc ~ {bn br}
+  & cn ~ $([>] $(bn z))
+  & z ~ ?((@diff_keep @diff_take) (t (xnew (oldcur (cr (best (br out))))))
+
+@diff_keep = (* (t (xnew (oldcur (cntcopy (best (bccopy out)))))))
+  & oldcur ~ *
+  & cntcopy ~ *
+  & @runs ~ (t (xnew (1 (best (bccopy out)))))
+
+@diff_take = (* (t (xnew (oldcur (cntcopy (best (bccopy out)))))))
+  & best ~ *
+  & bccopy ~ *
+  & @runs ~ (t (xnew (1 (oldcur (cntcopy out)))))

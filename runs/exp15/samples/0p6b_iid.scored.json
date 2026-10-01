@@ -1,0 +1,4066 @@
+{
+"meta": {
+"model": "mlx-community/Qwen3-0.6B-4bit",
+"adapter": "adapters/exp15_0p6b",
+"set": "runs/exp15/sets/iid.json",
+"n": 4,
+"temp": 0.7,
+"top_p": 0.95,
+"max_tokens": 160,
+"batch": 64,
+"seed": 0,
+"out": "runs/exp15/samples/0p6b_iid.json",
+"seconds": 44.4,
+"score_seconds": 4.2
+},
+"specs": [
+[
+"gen",
+"pipeline",
+10001
+],
+[
+"gen",
+"pipeline",
+10005
+],
+[
+"gen",
+"pipeline",
+10006
+],
+[
+"gen",
+"pipeline",
+10007
+],
+[
+"gen",
+"pipeline",
+10008
+],
+[
+"gen",
+"pipeline",
+10011
+],
+[
+"gen",
+"pipeline",
+10014
+],
+[
+"gen",
+"pipeline",
+10017
+],
+[
+"gen",
+"pipeline",
+10018
+],
+[
+"gen",
+"pipeline",
+10019
+],
+[
+"gen",
+"pipeline",
+10021
+],
+[
+"gen",
+"pipeline",
+10025
+],
+[
+"gen",
+"pipeline",
+10026
+],
+[
+"gen",
+"pipeline",
+10027
+],
+[
+"gen",
+"pipeline",
+10028
+],
+[
+"gen",
+"pipeline",
+10029
+],
+[
+"gen",
+"pipeline",
+10031
+],
+[
+"gen",
+"pipeline",
+10034
+],
+[
+"gen",
+"pipeline",
+10035
+],
+[
+"gen",
+"pipeline",
+10038
+],
+[
+"gen",
+"pipeline",
+10039
+],
+[
+"gen",
+"pipeline",
+10041
+],
+[
+"gen",
+"pipeline",
+10042
+],
+[
+"gen",
+"pipeline",
+10043
+],
+[
+"gen",
+"pipeline",
+10046
+],
+[
+"gen",
+"pipeline",
+10047
+],
+[
+"gen",
+"pipeline",
+10055
+],
+[
+"gen",
+"pipeline",
+10056
+],
+[
+"gen",
+"pipeline",
+10058
+],
+[
+"gen",
+"pipeline",
+10059
+],
+[
+"gen",
+"pipeline",
+10060
+],
+[
+"gen",
+"pipeline",
+10062
+],
+[
+"gen",
+"pipeline",
+10063
+],
+[
+"gen",
+"pipeline",
+10065
+],
+[
+"gen",
+"pipeline",
+10070
+],
+[
+"gen",
+"pipeline",
+10073
+],
+[
+"gen",
+"pipeline",
+10074
+],
+[
+"gen",
+"pipeline",
+10077
+],
+[
+"gen",
+"pipeline",
+10078
+],
+[
+"gen",
+"pipeline",
+10079
+],
+[
+"gen",
+"pipeline",
+10081
+],
+[
+"gen",
+"pipeline",
+10082
+],
+[
+"gen",
+"pipeline",
+10083
+],
+[
+"gen",
+"pipeline",
+10086
+],
+[
+"gen",
+"pipeline",
+10088
+],
+[
+"gen",
+"pipeline",
+10089
+],
+[
+"gen",
+"pipeline",
+10091
+],
+[
+"gen",
+"pipeline",
+10094
+],
+[
+"gen",
+"pipeline",
+10098
+],
+[
+"gen",
+"pipeline",
+10100
+],
+[
+"gen",
+"pipeline",
+10101
+],
+[
+"gen",
+"pipeline",
+10103
+],
+[
+"gen",
+"pipeline",
+10104
+],
+[
+"gen",
+"pipeline",
+10106
+],
+[
+"gen",
+"pipeline",
+10107
+],
+[
+"gen",
+"pipeline",
+10108
+],
+[
+"gen",
+"pipeline",
+10109
+],
+[
+"gen",
+"pipeline",
+10110
+],
+[
+"gen",
+"pipeline",
+10111
+],
+[
+"gen",
+"pipeline",
+10112
+],
+[
+"gen",
+"reduce",
+10000
+],
+[
+"gen",
+"reduce",
+10001
+],
+[
+"gen",
+"reduce",
+10002
+],
+[
+"gen",
+"reduce",
+10004
+],
+[
+"gen",
+"reduce",
+10005
+],
+[
+"gen",
+"reduce",
+10007
+],
+[
+"gen",
+"reduce",
+10008
+],
+[
+"gen",
+"reduce",
+10012
+],
+[
+"gen",
+"reduce",
+10013
+],
+[
+"gen",
+"reduce",
+10015
+],
+[
+"gen",
+"reduce",
+10016
+],
+[
+"gen",
+"reduce",
+10017
+],
+[
+"gen",
+"reduce",
+10019
+],
+[
+"gen",
+"reduce",
+10020
+],
+[
+"gen",
+"reduce",
+10026
+],
+[
+"gen",
+"reduce",
+10027
+],
+[
+"gen",
+"reduce",
+10037
+],
+[
+"gen",
+"reduce",
+10038
+],
+[
+"gen",
+"reduce",
+10048
+],
+[
+"gen",
+"reduce",
+10049
+],
+[
+"gen",
+"reduce",
+10050
+],
+[
+"gen",
+"reduce",
+10051
+],
+[
+"gen",
+"reduce",
+10052
+],
+[
+"gen",
+"reduce",
+10053
+],
+[
+"gen",
+"reduce",
+10055
+],
+[
+"gen",
+"reduce",
+10056
+],
+[
+"gen",
+"reduce",
+10057
+],
+[
+"gen",
+"reduce",
+10059
+],
+[
+"gen",
+"reduce",
+10060
+],
+[
+"gen",
+"reduce",
+10066
+],
+[
+"gen",
+"reduce",
+10068
+],
+[
+"gen",
+"reduce",
+10069
+],
+[
+"gen",
+"reduce",
+10070
+],
+[
+"gen",
+"reduce",
+10071
+],
+[
+"gen",
+"reduce",
+10075
+],
+[
+"gen",
+"reduce",
+10076
+],
+[
+"gen",
+"reduce",
+10077
+],
+[
+"gen",
+"reduce",
+10078
+],
+[
+"gen",
+"reduce",
+10092
+],
+[
+"gen",
+"reduce",
+10093
+],
+[
+"gen",
+"reduce",
+10094
+],
+[
+"gen",
+"reduce",
+10096
+],
+[
+"gen",
+"reduce",
+10098
+],
+[
+"gen",
+"reduce",
+10099
+],
+[
+"gen",
+"reduce",
+10100
+],
+[
+"gen",
+"reduce",
+10104
+],
+[
+"gen",
+"reduce",
+10108
+],
+[
+"gen",
+"reduce",
+10109
+],
+[
+"gen",
+"reduce",
+10113
+],
+[
+"gen",
+"reduce",
+10114
+],
+[
+"gen",
+"reduce",
+10117
+],
+[
+"gen",
+"reduce",
+10118
+],
+[
+"gen",
+"reduce",
+10130
+],
+[
+"gen",
+"reduce",
+10138
+],
+[
+"gen",
+"reduce",
+10139
+],
+[
+"gen",
+"reduce",
+10140
+],
+[
+"gen",
+"reduce",
+10141
+],
+[
+"gen",
+"reduce",
+10150
+],
+[
+"gen",
+"reduce",
+10154
+],
+[
+"gen",
+"reduce",
+10155
+]
+],
+"scored": {
+"gen_pipeline_10001": [
+{
+"status": "fail",
+"prog": "sort\nreverse\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 3",
+"text": "map lin 3\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreverse\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 5",
+"text": "map lin 5\nreduce count"
+}
+],
+"gen_pipeline_10005": [
+{
+"status": "parse",
+"why": "bad reducer: reduce cnt",
+"text": "map sq\nreduce cnt"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nreduce last"
+},
+{
+"status": "fail",
+"prog": "reverse\nmap and 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "drop 8\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10006": [
+{
+"status": "parse",
+"why": "unknown word: mapq 5",
+"text": "mapq 5"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 30",
+"text": "map ge 30"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 7",
+"text": "map ge 7"
+}
+],
+"gen_pipeline_10007": [
+{
+"status": "fail",
+"prog": "filter lt 100\nsort\nrunsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lt 2",
+"text": "drop 3\nmap lt 2\ndrop 3\nreduce cntgtfirst"
+},
+{
+"status": "fail",
+"prog": "drop 5\nfilter even\nrunsum\nreduce max",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nrunsum\nrunsum\nreduce max"
+}
+],
+"gen_pipeline_10008": [
+{
+"status": "fail",
+"prog": "filter gt 8\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "take 5\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter ge 5\ndrop 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10011": [
+{
+"status": "fail",
+"prog": "filter ge 100\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 2",
+"text": "map ge 2\nsort\nmap mod 10"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter ge 20\nreverse\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lt 3",
+"text": "sort\nmap lt 3\nreduce xor"
+}
+],
+"gen_pipeline_10014": [
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndrop 3",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_pipeline_10017": [
+{
+"status": "parse",
+"why": "bad expression: lt 50",
+"text": "map lt 50\ndrop 8\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "filter gt 805\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: lin 7",
+"text": "filter lin 7\nmap and 3"
+},
+{
+"status": "fail",
+"prog": "map and 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10018": [
+{
+"status": "parse",
+"why": "bad predicate: div 2",
+"text": "filter lt 3\nfilter div 2"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter odd\nreverse\nfilter sq"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "sort\nfilter sq\nreduce cntgtfirst"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10019": [
+{
+"status": "fail",
+"prog": "filter ge 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "filter even\nreduce xor\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 10",
+"text": "map ge 10\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 1",
+"text": "sort\nmap ge 1\nreduce max"
+}
+],
+"gen_pipeline_10021": [
+{
+"status": "fail",
+"prog": "map and 3\ndedup\ndedup\nreverse\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: and",
+"text": "filter and\nreverse\nreverse\nsort\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter even\nfilter ge 3\ndedup\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\ndedup\nfilter even\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10025": [
+{
+"status": "parse",
+"why": "bad expression: gt 3",
+"text": "take 8\nmap div 2\nmap gt 3"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\nrunsum\nrunsum\nfilter even"
+},
+{
+"status": "fail",
+"prog": "filter gt 20\nrunsum\nrunsum\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 50",
+"text": "take 8\nmap gt 50\nreduce last"
+}
+],
+"gen_pipeline_10026": [
+{
+"status": "fail",
+"prog": "sort\nmap and 20\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 3",
+"text": "map ge 3\nfilter lin 2\nreduce max"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nmap xor 20\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 20",
+"text": "sort\nsort\nmap ge 20\nreduce first"
+}
+],
+"gen_pipeline_10027": [
+{
+"status": "fail",
+"prog": "drop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\ndedup\nreduce max"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nsort\nmap and 3\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "reverse\nreverse\nmap and 1",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_pipeline_10028": [
+{
+"status": "parse",
+"why": "bad predicate: and 20",
+"text": "sort\nfilter and 20\nreduce cntgtfirst"
+},
+{
+"status": "fail",
+"prog": "map xor 10\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntfirst",
+"text": "map sq\nreduce cntfirst"
+}
+],
+"gen_pipeline_10029": [
+{
+"status": "fail",
+"prog": "sort\nsort\nrunsum\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "reverse\ntake 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "reverse\nmap even\ndrop 3\nreduce xor"
+},
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "filter odd\nreduce\nreduce cntfirst\nreduce cntgtgt"
+}
+],
+"gen_pipeline_10031": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreverse\nsort\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\ndedup\nmap sq",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nsort\nreverse\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "take 2\nfilter lt 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10034": [
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\nfilter lt 10\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "drop 8\nfilter sq\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "drop 8\nreverse\nsort\nreverse\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "runsum\nfilter odd\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10035": [
+{
+"status": "fail",
+"prog": "map sq\nreverse\nmap sq",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 100",
+"text": "sort\nmap lin 100"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreverse\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "sort\nreduce\nreduce xor"
+}
+],
+"gen_pipeline_10038": [
+{
+"status": "fail",
+"prog": "runsum\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "sort\nfilter sq\nsort\nreduce cntgtfirst"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "runsum\nmap odd\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter gt 500\nsort\nrunsum\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10039": [
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nmap sq\nmap ge 5"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "reverse\nmap odd\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "runsum\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 8\nsort\ndrop 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10041": [
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "drop 3\nmap even"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\nsort\nfilter ge 7"
+},
+{
+"status": "fail",
+"prog": "reverse\nfilter gt 3",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 3",
+"text": "map ge 3\nreduce xor"
+}
+],
+"gen_pipeline_10042": [
+{
+"status": "fail",
+"prog": "sort\ntake 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "map and 5",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nmap and 5",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10043": [
+{
+"status": "parse",
+"why": "bad expression: ge 4",
+"text": "drop 2\nmap ge 4"
+},
+{
+"status": "fail",
+"prog": "take 8\nmap and 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lt 50",
+"text": "map lt 50\nmap odd\nfilter odd"
+},
+{
+"status": "fail",
+"prog": "filter gt 4\nsort\nsort\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10046": [
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "sort\nreduce xor\nmap even"
+},
+{
+"status": "parse",
+"why": "bad predicate: and 5",
+"text": "sort\nfilter and 5\nreduce last"
+},
+{
+"status": "fail",
+"prog": "map div 5\ndrop 5",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "take 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10047": [
+{
+"status": "fail",
+"prog": "filter odd\nfilter ge 10",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq 5",
+"text": "filter modeq 5"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 20",
+"text": "map gt 20\ndrop 8\nreduce last"
+}
+],
+"gen_pipeline_10055": [
+{
+"status": "parse",
+"why": "bad expression: ge 20",
+"text": "map ge 20\nreduce count"
+},
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "map even\nmap ge 10"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce max",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nmap lt 2"
+}
+],
+"gen_pipeline_10056": [
+{
+"status": "parse",
+"why": "bad expression: and",
+"text": "map and\nreverse\nrunsum\nreduce sum"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "runsum\nmap odd\nsort\nsort\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntfirst",
+"text": "sort\ndrop 8\ntake 3\nreduce cntfirst"
+},
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "runsum\nreduce\nrunsum\nreduce cntgtfirst"
+}
+],
+"gen_pipeline_10058": [
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10059": [
+{
+"status": "fail",
+"prog": "filter gt 5\ndedup\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\ndedup\ndrop 2\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "take 8\ndedup\nreverse",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "sort\nmap sq\ndedup\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10060": [
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\nsort\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10062": [
+{
+"status": "parse",
+"why": "bad expression: ge 3",
+"text": "map ge 3\ntake 1\ndedup\nreduce count"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq 5",
+"text": "filter odd\nrunsum\ndedup\nfilter modeq 5"
+},
+{
+"status": "fail",
+"prog": "drop 8\nmap div 5\ndedup\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntfirst",
+"text": "runsum\ndedup\nfilter ge 10\nreduce cntfirst\nreduce xor"
+}
+],
+"gen_pipeline_10063": [
+{
+"status": "fail",
+"prog": "runsum\nmap sq\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter ge 5\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 3",
+"text": "map gt 3\ndrop 8\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "take 1\nsort\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10065": [
+{
+"status": "parse",
+"why": "bad expression: lin 3",
+"text": "map and 2\nmap lin 3"
+},
+{
+"status": "fail",
+"prog": "sort\ndrop 5\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "runsum\nfilter lt 20",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10070": [
+{
+"status": "fail",
+"prog": "dedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "filter odd\ndedup\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter even\ndedup\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10073": [
+{
+"status": "fail",
+"prog": "sort\nfilter lt 20\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 1\nsort\nreduce max",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "runsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10074": [
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 8",
+"text": "map ge 8\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 20",
+"text": "map ge 20\nreduce xor"
+}
+],
+"gen_pipeline_10077": [
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "sort\nreduce min\nreduce first"
+},
+{
+"status": "fail",
+"prog": "reverse\nreverse\ndrop 2\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map xor 20\ndrop 8\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: mod",
+"text": "filter mod\nmap xor 20"
+}
+],
+"gen_pipeline_10078": [
+{
+"status": "fail",
+"prog": "sort\nfilter ge 4\ndrop 1",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "reverse\nfilter sq\nreduce last"
+},
+{
+"status": "fail",
+"prog": "map div 3\ndrop 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce cntgtfirst"
+}
+],
+"gen_pipeline_10079": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce cntgtgt"
+},
+{
+"status": "fail",
+"prog": "sort\ndrop 1",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "bad predicate: lin",
+"text": "filter lin\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad predicate: div 20",
+"text": "sort\nfilter div 20"
+}
+],
+"gen_pipeline_10081": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "runsum\nsort\nfilter sq\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "drop 8\nfilter ge 5\nsort\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 8\nreverse\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map mod 3\nrunsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10082": [
+{
+"status": "fail",
+"prog": "sort\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\ndedup\nsort\nreverse",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nsort",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_pipeline_10083": [
+{
+"status": "fail",
+"prog": "sort\ndedup\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter even\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "sort\nreverse\nsort\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10086": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "sort\ndrop 2\nmap add 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "map and 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: and 8",
+"text": "reverse\nfilter and 8\nreduce xor"
+}
+],
+"gen_pipeline_10088": [
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "dedup\nmap odd\ndedup\nreduce cntgtfirst"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10089": [
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "pass",
+"prog": "dedup\ndedup\nfilter even",
+"exact": true,
+"itrs": 17998,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "dedup\ndrop 5\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_pipeline_10091": [
+{
+"status": "parse",
+"why": "bad expression: gt 20",
+"text": "sort\nmap gt 20\nreduce sum"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce odd",
+"text": "drop 2\nreduce odd"
+},
+{
+"status": "fail",
+"prog": "drop 8\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "take 8\ntake 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10094": [
+{
+"status": "parse",
+"why": "bad predicate: and",
+"text": "filter and\ndrop 8\nreduce sum"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 1",
+"text": "sort\nmap ge 1\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "sort\nfilter sq\nreduce last"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 10",
+"text": "map gt 10\nreduce last"
+}
+],
+"gen_pipeline_10098": [
+{
+"status": "fail",
+"prog": "drop 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nmap and 3\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\ndrop 8\nreduce sum"
+}
+],
+"gen_pipeline_10100": [
+{
+"status": "fail",
+"prog": "map sq\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter ge 10\nsort\nsort",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "filter even\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10101": [
+{
+"status": "fail",
+"prog": "map sq\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: mod",
+"text": "filter mod\nreverse\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "drop 2\nmap and 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 5",
+"text": "sort\nmap ge 5\nreduce last"
+}
+],
+"gen_pipeline_10103": [
+{
+"status": "parse",
+"why": "bad expression: ge 5",
+"text": "reverse\nfilter even\nmap ge 5\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "take 8\nfilter sq\nreduce min"
+},
+{
+"status": "fail",
+"prog": "runsum\ntake 5\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "reverse\ntake 2\nmap mod 3\nsort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10104": [
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "reverse\nmap even\nreduce last"
+},
+{
+"status": "fail",
+"prog": "filter gt 800\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 200",
+"text": "sort\nmap ge 200"
+}
+],
+"gen_pipeline_10106": [
+{
+"status": "fail",
+"prog": "map div 20\ntake 5\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lt 3",
+"text": "drop 2\nsort\nsort\nmap lt 3\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "drop 8\nmap odd\nrunsum"
+},
+{
+"status": "parse",
+"why": "unknown word: drop",
+"text": "drop\nreverse\nsort\ndrop 8\nreduce last"
+}
+],
+"gen_pipeline_10107": [
+{
+"status": "parse",
+"why": "bad expression: lt 3",
+"text": "map lt 3\nsort\ndrop 2\nreduce cntgtfirst"
+},
+{
+"status": "fail",
+"prog": "take 5\ntake 2\ntake 5\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "take 2\nfilter sq\nreduce first"
+},
+{
+"status": "fail",
+"prog": "runsum\ntake 3\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10108": [
+{
+"status": "fail",
+"prog": "runsum\ndrop 2\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "sort\nfilter sq\nrunsum\nreduce max"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\ndrop 8\ndrop 8\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nmap sq\nrunsum\nreverse\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_pipeline_10109": [
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "sort\nreduce max\nreduce xor"
+}
+],
+"gen_pipeline_10110": [
+{
+"status": "fail",
+"prog": "drop 8\nmap and 5\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: and 8",
+"text": "runsum\nfilter and 8\nreduce cntgtfirst\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter even\nreverse\ndrop 2\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 5",
+"text": "map gt 5\ntake 8\nreduce xor"
+}
+],
+"gen_pipeline_10111": [
+{
+"status": "fail",
+"prog": "sort\nmap add 5",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "sort\nreduce last\nreverse"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce sum"
+}
+],
+"gen_pipeline_10112": [
+{
+"status": "fail",
+"prog": "drop 3\ndrop 8\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 5",
+"text": "map and 1\nmap lin 5\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nrunsum\nrunsum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "bad predicate: div 5",
+"text": "runsum\nfilter div 5\nreduce xor"
+}
+],
+"gen_reduce_10000": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce cntgt"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "sort\nmap mod 10",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10001": [
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "map even\nreduce max"
+},
+{
+"status": "parse",
+"why": "bad predicate: div 3",
+"text": "filter div 3\nreduce count"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nsort\nreduce last"
+},
+{
+"status": "fail",
+"prog": "map xor 3\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10002": [
+{
+"status": "fail",
+"prog": "drop 8\nreverse\nmap div 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "drop 3\nmap odd\nreduce last"
+},
+{
+"status": "fail",
+"prog": "take 3\ndrop 8\nsort\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [6, 0, 4, 8, 7, 6, 4, 7, 5, 9, 3, 8]"
+},
+{
+"status": "fail",
+"prog": "filter lt 300\nsort\ndrop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+}
+],
+"gen_reduce_10004": [
+{
+"status": "fail",
+"prog": "take 5\nsort\ndrop 1",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "sort\nsort\nmap even\nreduce count"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 1",
+"text": "map lin 1\nreverse\nreduce sum"
+},
+{
+"status": "parse",
+"why": "bad expression: modefirst",
+"text": "map modefirst\nsort\nmap sq\nreduce sum"
+}
+],
+"gen_reduce_10005": [
+{
+"status": "fail",
+"prog": "take 8\ndrop 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "drop 5\nreduce xor\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntgt",
+"text": "sort\nfilter ge 4\nreduce cntgt"
+}
+],
+"gen_reduce_10007": [
+{
+"status": "parse",
+"why": "bad expression: lt 30",
+"text": "map lt 30\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 4",
+"text": "drop 1\nmap gt 4\nreduce cntgt"
+},
+{
+"status": "fail",
+"prog": "map xor 8\nmap and 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "take 8\nfilter ge 20\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10008": [
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "map div 10\nreduce xor\nreduce count"
+},
+{
+"status": "fail",
+"prog": "sort\nreverse\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nmap lt 5"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "drop 3\nmap odd\nfilter ge 20\nreduce xor"
+}
+],
+"gen_reduce_10012": [
+{
+"status": "fail",
+"prog": "filter even\ndrop 3\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "runsum\nmap xor 1\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nreverse\ndrop 1\nreduce cntgtgt5\nreduce last"
+},
+{
+"status": "fail",
+"prog": "map and 10\nrunsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10013": [
+{
+"status": "fail",
+"prog": "drop 1\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq 5",
+"text": "filter modeq 5\nfilter even"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\nreverse\nrunsum\nreduce count"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nfilter even\nreduce last"
+}
+],
+"gen_reduce_10015": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "sort\nfilter sq\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nmap sq\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter even\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "filter even\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+}
+],
+"gen_reduce_10016": [
+{
+"status": "fail",
+"prog": "reverse\nmap xor 20",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map and 2\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "reverse\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "take 5\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10017": [
+{
+"status": "fail",
+"prog": "reverse\ndrop 3\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nsort\nsort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: gt 300",
+"text": "map gt 300\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10019": [
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\ndedup\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "reverse\ndedup\nreverse\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntfirst",
+"text": "sort\ndedup\nreduce cntfirst"
+},
+{
+"status": "fail",
+"prog": "dedup\nsort\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10020": [
+{
+"status": "parse",
+"why": "bad expression: lt 100",
+"text": "map lt 100\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "map and 5\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 20",
+"text": "reverse\nmap ge 20\nreduce xor"
+}
+],
+"gen_reduce_10026": [
+{
+"status": "parse",
+"why": "bad expression: lin 7",
+"text": "sort\nmap lin 7\nreduce cnt"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "sort\nmap lin 2"
+},
+{
+"status": "fail",
+"prog": "take 1\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10027": [
+{
+"status": "fail",
+"prog": "sort\nfilter ge 300",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter lt 200\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: lt 10",
+"text": "map lt 10\nreverse\nreduce cntgt first"
+},
+{
+"status": "fail",
+"prog": "map sq\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10037": [
+{
+"status": "parse",
+"why": "bad expression: ge 500",
+"text": "sort\nmap ge 500"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 5",
+"text": "map lin 5\nsort\nreverse\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "drop 2\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nfilter gt 3"
+}
+],
+"gen_reduce_10038": [
+{
+"status": "fail",
+"prog": "runsum\nreverse\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "take 3\nsort\ntake 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 5\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "drop 8\ntake 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10048": [
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\ndedup\nreduce cntgt"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "dedup\ndedup\nreduce cntgtfirst\nreduce first"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10049": [
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "sort\nfilter xor\nreduce last"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq 2",
+"text": "filter modeq 2\nmap lt 10\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map and 5\nmap odd\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "dedup\nmap odd\nsort\ndedup\nreduce last"
+}
+],
+"gen_reduce_10050": [
+{
+"status": "fail",
+"prog": "reverse\ndrop 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "map sq\nmap and 10\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "drop 8\nsort\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "map xor 30\nreverse\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10051": [
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "sort\nreduce\nreduce min"
+},
+{
+"status": "fail",
+"prog": "take 8\nfilter lt 20\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 1",
+"text": "map lin 1\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\ndrop 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10052": [
+{
+"status": "parse",
+"why": "bad reducer: reduce ge 3",
+"text": "sort\ndrop 2\ndrop 8\nreduce ge 3\nreduce count"
+},
+{
+"status": "fail",
+"prog": "runsum\nsort\nsort\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "drop 2\nmap and 5\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "filter even\nrunsum\nreduce xor\nreduce last"
+}
+],
+"gen_reduce_10053": [
+{
+"status": "fail",
+"prog": "reverse\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [6, 0, 4, 8, 7, 6, 4, 7, 5, 9, 3, 8]"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntgtgt",
+"text": "sort\nreduce cntgtgt"
+},
+{
+"status": "pass",
+"prog": "sort\nsort\nreduce last",
+"exact": false,
+"itrs": 1329743,
+"why": ""
+}
+],
+"gen_reduce_10055": [
+{
+"status": "fail",
+"prog": "filter odd\ndedup\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\nmap xor 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "reverse\ndedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\ndedup\nreverse\ndedup\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [6, 0, 4, 8, 7, 6, 4, 7, 5, 9, 3, 8]"
+}
+],
+"gen_reduce_10056": [
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "runsum\nreduce\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "drop 8\nreverse\nrunsum\nreduce max",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "drop 2\nreduce xor\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "drop 2\nfilter even\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10057": [
+{
+"status": "fail",
+"prog": "filter ge 15\nreverse\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "drop 1\nreverse\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "drop 5\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [6, 0, 4, 8, 7, 6, 4, 7, 5, 9, 3, 8]"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 10",
+"text": "sort\nmap ge 10\nreduce max"
+}
+],
+"gen_reduce_10059": [
+{
+"status": "parse",
+"why": "bad expression: gt 50",
+"text": "reverse\nmap gt 50"
+},
+{
+"status": "fail",
+"prog": "map xor 20\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "map and 2\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter odd\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10060": [
+{
+"status": "fail",
+"prog": "sort\ndedup\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "dedup\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\ndedup\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10066": [
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\ndrop 1\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "map and 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce last"
+}
+],
+"gen_reduce_10068": [
+{
+"status": "parse",
+"why": "bad reducer: reduce cntgtgt",
+"text": "sort\nsort\nreduce cntgtgt"
+},
+{
+"status": "fail",
+"prog": "take 8\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nsort\nreduce count"
+},
+{
+"status": "fail",
+"prog": "drop 1\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10069": [
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad reducer: reduce cntgtgt",
+"text": "filter odd\nreduce cntgtgt"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "reverse\nmap odd"
+}
+],
+"gen_reduce_10070": [
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nfilter and 5\nreduce min"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: div 8",
+"text": "filter div 8\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "map sq\nsort\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10071": [
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "runsum\nmap odd\nreduce max"
+},
+{
+"status": "fail",
+"prog": "take 2\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "sort\nmap even\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "drop 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [6, 0, 4, 8, 7, 6, 4, 7, 5, 9, 3, 8]"
+}
+],
+"gen_reduce_10075": [
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "take 3\nsort\nsort\nfilter xor"
+},
+{
+"status": "parse",
+"why": "bad predicate: and",
+"text": "filter and\nmap odd\nreduce sum\nreduce max"
+},
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "sort\nrunsum\nmap even\nreduce xor"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "filter gt 10\nreduce sum\ndrop 8\nreduce last"
+}
+],
+"gen_reduce_10076": [
+{
+"status": "fail",
+"prog": "take 3\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter even\nreduce max",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 3\nsort\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10077": [
+{
+"status": "fail",
+"prog": "map mod 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter gt 4\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce max"
+},
+{
+"status": "fail",
+"prog": "sort\nmap and 8\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+}
+],
+"gen_reduce_10078": [
+{
+"status": "parse",
+"why": "bad expression: ge 35",
+"text": "drop 2\nmap ge 35\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "take 8\nreverse\nrunsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\ndrop 8\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map xor 5\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10092": [
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "drop 8\nreduce xor\nreduce sum"
+},
+{
+"status": "fail",
+"prog": "filter ge 500\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "filter xor\ndrop 3\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter ge 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10093": [
+{
+"status": "fail",
+"prog": "filter ge 30\nmap sq\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "runsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "reverse\ndrop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "sort\nrunsum\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10094": [
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "runsum\nmap lin 2\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "map and 10\nsort\nfilter xor\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "map sq\nreverse\ndrop 8\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "drop 8\nfilter odd\ndrop 3\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+}
+],
+"gen_reduce_10096": [
+{
+"status": "fail",
+"prog": "filter gt 30",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nreverse\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10098": [
+{
+"status": "parse",
+"why": "bad predicate: xor",
+"text": "map add 2\nfilter xor\ndrop 5\nreduce cntgtfirst"
+},
+{
+"status": "parse",
+"why": "bad predicate: and 5",
+"text": "take 3\nfilter and 5\ndedup\ndedup"
+},
+{
+"status": "fail",
+"prog": "take 8\ndedup\nrunsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad predicate: and",
+"text": "filter and\ndedup\nmap odd\nreduce last"
+}
+],
+"gen_reduce_10099": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter odd\nmap and 3",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 2",
+"text": "map ge 2\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "runsum\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10100": [
+{
+"status": "fail",
+"prog": "sort\nfilter gt 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "sort\nreverse\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10104": [
+{
+"status": "fail",
+"prog": "drop 8\nmap and 1\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 3\nreverse\ndrop 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter lt 10\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "map odd\nsort\nreduce last"
+}
+],
+"gen_reduce_10108": [
+{
+"status": "parse",
+"why": "bad reducer: reduce cnt",
+"text": "take 8\nreduce cnt"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map and 5\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "reduce xor\nreduce xor"
+}
+],
+"gen_reduce_10109": [
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter odd\nmap and 10\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "map mod 10\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10113": [
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "filter lt 3\nreduce\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter even\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce min",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "drop 1\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10114": [
+{
+"status": "parse",
+"why": "bad expression: ge 5",
+"text": "filter even\nmap ge 5"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 50",
+"text": "map ge 50\nsort\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 10",
+"text": "sort\nmap ge 10\nreduce first"
+},
+{
+"status": "fail",
+"prog": "reverse\ndrop 2\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10117": [
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\ndrop 5\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "filter ge 20\ntake 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "map sq\ndrop 1\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "parse",
+"why": "stage after reduce",
+"text": "drop 5\nreduce xor\nreduce sum"
+}
+],
+"gen_reduce_10118": [
+{
+"status": "parse",
+"why": "bad predicate: sq",
+"text": "filter sq\nsort\nreverse\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "reverse\nmap xor 200",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map mod 10\nsort\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map sq\nfilter ge 3",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10130": [
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "drop 3\nmap even\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad predicate: mod",
+"text": "filter mod\nrunsum\nreduce xor\nfilter odd"
+},
+{
+"status": "fail",
+"prog": "sort\ndrop 1\ndrop 1\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreverse\nreverse\ntake 2",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10138": [
+{
+"status": "fail",
+"prog": "filter ge 100\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "map div 2\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "reverse\nfilter odd\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nmap xor 20\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10139": [
+{
+"status": "parse",
+"why": "bad expression: lin 5",
+"text": "reverse\nmap lin 5\nreduce last"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "parse",
+"why": "bad expression: ge 10",
+"text": "sort\nmap ge 10\nreduce xor"
+},
+{
+"status": "parse",
+"why": "unknown word: reduce",
+"text": "drop 3\nreduce\nreverse\nreduce last"
+}
+],
+"gen_reduce_10140": [
+{
+"status": "parse",
+"why": "bad predicate: div 3",
+"text": "filter div 3\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad expression: even",
+"text": "sort\nmap even\nreduce first"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 8",
+"text": "map lin 8\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "sort\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"gen_reduce_10141": [
+{
+"status": "parse",
+"why": "bad expression: gt 200",
+"text": "map gt 200\nreduce sum"
+},
+{
+"status": "pass",
+"prog": "sort\nsort\nreduce count",
+"exact": false,
+"itrs": 1342616,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "map xor 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "filter odd\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10150": [
+{
+"status": "fail",
+"prog": "dedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\nfilter ge 3\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "reverse\ndedup\ndedup",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "dedup\ntake 1\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"gen_reduce_10154": [
+{
+"status": "fail",
+"prog": "sort\nmap and 100\ndrop 5",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "parse",
+"why": "bad expression: odd",
+"text": "drop 7\nmap odd\nreduce xor"
+},
+{
+"status": "parse",
+"why": "bad predicate: and",
+"text": "runsum\ndrop 8\nfilter and\nreduce xor"
+},
+{
+"status": "fail",
+"prog": "take 8\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"gen_reduce_10155": [
+{
+"status": "fail",
+"prog": "sort\nfilter ge 10\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "drop 8\nmap xor 50",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "drop 3\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "reverse\nsort\nreduce xor",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+]
+},
+"depth": {
+"gen_pipeline_10001": 1,
+"gen_pipeline_10005": 1,
+"gen_pipeline_10006": 1,
+"gen_pipeline_10007": 3,
+"gen_pipeline_10008": 2,
+"gen_pipeline_10011": 3,
+"gen_pipeline_10014": 3,
+"gen_pipeline_10017": 3,
+"gen_pipeline_10018": 2,
+"gen_pipeline_10019": 3,
+"gen_pipeline_10021": 3,
+"gen_pipeline_10025": 3,
+"gen_pipeline_10026": 3,
+"gen_pipeline_10027": 2,
+"gen_pipeline_10028": 1,
+"gen_pipeline_10029": 3,
+"gen_pipeline_10031": 3,
+"gen_pipeline_10034": 3,
+"gen_pipeline_10035": 2,
+"gen_pipeline_10038": 3,
+"gen_pipeline_10039": 2,
+"gen_pipeline_10041": 1,
+"gen_pipeline_10042": 2,
+"gen_pipeline_10043": 3,
+"gen_pipeline_10046": 2,
+"gen_pipeline_10047": 3,
+"gen_pipeline_10055": 1,
+"gen_pipeline_10056": 3,
+"gen_pipeline_10058": 2,
+"gen_pipeline_10059": 3,
+"gen_pipeline_10060": 2,
+"gen_pipeline_10062": 3,
+"gen_pipeline_10063": 3,
+"gen_pipeline_10065": 2,
+"gen_pipeline_10070": 3,
+"gen_pipeline_10073": 2,
+"gen_pipeline_10074": 2,
+"gen_pipeline_10077": 3,
+"gen_pipeline_10078": 3,
+"gen_pipeline_10079": 1,
+"gen_pipeline_10081": 3,
+"gen_pipeline_10082": 2,
+"gen_pipeline_10083": 3,
+"gen_pipeline_10086": 2,
+"gen_pipeline_10088": 2,
+"gen_pipeline_10089": 3,
+"gen_pipeline_10091": 3,
+"gen_pipeline_10094": 2,
+"gen_pipeline_10098": 2,
+"gen_pipeline_10100": 2,
+"gen_pipeline_10101": 3,
+"gen_pipeline_10103": 3,
+"gen_pipeline_10104": 2,
+"gen_pipeline_10106": 3,
+"gen_pipeline_10107": 3,
+"gen_pipeline_10108": 3,
+"gen_pipeline_10109": 3,
+"gen_pipeline_10110": 3,
+"gen_pipeline_10111": 2,
+"gen_pipeline_10112": 3,
+"gen_reduce_10000": 2,
+"gen_reduce_10001": 3,
+"gen_reduce_10002": 3,
+"gen_reduce_10004": 3,
+"gen_reduce_10005": 3,
+"gen_reduce_10007": 3,
+"gen_reduce_10008": 3,
+"gen_reduce_10012": 3,
+"gen_reduce_10013": 3,
+"gen_reduce_10015": 2,
+"gen_reduce_10016": 3,
+"gen_reduce_10017": 3,
+"gen_reduce_10019": 3,
+"gen_reduce_10020": 2,
+"gen_reduce_10026": 2,
+"gen_reduce_10027": 2,
+"gen_reduce_10037": 2,
+"gen_reduce_10038": 3,
+"gen_reduce_10048": 3,
+"gen_reduce_10049": 3,
+"gen_reduce_10050": 3,
+"gen_reduce_10051": 3,
+"gen_reduce_10052": 3,
+"gen_reduce_10053": 2,
+"gen_reduce_10055": 3,
+"gen_reduce_10056": 3,
+"gen_reduce_10057": 2,
+"gen_reduce_10059": 2,
+"gen_reduce_10060": 3,
+"gen_reduce_10066": 3,
+"gen_reduce_10068": 2,
+"gen_reduce_10069": 2,
+"gen_reduce_10070": 2,
+"gen_reduce_10071": 3,
+"gen_reduce_10075": 3,
+"gen_reduce_10076": 2,
+"gen_reduce_10077": 3,
+"gen_reduce_10078": 3,
+"gen_reduce_10092": 3,
+"gen_reduce_10093": 3,
+"gen_reduce_10094": 3,
+"gen_reduce_10096": 2,
+"gen_reduce_10098": 3,
+"gen_reduce_10099": 3,
+"gen_reduce_10100": 2,
+"gen_reduce_10104": 3,
+"gen_reduce_10108": 2,
+"gen_reduce_10109": 2,
+"gen_reduce_10113": 2,
+"gen_reduce_10114": 3,
+"gen_reduce_10117": 3,
+"gen_reduce_10118": 3,
+"gen_reduce_10130": 3,
+"gen_reduce_10138": 2,
+"gen_reduce_10139": 3,
+"gen_reduce_10140": 3,
+"gen_reduce_10141": 2,
+"gen_reduce_10150": 3,
+"gen_reduce_10154": 3,
+"gen_reduce_10155": 3
+},
+"gold": {
+"gen_pipeline_10001": "map lin 2 2",
+"gen_pipeline_10005": "take 1",
+"gen_pipeline_10006": "drop 8",
+"gen_pipeline_10007": "filter ge 10\ntake 2\nrunsum",
+"gen_pipeline_10008": "take 5\nmap xor 63",
+"gen_pipeline_10011": "filter ge 5\nreverse\nfilter ge 5",
+"gen_pipeline_10014": "dedup\nsort\nmap mod 3",
+"gen_pipeline_10017": "sort\nreverse\nrunsum",
+"gen_pipeline_10018": "drop 5\ndedup",
+"gen_pipeline_10019": "sort\nmap mod 8\ndrop 8",
+"gen_pipeline_10021": "map div 3\nfilter odd\ndedup",
+"gen_pipeline_10025": "drop 1\nrunsum\nmap xor 15",
+"gen_pipeline_10026": "sort\nfilter lt 50\ntake 8",
+"gen_pipeline_10027": "take 8\ndedup",
+"gen_pipeline_10028": "map mod 3",
+"gen_pipeline_10029": "reverse\ndrop 8\nmap lin 2 0",
+"gen_pipeline_10031": "reverse\ndrop 1\ndedup",
+"gen_pipeline_10034": "sort\nrunsum\nmap xor 255",
+"gen_pipeline_10035": "drop 3\ndrop 1",
+"gen_pipeline_10038": "filter lt 5\ndedup\nmap and 63",
+"gen_pipeline_10039": "map mod 11\nrunsum",
+"gen_pipeline_10041": "filter gt 20",
+"gen_pipeline_10042": "filter odd\nreverse",
+"gen_pipeline_10043": "drop 8\nfilter lt 500\ndrop 8",
+"gen_pipeline_10046": "map sq\nfilter ge 3",
+"gen_pipeline_10047": "filter modeq 5 2\nsort\nreverse",
+"gen_pipeline_10055": "filter gt 10",
+"gen_pipeline_10056": "runsum\ntake 5\nreverse",
+"gen_pipeline_10058": "dedup\ndrop 3",
+"gen_pipeline_10059": "dedup\nfilter odd\ntake 2",
+"gen_pipeline_10060": "dedup\nmap add 9",
+"gen_pipeline_10062": "runsum\nfilter odd\ndedup",
+"gen_pipeline_10063": "filter modeq 3 2\ndrop 1\nreverse",
+"gen_pipeline_10065": "map add 2\nmap div 2",
+"gen_pipeline_10070": "sort\ndedup\nsort",
+"gen_pipeline_10073": "filter lt 50\nfilter odd",
+"gen_pipeline_10074": "map xor 7\nfilter lt 50",
+"gen_pipeline_10077": "take 1\nsort\nmap and 3",
+"gen_pipeline_10078": "filter odd\ndrop 1\ntake 8",
+"gen_pipeline_10079": "map and 63",
+"gen_pipeline_10081": "drop 1\nrunsum\nsort",
+"gen_pipeline_10082": "dedup\nmap sq",
+"gen_pipeline_10083": "filter lt 20\ndedup\nsort",
+"gen_pipeline_10086": "map sq\ndrop 5",
+"gen_pipeline_10088": "dedup\ntake 3",
+"gen_pipeline_10089": "dedup\ndedup\nfilter even",
+"gen_pipeline_10091": "take 8\ndrop 5\nsort",
+"gen_pipeline_10094": "runsum\nreverse",
+"gen_pipeline_10098": "drop 5\ndrop 2",
+"gen_pipeline_10100": "reverse\nmap lin 10 7",
+"gen_pipeline_10101": "reverse\ndrop 3\nsort",
+"gen_pipeline_10103": "map xor 63\nrunsum\nreverse",
+"gen_pipeline_10104": "sort\ntake 5",
+"gen_pipeline_10106": "take 1\ntake 2\ntake 2",
+"gen_pipeline_10107": "take 8\ntake 8\ndrop 3",
+"gen_pipeline_10108": "drop 2\nrunsum\ndrop 2",
+"gen_pipeline_10109": "sort\nfilter lt 10\nsort",
+"gen_pipeline_10110": "take 1\nmap lin 2 100\nsort",
+"gen_pipeline_10111": "take 5\nreverse",
+"gen_pipeline_10112": "map add 1\nrunsum\nfilter gt 10",
+"gen_reduce_10000": "take 5\nreduce last",
+"gen_reduce_10001": "sort\nfilter gt 20\nreduce first",
+"gen_reduce_10002": "map lin 2 100\ndrop 5\nreduce sum",
+"gen_reduce_10004": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"gen_reduce_10005": "reverse\nrunsum\nreduce first",
+"gen_reduce_10007": "drop 3\nfilter even\nreduce xor",
+"gen_reduce_10008": "filter even\ndrop 5\nreduce cntgtfirst",
+"gen_reduce_10012": "runsum\ntake 2\nreduce min",
+"gen_reduce_10013": "drop 1\nfilter ge 3\nreduce xor",
+"gen_reduce_10015": "drop 2\nreduce first",
+"gen_reduce_10016": "drop 2\nreverse\nreduce last",
+"gen_reduce_10017": "filter modeq 5 4\ntake 2\nreduce max",
+"gen_reduce_10019": "reverse\ndedup\nreduce xor",
+"gen_reduce_10020": "map and 255\nreduce min",
+"gen_reduce_10026": "map div 10\nreduce count",
+"gen_reduce_10027": "filter odd\nreduce sum",
+"gen_reduce_10037": "filter lt 100\nreduce cntgtfirst",
+"gen_reduce_10038": "take 5\ntake 8\nreduce count",
+"gen_reduce_10048": "dedup\nreverse\nreduce min",
+"gen_reduce_10049": "runsum\ndedup\nreduce count",
+"gen_reduce_10050": "drop 1\nmap and 63\nreduce last",
+"gen_reduce_10051": "sort\nmap lin 3 2\nreduce min",
+"gen_reduce_10052": "runsum\nfilter lt 20\nreduce first",
+"gen_reduce_10053": "sort\nreduce max",
+"gen_reduce_10055": "drop 8\ndedup\nreduce xor",
+"gen_reduce_10056": "take 1\ntake 1\nreduce min",
+"gen_reduce_10057": "filter gt 500\nreduce cntgtfirst",
+"gen_reduce_10059": "filter lt 100\nreduce sum",
+"gen_reduce_10060": "dedup\nsort\nreduce cntgtfirst",
+"gen_reduce_10066": "map mod 6\ndrop 1\nreduce first",
+"gen_reduce_10068": "map add 5\nreduce xor",
+"gen_reduce_10069": "drop 3\nreduce first",
+"gen_reduce_10070": "drop 3\nreduce min",
+"gen_reduce_10071": "drop 8\nreverse\nreduce cntgtfirst",
+"gen_reduce_10075": "runsum\ndrop 8\nreduce last",
+"gen_reduce_10076": "take 5\nreduce xor",
+"gen_reduce_10077": "drop 8\nfilter modeq 4 2\nreduce count",
+"gen_reduce_10078": "take 2\ntake 5\nreduce first",
+"gen_reduce_10092": "drop 1\ntake 2\nreduce sum",
+"gen_reduce_10093": "drop 2\ntake 1\nreduce max",
+"gen_reduce_10094": "runsum\ntake 5\nreduce cntgtfirst",
+"gen_reduce_10096": "drop 1\nreduce count",
+"gen_reduce_10098": "dedup\nrunsum\nreduce min",
+"gen_reduce_10099": "take 5\nfilter lt 50\nreduce count",
+"gen_reduce_10100": "drop 2\nreduce sum",
+"gen_reduce_10104": "runsum\nreverse\nreduce min",
+"gen_reduce_10108": "map and 63\nreduce count",
+"gen_reduce_10109": "drop 5\nreduce min",
+"gen_reduce_10113": "map add 1\nreduce min",
+"gen_reduce_10114": "runsum\nsort\nreduce last",
+"gen_reduce_10117": "drop 1\nrunsum\nreduce last",
+"gen_reduce_10118": "map mod 11\nsort\nreduce min",
+"gen_reduce_10130": "runsum\nfilter even\nreduce min",
+"gen_reduce_10138": "map xor 3\nreduce min",
+"gen_reduce_10139": "map mod 11\nmap mod 11\nreduce last",
+"gen_reduce_10140": "reverse\nreverse\nreduce min",
+"gen_reduce_10141": "map lin 10 2\nreduce count",
+"gen_reduce_10150": "dedup\nmap add 5\nreduce last",
+"gen_reduce_10154": "reverse\nrunsum\nreduce cntgtfirst",
+"gen_reduce_10155": "filter lt 50\nsort\nreduce last"
+}
+}

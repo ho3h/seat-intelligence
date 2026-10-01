@@ -1,0 +1,134 @@
+// Entry point: compare the endpoints, then start breadth-first search.
+@prog = ((n (s (t edges))) out)
+  & n ~ *
+  & s ~ {s_eq s_start}
+  & t ~ {t_eq t_target}
+  & s_eq ~ $([=] $(t_eq same))
+  & same ~ ?((@prog_same @prog_diff) (s_start (t_target (edges out))))
+
+@prog_same = (* (s (t (edges out))))
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@prog_diff = (* (s (t (edges out))))
+  & s ~ {sf ss}
+  & @bfs ~ (t
+      (edges
+        ((1 (sf (0 *)))
+         ((1 (ss (0 *)))
+          (0 out))))
+
+// Membership test for a number in a list.
+@mem = (candidate ((?((@mem_nil @mem_cons) (pl (candidate out))) pl) out))
+
+@mem_nil = (* (pl (candidate out)))
+  & pl ~ *
+  & candidate ~ *
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (candidate out)))
+  & candidate ~ {ce cr}
+  & head ~ {he hd}
+  & ce ~ $([=] $(he eq))
+  & hd ~ *
+  & @mem ~ (cr (tail found))
+  & found ~ $([|] $(eq result))
+  & out ~ result
+
+// Add candidate to seen and next only if it is not already seen.
+@consider = (candidate (seen (next out)))
+  & candidate ~ {cmem ckeep}
+  & seen ~ {smem skeep}
+  & @mem ~ (cmem (smem found))
+  & found ~ ?((@consider_add @consider_keep) (ckeep (skeep (next out))))
+
+@consider_add = (* (candidate (seen (next out))))
+  & candidate ~ {c1 c2}
+  & out ~ ((1 (c1 seen)) (1 (c2 next)))
+
+@consider_keep = (* (candidate (seen (next out))))
+  & candidate ~ *
+  & out ~ (seen next)
+
+// Process one undirected edge against the current frontier.
+@edge_scan = (u (v (front (seen (next out))))
+  & u ~ {u_mem u_cand}
+  & v ~ {v_mem v_cand}
+  & front ~ {front_u front_v}
+  & @mem ~ (u_mem (front_u bu))
+  & @mem ~ (v_mem (front_v bv))
+  & bu ~ ?((@edge_u_no @edge_u_yes) (v_cand (u_cand (bv (seen (next out))))))
+
+@edge_u_no = (* (v (u (bv (seen (next out))))))
+  & v ~ *
+  & @vcheck ~ (u (bv (seen (next out))))
+
+@edge_u_yes = (* (v (u (bv (seen (next out))))))
+  & @consider ~ (v (seen (next st)))
+  & st ~ (seen2 next2)
+  & @vcheck ~ (u (bv (seen2 (next2 out))))
+
+@vcheck = (u (?( (@v_no @v_yes) (u (seen (next out)))) (seen (next out))))
+
+@v_no = (* (u (seen (next out))))
+  & u ~ *
+  & out ~ (seen next)
+
+@v_yes = (* (u (seen (next out))))
+  & @consider ~ (u (seen (next st)))
+  & st ~ (seen2 next2)
+  & out ~ (seen2 next2)
+
+// Scan and rebuild the edge list, accumulating discovered vertices.
+@scan = ((?((@scan_nil @scan_cons) (pl (front (seen (next out))))) pl) (front (seen (next out))))
+
+@scan_nil = (* (pl (front (seen (next out)))))
+  & pl ~ *
+  & front ~ *
+  & out ~ ((0 *) (seen next))
+
+@scan_cons = (* (((u v) tail) (front (seen (next out)))))
+  & u ~ {u_scan u_keep}
+  & v ~ {v_scan v_keep}
+  & front ~ {front_edge front_rest}
+  & @edge_scan ~ (u_scan (v_scan (front_edge (seen (next st))))
+  & st ~ (seen2 next2)
+  & @scan ~ (tail (front_rest (seen2 (next2 rest))))
+  & rest ~ (edges_tail (seen_final next_final))
+  & out ~ ((1 ((u_keep v_keep) edges_tail)) (seen_final next_final))
+
+// Breadth-first search, checking the target before expanding the frontier.
+@bfs = (target (edges (front (seen (depth out)))))
+  & target ~ {tm tr}
+  & front ~ {fm fr}
+  & @mem ~ (tm (fm found))
+  & found ~ ?((@bfs_more @bfs_hit) (tr (edges (fr (seen (depth out))))))
+
+@bfs_hit = (* (target (edges (front (seen (depth out))))))
+  & target ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ depth
+
+@bfs_more = (* (target (edges (front (seen (depth out))))))
+  & @scan ~ (edges (front (seen ((0 *) st))))
+  & st ~ (edges2 (seen2 next))
+  & @next ~ (next (target (edges2 (seen2 (depth out))))
+
+// Dispatch on whether the newly discovered frontier is empty.
+@next = ((?((@next_nil @next_cons) (pl (target (edges (seen (depth out))))) pl) (target (edges (seen (depth out)))))
+
+@next_nil = (* (pl (target (edges (seen (depth out))))))
+  & pl ~ *
+  & target ~ *
+  & edges ~ *
+  & seen ~ *
+  & depth ~ *
+  & out ~ 16777215
+
+@next_cons = (* ((head tail) (target (edges (seen (depth out))))))
+  & depth ~ $([+1] d2)
+  & @bfs ~ (target (edges ((1 (head tail)) (seen (d2 out))))

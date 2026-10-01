@@ -1,0 +1,234 @@
+// Initialize colors to zero, then start a traversal from every uncolored vertex.
+@prog = ((n edges) out)
+  & n ~ {n_init n_outer}
+  & @init ~ (n_init colors)
+  & @outer ~ (n_outer (0 (edges (colors (0 out)))))
+
+@init = (n out)
+  & n ~ ?((@initZero @initSucc) out)
+
+@initZero = out
+  & out ~ (0 *)
+
+@initSucc = (pred out)
+  & @init ~ (pred tail)
+  & out ~ (1 (0 tail))
+
+// Read a list element at an index; return zero if the index is out of range.
+@get = (idx (lst out))
+  & idx ~ ?((@getZero @getSucc) (lst out))
+
+@getZero = (lst out)
+  & lst ~ (?( (@getNil @getCons) (payload out)) payload)
+
+@getNil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@getCons = (* (payload out))
+  & payload ~ (h t)
+  & h ~ out
+  & t ~ *
+
+@getSucc = (pred (lst out))
+  & lst ~ (?( (@getTailNil @getTailCons) (pred (payload out))) payload)
+
+@getTailNil = (pred (payload out))
+  & pred ~ *
+  & payload ~ *
+  & out ~ 0
+
+@getTailCons = (* (pred (payload out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (pred (t out))
+
+// Set a list element at an index, rebuilding the list.
+@set = (idx (lst (val out)))
+  & idx ~ ?((@setZero @setSucc) (lst (val out)))
+
+@setZero = (lst (val out))
+  & lst ~ (?( (@setNil @setCons) (payload (val out))) payload)
+
+@setNil = (payload (val out))
+  & payload ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@setCons = (* (payload (val out)))
+  & payload ~ (h t)
+  & h ~ *
+  & out ~ (1 (val t))
+
+@setSucc = (pred (lst (val out)))
+  & lst ~ (?( (@setTailNil @setTailCons) (pred (payload (val out)))) payload)
+
+@setTailNil = (pred (payload (val out)))
+  & pred ~ *
+  & payload ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@setTailCons = (* (pred (payload (val out))))
+  & payload ~ (h t)
+  & @set ~ (pred (t (val rest)))
+  & out ~ (1 (h rest))
+
+// Visit vertices in order. A component is counted if its traversal has no conflict.
+@outer = (rem (idx (edges (colors (count out)))))
+  & rem ~ ?((@outerDone @outerStep) (idx (edges (colors (count out)))))
+
+@outerDone = (idx (edges (colors (count out))))
+  & idx ~ *
+  & edges ~ *
+  & colors ~ *
+  & out ~ count
+
+@outerStep = (pred (idx (edges (colors (count out)))))
+  & idx ~ {ig ik}
+  & colors ~ {cg ck}
+  & @get ~ (ig (cg color))
+  & color ~ ?((@outerStart @outerSkip) (pred (ik (edges (ck (count out))))))
+
+@outerStart = (pred (idx (edges (colors (count out)))))
+  & idx ~ {iset ir}
+  & ir ~ {iv ia}
+  & edges ~ {eb eo}
+  & @set ~ (iset (colors (1 seeded)))
+  & @bfs ~ ((1 ((iv 1) (0 *))) (eb (seeded (0 state))))
+  & state ~ (newcolors bad)
+  & bad ~ ?((@outerGood @outerBad) (pred (ia (eo (newcolors (count out))))))
+
+@outerSkip = (z (pred (idx (edges (colors (count out))))))
+  & z ~ *
+  & idx ~ $([+1] idx2)
+  & @outer ~ (pred (idx2 (edges (colors (count out)))))
+
+@outerGood = (pred (idx (edges (colors (count out)))))
+  & idx ~ $([+1] idx2)
+  & count ~ $([+1] count2)
+  & @outer ~ (pred (idx2 (edges (colors (count2 out)))))
+
+@outerBad = (z (pred (idx (edges (colors (count out))))))
+  & z ~ *
+  & idx ~ $([+1] idx2)
+  & @outer ~ (pred (idx2 (edges (colors (count out)))))
+
+// Worklist traversal; queue items are (vertex, color), with colors 1 and 2.
+@bfs = (queue (edges (colors (bad out))))
+  & queue ~ (?( (@bfsNil @bfsCons) (payload (edges (colors (bad out))))) payload)
+
+@bfsNil = (payload (edges (colors (bad out))))
+  & payload ~ *
+  & edges ~ *
+  & out ~ (colors bad)
+
+@bfsCons = (* (payload (edges (colors (bad out)))))
+  & payload ~ (item tail)
+  & item ~ (v cv)
+  & edges ~ {escan eagain}
+  & @scan ~ (v (cv (escan (colors (bad (tail scanout))))))
+  & scanout ~ (newcolors (newbad newqueue))
+  & @append ~ (newqueue (tail queue))
+  & @bfs ~ (queue (eagain (newcolors (newbad out))))
+
+// Scan every edge for neighbors of the current vertex.
+@scan = (v (cv (elist (colors (bad (queue out))))))
+  & elist ~ (?( (@scanNil @scanCons) (payload (v (cv (colors (bad (queue out))))))) payload)
+
+@scanNil = (* (payload (v (cv (colors (bad (queue out))))))
+  & payload ~ *
+  & v ~ *
+  & cv ~ *
+  & out ~ (colors (bad queue))
+
+@scanCons = (* (payload (v (cv (colors (bad (queue out))))))
+  & payload ~ (edge rest)
+  & @edge ~ (edge (v (cv (rest (colors (bad (queue out))))))
+
+// Check whether an edge endpoint matches the current vertex.
+@edge = (edge (v (cv (rest (colors (bad (queue out))))))
+  & edge ~ (u w)
+  & u ~ {ut uk}
+  & w ~ {wt wk}
+  & v ~ {vtmp vscan}
+  & vtmp ~ {vu vw}
+  & ut ~ $([=] $(vu eq))
+  & eq ~ ?((@edgeNoU @edgeHitU) ctx)
+  & ctx ~ (uk (wt (wk (vw (vscan (cv (rest (colors (bad (queue out))))))))))
+
+@edgeHitU = (z ctx)
+  & z ~ *
+  & ctx ~ (uk (wt (wk (vw (vscan (cv (rest (colors (bad (queue out)))))))))
+  & uk ~ *
+  & wt ~ *
+  & vw ~ *
+  & @consider ~ (wk (vscan (cv (rest (colors (bad (queue out)))))))
+
+@edgeNoU = ctx
+  & ctx ~ (uk (wt (wk (vw (vscan (cv (rest (colors (bad (queue out)))))))))
+  & wt ~ $([=] $(vw eq2))
+  & eq2 ~ ?((@edgeNoW @edgeHitW) ctx2)
+  & ctx2 ~ (uk (wk (vscan (cv (rest (colors (bad (queue out))))))))
+
+@edgeHitW = (z ctx2)
+  & z ~ *
+  & ctx2 ~ (uk (wk (vscan (cv (rest (colors (bad (queue out))))))))
+  & wk ~ *
+  & @consider ~ (uk (vscan (cv (rest (colors (bad (queue out)))))))
+
+@edgeNoW = ctx2
+  & ctx2 ~ (uk (wk (vscan (cv (rest (colors (bad (queue out))))))))
+  & uk ~ *
+  & wk ~ *
+  & @scan ~ (vscan (cv (rest (colors (bad (queue out))))))
+
+// Color a new neighbor, or record a coloring conflict.
+@consider = (neighbor (v (cv (rest (colors (bad (queue out))))))
+  & neighbor ~ {ng nq}
+  & cv ~ {cvcalc cvkeep}
+  & 3 ~ $([-] $(cvcalc expected))
+  & colors ~ {cg ck}
+  & @get ~ (ng (cg old))
+  & old ~ {oldtest oldkeep}
+  & oldtest ~ $([=] $(0 zero))
+  & zero ~ ?((@considerKnown @considerNew) ctx)
+  & ctx ~ (oldkeep (expected (nq (v (cvkeep (rest (ck (bad (queue out)))))))))
+
+@considerKnown = ctx
+  & ctx ~ (oldkeep (expected (nq (v (cvkeep (rest (ck (bad (queue out)))))))))
+  & oldkeep ~ $([=] $(expected eq))
+  & nq ~ *
+  & eq ~ ?((@knownConflict @knownMatch) ctx2)
+  & ctx2 ~ (v (cvkeep (rest (ck (bad (queue out))))))
+
+@considerNew = (z ctx)
+  & z ~ *
+  & ctx ~ (oldkeep (expected (nq (v (cvkeep (rest (ck (bad (queue out)))))))))
+  & oldkeep ~ *
+  & expected ~ {eset eqcolor}
+  & nq ~ {nset nqueue}
+  & @set ~ (nset (ck (eset newcolors)))
+  & @scan ~ (v (cvkeep (rest (newcolors (bad (1 ((nqueue eqcolor) queue)))))))
+
+@knownConflict = ctx2
+  & ctx2 ~ (v (cvkeep (rest (ck (bad (queue out))))))
+  & bad ~ *
+  & @scan ~ (v (cvkeep (rest (ck (1 (queue out))))))
+
+@knownMatch = (* ctx2)
+  & ctx2 ~ (v (cvkeep (rest (ck (bad (queue out))))))
+  & @scan ~ (v (cvkeep (rest (ck (bad (queue out))))))
+
+// Append two lists.
+@append = (a (b out))
+  & a ~ (?( (@appendNil @appendCons) (p (b out))) p)
+
+@appendNil = (* (p (b out)))
+  & p ~ *
+  & out ~ b
+
+@appendCons = (* (p (b out)))
+  & p ~ (h t)
+  & @append ~ (t (b rest))
+  & out ~ (1 (h rest))

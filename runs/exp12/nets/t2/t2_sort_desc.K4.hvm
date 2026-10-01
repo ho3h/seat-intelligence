@@ -1,0 +1,41 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @insert ~ (sorted (h out))
+  & @sort_cons_lw ~ (t sorted)
+
+@insert = ((?((@ins_nil @ins_cons) (x (payload out))) payload) (x out))
+
+@ins_nil = (x (payload out))
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((y ys) out)))
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & y_cmp ~ $([>] $(x_cmp z))
+  & z ~ ?((@ins_before @ins_after) (x_keep (y_keep (ys out))))
+
+@ins_before = (x (y (ys out)))
+  & out ~ (1 (x (1 (y ys))))
+
+@ins_after = (* (x (y (ys out))))
+  & @insert ~ (ys (x rest))
+  & out ~ (1 (y rest))
+
+@sort_cons_lw = (ls24 q8)
+  & ls24 ~ (g19 (e15 (g20 (e16 (g21 (e17 (g22 (e18 tk23))))))))
+  & g19 ~ ?((@sort_nil @sort_cons_la) ((e15 q10) q8))
+  & g20 ~ ?((@sort_nil @sort_cons_la) ((e16 q12) q10))
+  & g21 ~ ?((@sort_nil @sort_cons_la) ((e17 q14) q12))
+  & g22 ~ ?((@sort_nil @sort_cons) ((e18 tk23) q14))
+
+@sort_cons_la = (* ((h sorted) out))
+  & @insert ~ (sorted (h out))

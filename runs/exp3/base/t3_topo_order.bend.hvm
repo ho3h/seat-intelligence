@@ -1,0 +1,105 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_order = ({a b} (c (d ({$([=] $(a ?((@build_order__C0 @build_order__C1) (b (c (d (e f))))))) e} f))))
+
+@build_order__C0 = ({b h} ({c d} ({f a} ($([+0x0000001] k) (m o)))))
+  & @build_order ~ (b (c (j (k (n o)))))
+  & @find_zero ~ (a (0 {l {e g}}))
+  & @remove_outgoing ~ (d (e (i j)))
+  & @set_at ~ (f (g (h i)))
+  & @List/Cons ~ (l (m n))
+
+@build_order__C1 = (* (* (* (* (* (a b))))))
+  & @reverse_list ~ (a (@List/Nil b))
+
+@count_edges = ((@count_edges__C1 a) a)
+
+@count_edges__C0 = (* ((* c) (a (b e))))
+  & @count_edges ~ (a (d e))
+  & @increment_at ~ (b (c (0 d)))
+
+@count_edges__C1 = (?(((a a) @count_edges__C0) b) b)
+
+@decrement_at = ((@decrement_at__C3 a) a)
+
+@decrement_at__C0 = ($([:-0x0000001] c) (a (b e)))
+  & @List/Cons ~ (a (d e))
+  & @decrement_at ~ (b (c d))
+
+@decrement_at__C1 = (* (* ($([:-0x0000001] a) b)))
+  & @List/Cons ~ (a b)
+
+@decrement_at__C2 = (* (b (c ({$([=0x0000000] ?((@decrement_at__C0 @decrement_at__C1) (a (b (c d))))) a} d))))
+
+@decrement_at__C3 = (?(((* @List/Nil) @decrement_at__C2) a) a)
+
+@find_zero = ((@find_zero__C2 a) a)
+
+@find_zero__C0 = ($([+0x0000001] b) (a c))
+  & @find_zero ~ (a (b c))
+
+@find_zero__C1 = (* ($([=0x0000000] ?((@find_zero__C0 (* (a (* a)))) (b (c d)))) (c (b d))))
+
+@find_zero__C2 = (?(((a a) @find_zero__C1) b) b)
+
+@increment_at = ((@increment_at__C3 a) a)
+
+@increment_at__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @increment_at ~ (b (c (d e)))
+
+@increment_at__C1 = (* (* (* ($([+0x0000001] a) b))))
+  & @List/Cons ~ (a b)
+
+@increment_at__C2 = (* (c (d ({$([=0x0000000] ?((@increment_at__C0 @increment_at__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@increment_at__C3 = (?(((* (* @List/Nil)) @increment_at__C2) a) a)
+
+@make_zeros = ({a b} ({$([=] $(a ?((@make_zeros__C0 (* (* (* @List/Nil)))) (b (c d))))) c} d))
+
+@make_zeros__C0 = (a ($([+0x0000001] b) d))
+  & @List/Cons ~ (0 (c d))
+  & @make_zeros ~ (a (b c))
+
+@prog = (({a d} {b c}) g)
+  & @build_order ~ (a (b (f (0 (@List/Nil g)))))
+  & @count_edges ~ (c (e f))
+  & @make_zeros ~ (d (0 e))
+
+@remove_outgoing = ((@remove_outgoing__C3 a) a)
+
+@remove_outgoing__C0 = (b (c (a (* d))))
+  & @remove_outgoing ~ (a (b (c d)))
+
+@remove_outgoing__C1 = (* (b (c (a (d f)))))
+  & @remove_outgoing ~ (a (b (e f)))
+  & @decrement_at ~ (c (d e))
+
+@remove_outgoing__C2 = (* (($([=] $(a ?((@remove_outgoing__C0 @remove_outgoing__C1) (b (c (d (e f))))))) e) (d ({a b} (c f)))))
+
+@remove_outgoing__C3 = (?(((* (a a)) @remove_outgoing__C2) b) b)
+
+@reverse_list = ((@reverse_list__C1 a) a)
+
+@reverse_list__C0 = (* (b (a (c e))))
+  & @reverse_list ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@reverse_list__C1 = (?(((a a) @reverse_list__C0) b) b)
+
+@set_at = ((@set_at__C3 a) a)
+
+@set_at__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_at ~ (b (c (d e)))
+
+@set_at__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@set_at__C2 = (* (c (d ({$([=0x0000000] ?((@set_at__C0 @set_at__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_at__C3 = (?(((* (* @List/Nil)) @set_at__C2) a) a)
+
+

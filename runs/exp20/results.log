@@ -1,0 +1,40 @@
+
+== A
+  t5_decide_normalise        att 6  seed0 fail  0-2 -  glueErrs 16  depth None itrs None  recipes []  fails ['algorithm', 'edge', 'edge', 'edge', 'edge', 'edge']
+  t5_decide_drop_known       att 2  seed0 fail  0-2 -  glueErrs 21  depth None itrs None  recipes []  fails ['algorithm', 'algorithm']
+  t5_decide_order            att 3  seed0 fail  0-2 -  glueErrs 22  depth None itrs None  recipes []  fails ['edge', 'algorithm', 'algorithm']
+  t5_decide_top_k            att 6  seed0 fail  0-2 -  glueErrs 11  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm']
+  t5_decide_stage_cap        att 0  seed0 fail  0-2 -  glueErrs 35  depth None itrs None  recipes []  fails []
+  t5_decide_stage_idem       att 3  seed0 fail  0-2 -  glueErrs 19  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm']
+  t5_conflict_pairs          att 6  seed0 fail  0-2 -  glueErrs 23  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm']
+  t5_prop_conflicts          att 2  seed0 fail  0-2 -  glueErrs 17  depth None itrs None  recipes []  fails ['algorithm', 'algorithm']
+  t5_prop_majority           att 4  seed0 fail  0-2 -  glueErrs 34  depth None itrs None  recipes []  fails ['perf', 'algorithm', 'perf', 'algorithm']
+  t5_rewrite_edges           att 3  seed0 fail  0-2 -  glueErrs 11  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm']
+  t5_rewrite_weighted        att 1  seed0 fail  0-2 -  glueErrs 18  depth None itrs None  recipes []  fails ['perf']
+  t5_rewrite_collapsed       att 2  seed0 PASS  0-2 PASS  glueErrs 23  depth 1007 itrs 3462518  recipes []  fails ['edge']
+  t5_rewrite_degrees         att 3  seed0 fail  0-2 -  glueErrs 24  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm']
+  t5_rewrite_sameas_cycle    att 6  seed0 fail  0-2 -  glueErrs 16  depth None itrs None  recipes []  fails ['perf', 'perf', 'perf', 'algorithm', 'algorithm', 'algorithm']
+  t5_metric_pairwise         att 3  seed0 fail  0-2 -  glueErrs 16  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm']
+  t5_metric_rand             att 6  seed0 fail  0-2 -  glueErrs 28  depth None itrs None  recipes []  fails ['algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm']
+  seed0 1/16  seeds0-2 1/16  mean attempts (passing) 2.00  mean attempts (all) 3.50  failure classes {'algorithm': 42, 'edge': 7, 'perf': 6}  glue errors caught 334
+
+== B
+  t5_decide_normalise        att 6  seed0 fail  0-2 -  glueErrs 21  depth None itrs None  recipes ['list_length_and_copy', 'list_to_trie', 'select_sorted', 'sort_by']  fails ['algorithm', 'algorithm', 'algorithm', 'algorithm', 'recipe-misuse', 'algorithm']
+  t5_decide_drop_known       att 6  seed0 PASS  0-2 PASS  glueErrs 14  depth 1376 itrs 51584627  recipes ['filter_in_order', 'list_length_and_copy', 'lookup_many', 'reduce_by_key']  fails ['algorithm', 'algorithm', 'edge', 'recipe-misuse', 'edge']
+  t5_decide_order            att 1  seed0 PASS  0-2 PASS  glueErrs  0  depth 813 itrs 454927  recipes ['filter_in_order', 'sort_by']  fails []
+  t5_decide_top_k            att 1  seed0 PASS  0-2 PASS  glueErrs  1  depth 2077 itrs 4886339  recipes ['sort_by', 'take_first']  fails []
+  t5_decide_stage_cap        att 1  seed0 PASS  0-2 PASS  glueErrs  3  depth 796 itrs 137621  recipes ['filter_in_order', 'sort_by', 'take_first']  fails []
+  t5_decide_stage_idem       att 3  seed0 PASS  0-2 PASS  glueErrs  7  depth 417 itrs 167038  recipes []  fails ['edge', 'edge']
+  t5_conflict_pairs          att 1  seed0 PASS  0-2 PASS  glueErrs  3  depth 905 itrs 63846  recipes ['list_length_and_copy', 'list_to_trie', 'sort_by']  fails []
+  t5_prop_conflicts          att 3  seed0 PASS  0-2 PASS  glueErrs 10  depth 1541 itrs 309423  recipes ['count_where_trie', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'reduce_by_key']  fails ['recipe-misuse', 'recipe-misuse']
+  t5_prop_majority           att 5  seed0 PASS  0-2 PASS  glueErrs  6  depth 1836 itrs 700025  recipes ['argmax_first_trie', 'filter_in_order', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'reduce_by_key']  fails ['perf', 'perf', 'perf', 'perf']
+  t5_rewrite_edges           att 1  seed0 PASS  0-2 PASS  glueErrs  1  depth 1861 itrs 4820833  recipes ['filter_in_order', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'reduce_by_key', 'select_sorted']  fails []
+  t5_rewrite_weighted        att 6  seed0 fail  0-2 -  glueErrs 10  depth None itrs None  recipes ['filter_in_order', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'reduce_by_key', 'select_sorted']  fails ['edge', 'edge', 'edge', 'edge', 'edge', 'recipe-misuse']
+  t5_rewrite_collapsed       att 4  seed0 fail  0-2 -  glueErrs 12  depth None itrs None  recipes ['count_where_trie', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'reduce_by_key']  fails ['edge', 'edge', 'recipe-misuse', 'recipe-misuse']
+  t5_rewrite_degrees         att 6  seed0 fail  0-2 -  glueErrs 10  depth None itrs None  recipes ['filter_in_order', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'reduce_by_key', 'select_sorted']  fails ['recipe-misuse', 'recipe-misuse', 'recipe-misuse', 'recipe-misuse', 'recipe-misuse', 'recipe-misuse']
+  t5_rewrite_sameas_cycle    att 1  seed0 PASS  0-2 PASS  glueErrs  5  depth 3094 itrs 822146  recipes ['count_where', 'list_length_and_copy', 'list_to_trie', 'lookup_many', 'pointer_jump']  fails []
+  t5_metric_pairwise         att 4  seed0 fail  0-2 -  glueErrs 25  depth None itrs None  recipes ['list_length_and_copy', 'list_to_trie']  fails ['algorithm', 'algorithm', 'algorithm', 'algorithm']
+  t5_metric_rand             att 5  seed0 fail  0-2 -  glueErrs 11  depth None itrs None  recipes ['list_length_and_copy', 'list_to_trie', 'reduce_by_key']  fails ['algorithm', 'algorithm', 'algorithm', 'algorithm', 'algorithm']
+  seed0 10/16  seeds0-2 10/16  mean attempts (passing) 2.30  mean attempts (all) 3.38  failure classes {'algorithm': 16, 'edge': 11, 'perf': 4, 'recipe-misuse': 13}  glue errors caught 139
+
+paired: {'B_only': 10, 'A_only': 1, 'both': 0, 'neither': 5, 'sign_test_one_sided_p': 0.005859375, 'passA': 1, 'passB': 10}

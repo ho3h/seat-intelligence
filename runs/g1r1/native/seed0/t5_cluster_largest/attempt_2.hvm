@@ -1,0 +1,153 @@
+@prog = (input out)
+  & input ~ (n pairs)
+  & @build ~ (n labels)
+  & @edges ~ (pairs (n (labels done)))
+  & @largest ~ (done out)
+
+@build = (n out)
+  & n ~ ?((@build_zero @build_succ) out)
+
+@build_zero = out
+  & out ~ (0 *)
+
+@build_succ = (m out)
+  & m ~ {head rec}
+  & @build ~ (rec tail)
+  & out ~ (1 (head tail))
+
+@edges = (pairs (n (labels out)))
+  & pairs ~ (?( (@edges_nil @edges_cons) (payload (n (labels out)))) payload)
+
+@edges_nil = (payload (n (labels out)))
+  & payload ~ *
+  & n ~ *
+  & labels ~ out
+
+@edges_cons = (* (payload (n (labels out))))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & n ~ {nrec nfor}
+  & nfor ~ {nforu nforv}
+  & nforu ~ $([-] $(1 baseu))
+  & baseu ~ $([-] $(u idxu))
+  & nforv ~ $([-] $(1 basev))
+  & basev ~ $([-] $(v idxv))
+  & @get_keep ~ (idxu (labels (lu labels1)))
+  & @get_keep ~ (idxv (labels1 (lv labels2)))
+  & @replace ~ (labels2 (lu (lv newlabels)))
+  & @edges ~ (tail (nrec (newlabels out)))
+
+@get_keep = (idx (list (val outlist)))
+  & idx ~ ?((@gk_zero @gk_succ) (list (val outlist)))
+
+@gk_zero = (list (val outlist))
+  & @gk_here ~ (list (val outlist))
+
+@gk_succ = (idx (list (val outlist)))
+  & @gk_next ~ (idx (list (val outlist)))
+
+@gk_here = (list (val outlist))
+  & list ~ (?( (@gkh_nil @gkh_cons) (payload (val outlist))) payload)
+
+@gkh_nil = (payload (val outlist))
+  & payload ~ *
+  & val ~ 0
+  & outlist ~ (0 *)
+
+@gkh_cons = (* (payload (val outlist)))
+  & payload ~ (h t)
+  & h ~ {hv hl}
+  & val ~ hv
+  & outlist ~ (1 (hl t))
+
+@gk_next = (idx (list (val outlist)))
+  & list ~ (?( (@gkn_nil @gkn_cons) (payload (idx (val outlist)))) payload)
+
+@gkn_nil = (payload (idx (val outlist)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ 0
+  & outlist ~ (0 *)
+
+@gkn_cons = (* (payload (idx (val outlist))))
+  & payload ~ (h t)
+  & @get_keep ~ (idx (t (val tailout)))
+  & outlist ~ (1 (h tailout))
+
+@replace = (list (old (new out)))
+  & list ~ (?( (@ra_nil @ra_cons) (payload (old (new out)))) payload)
+
+@ra_nil = (payload (old (new out)))
+  & payload ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@ra_cons = (* (payload (old (new out))))
+  & payload ~ (h t)
+  & h ~ {hc hr}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@ra_no @ra_yes) (hr (nc (t (or (nr out))))))
+
+@ra_no = (hr (nc (t (or (nr out)))))
+  & @replace ~ (t (or (nr r)))
+  & out ~ (1 (hr r))
+  & nc ~ *
+
+@ra_yes = (* (hr (nc (t (or (nr out))))))
+  & @replace ~ (t (or (nr r)))
+  & out ~ (1 (nc r))
+  & hr ~ *
+
+@largest = (list out)
+  & list ~ (?( (@largest_nil @largest_cons) (payload out)) payload)
+
+@largest_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@largest_cons = (* (payload out))
+  & payload ~ (h t)
+  & @count_keep ~ (h (t (ct tail2)))
+  & ct ~ $([+1] count)
+  & @largest ~ (tail2 rest)
+  & count ~ {c1 c2}
+  & rest ~ {r1 r2}
+  & c1 ~ $([>] $(r1 z))
+  & z ~ ?((@largest_no @largest_yes) (c2 (r2 out)))
+
+@largest_no = (c (r out))
+  & c ~ *
+  & r ~ out
+
+@largest_yes = (* (c (r out)))
+  & r ~ *
+  & c ~ out
+
+@count_keep = (target (list (cnt outlist)))
+  & list ~ (?( (@ck_nil @ck_cons) (payload (target (cnt outlist)))) payload)
+
+@ck_nil = (payload (target (cnt outlist)))
+  & payload ~ *
+  & target ~ *
+  & cnt ~ 0
+  & outlist ~ (0 *)
+
+@ck_cons = (* (payload (target (cnt outlist))))
+  & payload ~ (h t)
+  & h ~ {hc hr}
+  & target ~ {tc tr}
+  & hc ~ $([=] $(tc z))
+  & z ~ ?((@ck_no @ck_yes) (hr (tr (t (cnt outlist)))))
+
+@ck_no = (hr (tr (t (cnt outlist))))
+  & @count_keep ~ (tr (t (subcount tailout)))
+  & cnt ~ subcount
+  & outlist ~ (1 (hr tailout))
+
+@ck_yes = (* (hr (tr (t (cnt outlist)))))
+  & @count_keep ~ (tr (t (subcount tailout)))
+  & subcount ~ $([+1] cnt)
+  & outlist ~ (1 (hr tailout))

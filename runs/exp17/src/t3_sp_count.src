@@ -1,0 +1,15 @@
+# t3_sp_count: directed BFS from s by channel label propagation (lib/chan, one channel per arc, hop-distance
+# labels), then a gated dataflow count: each vertex appends its path count to its stream after the last round and
+# sums the counts of strictly closer in-neighbours (lib/hooks_bfs). Answer: the count at t.
+#include base
+#include chan
+#include hooks_bfs
+def prog(x):
+  (n, s, t, es) = x
+  if (s >= n) | (t >= n):
+    return 0
+  else:
+    (l, m) = lvl(n, 0, 1)
+    T = chan_walk_dir(es, zio(l), l, m)
+    (F, z) = chan_gen(T, s, 3, l, n)
+    return z + get(F, t, l, m)

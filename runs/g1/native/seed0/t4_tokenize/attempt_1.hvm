@@ -1,0 +1,69 @@
+@prog = (input output)
+  & @tok ~ (input (0 (0 output)))
+
+@tok = ((tag payload) (acc (active out)))
+  & tag ~ ?((@tok_nil @tok_cons) (payload (acc (active out))))
+
+@tok_nil = (* (acc (active out)))
+  & active ~ ?((@tok_finish_no @tok_finish_yes) (acc out))
+
+@tok_cons = (* ((h t) (acc (active out))))
+  & h ~ {h1 h2}
+  & h2 ~ {h3 h4}
+  & h1 ~ $([>] $(47 gt))
+  & h3 ~ $([<] $(58 lt))
+  & gt ~ ?((@tok_non_digit_pre @tok_check_hi) (lt (h4 (t (acc (active out)))))
+
+@tok_check_hi = (* (lt (h (t (acc (active out))))))
+  & lt ~ ?((@tok_non_digit @tok_digit) (h (t (acc (active out)))))
+
+@tok_non_digit_pre = (lt (h (t (acc (active out)))))
+  & lt ~ *
+  & @tok_non_digit ~ (h (t (acc (active out))))
+
+@tok_digit = (* (h (t (acc (active out)))))
+  & h ~ $([-] $(48 digit))
+  & acc ~ $([*] $(10 prod))
+  & prod ~ $([+] $(digit newacc))
+  & active ~ *
+  & @tok ~ (t (newacc (1 out)))
+
+@tok_non_digit = (h (t (acc (active out))))
+  & h ~ {hc hv}
+  & hc ~ $([=] $(32 eq))
+  & eq ~ ?((@tok_symbol @tok_space) (hv (t (acc (active out)))))
+
+@tok_space = (* (h (t (acc (active out)))))
+  & h ~ *
+  & @tok ~ (t (0 (0 rest)))
+  & active ~ ?((@tok_space_empty @tok_space_flush) (acc (rest out)))
+
+@tok_space_empty = (acc (rest rest))
+  & acc ~ *
+
+@tok_space_flush = (* (acc (rest (1 ((0 acc) rest)))))
+
+@tok_symbol = (h (t (acc (active out))))
+  & h ~ {hc hv}
+  & hc ~ $([<] $(43 less))
+  & less ~ ?((@tok_operator @tok_paren) (hv (t (acc (active out)))))
+
+@tok_operator = (h (t (acc (active out))))
+  & @tok_emit ~ (1 (h (t (acc (active out)))))
+
+@tok_paren = (* (h (t (acc (active out)))))
+  & @tok_emit ~ (2 (h (t (acc (active out)))))
+
+@tok_emit = (kind (value (t (acc (active out)))))
+  & @tok ~ (t (0 (0 rest)))
+  & active ~ ?((@tok_emit_no @tok_emit_yes) (kind (value (acc (rest out)))))
+
+@tok_emit_no = (kind (value (acc (rest (1 ((kind value) rest))))))
+  & acc ~ *
+
+@tok_emit_yes = (* (kind (value (acc (rest (1 ((0 acc) (1 ((kind value) rest)))))))))
+
+@tok_finish_no = (acc (0 *))
+  & acc ~ *
+
+@tok_finish_yes = (* (acc (1 ((0 acc) (0 *)))))

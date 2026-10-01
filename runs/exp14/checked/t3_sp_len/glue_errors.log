@@ -1,0 +1,2 @@
+--- 04:13:52
+build.py:43: wire `nm1` (num, argument `cm1` of branch nonzero case of @prog (t3_sp_len), made at build.py:56) is used a second time (lg port `x`); it was already used at build.py:42 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(nm1, 2)  and use each once.

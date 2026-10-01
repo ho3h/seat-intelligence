@@ -1,0 +1,41 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@append4 = ((@append4__C10 a) a)
+
+@append4__C0 = (d (a (b (c g))))
+  & @List/Cons ~ (a (f g))
+  & @List/Cons ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@append4__C1 = (* (d (e (f (a (b (c k)))))))
+  & @List/Cons ~ (a (j k))
+  & @List/Cons ~ (b (i j))
+  & @List/Cons ~ (c (h i))
+  & @List/Cons ~ (d (g h))
+  & @append4 ~ (e (f g))
+
+@append4__C10 = (?(((a a) @append4__C9) b) b)
+
+@append4__C2 = (?((@append4__C0 @append4__C1) a) a)
+
+@append4__C3 = (c (a (b e)))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@append4__C4 = (* (d ((@append4__C2 (a (b (c (d e))))) (a (b (c e))))))
+
+@append4__C5 = (?((@append4__C3 @append4__C4) a) a)
+
+@append4__C6 = (b (a c))
+  & @List/Cons ~ (a (b c))
+
+@append4__C7 = (* (c ((@append4__C5 (a (b (c d)))) (a (b d)))))
+
+@append4__C8 = (?((@append4__C6 @append4__C7) a) a)
+
+@append4__C9 = (* (b ((@append4__C8 (a (b c))) (a c))))
+
+@prog = ((a b) c)
+  & @append4 ~ (a (b c))
+
+

@@ -1,0 +1,122 @@
+// Generate vertices 0 through n-1, then repeatedly peel the k-core.
+@prog = (input out)
+  & @start ~ (input out)
+
+@start = ((n (k edges)) out)
+  & @range ~ (n alive)
+  & @iterate ~ (alive (k (edges out)))
+
+@range = (n out)
+  & n ~ ?((@range_nil @range_more) out)
+
+@range_nil = (0 *)
+
+@range_more = (n out)
+  & n ~ {nh nr}
+  & @range ~ (nr tail)
+  & out ~ (1 (nh tail))
+
+// Filter the traversal list, measuring degrees against the whole alive list.
+@filter = ((?((@filter_nil @filter_cons) (payload (whole (k (edges out))))) payload) (whole (k (edges out))))
+
+@filter_nil = (* (whole (k (edges out))))
+  & whole ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((h t) (whole (k (edges out)))))
+  & h ~ {hd hkeep}
+  & whole ~ {whole_d whole_r}
+  & k ~ {k_d k_r}
+  & edges ~ {edges_d edges_r}
+  & @degree ~ (hd (whole_d (edges_d deg)))
+  & @filter ~ (t (whole_r (k_r (edges_r tailout))))
+  & deg ~ $([<] $(k_d test))
+  & test ~ ?((@filter_keep @filter_drop) (hkeep (tailout out)))
+
+@filter_keep = (* (h (tail (whole (k (edges out))))))
+  & @filter ~ (tail (whole (k (edges tailout))))
+  & out ~ (1 (h tailout))
+
+@filter_drop = (* (h (tail (whole (k (edges out))))))
+  & h ~ *
+  & @filter ~ (tail (whole (k (edges out))))
+
+// Count edges incident to v whose other endpoint is alive.
+@degree = ((c (alive edges)) out)
+  & @dscan ~ (edges (c (alive (0 out))))
+
+@dscan = ((?((@ds_nil @ds_cons) (payload (c (alive (acc out))))) payload) (c (alive (acc out))))
+
+@ds_nil = (* (c (alive (acc out))))
+  & c ~ *
+  & alive ~ *
+  & out ~ acc
+
+@ds_cons = (* ((edge tail) (c (alive (acc out)))))
+  & c ~ {cw cr}
+  & alive ~ {aw ar}
+  & @weight ~ ((cw (aw edge)) weight)
+  & @dscan ~ (tail (cr (ar (acc2 out))))
+  & acc ~ $([+] $(weight acc2))
+
+// Return the number of live incidences contributed by edge (u,v).
+@weight = ((c (alive edge)) out)
+  & edge ~ (u v)
+  & c ~ {cu cv}
+  & alive ~ {av_u av_v}
+  & u ~ {u_eq u_mem}
+  & v ~ {v_eq v_mem}
+  & @member ~ (v_mem (av_v mv))
+  & @member ~ (u_mem (av_u mu))
+  & cu ~ $([=] $(u_eq eq_u))
+  & cv ~ $([=] $(v_eq eq_v))
+  & eq_u ~ $([&] $(mv hit_u))
+  & eq_v ~ $([&] $(mu hit_v))
+  & hit_u ~ $([+] $(hit_v out))
+
+// Test whether x occurs in a list of numbers.
+@member = (x ((?((@member_nil @member_cons) (payload (x out))) payload) out))
+
+@member_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@member_cons = (* ((head tail) (x out)))
+  & x ~ {x_cmp x_rec}
+  & x_cmp ~ $([=] $(head eq))
+  & @member ~ (x_rec (tail rest))
+  & eq ~ $([|] $(rest out))
+
+@len = ((?((@len_nil @len_cons) (payload out)) payload) out)
+
+@len_nil = (* out)
+  & out ~ 0
+
+@len_cons = (* ((head tail) out))
+  & head ~ *
+  & @len ~ (tail rest)
+  & rest ~ $([+1] out)
+
+// Repeat simultaneous peeling rounds until the alive-list length stops changing.
+@iterate = (alive (k (edges out)))
+  & alive ~ {walk alive_rest}
+  & alive_rest ~ {whole lenlist}
+  & k ~ {kf kr}
+  & edges ~ {ef er}
+  & @filter ~ (walk (whole (kf (ef new))))
+  & @len ~ (lenlist oldn)
+  & new ~ {new_len new_continue}
+  & @len ~ (new_len newn)
+  & oldn ~ $([=] $(newn same))
+  & same ~ ?((@iter_changed @iter_done) (new_continue (kr (er out))))
+
+@iter_changed = (* (new (k (edges out))))
+  & @iterate ~ (new (k (edges out)))
+
+@iter_done = (* (new (k (edges out))))
+  & @len ~ (new count)
+  & k ~ *
+  & edges ~ *
+  & out ~ count

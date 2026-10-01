@@ -1,0 +1,9 @@
+@prog = (((?((@ap2_nil @ap2_first) (payload_q0 (ys out))) payload_q0) ys) out)
+
+@ap2_nil = (* (a a))
+
+@ap2_first = (* ((head tail) (ys out)))
+  & tail ~ (?((@ap2_one (* ((head2_q4 (?((@ap2_nil @ap2_first) (payload_q1_q4 (ys_q4 result_q4))) payload_q1_q4)) (ys_q4 (1 (head2_q4 result_q4)))))) (payload2 (ys rest))) payload2)
+  & out ~ (1 (head rest))
+
+@ap2_one = (* (a a))

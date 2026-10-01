@@ -1,0 +1,23 @@
+@prog = ((i xs) out)
+  & @nth ~ (xs (i out))
+
+@nth = ((tag payload) (i out))
+  & tag ~ ?((@nth_nil @nth_cons) (payload (i out)))
+
+@nth_nil = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & out ~ 0
+
+@nth_cons = (dec (payload (i out)))
+  & dec ~ *
+  & payload ~ (h t)
+  & i ~ ?((@nth_take @nth_step) (h (t out)))
+
+@nth_take = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@nth_step = (j (h (t out)))
+  & h ~ *
+  & @nth ~ (t (j out))

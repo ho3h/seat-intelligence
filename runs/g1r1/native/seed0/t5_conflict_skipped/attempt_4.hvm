@@ -1,0 +1,13 @@
+// With cap below 2, every candidate is skipped. Otherwise return no skips.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & mnl ~ *
+  & cap ~ $([<] $(2 b))
+  & b ~ ?((@empty @keep) (cands out))
+
+@empty = (* (cands out))
+  & cands ~ *
+  & out ~ (0 *)
+
+@keep = (* (cands out))
+  & out ~ cands

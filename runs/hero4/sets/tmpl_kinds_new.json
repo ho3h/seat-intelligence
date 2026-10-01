@@ -1,0 +1,63 @@
+{
+ "limit": {
+  "meaning": "In every section of {S} seats there may be at most {K} guests from the category {CAT}.",
+  "slots": [
+   "{CAT} a category phrase like 'chip makers'",
+   "{K} digit",
+   "{S} digit"
+  ]
+ },
+ "pair": {
+  "meaning": "Every guest from category {CAT} must sit right next to a guest from category {CAT2} (paired one to one).",
+  "slots": [
+   "{CAT}",
+   "{CAT2}"
+  ]
+ },
+ "apart": {
+  "meaning": "Keep the guests of company {CO} and of company {CO2} away from each other: {CO} at one end of the table, {CO2} at the other, everyone else between.",
+  "slots": [
+   "{CO}",
+   "{CO2}: company names"
+  ]
+ },
+ "vip": {
+  "meaning": "Guests whose RSVP rank number is {R} or lower go to the first seats; everyone else keeps their order after them.",
+  "slots": [
+   "{R} digits"
+  ]
+ },
+ "stagger": {
+  "meaning": "Seat in rounds: in each round a company may contribute at most {M} guests; the rest wait for later rounds.",
+  "slots": [
+   "{M} digit"
+  ]
+ },
+ "headseat": {
+  "meaning": "The guest with the lowest RSVP rank number takes the very first seat; everyone else keeps the current order.",
+  "slots": []
+ },
+ "bigfirst": {
+  "meaning": "Companies that brought more guests are seated before those that brought fewer; guests without a company come last.",
+  "slots": []
+ },
+ "waitlist": {
+  "meaning": "Only the first {K} guests of category {CAT} keep their place; further guests of that category go to the very end.",
+  "slots": [
+   "{CAT}",
+   "{K}"
+  ]
+ },
+ "snake": {
+  "meaning": "With sections of {S} seats, every second section (2nd, 4th, ...) is seated in reverse direction.",
+  "slots": [
+   "{S}"
+  ]
+ },
+ "sectionlead": {
+  "meaning": "In every section of {S} seats the guest with the lowest RSVP rank number takes that section's first seat.",
+  "slots": [
+   "{S}"
+  ]
+ }
+}

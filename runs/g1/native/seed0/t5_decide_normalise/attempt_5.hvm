@@ -1,0 +1,63 @@
+// Fold candidates into a sorted, deduplicated accumulator.
+@prog = (input out)
+  & @walk ~ (input ((0 *) out))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (acc out))) pl) (acc out))
+
+@walk_nil = (* (a a))
+
+@walk_cons = (* ((triple tail) (acc out)))
+  & @normalize ~ (triple (tail (acc out)))
+
+@normalize = (({uc u} ({vc v} s)) (tail (acc out)))
+  & uc ~ $([<] $(vc z))
+  & z ~ ?((@norm_rev @norm_fwd) (u (v (s (tail (acc out))))))
+
+@norm_rev = (u (v (s (tail (acc out)))))
+  & @insert ~ (acc ((v (u s)) mid))
+  & @walk ~ (tail (mid out))
+
+@norm_fwd = (* (u (v (s (tail (acc out))))))
+  & @insert ~ (acc ((u (v s)) mid))
+  & @walk ~ (tail (mid out))
+
+@insert = ((?((@ins_nil @ins_cons) (pl (item out))) pl) (item out))
+
+@ins_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@ins_cons = (* ((head tail) (item out)))
+  & @order ~ (item (head (tail out)))
+
+@order = (({uc u} ({vc v} s)) (({hc hu} ({hvc hv} hs)) (tail out)))
+  & uc ~ $([<] $(hc z))
+  & z ~ ?((@order_u_ge @before) ((u (v s)) ((hu (hv hs)) (tail out))))
+
+@order_u_ge = (({uc u} (v s)) (({hc hu} (hv hs)) (tail out)))
+  & hc ~ $([<] $(uc z))
+  & z ~ ?((@order_equal @after) ((u (v s)) ((hu (hv hs)) (tail out))))
+
+@order_equal = ((u ({vc v} s)) ((hu ({hvc hv} hs)) (tail out)))
+  & vc ~ $([<] $(hvc z))
+  & z ~ ?((@order_v_ge @before) ((u (v s)) ((hu (hv hs)) (tail out))))
+
+@order_v_ge = ((u ({vc v} s)) ((hu ({hvc hv} hs)) (tail out)))
+  & hvc ~ $([<] $(vc z))
+  & z ~ ?((@score_cmp @after) ((u (v s)) ((hu (hv hs)) (tail out))))
+
+@before = (* ((u (v s)) ((hu (hv hs)) (tail out))))
+  & out ~ (1 ((u (v s)) (1 ((hu (hv hs)) tail))))
+
+@after = (* ((u (v s)) ((hu (hv hs)) (tail out))))
+  & @insert ~ (tail ((u (v s)) mid))
+  & out ~ (1 ((hu (hv hs)) mid))
+
+@score_cmp = ((u (v {sc s})) ((hu (hv {hsc hs})) (tail out)))
+  & sc ~ $([>] $(hsc z))
+  & z ~ ?((@score_old @score_new) ((u (v s)) ((hu (hv hs)) (tail out))))
+
+@score_old = ((* (* *)) ((hu (hv hs)) (tail out)))
+  & out ~ (1 ((hu (hv hs)) tail))
+
+@score_new = (* ((u (v s)) ((* (* *)) (tail out))))
+  & out ~ (1 ((u (v s)) tail))

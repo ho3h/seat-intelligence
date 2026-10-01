@@ -1,0 +1,47 @@
+{
+ "pid": "t4_eval_rpn",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 336,
+    "itrs_median_big": 6415,
+    "itrs_max": 6536,
+    "depth_median_big": 3590,
+    "depth_max": 3657
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 152308,
+ "best": {
+  "itrs_median_small": 336,
+  "itrs_median_big": 6415,
+  "itrs_max": 6536,
+  "depth_median_big": 3590,
+  "depth_max": 3657
+ },
+ "usd": 0.03618383,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

@@ -1,0 +1,34 @@
+--- 05:04:07
+build.py:32: unknown operator '=='; use one of ! % & * + - / < << = > >> ^ |
+--- 05:05:09
+branch nonzero case of @prog (t5_rewrite_collapsed) (@prog_b1s): 4 value(s) never used:
+    `nm12` (num, copy 2 of `nm1`, made at build.py:54)
+    `L5` (depth, copy 5 of `L`, made at build.py:61)
+    `L22` (depth, copy 2 of `L2`, made at build.py:67)
+    `L32` (depth, copy 2 of `L3`, made at build.py:71)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:55
+build.py:24: wire `e2` (num, argument `e2` of step of stream `rk_w`, made at recipes.py:606) is used a second time (left operand of `=`); it was already used at recipes.py:121 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(e2, 2)  and use each once.
+--- 05:13:23
+wrong arity: branch zero case of @prog (t5_rewrite_collapsed) is called as f(d, passed[0]:list[num], passed[1]:list[(num num)]), i.e. d plus 2 value(s); your function `empty_case` takes 4 parameter(s) (b, c_copy1, c_copy2, es).
+--- 05:13:55
+wrong arity: branch zero case of @prog (t5_rewrite_collapsed) is called as f(d, passed[0]:list[num], passed[1]:list[(num num)]), i.e. d plus 2 value(s); your function `empty_case` takes 4 parameter(s) (b, c_copy1, c_copy2, es).
+--- 05:14:15
+branch nonzero case of @prog (t5_rewrite_collapsed) (@prog_b2s): 2 value(s) never used:
+    `c2` (list[(num num)], output `c2` of recipe list_length_and_copy `lc`, made at build.py:37)
+    `L31` (depth, copy 1 of `L3`, made at build.py:44)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:14:34
+@prog (t5_rewrite_collapsed) (@prog): 1 value(s) never used:
+    `c1` (list[num], output `c1` of recipe list_length_and_copy `lc_num`, made at build.py:28)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:17:53
+build.py:53: wire `L` (depth, output `L` of lg, made at build.py:40) is used a second time (recipe count_where_trie `cct` port `L`); it was already used at build.py:41 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:19:24
+build.py:50: wire `r` (num, result of `+`, made at build.py:48) is used a second time (select if_false); it was already used at build.py:49 (left operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:19:32
+build.py:53: kind mismatch at recipe reduce_by_key `rk` (add) port `L`: expected depth, got num `sel1` from copy 1 of `sel` (made at build.py:51). Depths come from lg(); if this number really is a trie depth, use d.as_depth(x).
+--- 05:19:44
+build.py:56: wire `sel` (depth, as_depth(sel), made at build.py:51) is used a second time (recipe count_where_trie `cct` port `L`); it was already used at build.py:52 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(sel, 2)  and use each once.
+--- 05:29:22
+keyval of reduce_by_key `rk` (combine inc) must return just the key k

@@ -1,0 +1,119 @@
+@prog = ((n edges) out)
+  & @range ~ (n verts)
+  & @search ~ (verts ((0 *) (0 (edges out))))
+
+@range = (?((@range_nil @range_succ) out) out)
+
+@range_nil = out
+  & out ~ (0 *)
+
+@range_succ = (pred out)
+  & pred ~ {p_head p_rec}
+  & @range ~ (p_rec tail)
+  & out ~ (1 (p_head tail))
+
+@search = ((?((@search_nil @search_cons) (payload (chosen (cur (best (edges out)))))) payload) (chosen (cur (best (edges out))))
+
+@search_nil = (* (chosen (cur (best (edges out)))))
+  & chosen ~ *
+  & edges ~ *
+  & @max ~ (cur (best out))
+
+@search_cons = (* ((v tail) (chosen (cur (best (edges out))))))
+  & @step ~ ((v tail) (chosen (cur (best (edges out)))))
+
+@step = ((v tail) (chosen (cur (best (edges out)))))
+  & tail ~ {tail_ex tail_cond}
+  & chosen ~ {chosen_ex {chosen_inc chosen_test}}
+  & v ~ {v_inc v_test}
+  & cur ~ {cur_ex cur_inc}
+  & best ~ {best_ex best_inc}
+  & edges ~ {edges_ex {edges_inc edges_test}}
+  & @search ~ (tail_ex (chosen_ex (cur_ex (best_ex (edges_ex excluded)))))
+  & @alladj ~ (chosen_test (v_test (edges_test ok)))
+  & ok ~ ?((@step_no @step_yes) (excluded (tail_cond (v_inc (chosen_inc (cur_inc (best_inc (edges_inc out)))))))
+
+@step_no = (excluded (tail (v (chosen (cur (best (edges out)))))))
+  & tail ~ *
+  & v ~ *
+  & chosen ~ *
+  & cur ~ *
+  & best ~ *
+  & edges ~ *
+  & out ~ excluded
+
+@step_yes = (excluded (tail (v (chosen (cur (best (edges out)))))))
+  & cur ~ $([+1] cur1)
+  & @search ~ (tail ((1 (v chosen)) (cur1 (best (edges y)))))
+  & @max ~ (excluded (y out))
+
+@alladj = ((?((@aa_nil @aa_cons) (payload (v (edges out)))) payload) (v (edges out)))
+
+@aa_nil = (* (v (edges out)))
+  & v ~ *
+  & edges ~ *
+  & out ~ 1
+
+@aa_cons = (* ((u tail) (v (edges out))))
+  & v ~ {v_check v_rec}
+  & edges ~ {edges_check edges_rec}
+  & @hasedge ~ (edges_check (u (v_check found)))
+  & found ~ ?((@aa_no @aa_yes) (tail (v_rec (edges_rec out))))
+
+@aa_no = (tail (v (edges out)))
+  & tail ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@aa_yes = (* (tail (v (edges out))))
+  & @alladj ~ (tail (v (edges out)))
+
+@hasedge = ((?((@he_nil @he_cons) (payload (a (b out)))) payload) (a (b out)))
+
+@he_nil = (* (a (b out)))
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@he_cons = (* ((edge tail) (a (b out))))
+  & a ~ {a_match a_rec}
+  & b ~ {b_match b_rec}
+  & @edge_match ~ (edge (a_match (b_match matched)))
+  & matched ~ ?((@he_no @he_yes) (tail (a_rec (b_rec out))))
+
+@he_no = (tail (a (b out)))
+  & @hasedge ~ (tail (a (b out)))
+
+@he_yes = (* (tail (a (b out))))
+  & tail ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@edge_match = ((u v) (a (b out)))
+  & u ~ {u_ab u_ba}
+  & v ~ {v_ab v_ba}
+  & a ~ {a_ab a_ba}
+  & b ~ {b_ab b_ba}
+  & u_ab ~ $([=] $(a_ab e1))
+  & v_ab ~ $([=] $(b_ab e2))
+  & u_ba ~ $([=] $(b_ba e3))
+  & v_ba ~ $([=] $(a_ba e4))
+  & e1 ~ $([&] $(e2 direct))
+  & e3 ~ $([&] $(e4 reverse))
+  & direct ~ $([|] $(reverse out))
+
+@max = (a (b out))
+  & a ~ {acmp aret}
+  & b ~ {bcmp bret}
+  & acmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (aret (bret out)))
+
+@max_no = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@max_yes = (a (b out))
+  & b ~ *
+  & out ~ a

@@ -1,0 +1,434 @@
+@prog = (input out)
+  & input ~ (n (cap (mnl (cands *))))
+  & n ~ {n_fill n_main}
+  & n_main ~ {n_ones n_proc}
+  & @fill_nils ~ (1001 (0 *) buckets0)
+  & @add_all_cands ~ (cands buckets0 buckets1)
+  & @collect ~ (0 buckets1 sorted)
+  & @iota_up ~ (0 n_fill (0 *) parent_rev)
+  & @rev ~ (parent_rev (0 *) parent)
+  & @ones ~ (n_ones (0 *) size)
+  & @process_all ~ (sorted n_proc cap mnl parent size out)
+
+@make_cons = (h (t out))
+  & (1 (h t)) ~ out
+
+@rev = (list (acc out))
+  & list ~ (tag payload)
+  & tag ~ ?((@rev_nil @rev_cons) (payload acc out))
+
+@rev_nil = (payload acc out)
+  & payload ~ *
+  & acc ~ out
+
+@rev_cons = (payload acc out)
+  & payload ~ (h t)
+  & @make_cons ~ (h acc newacc)
+  & @rev ~ (t newacc out)
+
+@list_get = (idx (list out))
+  & idx ~ ?((@get_z @get_s) (list out))
+
+@get_z = (list out)
+  & list ~ (tag payload)
+  & tag ~ ?((@get_z_nil @get_z_cons) (payload out))
+
+@get_z_nil = (payload out)
+  & payload ~ *
+  & 0 ~ out
+
+@get_z_cons = (payload out)
+  & payload ~ (h t)
+  & h ~ out
+  & t ~ *
+
+@get_s = (pred (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (h t)
+  & h ~ *
+  & @list_get ~ (pred t out)
+
+@list_set = (idx (val (list out)))
+  & idx ~ ?((@set_z @set_s) (val (list out)))
+
+@set_z = (val (list out))
+  & list ~ (tag payload)
+  & payload ~ (h t)
+  & tag ~ *
+  & h ~ *
+  & @make_cons ~ (val t out)
+
+@set_s = (pred (val (list out)))
+  & list ~ (tag payload)
+  & payload ~ (h t)
+  & tag ~ *
+  & @list_set ~ (pred val t newtail)
+  & @make_cons ~ (h newtail out)
+
+@list_update_cons = (idx (val (list out)))
+  & idx ~ ?((@luc_zero @luc_succ) (val (list out)))
+
+@luc_zero = (val (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@luc_zero_nil @luc_zero_cons) (payload val out))
+
+@luc_zero_nil = (payload val out)
+  & payload ~ *
+  & @make_cons ~ (val list out)
+  & list ~ (0 *)
+
+@luc_zero_cons = (payload val out)
+  & payload ~ (old tail)
+  & @make_cons ~ (val old newhead)
+  & @make_cons ~ (newhead tail out)
+
+@luc_succ = (pred (val (list out)))
+  & list ~ (tag payload)
+  & payload ~ (h t)
+  & tag ~ *
+  & @list_update_cons ~ (pred val t newtail)
+  & @make_cons ~ (h newtail out)
+
+@append = (xs (ys out))
+  & xs ~ (tag payload)
+  & tag ~ ?((@append_nil @append_cons) (payload ys out))
+
+@append_nil = (payload ys out)
+  & payload ~ *
+  & ys ~ out
+
+@append_cons = (payload ys out)
+  & payload ~ (h t)
+  & @append ~ (t ys rest)
+  & @make_cons ~ (h rest out)
+
+@iota_up = (i (limit (acc out)))
+  & limit ~ {limit_cmp limit_ctx}
+  & i ~ {i_cmp i_kept}
+  & i_cmp ~ $([<] $(limit_cmp less))
+  & less ~ ?((@iu_done @iu_step) (i_kept limit_ctx acc out))
+
+@iu_done = (pred ctx)
+  & ctx ~ (i (limit (acc out)))
+  & pred ~ *
+  & i ~ *
+  & limit ~ *
+  & @rev ~ (acc (0 *) out)
+
+@iu_step = (pred ctx)
+  & ctx ~ (i (limit (acc out)))
+  & pred ~ *
+  & i ~ {i_cons i_next}
+  & i_next ~ $([+1] i_plus)
+  & @make_cons ~ (i_cons acc newacc)
+  & @iota_up ~ (i_plus limit newacc out)
+
+@ones = (count (acc out))
+  & count ~ ?((@ones_z @ones_s) (acc out))
+
+@ones_z = (acc out)
+  & acc ~ out
+
+@ones_s = (pred (acc out))
+  & @make_cons ~ (1 acc newacc)
+  & @ones ~ (pred newacc out)
+
+@fill_nils = (count (acc out))
+  & count ~ ?((@fill_nils_z @fill_nils_s) (acc out))
+
+@fill_nils_z = (acc out)
+  & acc ~ out
+
+@fill_nils_s = (pred (acc out))
+  & @make_cons ~ ((0 *) acc newacc)
+  & @fill_nils ~ (pred newacc out)
+
+@cand_bucket_idx = (cand out)
+  & cand ~ (u (v s))
+  & u ~ *
+  & v ~ *
+  & 1000 ~ $([-] $(s out))
+
+@add_all_cands = (cands (buckets out))
+  & cands ~ (tag payload)
+  & tag ~ ?((@add_all_nil @add_all_cons) (payload buckets out))
+
+@add_all_nil = (payload buckets out)
+  & payload ~ *
+  & buckets ~ out
+
+@add_all_cons = (payload buckets out)
+  & payload ~ (cand tail)
+  & cand ~ {cand_idx cand_update}
+  & @cand_bucket_idx ~ (cand_idx idx)
+  & @list_update_cons ~ (idx cand_update buckets newbuckets)
+  & @add_all_cands ~ (tail newbuckets out)
+
+@cand_key = (cand out)
+  & cand ~ (u (v s))
+  & s ~ *
+  & u ~ $([<<] $(8 u8))
+  & u8 ~ $([|] $(v out))
+
+@insert_cand = (cand (sorted out))
+  & sorted ~ (tag payload)
+  & tag ~ ?((@ins_nil @ins_cons) (payload cand out))
+
+@ins_nil = (payload cand out)
+  & payload ~ *
+  & @make_cons ~ (cand (0 *) out)
+
+@ins_cons = (payload cand out)
+  & payload ~ (head tail)
+  & cand ~ {cand_key cand_val}
+  & head ~ {head_key head_val}
+  & @cand_key ~ (cand_key k1)
+  & @cand_key ~ (head_key k2)
+  & k1 ~ $([>] $(k2 gt))
+  & gt ~ ?((@ins_cons_le @ins_cons_gt) (cand_val head_val tail out))
+
+@ins_cons_le = (pred ctx)
+  & ctx ~ (cand (head (tail out)))
+  & pred ~ *
+  & @make_cons ~ (cand (1 (head tail)) out)
+
+@ins_cons_gt = (pred ctx)
+  & ctx ~ (cand (head (tail out)))
+  & pred ~ *
+  & @insert_cand ~ (cand tail newtail)
+  & @make_cons ~ (head newtail out)
+
+@insert_all = (list (acc out))
+  & list ~ (tag payload)
+  & tag ~ ?((@insert_all_nil @insert_all_cons) (payload acc out))
+
+@insert_all_nil = (payload acc out)
+  & payload ~ *
+  & acc ~ out
+
+@insert_all_cons = (payload acc out)
+  & payload ~ (h t)
+  & @insert_cand ~ (h acc newacc)
+  & @insert_all ~ (t newacc out)
+
+@collect = (idx (buckets out))
+  & idx ~ {idx_cmp idx_ctx}
+  & idx_cmp ~ $([<] $(1001 less))
+  & less ~ ?((@collect_end @collect_step) (idx_ctx buckets out))
+
+@collect_end = (pred ctx)
+  & ctx ~ (idx (buckets out))
+  & pred ~ *
+  & idx ~ *
+  & buckets ~ *
+  & (0 *) ~ out
+
+@collect_step = (pred ctx)
+  & ctx ~ (idx (buckets out))
+  & pred ~ *
+  & idx ~ {idx_get idx_next}
+  & buckets ~ {buckets_here buckets_rec}
+  & @list_get ~ (idx_get buckets_here bucket)
+  & @insert_all ~ (bucket (0 *) sorted_bucket)
+  & idx_next ~ $([+1] idx_plus)
+  & @collect ~ (idx_plus buckets_rec rest)
+  & @append ~ (sorted_bucket rest out)
+
+@find = (x (parent out))
+  & parent ~ {parent_get parent_ctx}
+  & x ~ {x_get x_cmp}
+  & @list_get ~ (x_get parent_get root)
+  & root ~ {root_cmp root_out}
+  & root_cmp ~ $([=] $(x_cmp same))
+  & same ~ ?((@find_rec @find_done) (root_out parent_ctx out))
+
+@find_done = (pred ctx)
+  & ctx ~ (root (parent out))
+  & pred ~ *
+  & parent ~ *
+  & root ~ out
+
+@find_rec = (pred ctx)
+  & ctx ~ (root (parent out))
+  & pred ~ *
+  & @find ~ (root parent out)
+
+@pair_is_conflict = (fa (fb (ru (rv out))))
+  & ru ~ {ru1 ru2}
+  & rv ~ {rv1 rv2}
+  & fa ~ {fa1 fa2}
+  & fb ~ {fb1 fb2}
+  & fa1 ~ $([=] $(ru1 e1a))
+  & fb1 ~ $([=] $(rv1 e1b))
+  & e1a ~ $([&] $(e1b eq1))
+  & fa2 ~ $([=] $(rv2 e2a))
+  & fb2 ~ $([=] $(ru2 e2b))
+  & e2a ~ $([&] $(e2b eq2))
+  & eq1 ~ $([|] $(eq2 out))
+
+@has_conflict = (mnl (ru (rv (parent out))))
+  & mnl ~ (tag payload)
+  & tag ~ ?((@hc_nil @hc_cons) (payload ru rv parent out))
+
+@hc_nil = (payload ru rv parent out)
+  & payload ~ *
+  & ru ~ *
+  & rv ~ *
+  & parent ~ *
+  & 0 ~ out
+
+@hc_cons = (payload ru rv parent out)
+  & payload ~ (a (b tail))
+  & parent ~ {parent_a parent_rest}
+  & parent_rest ~ {parent_b parent_ctx}
+  & ru ~ {ru_pair ru_ctx}
+  & rv ~ {rv_pair rv_ctx}
+  & @find ~ (a parent_a fa)
+  & @find ~ (b parent_b fb)
+  & @pair_is_conflict ~ (fa fb ru_pair rv_pair conflict)
+  & conflict ~ ?((@hc_next @hc_found) (tail ru_ctx rv_ctx parent_ctx out))
+
+@hc_next = (pred ctx)
+  & ctx ~ (tail (ru (rv (parent out))))
+  & pred ~ *
+  & @has_conflict ~ (tail ru rv parent out)
+
+@hc_found = (pred ctx)
+  & ctx ~ (tail (ru (rv (parent out))))
+  & pred ~ *
+  & tail ~ *
+  & ru ~ *
+  & rv ~ *
+  & parent ~ *
+  & 1 ~ out
+
+@make_state = (parent (size out))
+  & (parent size) ~ out
+
+@process_all = (cands (n (cap (mnl (state out)))))
+  & state ~ (parent size)
+  & cands ~ (tag payload)
+  & tag ~ ?((@pa_nil @pa_cons) (payload n cap mnl parent size out))
+
+@pa_nil = (payload n cap mnl parent size out)
+  & payload ~ *
+  & cap ~ *
+  & mnl ~ *
+  & size ~ *
+  & @build_output ~ (n parent out)
+
+@pa_cons = (payload n cap mnl parent size out)
+  & payload ~ (cand tail)
+  & n ~ {n1 n2}
+  & cap ~ {cap1 cap2}
+  & mnl ~ {mnl1 mnl2}
+  & @process_cand ~ (cand n1 cap1 mnl1 parent size newstate)
+  & newstate ~ (newparent newsize)
+  & @process_all ~ (tail n2 cap2 mnl2 newparent newsize out)
+
+@process_cand = (cand (n (cap (mnl (parent (size out))))))
+  & cand ~ (u (v s))
+  & s ~ *
+  & u ~ {u_find *}
+  & v ~ {v_find *}
+  & parent ~ {parent_find parent_ctx}
+  & parent_find ~ {parent_u parent_v}
+  & @find ~ (u_find parent_u ru)
+  & @find ~ (v_find parent_v rv)
+  & ru ~ {ru_cmp ru_ctx}
+  & rv ~ {rv_cmp rv_ctx}
+  & ru_cmp ~ $([=] $(rv_cmp same))
+  & same ~ ?((@pc_diff @pc_same) (ru_ctx rv_ctx n cap mnl parent_ctx size out))
+
+@pc_same = (pred ctx)
+  & ctx ~ (ru (rv (n (cap (mnl (parent (size out)))))))
+  & pred ~ *
+  & ru ~ *
+  & rv ~ *
+  & n ~ *
+  & cap ~ *
+  & mnl ~ *
+  & @make_state ~ (parent size out)
+
+@pc_diff = (pred ctx)
+  & ctx ~ (ru (rv (n (cap (mnl (parent (size out)))))))
+  & pred ~ *
+  & ru ~ {ru_cmp ru_ctx}
+  & rv ~ {rv_cmp rv_ctx}
+  & ru_cmp ~ $([>] $(rv_cmp ru_gt))
+  & ru_gt ~ ?((@pc_ru_le @pc_ru_gt) (ru_ctx rv_ctx n cap mnl parent size out))
+
+@pc_ru_gt = (pred ctx)
+  & ctx ~ (ru (rv (n (cap (mnl (parent (size out)))))))
+  & pred ~ *
+  & @pc_try_union ~ (ru rv n cap mnl parent size out)
+
+@pc_ru_le = (pred ctx)
+  & ctx ~ (ru (rv (n (cap (mnl (parent (size out)))))))
+  & pred ~ *
+  & @pc_try_union ~ (rv ru n cap mnl parent size out)
+
+@pc_try_union = (high (low (n (cap (mnl (parent (size out)))))))
+  & n ~ *
+  & high ~ {high_get high_rest}
+  & high_rest ~ {high_conf high_ctx}
+  & low ~ {low_get low_rest}
+  & low_rest ~ {low_conf low_ctx}
+  & size ~ {size_get size_ctx}
+  & size_get ~ {size_high_get size_low_get}
+  & parent ~ {parent_conf parent_ctx}
+  & sum ~ {sum_cmp sum_ctx}
+  & @list_get ~ (high_get size_high_get size_high)
+  & @list_get ~ (low_get size_low_get size_low)
+  & size_high ~ $([+] $(size_low sum))
+  & sum_cmp ~ $([>] $(cap gt))
+  & gt ~ $([=] $(0 cap_ok))
+  & @has_conflict ~ (mnl low_conf high_conf parent_conf conflict)
+  & conflict ~ $([=] $(0 no_conf))
+  & no_conf ~ $([&] $(cap_ok allowed))
+  & allowed ~ ?((@pc_skip @pc_do) (high_ctx low_ctx sum_ctx parent_ctx size_ctx out))
+
+@pc_skip = (pred ctx)
+  & ctx ~ (high (low (sum (parent (size out)))))
+  & pred ~ *
+  & high ~ *
+  & low ~ *
+  & sum ~ *
+  & @make_state ~ (parent size out)
+
+@pc_do = (pred ctx)
+  & ctx ~ (high (low (sum (parent (size out)))))
+  & pred ~ *
+  & high ~ {high_set_parent high_set_size}
+  & @list_set ~ (low high_set_parent parent new_parent)
+  & @list_set ~ (high_set_size sum size new_size)
+  & @make_state ~ (new_parent new_size out)
+
+@build_output = (n (parent out))
+  & @build_out_up ~ (0 n parent (0 *) out_rev)
+  & @rev ~ (out_rev (0 *) out)
+
+@build_out_up = (i (limit (parent (acc out))))
+  & i ~ {i_cmp i_kept}
+  & limit ~ {limit_cmp limit_ctx}
+  & i_cmp ~ $([<] $(limit_cmp less))
+  & less ~ ?((@bou_done @bou_step) (i_kept limit_ctx parent acc out))
+
+@bou_done = (pred ctx)
+  & ctx ~ (i (limit (parent (acc out))))
+  & pred ~ *
+  & i ~ *
+  & limit ~ *
+  & parent ~ *
+  & acc ~ out
+
+@bou_step = (pred ctx)
+  & ctx ~ (i (limit (parent (acc out))))
+  & pred ~ *
+  & i ~ {i_find i_next}
+  & parent ~ {parent_find parent_rec}
+  & @find ~ (i_find parent_find root)
+  & i_next ~ $([+1] i_plus)
+  & @make_cons ~ (root acc newacc)
+  & @build_out_up ~ (i_plus limit parent_rec newacc out)

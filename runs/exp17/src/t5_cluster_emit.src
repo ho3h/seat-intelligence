@@ -1,0 +1,22 @@
+# t5_cluster_emit: components by channel label propagation (lib/chan) with labels 4095 - id (min over them is the
+# largest member id), then one tail-threaded flatten emitting (d, canon) for every non-canonical d, ascending.
+#include base
+#include chan
+#include hooks_cc
+def prog(x):
+  (n, es) = x
+  (F, z, l, m) = chan_cc(n, es, 1, 3)
+  return seq(z, emit_pairs(F, l, 0, n, []))
+
+def emit_pairs(t, l, base, n, acc):
+  switch l:
+    case 0:
+      c = 4095 - t
+      if (base < n) & (c != base):
+        return List/Cons((base, c), acc)
+      else:
+        return acc
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return emit_pairs(a, l-1, base, n, emit_pairs(b, l-1, base + h, n, acc))

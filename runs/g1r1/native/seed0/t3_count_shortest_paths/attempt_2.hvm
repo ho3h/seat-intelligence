@@ -1,0 +1,237 @@
+// Validate the vertex indices before starting the search.
+@prog = ((n (s (t edges))) out)
+  & @valid_s ~ (n (s (t (edges out))))
+
+@valid_s = (n (s (t (edges out))))
+  & n ~ {n_op n_keep}
+  & s ~ {s_op s_keep}
+  & s_op ~ $([<] $(n_op c))
+  & c ~ ?((@invalid @valid_t) (n_keep (s_keep (t (edges out)))))
+
+@valid_t = (* (n (s (t (edges out)))))
+  & n ~ {n_op n_keep}
+  & t ~ {t_op t_keep}
+  & t_op ~ $([<] $(n_op c))
+  & c ~ ?((@invalid @start) (n_keep (s (t_keep (edges out)))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+// Handle s == t, otherwise initialize the BFS.
+@start = (n (s (t (edges out))))
+  & s ~ {s_op s_keep}
+  & t ~ {t_op t_keep}
+  & s_op ~ $([=] $(t_op eq))
+  & eq ~ ?((@start_bfs @same) (n (s_keep (t_keep (edges out)))))
+
+@same = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 1
+
+@start_bfs = (n (s (t (edges out))))
+  & n ~ {n_round n_static}
+  & s ~ {s_static {s_front s_seen}}
+  & @bfs ~ (n_round (n_static (s_static (t (edges ((1 ((s_front 1) (0 *))) ((1 (s_seen (0 *))) out))))))
+
+// BFS rounds. The frontier and seen vertices are lists of (vertex, path-count)
+// pairs and vertices, respectively.
+@bfs = (?((@bfs_done @bfs_step) (n (s (t (edges (front (seen out))))))) (n (s (t (edges (front (seen out))))))
+
+@bfs_done = (n (s (t (edges (front (seen out))))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ 0
+
+@bfs_step = (roundrem (n (s (t (edges (front (seen out))))))
+  & @build ~ (n (0 (n (s (t (edges (front (seen ((0 *) (0 (0 (roundrem out))))))))))))
+
+// Scan every vertex to build the next frontier.
+@build = (?((@build_done @build_step) (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out)))))))))))) (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))))
+
+@build_done = (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+  & i ~ *
+  & front ~ *
+  & @round_done ~ (n (s (t (edges (acc (seen (ff (fc (rounds out))))))))
+
+@build_step = (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+  & i ~ {i_test i_keep}
+  & seen ~ {seen_test seen_keep}
+  & @mem ~ (seen_test (i_test present))
+  & present ~ ?((@build_seen @build_unseen) (rem1 (i_keep (n (s (t (edges (front (seen_keep (acc (ff (fc (rounds out))))))))))))
+
+@build_seen = (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+  & @advance ~ (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+
+@build_unseen = (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+  & i ~ {i_sum i_keep}
+  & edges ~ {edges_sum edges_keep}
+  & front ~ {front_sum front_keep}
+  & @sum ~ (edges_sum (i_sum (front_sum (0 (0 sumresult)))))
+  & @candidate ~ (sumresult (rem1 (i_keep (n (s (t (edges_keep (front_keep (seen (acc (ff (fc (rounds out))))))))))))
+
+@advance = (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+  & i ~ $([+1] i2)
+  & @build ~ (rem1 (i2 (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+
+// A candidate is included whenever an edge reaches the current frontier,
+// even if its path count is zero modulo 2^24.
+@candidate = ((cnt has) (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))))
+  & has ~ ?((@cand_no @cand_yes) (cnt (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))))
+
+@cand_no = (cnt (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+  & cnt ~ *
+  & @advance ~ (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))
+
+@cand_yes = (* (cnt (rem1 (i (n (s (t (edges (front (seen (acc (ff (fc (rounds out))))))))))))
+  & cnt ~ {cnt_store cnt_ctx}
+  & t ~ {t_cmp t_ctx}
+  & i ~ {i_cmp {i_cur {i_acc i_seen}}}
+  & i_cmp ~ $([=] $(t_cmp eq))
+  & eq ~ ?((@cand_not_t @cand_is_t) (cnt_ctx ((1 ((i_acc cnt_store) acc)) (1 (i_seen seen)) (rem1 (i_cur (n (s (t_ctx (edges (front (ff (fc (rounds out))))))))))))
+
+@cand_not_t = (cnt (newacc (newseen (rem1 (i (n (s (t (edges (front (ff (fc (rounds out))))))))))))
+  & @advance ~ (rem1 (i (n (s (t (edges (front (newseen (newacc (ff (fc (rounds out))))))))))
+
+@cand_is_t = (* (cnt (newacc (newseen (rem1 (i (n (s (t (edges (front (ff (fc (rounds out))))))))))))
+  & ff ~ *
+  & fc ~ *
+  & @advance ~ (rem1 (i (n (s (t (edges (front (newseen (newacc (1 (cnt (rounds out))))))))))
+
+// Return the target count if found; stop early if the next frontier is empty.
+@round_done = (n (s (t (edges (newfront (seen (ff (fc (rounds out))))))))
+  & ff ~ ?((@round_no @round_yes) (n (s (t (edges (newfront (seen (fc (rounds out))))))))
+
+@round_yes = (* (n (s (t (edges (newfront (seen (fc (rounds out)))))))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & newfront ~ *
+  & seen ~ *
+  & out ~ fc
+  & rounds ~ *
+
+@round_no = (n (s (t (edges (newfront (seen (fc (rounds out))))))))
+  & fc ~ *
+  & newfront ~ {front_test front_keep}
+  & @empty ~ (front_test emptyflag)
+  & emptyflag ~ ?((@round_continue @round_stop) (n (s (t (edges (front_keep (seen (rounds out))))))))
+
+@round_continue = (n (s (t (edges (front (seen (rounds out)))))))
+  & @bfs ~ (rounds (n (s (t (edges (front (seen out))))))
+
+@round_stop = (* (n (s (t (edges (front (seen (rounds out))))))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & rounds ~ *
+  & out ~ 0
+
+// List membership for the seen-vertex list.
+@mem = ((?((@mem_nil @mem_cons) (x out)) pl) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x_op x_ctx}
+  & x_op ~ $([=] $(h eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (x_ctx out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+// Look up a vertex's path count in a frontier. The result is (present, count).
+@get = ((?((@get_nil @get_cons) (x out)) pl) (x out))
+
+@get_nil = (* (x out))
+  & x ~ *
+  & out ~ (0 0)
+
+@get_cons = (* ((hv hc) (tail (x out))))
+  & x ~ {x_op x_ctx}
+  & x_op ~ $([=] $(hv eq))
+  & eq ~ ?((@get_no @get_yes) (tail (hc (x_ctx out))))
+
+@get_no = (tail (hc (x out)))
+  & hc ~ *
+  & @get ~ (tail (x out))
+
+@get_yes = (* (tail (hc (x out))))
+  & tail ~ *
+  & x ~ *
+  & out ~ (1 hc)
+
+// Sum counts of frontier vertices adjacent to i, while separately tracking
+// whether any such vertex is present.
+@sum = ((?((@sum_nil @sum_cons) (i (front (acc (has out))))) pl) (i (front (acc (has out)))))
+
+@sum_nil = (* (i (front (acc (has out)))))
+  & i ~ *
+  & front ~ *
+  & out ~ (acc has)
+
+@sum_cons = (* ((u v) (tail (i (front (acc (has out)))))))
+  & i ~ {i_op i_ctx}
+  & i_op ~ $([=] $(u eq))
+  & eq ~ ?((@sum_u_no @sum_u_yes) (u (v (tail (i_ctx (front (acc (has out))))))))
+
+@sum_u_yes = (* (u (v (tail (i (front (acc (has out))))))))
+  & u ~ *
+  & front ~ {front_get front_keep}
+  & @get ~ (front_get (v result))
+  & result ~ (p ways)
+  & @sum_add ~ (tail (i (front_keep (acc (has (p ways out))))))
+
+@sum_u_no = (u (v (tail (i (front (acc (has out)))))))
+  & i ~ {i_op i_ctx}
+  & i_op ~ $([=] $(v eq))
+  & eq ~ ?((@sum_v_no @sum_v_yes) (u (v (tail (i_ctx (front (acc (has out))))))))
+
+@sum_v_yes = (* (u (v (tail (i (front (acc (has out))))))))
+  & v ~ *
+  & front ~ {front_get front_keep}
+  & @get ~ (front_get (u result))
+  & result ~ (p ways)
+  & @sum_add ~ (tail (i (front_keep (acc (has (p ways out))))))
+
+@sum_v_no = (u (v (tail (i (front (acc (has out)))))))
+  & u ~ *
+  & v ~ *
+  & @sum ~ (tail (i (front (acc (has out)))))
+
+@sum_add = (tail (i (front (acc (has (p (ways out))))))
+  & acc ~ $([+] $(ways acc2))
+  & has ~ $([|] $(p has2))
+  & @sum ~ (tail (i (front (acc2 (has2 out))))
+
+// Is a list empty?
+@empty = ((?((@empty_nil @empty_cons) out) pl) out)
+
+@empty_nil = (* out)
+  & out ~ 1
+
+@empty_cons = (* ((h t) out))
+  & h ~ *
+  & t ~ *
+  & out ~ 0

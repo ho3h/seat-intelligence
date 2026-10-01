@@ -1,0 +1,23 @@
+@prog = (l out)
+  & @rev ~ (l ((0 *) out))
+
+@rev = (lv1 (acc out))
+  & @rev_cons_lw ~ (lv1 (acc out))
+
+@rev_nil = (* (a a))
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev_cons_lw ~ (t ((1 (h acc)) out))
+
+@rev_cons_lw = (ls50 (q10 q11))
+  & ls50 ~ (g41 (e33 (g42 (e34 (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 (g48 (e40 tk49))))))))))))))))
+  & g41 ~ ?((@rev_nil @rev_cons_la) ((e33 (q13 q14)) (q10 q11)))
+  & g42 ~ ?((@rev_nil @rev_cons_la) ((e34 (q16 q17)) (q13 q14)))
+  & g43 ~ ?((@rev_nil @rev_cons_la) ((e35 (q19 q20)) (q16 q17)))
+  & g44 ~ ?((@rev_nil @rev_cons_la) ((e36 (q22 q23)) (q19 q20)))
+  & g45 ~ ?((@rev_nil @rev_cons_la) ((e37 (q25 q26)) (q22 q23)))
+  & g46 ~ ?((@rev_nil @rev_cons_la) ((e38 (q28 q29)) (q25 q26)))
+  & g47 ~ ?((@rev_nil @rev_cons_la) ((e39 (q31 q32)) (q28 q29)))
+  & g48 ~ ?((@rev_nil @rev_cons) ((e40 tk49) (q31 q32)))
+
+@rev_cons_la = (* ((h ((1 (h acc)) out)) (acc out)))

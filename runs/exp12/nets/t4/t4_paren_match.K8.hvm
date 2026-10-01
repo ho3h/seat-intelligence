@@ -1,0 +1,52 @@
+@prog = (input output)
+  & @many ~ (input (0 result))
+  & result ~ (output (idx (rest close)))
+  & idx ~ *
+  & rest ~ *
+  & close ~ *
+
+@many = ((?((@many_nil @many_cons) (p (idx out))) p) (idx out))
+
+@many_nil = (* (idx out))
+  & out ~ ((0 *) (idx ((0 *) 0)))
+
+@many_cons = (* ((h t) (idx out)))
+  & h ~ $([=] $(40 z))
+  & z ~ ?((@many_close @many_open) (t (idx out)))
+
+@many_close = (t (idx out))
+  & idx ~ {keep step}
+  & step ~ $([+1] next)
+  & out ~ ((0 *) (next (t keep)))
+
+@many_open = (* (t (idx out)))
+  & idx ~ {open_ix step}
+  & step ~ $([+1] start)
+  & @many ~ (t (start inner))
+  & inner ~ (inside (after_open (rest close)))
+  & @many ~ (rest (after_open suffix))
+  & suffix ~ (after (final_idx (final_rest final_close)))
+  & @append ~ (inside ((1 (open_ix after)) merged))
+  & out ~ ((1 (close merged)) (final_idx (final_rest final_close)))
+
+@append = (lv1 (b out))
+  & @ap_cons_lw ~ (lv1 (b out))
+
+@ap_nil = (* (b out))
+  & out ~ b
+
+@ap_cons = (* ((h t) (b (1 (h tail)))))
+  & @ap_cons_lw ~ (t (b tail))
+
+@ap_cons_lw = (ls50 (q10 q11))
+  & ls50 ~ (g41 (e33 (g42 (e34 (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 (g48 (e40 tk49))))))))))))))))
+  & g41 ~ ?((@ap_nil @ap_cons_la) ((e33 (q13 q14)) (q10 q11)))
+  & g42 ~ ?((@ap_nil @ap_cons_la) ((e34 (q16 q17)) (q13 q14)))
+  & g43 ~ ?((@ap_nil @ap_cons_la) ((e35 (q19 q20)) (q16 q17)))
+  & g44 ~ ?((@ap_nil @ap_cons_la) ((e36 (q22 q23)) (q19 q20)))
+  & g45 ~ ?((@ap_nil @ap_cons_la) ((e37 (q25 q26)) (q22 q23)))
+  & g46 ~ ?((@ap_nil @ap_cons_la) ((e38 (q28 q29)) (q25 q26)))
+  & g47 ~ ?((@ap_nil @ap_cons_la) ((e39 (q31 q32)) (q28 q29)))
+  & g48 ~ ?((@ap_nil @ap_cons) ((e40 tk49) (q31 q32)))
+
+@ap_cons_la = (* ((h (b tail)) (b (1 (h tail)))))

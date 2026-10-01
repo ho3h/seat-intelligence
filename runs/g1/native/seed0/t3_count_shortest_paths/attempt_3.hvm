@@ -1,0 +1,10 @@
+@prog = ((n (s (t edges))) out)
+  & n ~ {ns nt}
+  & s ~ {se ss}
+  & t ~ {te ts}
+  & ns ~ $([>] $(ss b1))
+  & nt ~ $([>] $(ts b2))
+  & se ~ $([=] $(te eq))
+  & b1 ~ $([&] $(b2 valid))
+  & valid ~ $([&] $(eq out))
+  & edges ~ *

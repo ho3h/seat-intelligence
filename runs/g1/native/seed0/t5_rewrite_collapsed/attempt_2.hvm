@@ -1,0 +1,122 @@
+// Input: (clusters, edges); count loops and repeated rewritten edges.
+@prog = (input out)
+  & input ~ (c edges)
+  & @walk ~ (edges (c ((0 *) (0 out))))
+
+// Traverse the edge list.
+@walk = ((?((@walk_nil @walk_cons) (pl (c (seen (n out))))) pl) (c (seen (n out))))
+
+@walk_nil = (pl (c (seen (n out))))
+  & pl ~ *
+  & c ~ *
+  & seen ~ *
+  & n ~ out
+
+@walk_cons = (* ((edge tail) (c (seen (n out)))))
+  & @edge_start ~ (edge (tail (c (seen (n out)))))
+
+// Look up both endpoint cluster IDs.
+@edge_start = (edge (tail (c (seen (n out)))))
+  & edge ~ (u v)
+  & c ~ {c1 ctemp}
+  & ctemp ~ {c2 cnext}
+  & @get ~ (c1 (u cu))
+  & @edge_after_u ~ (v (cu (tail (c2 (cnext (seen (n out)))))))
+
+@edge_after_u = (v (cu (tail (c2 (cnext (seen (n out)))))))
+  & @get ~ (c2 (v cv))
+  & @edge_done ~ (cu (cv (tail (cnext (seen (n out))))))
+
+// Loops disappear; otherwise sort the pair and check whether it was seen.
+@edge_done = (cu (cv (tail (c (seen (n out))))))
+  & cu ~ {cu_cmp cu_save}
+  & cv ~ {cv_cmp cv_save}
+  & cu_cmp ~ $([=] $(cv_cmp eq))
+  & eq ~ ?((@edge_diff @edge_loop) (cu_save (cv_save (tail (c (seen (n out)))))))
+
+@edge_loop = (* (cu (cv (tail (c (seen (n out))))))
+  & cu ~ *
+  & cv ~ *
+  & n ~ $([+1] n2)
+  & @walk ~ (tail (c (seen (n2 out))))
+
+@edge_diff = (cu (cv (tail (c (seen (n out))))))
+  & cu ~ {cu_cmp cu_keep}
+  & cv ~ {cv_cmp cv_keep}
+  & cu_cmp ~ $([<] $(cv_cmp lt))
+  & lt ~ ?((@sort_reverse @sort_forward) (cu_keep (cv_keep (tail (c (seen (n out)))))))
+
+@sort_reverse = (cu (cv (tail (c (seen (n out))))))
+  & @check ~ (cv (cu (tail (c (seen (n out))))))
+
+@sort_forward = (* (cu (cv (tail (c (seen (n out))))))
+  & @check ~ (cu (cv (tail (c (seen (n out))))))
+
+// Duplicate the candidate and seen list so membership checking preserves them.
+@check = (x (y (tail (c (seen (n out))))))
+  & x ~ {x_q x_keep}
+  & y ~ {y_q y_keep}
+  & seen ~ {seen_q seen_keep}
+  & @contains ~ (seen_q (x_q (y_q found)))
+  & found ~ ?((@check_fresh @check_dup) (x_keep (y_keep (tail (c (seen_keep (n out)))))))
+
+@check_fresh = (x (y (tail (c (seen (n out))))))
+  & @walk ~ (tail (c ((1 ((x y) seen)) (n out))))
+
+@check_dup = (* (x (y (tail (c (seen (n out))))))
+  & x ~ *
+  & y ~ *
+  & n ~ $([+1] n2)
+  & @walk ~ (tail (c (seen (n2 out))))
+
+// Membership test for a candidate pair in the seen list.
+@contains = ((?((@contains_nil @contains_cons) (pl (x (y out)))) pl) (x (y out)))
+
+@contains_nil = (pl (x (y out)))
+  & pl ~ *
+  & x ~ *
+  & y ~ *
+  & out ~ 0
+
+@contains_cons = (* ((item tail) (x (y out))))
+  & item ~ (a b)
+  & x ~ {x_cmp x_keep}
+  & y ~ {y_cmp y_keep}
+  & a ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@contains_a_no @contains_a_yes) (b (x_keep (y_cmp (y_keep (tail out))))))
+
+@contains_a_no = (b (x (y_cmp (y (tail out)))))
+  & b ~ *
+  & y_cmp ~ *
+  & @contains ~ (tail (x (y out)))
+
+@contains_a_yes = (* (b (x (y_cmp (y (tail out))))))
+  & b ~ $([=] $(y_cmp eq2))
+  & eq2 ~ ?((@contains_b_no @contains_b_yes) (x (y (tail out))))
+
+@contains_b_no = (x (y (tail out)))
+  & @contains ~ (tail (x (y out)))
+
+@contains_b_yes = (* (x (y (tail out))))
+  & x ~ *
+  & y ~ *
+  & tail ~ *
+  & out ~ 1
+
+// Index a list, returning the element at the given valid index.
+@get = (l (idx out))
+  & idx ~ ?((@get_zero @get_succ) (l out))
+
+@get_zero = (l out)
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (idx (l out))
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @get ~ (tail (idx out))

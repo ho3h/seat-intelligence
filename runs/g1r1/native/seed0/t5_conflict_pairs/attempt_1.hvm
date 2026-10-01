@@ -1,0 +1,67 @@
+@prog = ((c m) out)
+  & @outer ~ (c (0 (m out)))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (a (m out)))) pl) (a (m out)))
+
+@outer_nil = (* (* (* (0 *))))
+
+@outer_cons = (* ((ca rest) (a (m out))))
+  & rest ~ {scan outer}
+  & a ~ {a0 ai}
+  & ai ~ $([+1] an)
+  & an ~ {b0 an0}
+  & @cols ~ (scan (outer (ca (a0 (b0 (an0 (m out))))))
+
+@cols = ((?((@cols_nil @cols_cons) (pl (outer (ca (a (b (an (m out))))))) pl) (outer (ca (a (b (an (m out))))))
+
+@cols_nil = (* (outer (* (* (* (an (m out)))))))
+  & @outer ~ (outer (an (m out)))
+
+@cols_cons = (* ((cb tl) (outer (ca (a (b (an (m out))))))))
+  & @cand ~ (cb (tl (outer (ca (a (b (an (m out))))))))
+
+@cand = (cb (tl (outer (ca (a (b (an (m out))))))))
+  & m ~ {mm mr}
+  & a ~ {am ar}
+  & b ~ {bm br}
+  & @mem ~ (mm (am (bm found)))
+  & found ~ ?((@cand_miss @cand_hit) (tl (outer (ca (cb (ar (br (an (mr out))))))))
+
+@cand_miss = (tl (outer (ca (cb (a (b (an (m out))))))))
+  & cb ~ *
+  & b ~ $([+1] bn)
+  & @cols ~ (tl (outer (ca (a (bn (an (m out))))))
+
+@cand_hit = (* (tl (outer (ca (cb (a (b (an (m out))))))))
+  & ca ~ {cc ck}
+  & cc ~ $([=] $(cb same))
+  & same ~ ?((@cand_diff @cand_same) (tl (outer (ck (a (b (an (m out))))))))
+
+@cand_diff = (tl (outer (ck (a (b (an (m out)))))))
+  & b ~ $([+1] bn)
+  & @cols ~ (tl (outer (ck (a (bn (an (m out))))))
+
+@cand_same = (* (tl (outer (ck (a (b (an (m out))))))))
+  & a ~ {ao ar}
+  & b ~ {bo br}
+  & br ~ $([+1] bn)
+  & @cols ~ (tl (outer (ck (ar (bn (an (m tailout))))))
+  & out ~ (1 ((ao bo) tailout))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (a (b out)))) pl) (a (b out)))
+
+@mem_nil = (* (* (* 0)))
+
+@mem_cons = (* ((p tl) (a (b out))))
+  & p ~ (x y)
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & x ~ $([=] $(a1 ex))
+  & y ~ $([=] $(b1 ey))
+  & ex ~ $([*] $(ey both))
+  & both ~ ?((@mem_no @mem_yes) (tl (a2 (b2 out))))
+
+@mem_no = (tl (a (b out)))
+  & @mem ~ (tl (a (b out)))
+
+@mem_yes = (* (* (* (* 1))))

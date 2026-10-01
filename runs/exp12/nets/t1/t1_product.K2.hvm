@@ -1,0 +1,32 @@
+@prog = (l out)
+  & @prod ~ (l out)
+
+@prod = (lv1 out)
+  & @prod_cons_lw ~ (lv1 out)
+
+@prod_nil = (* 1)
+
+@prod_cons = (* ((h t) out))
+  & @prod2_cons_lw ~ (t (h out))
+
+@prod2 = (lv2 (h out))
+  & @prod2_cons_lw ~ (lv2 (h out))
+
+@prod2_nil = (* (a a))
+
+@prod2_cons = (* ((h2 t2) ($([*] $(h2 $([*] $(rest out)))) out)))
+  & @prod_cons_lw ~ (t2 rest)
+
+@prod_cons_lw = (ls25 q16)
+  & ls25 ~ (g22 (e20 (g23 (e21 tk24))))
+  & g22 ~ ?((@prod_nil @prod_cons_la) ((e20 (q18 q19)) q16))
+  & g23 ~ ?((@prod2_nil @prod2_cons) ((e21 tk24) (q18 q19)))
+
+@prod2_cons_lw = (ls36 (q27 q28))
+  & ls36 ~ (g33 (e31 (g34 (e32 tk35))))
+  & g33 ~ ?((@prod2_nil @prod2_cons_la) ((e31 q30) (q27 q28)))
+  & g34 ~ ?((@prod_nil @prod_cons) ((e32 tk35) q30))
+
+@prod_cons_la = (* ((h (h out)) out))
+
+@prod2_cons_la = (* ((h2 rest) ($([*] $(h2 $([*] $(rest out)))) out)))

@@ -1,0 +1,19 @@
+@prog = (l out)
+  & @sw ~ (l (0 out))
+
+@sw = ((?((@sw_nil @sw_cons) (pl (acc out))) pl) (acc out))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((h t) (acc out)))
+  & @step ~ (acc (h acc2))
+  & @sw ~ (t (acc2 out))
+
+@step = (acc (x out))
+  & @lift ~ (x hl)
+  & @comb ~ (acc (hl out))
+
+@lift = (* 1)
+
+@comb = (a (b w2))
+  & a ~ $([+] $(b w2))

@@ -1,0 +1,207 @@
+// Build a list of n zero colors, then start one traversal per vertex.
+@prog = ((n edges) out)
+  & n ~ {n_init n_outer}
+  & @init ~ (n_init colors)
+  & @outer ~ (n_outer (0 (edges (colors (0 out))))
+
+@init = (n out)
+  & n ~ ?((@init0 @initS) out)
+
+@init0 = out
+  & out ~ (0 *)
+
+@initS = (n out)
+  & @init ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Get the value at a zero-based list index.
+@get = (idx (lst out))
+  & idx ~ ?((@get0 @getS) (lst out))
+
+@get0 = (lst out)
+  & lst ~ (?( (@getNil @getHead) (p out)) p)
+
+@getS = (idx (lst out))
+  & @get ~ (idx (lst out))
+
+@getNil = (p out)
+  & p ~ *
+  & out ~ 0
+
+@getHead = (* (p out))
+  & p ~ (h t)
+  & h ~ out
+  & t ~ *
+
+// Set the value at a zero-based list index, rebuilding the list.
+@set = (idx (lst (val out)))
+  & idx ~ ?((@set0 @setS) (lst (val out)))
+
+@set0 = (lst (val out))
+  & lst ~ (?( (@setNil @setHead) (p (val out))) p)
+
+@setNil = (p (val out))
+  & p ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@setHead = (* (p (val out)))
+  & p ~ (h t)
+  & h ~ *
+  & out ~ (1 (val t))
+
+@setS = (idx (lst (val out)))
+  & lst ~ (?( (@setSNil @setSCons) (idx (p (val out)))) p)
+
+@setSNil = (idx (p (val out)))
+  & idx ~ *
+  & p ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@setSCons = (* (idx (p (val out))))
+  & p ~ (h t)
+  & @set ~ (idx (t (val rest)))
+  & out ~ (1 (h rest))
+
+// Iterate over vertices, starting a coloring traversal at each uncolored one.
+@outer = (rem (i (edges (colors (count out))))
+  & rem ~ ?((@outerDone @outerStep) (i (edges (colors (count out))))
+
+@outerDone = (i (edges (colors (count out))))
+  & i ~ *
+  & edges ~ *
+  & colors ~ *
+  & out ~ count
+
+@outerStep = (rem (i (edges (colors (count out))))
+  & i ~ {iget ikeep}
+  & colors ~ {cg ck}
+  & @get ~ (iget (cg c))
+  & c ~ ?((@outerStart @outerSkip) (rem (ikeep (edges (ck (count out))))
+
+@outerStart = (rem (i (edges (colors (count out))))
+  & i ~ {i_set i_front}
+  & @set ~ (i_set (colors 1 seeded))
+  & edges ~ {edges_bfs edges_keep}
+  & @bfs ~ ((1 ((i_front 1) (0 *))) (edges_bfs (seeded (0 state))))
+  & @outerAfter ~ (rem (i (edges_keep (count (state out))))
+
+@outerSkip = (pred (rem (i (edges (colors (count out)))))
+  & pred ~ *
+  & @outerAgain ~ (rem (i (edges (colors (count out))))
+
+@outerAfter = (rem (i (edges (count (state out))))
+  & state ~ (newcolors bad)
+  & bad ~ ?((@outerGood @outerBad) (rem (i (edges (count newcolors out))))
+
+@outerGood = (rem (i (edges (count colors out))))
+  & count ~ $([+1] count2)
+  & @outerAgain ~ (rem (i (edges (colors count2 out))))
+
+@outerBad = (pred (rem (i (edges (count colors out)))))
+  & pred ~ *
+  & @outerAgain ~ (rem (i (edges (colors count out))))
+
+@outerAgain = (rem (i (edges (colors (count out))))
+  & i ~ $([+1] i2)
+  & @outer ~ (rem (i2 (edges (colors (count out))))
+
+// Breadth-first traversal. The queue contains (vertex, color) pairs.
+@bfs = (queue (edges (colors (bad out))))
+  & queue ~ (?( (@bfsNil @bfsCons) (p (edges (colors (bad out)))) p)
+
+@bfsNil = (p (edges (colors (bad out))))
+  & p ~ *
+  & edges ~ *
+  & out ~ (colors bad)
+
+@bfsCons = (* (p (edges (colors (bad out)))))
+  & p ~ (item tail)
+  & item ~ (v cv)
+  & edges ~ {escan ekeep}
+  & 3 ~ $([-] $(cv expect))
+  & @scan ~ (v (expect (escan (colors (bad (0 *) scanstate)))))
+  & @bfsAfterScan ~ (tail (ekeep (scanstate out)))
+
+@bfsAfterScan = (tail (edges (state out)))
+  & state ~ (newcolors (newbad newfront))
+  & @append ~ (newfront (tail queue))
+  & @bfs ~ (queue (edges (newcolors (newbad out))))
+
+// Scan every edge for neighbors of the current vertex.
+@scan = (v (expect (elist (colors (bad (front out)))))
+  & elist ~ (?( (@scanNil @scanCons) (p (v (expect (colors (bad (front out)))))) p)
+
+@scanNil = (p (v (expect (colors (bad (front out))))))
+  & p ~ *
+  & out ~ (colors (bad front))
+
+@scanCons = (* (p (v (expect (colors (bad (front out)))))))
+  & p ~ (edge rest)
+  & edge ~ (u w)
+  & v ~ {vfirst vrest}
+  & vrest ~ {vsecond vnext}
+  & u ~ {utest uneighbor}
+  & w ~ {wtest wneighbor}
+  & utest ~ $([=] $(vfirst eq1))
+  & eq1 ~ ?((@scanCheckOther @scanHitW) (vnext (vsecond (expect (uneighbor (wtest (wneighbor (rest (colors (bad (front out))))))))))
+
+@scanHitW = (vnext (vsecond (expect (uneighbor (wtest (wneighbor (rest (colors (bad (front out))))))))))
+  & vsecond ~ *
+  & uneighbor ~ *
+  & wtest ~ *
+  & @consider ~ (wneighbor (expect (vnext (rest (colors (bad (front out))))))
+
+@scanCheckOther = (* (vnext (vsecond (expect (uneighbor (wtest (wneighbor (rest (colors (bad (front out))))))))))
+  & wtest ~ $([=] $(vsecond eq2))
+  & eq2 ~ ?((@scanNo @scanHitU) (vnext (expect (uneighbor (wneighbor (rest (colors (bad (front out))))))))
+
+@scanHitU = (* (vnext (expect (uneighbor (wneighbor (rest (colors (bad (front out)))))))))
+  & wneighbor ~ *
+  & @consider ~ (uneighbor (expect (vnext (rest (colors (bad (front out))))))
+
+@scanNo = (vnext (expect (uneighbor (wneighbor (rest (colors (bad (front out))))))))
+  & uneighbor ~ *
+  & wneighbor ~ *
+  & @scan ~ (vnext (expect (rest (colors (bad (front out))))))
+
+// Consider an adjacent vertex: color it if new, otherwise detect a conflict.
+@consider = (neighbor (expect (v (rest (colors (bad (front out))))))
+  & neighbor ~ {ng nkeep}
+  & expect ~ {eu en}
+  & colors ~ {cg ck}
+  & @get ~ (ng (cg c))
+  & c ~ ?((@considerNew @considerKnown) (nkeep (eu (en (v (rest (ck (bad (front out))))))))
+
+@considerNew = (nkeep (eu (en (v (rest (colors (bad (front out))))))))
+  & nkeep ~ {idx qv}
+  & eu ~ {setcolor qcolor}
+  & @set ~ (idx (colors setcolor newcolors))
+  & @scan ~ (v (en (rest (newcolors (bad (1 ((qv qcolor) front)) out))))
+
+@considerKnown = (pred (nkeep (eu (en (v (rest (colors (bad (front out)))))))))
+  & eu ~ $([-] $(1 eprev))
+  & pred ~ $([=] $(eprev eq))
+  & eq ~ ?((@considerConflict @considerOk) (nkeep (en (v (rest (colors (bad (front out))))))))
+
+@considerConflict = (nkeep (en (v (rest (colors (bad (front out)))))))
+  & nkeep ~ *
+  & @scan ~ (v (en (rest (colors (1 front out)))))
+
+@considerOk = (* (nkeep (en (v (rest (colors (bad (front out))))))))
+  & nkeep ~ *
+  & @scan ~ (v (en (rest (colors (bad (front out))))))
+
+// Concatenate two lists.
+@append = (a (b out))
+  & a ~ (?( (@appendNil @appendCons) (p (b out))) p)
+
+@appendNil = (p (b out))
+  & p ~ *
+  & out ~ b
+
+@appendCons = (* (p (b out)))
+  & p ~ (h t)
+  & @append ~ (t (b rest))
+  & out ~ (1 (h rest))

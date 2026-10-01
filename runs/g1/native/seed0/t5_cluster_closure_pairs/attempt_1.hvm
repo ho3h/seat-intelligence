@@ -1,0 +1,81 @@
+@prog = ((n pairs) out)
+  & @build ~ (n ((0 *) labels))
+  & @ef ~ (pairs (labels out))
+
+@build = (?((@bzero @bsucc) (acc out)) (acc out))
+
+@bzero = (a a)
+
+@bsucc = (k (acc out))
+  & k ~ {k1 k2}
+  & @build ~ (k1 ((1 (k2 acc)) out))
+
+@ef = ((?((@ef_nil @ef_cons) (pl (labels out))) pl) (labels out))
+
+@ef_nil = (* (labels out))
+  & @count ~ (labels out)
+
+@ef_cons = (* ((u v) (pl (labels out))))
+  & labels ~ {la lb}
+  & lb ~ {lc ld}
+  & @lookup ~ (u (la lu))
+  & @lookup ~ (v (lc lv))
+  & @replace ~ (ld (lv (lu newlabels)))
+  & @ef ~ (pl (newlabels out))
+
+@lookup = ((?((@look_nil @look_cons) (pl (idx out))) pl) (idx out))
+
+@look_nil = (* (* 0))
+
+@look_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@look_zero @look_succ) (h (t out)))
+
+@look_zero = (z (* z))
+
+@look_succ = (k (* (t out)))
+  & @lookup ~ (t (k out))
+
+@replace = ((?((@rep_nil @rep_cons) (pl (from (to out)))) pl) (from (to out)))
+
+@rep_nil = (* (* (* (0 *))))
+
+@rep_cons = (* ((h t) (from (to out))))
+  & h ~ {hc hs}
+  & from ~ {fc fs}
+  & hc ~ $([=] $(fc eq))
+  & eq ~ ?((@rep_diff @rep_same) (hs (t (fs (to out))))
+
+@rep_diff = (h (t (from (to out))))
+  & @replace ~ (t (from (to (tail_out))))
+  & out ~ (1 (h tail_out))
+
+@rep_same = (* (* (t (from (to out)))))
+  & to ~ {tr th}
+  & @replace ~ (t (from (tr (tail_out))))
+  & out ~ (1 (th tail_out))
+
+@count = (labels out)
+  & labels ~ {full rem}
+  & @outer ~ (rem (full (0 out)))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (full (acc out)))) pl) (full (acc out)))
+
+@outer_nil = (* (* (acc out)))
+  & acc ~ $([/] $(2 out))
+
+@outer_cons = (* ((h t) (full (acc out))))
+  & full ~ {fi ff}
+  & @inner ~ (fi (h (0 cnt)))
+  & cnt ~ $([-] $(1 incr))
+  & acc ~ $([+] $(incr acc2))
+  & @outer ~ (t (ff (acc2 out)))
+
+@inner = ((?((@inner_nil @inner_cons) (pl (target (count out)))) pl) (target (count out)))
+
+@inner_nil = (* (* (a a)))
+
+@inner_cons = (* ((v rest) (target (count out))))
+  & target ~ {tc tr}
+  & v ~ $([=] $(tc eq))
+  & count ~ $([+] $(eq count2))
+  & @inner ~ (rest (tr (count2 out)))

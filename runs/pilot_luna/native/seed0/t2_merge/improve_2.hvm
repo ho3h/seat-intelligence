@@ -1,0 +1,48 @@
+// Merge two ascending lists while retaining the unconsumed head and tail.
+
+@prog = ((xs ys) out)
+  & @start ~ (xs (ys out))
+
+@start = ((?((@x_nil @x_cons) (pl (ys out))) pl) (ys out))
+
+@x_nil = (* (ys out))
+  & ys ~ out
+
+@x_cons = (* ((x xt) (ys out)))
+  & ys ~ (?((@y_nil @y_cons) (py (x (xt out)))) py)
+
+@y_nil = (* (x (xt out)))
+  & out ~ (1 (x xt))
+
+@y_cons = (* ((y yt) (x (xt out))))
+  & @loop ~ (x (xt (y yt))) out
+
+@loop = ((x (xt (y yt))) out)
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & xc ~ $([>] $(yc gt))
+  & gt ~ ?((@take_x @take_y) (xkeep (xt (ykeep (yt out)))))
+
+@take_x = (x (xt (y (yt out))))
+  & @next_x ~ (xt (y (yt tail)))
+  & out ~ (1 (x tail))
+
+@next_x = ((?((@next_x_nil @next_x_cons) (pl (y (yt tail)))) pl) (y (yt tail)))
+
+@next_x_nil = (* (y (yt tail)))
+  & tail ~ (1 (y yt))
+
+@next_x_cons = (* ((xn xrest) (y (yt tail))))
+  & @loop ~ (xn (xrest (y yt))) tail
+
+@take_y = (* (x (xt (y (yt out)))))
+  & @next_y ~ (yt (x (xt tail)))
+  & out ~ (1 (y tail))
+
+@next_y = ((?((@next_y_nil @next_y_cons) (pl (x (xt tail)))) pl) (x (xt tail)))
+
+@next_y_nil = (* (x (xt tail)))
+  & tail ~ (1 (x xt))
+
+@next_y_cons = (* ((yn yrest) (x (xt tail))))
+  & @loop ~ (x (xt (yn yrest))) tail

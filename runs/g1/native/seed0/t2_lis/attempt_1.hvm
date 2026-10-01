@@ -1,0 +1,42 @@
+// @prog maps the input list to its longest strictly increasing subsequence length.
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+// Build sorted patience-sorting tails, then count them.
+@lis = ((?((@lis_nil @lis_cons) (pl (tails out))) pl) (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails out)
+
+@lis_cons = (* ((h t) (tails out)))
+  & @ins ~ (h (tails newtails))
+  & @lis ~ (t (newtails out))
+
+// Insert x at the first tail value greater than or equal to x.
+@ins = (x ((?((@ins_nil @ins_cons) (pl (x out))) pl) out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & h ~ {hc hr}
+  & hc ~ $([<] $(xc z))
+  & z ~ ?((@ins_stop @ins_more) (hr (t (xr out))))
+
+// Replace h with x when h >= x.
+@ins_stop = (* (t (x out)))
+  & out ~ (1 (x t))
+
+// Otherwise keep h and continue inserting into the tail.
+@ins_more = (* (hr (t (x out))))
+  & @ins ~ (x (t res))
+  & out ~ (1 (hr res))
+
+@len = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) (acc out)))
+  & acc ~ $([+1] acc2)
+  & @len ~ (t (acc2 out))

@@ -1,0 +1,343 @@
+// Initialize the identity cluster labels.
+@prog = ((n (mnl cands)) out)
+  & @init ~ (n labels)
+  & @run ~ (cands (mnl (labels out)))
+
+@init = ?(((0 *) @init_succ) out)
+
+@init_succ = (k out)
+  & k ~ {k_rec k_head}
+  & @init ~ (k_rec tail)
+  & out ~ (1 (k_head tail))
+
+// Process candidates in greedy order.
+@run = ((?((@run_nil @run_cons) (payload (mnl (labels out)))) payload) (mnl (labels out)))
+
+@run_nil = (* (mnl (labels out)))
+  & payload ~ *
+  & mnl ~ *
+  & out ~ labels
+
+@run_cons = (* (payload (mnl (labels out))))
+  & payload ~ (head tail)
+  & head ~ {head_best head_remove}
+  & @best ~ (head_best best)
+  & best ~ {best_remove best_process}
+  & @remove ~ (head_remove (best_remove remaining))
+  & @process ~ (best_process (remaining (mnl (labels out))))
+
+// Find the best candidate without sorting the list.
+@best = ((?((@best_nil @best_cons) (payload out)) payload) out)
+
+@best_nil = (* out)
+  & out ~ (0 *)
+
+@best_cons = (* (payload out))
+  & payload ~ (head tail)
+  & @best_scan ~ (tail (head out))
+
+@best_scan = ((?((@scan_nil @scan_cons) (payload (best out))) payload) (best out))
+
+@scan_nil = (* (payload (best out)))
+  & out ~ best
+
+@scan_cons = (* (payload (best out)))
+  & payload ~ (head tail)
+  & head ~ {head_cmp head_keep}
+  & best ~ {best_cmp best_keep}
+  & @before ~ (head_cmp (best_cmp z))
+  & z ~ ?((@scan_keep @scan_take) (head_keep (tail (best_keep out))))
+
+@scan_keep = (head (tail (best out)))
+  & head ~ *
+  & @best_scan ~ (tail (best out))
+
+@scan_take = (head (tail (best out)))
+  & best ~ *
+  & @best_scan ~ (tail (head out))
+
+// True iff the first candidate sorts before the second.
+@before = (c (b out))
+  & c ~ (uc (vc sc))
+  & b ~ (ub (vb sb))
+  & sc ~ {sc_gt sc_eq}
+  & sb ~ {sb_gt sb_eq}
+  & sc_gt ~ $([>] $(sb_gt zgt))
+  & sc_eq ~ $([=] $(sb_eq zeq))
+  & zgt ~ ?((@before_score_nogt @before_score_gt) (zeq (uc (vc (ub (vb out)))))
+
+@before_score_gt = (zeq (uc (vc (ub (vb out)))))
+  & zeq ~ *
+  & uc ~ *
+  & vc ~ *
+  & ub ~ *
+  & vb ~ *
+  & out ~ 1
+
+@before_score_nogt = (zeq (uc (vc (ub (vb out)))))
+  & zeq ~ ?((@before_score_neq @before_score_eq) (uc (vc (ub (vb out)))))
+
+@before_score_neq = (uc (vc (ub (vb out))))
+  & uc ~ *
+  & vc ~ *
+  & ub ~ *
+  & vb ~ *
+  & out ~ 0
+
+@before_score_eq = (uc (vc (ub (vb out))))
+  & uc ~ {uc_lt uc_eq}
+  & ub ~ {ub_lt ub_eq}
+  & uc_lt ~ $([<] $(ub_lt zult))
+  & uc_eq ~ $([=] $(ub_eq zueq))
+  & zult ~ ?((@before_u_notless @before_u_less) (zueq (vc (vb out))))
+
+@before_u_less = (zueq (vc (vb out)))
+  & zueq ~ *
+  & vc ~ *
+  & vb ~ *
+  & out ~ 1
+
+@before_u_notless = (zueq (vc (vb out)))
+  & zueq ~ ?((@before_u_neq @before_u_eq) (vc (vb out)))
+
+@before_u_neq = (vc (vb out))
+  & vc ~ *
+  & vb ~ *
+  & out ~ 0
+
+@before_u_eq = (vc (vb out))
+  & vc ~ $([<] $(vb z))
+  & z ~ ?((0 1) out)
+
+// Remove the selected candidate.
+@remove = ((?((@remove_nil @remove_cons) (payload (best out))) payload) (best out))
+
+@remove_nil = (* (best out))
+  & best ~ *
+  & out ~ (0 *)
+
+@remove_cons = (* (payload (best out)))
+  & payload ~ (head tail)
+  & head ~ {head_eq head_out}
+  & best ~ {best_eq best_rec}
+  & @eqpair ~ (head_eq (best_eq z))
+  & z ~ ?((@remove_keep @remove_drop) (head_out (tail (best_rec out))))
+
+@remove_drop = (head (tail (best out)))
+  & head ~ *
+  & @remove ~ (tail (best out))
+
+@remove_keep = (head (tail (best out)))
+  & @remove ~ (tail (best remaining))
+  & out ~ (1 (head remaining))
+
+// Equality of candidate endpoint pairs.
+@eqpair = (x (y out))
+  & x ~ (xu (xv xs))
+  & y ~ (yu (yv ys))
+  & xs ~ *
+  & ys ~ *
+  & @eqnum ~ (xu (yu z))
+  & z ~ ?((@eqpair_u_no @eqpair_u_yes) (xv (yv out)))
+
+@eqpair_u_no = (xv (yv out))
+  & xv ~ *
+  & yv ~ *
+  & out ~ 0
+
+@eqpair_u_yes = (xv (yv out))
+  & @eqnum ~ (xv (yv z))
+  & z ~ ?((0 1) out)
+
+@eqnum = (x (y out))
+  & x ~ $([=] $(y z))
+  & z ~ ?((0 1) out)
+
+// Process one selected candidate.
+@process = (cand (remaining (mnl (labels out))))
+  & cand ~ (u (v score))
+  & score ~ *
+  & @lookup ~ (u (labels found_u))
+  & found_u ~ (la labels_u)
+  & @process_u ~ (v (remaining (mnl (la (labels_u out))))
+
+@process_u = (v (remaining (mnl (la (labels out)))))
+  & @lookup ~ (v (labels found_v))
+  & found_v ~ (lb labels_v)
+  & @process_v ~ (remaining (mnl (la (lb (labels_v out))))
+
+@process_v = (remaining (mnl (la (lb (labels out)))))
+  & @eqnum ~ (la (lb z))
+  & z ~ ?((@process_diff @process_same) (remaining (mnl (la (lb (labels out)))))
+
+@process_same = (remaining (mnl (la (lb (labels out)))))
+  & la ~ *
+  & lb ~ *
+  & @run ~ (remaining (mnl (labels out)))
+
+@process_diff = (remaining (mnl (la (lb (labels out)))))
+  & @conflict ~ (mnl (labels (la (lb result))))
+  & result ~ (bad labels_restored)
+  & bad ~ ?((@process_safe @process_skip) (remaining (mnl (la (lb (labels_restored out)))))
+
+@process_skip = (remaining (mnl (la (lb (labels out)))))
+  & la ~ *
+  & lb ~ *
+  & @run ~ (remaining (mnl (labels out)))
+
+@process_safe = (remaining (mnl (la (lb (labels out)))))
+  & la ~ {la_cmp la_keep}
+  & lb ~ {lb_cmp lb_keep}
+  & la_cmp ~ $([>] $(lb_cmp z))
+  & z ~ ?((@merge_b @merge_a) (remaining (mnl (la_keep (lb_keep (labels out)))))
+
+@merge_a = (remaining (mnl (la (lb (labels out)))))
+  & @replace ~ (labels (la (lb (la new_labels))))
+  & @run ~ (remaining (mnl (new_labels out)))
+
+@merge_b = (remaining (mnl (la (lb (labels out)))))
+  & @replace ~ (labels (la (lb (lb new_labels))))
+  & @run ~ (remaining (mnl (new_labels out)))
+
+// Check whether any must-not-link pair crosses the two clusters.
+@conflict = ((?((@cf_nil @cf_cons) (payload (labels (a (b out))))) payload) (labels (a (b out))))
+
+@cf_nil = (* (labels (a (b out))))
+  & payload ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ (0 labels)
+
+@cf_cons = (* (payload (labels (a (b out)))))
+  & payload ~ (pair tail)
+  & pair ~ (x y)
+  & @lookup ~ (x (labels found_x))
+  & found_x ~ (lx labels_x)
+  & @cf_got_x ~ (y (tail (labels_x (lx (a (b out)))))
+
+@cf_got_x = (y (tail (labels (lx (a (b out)))))
+  & @lookup ~ (y (labels found_y))
+  & found_y ~ (ly labels_y)
+  & @cf_got_y ~ (tail (labels_y (lx (ly (a (b out)))))
+
+@cf_got_y = (tail (labels (lx (ly (a (b out)))))
+  & @cross ~ (lx (ly (a (b z))))
+  & z ~ ?((@cf_cross_no @cf_cross_yes) (tail (labels (lx (ly (a (b out)))))
+
+@cf_cross_yes = (tail (labels (lx (ly (a (b out)))))
+  & tail ~ *
+  & lx ~ *
+  & ly ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ (1 labels)
+
+@cf_cross_no = (tail (labels (lx (ly (a (b out)))))
+  & @conflict ~ (tail (labels (a (b result))))
+  & result ~ (bad labels_restored)
+  & out ~ (bad labels_restored)
+
+// True iff lx,ly are in opposite clusters a,b.
+@cross = (lx (ly (a (b out))))
+  & lx ~ {lx_cmp lx_keep}
+  & a ~ {a_cmp a_keep}
+  & @eqnum ~ (lx_cmp (a_cmp z))
+  & z ~ ?((@cross_a_no @cross_a_yes) (lx_keep (ly (a_keep (b out))))
+
+@cross_a_yes = (lx (ly (a (b out))))
+  & lx ~ *
+  & a ~ *
+  & ly ~ {ly_cmp ly_keep}
+  & b ~ {b_cmp b_keep}
+  & @eqnum ~ (ly_cmp (b_cmp z))
+  & z ~ ?((0 1) out)
+
+@cross_a_no = (lx (ly (a (b out))))
+  & a ~ *
+  & lx ~ {lx_cmp lx_keep}
+  & b ~ {b_cmp b_keep}
+  & @eqnum ~ (lx_cmp (b_cmp z))
+  & z ~ ?((@cross_b_no @cross_b_yes) (ly (lx_keep (b_keep out))))
+
+@cross_b_yes = (ly (lx (b out)))
+  & lx ~ *
+  & b ~ *
+  & ly ~ {ly_cmp ly_keep}
+  & @eqnum ~ (ly_cmp (a_cmp z))
+  & z ~ ?((0 1) out)
+
+@cross_b_no = (ly (lx (b out)))
+  & lx ~ *
+  & ly ~ *
+  & b ~ *
+  & out ~ 0
+
+// Lookup an index while returning a fully reconstructed copy of the list.
+@lookup = (i ((?((@lookup_nil @lookup_cons) (payload (i out))) payload) out))
+
+@lookup_nil = (* (i out))
+  & i ~ *
+  & out ~ (0 (0 *))
+
+@lookup_cons = (* (payload (i out)))
+  & payload ~ (head tail)
+  & i ~ ?((@lookup_zero @lookup_more) (head (tail out)))
+
+@lookup_zero = (head (tail out))
+  & head ~ {head_value head_list}
+  & @copylist ~ (tail tail_copy)
+  & out ~ (head_value (1 (head_list tail_copy)))
+
+@lookup_more = (i (head (tail out)))
+  & @lookup ~ (i (tail result))
+  & result ~ (value tail_copy)
+  & out ~ (value (1 (head tail_copy)))
+
+@copylist = ((?((@copy_nil @copy_cons) payload) payload) out)
+
+@copy_nil = (* out)
+  & out ~ (0 *)
+
+@copy_cons = (* (payload out))
+  & payload ~ (head tail)
+  & @copylist ~ (tail tail_copy)
+  & out ~ (1 (head tail_copy))
+
+// Replace both old cluster labels with the new maximum label.
+@replace = ((?((@repl_nil @repl_cons) (payload (a (b (new out))))) payload) (a (b (new out))))
+
+@repl_nil = (* (a (b (new out))))
+  & payload ~ *
+  & a ~ *
+  & b ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@repl_cons = (* (payload (a (b (new out)))))
+  & payload ~ (head tail)
+  & head ~ {head_cmp head_keep}
+  & a ~ {a_cmp a_keep}
+  & @eqnum ~ (head_cmp (a_cmp z))
+  & z ~ ?((@repl_not_a @repl_is_a) (head_keep (tail (a_keep (b (new out)))))
+
+@repl_is_a = (head (tail (a (b (new out)))))
+  & head ~ *
+  & @repl_emit_new ~ (tail (a (b (new out))))
+
+@repl_not_a = (head (tail (a (b (new out)))))
+  & head ~ {head_cmp head_keep}
+  & b ~ {b_cmp b_keep}
+  & @eqnum ~ (head_cmp (b_cmp z))
+  & z ~ ?((@repl_keep @repl_is_b) (head_keep (tail (a (b_keep (new out)))))
+
+@repl_is_b = (head (tail (a (b (new out)))))
+  & head ~ *
+  & @repl_emit_new ~ (tail (a (b (new out))))
+
+@repl_keep = (head (tail (a (b (new out)))))
+  & @replace ~ (tail (a (b (new tail_out))))
+  & out ~ (1 (head tail_out))
+
+@repl_emit_new = (tail (a (b (new out))))
+  & @replace ~ (tail (a (b (new tail_out))))
+  & out ~ (1 (new tail_out))

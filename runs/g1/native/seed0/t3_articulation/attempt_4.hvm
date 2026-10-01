@@ -1,0 +1,129 @@
+// Generate vertices, count original components, and test each vertex.
+@prog = ((n edges) out)
+  & n ~ {n1 nr}
+  & nr ~ {n2 nr2}
+  & nr2 ~ {n3 nd}
+  & edges ~ {ecomp earts}
+  & @range ~ (n1 vcomp)
+  & @range ~ (n2 cand)
+  & @range ~ (n3 vall)
+  & @components ~ (nd (vcomp (ecomp base)))
+  & @arts ~ (cand (vall (earts (base (0 out))))
+
+@range = (n out)
+  & n ~ ?((@range_nil @range_succ) out)
+
+@range_nil = (0 *)
+
+@range_succ = (k out)
+  & k ~ {k1 k2}
+  & @range ~ (k1 tail)
+  & out ~ (1 (k2 tail))
+
+// Count components after excluding d. The initial visited list contains d.
+@components = (d (vs (edges out)))
+  & @cs ~ (vs (edges ((1 (d (0 *))) (0 out))))
+
+@cs = ((?((@cs_nil @cs_cons) (pl (edges (visited (count out))))) pl) (edges (visited (count out))))
+
+@cs_nil = (* (* (a a)))
+
+@cs_cons = (* ((v rest) (edges (visited (count out)))))
+  & v ~ {v_mem v_visit}
+  & visited ~ {visited_mem visited_next}
+  & @mem ~ (v_mem (visited_mem found))
+  & found ~ ?((@cs_visit @cs_skip) (v_visit (rest (edges (visited_next (count out)))))
+
+@cs_skip = (* (* (rest (edges (visited (count out))))))
+  & @cs ~ (rest (edges (visited (count out))))
+
+@cs_visit = (v (rest (edges (visited (count out)))))
+  & v ~ {vq vm}
+  & edges ~ {eb ec}
+  & @bfs ~ ((1 (vq (0 *))) (eb ((1 (vm visited)) bfsvis)))
+  & count ~ $([+1] count2)
+  & @cs ~ (rest (ec (bfsvis (count2 out))))
+
+// Membership test: return 1 if x occurs in list l, otherwise 0.
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (t (x_rec out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (* (* 1)))
+
+// Flood from queued vertices, recording each discovered vertex.
+@bfs = ((?((@bfs_nil @bfs_cons) (edges (visited out))) pl) (edges (visited out)))
+
+@bfs_nil = (* (a a))
+
+@bfs_cons = (* ((cur rest) (edges (visited out))))
+  & edges ~ {ee er}
+  & @expand ~ (ee (cur (visited (rest r))))
+  & r ~ (vis_new queue_new)
+  & @bfs ~ (queue_new (er (vis_new out)))
+
+// Scan edges for neighbors of cur, returning (visited, queue).
+@expand = ((?((@expand_nil @expand_cons) (cur (visited (queue out)))) pl) (cur (visited (queue out))))
+
+@expand_nil = (* (* (visited (queue out))))
+  & out ~ (visited queue)
+
+@expand_cons = (* (((u v) tail) (cur (visited (queue out)))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & cur ~ {c1 cr}
+  & cr ~ {c2 c3}
+  & @try ~ ((u1 v1) (c1 (visited (queue r1))))
+  & r1 ~ (vis1 q1)
+  & @try ~ ((v2 u2) (c2 (vis1 (q1 r2))))
+  & r2 ~ (vis2 q2)
+  & @expand ~ (tail (c3 (vis2 (q2 out))))
+
+// If a equals cur, enqueue b unless b is already visited.
+@try = ((a b) (cur (visited (queue out))))
+  & a ~ $([=] $(cur z))
+  & z ~ ?((@try_no @try_yes) (b (visited (queue out))))
+
+@try_no = (* (visited (queue out)))
+  & out ~ (visited queue)
+
+@try_yes = (* (b (visited (queue out))))
+  & b ~ {b_mem b_new}
+  & visited ~ {vis_mem vis_new}
+  & @mem ~ (b_mem (vis_mem found))
+  & found ~ ?((@try_add @try_seen) (b_new (vis_new (queue out))))
+
+@try_add = (b (visited (queue out)))
+  & b ~ {b1 b2}
+  & out ~ ((1 (b1 visited)) (1 (b2 queue)))
+
+@try_seen = (* (* (visited (queue out))))
+  & out ~ (visited queue)
+
+// Count components with each candidate removed and compare with the base count.
+@arts = ((?((@arts_nil @arts_cons) (pl (allverts (edges (base (acc out))))) pl) (allverts (edges (base (acc out)))))
+
+@arts_nil = (* (* (* (* (a a)))))
+
+@arts_cons = (* ((v rest) (allverts (edges (base (acc out))))))
+  & allverts ~ {av_comp av_rec}
+  & edges ~ {edge_comp edge_rec}
+  & base ~ {base_cmp base_rec}
+  & @components ~ (v (av_comp (edge_comp comp)))
+  & comp ~ $([>] $(base_cmp gt))
+  & gt ~ ?((@arts_no @arts_yes) (rest (av_rec (edge_rec (base_rec (acc out)))))
+
+@arts_no = (rest (allverts (edges (base (acc out)))))
+  & @arts ~ (rest (allverts (edges (base (acc out)))))
+
+@arts_yes = (* (rest (allverts (edges (base (acc out))))))
+  & acc ~ $([+1] acc2)
+  & @arts ~ (rest (allverts (edges (base (acc2 out)))))

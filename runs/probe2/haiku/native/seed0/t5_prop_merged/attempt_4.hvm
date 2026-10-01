@@ -1,0 +1,71 @@
+@prog = (input output)
+  & input ~ ((c attrs) *)
+  & @collect ~ (c (attrs output))
+
+@collect = (c (attrs out))
+  & attrs ~ (?((@coll_nil @coll_cons) out) *)
+
+@coll_nil = (out)
+  & out ~ (0 *)
+
+@coll_cons = (* (((n (k v)) tail) out))
+  & @get_cid ~ (n (c cid_val))
+  & cid_val ~ ((cid _) *)
+  & @insert ~ ((cid (k v)) (out out_next))
+  & @collect ~ (c (tail out_next))
+
+@get_cid = (n (c out))
+  & n ~ ?((@gc_z @gc_s) (c out))
+
+@gc_z = (c out)
+  & c ~ (x xs)
+  & * ~ xs
+  & out ~ x
+
+@gc_s = (((n_prev out) c) *)
+  & @get_cid ~ (n_prev (c out))
+
+@insert = ((cid (k v)) (acc out))
+  & acc ~ (?((@ins_nil @ins_cons) out) *)
+
+@ins_nil = (out)
+  & out ~ (1 (((cid (k v)) (0 *)) *))
+
+@ins_cons = (* (((cid2 (k2 v2)) rest) out))
+  & cid ~ $([<] $(cid2 cmp))
+  & cmp ~ (?((@ins_lt @ins_ge) ((cid (k v)) (cid2 (k2 v2)) rest out)) *)
+
+@ins_lt = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & out ~ (1 (((cid (k v)) next) *))
+  & @insert ~ (((cid2 (k2 v2)) rest) (next _))
+
+@ins_ge = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & cid ~ $([=] $(cid2 ceq))
+  & ceq ~ (?((@ins_eq @ins_gt) ((cid (k v)) (cid2 (k2 v2)) rest out)) *)
+
+@ins_eq = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & k ~ $([=] $(k2 keq))
+  & keq ~ (?((@ins_same @ins_diff) ((cid (k v)) (v2 rest out))) *)
+
+@ins_same = ((cid (k v)) (v2 rest out))
+  & v ~ $([<] $(v2 vmin))
+  & vmin ~ (?((@ins_v1 @ins_v2) ((cid (k v)) (v2 rest out))) *)
+
+@ins_v1 = ((cid (k v)) (v2 rest out))
+  & * ~ v2
+  & out ~ (1 (((cid (k v)) next) *))
+  & @insert ~ (rest (next _))
+
+@ins_v2 = ((cid (k v)) (v2 rest out))
+  & * ~ v
+  & out ~ (1 (((cid (k v2)) next) *))
+  & @insert ~ (rest (next _))
+
+@ins_diff = ((cid (k v)) (v2 rest out))
+  & * ~ v2
+  & out ~ (1 (((cid (k v)) next) *))
+  & @insert ~ (((cid2 (k2 v2)) rest) (next _))
+
+@ins_gt = ((cid (k v)) (cid2 (k2 v2)) rest out)
+  & out ~ (1 (((cid2 (k2 v2)) next) *))
+  & @insert ~ (((cid (k v)) rest) (next _))

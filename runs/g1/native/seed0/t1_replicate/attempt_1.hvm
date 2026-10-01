@@ -1,0 +1,16 @@
+// Replicate v n times, using the remaining count and value/output context.
+@prog = (input output)
+  & input ~ (n v)
+  & @rep ~ (n (v output))
+
+@rep = (n (v out))
+  & n ~ ?((@rep_zero @rep_succ) (v out))
+
+@rep_zero = (v out)
+  & v ~ *
+  & out ~ (0 *)
+
+@rep_succ = (n (v out))
+  & v ~ {head nextv}
+  & out ~ (1 (head tail))
+  & @rep ~ (n (nextv tail))

@@ -1,0 +1,95 @@
+@prog = ((n edges) out)
+  & n ~ ?((@prog_zero @prog_nonzero) (edges out))
+
+@prog_zero = (edges out)
+  & edges ~ *
+  & out ~ 16777215
+
+@prog_nonzero = (nm1 (edges out))
+  & nm1 ~ $([+1] n)
+  & @build ~ (n tree)
+  & @process ~ (edges (tree updated))
+  & @best ~ (updated (0 result))
+  & result ~ (* out)
+
+@build = (n out)
+  & n ~ {n_cmp n_ctx}
+  & n_cmp ~ $([=] $(1 isone))
+  & isone ~ ?((@build_node @build_leaf) (n_ctx out))
+
+@build_node = (n out)
+  & n ~ {n1 n2}
+  & n1 ~ $([/] $(2 split0))
+  & split0 ~ {split_pair split_sub}
+  & split_pair ~ {split_saved split_build}
+  & n2 ~ $([-] $(split_sub rightlen))
+  & @build ~ (split_build left)
+  & @build ~ (rightlen right)
+  & out ~ (1 (split_saved (left right)))
+
+@build_leaf = (* (n out))
+  & n ~ *
+  & out ~ (0 0)
+
+@process = (l (tree out))
+  & l ~ (?( (@proc_nil @proc_cons) (payload (tree out))) payload)
+
+@proc_nil = (* (tree out))
+  & tree ~ out
+
+@proc_cons = (* (((u v) tail) (tree out)))
+  & @upd ~ (tree (u tree1))
+  & @upd ~ (tree1 (v tree2))
+  & @process ~ (tail (tree2 out))
+
+@upd = (tree (idx out))
+  & tree ~ (?( (@upd_leaf @upd_node) (payload (idx out))) payload)
+
+@upd_leaf = (degree (idx out))
+  & idx ~ *
+  & degree ~ $([+1] degree2)
+  & out ~ (0 degree2)
+
+@upd_node = (* ((split (left right)) (idx out)))
+  & idx ~ {idx_cmp idx_keep}
+  & split ~ {split_cmp split_keep}
+  & idx_cmp ~ $([<] $(split_cmp cmp))
+  & cmp ~ ?((@upd_right @upd_left) (idx_keep (split_keep (left (right out))))
+
+@upd_left = (* (idx (split (left (right out)))))
+  & @upd ~ (left (idx newleft))
+  & out ~ (1 (split (newleft right)))
+
+@upd_right = (idx (split (left (right out))))
+  & split ~ {split_keep split_sub}
+  & idx ~ $([-] $(split_sub idx2))
+  & @upd ~ (right (idx2 newright))
+  & out ~ (1 (split_keep (left newright)))
+
+@best = (tree (base out))
+  & tree ~ (?( (@best_leaf @best_node) (payload (base out))) payload)
+
+@best_leaf = (degree (base out))
+  & out ~ (degree base)
+
+@best_node = (* ((split (left right)) (base out)))
+  & base ~ {base_left base_right}
+  & @best ~ (left (base_left lres))
+  & base_right ~ $([+] $(split rightbase))
+  & @best ~ (right (rightbase rres))
+  & lres ~ (ldeg lid)
+  & rres ~ (rdeg rid)
+  & ldeg ~ {ld_cmp ld_keep}
+  & rdeg ~ {rd_cmp rd_keep}
+  & rd_cmp ~ $([>] $(ld_cmp choose_right))
+  & choose_right ~ ?((@choose_left @choose_right) (ld_keep (lid (rd_keep (rid out))))
+
+@choose_left = (ld (lid (rd (rid out))))
+  & rd ~ *
+  & rid ~ *
+  & out ~ (ld lid)
+
+@choose_right = (* (ld (lid (rd (rid out)))))
+  & ld ~ *
+  & lid ~ *
+  & out ~ (rd rid)

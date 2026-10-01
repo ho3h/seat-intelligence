@@ -1,0 +1,16 @@
+@max_acc = ((@max_acc__C3 a) a)
+
+@max_acc__C0 = (b (* (a c)))
+  & @max_acc ~ (a (b c))
+
+@max_acc__C1 = (* (* (b (a c))))
+  & @max_acc ~ (a (b c))
+
+@max_acc__C2 = (* ({$([>] $(a ?((@max_acc__C0 @max_acc__C1) (b (c (d e)))))) c} (d ({a b} e))))
+
+@max_acc__C3 = (?(((a a) @max_acc__C2) b) b)
+
+@prog = (a b)
+  & @max_acc ~ (a (0 b))
+
+

@@ -1,0 +1,34 @@
+@List/Nil = ((0 a) a)
+
+@list_length__C0 = (* (* (((?((0 @list_length__C0) a_q80) a_q80) $([+0x0000001] c)) c)))
+
+@list_length__C1 = (?((0 (* (* (((?((0 @list_length__C0) a_q80_q82) a_q80_q82) $([+0x0000001] c_q82)) c_q82)))) a) a)
+
+@merge_count__C2 = (* (a (b (((1 (a (b c_i8))) c_i8) 0))))
+
+@merge_count__C3 = (* ({a f} (g (c ({$([>] $(a ?((@merge_count__C1_z @merge_count__C0_s) (c (d (e (f (g h)))))))) d} (e h))))))
+
+@merge_count__C5 = (* (a (a 0)))
+
+@merge_count__C6 = (* (b (c (a (((?((@merge_count__C2 @merge_count__C3) a_q88) a_q88) (a (b (c d)))) d)))))
+
+@merge_count__C7 = (?((@merge_count__C5 @merge_count__C6) a) a)
+
+@prog = ({b_q69 ((?((0 (* (* (((?((0 (* (* (((?((0 (* (* (((?((0 @list_length__C0) a_q80_q105) a_q80_q105) $([+0x0000001] c_q105)) c_q105)))) a_q80_q104) a_q80_q104) $([+0x0000001] c_q104)) c_q104)))) a_q80_q82_q96) a_q80_q82_q96) $([+0x0000001] c_q82_q96)) c_q82_q96)))) a_q96) a_q96) {$([>0x0000002] ?((@sort_count__C0 @sort_count__C1) (b_q69 (c_q69 (* b))))) c_q69})} b)
+
+@sort_count__C0 = (a ($([:/0x0000002] {{?((@split_at__C3_z @split_at__C2_s) (a (b_q75 ({b_q74 (@list_length__C1 {$([>0x0000002] ?((@sort_count__C0 @sort_count__C1) (b_q74 (c_q74 ((@merge_count__C7 (f (g (h j)))) $([+] $(i $([+] $(j k))))))))) c_q74})} {b_q73 (@list_length__C1 {$([>0x0000002] ?((@sort_count__C0 @sort_count__C1) (b_q73 (c_q73 (g i))))) c_q73})})))) b_q75} f}) (h k)))
+
+@sort_count__C1 = (* (a (* (a 0))))
+
+@split_at__C0 = (* (c (a ($([:-0x0000001] {?((@split_at__C3_z @split_at__C2_s) (a (b_q76 (d f)))) b_q76}) (((1 (c (d c_i9))) c_i9) f)))))
+
+@split_at__C1 = (?(((* (@List/Nil @List/Nil)) @split_at__C0) a) a)
+
+@merge_count__C1_z = ($([:-0x0000001] b) (f ((@merge_count__C7 (b (((1 (c (d c_i7))) c_i7) (g i)))) (c (d (((1 (f (g c_i6))) c_i6) i))))))
+
+@merge_count__C0_s = (* ({d i} (a (b (f (e (((1 (f (g c_i4))) c_i4) j)))))))
+  & ?((@merge_count__C5 @merge_count__C6) (a (b (d (e (g $([+] $(i j)))))))) ~ 1
+
+@split_at__C3_z = (a (* (@List/Nil a)))
+
+@split_at__C2_s = (* ((@split_at__C1 a) a))

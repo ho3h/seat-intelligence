@@ -1,0 +1,132 @@
+// Build the initial distance list.
+@prog = ((n (s edges)) out)
+  & n ~ {nb nr}
+  & @build ~ (nb (0 (s d0)))
+  & @round ~ (nr (edges (d0 out)))
+
+@build = (n (idx (s out)))
+  & n ~ ?((@bzero @bmore) (idx (s out)))
+
+@bzero = (idx (s out))
+  & idx ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@bmore = (rem (idx (s out)))
+  & idx ~ {ix1 ix2}
+  & s ~ {sc sr}
+  & ix1 ~ $([=] $(sc z))
+  & ix2 ~ $([+1] idxnext)
+  & z ~ ?((@bhead_no @bhead_yes) (rem (idxnext (sr out))))
+
+@bhead_no = (rem (idx (s out)))
+  & @build ~ (rem (idx (s tail)))
+  & out ~ (1 (16777215 tail))
+
+@bhead_yes = (* (rem (idx (s out))))
+  & @build ~ (rem (idx (s tail)))
+  & out ~ (1 (0 tail))
+
+// Run n Bellman-Ford passes.
+@round = (count (edges (d out)))
+  & count ~ ?((@rdone @rstep) (edges (d out)))
+
+@rdone = (edges (d out))
+  & edges ~ *
+  & d ~ out
+
+@rstep = (count (edges (d out)))
+  & edges ~ {e1 e2}
+  & @relax ~ (e1 (d d1))
+  & @round ~ (count (e2 (d1 out)))
+
+// Relax every edge once.
+@relax = ((?((@rnil @rcons) (p (d out))) p) (d out))
+
+@rnil = (p (d out))
+  & p ~ *
+  & d ~ out
+
+@rcons = (* (((u (v w)) tail) (d out)))
+  & @edge ~ ((u (v w)) (tail (d tmp)))
+  & @relax ~ (tail (tmp out))
+
+// Relax one edge, then continue with the remaining edges.
+@edge = ((u (v w)) (tail (d out)))
+  & @get ~ (d (u g1))
+  & g1 ~ (du d1)
+  & du ~ {duadd duold}
+  & duadd ~ $([+] $(w cand))
+  & cand ~ {cc rest}
+  & rest ~ {cv cs}
+  & v ~ {vget vset}
+  & @get ~ (d1 (vget gv))
+  & gv ~ (dv d2)
+  & cc ~ $([<] $(duold z1))
+  & z1 ~ ?((@safe @overflow) (cv (cs (vset (dv (d2 (tail out)))))))
+
+@overflow = (* (cv (cs (v (dv (d (tail out))))))
+  & cv ~ *
+  & cs ~ *
+  & v ~ *
+  & dv ~ *
+  & @relax ~ (tail (d out))
+
+@safe = (cv (cs (v (dv (d (tail out))))))
+  & cv ~ $([<] $(dv z2))
+  & z2 ~ ?((@no_update @update) (cs (v (d (tail out)))))
+
+@no_update = (cs (v (d (tail out))))
+  & cs ~ *
+  & v ~ *
+  & @relax ~ (tail (d out))
+
+@update = (* (cs (v (d (tail out)))))
+  & @set ~ (d (v (cs nd)))
+  & @relax ~ (tail (nd out))
+
+// Lookup an indexed distance, also rebuilding the list.
+@get = ((?((@gnil @gcons) (p (i out))) p) (i out))
+
+@gnil = (p (i out))
+  & p ~ *
+  & i ~ *
+  & out ~ (16777215 (0 *))
+
+@gcons = (* ((h t) (i out)))
+  & @gidx ~ (i (h (t out)))
+
+@gidx = (i (h (t out)))
+  & i ~ ?((@gzero @gmore) (h (t out)))
+
+@gzero = (h (t out))
+  & h ~ {a b}
+  & out ~ (a (1 (b t)))
+
+@gmore = (im1 (h (t out)))
+  & @get ~ (t (im1 got))
+  & got ~ (v rt)
+  & out ~ (v (1 (h rt)))
+
+// Set an indexed distance.
+@set = ((?((@snil @scons) (p (i (val out)))) p) (i (val out)))
+
+@snil = (p (i (val out)))
+  & p ~ *
+  & i ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@scons = (* ((h t) (i (val out))))
+  & @sidx ~ (i (h (t (val out))))
+
+@sidx = (i (h (t (val out))))
+  & i ~ ?((@szero @smore) (h (t (val out))))
+
+@szero = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@smore = (im1 (h (t (val out))))
+  & @set ~ (t (im1 (val st)))
+  & out ~ (1 (h st))

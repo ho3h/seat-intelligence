@@ -1,0 +1,178 @@
+// Dispatch k=0 separately; otherwise build the exact-k cost vector.
+@prog = (input out)
+  & input ~ (n (s (t (k edges))))
+  & k ~ {kc kr}
+  & kc ~ $([=] $(0 z))
+  & z ~ ?((@nonzero @zero) (n (s (t (kr (edges out))))))
+
+@zero = (* (n (s (t (k (edges out))))))
+  & n ~ {nc nn}
+  & nn ~ *
+  & s ~ {sc sr}
+  & sc ~ $([<] $(nc z))
+  & z ~ ?((@zero_invalid @zero_cmp) (sr (t (k (edges out)))))
+
+@zero_invalid = (s (t (k (edges out))))
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@zero_cmp = (* (s (t (k (edges out)))))
+  & s ~ $([=] $(t eq))
+  & eq ~ ?((@zero_no @zero_yes) (k (edges out)))
+
+@zero_no = (k (edges out))
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@zero_yes = (* (k (edges out)))
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@nonzero = (n (s (t (k (edges out)))))
+  & n ~ {ni nr}
+  & @init ~ (0 (ni (t initial)))
+  & @round ~ (k (nr (edges (initial costs))))
+  & @lookup ~ (s (costs out))
+
+// Initialize the exact-zero-arc costs: 0 at t, infinity elsewhere.
+@init = (i (n (t out)))
+  & i ~ {ic ir}
+  & n ~ {nc nr}
+  & ic ~ $([<] $(nc z))
+  & z ~ ?((@init_done @init_more) (ir (nr (t out))))
+
+@init_done = (i (n (t out)))
+  & i ~ *
+  & n ~ *
+  & t ~ *
+  & out ~ (0 *)
+
+@init_more = (* (i (n (t out))))
+  & i ~ {ie ii}
+  & t ~ {te tr}
+  & ie ~ $([=] $(te eq))
+  & eq ~ ?((@init_other @init_target) (ii (n (tr out))))
+
+@init_other = (* (i (n (t out))))
+  & i ~ $([+1] j)
+  & @init ~ (j (n (t tail)))
+  & out ~ (1 (16777215 tail))
+
+@init_target = (* (i (n (t out))))
+  & i ~ $([+1] j)
+  & @init ~ (j (n (t tail)))
+  & out ~ (1 (0 tail))
+
+// Perform one Bellman update per vertex, repeated exactly k times.
+@round = (r (n (edges (prev out))))
+  & r ~ {rc rr}
+  & rc ~ $([>] $(0 z))
+  & z ~ ?((@round_done @round_more) (rr (n (edges (prev out)))))
+
+@round_done = (r (n (edges (prev out))))
+  & r ~ *
+  & n ~ *
+  & edges ~ *
+  & out ~ prev
+
+@round_more = (* (r (n (edges (prev out)))))
+  & n ~ {nb nr}
+  & edges ~ {eb er}
+  & @build ~ (0 (nb (eb (prev nextvec))))
+  & r ~ $([-] $(1 rnext))
+  & @round ~ (rnext (nr (er (nextvec out))))
+
+// Build the next cost vector, one source vertex at a time.
+@build = (u (n (edges (prev out))))
+  & u ~ {uc ur}
+  & n ~ {nc nr}
+  & uc ~ $([<] $(nc z))
+  & z ~ ?((@build_done @build_more) (ur (nr (edges (prev out)))))
+
+@build_done = (u (n (edges (prev out))))
+  & u ~ *
+  & n ~ *
+  & edges ~ *
+  & prev ~ *
+  & out ~ (0 *)
+
+@build_more = (* (u (n (edges (prev out)))))
+  & u ~ {us ui}
+  & edges ~ {es er}
+  & prev ~ {ps pr}
+  & @scan ~ (es (us (ps (16777215 best))))
+  & ui ~ $([+1] unext)
+  & @build ~ (unext (n (er (pr tail))))
+  & out ~ (1 (best tail))
+
+// Scan all edges, keeping the cheapest candidate for this source.
+@scan = ((?((@scan_nil @scan_cons) (pl (u (prev (acc out))))) pl) (u (prev (acc out))))
+
+@scan_nil = (* (u (prev (acc out))))
+  & u ~ *
+  & prev ~ *
+  & out ~ acc
+
+@scan_cons = (* ((edge tail) (u (prev (acc out)))))
+  & edge ~ (src (dst w))
+  & u ~ {uc ur}
+  & src ~ $([=] $(uc z))
+  & z ~ ?((@scan_skip @scan_hit) (tail (dst (w (ur (prev (acc out)))))))
+
+@scan_skip = (tail (dst (w (u (prev (acc out))))))
+  & dst ~ *
+  & w ~ *
+  & @scan ~ (tail (u (prev (acc out))))
+
+@scan_hit = (* (tail (dst (w (u (prev (acc out)))))))
+  & prev ~ {pget prec}
+  & @lookup ~ (pget (dst got))
+  & got ~ {gt gv}
+  & gt ~ $([=] $(16777215 eq))
+  & eq ~ ?((@hit_reachable @hit_dead) (tail (w (u (prec (acc (gv out)))))))
+
+@hit_dead = (* (tail (w (u (prev (acc (got out)))))))
+  & w ~ *
+  & got ~ *
+  & @scan ~ (tail (u (prev (acc out))))
+
+@hit_reachable = (tail (w (u (prev (acc (got out))))))
+  & acc ~ {acmp acar}
+  & got ~ $([+] $(w cand))
+  & cand ~ {ccmp ccarry}
+  & ccmp ~ $([<] $(acmp z))
+  & z ~ ?((@candidate_keep @candidate_use) (tail (u (prev (acar (ccarry out))))))
+
+@candidate_keep = (tail (u (prev (acc (cand out)))))
+  & cand ~ *
+  & @scan ~ (tail (u (prev (acc out))))
+
+@candidate_use = (* (tail (u (prev (cand out)))))
+  & @scan ~ (tail (u (prev (cand out))))
+
+// Look up a vertex cost in a list; out-of-range indices return infinity.
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (i out))) pl) (i out))
+
+@lookup_nil = (* (i out))
+  & i ~ *
+  & out ~ 16777215
+
+@lookup_cons = (* ((h t) (i out)))
+  & i ~ {ic ir}
+  & ic ~ $([=] $(0 z))
+  & z ~ ?((@lookup_next @lookup_hit) (ir (h (t out))))
+
+@lookup_next = (i (h (t out)))
+  & i ~ $([-] $(1 inext))
+  & h ~ *
+  & @lookup ~ (inext (t out))
+
+@lookup_hit = (* (i (h (t out))))
+  & i ~ *
+  & t ~ *
+  & out ~ h

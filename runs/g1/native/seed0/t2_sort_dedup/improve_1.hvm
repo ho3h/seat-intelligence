@@ -1,0 +1,69 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* (0 *))
+
+@sort_cons = (* ((h t) out))
+  & @sort_tail ~ (t (h out))
+
+@sort_tail = ((?((@sort_single @sort_many) (pl (h out))) pl) (h out))
+
+@sort_single = (* (h out))
+  & out ~ (1 (h (0 *)))
+
+@sort_many = (* ((h2 t2) (h out)))
+  & @split ~ ((1 (h (1 (h2 t2)))) p)
+  & @parts ~ (p out)
+
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (* ((0 *) (0 *)))
+
+@split_cons = (* ((h t) out))
+  & @split ~ (t p)
+  & p ~ (a b)
+  & out ~ ((1 (h b)) a)
+
+@parts = ((a b) out)
+  & @sort ~ (a sa)
+  & @sort ~ (b sb)
+  & @merge ~ (sa (sb out))
+
+@merge = ((?((@merge_nil @merge_cons) (pl (b out))) pl) (b out))
+
+@merge_nil = (* (b b))
+
+@merge_cons = (* ((h t) (b out)))
+  & @merge_b ~ (b (h (t out)))
+
+@merge_b = ((?((@mb_nil @mb_cons) (pl (h (t out)))) pl) (h (t out)))
+
+@mb_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@mb_cons = (* ((y ys) (h (t out))))
+  & {ha hb} ~ h
+  & {ya yb} ~ y
+  & ha ~ $([<] $(ya z))
+  & z ~ ?((@mb_ge @mb_less) (hb (yb (t (ys out))))
+
+@mb_less = (* (h (y (t (ys out)))))
+  & @merge ~ (t ((1 (y ys)) r))
+  & out ~ (1 (h r))
+
+@mb_ge = (h (y (t (ys out))))
+  & {hc hd} ~ h
+  & {yc yd} ~ y
+  & hc ~ $([=] $(yc z))
+  & z ~ ?((@mb_gt @mb_eq) (hd (yd (t (ys out))))
+
+@mb_gt = (h (y (t (ys out))))
+  & @merge ~ ((1 (h t)) (ys r))
+  & out ~ (1 (y r))
+
+@mb_eq = (* (h (y (t (ys out)))))
+  & y ~ *
+  & @merge ~ (t (ys r))
+  & out ~ (1 (h r))

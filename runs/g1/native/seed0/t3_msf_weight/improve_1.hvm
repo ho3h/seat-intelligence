@@ -1,0 +1,162 @@
+// Initialize one distinct component label per vertex.
+@prog = ((n edges) out)
+  & @init ~ (n labels)
+  & @sort ~ (edges sorted)
+  & @go ~ (sorted (labels (0 out)))
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_succ) out)
+
+@init_zero = (0 *)
+
+@init_succ = (nm out)
+  & nm ~ {n1 n2}
+  & @init ~ (n1 rest)
+  & out ~ (1 (n2 rest))
+
+// Merge sort the edge list.
+@sort = ((tag payload) out)
+  & tag ~ ?((@sort_nil @sort_cons) (payload out))
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h (tt tp)) out))
+  & tt ~ ?((@sort_one @sort_many) (tp (h out)))
+
+@sort_one = (* (h out))
+  & out ~ (1 (h (0 *)))
+
+@sort_many = (* ((h2 t2) (h out)))
+  & @split ~ ((1 (h2 t2)) ((1 (h (0 *))) ((0 *) (1 (left right)))))
+  & @sort ~ (left sl)
+  & @sort ~ (right sr)
+  & @merge ~ (sl (sr out))
+
+// Split a list alternately into two reversed lists.
+@split = (l (accL (accR (flag out))))
+  & l ~ ?((@split_nil @split_cons) (accL (accR (flag out))))
+
+@split_nil = (* (accL (accR (flag out))))
+  & flag ~ *
+  & out ~ (accL accR)
+
+@split_cons = (* ((h t) (accL (accR (flag out)))))
+  & flag ~ ?((@split_putleft @split_putright) (h (t (accL (accR out))))
+
+@split_putleft = (h (t (accL (accR out))))
+  & @split ~ (t ((1 (h accL)) (accR (1 out))))
+
+@split_putright = (h (t (accL (accR out))))
+  & @split ~ (t (accL ((1 (h accR)) (0 out))))
+
+// Merge two weight-sorted edge lists.
+@merge = ((ta pa) ((tb pb) out))
+  & ta ~ ?((@merge_a_nil @merge_a_cons) (pa (tb (pb out))))
+
+@merge_a_nil = (* (tb (pb out)))
+  & pa ~ *
+  & out ~ (tb pb)
+
+@merge_a_cons = (* ((ha ta) (tb (pb out))))
+  & tb ~ ?((@merge_b_nil @merge_b_cons) ((ha ta) (pb out)))
+
+@merge_b_nil = (* ((ha ta) (pb out)))
+  & pb ~ *
+  & out ~ (1 (ha ta))
+
+@merge_b_cons = (* ((ha ta) ((hb tbail) out)))
+  & ha ~ (u (v w))
+  & hb ~ (x (y q))
+  & w ~ {wc wh}
+  & q ~ {qc qh}
+  & wc ~ $([>] $(qc flag))
+  & flag ~ ?((@merge_take_a @merge_take_b) ((u (v wh)) ((x (y qh)) (ta (tbail out))))
+
+@merge_take_a = ((u (v w)) ((x (y q)) (ta (tb out))))
+  & @merge ~ (ta ((1 ((x (y q)) tb)) rest))
+  & out ~ (1 ((u (v w)) rest))
+
+@merge_take_b = ((u (v w)) ((x (y q)) (ta (tb out))))
+  & @merge ~ ((1 ((u (v w)) ta)) (tb rest))
+  & out ~ (1 ((x (y q)) rest))
+
+// Look up the label at index idx in a list.
+@at = (idx ((tag payload) out))
+  & tag ~ ?((@at_nil @at_list_cons) (payload (idx out)))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@at_list_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@at_here @at_more) (h (t out)))
+
+@at_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@at_more = (idxm (h (t out)))
+  & h ~ *
+  & @at ~ (idxm (t out))
+
+// Replace every occurrence of old with new in a label list.
+@replace = ((tag payload) (old (new out)))
+  & tag ~ ?((@rp_nil @rp_cons) (payload (old (new out))))
+
+@rp_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rp_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hh}
+  & old ~ {oc oldkeep}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@rp_no @rp_yes) (hh (t (oldkeep (new out)))))
+
+@rp_no = (h (t (old (new out))))
+  & @replace ~ (t (old (new rest)))
+  & out ~ (1 (h rest))
+
+@rp_yes = (* (h (t (old (new out)))))
+  & h ~ *
+  & new ~ {nrec nhead}
+  & @replace ~ (t (old (nrec rest)))
+  & out ~ (1 (nhead rest))
+
+// Process the sorted edges.
+@go = ((tag payload) (labels (acc out)))
+  & tag ~ ?((@go_nil @go_cons) (payload (labels (acc out))))
+
+@go_nil = (* (labels (acc out)))
+  & labels ~ *
+  & out ~ acc
+
+@go_cons = (* ((h t) (labels (acc out))))
+  & @process ~ (h (labels (acc (t out))))
+
+// Join the endpoint components when they differ.
+@process = ((u (v w)) (labels (acc (rest out))))
+  & labels ~ {la more}
+  & more ~ {lb lc}
+  & @at ~ (u (la lu))
+  & @at ~ (v (lb lv))
+  & @decision ~ (w (lu (lv (lc (acc (rest out))))))
+
+@decision = (w (lu (lv (labels (acc (rest out))))))
+  & lu ~ {lu_cmp lu_keep}
+  & lv ~ {lv_cmp lv_keep}
+  & lu_cmp ~ $([=] $(lv_cmp eq))
+  & eq ~ ?((@different @samecomp) (w (lu_keep (lv_keep (labels (acc (rest out)))))))
+
+@different = (w (lu (lv (labels (acc (rest out))))))
+  & @replace ~ (labels (lv (lu newlabels)))
+  & acc ~ $([+] $(w acc2))
+  & @go ~ (rest (newlabels (acc2 out)))
+
+@samecomp = (* (w (lu (lv (labels (acc (rest out))))))
+  & w ~ *
+  & lu ~ *
+  & lv ~ *
+  & @go ~ (rest (labels (acc out)))

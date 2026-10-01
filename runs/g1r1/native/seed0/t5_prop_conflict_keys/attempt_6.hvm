@@ -1,0 +1,110 @@
+@prog = ((c attrs) out)
+  & c ~ {c_full c_iter}
+  & @enum ~ (c_iter (c_full (attrs (0 out))))
+
+@enum = ((?((@enum_nil @enum_cons) (pl (c_full (attrs (idx out))))) pl) (c_full (attrs (idx out))))
+
+@enum_nil = (* (c_full (attrs (idx out))))
+  & c_full ~ *
+  & attrs ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@enum_cons = (* ((cid tail) (c_full (attrs (idx out)))))
+  & cid ~ {cid_cmp cid_drop}
+  & idx ~ {idx_cmp idx_keep}
+  & cid_cmp ~ $([=] $(idx_cmp eq))
+  & cid_drop ~ *
+  & eq ~ ?((@enum_nonroot @enum_root) (tail (c_full (attrs (idx_keep out)))))
+
+@enum_nonroot = (tail (c_full (attrs (idx out))))
+  & idx ~ $([+1] ni)
+  & @enum ~ (tail (c_full (attrs (ni out))))
+
+@enum_root = (* (tail (c_full (attrs (idx out)))))
+  & idx ~ {candidate next}
+  & next ~ $([+1] ni)
+  & @keys ~ (candidate (0 (c_full (attrs (tail (ni out))))))
+
+@keys = (cid (key (c_full (attrs (iter (idx out))))))
+  & key ~ {kcmp kkeep}
+  & kcmp ~ $([<] $(4 valid))
+  & valid ~ ?((@keys_end @keys_scan) (cid (kkeep (c_full (attrs (iter (idx out)))))))
+
+@keys_end = (cid (key (c_full (attrs (iter (idx out))))))
+  & cid ~ *
+  & key ~ *
+  & @enum ~ (iter (c_full (attrs (idx out))))
+
+@keys_scan = (* (cid (key (c_full (attrs (iter (idx out)))))))
+  & cid ~ {cid_scan cid_keep}
+  & key ~ {key_scan key_keep}
+  & c_full ~ {c_scan c_keep}
+  & attrs ~ {attrs_scan attrs_keep}
+  & @scan ~ (attrs_scan (c_scan (cid_scan (key_scan (0 (0 (0 conf)))))))
+  & conf ~ ?((@keys_no @keys_yes) (cid_keep (key_keep (c_keep (attrs_keep (iter (idx out)))))))
+
+@keys_no = (cid (key (c_full (attrs (iter (idx out))))))
+  & key ~ $([+1] nk)
+  & @keys ~ (cid (nk (c_full (attrs (iter (idx out))))))
+
+@keys_yes = (* (cid (key (c_full (attrs (iter (idx out)))))))
+  & cid ~ {cid_out cid_rec}
+  & key ~ {key_rec key_out}
+  & key_rec ~ $([+1] nk)
+  & @keys ~ (cid_rec (nk (c_full (attrs (iter (idx rest))))))
+  & out ~ (1 ((cid_out key_out) rest))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (c_full (cid (key (seen (base (found out))))))) pl) (c_full (cid (key (seen (base (found out))))))))
+
+@scan_nil = (* (c_full (cid (key (seen (base (found out)))))))
+  & c_full ~ *
+  & cid ~ *
+  & key ~ *
+  & seen ~ *
+  & base ~ *
+  & out ~ found
+
+@scan_cons = (* (((node (akey val)) tail) (c_full (cid (key (seen (base (found out))))))))
+  & c_full ~ {c_nth c_rec}
+  & @nth ~ (c_nth (node cval))
+  & cid ~ {cid_cmp cid_rec}
+  & key ~ {key_cmp key_rec}
+  & akey ~ $([=] $(key_cmp eqkey))
+  & cval ~ $([=] $(cid_cmp eqcluster))
+  & eqcluster ~ $([&] $(eqkey relevant))
+  & relevant ~ ?((@scan_other @scan_match) (tail (c_rec (cid_rec (key_rec (seen (base (found (val out)))))))))
+
+@scan_other = (tail (c_rec (cid (key (seen (base (found (val out))))))))
+  & val ~ *
+  & @scan ~ (tail (c_rec (cid (key (seen (base (found out)))))))
+
+@scan_match = (* (tail (c_rec (cid (key (seen (base (found (val out)))))))))
+  & seen ~ ?((@scan_first @scan_later) (tail (c_rec (cid (key (base (found (val out))))))))
+
+@scan_first = (tail (c_rec (cid (key (base (found (val out)))))))
+  & base ~ *
+  & @scan ~ (tail (c_rec (cid (key (1 (val (found out)))))))
+
+@scan_later = (* (tail (c_rec (cid (key (base (found (val out))))))))
+  & base ~ {base_cmp base_keep}
+  & val ~ $([!] $(base_cmp diff))
+  & found ~ $([|] $(diff nf))
+  & @scan ~ (tail (c_rec (cid (key (1 (base_keep (nf out)))))))
+
+@nth = ((?((@nth_nil @nth_cons) (pl (idx out))) pl) (idx out))
+
+@nth_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@nth_here @nth_later) (head (tail out)))
+
+@nth_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@nth_later = (idxm (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idxm out))

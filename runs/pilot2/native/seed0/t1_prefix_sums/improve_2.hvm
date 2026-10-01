@@ -1,0 +1,40 @@
+// Process four elements per recursive call.
+@prog = (l out)
+  & @scan ~ (l (0 out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (acc out))) pl) (acc out))
+
+@scan_nil = (* (* (0 *)))
+
+@scan_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h s1))
+  & s1 ~ {v1 carry1}
+  & t ~ (?( (@s1_nil @s1_cons) (pl (v1 (carry1 out))) ) pl)
+
+@s1_nil = (* (v1 (carry1 out)))
+  & carry1 ~ *
+  & out ~ (1 (v1 (0 *)))
+
+@s1_cons = (* ((h2 t2) (v1 (carry1 out))))
+  & carry1 ~ $([+] $(h2 s2))
+  & s2 ~ {v2 carry2}
+  & t2 ~ (?( (@s2_nil @s2_cons) (pl (v1 (v2 (carry2 out)))) ) pl)
+
+@s2_nil = (* (v1 (v2 (carry2 out))))
+  & carry2 ~ *
+  & out ~ (1 (v1 (1 (v2 (0 *)))))
+
+@s2_cons = (* ((h3 t3) (v1 (v2 (carry2 out)))))
+  & carry2 ~ $([+] $(h3 s3))
+  & s3 ~ {v3 carry3}
+  & t3 ~ (?( (@s3_nil @s3_cons) (pl (v1 (v2 (v3 (carry3 out))))) ) pl)
+
+@s3_nil = (* (v1 (v2 (v3 (carry3 out))))
+  & carry3 ~ *
+  & out ~ (1 (v1 (1 (v2 (1 (v3 (0 *)))))))
+
+@s3_cons = (* ((h4 t4) (v1 (v2 (v3 (carry3 out)))))
+  & carry3 ~ $([+] $(h4 s4))
+  & s4 ~ {v4 carry4}
+  & @scan ~ (t4 (carry4 rest))
+  & out ~ (1 (v1 (1 (v2 (1 (v3 (1 (v4 rest)))))))

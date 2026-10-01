@@ -1,0 +1,34 @@
+@Gtree/C1 = (a (b (c ((1 (a (b (c d)))) d))))
+
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@prog = (a b)
+  & @walk ~ (a (0 (@List/Nil b)))
+
+@walk = ((@walk__C7 a) a)
+
+@walk__C0 = (b (a c))
+  & @List/Cons ~ (a (b c))
+
+@walk__C1 = (* (a (b (c (f (e g))))))
+  & @walk ~ (d (e (f g)))
+  & @Gtree/C1 ~ (a (b (c d)))
+
+@walk__C2 = (?((@walk__C0 @walk__C1) a) a)
+
+@walk__C3 = (a ((@walk__C2 (a b)) b))
+
+@walk__C4 = (* (a (b (c (h (f ({e g} j)))))))
+  &!@walk ~ (d (e (i j)))
+  & @Gtree/C1 ~ (a (b (c d)))
+  &!@walk ~ (f (g (h i)))
+
+@walk__C5 = (?((@walk__C3 @walk__C4) a) a)
+
+@walk__C6 = (* ((@walk__C5 (a (b (d e)))) (c (b ($([+] $(c d)) (a e))))))
+
+@walk__C7 = (?(((* (a a)) @walk__C6) b) b)
+
+

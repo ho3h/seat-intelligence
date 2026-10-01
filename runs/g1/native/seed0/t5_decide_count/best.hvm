@@ -1,0 +1,22 @@
+@prog = (input out)
+  & @t5_init ~ (input out)
+
+@t5_init = ((tau cands) out)
+  & @t5_count ~ (cands (tau out))
+
+@t5_count = ((?((@t5_nil @t5_cons) (pl (tau out))) pl) (tau out))
+
+@t5_nil = (* (* 0))
+
+@t5_cons = (* (((u (v score)) tail) (tau out)))
+  & u ~ *
+  & v ~ *
+  & tau ~ {tc tn}
+  & @t5_count ~ (tail (tn tailcount))
+  & score ~ $([<] $(tc z))
+  & z ~ ?((@t5_ge @t5_lt) (tailcount out))
+
+@t5_ge = (tailcount out)
+  & tailcount ~ $([+1] out)
+
+@t5_lt = (* (a a))

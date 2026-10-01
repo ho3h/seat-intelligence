@@ -1,0 +1,41 @@
+# third-party runtimes, fetched and built by scripts/setup_physics.sh
+physics/
+genome/hero5/tracer/target/
+
+# scratch space for temporary nets written by the executor
+scratch/*
+!scratch/.gitkeep
+
+# model weights (published separately, see adapters/README.md)
+adapters/*
+!adapters/README.md
+
+# data: only the public seating chart transcription and the frozen test sets are tracked
+data/*
+!data/hero/
+data/hero/*
+!data/hero/luncheon.json
+!data/hero/policies_test*.json
+
+# regenerable training data (genome/*/gen_train*.py, genome/hero4/data.py)
+runs/datagen/
+runs/*/data/
+runs/*/data_*/
+runs/hero4/samples/
+
+# build output for the hosted variant of the demo (demo/luncheon/build.py)
+demo/luncheon/artifact.html
+demo/luncheon/*_backup.*
+
+# secrets and local junk
+.env
+.env.*
+*.pem
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+node_modules/
+.claude/
+*.pt
+*.safetensors

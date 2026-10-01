@@ -1,0 +1,41 @@
+// Count vertices that occur in no merge edge.
+@prog = (input out)
+  & input ~ (n edges)
+  & @outer ~ (n ((0 edges) (0 out)))
+
+@outer = (n ((i edges) (acc out)))
+  & n ~ ?((@outer_zero @outer_more) ((i edges) (acc out)))
+
+@outer_zero = ((* *) (a a))
+
+@outer_more = (rem ((i edges) (acc out)))
+  & edges ~ {escan enext}
+  & @has ~ (escan (i flag))
+  & acc ~ $([+] $(flag acc2))
+  & i ~ $([+1] inext)
+  & @outer ~ (rem ((inext enext) (acc2 out)))
+
+// Return 1 if the vertex does not occur in the edge list, otherwise 0.
+@has = ((?((@has_nil @has_cons) (payload (i out))) payload) (i out))
+
+@has_nil = (* (* one))
+  & one ~ 1
+
+@has_cons = (* ((u v) (tail (i out))))
+  & i ~ {iu ix}
+  & ix ~ {iv ir}
+  & u ~ $([=] $(iu eq))
+  & eq ~ ?((@has_v @has_u_hit) (v (tail (iv (ir out)))))
+
+@has_v = (v (tail (iv (ir out))))
+  & v ~ $([=] $(iv eq2))
+  & eq2 ~ ?((@has_recurse @has_v_hit) (tail (ir out)))
+
+@has_recurse = (tail (ir out))
+  & @has ~ (tail (ir out))
+
+@has_u_hit = (* (* (* (* (* zero)))))
+  & zero ~ 0
+
+@has_v_hit = (* (* (* zero)))
+  & zero ~ 0

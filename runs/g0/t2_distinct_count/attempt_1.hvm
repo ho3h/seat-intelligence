@@ -1,0 +1,44 @@
+@prog = (l out)
+  & @build ~ (l ((0 *) t))
+  & @size ~ (t out)
+
+@build = ((?((@build_nil @build_cons) (pl (tr res))) pl) (tr res))
+
+@build_nil = (* (a a))
+
+@build_cons = (* ((h t) (tr res)))
+  & @ins ~ (h (tr tr2))
+  & @build ~ (t (tr2 res))
+
+@ins = (x ((?((@ins_leaf @ins_node) (x (pl res))) pl) res))
+
+@ins_leaf = (x (* (1 ((0 *) (x (0 *))))))
+
+@ins_node = (* (x ((l (v r)) res)))
+  & x ~ {x1 {x2 x3}}
+  & v ~ {v1 {v2 v3}}
+  & x1 ~ $([<] $(v1 lt))
+  & x2 ~ $([>] $(v2 gt))
+  & lt ~ $([*] $(2 lt2))
+  & lt2 ~ $([+] $(gt d))
+  & d ~ ?((@ins_eq @ins_ne) (x3 (l (v3 (r res)))))
+
+@ins_eq = (* (l (v (r (1 (l (v r)))))))
+
+@ins_ne = (?((@ins_gt @ins_lt) c) c)
+
+@ins_gt = (x (l (v (r (1 (l (v r2)))))))
+  & @ins ~ (x (r r2))
+
+@ins_lt = (* (x (l (v (r (1 (l2 (v r))))))))
+  & @ins ~ (x (l l2))
+
+@size = ((?((@size_leaf @size_node) (pl res)) pl) res)
+
+@size_leaf = (* 0)
+
+@size_node = (* ((l (* r)) res))
+  & @size ~ (l a)
+  & @size ~ (r b)
+  & a ~ $([+] $(b c))
+  & c ~ $([+] $(1 res))

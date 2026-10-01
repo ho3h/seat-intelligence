@@ -1,0 +1,118 @@
+@prog = (input output)
+  & input ~ (tau (cap cands))
+  & @build ~ (cands (tau sorted))
+  & @stage ~ (sorted (cap output))
+
+@build = ((?((@build_nil @build_cons) (pl (tau out))) pl) (tau out))
+
+@build_nil = (* (tau out))
+  & tau ~ *
+  & out ~ (0 *)
+
+@build_cons = (* (((u (v score)) tail) (tau out)))
+  & tau ~ {tau_rec tau_cmp}
+  & score ~ {score_cmp score_ctx}
+  & @build ~ (tail (tau_rec rest))
+  & score_cmp ~ $([<] $(tau_cmp lt))
+  & lt ~ ?((@build_accept @build_reject) (u (v (score_ctx (rest out))))
+
+@build_accept = (u (v (score (rest out))))
+  & @ins ~ ((u (v score)) (rest out))
+
+@build_reject = (* (u (v (score (rest out)))))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & out ~ rest
+
+@before = ((u (v s)) ((eu (ev es)) out))
+  & s ~ {sg sc}
+  & es ~ {eg ec}
+  & sg ~ $([>] $(eg gt))
+  & gt ~ ?((@before_equal @before_true) ((u (v sc)) ((eu (ev ec)) out))
+
+@before_equal = ((u (v s)) ((eu (ev es)) out))
+  & s ~ {sl sc}
+  & es ~ {el ec}
+  & sl ~ $([<] $(el lt))
+  & lt ~ ?((@before_u @before_false) ((u (v sc)) ((eu (ev ec)) out))
+
+@before_u = ((u (v s)) ((eu (ev es)) out))
+  & u ~ {ug uc}
+  & eu ~ {eg ec}
+  & ug ~ $([>] $(eg gt))
+  & gt ~ ?((@before_u_lt @before_false) ((uc (v s)) ((ec (ev es)) out))
+
+@before_u_lt = ((u (v s)) ((eu (ev es)) out))
+  & u ~ {ul uc}
+  & eu ~ {el ec}
+  & ul ~ $([<] $(el lt))
+  & lt ~ ?((@before_v @before_true) ((uc (v s)) ((ec (ev es)) out))
+
+@before_v = ((u (v s)) ((eu (ev es)) out))
+  & v ~ {vg vc}
+  & ev ~ {eg ec}
+  & vg ~ $([>] $(eg gt))
+  & gt ~ ?((@before_true @before_false) ((u (vc s)) ((eu (ec es)) out))
+
+@before_true = (* ((a b) out))
+  & a ~ *
+  & b ~ *
+  & out ~ 1
+
+@before_false = (* ((a b) out))
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@ins = ((?((@ins_nil @ins_cons) (pl (item out))) pl) (item out))
+
+@ins_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@ins_cons = (* (((eu (ev es)) tail) (item out)))
+  & item ~ {item_cmp item_keep}
+  & eu ~ {eu_cmp eu_keep}
+  & ev ~ {ev_cmp ev_keep}
+  & es ~ {es_cmp es_keep}
+  & @before ~ (item_cmp ((eu_cmp (ev_cmp es_cmp)) pred))
+  & pred ~ ?((@ins_skip @ins_take) (item_keep ((eu_keep (ev_keep es_keep)) (tail out))))
+
+@ins_skip = (item ((eu (ev es)) (tail out)))
+  & @ins ~ (item (tail rest))
+  & out ~ (1 ((eu (ev es)) rest))
+
+@ins_take = (* (item ((eu (ev es)) (tail out))))
+  & eu ~ *
+  & ev ~ *
+  & es ~ *
+  & out ~ (1 (item tail))
+
+@stage = ((?((@stage_nil @stage_cons) (pl (cap out))) pl) (cap out))
+
+@stage_nil = (* (cap out))
+  & cap ~ *
+  & out ~ ((0 *) 0)
+
+@stage_cons = (* (((u (v score)) tail) (cap out)))
+  & cap ~ ?((@stage_exhausted @stage_room) (u (v (score (tail out))))
+
+@stage_exhausted = (u (v (score (tail out))))
+  & @length ~ ((1 ((u (v score)) tail)) n)
+  & out ~ ((0 *) n)
+
+@stage_room = (remaining (u (v (score (tail out)))))
+  & @stage ~ (tail (remaining res))
+  & res ~ (staged deferred)
+  & score ~ *
+  & out ~ ((1 ((u v) staged)) deferred)
+
+@length = ((?((@length_nil @length_cons) (pl out)) pl) out)
+
+@length_nil = (* out)
+  & out ~ 0
+
+@length_cons = (* ((head tail) out))
+  & head ~ *
+  & @length ~ (tail n)
+  & n ~ $([+1] out)

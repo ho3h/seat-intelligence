@@ -1,0 +1,126 @@
+// Entry point: parse the expression and discard its (empty) remainder.
+@prog = (input output)
+  & @expr ~ (input (ast rem))
+  & output ~ ast
+  & rem ~ (0 *)
+
+// expr := term ('+' term)*
+@expr = (input out)
+  & @skip ~ (input s)
+  & @term ~ (s (a rem))
+  & @expr_loop ~ ((a rem) out)
+
+@expr_loop = ((acc rem) out)
+  & @skip ~ (rem s)
+  & @em_check ~ ((acc s) out)
+
+@em_check = ((acc (?((@em_nil @em_cons) (pl (acc out))) pl)) out)
+
+@em_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@em_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(43 z))
+  & z ~ ?((@em_nonplus @em_plus) (acc (hr (t out))))
+
+@em_nonplus = (acc (h (t out)))
+  & out ~ (acc (1 (h t)))
+
+@em_plus = (* (acc (* (t out))))
+  & @term ~ (t (rhs rem))
+  & @expr_loop ~ (((1 (acc rhs)) rem) out)
+
+// term := factor ('*' factor)*
+@term = (input out)
+  & @skip ~ (input s)
+  & @factor ~ (s (a rem))
+  & @term_loop ~ ((a rem) out)
+
+@term_loop = ((acc rem) out)
+  & @skip ~ (rem s)
+  & @tm_check ~ ((acc s) out)
+
+@tm_check = ((acc (?((@tm_nil @tm_cons) (pl (acc out))) pl)) out)
+
+@tm_nil = (* (acc out))
+  & out ~ (acc (0 *))
+
+@tm_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(42 z))
+  & z ~ ?((@tm_nonmul @tm_mul) (acc (hr (t out))))
+
+@tm_nonmul = (acc (h (t out)))
+  & out ~ (acc (1 (h t)))
+
+@tm_mul = (* (acc (* (t out))))
+  & @factor ~ (t (rhs rem))
+  & @term_loop ~ (((2 (acc rhs)) rem) out)
+
+// factor := number | '(' expr ')'
+@factor = ((?((@fa_nil @fa_cons) (pl out)) pl) out)
+
+@fa_nil = (* out)
+  & out ~ ((0 0) (0 *))
+
+@fa_cons = (* ((h t) out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(40 z))
+  & z ~ ?((@fa_number @fa_paren) (hr (t out)))
+
+@fa_number = (h (t out))
+  & h ~ $([-] $(48 d))
+  & @num_loop ~ ((d t) (n rem))
+  & out ~ ((0 n) rem)
+
+@fa_paren = (* (* (t out)))
+  & @expr ~ (t (ast rem1))
+  & @drop ~ (rem1 rem2)
+  & out ~ (ast rem2)
+
+// Skip any leading spaces, preserving the first non-space character.
+@skip = ((?((@skip_nil @skip_cons) (pl out)) pl) out)
+
+@skip_nil = (* out)
+  & out ~ (0 *)
+
+@skip_cons = (* ((h t) out))
+  & h ~ {hc hr}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@skip_keep @skip_space) (hr (t out)))
+
+@skip_keep = (h (t out))
+  & out ~ (1 (h t))
+
+@skip_space = (* (* (t out)))
+  & @skip ~ (t out)
+
+// Read the remaining digits of a decimal number.
+@num_loop = ((acc (?((@num_nil @num_cons) (acc (pl out))) pl)) out)
+
+@num_nil = (acc (* out))
+  & out ~ (acc (0 *))
+
+@num_cons = (* (acc ((h t) out)))
+  & h ~ {hc hr}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@num_digit @num_end) (acc (hr (t out))))
+
+@num_end = (acc (h (t out)))
+  & out ~ (acc (1 (h t)))
+
+@num_digit = (acc (h (t out)))
+  & h ~ $([-] $(48 digit))
+  & acc ~ $([*] $(10 mul))
+  & mul ~ $([+] $(digit next))
+  & @num_loop ~ ((next t) out)
+
+// Consume one list item, used for the closing parenthesis.
+@drop = ((?((@drop_nil @drop_cons) (pl out)) pl) out)
+
+@drop_nil = (* out)
+  & out ~ (0 *)
+
+@drop_cons = (* ((* t) out))
+  & out ~ t

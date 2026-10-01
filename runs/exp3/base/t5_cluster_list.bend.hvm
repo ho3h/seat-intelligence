@@ -1,0 +1,79 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@collect_members = ((@collect_members__C2 a) a)
+
+@collect_members__C0 = (* a)
+  & @List/Cons ~ a
+
+@collect_members__C1 = (* ($([=] $(a ?(((* (b b)) @collect_members__C0) (c (g h))))) (d ({c $([+0x0000001] e)} ({a f} h)))))
+  & @collect_members ~ (d (e (f g)))
+
+@collect_members__C2 = (?(((* (* @List/Nil)) @collect_members__C1) a) a)
+
+@collect_roots = ((@collect_roots__C2 a) a)
+
+@collect_roots__C0 = (* (a (b d)))
+  & @List/Cons ~ (c d)
+  & @collect_members ~ (a (0 (b c)))
+
+@collect_roots__C1 = (* ($([=] $(a ?(((* (* (b b))) @collect_roots__C0) (c (d (h i)))))) (e ({c f} ({a {d $([+0x0000001] g)}} i)))))
+  & @collect_roots ~ (e (f (g h)))
+
+@collect_roots__C2 = (?(((* (* @List/Nil)) @collect_roots__C1) a) a)
+
+@get_label = ((@get_label__C2 a) a)
+
+@get_label__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_label ~ (a (b c))
+
+@get_label__C1 = (* (c (d ({$([=0x0000000] ?((@get_label__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_label__C2 = (?(((* 0) @get_label__C1) a) a)
+
+@make_labels = ({$([=] $(a ?((@make_labels__C0 (* (* (* @List/Nil)))) (b (c d))))) b} ({a c} d))
+
+@make_labels__C0 = ({a $([+0x0000001] b)} (c e))
+  & @List/Cons ~ (a (d e))
+  & @make_labels ~ (b (c d))
+
+@merge_edges = ((@merge_edges__C5 a) a)
+
+@merge_edges__C0 = a
+  & @replace_label ~ a
+
+@merge_edges__C1 = (* (a (c (b d))))
+  & @replace_label ~ (a (b (c d)))
+
+@merge_edges__C2 = (c (a ({$([<] $(b ?((@merge_edges__C0 @merge_edges__C1) (c (d (e f)))))) d} ({b e} g))))
+  & @merge_edges ~ (a (f g))
+
+@merge_edges__C3 = (* (b (a (* (* c)))))
+  & @merge_edges ~ (a (b c))
+
+@merge_edges__C4 = (* ((b d) (g ({f {c a}} j))))
+  & @get_label ~ (c (d {e i}))
+  & @get_label ~ (a (b {$([=] $(e ?((@merge_edges__C2 @merge_edges__C3) (f (g (h (i j))))))) h}))
+
+@merge_edges__C5 = (?(((a a) @merge_edges__C4) b) b)
+
+@prog = ((b a) f)
+  & @collect_roots ~ (d (e (0 f)))
+  & @merge_edges ~ (a (c {d e}))
+  & @make_labels ~ (0 (b c))
+
+@replace_label = ((@replace_label__C3 a) a)
+
+@replace_label__C0 = (* a)
+  & @List/Cons ~ a
+
+@replace_label__C1 = (* (a (* b)))
+  & @List/Cons ~ (a b)
+
+@replace_label__C2 = (* ({$([=] $(a ?((@replace_label__C0 @replace_label__C1) (b (c (g h)))))) c} (d ({a e} ({b f} h)))))
+  & @replace_label ~ (d (e (f g)))
+
+@replace_label__C3 = (?(((* (* @List/Nil)) @replace_label__C2) a) a)
+
+

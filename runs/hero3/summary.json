@@ -1,0 +1,6419 @@
+{
+ "summary": {
+  "a": {
+   "assoc_total": 31,
+   "assoc_accepted": 31,
+   "nonassoc_total": 12,
+   "nonassoc_accepted": [],
+   "adversarial_accepted": {
+    "planted_point": true
+   },
+   "audit_stable": true
+  },
+  "comm_label_agreement": "31/31",
+  "b": {
+   "accepted": 32,
+   "passed": 32,
+   "failed": []
+  },
+  "forced_rewrites_of_rejected": {
+   "sub_fold": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "hash31": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "abs_diff": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "alternating": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "sat_sub": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "horner_square": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "xorshift_hash": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "midpoint": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "sat_sum_unclamped": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "glitch_1e3": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "avg_wrong_merge": [
+    "fail",
+    "fail",
+    "fail"
+   ],
+   "adjacent_equal_wrong": [
+    "fail",
+    "fail",
+    "fail"
+   ]
+  },
+  "c": {
+   "n": 31,
+   "median_exp": 0.10861119990128339,
+   "max_exp": 0.11188733532619742,
+   "share_le_0_4": 1.0,
+   "itrs_median_exp": 1.000125185720566,
+   "seq_median_exp": 0.9997442545448806,
+   "seq_la_median_exp": 0.9995704821357765,
+   "seqtree_median_exp": 0.9974525175414967,
+   "ingest_median_exp": 0.990209795057946
+  }
+ },
+ "rows": [
+  {
+   "fold": "sum",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 151,
+     "itrs": 36982,
+     "width": 2464,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 203,
+     "itrs": 369996,
+     "width": 20480,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 249,
+     "itrs": 3700108,
+     "width": 203392,
+     "secs": 1.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10861119990128339,
+   "tree_iexp": 1.0001120031620527,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 24014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 240020,
+     "width": 6,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2400080,
+     "width": 6,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998806058276707,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 23235,
+     "width": 12,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 231471,
+     "width": 12,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2312781,
+     "width": 12,
+     "secs": 2.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9989959170192716,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 47985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 479999,
+     "width": 32768,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 4800111,
+     "width": 275712,
+     "secs": 4.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000728905897858,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7772,
+     "itrs": 72345,
+     "width": 2480,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75380,
+     "itrs": 720535,
+     "width": 20592,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750449,
+     "itrs": 7200707,
+     "width": 245760,
+     "secs": 5.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923941956494388,
+   "ingest_iexp": 0.9989833093327256
+  },
+  {
+   "fold": "product",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 151,
+     "itrs": 36982,
+     "width": 2464,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 203,
+     "itrs": 369996,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 249,
+     "itrs": 3700108,
+     "width": 203392,
+     "secs": 1.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10861119990128339,
+   "tree_iexp": 1.0001120031620527,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 24014,
+     "width": 6,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 240020,
+     "width": 6,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2400080,
+     "width": 6,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998806058276707,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 23235,
+     "width": 12,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 231471,
+     "width": 12,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2312781,
+     "width": 12,
+     "secs": 2.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9989959170192716,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 47985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 479999,
+     "width": 32768,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 4800111,
+     "width": 275712,
+     "secs": 5.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000728905897858,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7772,
+     "itrs": 72345,
+     "width": 2480,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75380,
+     "itrs": 720535,
+     "width": 20592,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750449,
+     "itrs": 7200707,
+     "width": 245760,
+     "secs": 4.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "product",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923941956494388,
+   "ingest_iexp": 0.9989833093327256
+  },
+  {
+   "fold": "length",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 151,
+     "itrs": 37982,
+     "width": 2488,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 203,
+     "itrs": 379996,
+     "width": 20480,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 249,
+     "itrs": 3800108,
+     "width": 234464,
+     "secs": 1.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10861119990128339,
+   "tree_iexp": 1.000109055053952,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 25014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 250020,
+     "width": 6,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2500080,
+     "width": 6,
+     "secs": 2.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998853801815816,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 24235,
+     "width": 13,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 241471,
+     "width": 13,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2412781,
+     "width": 13,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9990374400961939,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 48985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 489999,
+     "width": 32768,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 4900111,
+     "width": 275712,
+     "secs": 4.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000714028158326,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7772,
+     "itrs": 73345,
+     "width": 2480,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75380,
+     "itrs": 730535,
+     "width": 20592,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750449,
+     "itrs": 7300707,
+     "width": 245760,
+     "secs": 4.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "length",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923941956494388,
+   "ingest_iexp": 0.9989972031479074
+  },
+  {
+   "fold": "max",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 231,
+     "itrs": 50968,
+     "width": 2464,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 315,
+     "itrs": 509982,
+     "width": 20480,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 385,
+     "itrs": 5100094,
+     "width": 203392,
+     "secs": 2.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11092437480817832,
+   "tree_iexp": 1.0001402942967876,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 11010,
+     "itrs": 38014,
+     "width": 8,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110010,
+     "itrs": 380020,
+     "width": 8,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100010,
+     "itrs": 3800080,
+     "width": 8,
+     "secs": 3.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998046571500905,
+   "seq_list_iexp": 0.999924584591175,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 11011,
+     "itrs": 37235,
+     "width": 13,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110011,
+     "itrs": 371471,
+     "width": 13,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100011,
+     "itrs": 3712781,
+     "width": 13,
+     "secs": 3.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9997851327218928,
+   "seq_la_iexp": 0.999373987376799,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 11114,
+     "itrs": 61985,
+     "width": 3906,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110158,
+     "itrs": 619999,
+     "width": 32768,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100191,
+     "itrs": 6200111,
+     "width": 275714,
+     "secs": 7.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9977988477386536,
+   "seq_tree_iexp": 1.0000564295802394,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7852,
+     "itrs": 86331,
+     "width": 2484,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75492,
+     "itrs": 860521,
+     "width": 21376,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750585,
+     "itrs": 8600693,
+     "width": 245960,
+     "secs": 5.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.990209795057946,
+   "ingest_iexp": 0.9991833371873514
+  },
+  {
+   "fold": "min",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 231,
+     "itrs": 50968,
+     "width": 2464,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 315,
+     "itrs": 509982,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 385,
+     "itrs": 5100094,
+     "width": 203392,
+     "secs": 2.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11092437480817832,
+   "tree_iexp": 1.0001402942967876,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 11010,
+     "itrs": 38014,
+     "width": 8,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110010,
+     "itrs": 380020,
+     "width": 8,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100010,
+     "itrs": 3800080,
+     "width": 8,
+     "secs": 4.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998046571500905,
+   "seq_list_iexp": 0.999924584591175,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 11011,
+     "itrs": 37235,
+     "width": 13,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110011,
+     "itrs": 371471,
+     "width": 13,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100011,
+     "itrs": 3712781,
+     "width": 13,
+     "secs": 4.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9997851327218928,
+   "seq_la_iexp": 0.999373987376799,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 11114,
+     "itrs": 61985,
+     "width": 3906,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110158,
+     "itrs": 619999,
+     "width": 32768,
+     "secs": 1.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100191,
+     "itrs": 6200111,
+     "width": 275714,
+     "secs": 6.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9977988477386536,
+   "seq_tree_iexp": 1.0000564295802394,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7852,
+     "itrs": 86331,
+     "width": 2484,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75492,
+     "itrs": 860521,
+     "width": 21376,
+     "secs": 1.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750585,
+     "itrs": 8600693,
+     "width": 245960,
+     "secs": 5.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "min",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.990209795057946,
+   "ingest_iexp": 0.9991833371873514
+  },
+  {
+   "fold": "count_even",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 155,
+     "itrs": 40982,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 207,
+     "itrs": 409996,
+     "width": 20480,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 253,
+     "itrs": 4100108,
+     "width": 203392,
+     "secs": 2.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1063944115027632,
+   "tree_iexp": 1.0001010737686886,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 28014,
+     "width": 6,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 280020,
+     "width": 6,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2800080,
+     "width": 6,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.999897657632139,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3013,
+     "itrs": 27235,
+     "width": 14,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30013,
+     "itrs": 271471,
+     "width": 14,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300013,
+     "itrs": 2712781,
+     "width": 14,
+     "secs": 3.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.999070471033056,
+   "seq_la_iexp": 0.9991436777119544,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3124,
+     "itrs": 51985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30160,
+     "itrs": 519999,
+     "width": 32768,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300201,
+     "itrs": 5200111,
+     "width": 275712,
+     "secs": 5.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9913505546916982,
+   "seq_tree_iexp": 1.0000672828722934,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7776,
+     "itrs": 76345,
+     "width": 2481,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75384,
+     "itrs": 760535,
+     "width": 20704,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750453,
+     "itrs": 7600707,
+     "width": 245762,
+     "secs": 4.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_even",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9922836230768239,
+   "ingest_iexp": 0.9990366958916024
+  },
+  {
+   "fold": "argmax_first",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 245,
+     "itrs": 74950,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 337,
+     "itrs": 749964,
+     "width": 20480,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 406,
+     "itrs": 7500076,
+     "width": 203392,
+     "secs": 4.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10967997460633072,
+   "tree_iexp": 1.000147013517927,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 10015,
+     "itrs": 62020,
+     "width": 12,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100015,
+     "itrs": 620026,
+     "width": 12,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000015,
+     "itrs": 6200086,
+     "width": 12,
+     "secs": 5.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9996777803693877,
+   "seq_list_iexp": 0.9999329758199575,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 10016,
+     "itrs": 61241,
+     "width": 21,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100016,
+     "itrs": 611477,
+     "width": 21,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000016,
+     "itrs": 6112787,
+     "width": 21,
+     "secs": 6.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9996563163948833,
+   "seq_la_iexp": 0.9995984947091903,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 10120,
+     "itrs": 85991,
+     "width": 3908,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100163,
+     "itrs": 860005,
+     "width": 32768,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000197,
+     "itrs": 8600117,
+     "width": 275716,
+     "secs": 8.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9974525175414967,
+   "seq_tree_iexp": 1.0000256800927976,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7862,
+     "itrs": 110313,
+     "width": 2494,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75506,
+     "itrs": 1100503,
+     "width": 23616,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750602,
+     "itrs": 11000675,
+     "width": 246566,
+     "secs": 7.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmax_first",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9899383388921575,
+   "ingest_iexp": 0.9993963193461126
+  },
+  {
+   "fold": "argmin_first",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 245,
+     "itrs": 74950,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 337,
+     "itrs": 749964,
+     "width": 20480,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 406,
+     "itrs": 7500076,
+     "width": 203392,
+     "secs": 4.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10967997460633072,
+   "tree_iexp": 1.000147013517927,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 10015,
+     "itrs": 62020,
+     "width": 12,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100015,
+     "itrs": 620026,
+     "width": 12,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000015,
+     "itrs": 6200086,
+     "width": 12,
+     "secs": 5.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9996777803693877,
+   "seq_list_iexp": 0.9999329758199575,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 10016,
+     "itrs": 61241,
+     "width": 21,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100016,
+     "itrs": 611477,
+     "width": 21,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000016,
+     "itrs": 6112787,
+     "width": 21,
+     "secs": 6.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9996563163948833,
+   "seq_la_iexp": 0.9995984947091903,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 10120,
+     "itrs": 85991,
+     "width": 3908,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100163,
+     "itrs": 860005,
+     "width": 32768,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000197,
+     "itrs": 8600117,
+     "width": 275716,
+     "secs": 9.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9974525175414967,
+   "seq_tree_iexp": 1.0000256800927976,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7862,
+     "itrs": 110313,
+     "width": 2494,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75506,
+     "itrs": 1100503,
+     "width": 23616,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750602,
+     "itrs": 11000675,
+     "width": 246566,
+     "secs": 7.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "argmin_first",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9899383388921575,
+   "ingest_iexp": 0.9993963193461126
+  },
+  {
+   "fold": "second_largest",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 326,
+     "itrs": 105917,
+     "width": 2928,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 446,
+     "itrs": 1059931,
+     "width": 20960,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 543,
+     "itrs": 10600043,
+     "width": 206784,
+     "secs": 5.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11079111476045389,
+   "tree_iexp": 1.0001709778685839,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 20015,
+     "itrs": 93018,
+     "width": 12,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 200015,
+     "itrs": 930024,
+     "width": 12,
+     "secs": 1.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2000015,
+     "itrs": 9300084,
+     "width": 12,
+     "secs": 9.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998388292096285,
+   "seq_list_iexp": 0.9999599368895611,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 20016,
+     "itrs": 92239,
+     "width": 21,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 200016,
+     "itrs": 921475,
+     "width": 21,
+     "secs": 1.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2000016,
+     "itrs": 9212785,
+     "width": 21,
+     "secs": 10.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9998280888282969,
+   "seq_la_iexp": 0.9997381750704543,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 20119,
+     "itrs": 116989,
+     "width": 3910,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 200163,
+     "itrs": 1170003,
+     "width": 32768,
+     "secs": 1.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2000196,
+     "itrs": 11700115,
+     "width": 275718,
+     "secs": 13.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9987330819016095,
+   "seq_tree_iexp": 1.0000225508550675,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7947,
+     "itrs": 141280,
+     "width": 2984,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75623,
+     "itrs": 1410470,
+     "width": 26370,
+     "secs": 1.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750743,
+     "itrs": 14100642,
+     "width": 295530,
+     "secs": 8.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "second_largest",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9876440392347239,
+   "ingest_iexp": 0.9995791001155542
+  },
+  {
+   "fold": "longest_run",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 396,
+     "itrs": 266765,
+     "width": 11512,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 544,
+     "itrs": 2669779,
+     "width": 70704,
+     "secs": 2.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 662,
+     "itrs": 26699891,
+     "width": 941536,
+     "secs": 15.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11158140175709381,
+   "tree_iexp": 1.0001903197778304,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 27015,
+     "itrs": 254026,
+     "width": 34,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 270015,
+     "itrs": 2540032,
+     "width": 34,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2700015,
+     "itrs": 25400092,
+     "width": 34,
+     "secs": 23.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998806025120961,
+   "seq_list_iexp": 0.9999785599833669,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 27016,
+     "itrs": 253247,
+     "width": 77,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 270016,
+     "itrs": 2531483,
+     "width": 77,
+     "secs": 2.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2700016,
+     "itrs": 25312793,
+     "width": 77,
+     "secs": 26.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.999872645060468,
+   "seq_la_iexp": 0.9998978791368813,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 27119,
+     "itrs": 277997,
+     "width": 4904,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 270163,
+     "itrs": 2780011,
+     "width": 48214,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2700196,
+     "itrs": 27800123,
+     "width": 462158,
+     "secs": 31.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9990608092428429,
+   "seq_tree_iexp": 1.0000033040854432,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 8017,
+     "itrs": 302128,
+     "width": 11600,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75721,
+     "itrs": 3020318,
+     "width": 97705,
+     "secs": 2.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750862,
+     "itrs": 30200490,
+     "width": 1149706,
+     "secs": 21.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "longest_run",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9857741211470397,
+   "ingest_iexp": 0.9999115068034496
+  },
+  {
+   "fold": "is_sorted",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 234,
+     "itrs": 110917,
+     "width": 6112,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 318,
+     "itrs": 1109931,
+     "width": 41440,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 388,
+     "itrs": 11100043,
+     "width": 446336,
+     "secs": 5.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10980793409203218,
+   "tree_iexp": 1.0001632732964336,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 11013,
+     "itrs": 98022,
+     "width": 17,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110013,
+     "itrs": 980028,
+     "width": 17,
+     "secs": 1.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100013,
+     "itrs": 9800088,
+     "width": 17,
+     "secs": 9.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997460892376986,
+   "seq_list_iexp": 0.9999532080158534,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 11014,
+     "itrs": 97243,
+     "width": 35,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110014,
+     "itrs": 971479,
+     "width": 35,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100014,
+     "itrs": 9712789,
+     "width": 35,
+     "secs": 9.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9997265701810512,
+   "seq_la_iexp": 0.9997428028257914,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 11117,
+     "itrs": 121993,
+     "width": 3956,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110161,
+     "itrs": 1220007,
+     "width": 32768,
+     "secs": 1.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100194,
+     "itrs": 12200119,
+     "width": 337860,
+     "secs": 12.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.997740833248978,
+   "seq_tree_iexp": 1.000014577690592,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7855,
+     "itrs": 146280,
+     "width": 6201,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75495,
+     "itrs": 1460470,
+     "width": 51690,
+     "secs": 1.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750588,
+     "itrs": 14600642,
+     "width": 614458,
+     "secs": 9.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "is_sorted",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9901277137441925,
+   "ingest_iexp": 0.9995935003786469
+  },
+  {
+   "fold": "last",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 168,
+     "itrs": 51971,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 228,
+     "itrs": 519985,
+     "width": 20480,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 273,
+     "itrs": 5200097,
+     "width": 203392,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10542668265744662,
+   "tree_iexp": 1.000125185720566,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7013,
+     "itrs": 39018,
+     "width": 8,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70019,
+     "itrs": 390024,
+     "width": 8,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700079,
+     "itrs": 3900084,
+     "width": 8,
+     "secs": 3.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9996216057921609,
+   "seq_list_iexp": 0.9999044782846085,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3013,
+     "itrs": 38239,
+     "width": 20,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30013,
+     "itrs": 381475,
+     "width": 20,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300013,
+     "itrs": 3812785,
+     "width": 20,
+     "secs": 4.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.999070471033056,
+   "seq_la_iexp": 0.999367895025786,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3124,
+     "itrs": 62989,
+     "width": 3905,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30160,
+     "itrs": 630003,
+     "width": 32768,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300201,
+     "itrs": 6300115,
+     "width": 275713,
+     "secs": 4.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9913505546916982,
+   "seq_tree_iexp": 1.0000418816706818,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7785,
+     "itrs": 87334,
+     "width": 2484,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75397,
+     "itrs": 870524,
+     "width": 21376,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750469,
+     "itrs": 8700696,
+     "width": 245776,
+     "secs": 5.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "last",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9920370702126589,
+   "ingest_iexp": 0.9991853214875098
+  },
+  {
+   "fold": "xor_all",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 151,
+     "itrs": 36982,
+     "width": 2464,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 203,
+     "itrs": 369996,
+     "width": 20480,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 249,
+     "itrs": 3700108,
+     "width": 203392,
+     "secs": 2.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10861119990128339,
+   "tree_iexp": 1.0001120031620527,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 24014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 240020,
+     "width": 6,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2400080,
+     "width": 6,
+     "secs": 2.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998806058276707,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 23235,
+     "width": 12,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 231471,
+     "width": 12,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2312781,
+     "width": 12,
+     "secs": 2.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9989959170192716,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 47985,
+     "width": 3904,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 479999,
+     "width": 32768,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 4800111,
+     "width": 275712,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000728905897858,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7772,
+     "itrs": 72345,
+     "width": 2480,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75380,
+     "itrs": 720535,
+     "width": 20592,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750449,
+     "itrs": 7200707,
+     "width": 245760,
+     "secs": 4.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "xor_all",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923941956494388,
+   "ingest_iexp": 0.9989833093327256
+  },
+  {
+   "fold": "category_set",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 153,
+     "itrs": 39982,
+     "width": 2464,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 205,
+     "itrs": 399996,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 251,
+     "itrs": 4000108,
+     "width": 203392,
+     "secs": 2.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1074911453317196,
+   "tree_iexp": 1.000103601147541,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 27014,
+     "width": 7,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 270020,
+     "width": 7,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2700080,
+     "width": 7,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998938682125038,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 26235,
+     "width": 13,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 261471,
+     "width": 13,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2612781,
+     "width": 13,
+     "secs": 2.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9991109703520429,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 50985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 509999,
+     "width": 32768,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 5100111,
+     "width": 275712,
+     "secs": 2.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000686023239993,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7774,
+     "itrs": 75345,
+     "width": 2480,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75382,
+     "itrs": 750535,
+     "width": 20592,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750451,
+     "itrs": 7500707,
+     "width": 245761,
+     "secs": 4.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_set",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923389021777694,
+   "ingest_iexp": 0.9990238818700683
+  },
+  {
+   "fold": "all_positive",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 153,
+     "itrs": 38982,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 205,
+     "itrs": 389996,
+     "width": 20480,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 251,
+     "itrs": 3900108,
+     "width": 203392,
+     "secs": 2.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1074911453317196,
+   "tree_iexp": 1.0001062581636948,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 26014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 260020,
+     "width": 6,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2600080,
+     "width": 6,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998897873819723,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 25235,
+     "width": 13,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 251471,
+     "width": 13,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2512781,
+     "width": 13,
+     "secs": 3.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9990756652417246,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 49985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 499999,
+     "width": 32768,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 5000111,
+     "width": 275712,
+     "secs": 2.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000699745611066,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7774,
+     "itrs": 74345,
+     "width": 2480,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75382,
+     "itrs": 740535,
+     "width": 20592,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750451,
+     "itrs": 7400707,
+     "width": 245761,
+     "secs": 5.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "all_positive",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923389021777694,
+   "ingest_iexp": 0.9990107223437593
+  },
+  {
+   "fold": "any_zero",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 153,
+     "itrs": 38982,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 205,
+     "itrs": 389996,
+     "width": 20480,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 251,
+     "itrs": 3900108,
+     "width": 203392,
+     "secs": 2.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1074911453317196,
+   "tree_iexp": 1.0001062581636948,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 26014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 260020,
+     "width": 6,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2600080,
+     "width": 6,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998897873819723,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 25235,
+     "width": 13,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 251471,
+     "width": 13,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2512781,
+     "width": 13,
+     "secs": 2.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9990756652417246,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 49985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 499999,
+     "width": 32768,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 5000111,
+     "width": 275712,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000699745611066,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7774,
+     "itrs": 74345,
+     "width": 2480,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75382,
+     "itrs": 740535,
+     "width": 20592,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750451,
+     "itrs": 7400707,
+     "width": 245761,
+     "secs": 5.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "any_zero",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923389021777694,
+   "ingest_iexp": 0.9990107223437593
+  },
+  {
+   "fold": "count_gt500",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 153,
+     "itrs": 38982,
+     "width": 2464,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 205,
+     "itrs": 389996,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 251,
+     "itrs": 3900108,
+     "width": 203392,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1074911453317196,
+   "tree_iexp": 1.0001062581636948,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 26014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 260020,
+     "width": 6,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2600080,
+     "width": 6,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.9998897873819723,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3011,
+     "itrs": 25235,
+     "width": 13,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30011,
+     "itrs": 251471,
+     "width": 13,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300011,
+     "itrs": 2512781,
+     "width": 13,
+     "secs": 2.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9992132115229853,
+   "seq_la_iexp": 0.9990756652417246,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3122,
+     "itrs": 49985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30158,
+     "itrs": 499999,
+     "width": 32768,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300199,
+     "itrs": 5000111,
+     "width": 275712,
+     "secs": 2.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9914881712473129,
+   "seq_tree_iexp": 1.0000699745611066,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7774,
+     "itrs": 74345,
+     "width": 2480,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75382,
+     "itrs": 740535,
+     "width": 20592,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750451,
+     "itrs": 7400707,
+     "width": 245761,
+     "secs": 6.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "count_gt500",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9923389021777694,
+   "ingest_iexp": 0.9990107223437593
+  },
+  {
+   "fold": "sum_squares",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 155,
+     "itrs": 40982,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 207,
+     "itrs": 409996,
+     "width": 20480,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 253,
+     "itrs": 4100108,
+     "width": 203392,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1063944115027632,
+   "tree_iexp": 1.0001010737686886,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7009,
+     "itrs": 28014,
+     "width": 6,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70015,
+     "itrs": 280020,
+     "width": 6,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700075,
+     "itrs": 2800080,
+     "width": 6,
+     "secs": 2.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997442545448806,
+   "seq_list_iexp": 0.999897657632139,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3013,
+     "itrs": 27235,
+     "width": 14,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30013,
+     "itrs": 271471,
+     "width": 14,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300013,
+     "itrs": 2712781,
+     "width": 14,
+     "secs": 2.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.999070471033056,
+   "seq_la_iexp": 0.9991436777119544,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3124,
+     "itrs": 51985,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30160,
+     "itrs": 519999,
+     "width": 32768,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300201,
+     "itrs": 5200111,
+     "width": 275712,
+     "secs": 2.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9913505546916982,
+   "seq_tree_iexp": 1.0000672828722934,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7776,
+     "itrs": 76345,
+     "width": 2481,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75384,
+     "itrs": 760535,
+     "width": 20704,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750453,
+     "itrs": 7600707,
+     "width": 245762,
+     "secs": 6.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sum_squares",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9922836230768239,
+   "ingest_iexp": 0.9990366958916024
+  },
+  {
+   "fold": "gcd",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 439,
+     "itrs": 87289,
+     "width": 2440,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 552,
+     "itrs": 829815,
+     "width": 20480,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 618,
+     "itrs": 8129719,
+     "width": 172320,
+     "secs": 5.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.07426197742334711,
+   "tree_iexp": 0.984558008253155,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 17415,
+     "itrs": 59942,
+     "width": 12,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 173205,
+     "itrs": 597908,
+     "width": 12,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1733436,
+     "itrs": 5981712,
+     "width": 12,
+     "secs": 4.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9989921664776664,
+   "seq_list_iexp": 0.9995471349943332,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 17416,
+     "itrs": 59163,
+     "width": 21,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 173206,
+     "itrs": 589359,
+     "width": 21,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1733437,
+     "itrs": 5894413,
+     "width": 21,
+     "secs": 5.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9989798231280738,
+   "seq_la_iexp": 0.9991951870978105,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 17521,
+     "itrs": 83913,
+     "width": 3905,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 173353,
+     "itrs": 837887,
+     "width": 32768,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1733619,
+     "itrs": 8381743,
+     "width": 275713,
+     "secs": 4.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9976973842332939,
+   "seq_tree_iexp": 0.9997525462247541,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 8061,
+     "itrs": 124908,
+     "width": 2484,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75711,
+     "itrs": 1223874,
+     "width": 21386,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750840,
+     "itrs": 12262526,
+     "width": 247424,
+     "secs": 8.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "gcd",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9845792399361574,
+   "ingest_iexp": 0.9959948433157256
+  },
+  {
+   "fold": "lexmin_pair",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 293,
+     "itrs": 84935,
+     "width": 2488,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 401,
+     "itrs": 849965,
+     "width": 21808,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 489,
+     "itrs": 8500189,
+     "width": 234464,
+     "secs": 5.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11122061938475537,
+   "tree_iexp": 1.0001709455751175,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 17012,
+     "itrs": 72014,
+     "width": 10,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 170012,
+     "itrs": 720023,
+     "width": 10,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1700012,
+     "itrs": 7200113,
+     "width": 10,
+     "secs": 6.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998483064667876,
+   "seq_list_iexp": 0.9999611890084258,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 17013,
+     "itrs": 71235,
+     "width": 19,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 170013,
+     "itrs": 711474,
+     "width": 19,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1700013,
+     "itrs": 7112814,
+     "width": 19,
+     "secs": 6.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9998356702176819,
+   "seq_la_iexp": 0.9996740117065968,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 17116,
+     "itrs": 95985,
+     "width": 3905,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 170160,
+     "itrs": 960015,
+     "width": 32768,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1700193,
+     "itrs": 9600239,
+     "width": 275713,
+     "secs": 5.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9985479729824288,
+   "seq_tree_iexp": 1.000039337901624,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7914,
+     "itrs": 120298,
+     "width": 2488,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75578,
+     "itrs": 1200491,
+     "width": 22275,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750689,
+     "itrs": 12000693,
+     "width": 246936,
+     "secs": 7.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "lexmin_pair",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.988532003088408,
+   "ingest_iexp": 0.9994739593704227
+  },
+  {
+   "fold": "top3_merge",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 355,
+     "itrs": 196822,
+     "width": 5856,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 483,
+     "itrs": 1969836,
+     "width": 33008,
+     "secs": 1.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 586,
+     "itrs": 19699948,
+     "width": 413568,
+     "secs": 16.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10883463148149815,
+   "tree_iexp": 1.0001957196186102,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 22024,
+     "itrs": 184014,
+     "width": 20,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 220024,
+     "itrs": 1840020,
+     "width": 20,
+     "secs": 1.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2200024,
+     "itrs": 18400080,
+     "width": 20,
+     "secs": 14.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.999765610084537,
+   "seq_list_iexp": 0.9999844226722304,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 22025,
+     "itrs": 183235,
+     "width": 29,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 220025,
+     "itrs": 1831471,
+     "width": 29,
+     "secs": 1.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2200025,
+     "itrs": 18312781,
+     "width": 29,
+     "secs": 16.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9997558494373232,
+   "seq_la_iexp": 0.9998729346277164,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 22128,
+     "itrs": 207985,
+     "width": 3915,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 220172,
+     "itrs": 2079999,
+     "width": 32768,
+     "secs": 2.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 2200205,
+     "itrs": 20800111,
+     "width": 275723,
+     "secs": 11.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9987604922605401,
+   "seq_tree_iexp": 1.0000168190329888,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7976,
+     "itrs": 232185,
+     "width": 5976,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75660,
+     "itrs": 2320375,
+     "width": 54536,
+     "secs": 2.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750786,
+     "itrs": 23200547,
+     "width": 592033,
+     "secs": 13.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "top3_merge",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9868655101889742,
+   "ingest_iexp": 0.9998320325442619
+  },
+  {
+   "fold": "sat_sum_cap",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 261,
+     "itrs": 64968,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 353,
+     "itrs": 649982,
+     "width": 20480,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 429,
+     "itrs": 6500094,
+     "width": 203392,
+     "secs": 4.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10790839242322157,
+   "tree_iexp": 1.000110069840842,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 13018,
+     "itrs": 52014,
+     "width": 10,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 130018,
+     "itrs": 520020,
+     "width": 10,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1300018,
+     "itrs": 5200080,
+     "width": 10,
+     "secs": 4.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997025491837764,
+   "seq_list_iexp": 0.9999448858509373,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 13019,
+     "itrs": 51235,
+     "width": 20,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 130019,
+     "itrs": 511471,
+     "width": 20,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1300019,
+     "itrs": 5112781,
+     "width": 20,
+     "secs": 5.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9996860363205875,
+   "seq_la_iexp": 0.9995452250428591,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 13122,
+     "itrs": 75985,
+     "width": 3928,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 130166,
+     "itrs": 759999,
+     "width": 32768,
+     "secs": 1.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1300199,
+     "itrs": 7600111,
+     "width": 306784,
+     "secs": 3.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9980048971303805,
+   "seq_tree_iexp": 1.0000460337074857,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7882,
+     "itrs": 100331,
+     "width": 2484,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75530,
+     "itrs": 1000521,
+     "width": 21377,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750629,
+     "itrs": 10000693,
+     "width": 246561,
+     "secs": 5.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_cap",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9893944542599381,
+   "ingest_iexp": 0.9992974773398651
+  },
+  {
+   "fold": "sat_sum_24",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 270,
+     "itrs": 52966,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 368,
+     "itrs": 529980,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 452,
+     "itrs": 5300092,
+     "width": 203392,
+     "secs": 4.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11188733532619742,
+   "tree_iexp": 1.000143116020141,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 15010,
+     "itrs": 40014,
+     "width": 8,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 150010,
+     "itrs": 400020,
+     "width": 8,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1500010,
+     "itrs": 4000080,
+     "width": 8,
+     "secs": 3.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998567310496527,
+   "seq_list_iexp": 0.9999283546642227,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 15011,
+     "itrs": 39235,
+     "width": 13,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 150011,
+     "itrs": 391471,
+     "width": 13,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1500011,
+     "itrs": 3912781,
+     "width": 13,
+     "secs": 3.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9998424094571805,
+   "seq_la_iexp": 0.9994059419953268,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 15114,
+     "itrs": 63985,
+     "width": 3906,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 150158,
+     "itrs": 639999,
+     "width": 32768,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1500191,
+     "itrs": 6400111,
+     "width": 275714,
+     "secs": 3.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9983835689087373,
+   "seq_tree_iexp": 1.0000546659644582,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7892,
+     "itrs": 88329,
+     "width": 2488,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75548,
+     "itrs": 880519,
+     "width": 22274,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750653,
+     "itrs": 8800691,
+     "width": 245969,
+     "secs": 4.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "sat_sum_24",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9891260740126041,
+   "ingest_iexp": 0.9992067295581369
+  },
+  {
+   "fold": "minmax_pair",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 232,
+     "itrs": 70949,
+     "width": 2488,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 316,
+     "itrs": 709963,
+     "width": 21808,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 386,
+     "itrs": 7100075,
+     "width": 234464,
+     "secs": 5.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11054965989042766,
+   "tree_iexp": 1.0001583288483016,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 11011,
+     "itrs": 58014,
+     "width": 10,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110011,
+     "itrs": 580020,
+     "width": 10,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100011,
+     "itrs": 5800080,
+     "width": 10,
+     "secs": 4.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997851327218928,
+   "seq_list_iexp": 0.99995058658735,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 11012,
+     "itrs": 57235,
+     "width": 19,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110012,
+     "itrs": 571471,
+     "width": 19,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100012,
+     "itrs": 5712781,
+     "width": 19,
+     "secs": 4.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.999765610084537,
+   "seq_la_iexp": 0.9995929442521819,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 11115,
+     "itrs": 81985,
+     "width": 3908,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110159,
+     "itrs": 819999,
+     "width": 32768,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100192,
+     "itrs": 8200111,
+     "width": 275716,
+     "secs": 4.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9977795078180516,
+   "seq_tree_iexp": 1.0000426651020988,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7853,
+     "itrs": 106312,
+     "width": 2488,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75493,
+     "itrs": 1060502,
+     "width": 22272,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750586,
+     "itrs": 10600674,
+     "width": 246160,
+     "secs": 6.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "minmax_pair",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9901824310995744,
+   "ingest_iexp": 0.9993755952729689
+  },
+  {
+   "fold": "mean_floor",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 163,
+     "itrs": 41997,
+     "width": 2464,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 215,
+     "itrs": 420011,
+     "width": 20480,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 261,
+     "itrs": 4200123,
+     "width": 203392,
+     "secs": 3.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10222645146716164,
+   "tree_iexp": 1.000021870290124,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7021,
+     "itrs": 29034,
+     "width": 6,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70027,
+     "itrs": 290040,
+     "width": 6,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700087,
+     "itrs": 2900100,
+     "width": 6,
+     "secs": 2.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9993765201127462,
+   "seq_list_iexp": 0.9997530504101414,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3023,
+     "itrs": 28255,
+     "width": 14,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30023,
+     "itrs": 281491,
+     "width": 14,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300023,
+     "itrs": 2812801,
+     "width": 14,
+     "secs": 1.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9983582010879228,
+   "seq_la_iexp": 0.9990218480795398,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3134,
+     "itrs": 53005,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30170,
+     "itrs": 530019,
+     "width": 32768,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300211,
+     "itrs": 5300131,
+     "width": 275712,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9906638045025611,
+   "seq_tree_iexp": 0.9999848825353992,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7784,
+     "itrs": 77360,
+     "width": 2480,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75392,
+     "itrs": 770550,
+     "width": 20704,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750461,
+     "itrs": 7700722,
+     "width": 245762,
+     "secs": 4.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "mean_floor",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9920626502325209,
+   "ingest_iexp": 0.999007492173194
+  },
+  {
+   "fold": "hash_affine",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 180,
+     "itrs": 45977,
+     "width": 2464,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 240,
+     "itrs": 459991,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 299,
+     "itrs": 4600103,
+     "width": 203392,
+     "secs": 3.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11019934161056187,
+   "tree_iexp": 1.0001134629284576,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7011,
+     "itrs": 33018,
+     "width": 7,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70017,
+     "itrs": 330024,
+     "width": 7,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700077,
+     "itrs": 3300084,
+     "width": 7,
+     "secs": 2.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9996829213340439,
+   "seq_list_iexp": 0.9998871156555115,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 6012,
+     "itrs": 32239,
+     "width": 15,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 60012,
+     "itrs": 321475,
+     "width": 15,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 600012,
+     "itrs": 3212785,
+     "width": 15,
+     "secs": 2.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9995704821357765,
+   "seq_la_iexp": 0.9992500506138734,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 6120,
+     "itrs": 56989,
+     "width": 3904,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 60159,
+     "itrs": 570003,
+     "width": 32768,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 600197,
+     "itrs": 5700115,
+     "width": 275712,
+     "secs": 3.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9957711990945107,
+   "seq_tree_iexp": 1.0000462906485788,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7803,
+     "itrs": 81340,
+     "width": 2482,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75423,
+     "itrs": 810530,
+     "width": 21040,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750501,
+     "itrs": 8100702,
+     "width": 245786,
+     "secs": 4.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "hash_affine",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9915448341684473,
+   "ingest_iexp": 0.9991092440171282
+  },
+  {
+   "fold": "adjacent_equal",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 235,
+     "itrs": 112915,
+     "width": 5648,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 319,
+     "itrs": 1129929,
+     "width": 37584,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 389,
+     "itrs": 11300041,
+     "width": 428256,
+     "secs": 8.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10944086952698565,
+   "tree_iexp": 1.0001641901872327,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 11015,
+     "itrs": 100022,
+     "width": 17,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110015,
+     "itrs": 1000028,
+     "width": 17,
+     "secs": 1.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100015,
+     "itrs": 10000088,
+     "width": 17,
+     "secs": 7.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9997070529142704,
+   "seq_list_iexp": 0.9999541437484957,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 11016,
+     "itrs": 99243,
+     "width": 37,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110016,
+     "itrs": 991479,
+     "width": 37,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100016,
+     "itrs": 9912789,
+     "width": 37,
+     "secs": 8.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.999687537437031,
+   "seq_la_iexp": 0.9997479890148047,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 11119,
+     "itrs": 123993,
+     "width": 3982,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 110163,
+     "itrs": 1240007,
+     "width": 33625,
+     "secs": 1.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1100196,
+     "itrs": 12400119,
+     "width": 368934,
+     "secs": 9.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9977021657073062,
+   "seq_tree_iexp": 1.000014342561042,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7856,
+     "itrs": 148278,
+     "width": 5705,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75496,
+     "itrs": 1480468,
+     "width": 47545,
+     "secs": 1.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750589,
+     "itrs": 14800640,
+     "width": 565306,
+     "secs": 7.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "adjacent_equal",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9901003603453904,
+   "ingest_iexp": 0.9996018878674522
+  },
+  {
+   "fold": "category_counts",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 159,
+     "itrs": 86952,
+     "width": 5368,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 211,
+     "itrs": 869966,
+     "width": 45056,
+     "secs": 0.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 257,
+     "itrs": 8700078,
+     "width": 379104,
+     "secs": 5.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.1042679995054216,
+   "tree_iexp": 1.0001217852648427,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 7012,
+     "itrs": 74014,
+     "width": 14,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 70018,
+     "itrs": 740020,
+     "width": 14,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 700078,
+     "itrs": 7400080,
+     "width": 14,
+     "secs": 5.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9996522613551132,
+   "seq_list_iexp": 0.9999612695002368,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 3017,
+     "itrs": 73235,
+     "width": 34,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30017,
+     "itrs": 731471,
+     "width": 34,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300017,
+     "itrs": 7312781,
+     "width": 34,
+     "secs": 6.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9987852769340283,
+   "seq_la_iexp": 0.9996819408302019,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 3128,
+     "itrs": 97985,
+     "width": 4908,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 30164,
+     "itrs": 979999,
+     "width": 37351,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 300205,
+     "itrs": 9800111,
+     "width": 375716,
+     "secs": 7.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9910755884391445,
+   "seq_tree_iexp": 1.0000356988774315,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7780,
+     "itrs": 122315,
+     "width": 5456,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75388,
+     "itrs": 1220505,
+     "width": 45123,
+     "secs": 1.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750457,
+     "itrs": 12200677,
+     "width": 540672,
+     "secs": 5.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "category_counts",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.992173107957541,
+   "ingest_iexp": 0.9994521050695796
+  },
+  {
+   "fold": "max_priority_guest",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 293,
+     "itrs": 84935,
+     "width": 2488,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 401,
+     "itrs": 849965,
+     "width": 21808,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 489,
+     "itrs": 8500189,
+     "width": 234464,
+     "secs": 6.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11122061938475537,
+   "tree_iexp": 1.0001709455751175,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 17012,
+     "itrs": 72014,
+     "width": 10,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 170012,
+     "itrs": 720023,
+     "width": 10,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1700012,
+     "itrs": 7200113,
+     "width": 10,
+     "secs": 6.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998483064667876,
+   "seq_list_iexp": 0.9999611890084258,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 17013,
+     "itrs": 71235,
+     "width": 19,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 170013,
+     "itrs": 711474,
+     "width": 19,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1700013,
+     "itrs": 7112814,
+     "width": 19,
+     "secs": 6.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9998356702176819,
+   "seq_la_iexp": 0.9996740117065968,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 17116,
+     "itrs": 95985,
+     "width": 3905,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 170160,
+     "itrs": 960015,
+     "width": 32768,
+     "secs": 1.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1700193,
+     "itrs": 9600239,
+     "width": 275713,
+     "secs": 7.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9985479729824288,
+   "seq_tree_iexp": 1.000039337901624,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7914,
+     "itrs": 120298,
+     "width": 2488,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75578,
+     "itrs": 1200491,
+     "width": 22275,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750689,
+     "itrs": 12000693,
+     "width": 246936,
+     "secs": 4.5,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "max_priority_guest",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.988532003088408,
+   "ingest_iexp": 0.9994739593704227
+  },
+  {
+   "fold": "first_violation",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 251,
+     "itrs": 83951,
+     "width": 2976,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 343,
+     "itrs": 839965,
+     "width": 24576,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 412,
+     "itrs": 8400077,
+     "width": 268928,
+     "secs": 5.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.10761174727604836,
+   "tree_iexp": 1.0001286966907044,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 10020,
+     "itrs": 71018,
+     "width": 12,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100020,
+     "itrs": 710024,
+     "width": 12,
+     "secs": 0.7,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000020,
+     "itrs": 7100084,
+     "width": 12,
+     "secs": 5.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9995704821357765,
+   "seq_list_iexp": 0.999947524614722,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 10021,
+     "itrs": 70239,
+     "width": 28,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100021,
+     "itrs": 701475,
+     "width": 28,
+     "secs": 0.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000021,
+     "itrs": 7012785,
+     "width": 28,
+     "secs": 6.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9995490289785678,
+   "seq_la_iexp": 0.9996561022652218,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 10125,
+     "itrs": 94989,
+     "width": 3930,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 100168,
+     "itrs": 950003,
+     "width": 32768,
+     "secs": 1.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1000202,
+     "itrs": 9500115,
+     "width": 306786,
+     "secs": 6.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9973463433696773,
+   "seq_tree_iexp": 1.0000277734291088,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7868,
+     "itrs": 119314,
+     "width": 2984,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75512,
+     "itrs": 1190504,
+     "width": 26382,
+     "secs": 1.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750608,
+     "itrs": 11900676,
+     "width": 295112,
+     "secs": 4.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "first_violation",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9897744187882769,
+   "ingest_iexp": 0.9994401129362718
+  },
+  {
+   "fold": "section_fill_cap6",
+   "verified": true,
+   "tree": {
+    "1000": {
+     "ok": true,
+     "depth": 251,
+     "itrs": 51968,
+     "width": 2488,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 343,
+     "itrs": 519982,
+     "width": 20480,
+     "secs": 0.4,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 419,
+     "itrs": 5200094,
+     "width": 234464,
+     "secs": 4.0,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "tree",
+     "n": 100000
+    }
+   },
+   "tree_dexp": 0.11127015074262858,
+   "tree_iexp": 1.0001375955233605,
+   "seq_list": {
+    "1000": {
+     "ok": true,
+     "depth": 13010,
+     "itrs": 39014,
+     "width": 8,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_list",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 130010,
+     "itrs": 390020,
+     "width": 8,
+     "secs": 0.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_list",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1300010,
+     "itrs": 3900080,
+     "width": 8,
+     "secs": 2.8,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_list",
+     "n": 100000
+    }
+   },
+   "seq_list_dexp": 0.9998346982295926,
+   "seq_list_iexp": 0.9999265179528007,
+   "seq_la": {
+    "1000": {
+     "ok": true,
+     "depth": 13011,
+     "itrs": 38235,
+     "width": 14,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_la",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 130011,
+     "itrs": 381471,
+     "width": 14,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_la",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1300011,
+     "itrs": 3812781,
+     "width": 14,
+     "secs": 4.3,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_la",
+     "n": 100000
+    }
+   },
+   "seq_la_dexp": 0.9998181751111636,
+   "seq_la_iexp": 0.9993903831447543,
+   "seq_tree": {
+    "1000": {
+     "ok": true,
+     "depth": 13114,
+     "itrs": 62985,
+     "width": 3906,
+     "secs": 0.1,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_tree",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 130158,
+     "itrs": 629999,
+     "width": 32768,
+     "secs": 0.6,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_tree",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 1300191,
+     "itrs": 6300111,
+     "width": 275714,
+     "secs": 3.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "seq_tree",
+     "n": 100000
+    }
+   },
+   "seq_tree_dexp": 0.9981359880854731,
+   "seq_tree_iexp": 1.0000555337738544,
+   "ingest": {
+    "1000": {
+     "ok": true,
+     "depth": 7872,
+     "itrs": 87331,
+     "width": 2484,
+     "secs": 0.2,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "ingest",
+     "n": 1000
+    },
+    "10000": {
+     "ok": true,
+     "depth": 75520,
+     "itrs": 870521,
+     "width": 21376,
+     "secs": 0.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "ingest",
+     "n": 10000
+    },
+    "100000": {
+     "ok": true,
+     "depth": 750619,
+     "itrs": 8700693,
+     "width": 246152,
+     "secs": 2.9,
+     "error": "",
+     "result": "<skipped>",
+     "fold": "section_fill_cap6",
+     "kind": "ingest",
+     "n": 100000
+    }
+   },
+   "ingest_dexp": 0.9896672339234261,
+   "ingest_iexp": 0.9991927059426741
+  }
+ ]
+}

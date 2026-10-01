@@ -1,0 +1,128 @@
+// SCCs are found by testing forward and reverse reachability from each
+// unmarked vertex, then marking the intersection of the two sets.
+
+@prog = ((n edges) out)
+  & @sc ~ (n (0 (n (edges ((0 *) (0 out))))))
+
+@sc = (rem (idx (limit (edges (marked (count out))))))
+  & rem ~ ?((@sc_done @sc_step) (idx (limit (edges (marked (count out))))))
+
+@sc_done = (idx (limit (edges (marked (count out)))))
+  & idx ~ *
+  & limit ~ *
+  & edges ~ *
+  & marked ~ *
+  & out ~ count
+
+@sc_step = (k (idx (limit (edges (marked (count out))))))
+  & idx ~ {i_mem i_proc}
+  & marked ~ {m_mem m_proc}
+  & @mem ~ (i_mem (m_mem found))
+  & found ~ ?((@sc_new @sc_existing) (k (i_proc (limit (edges (m_proc (count out)))))))
+
+@sc_existing = (* (k (idx (limit (edges (marked (count out)))))))
+  & idx ~ $([+1] idx2)
+  & @sc ~ (k (idx2 (limit (edges (marked (count out))))))
+
+@sc_new = (k (idx (limit (edges (marked (count out))))))
+  & idx ~ {idx_f idx_r}
+  & limit ~ {lim_f lim_rest}
+  & lim_rest ~ {lim_r lim_next}
+  & edges ~ {edge_f edge_rest}
+  & edge_rest ~ {edge_r edge_next}
+  & @reach ~ (lim_f (edge_f ((1 (idx_f (0 *))) (0 fset))))
+  & @reach ~ (lim_r (edge_r ((1 (idx_r (0 *))) (1 rset))))
+  & @inter ~ (fset (rset (marked mark2)))
+  & idx ~ $([+1] idx2)
+  & count ~ $([+1] count2)
+  & @sc ~ (k (idx2 (lim_next (edge_next (mark2 (count2 out))))))
+
+// Run a fixed number of full edge scans to compute reachability.
+@reach = (k (edges (set (dir out))))
+  & k ~ ?((@reach_done @reach_step) (edges (set (dir out))))
+
+@reach_done = (edges (set (dir out)))
+  & edges ~ *
+  & dir ~ *
+  & out ~ set
+
+@reach_step = (k (edges (set (dir out))))
+  & edges ~ {e_scan e_rec}
+  & dir ~ {d_scan d_rec}
+  & @scan ~ (e_scan (set (d_scan s2)))
+  & @reach ~ (k (e_rec (s2 (d_rec out))))
+
+// Scan edges, adding reachable destinations to the set.
+@scan = ((?((@scan_nil @scan_cons) (p (set (dir out)))) p) (set (dir out)))
+
+@scan_nil = (* (set (* set)))
+
+@scan_cons = (* (((u v) tail) (set (dir out))))
+  & dir ~ ?((@scan_fwd @scan_rev) (u (v (tail (set out)))))
+
+@scan_fwd = (u (v (tail (set out))))
+  & @edge ~ (u (v (tail (set out))))
+
+@scan_rev = (* (u (v (tail (set out)))))
+  & @edge ~ (v (u (tail (set out))))
+
+@edge = (src (dst (tail (set out))))
+  & set ~ {s_mem s_keep}
+  & @mem ~ (src (s_mem found))
+  & found ~ ?((@edge_no @edge_yes) (dst (tail (s_keep out))))
+
+@edge_no = (dst (tail (set out)))
+  & dst ~ *
+  & @scan ~ (tail (set (0 out)))
+
+@edge_yes = (* (dst (tail (set out))))
+  & @add ~ (dst (set updated))
+  & @scan ~ (tail (updated (0 out)))
+
+// Add x to a set unless it is already present.
+@add = (x (set out))
+  & x ~ {xm xo}
+  & set ~ {sm so}
+  & @mem ~ (xm (sm found))
+  & found ~ ?((@add_no @add_yes) (xo (so out)))
+
+@add_no = (x (s out))
+  & out ~ (1 (x s))
+
+@add_yes = (* (x (s out)))
+  & x ~ *
+  & out ~ s
+
+// Membership test for a list of numbers.
+@mem = ((?((@mem_nil @mem_cons) (p (x out))) p) (x out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (x_rec (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (* (* 1)))
+
+// Add to marked the intersection of the two reachability sets.
+@inter = ((?((@inter_nil @inter_cons) (p (rev (marked out)))) p) (rev (marked out)))
+
+@inter_nil = (* (rev (* marked)))
+
+@inter_cons = (* ((h t) (rev (marked out))))
+  & h ~ {h_mem h_add}
+  & rev ~ {r_mem r_next}
+  & @mem ~ (h_mem (r_mem found))
+  & found ~ ?((@inter_skip @inter_add) (h_add (t (r_next (marked out)))))
+
+@inter_skip = (h (t (rev (marked out))))
+  & h ~ *
+  & @inter ~ (t (rev (marked out)))
+
+@inter_add = (* (h (t (rev (marked out)))))
+  & @add ~ (h (marked m2))
+  & @inter ~ (t (rev (m2 out)))

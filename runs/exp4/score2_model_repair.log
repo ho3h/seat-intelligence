@@ -1,0 +1,42 @@
+/Users/tedsandtads/Genome/genome/exp4/wire.py:94: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(el, layers); self.norm = nn.LayerNorm(d)
+{
+ "file": "runs/exp4/skel_iid.model.repair.scored.json",
+ "tasks": 120,
+ "n": 4,
+ "samples": 480,
+ "outcomes": {
+  "fail": 367,
+  "pass": 45,
+  "static": 58,
+  "badskel": 9,
+  "noblock": 1
+ },
+ "static_classes": {
+  "undef_ref": 56,
+  "other_static": 2
+ },
+ "pass@1": 0.0938,
+ "pass@1_task_boot95": [
+  0.06,
+  0.133
+ ],
+ "pass@1_wilson95_samples(naive)": [
+  0.071,
+  0.123
+ ],
+ "pass@2": 0.1458,
+ "pass@4": 0.2,
+ "static_filter_best_of_4": 0.1,
+ "static_filter_best_of_n_wilson95": [
+  0.058,
+  0.167
+ ],
+ "pass_given_static_clean": 0.1092,
+ "static_clean_rate": 0.8583,
+ "per_family_pass@1": {
+  "pipeline": 0.071,
+  "reduce": 0.117
+ }
+}
+Counter({'fail': 367, 'static': 58, 'pass': 45, 'badskel': 9, 'noblock': 1})

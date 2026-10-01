@@ -1,0 +1,33 @@
+@prog = (input out)
+  & input ~ (lo (hi xs))
+  & @count ~ (xs (lo (hi out)))
+
+@count = (lv1 (lo (hi out)))
+  & @count_cons_lw ~ (lv1 (lo (hi out)))
+
+@count_nil = (* (* (* out)))
+  & out ~ 0
+
+@count_cons = (* (({$([<] $(lo_cmp $([|] $(hi_bad $([=] $(0 valid)))))) $([>] $(hi_cmp hi_bad))} t) ({lo_cmp lo_rec} ({hi_cmp hi_rec} out))))
+  & @count_cons_lw ~ (t (lo_rec (hi_rec $([+] $(valid out)))))
+
+@count_cons_lw = (ls108 (q12 (q13 q14)))
+  & ls108 ~ (g91 (e75 (g92 (e76 (g93 (e77 (g94 (e78 (g95 (e79 (g96 (e80 (g97 (e81 (g98 (e82 (g99 (e83 (g100 (e84 (g101 (e85 (g102 (e86 (g103 (e87 (g104 (e88 (g105 (e89 (g106 (e90 tk107))))))))))))))))))))))))))))))))
+  & g91 ~ ?((@count_nil @count_cons_la) ((e75 (q16 (q17 q18))) (q12 (q13 q14))))
+  & g92 ~ ?((@count_nil @count_cons_la) ((e76 (q20 (q21 q22))) (q16 (q17 q18))))
+  & g93 ~ ?((@count_nil @count_cons_la) ((e77 (q24 (q25 q26))) (q20 (q21 q22))))
+  & g94 ~ ?((@count_nil @count_cons_la) ((e78 (q28 (q29 q30))) (q24 (q25 q26))))
+  & g95 ~ ?((@count_nil @count_cons_la) ((e79 (q32 (q33 q34))) (q28 (q29 q30))))
+  & g96 ~ ?((@count_nil @count_cons_la) ((e80 (q36 (q37 q38))) (q32 (q33 q34))))
+  & g97 ~ ?((@count_nil @count_cons_la) ((e81 (q40 (q41 q42))) (q36 (q37 q38))))
+  & g98 ~ ?((@count_nil @count_cons_la) ((e82 (q44 (q45 q46))) (q40 (q41 q42))))
+  & g99 ~ ?((@count_nil @count_cons_la) ((e83 (q48 (q49 q50))) (q44 (q45 q46))))
+  & g100 ~ ?((@count_nil @count_cons_la) ((e84 (q52 (q53 q54))) (q48 (q49 q50))))
+  & g101 ~ ?((@count_nil @count_cons_la) ((e85 (q56 (q57 q58))) (q52 (q53 q54))))
+  & g102 ~ ?((@count_nil @count_cons_la) ((e86 (q60 (q61 q62))) (q56 (q57 q58))))
+  & g103 ~ ?((@count_nil @count_cons_la) ((e87 (q64 (q65 q66))) (q60 (q61 q62))))
+  & g104 ~ ?((@count_nil @count_cons_la) ((e88 (q68 (q69 q70))) (q64 (q65 q66))))
+  & g105 ~ ?((@count_nil @count_cons_la) ((e89 (q72 (q73 q74))) (q68 (q69 q70))))
+  & g106 ~ ?((@count_nil @count_cons) ((e90 tk107) (q72 (q73 q74))))
+
+@count_cons_la = (* (({$([<] $(lo_cmp $([|] $(hi_bad $([=] $(0 valid)))))) $([>] $(hi_cmp hi_bad))} (lo_rec (hi_rec $([+] $(valid out))))) ({lo_cmp lo_rec} ({hi_cmp hi_rec} out))))

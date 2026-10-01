@@ -1,0 +1,53 @@
+# t5_cluster_list: components by channel label propagation (lib/chan, min label = smallest member), then a chain of
+# keyed push-front updates keyed by label, threaded from the largest vertex down (so each bucket comes out
+# ascending), then the non-empty buckets flattened in label order (= ascending smallest member).
+#include base
+#include chan
+#include hooks_cc
+def prog(x):
+  (n, es) = x
+  (F, z, l, m) = chan_cc(n, es, 0, 3)
+  B = scatp(F, l, l, m, 0, n, zl(l))
+  return seq(z, flatb(B, l, []))
+
+def zl(l):
+  switch l:
+    case 0:
+      return []
+    case _:
+      return (zl(l-1), zl(l-1))
+
+def push(t, k, l, m, v):
+  switch l:
+    case 0:
+      return List/Cons(v, t)
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, push(b, k, l-1, m >> 1, v))
+      else:
+        return (push(a, k, l-1, m >> 1, v), b)
+
+def scatp(F, l, L, m, base, n, C):
+  switch l:
+    case 0:
+      if base < n:
+        return push(C, F, L, m, base)
+      else:
+        return C
+    case _:
+      (a, b) = F
+      h = 1 << (l-1)
+      return scatp(a, l-1, L, m, base, n, scatp(b, l-1, L, m, base + h, n, C))
+
+def flatb(t, l, acc):
+  switch l:
+    case 0:
+      match t:
+        case List/Nil:
+          return acc
+        case List/Cons:
+          return List/Cons(t, acc)
+    case _:
+      (a, b) = t
+      return flatb(a, l-1, flatb(b, l-1, acc))

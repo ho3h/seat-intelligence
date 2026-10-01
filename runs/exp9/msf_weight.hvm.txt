@@ -1,0 +1,15 @@
+// t3_msf_weight (GRAPH-SWING-2, runs/exp9): Prim over tries (prim template, second=False); every vertex starts
+// unreached, so each time the argmin is unreached a new component root is taken with key 0. n steps; tot mod 2^24.
+@prog = ((n es) out)
+  & n ~ ?((@mf_zero @mf_pos) (es out))
+@mf_zero = (* 0)
+@mf_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @ki0 ~ (G (L3 (0 (n1 K0))))
+  & @prim ~ (n2 (K0 (0 (L4 ((0 16777215) (out *))))))

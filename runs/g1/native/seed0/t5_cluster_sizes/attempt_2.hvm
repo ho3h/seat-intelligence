@@ -1,0 +1,175 @@
+// Entry point
+@prog = ((n edges) out)
+  & n ~ {ng {nr ne}}
+  & @gen ~ (0 (ng labels))
+  & @repeat ~ (nr (edges (labels final)))
+  & @emit ~ (0 (ne (final out)))
+
+// Build [0, 1, ..., n-1]
+@gen = (i (n out))
+  & i ~ {ic ik}
+  & n ~ {nc nk}
+  & ic ~ $([<] $(nc flag))
+  & flag ~ ?((@gen_done @gen_more) (ik (nk out)))
+
+@gen_done = (ik (nk out))
+  & ik ~ *
+  & nk ~ *
+  & out ~ (0 *)
+
+@gen_more = (* (ik (nk out)))
+  & ik ~ {head next}
+  & @gen ~ ($([+1] next) (nk tail))
+  & out ~ (1 (head tail))
+
+// Apply n complete sweeps over the edge list
+@repeat = (k (edges (labels out)))
+  & k ~ ?((@rep_done @rep_more) (edges (labels out)))
+
+@rep_done = (edges (labels out))
+  & edges ~ *
+  & out ~ labels
+
+@rep_more = (pred (edges (labels out)))
+  & @sw ~ (edges (labels (edges2 labels2)))
+  & @repeat ~ (pred (edges2 (labels2 out)))
+
+// Sweep the edge list, updating endpoint labels
+@sw = (edges (labels (edgesout labelsout)))
+  & edges ~ (?( (@sw_nil @sw_cons) (labels (edgesout (labelsout p)))) p)
+
+@sw_nil = (labels (edgesout (labelsout p)))
+  & p ~ *
+  & edgesout ~ (0 *)
+  & labelsout ~ labels
+
+@sw_cons = (* (labels (edgesout (labelsout ((u v) tail)))))
+  & u ~ {uu uc}
+  & v ~ {vv vc}
+  & @edge_update ~ (uu (vv (labels mid)))
+  & @sw ~ (tail (mid (tail_edges labelsout)))
+  & edgesout ~ (1 ((uc vc) tail_edges))
+
+// Merge the labels at the two endpoints of an edge
+@edge_update = (u (v (labels out)))
+  & u ~ {ug us}
+  & v ~ {vg vs}
+  & @get ~ (ug (labels (av labels1)))
+  & @get ~ (vg (labels1 (bv labels2)))
+  & av ~ {ac ak}
+  & bv ~ {bc bk}
+  & ac ~ $([>] $(bc flag))
+  & flag ~ ?((@edge_b @edge_a) (ak (bk (us (vs (labels2 out))))))
+
+@edge_a = (* (ak (bk (us (vs (labels out))))))
+  & bk ~ *
+  & @edge_apply ~ (ak (us (vs (labels out))))
+
+@edge_b = (ak (bk (us (vs (labels out)))))
+  & ak ~ *
+  & @edge_apply ~ (bk (us (vs (labels out))))
+
+@edge_apply = (value (u (v (labels out))))
+  & value ~ {x y}
+  & @set ~ (u (x (labels mid)))
+  & @set ~ (v (y (mid out)))
+
+// Read a label by index, returning the reconstructed list
+@get = (idx (lst (val out)))
+  & lst ~ (?((@get_nil @get_cons) (idx (val (out p)))) p)
+
+@get_nil = (idx (val (out p)))
+  & idx ~ *
+  & p ~ *
+  & val ~ 0
+  & out ~ (0 *)
+
+@get_cons = (* (idx (val (out (head tail)))))
+  & idx ~ ?((@get_at @get_next) ((head tail) (val out)))
+
+@get_at = ((head tail) (val out))
+  & head ~ {val hcopy}
+  & out ~ (1 (hcopy tail))
+
+@get_next = (idx ((head tail) (val out)))
+  & @get ~ (idx (tail (val tailout)))
+  & out ~ (1 (head tailout))
+
+// Set a label by index
+@set = (idx (new (lst out)))
+  & lst ~ (?((@set_nil @set_cons) (idx (new (out p)))) p)
+
+@set_nil = (idx (new (out p)))
+  & idx ~ *
+  & new ~ *
+  & p ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (idx (new (out (head tail)))))
+  & idx ~ ?((@set_at @set_next) (new (out (head tail))))
+
+@set_at = (new (out (head tail)))
+  & head ~ *
+  & out ~ (1 (new tail))
+
+@set_next = (idx (new (out (head tail))))
+  & @set ~ (idx (new (tail tailout)))
+  & out ~ (1 (head tailout))
+
+// Count occurrences of target while reconstructing the list
+@count = (target (lst (acc (lstout countout))))
+  & lst ~ (?((@count_nil @count_cons) (target (acc (lstout (countout p))))) p)
+
+@count_nil = (target (acc (lstout (countout p))))
+  & target ~ *
+  & p ~ *
+  & lstout ~ (0 *)
+  & countout ~ acc
+
+@count_cons = (* (target (acc (lstout (countout (head tail))))))
+  & target ~ {tc tn}
+  & head ~ {hc hh}
+  & hc ~ $([=] $(tc flag))
+  & flag ~ ?((@count_no @count_yes) (tn (tail (acc (hh (lstout countout))))))
+
+@count_no = (tn (tail (acc (hh (lstout countout)))))
+  & @count_go ~ (tn (tail (acc (hh (lstout countout)))))
+
+@count_yes = (* (tn (tail (acc (hh (lstout countout))))))
+  & acc ~ $([+1] acc2)
+  & @count_go ~ (tn (tail (acc2 (hh (lstout countout)))))
+
+@count_go = (target (tail (acc (head (lstout countout)))))
+  & @count ~ (target (tail (acc (tailout count))))
+  & lstout ~ (1 (head tailout))
+  & countout ~ count
+
+// Visit ids in ascending order; emit a count only for canonical ids
+@emit = (i (n (labels out)))
+  & i ~ {ib {ig {ie {ic ir}}}}
+  & n ~ {nb nn}
+  & ib ~ $([<] $(nb flag))
+  & flag ~ ?((@emit_done @emit_more) (ig (ie (ic (ir (nn (labels out)))))))
+
+@emit_done = (ig (ie (ic (ir (nn (labels out))))))
+  & ig ~ *
+  & ie ~ *
+  & ic ~ *
+  & ir ~ *
+  & nn ~ *
+  & labels ~ *
+  & out ~ (0 *)
+
+@emit_more = (* (ig (ie (ic (ir (nn (labels out)))))))
+  & @get ~ (ig (labels (at labels1)))
+  & ie ~ $([=] $(at same))
+  & @count ~ (ic (labels1 (0 (labels2 count))))
+  & @emit ~ ($([+1] ir) (nn (labels2 rest)))
+  & same ~ ?((@emit_skip @emit_take) (count (rest out)))
+
+@emit_skip = (count (rest out))
+  & count ~ *
+  & out ~ rest
+
+@emit_take = (* (count (rest out)))
+  & out ~ (1 (count rest))

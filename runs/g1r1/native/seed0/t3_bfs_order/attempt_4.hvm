@@ -1,0 +1,132 @@
+// Input: (n, start, edges). The queue and seen set are lists.
+// The output accumulator is reversed and reversed once the queue is empty.
+@prog = (input output)
+  & input ~ (n (s edges))
+  & s ~ {s_q s_seen}
+  & @bfs ~ (n (edges ((1 (s_q (0 *))) ((1 (s_seen (0 *))) ((0 *) output)))))
+
+@bfs = ((?((@bfs_done @bfs_more) (p (n (edges (seen (acc out)))))) p) (n (edges (seen (acc out)))))
+
+@bfs_done = (p (n (edges (seen (acc out)))))
+  & p ~ *
+  & n ~ *
+  & edges ~ *
+  & seen ~ *
+  & @rev ~ (acc out)
+
+@bfs_more = (* ((u qt) (n (edges (seen (acc out))))))
+  & n ~ {n_scan n_rec}
+  & edges ~ {edges_nbr edges_rec}
+  & u ~ {u_nbr u_acc}
+  & @nbrs ~ (u_nbr (edges_nbr ((0 *) nbrlist)))
+  & @scan ~ (n_scan (0 (nbrlist (qt (seen res)))))
+  & res ~ (qnew seennew)
+  & accnew ~ (1 (u_acc acc))
+  & @bfs ~ (n_rec (edges_rec (qnew (seennew (accnew out)))))
+
+// Build the current vertex's neighbor list with one pass over the edge list.
+@nbrs = ((?((@nbr_nil @nbr_cons) (p (u (acc out)))) p) (u (acc out)))
+
+@nbr_nil = (p (u (acc out)))
+  & p ~ *
+  & u ~ *
+  & out ~ acc
+
+@nbr_cons = (* (((a b) t) (u (acc out))))
+  & a ~ {at ak}
+  & b ~ {bt bk}
+  & u ~ {ua ur}
+  & ur ~ {ub urec}
+  & at ~ $([=] $(ua ea))
+  & bt ~ $([=] $(ub eb))
+  & ea ~ ?((@nbr_check_b @nbr_use_b) (eb (ak (bk (t (urec (acc out)))))))
+
+@nbr_check_b = ((?((@nbr_skip @nbr_use_a) (a (b (t (u (acc out)))))) a) (b (t (u (acc out)))))
+
+@nbr_skip = (a (b (t (u (acc out)))))
+  & a ~ *
+  & b ~ *
+  & @nbrs ~ (u (t (acc out)))
+
+@nbr_use_a = (* (a (b (t (u (acc out))))))
+  & b ~ *
+  & @nbr_add ~ (t (u (a (acc out))))
+
+@nbr_use_b = (* (eb (a (b (t (u (acc out)))))))
+  & eb ~ *
+  & a ~ *
+  & @nbr_add ~ (t (u (b (acc out))))
+
+@nbr_add = (t (u (x (acc out))))
+  & accnew ~ (1 (x acc))
+  & @nbrs ~ (u (t (accnew out)))
+
+// Scan candidate vertex IDs in increasing order.
+@scan = ((?((@scan_done @scan_more) (i (neighbors (q (seen out)))))) (i (neighbors (q (seen out)))))
+
+@scan_done = (i (neighbors (q (seen out))))
+  & i ~ *
+  & neighbors ~ *
+  & out ~ (q seen)
+
+@scan_more = (left (i (neighbors (q (seen out)))))
+  & i ~ {i_mem i_keep}
+  & i_mem ~ {i_neighbor i_seen}
+  & i_keep ~ {i_add i_step}
+  & i_step ~ $([+1] next_i)
+  & neighbors ~ {ng ns}
+  & seen ~ {ss sr}
+  & @mem ~ (i_neighbor (ng m_neighbor))
+  & @mem ~ (i_seen (ss m_seen))
+  & m_seen ~ $([=] $(0 unseen))
+  & m_neighbor ~ $([&] $(unseen flag))
+  & flag ~ ?((@scan_skip @scan_add) (left (next_i (i_add (ns (q (sr out)))))))
+
+@scan_skip = (left (next_i (i_add (neighbors (q (seen out))))))
+  & i_add ~ *
+  & @scan ~ (left (next_i (neighbors (q (seen out)))))
+
+@scan_add = (* (left (next_i (i_add (neighbors (q (seen out)))))))
+  & i_add ~ {c1 c2}
+  & @append ~ (q (c1 qnew))
+  & seennew ~ (1 (c2 seen))
+  & @scan ~ (left (next_i (neighbors (qnew (seennew out)))))
+
+// Membership test for a vertex in a list of vertices.
+@mem = ((?((@mem_nil @mem_cons) (p (x out))) p) (x out))
+
+@mem_nil = (p (x out))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 eq))
+  & @mem ~ (t (x2 rest))
+  & eq ~ $([|] $(rest out))
+
+// Append one vertex to the end of a queue.
+@append = ((?((@append_nil @append_cons) (p (x out))) p) (x out))
+
+@append_nil = (p (x out))
+  & p ~ *
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* ((h t) (x out)))
+  & @append ~ (t (x tail))
+  & out ~ (1 (h tail))
+
+// Reverse a list.
+@rev = (l out)
+  & @rev_acc ~ (l ((0 *) out))
+
+@rev_acc = ((?((@rev_nil @rev_cons) (p (acc out))) p) (acc out))
+
+@rev_nil = (p (acc out))
+  & p ~ *
+  & out ~ acc
+
+@rev_cons = (* ((h t) (acc out)))
+  & accnew ~ (1 (h acc))
+  & @rev_acc ~ (t (accnew out))

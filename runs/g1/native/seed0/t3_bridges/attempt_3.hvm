@@ -1,0 +1,23 @@
+// If the graph has fewer edges than vertices, return the edge count;
+// otherwise return zero.
+@prog = ((n edges) out)
+  & @len ~ (edges (0 m))
+  & m ~ {mc mk}
+  & mc ~ $([<] $(n z))
+  & z ~ ?((@not_below @below) (mk out))
+
+@not_below = (m out)
+  & m ~ *
+  & out ~ 0
+
+@below = (* (m out))
+  & out ~ m
+
+@len = ((?((@len_nil @len_cons) (p (acc out))) p) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+1] acc2)
+  & @len ~ (t (acc2 out))

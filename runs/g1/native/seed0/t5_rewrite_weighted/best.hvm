@@ -1,0 +1,126 @@
+// Entry point
+@prog = (input output)
+  & input ~ (cl edges)
+  & @walk ~ (edges (cl ((0 *) output)))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (cl (acc out)))) pl) (cl (acc out)))
+
+@walk_nil = (pl (cl (acc out)))
+  & pl ~ *
+  & cl ~ *
+  & out ~ acc
+
+@walk_cons = (* (pl (cl (acc out))))
+  & pl ~ (edge tail)
+  & edge ~ (u (v w))
+  & @edge_u ~ (u (v (w (tail (cl (acc out))))))
+
+// Look up c[u], then c[v].
+@edge_u = (u (v (w (tail (cl (acc out))))))
+  & cl ~ {cl1 cl2}
+  & @lookup ~ (u (cl1 cu))
+  & @after_u ~ (cu (v (w (tail (cl2 (acc out))))))
+
+@after_u = (cu (v (w (tail (cl (acc out))))))
+  & cl ~ {cl1 cl2}
+  & @lookup ~ (v (cl1 cv))
+  & @after_v ~ (cv (cu (w (tail (cl2 (acc out))))))
+
+// Drop internal edges; otherwise order the endpoints and insert the edge.
+@after_v = (cv (cu (w (tail (cl (acc out))))))
+  & cv ~ {cv_a cv_b}
+  & cu ~ {cu_a cu_b}
+  & cu_a ~ $([=] $(cv_a eq))
+  & eq ~ ?((@diff @same) (cu_b (cv_b (w (tail (cl (acc out)))))))
+
+@same = (* (cu (cv (w (tail (cl (acc out)))))))
+  & cu ~ *
+  & cv ~ *
+  & w ~ *
+  & @walk ~ (tail (cl (acc out)))
+
+@diff = (cu (cv (w (tail (cl (acc out))))))
+  & cu ~ {cu_a cu_b}
+  & cv ~ {cv_a cv_b}
+  & cu_a ~ $([<] $(cv_a lt))
+  & lt ~ ?((@reverse @forward) (cu_b (cv_b (w (tail (cl (acc out)))))))
+
+@reverse = (cu (cv (w (tail (cl (acc out))))))
+  & @insert ~ (cv (cu (w (acc acc2))))
+  & @walk ~ (tail (cl (acc2 out)))
+
+@forward = (* (cu (cv (w (tail (cl (acc out)))))))
+  & @insert ~ (cu (cv (w (acc acc2))))
+  & @walk ~ (tail (cl (acc2 out)))
+
+// Lookup a zero-based index in a list.
+@lookup = (i ((?((@look_nil @look_cons) (pl (i out))) pl) out))
+
+@look_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@look_cons = (* (pl (i out)))
+  & pl ~ (head tail)
+  & i ~ ?((@look_head @look_more) (head (tail out)))
+
+@look_head = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@look_more = (i (head (tail out)))
+  & head ~ *
+  & @lookup ~ (i (tail out))
+
+// Insert (x,y,w) into a sorted accumulator, combining equal pairs.
+@insert = (x (y (w ((?((@ins_nil @ins_cons) (pl (x (y (w out))))) pl) out))))
+
+@ins_nil = (pl (x (y (w out))))
+  & pl ~ *
+  & out ~ (1 ((x (y w)) (0 *)))
+
+@ins_cons = (* (pl (x (y (w out)))))
+  & pl ~ (h tail)
+  & h ~ (a (b total))
+  & @ins_cmpx ~ (x (a (y (b (w (total (tail out)))))))
+
+@ins_cmpx = (x (a (y (b (w (total (tail out)))))))
+  & x ~ {x_l x_r}
+  & a ~ {a_l a_r}
+  & x_l ~ $([<] $(a_l lt))
+  & lt ~ ?((@ins_xge @ins_xlt) (x_r (a_r (y (b (w (total (tail out))))))))
+
+@ins_xlt = (* (x (a (y (b (w (total (tail out))))))))
+  & out ~ (1 ((x (y w)) (1 ((a (b total)) tail))))
+
+@ins_xge = (x (a (y (b (w (total (tail out)))))))
+  & x ~ {x_eq x_keep}
+  & a ~ {a_eq a_keep}
+  & x_eq ~ $([=] $(a_eq eq))
+  & eq ~ ?((@ins_after @ins_cmpy) (x_keep (a_keep (y (b (w (total (tail out))))))))
+
+@ins_cmpy = (* (x (a (y (b (w (total (tail out))))))))
+  & y ~ {y_l y_r}
+  & b ~ {b_l b_r}
+  & y_l ~ $([<] $(b_l lt))
+  & lt ~ ?((@ins_yge @ins_ylt) (x (a (y_r (b_r (w (total (tail out))))))))
+
+@ins_ylt = (* (x (a (y (b (w (total (tail out))))))))
+  & out ~ (1 ((x (y w)) (1 ((a (b total)) tail))))
+
+@ins_yge = (x (a (y (b (w (total (tail out)))))))
+  & y ~ {y_eq y_keep}
+  & b ~ {b_eq b_keep}
+  & y_eq ~ $([=] $(b_eq eq))
+  & eq ~ ?((@ins_after @ins_merge) (x (a (y_keep (b_keep (w (total (tail out))))))))
+
+@ins_after = (x (a (y (b (w (total (tail out)))))))
+  & @insert ~ (x (y (w (tail tail2))))
+  & out ~ (1 ((a (b total)) tail2))
+
+@ins_merge = (* (x (a (y (b (w (total (tail out))))))))
+  & a ~ *
+  & b ~ *
+  & total ~ $([+] $(w sum))
+  & out ~ (1 ((x (y sum)) tail))

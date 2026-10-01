@@ -1,0 +1,66 @@
+@prog = (input output)
+  & @mode ~ (input stats)
+  & stats ~ (value count)
+  & value ~ output
+  & count ~ *
+
+@mode = ((?((@mn @mc) ctx) payload) out)
+  & ctx ~ (payload out)
+
+@mn = (payload out)
+  & payload ~ *
+  & out ~ (0 0)
+
+@mc = (* ((h t) out))
+  & h ~ {hfreq hchoice}
+  & t ~ {tscan tstats}
+  & @freq ~ (tscan (hfreq fcount))
+  & @mode ~ (tstats stats)
+  & stats ~ (bestval bestcnt)
+  & fcount ~ $([+1] headcount)
+  & headcount ~ {hgt hctx}
+  & bestcnt ~ {bgt bctx}
+  & hgt ~ $([>] $(bgt gt))
+  & gt ~ ?((@mc_notgt @mc_gt) (hchoice (bestval (hctx (bctx out))))
+
+@freq = ((?((@fn @fc) ctx) payload) (target out))
+  & ctx ~ (payload (target out))
+
+@fn = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ 0
+
+@fc = (* ((h t) (target out)))
+  & target ~ {target_eq target_rec}
+  & h ~ $([=] $(target_eq eq))
+  & @freq ~ (t (target_rec rest))
+  & eq ~ $([+] $(rest out))
+
+@mc_gt = (* (h (bv (hc (bc out)))))
+  & out ~ h
+  & bv ~ *
+  & hc ~ *
+  & bc ~ *
+
+@mc_notgt = (h (bv (hc (bc out))))
+  & hc ~ $([=] $(bc eq))
+  & eq ~ ?((@mc_neq @mc_eq) (h (bv out)))
+
+@mc_neq = (h (bv out))
+  & out ~ bv
+  & h ~ *
+
+@mc_eq = (* (h (bv out)))
+  & h ~ {hcmp hctx}
+  & bv ~ {bvcmp bvctx}
+  & hcmp ~ $([<] $(bvcmp lt))
+  & lt ~ ?((@mc_pickbv @mc_pickh) (hctx (bvctx out)))
+
+@mc_pickbv = (h (bv out))
+  & out ~ bv
+  & h ~ *
+
+@mc_pickh = (h (bv out))
+  & out ~ h
+  & bv ~ *

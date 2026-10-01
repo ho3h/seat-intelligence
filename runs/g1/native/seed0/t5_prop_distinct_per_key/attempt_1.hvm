@@ -1,0 +1,107 @@
+@prog = (input output)
+  & @loop ~ (input ((((0 *) 0) (((0 *) 0) (((0 *) 0) ((0 *) 0)))) output))
+
+@loop = ((?((@loop_nil @loop_cons) (p (sets out))) p) (sets out))
+
+@loop_nil = (* (((s0 c0) ((s1 c1) ((s2 c2) (s3 c3)))) out))
+  & s0 ~ *
+  & s1 ~ *
+  & s2 ~ *
+  & s3 ~ *
+  & out ~ (1 (c0 (1 (c1 (1 (c2 (1 (c3 (0 *)))))))))
+
+@loop_cons = (* (((node (key value)) tail) (sets out)))
+  & node ~ *
+  & key ~ ?((@upd0 @key_more) (value (tail (sets out))))
+
+@key_more = (k (value (tail (sets out))))
+  & k ~ ?((@upd1 @key_more2) (value (tail (sets out))))
+
+@key_more2 = (k (value (tail (sets out))))
+  & k ~ ?((@upd2 @key_to3) (value (tail (sets out))))
+
+@key_to3 = (* (value (tail (sets out))))
+  & @upd3 ~ (value (tail (sets out)))
+
+@has = ((?((@has_nil @has_cons) (p (v out))) p) (v out))
+
+@has_nil = (* (v out))
+  & v ~ *
+  & out ~ 0
+
+@has_cons = (* ((h tail) (v out)))
+  & v ~ {v_eq v_keep}
+  & h ~ $([=] $(v_eq z))
+  & z ~ ?((@has_no @has_yes) (tail (v_keep out)))
+
+@has_no = (tail (v out))
+  & @has ~ (tail (v out))
+
+@has_yes = (* (tail (v out)))
+  & tail ~ *
+  & v ~ *
+  & out ~ 1
+
+@upd0 = (v (t (((seen count) (s1 (s2 s3))) out)))
+  & seen ~ {seen_a seen_b}
+  & v ~ {v_a v_b}
+  & @has ~ (seen_a (v_a found))
+  & found ~ ?((@upd0_no @upd0_yes) (seen_b (v_b (count (t ((s1 (s2 s3)) out)))))
+
+@upd0_yes = (* (seen (v (count (t (rest out))))))
+  & v ~ *
+  & rest ~ (s1 (s2 s3))
+  & @loop ~ (t (((seen count) (s1 (s2 s3))) out))
+
+@upd0_no = (seen (v (count (t (rest out)))))
+  & count ~ $([+] $(1 count1))
+  & rest ~ (s1 (s2 s3))
+  & @loop ~ (t ((((1 (v seen)) count1) (s1 (s2 s3))) out))
+
+@upd1 = (v (t ((s0 ((seen count) (s2 s3))) out)))
+  & seen ~ {seen_a seen_b}
+  & v ~ {v_a v_b}
+  & @has ~ (seen_a (v_a found))
+  & found ~ ?((@upd1_no @upd1_yes) (seen_b (v_b (count (t ((s0 (s2 s3)) out)))))
+
+@upd1_yes = (* (seen (v (count (t (rest out))))))
+  & v ~ *
+  & rest ~ (s0 (s2 s3))
+  & @loop ~ (t ((s0 ((seen count) (s2 s3))) out))
+
+@upd1_no = (seen (v (count (t (rest out)))))
+  & count ~ $([+] $(1 count1))
+  & rest ~ (s0 (s2 s3))
+  & @loop ~ (t ((s0 (((1 (v seen)) count1) (s2 s3))) out))
+
+@upd2 = (v (t ((s0 (s1 ((seen count) s3))) out)))
+  & seen ~ {seen_a seen_b}
+  & v ~ {v_a v_b}
+  & @has ~ (seen_a (v_a found))
+  & found ~ ?((@upd2_no @upd2_yes) (seen_b (v_b (count (t ((s0 (s1 s3)) out)))))
+
+@upd2_yes = (* (seen (v (count (t (rest out))))))
+  & v ~ *
+  & rest ~ (s0 (s1 s3))
+  & @loop ~ (t ((s0 (s1 ((seen count) s3))) out))
+
+@upd2_no = (seen (v (count (t (rest out)))))
+  & count ~ $([+] $(1 count1))
+  & rest ~ (s0 (s1 s3))
+  & @loop ~ (t ((s0 (s1 (((1 (v seen)) count1) s3))) out))
+
+@upd3 = (v (t ((s0 (s1 (s2 (seen count)))) out)))
+  & seen ~ {seen_a seen_b}
+  & v ~ {v_a v_b}
+  & @has ~ (seen_a (v_a found))
+  & found ~ ?((@upd3_no @upd3_yes) (seen_b (v_b (count (t ((s0 (s1 s2)) out)))))
+
+@upd3_yes = (* (seen (v (count (t (rest out))))))
+  & v ~ *
+  & rest ~ (s0 (s1 s2))
+  & @loop ~ (t ((s0 (s1 (s2 (seen count)))) out))
+
+@upd3_no = (seen (v (count (t (rest out)))))
+  & count ~ $([+] $(1 count1))
+  & rest ~ (s0 (s1 s2))
+  & @loop ~ (t ((s0 (s1 (s2 ((1 (v seen)) count1)))) out))

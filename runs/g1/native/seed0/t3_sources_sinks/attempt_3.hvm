@@ -1,0 +1,39 @@
+// Count each vertex whose incoming or outgoing flag remains zero.
+
+@prog = ((n edges) out)
+  & @verts ~ (n (edges (0 (0 out))))
+
+@verts = (n (edges (i (src (sink out)))))
+  & n ~ ?((@vdone @vstep) (edges (i (src (sink out)))))
+
+@vdone = (edges (i (src (sink out))))
+  & edges ~ *
+  & i ~ *
+  & out ~ (src sink)
+
+@vstep = (rem (edges (i (src (sink out)))))
+  & edges ~ {scan_edges master}
+  & @scan ~ (scan_edges (i (0 (0 (master (rem (src (sink out))))))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (i (fi (fo (master (rem (src (sink out))))))))) pl) (i (fi (fo (master (rem (src (sink out))))))))
+
+@scan_nil = (pl (i (fi (fo (master (rem (src (sink out))))))))
+  & pl ~ *
+  & @after ~ (i (fi (fo (master (rem (src (sink out)))))))
+
+@scan_cons = (* ((u tail) (i (fi (fo (master (rem (src (sink out)))))))))
+  & i ~ {iu i_rest}
+  & i_rest ~ {iv i_next}
+  & u ~ $([=] $(iu z_out))
+  & v ~ $([=] $(iv z_in))
+  & fo ~ $([|] $(z_out fo_next))
+  & fi ~ $([|] $(z_in fi_next))
+  & @scan ~ (tail (i_next (fi_next (fo_next (master (rem (src (sink out))))))))
+
+@after = (i (fi (fo (master (rem (src (sink out)))))))
+  & fi ~ $([=] $(0 no_in))
+  & fo ~ $([=] $(0 no_out))
+  & src ~ $([+] $(no_in src_next))
+  & sink ~ $([+] $(no_out sink_next))
+  & i ~ $([+1] i_next)
+  & @verts ~ (rem (master (i_next (src_next (sink_next out)))))

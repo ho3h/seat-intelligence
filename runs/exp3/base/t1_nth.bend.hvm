@@ -1,0 +1,152 @@
+@List/Nil = ((0 a) a)
+
+@nth = ({$([>0x0000020] ?((@nth__C0 @nth__C1) (a b))) a} b)
+
+@nth__C0 = ($([:-0x0000020] a) (b d))
+  & @nth ~ (a (c d))
+  & @skip32 ~ (b c)
+
+@nth__C1 = (* a)
+  & @nth_small ~ a
+
+@nth_small = (a ((@nth_small__C2 (a b)) b))
+
+@nth_small__C0 = ($([:-0x0000001] a) (* b))
+  & @nth_small ~ (a b)
+
+@nth_small__C1 = (* (c (d ({$([=0x0000000] ?((@nth_small__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@nth_small__C2 = (?(((* 0) @nth_small__C1) a) a)
+
+@prog = ((a b) c)
+  & @nth ~ (a (b c))
+
+@skip32 = ((@skip32__C62 a) a)
+
+@skip32__C0 = (?((@List/Nil (* (* (a a)))) b) b)
+
+@skip32__C1 = (* (* ((@skip32__C0 a) a)))
+
+@skip32__C10 = (?((@List/Nil @skip32__C9) a) a)
+
+@skip32__C11 = (* (* ((@skip32__C10 a) a)))
+
+@skip32__C12 = (?((@List/Nil @skip32__C11) a) a)
+
+@skip32__C13 = (* (* ((@skip32__C12 a) a)))
+
+@skip32__C14 = (?((@List/Nil @skip32__C13) a) a)
+
+@skip32__C15 = (* (* ((@skip32__C14 a) a)))
+
+@skip32__C16 = (?((@List/Nil @skip32__C15) a) a)
+
+@skip32__C17 = (* (* ((@skip32__C16 a) a)))
+
+@skip32__C18 = (?((@List/Nil @skip32__C17) a) a)
+
+@skip32__C19 = (* (* ((@skip32__C18 a) a)))
+
+@skip32__C2 = (?((@List/Nil @skip32__C1) a) a)
+
+@skip32__C20 = (?((@List/Nil @skip32__C19) a) a)
+
+@skip32__C21 = (* (* ((@skip32__C20 a) a)))
+
+@skip32__C22 = (?((@List/Nil @skip32__C21) a) a)
+
+@skip32__C23 = (* (* ((@skip32__C22 a) a)))
+
+@skip32__C24 = (?((@List/Nil @skip32__C23) a) a)
+
+@skip32__C25 = (* (* ((@skip32__C24 a) a)))
+
+@skip32__C26 = (?((@List/Nil @skip32__C25) a) a)
+
+@skip32__C27 = (* (* ((@skip32__C26 a) a)))
+
+@skip32__C28 = (?((@List/Nil @skip32__C27) a) a)
+
+@skip32__C29 = (* (* ((@skip32__C28 a) a)))
+
+@skip32__C3 = (* (* ((@skip32__C2 a) a)))
+
+@skip32__C30 = (?((@List/Nil @skip32__C29) a) a)
+
+@skip32__C31 = (* (* ((@skip32__C30 a) a)))
+
+@skip32__C32 = (?((@List/Nil @skip32__C31) a) a)
+
+@skip32__C33 = (* (* ((@skip32__C32 a) a)))
+
+@skip32__C34 = (?((@List/Nil @skip32__C33) a) a)
+
+@skip32__C35 = (* (* ((@skip32__C34 a) a)))
+
+@skip32__C36 = (?((@List/Nil @skip32__C35) a) a)
+
+@skip32__C37 = (* (* ((@skip32__C36 a) a)))
+
+@skip32__C38 = (?((@List/Nil @skip32__C37) a) a)
+
+@skip32__C39 = (* (* ((@skip32__C38 a) a)))
+
+@skip32__C4 = (?((@List/Nil @skip32__C3) a) a)
+
+@skip32__C40 = (?((@List/Nil @skip32__C39) a) a)
+
+@skip32__C41 = (* (* ((@skip32__C40 a) a)))
+
+@skip32__C42 = (?((@List/Nil @skip32__C41) a) a)
+
+@skip32__C43 = (* (* ((@skip32__C42 a) a)))
+
+@skip32__C44 = (?((@List/Nil @skip32__C43) a) a)
+
+@skip32__C45 = (* (* ((@skip32__C44 a) a)))
+
+@skip32__C46 = (?((@List/Nil @skip32__C45) a) a)
+
+@skip32__C47 = (* (* ((@skip32__C46 a) a)))
+
+@skip32__C48 = (?((@List/Nil @skip32__C47) a) a)
+
+@skip32__C49 = (* (* ((@skip32__C48 a) a)))
+
+@skip32__C5 = (* (* ((@skip32__C4 a) a)))
+
+@skip32__C50 = (?((@List/Nil @skip32__C49) a) a)
+
+@skip32__C51 = (* (* ((@skip32__C50 a) a)))
+
+@skip32__C52 = (?((@List/Nil @skip32__C51) a) a)
+
+@skip32__C53 = (* (* ((@skip32__C52 a) a)))
+
+@skip32__C54 = (?((@List/Nil @skip32__C53) a) a)
+
+@skip32__C55 = (* (* ((@skip32__C54 a) a)))
+
+@skip32__C56 = (?((@List/Nil @skip32__C55) a) a)
+
+@skip32__C57 = (* (* ((@skip32__C56 a) a)))
+
+@skip32__C58 = (?((@List/Nil @skip32__C57) a) a)
+
+@skip32__C59 = (* (* ((@skip32__C58 a) a)))
+
+@skip32__C6 = (?((@List/Nil @skip32__C5) a) a)
+
+@skip32__C60 = (?((@List/Nil @skip32__C59) a) a)
+
+@skip32__C61 = (* (* ((@skip32__C60 a) a)))
+
+@skip32__C62 = (?((@List/Nil @skip32__C61) a) a)
+
+@skip32__C7 = (* (* ((@skip32__C6 a) a)))
+
+@skip32__C8 = (?((@List/Nil @skip32__C7) a) a)
+
+@skip32__C9 = (* (* ((@skip32__C8 a) a)))
+
+

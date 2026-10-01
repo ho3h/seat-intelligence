@@ -1,0 +1,50 @@
+@prog = ((n edges) out)
+  & @loop ~ (0 (n (edges (0 out))))
+
+@loop = (v (n (edges (count out))))
+  & is_final ~ $([=] $(v n))
+  & is_final ~ ?(({done done} (count out)) ({next_v next_v} (count out)))
+
+@done = (* (a a))
+
+@next_v = (* (a a))
+  & @check_v_cyclic ~ (v (edges (res out)))
+  & res ~ ?(({skip_it skip_it} (count out)) ({add_count add_count} (count out)))
+
+@skip_it = (x (count out))
+  & v_inc ~ $([+] $(1 new_v))
+  & @loop ~ (new_v (n (edges (count out))))
+
+@add_count = (x (count out))
+  & v_inc ~ $([+] $(1 new_v))
+  & c_inc ~ $([+] $(1 new_c))
+  & @loop ~ (new_v (n (edges (new_c out))))
+
+@check_v_cyclic = (v (edges (result out)))
+  & @find_outgoing ~ (v (edges (v (result out))))
+
+@find_outgoing = (v (edges (target (result out))))
+  & edges ~ ?((empty has_edge) (v (target (result out))))
+
+@empty = (* (x (result out)))
+  & result ~ 0
+
+@has_edge = ((src (dest rest)) (v (target (result out))))
+  & match ~ $([=] $(src v_cmp))
+  & v_cmp ~ ?(({skip skip} (dest (rest (target (result out))))) ({traverse traverse} (dest (rest (target (result out))))))
+
+@skip = (y (dest (rest (target (result out)))))
+  & @find_outgoing ~ (v (rest (target (result out))))
+
+@traverse = (y (dest (rest (target (result out)))))
+  & @dfs_search ~ (dest (target (edges (result out))))
+
+@dfs_search = (curr (target (edges (result out))))
+  & reached ~ $([=] $(curr target_eq))
+  & target_eq ~ ?(({not_found not_found} (edges (result out))) ({found found} (edges (result out))))
+
+@not_found = (z (edges (result out)))
+  & @find_outgoing ~ (curr (edges (target (result out))))
+
+@found = (z (edges (result out)))
+  & result ~ 1

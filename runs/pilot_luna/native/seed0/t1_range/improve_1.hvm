@@ -1,0 +1,37 @@
+// Generate four elements per recursive step when possible.
+@prog = (n out)
+  & @rb ~ ((n 0) out)
+
+@rb = ((n i) out)
+  & n ~ {nc nr}
+  & nc ~ $([>] $(3 b))
+  & b ~ ?((@small @block) (nr (i out)))
+
+// Handle the final zero to three elements.
+@small = ((n i) out)
+  & n ~ ?((@nil @one) (i out))
+
+@nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@one = (m (i out))
+  & i ~ {v next}
+  & out ~ (1 (v tail))
+  & next ~ $([+1] i2)
+  & @small ~ (m (i2 tail))
+
+// The boolean switch's successor argument is always zero.
+@block = (z (n (i out)))
+  & z ~ *
+  & n ~ $([-] $(4 n2))
+  & i ~ {a r1}
+  & r1 ~ {b r2}
+  & r2 ~ {c r3}
+  & r3 ~ {d e}
+  & b ~ $([+1] b1)
+  & c ~ $([+2] c1)
+  & d ~ $([+3] d1)
+  & e ~ $([+4] i2)
+  & out ~ (1 (a (1 (b1 (1 (c1 (1 (d1 tail))))))))
+  & @rb ~ ((n2 i2) tail)

@@ -1,0 +1,124 @@
+@prog = ((n edges) out)
+  & n ~ {n_init n_round}
+  & @init ~ (n_init (0 initial))
+  & @rounds ~ (n_round (edges (initial final)))
+  & @emit ~ (final (0 out))
+
+@init = (n (i out))
+  & n ~ ?((@init_zero @init_more) (i out))
+
+@init_zero = (i out)
+  & i ~ *
+  & (0 *) ~ out
+
+@init_more = (k (i out))
+  & i ~ {i_a i_b}
+  & i_a ~ $([+1] i_next)
+  & @init ~ (k (i_next rest))
+  & (1 (i_b rest)) ~ out
+
+@rounds = (n (edges (labs out)))
+  & n ~ ?((@round_zero @round_more) (edges (labs out)))
+
+@round_zero = (edges (labs out))
+  & edges ~ *
+  & labs ~ out
+
+@round_more = (k (edges (labs out)))
+  & edges ~ {edges_scan edges_keep}
+  & @scan ~ (edges_scan (labs labs_next))
+  & @rounds ~ (k (edges_keep (labs_next out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (labs out))) payload) (labs out))
+
+@scan_nil = (payload (labs out))
+  & payload ~ *
+  & labs ~ out
+
+@scan_cons = (* (((u v) tail) (labs out)))
+  & u ~ {u_get u_set}
+  & v ~ {v_get v_set}
+  & labs ~ {la labs_rest}
+  & labs_rest ~ {lb lc}
+  & @get ~ (la (u_get x))
+  & @get ~ (lb (v_get y))
+  & @max ~ (x (y m))
+  & m ~ {m1 m2}
+  & @set ~ (lc (u_set (m1 labs_u)))
+  & @set ~ (labs_u (v_set (m2 labs_v)))
+  & @scan ~ (tail (labs_v out))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & 0 ~ out
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (k (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (k out))
+
+@set = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & (0 *) ~ out
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_zero @set_succ) (head (tail (val out))))
+
+@set_zero = (head (tail (val out)))
+  & head ~ *
+  & (1 (val tail)) ~ out
+
+@set_succ = (k (head (tail (val out))))
+  & head ~ *
+  & @set ~ (tail (k (val out)))
+
+@max = (x (y out))
+  & x ~ {xx x_keep}
+  & y ~ {yy y_keep}
+  & xx ~ $([<] $(yy z))
+  & z ~ ?((@max_no @max_yes) (x_keep (y_keep out)))
+
+@max_no = (x (y out))
+  & x ~ out
+  & y ~ *
+
+@max_yes = (* (x (y out)))
+  & x ~ *
+  & y ~ out
+
+@emit = ((?((@emit_nil @emit_cons) (payload (i out))) payload) (i out))
+
+@emit_nil = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & (0 *) ~ out
+
+@emit_cons = (* ((head tail) (i out)))
+  & i ~ {i_cmp i_rest}
+  & i_rest ~ {i_inc i_pair}
+  & head ~ {h_cmp h_pair}
+  & i_cmp ~ $([=] $(h_cmp z))
+  & i_inc ~ $([+1] i_next)
+  & @emit ~ (tail (i_next rest))
+  & z ~ ?((@emit_diff @emit_equal) (i_pair (h_pair (rest out))))
+
+@emit_diff = (i (h (rest out)))
+  & (1 ((i h) rest)) ~ out
+
+@emit_equal = (* (i (h (rest out))))
+  & i ~ *
+  & h ~ *
+  & rest ~ out

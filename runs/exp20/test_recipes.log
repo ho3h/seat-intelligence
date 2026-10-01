@@ -1,0 +1,17 @@
+PASS  list_length_and_copy               r_len                      cases 73  depth(big) 1167  itrs(big) 7003
+PASS  list_to_trie_lookup_many           r_lookup                   cases 93  depth(big) 781  itrs(big) 104224
+PASS  filter_in_order                    t5_decide_filter           cases 39  depth(big) 534  itrs(big) 8777
+PASS  count_where                        t5_decide_count            cases 39  depth(big) 435  itrs(big) 4541
+PASS  take_first                         r_take                     cases 94  depth(big) 1038  itrs(big) 4000
+PASS  argmax_first                       r_argmax                   cases 74  depth(big) 1049  itrs(big) 5505
+PASS  sort_by                            r_sort                     cases 73  depth(big) 1052  itrs(big) 1443900
+PASS  sort_by_single_key                 r_sort1                    cases 73  depth(big) 1042  itrs(big) 947336
+PASS  reduce_by_key_and_select_sorted    r_dedup                    cases 73  depth(big) 1661  itrs(big) 1197796
+PASS  reduce_by_key_min_argmax_trie      r_rbk                      cases 94  depth(big) 902  itrs(big) 161276
+PASS  count_where_trie                   r_distinct                 cases 73  depth(big) 1576  itrs(big) 72254
+PASS  frontier_relax_min                 t3_cc_label                cases 48  depth(big) 2660  itrs(big) 415417
+PASS  frontier_relax_or                  r_reach                    cases 38  depth(big) 1996  itrs(big) 116025
+PASS  layered_bfs_count_directed         t3_sp_count                cases 89  depth(big) 4895  itrs(big) 540611
+PASS  layered_bfs_count_undirected       r_bfscount                 cases 38  depth(big) 3488  itrs(big) 839728
+PASS  pointer_jump                       t5_rewrite_sameas_roots    cases 60  depth(big) 2118  itrs(big) 722952
+16/16 pass

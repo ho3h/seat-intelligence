@@ -1,0 +1,97 @@
+@prog = (l out)
+  & @hist ~ (l (((((0 0) (0 0)) ((0 0) (0 0))) (((0 0) (0 0)) ((0 0) (0 0)))) out))
+
+@hist = ((?((@hist_nil @hist_cons) (pl (acc out))) pl) (acc out))
+
+@hist_nil = (* (acc out))
+  & @finish ~ (acc out)
+
+@hist_cons = (* ((h t) (acc out)))
+  & @bump8 ~ (h (acc acc2))
+  & @hist ~ (t (acc2 out))
+
+@bump8 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(8 b))
+  & b ~ ?((@bump8L @bump8R) (vkeep (tree out)))
+
+@bump8L = (v ((l r) out))
+  & @bump4 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump8R = (* (v ((l r) out)))
+  & v ~ $([-] $(8 v2))
+  & @bump4 ~ (v2 (r r2))
+  & out ~ (l r2)
+
+@bump4 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(4 b))
+  & b ~ ?((@bump4L @bump4R) (vkeep (tree out)))
+
+@bump4L = (v ((l r) out))
+  & @bump2 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump4R = (* (v ((l r) out)))
+  & v ~ $([-] $(4 v2))
+  & @bump2 ~ (v2 (r r2))
+  & out ~ (l r2)
+
+@bump2 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(2 b))
+  & b ~ ?((@bump2L @bump2R) (vkeep (tree out)))
+
+@bump2L = (v ((l r) out))
+  & @bump1 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump2R = (* (v ((l r) out)))
+  & v ~ $([-] $(2 v2))
+  & @bump1 ~ (v2 (r r2))
+  & out ~ (l r2)
+
+@bump1 = (v (tree out))
+  & v ~ ?((@bump1L @bump1R) (tree out))
+
+@bump1L = ((c0 c1) out)
+  & c0 ~ $([+] $(1 c0n))
+  & out ~ (c0n c1)
+
+@bump1R = (* ((c0 c1) out))
+  & c1 ~ $([+] $(1 c1n))
+  & out ~ (c0 c1n)
+
+@finish = (((((a0 a1) (a2 a3)) ((a4 a5) (a6 a7))) (((a8 a9) (a10 a11)) ((a12 a13) (a14 a15)))) out)
+  & out ~ (1 (a0
+    (1 (a1
+      (1 (a2
+        (1 (a3
+          (1 (a4
+            (1 (a5
+              (1 (a6
+                (1 (a7
+                  (1 (a8
+                    (1 (a9
+                      (1 (a10
+                        (1 (a11
+                          (1 (a12
+                            (1 (a13
+                              (1 (a14
+                                (1 (a15 (0 *)))
+                              ))
+                            ))
+                          ))
+                        ))
+                      ))
+                    ))
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+  ))

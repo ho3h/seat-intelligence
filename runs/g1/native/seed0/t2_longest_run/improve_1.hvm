@@ -1,0 +1,45 @@
+// Initialize from the first list element, then process the tail.
+// Worker state: (previous (current_run (best_run output))).
+
+@prog = (input output)
+  & @start ~ (input output)
+
+@start = ((?((@start_nil @start_cons) (payload out)) payload) out)
+
+@start_nil = (* out)
+  & out ~ 0
+
+@start_cons = (* ((head tail) out))
+  & @worker ~ (tail (head (1 (1 out))))
+
+@worker = ((?((@worker_nil @worker_cons) (payload (prev (run (best out))))) payload) (prev (run (best out))))
+
+@worker_nil = (* (prev (run (best out))))
+  & prev ~ *
+  & run ~ *
+  & best ~ out
+
+@worker_cons = (* ((head tail) (prev (run (best out)))))
+  & head ~ {head_next head_cmp}
+  & head_cmp ~ $([=] $(prev equal))
+  & equal ~ ?((@worker_different @worker_same) (tail (head_next (run (best out)))))
+
+@worker_different = (* (tail (head (run (best out)))))
+  & run ~ *
+  & @worker ~ (tail (head (1 (best out))))
+
+@worker_same = (* (tail (head (run (best out)))))
+  & run ~ $([+1] incremented)
+  & incremented ~ {run_next candidate_base}
+  & candidate_base ~ {candidate cmp_left}
+  & best ~ {best_keep cmp_right}
+  & cmp_left ~ $([>] $(cmp_right greater))
+  & greater ~ ?((@worker_not_better @worker_better) (tail (head (run_next (candidate (best_keep out))))))
+
+@worker_not_better = (* (tail (head (run (candidate (best out))))))
+  & candidate ~ *
+  & @worker ~ (tail (head (run (best out))))
+
+@worker_better = (* (tail (head (run (candidate (best out))))))
+  & best ~ *
+  & @worker ~ (tail (head (run (candidate out))))

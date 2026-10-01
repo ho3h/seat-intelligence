@@ -1,0 +1,12 @@
+// Stable partition around p: return (elements < p, elements >= p).
+@prog = ((p xs) out)
+  & @part ~ (xs (p out))
+
+@part = ((?(((* (* ((0 *) (0 *)))) @part_cons) (pl (p out))) pl) (p out))
+
+@part_cons = (* ((h t) (p out)))
+  & p ~ {pc pr}
+  & h ~ {hc hs}
+  & hc ~ $([<] $(pc b))
+  & @part ~ (t (pr pair))
+  & b ~ ?(((gh ((glo ghi) (glo (1 (gh ghi))))) (* (lh ((llo lhi) ((1 (lh llo)) lhi))))) (hs (pair out)))

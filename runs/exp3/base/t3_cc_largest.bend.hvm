@@ -1,0 +1,98 @@
+@capacity = ({a c} ({$([<] $(a ?(((* (b b)) @capacity__C0) (c (d e))))) d} e))
+
+@capacity__C0 = (* (a ($([*0x0000002] b) c)))
+  & @capacity ~ (a (b c))
+
+@find_root = ({e a} ({d {f b}} ({g c} j)))
+  & @get_leaf ~ (a (b (c (* ({$([=] $(d ?((@find_root__C0 @find_root__C1) (e (f (g (h (i j)))))))) h} i)))))
+
+@find_root__C0 = (a (* (c (b (* d)))))
+  & @find_root ~ (a (b (c d)))
+
+@find_root__C1 = (* (* (a (* (* (b (a b)))))))
+
+@get_leaf = (b (c ({$([=0x0000001] ?((@get_leaf__C2 (* (a (* (* a))))) (b (c (d e))))) d} e)))
+
+@get_leaf__C0 = ($([-] $(b c)) (* (a ({b d} e))))
+  & @get_leaf ~ (a (c (d e)))
+
+@get_leaf__C1 = (* (b (a (* c))))
+  & @get_leaf ~ (a (b c))
+
+@get_leaf__C2 = ((* (c d)) ({$([<] $(a ?((@get_leaf__C0 @get_leaf__C1) (b (c (d (e f))))))) b} ($([:/0x0000002] {a e}) f)))
+
+@make_tree = (a ({$([=0x0000001] ?((@make_tree__C1 @make_tree__C2) (a (b c)))) b} c))
+
+@make_tree__C0 = (* (a (0 (a 1))))
+
+@make_tree__C1 = ({e a} ($([:/0x0000002] {f {g b}}) ({$([+] $(g h)) c} (1 (d i)))))
+  &!@make_tree ~ (a (b (c d)))
+  &!@make_tree ~ (e (f (h i)))
+
+@make_tree__C2 = (* (a (* ({$([<] $(a ?(((* (0 (0 0))) @make_tree__C0) (b c)))) b} c))))
+
+@process_edges = ((@process_edges__C7 a) a)
+
+@process_edges__C0 = (a (* a))
+
+@process_edges__C1 = (* (* (a a)))
+
+@process_edges__C2 = (a (h (e (g ({b {c f}} (* (d i)))))))
+  & @set_two ~ (a (b (c (d (e (f (g (h i))))))))
+
+@process_edges__C3 = (* (a (h ({b {c f}} (* (e (g (d i))))))))
+  & @set_two ~ (a (b (c (d (e (f (g (h i))))))))
+
+@process_edges__C4 = (e ({m f} ({n o} (b (g ({$([<] $(c d)) {h $([+] $(a {$([>] $(n ?((@process_edges__C0 @process_edges__C1) (o (p q))))) {p k}}))}} (i ({c {j a}} r))))))))
+  & @process_edges ~ (b (l (m (q r))))
+  & $(d ?((@process_edges__C2 @process_edges__C3) (e (f (g (h (i (j (k l))))))))) ~ [=0x0000000]
+
+@process_edges__C5 = (* (b (c (d (a (* (* (* (* e)))))))))
+  & @process_edges ~ (a (b (c (d e))))
+
+@process_edges__C6 = (* ((b e) (k ({a {d h}} ({c {f i}} (j p))))))
+  & @find_root ~ (d (e (f ({g n} o))))
+  & @find_root ~ (a (b (c ({$([=] $(g ?((@process_edges__C4 @process_edges__C5) (h (i (j (k (l (m (n (o p))))))))))) l} m))))
+
+@process_edges__C7 = (?(((* (* (a a))) @process_edges__C6) b) b)
+
+@prog = (({$([=0x0000000] ?((@prog__C0 (* (* (* 0)))) (a (b c)))) a} b) c)
+
+@prog__C0 = ({c a} (b g))
+  & @process_edges ~ (b (e (f (1 g))))
+  & @capacity ~ (a (1 {f d}))
+  & @make_tree ~ (c (d (0 e)))
+
+@set_leaf = (a (b (c (d ({$([=0x0000001] ?((@set_leaf__C2 @set_leaf__C3) (a (b (c (d (e f))))))) e} f)))))
+
+@set_leaf__C0 = ($([-] $(c d)) (e (f (a (b ({c g} (1 (a h))))))))
+  & @set_leaf ~ (b (d (e (f (g h)))))
+
+@set_leaf__C1 = (* (b (c (d (a (g (e (1 (f g)))))))))
+  & @set_leaf ~ (a (b (c (d (e f)))))
+
+@set_leaf__C2 = ((* (e f)) ({$([<] $(a ?((@set_leaf__C0 @set_leaf__C1) (b (c (d (e (f (g h))))))))) b} (c (d ($([:/0x0000002] {a g}) h)))))
+
+@set_leaf__C3 = (* (* (* (a (b (* (0 (a b))))))))
+
+@set_two = ((* (h i)) ({$([<] $(a ?((@set_two__C4 @set_two__C5) (b (c (d (e (f (g (h (i (j k)))))))))))) b} (c (d (e (f (g ($([:/0x0000002] {a j}) k))))))))
+
+@set_two__C0 = ($([-] $(c d)) (e (f ($([-] $(g h)) (i (j (a (b ({c {g k}} (1 (a l)))))))))))
+  & @set_two ~ (b (d (e (f (h (i (j (k l))))))))
+
+@set_two__C1 = (* ($([-] $(h i)) (j (k (b (c (d (a (g ({h {l e}} (1 (f m))))))))))))
+  & @set_leaf ~ (a (b (c (d (e f)))))
+  & @set_leaf ~ (g (i (j (k (l m)))))
+
+@set_two__C2 = (b (c (d ($([-] $(h i)) (j (k (a (g ({h {l e}} (1 (f m)))))))))))
+  & @set_leaf ~ (a (b (c (d (e f)))))
+  & @set_leaf ~ (g (i (j (k (l m)))))
+
+@set_two__C3 = (* (b (c (d (e (f (g (a (j (h (1 (i j))))))))))))
+  & @set_two ~ (a (b (c (d (e (f (g (h i))))))))
+
+@set_two__C4 = (b (c (d ({$([<] $(a ?((@set_two__C0 @set_two__C1) (b (c (d (e (f (g (h (i (j k)))))))))))) e} (f (g (h (i ({a j} k)))))))))
+
+@set_two__C5 = (* (b (c (d ({$([<] $(a ?((@set_two__C2 @set_two__C3) (b (c (d (e (f (g (h (i (j k)))))))))))) e} (f (g (h (i ({a j} k))))))))))
+
+

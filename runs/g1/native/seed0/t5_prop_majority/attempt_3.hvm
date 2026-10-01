@@ -1,0 +1,135 @@
+// Input: (cluster_id, property_key, clustering, attributes)
+// Output: majority value, or 16777215 when there are no matching attributes.
+@prog = ((k (key (cl attrs))) out)
+  & @scanattrs ~ (attrs (key (k (cl ((0 *) out))))
+
+// Scan attributes and build a histogram of values belonging to this cluster/key.
+@scanattrs = ((?((@a_nil @a_cons) (pl (key (k (cl (hist out))))) pl) (key (k (cl (hist out))))
+
+@a_nil = (* (key (k (cl (hist out)))))
+  & key ~ *
+  & k ~ *
+  & cl ~ *
+  & @best ~ (hist (ans cnt))
+  & out ~ ans
+  & cnt ~ *
+
+@a_cons = (* ((node (ak val)) (tail (key (k (cl (hist out)))))))
+  & key ~ {key_proc key_next}
+  & k ~ {k_proc k_next}
+  & cl ~ {cl_proc cl_next}
+  & @process ~ ((node (ak val)) (key_proc (k_proc (cl_proc (hist hist2)))))
+  & @scanattrs ~ (tail (key_next (k_next (cl_next (hist2 out))))
+
+// Filter one attribute by key and cluster membership, then update the histogram.
+@process = ((node (ak val)) (key (k (cl (hist out)))))
+  & key ~ $([=] $(ak match))
+  & match ~ ?((@match_no @match_yes) (node (k (cl (val (hist out)))))
+
+@match_no = (node (k (cl (val (hist out)))))
+  & node ~ *
+  & k ~ *
+  & cl ~ *
+  & val ~ *
+  & out ~ hist
+
+@match_yes = (* (node (k (cl (val (hist out))))))
+  & @get ~ (cl (node got))
+  & k ~ $([=] $(got member))
+  & member ~ ?((@member_no @member_yes) (val (hist out)))
+
+@member_no = (val (hist out))
+  & val ~ *
+  & out ~ hist
+
+@member_yes = (* (val (hist out)))
+  & @update ~ (hist (val out))
+
+// Return the clustering ID at the given node index.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ *
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_succ = (idx2 (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (idx2 out))
+
+// Histogram update. Entries are (value, count).
+@update = ((?((@u_nil @u_cons) (pl (v out))) pl) (v out))
+
+@u_nil = (* (v out))
+  & out ~ (1 ((v 1) (0 *)))
+
+@u_cons = (* ((x cnt) (tail (v out))))
+  & x ~ {x_cmp x_keep}
+  & v ~ {v_cmp v_keep}
+  & x_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@u_diff @u_same) (x_keep (cnt (tail (v_keep out)))))
+
+@u_diff = (x (cnt (tail (v out))))
+  & @update ~ (tail (v tail2))
+  & out ~ (1 ((x cnt) tail2))
+
+@u_same = (* (x (cnt (tail (v out)))))
+  & cnt ~ $([+1] cnt2)
+  & v ~ *
+  & out ~ (1 ((x cnt2) tail))
+
+// Find the best histogram entry; internally return (value, count).
+@best = ((?((@best_nil @best_cons) (pl out)) pl) out)
+
+@best_nil = (* out)
+  & out ~ (16777215 0)
+
+@best_cons = (* ((val cnt) (tail out)))
+  & @best ~ (tail rest)
+  & @pick ~ ((val cnt) (rest out))
+
+// Prefer greater counts, then smaller values.
+@pick = ((val cnt) (rest out))
+  & rest ~ (best bc)
+  & cnt ~ {cnt_cmp cnt_ctx}
+  & bc ~ {bc_cmp bc_ctx}
+  & cnt_cmp ~ $([>] $(bc_cmp gt))
+  & gt ~ ?((@pick_no_gt @pick_gt) (val (cnt_ctx (best (bc_ctx out))))
+
+@pick_gt = (* (val (cnt (best (bc out)))))
+  & best ~ *
+  & bc ~ *
+  & out ~ (val cnt)
+
+@pick_no_gt = (val (cnt (best (bc out))))
+  & cnt ~ {cnt_eq cnt_keep}
+  & bc ~ {bc_eq bc_keep}
+  & cnt_eq ~ $([=] $(bc_eq eq))
+  & eq ~ ?((@pick_not_equal @pick_equal) (val (cnt_keep (best bc_keep out))))
+
+@pick_not_equal = (val (cnt (best (bc out))))
+  & val ~ *
+  & cnt ~ *
+  & out ~ (best bc)
+
+@pick_equal = (* (val (cnt (best (bc out)))))
+  & val ~ {val_cmp val_keep}
+  & best ~ {best_cmp best_keep}
+  & val_cmp ~ $([<] $(best_cmp lt))
+  & lt ~ ?((@pick_not_less @pick_less) (val_keep (cnt (best_keep (bc out))))
+
+@pick_not_less = (val (cnt (best (bc out))))
+  & val ~ *
+  & cnt ~ *
+  & out ~ (best bc)
+
+@pick_less = (* (val (cnt (best (bc out)))))
+  & best ~ *
+  & bc ~ *
+  & out ~ (val cnt)

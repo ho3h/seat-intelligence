@@ -1,0 +1,102 @@
+// Construct a list of n paired in/out counts, initially all zero.
+@prog = ((n edges) out)
+  & @pzeros ~ (n pairs)
+  & @edproc ~ (edges (pairs result))
+  & @split ~ (result out)
+
+@pzeros = (n out)
+  & n ~ ?((@pz_nil @pz_succ) out)
+
+@pz_nil = out
+  & out ~ (0 *)
+
+@pz_succ = (n out)
+  & @pzeros ~ (n tail)
+  & out ~ (1 ((0 0) tail))
+
+// Process each edge, updating both endpoint counts in one traversal
+// of the paired degree list.
+@edproc = ((?((@ep_nil @ep_cons) (payload ctx)) payload) ctx)
+
+@ep_nil = (payload (pairs out))
+  & payload ~ *
+  & out ~ pairs
+
+@ep_cons = (* (payload (pairs out)))
+  & payload ~ ((u v) tail)
+  & @up_pair ~ (u (v (pairs pairs2)))
+  & @edproc ~ (tail (pairs2 out))
+
+// Update out-degree at u and in-degree at v.
+@up_pair = (u (v (l out)))
+  & u ~ ?((@up_u0 @up_ur) (v (l out)))
+
+@up_u0 = (v (l out))
+  & v ~ ?((@up_both0 @up_u0vplus) (l out))
+
+@up_both0 = (l out)
+  & l ~ (1 ((i o) tail))
+  & i ~ $([+1] i2)
+  & o ~ $([+1] o2)
+  & out ~ (1 ((i2 o2) tail))
+
+@up_u0vplus = (v (l out))
+  & l ~ (1 ((i o) tail))
+  & o ~ $([+1] o2)
+  & @up_in ~ (v (tail tail2))
+  & out ~ (1 ((i o2) tail2))
+
+@up_ur = (u (v (l out)))
+  & v ~ ?((@up_v0 @up_bothpos) (u (l out)))
+
+@up_v0 = (u (l out))
+  & l ~ (1 ((i o) tail))
+  & i ~ $([+1] i2)
+  & @up_out ~ (u (tail tail2))
+  & out ~ (1 ((i2 o) tail2))
+
+@up_bothpos = (v (u (l out)))
+  & l ~ (1 (head tail))
+  & @up_pair ~ (u (v (tail tail2)))
+  & out ~ (1 (head tail2))
+
+// Update just the in-degree at a list index.
+@up_in = (idx (l out))
+  & idx ~ ?((@ui_zero @ui_succ) (l out))
+
+@ui_zero = (l out)
+  & l ~ (1 ((i o) tail))
+  & i ~ $([+1] i2)
+  & out ~ (1 ((i2 o) tail))
+
+@ui_succ = (idx (l out))
+  & l ~ (1 (head tail))
+  & @up_in ~ (idx (tail tail2))
+  & out ~ (1 (head tail2))
+
+// Update just the out-degree at a list index.
+@up_out = (idx (l out))
+  & idx ~ ?((@uo_zero @uo_succ) (l out))
+
+@uo_zero = (l out)
+  & l ~ (1 ((i o) tail))
+  & o ~ $([+1] o2)
+  & out ~ (1 ((i o2) tail))
+
+@uo_succ = (idx (l out))
+  & l ~ (1 (head tail))
+  & @up_out ~ (idx (tail tail2))
+  & out ~ (1 (head tail2))
+
+// Split the paired degree list into the output tuple of lists.
+@split = ((?((@split_nil @split_cons) (payload out)) payload) out)
+
+@split_nil = (payload out)
+  & payload ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* (payload out))
+  & payload ~ ((i o) tail)
+  & @split ~ (tail lists)
+  & lists ~ (ins outs)
+  & out ~ ((1 (i ins)) (1 (o outs)))

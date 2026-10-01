@@ -1,0 +1,85 @@
+@prog = ((n (queries edges)) out)
+  & n ~ *
+  & @q ~ (queries (edges out))
+
+@mem = ((?((@mem_nil @mem_cons) (p (needle out))) p) (needle out))
+
+@mem_nil = (* (needle out))
+  & needle ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (needle out)))
+  & needle ~ {n_cmp n_keep}
+  & h ~ $([=] $(n_cmp z))
+  & z ~ ?((@mem @mem_yes) (t (n_keep out)))
+
+@mem_yes = (* (t (needle out)))
+  & t ~ *
+  & needle ~ *
+  & out ~ 1
+
+@dfs = ((?((@dfs_nil @dfs_cons) (p (target (edges (visited out))))) p) (target (edges (visited out))))
+
+@dfs_nil = (* (target (edges (visited out))))
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 0
+
+@dfs_cons = (* ((v tail) (target (edges (visited out)))))
+  & v ~ {v_mem v_keep}
+  & visited ~ {vis_mem vis_keep}
+  & @mem ~ (vis_mem (v_mem z))
+  & z ~ ?((@dfs_new @dfs_seen) (tail (target (edges (v_keep (vis_keep out))))))
+
+@dfs_seen = (* (tail (target (edges (visited out)))))
+  & @dfs ~ (tail (target (edges (visited out))))
+
+@dfs_new = (* (v (tail (target (edges (visited out))))))
+  & v ~ {v_cmp v_keep}
+  & target ~ {t_cmp t_keep}
+  & v_cmp ~ $([=] $(t_cmp z))
+  & z ~ ?((@dfs_expand @dfs_hit) (v_keep (tail (t_keep (edges (visited out))))))
+
+@dfs_expand = (* (v (tail (target (edges (visited out))))))
+  & v ~ {v_scan v_seen}
+  & edges ~ {e_scan e_keep}
+  & @scan ~ (e_scan (v_scan (tail (target (e_keep ((1 (v_seen visited)) out)))))
+
+@dfs_hit = (* (v (tail (target (edges (visited out))))))
+  & v ~ *
+  & tail ~ *
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 1
+
+@scan = ((?((@scan_nil @scan_cons) (p (source (stack (target (graph (visited out)))))) p) (source (stack (target (graph (visited out))))))
+
+@scan_nil = (* (source (stack (target (graph (visited out))))))
+  & source ~ *
+  & @dfs ~ (stack (target (graph (visited out))))
+
+@scan_cons = (* (((u v) tail) (source (stack (target (graph (visited out)))))))
+  & source ~ {s_cmp s_keep}
+  & u ~ $([=] $(s_cmp z))
+  & z ~ ?((@scan_no @scan_yes) (v (tail (s_keep (stack (target (graph (visited out))))))))
+
+@scan_no = (* (v (tail (source (stack (target (graph (visited out))))))))
+  & v ~ *
+  & @scan ~ (tail (source (stack (target (graph (visited out))))))
+
+@scan_yes = (* (v (tail (source (stack (target (graph (visited out))))))))
+  & @scan ~ (tail (source ((1 (v stack)) (target (graph (visited out))))))
+
+@q = ((?((@q_nil @q_cons) (p (edges out))) p) (edges out))
+
+@q_nil = (* (edges out))
+  & edges ~ *
+  & out ~ (0 *)
+
+@q_cons = (* (((a b) tail) (edges out)))
+  & edges ~ {e_cur e_tail}
+  & @dfs ~ ((1 (a (0 *))) (b (e_cur ((0 *) ans))))
+  & @q ~ (tail (e_tail qtail))
+  & out ~ (1 (ans qtail))

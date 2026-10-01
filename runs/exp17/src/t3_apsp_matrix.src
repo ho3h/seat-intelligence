@@ -1,0 +1,108 @@
+# t3_apsp_matrix: all-sources Bellman-Ford as one vector label propagation over pre-wired channels
+# (lib/chan_gen). For an arc u -> v of weight w, u listens to v's stream with meta w. Every vertex u streams its
+# row D_u (a tuple-tree over targets, 2^23 = unreached), D_u <- min(D_u, min over arcs u -> v of D_v + w), leafwise;
+# a round is O(levels) deep, the global no-change test is hidden behind speculative rounds. Output: the rows.
+#include base
+#include chan_gen
+def prog(x):
+  (n, es) = x
+  (l, m) = lvl(n, 0, 1)
+  T = chan_walk_back(es, zio(l), l, m)
+  (F, z) = chan_gen(T, l, 3, l, n)
+  return seq(z, rows(F, l, 0, n, l, []))
+
+def rows(F, l, base, n, L, acc):
+  switch l:
+    case 0:
+      if base < n:
+        return List/Cons(row(F, L, 0, n, []), acc)
+      else:
+        return acc
+    case _:
+      (a, b) = F
+      h = 1 << (l-1)
+      return rows(a, l-1, base, n, L, rows(b, l-1, base + h, n, L, acc))
+
+def row(t, l, base, n, acc):
+  switch l:
+    case 0:
+      if base < n:
+        if t >= 8388608:
+          return List/Cons(16777215, acc)
+        else:
+          return List/Cons(t, acc)
+      else:
+        return acc
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return row(a, l-1, base, n, row(b, l-1, base + h, n, acc))
+
+def vinit(l, base, u):
+  switch l:
+    case 0:
+      if base == u:
+        return 0
+      else:
+        return 8388608
+    case _:
+      h = 1 << (l-1)
+      return (vinit(l-1, base, u), vinit(l-1, base + h, u))
+
+def vinf(l):
+  switch l:
+    case 0:
+      return 8388608
+    case _:
+      return (vinf(l-1), vinf(l-1))
+
+def vadd(t, w, l):
+  switch l:
+    case 0:
+      return t + w
+    case _:
+      (a, b) = t
+      return (vadd(a, w, l-1), vadd(b, w, l-1))
+
+def vmin(x, y, l):
+  switch l:
+    case 0:
+      return x - (x > y) * (x - y)
+    case _:
+      (x1, x2) = x
+      (y1, y2) = y
+      return (vmin(x1, y1, l-1), vmin(x2, y2, l-1))
+
+# (min, any entry of y below x)
+def vupd(x, y, l):
+  switch l:
+    case 0:
+      t = x > y
+      return (x - t * (x - y), t)
+    case _:
+      (x1, x2) = x
+      (y1, y2) = y
+      (a, c1) = vupd(x1, y1, l-1)
+      (b, c2) = vupd(x2, y2, l-1)
+      return ((a, b), c1 | c2)
+
+def lab0(mode, base):
+  return vinit(mode, 0, base)
+
+def out(mode, st):
+  return st
+
+def pre(mode, w, h):
+  return vadd(h, w, mode)
+
+def unit(mode):
+  return vinf(mode)
+
+def comb(mode, a, b):
+  return vmin(a, b, mode)
+
+def upd(mode, st, x):
+  return vupd(st, x, mode)
+
+def fin(mode, base, st, ins):
+  return ([], st)

@@ -1,0 +1,135 @@
+// Entry point: parsers stream tokens directly into the output list.
+@prog = (input output)
+  & @expr ~ (input (output er))
+  & er ~ (rest tail)
+  & @skip ~ (rest end)
+  & end ~ *
+  & tail ~ (0 *)
+
+// Remove leading spaces.
+@skip = ((?((@skip_nil @skip_cons) (pl out)) pl) out)
+
+@skip_nil = (* (0 *))
+
+@skip_cons = (* ((h t) out))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@skip_keep @skip_space) (hk (t out)))
+
+@skip_keep = (hk (t out))
+  & out ~ (1 (hk t))
+
+@skip_space = (* (hk (t out)))
+  & hk ~ *
+  & @skip ~ (t out)
+
+// Parse an expression or term, threading the open output-list tail.
+@expr = (l (tail out))
+  & @term ~ (l (tail tr))
+  & tr ~ (rest next)
+  & @expr_loop ~ ((rest next) out)
+
+@term = (l (tail out))
+  & @factor ~ (l (tail fr))
+  & fr ~ (rest next)
+  & @term_loop ~ ((rest next) out)
+
+// Loop over left-associative plus operators.
+@expr_loop = ((l tail) out)
+  & @skip ~ (l s)
+  & @expr_step ~ ((s tail) out)
+
+@expr_step = (((?((@el_nil @el_cons) (pl (tail out))) pl) tail) out)
+
+@el_nil = (* (tail ((0 *) tail)))
+
+@el_cons = (* ((h t) (tail out)))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(43 z))
+  & z ~ ?((@el_done @el_plus) (hk (t (tail out))))
+
+@el_done = (hk (t (tail ((1 (hk t)) tail))))
+
+@el_plus = (* (hk (t (tail out))))
+  & hk ~ *
+  & @term ~ (t (tail tr))
+  & tr ~ (rest next)
+  & next ~ (1 ((1 43) after))
+  & @expr_loop ~ ((rest after) out)
+
+// Loop over left-associative multiplication operators.
+@term_loop = ((l tail) out)
+  & @skip ~ (l s)
+  & @term_step ~ ((s tail) out)
+
+@term_step = (((?((@tl_nil @tl_cons) (pl (tail out))) pl) tail) out)
+
+@tl_nil = (* (tail ((0 *) tail)))
+
+@tl_cons = (* ((h t) (tail out)))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(42 z))
+  & z ~ ?((@tl_done @tl_star) (hk (t (tail out))))
+
+@tl_done = (hk (t (tail ((1 (hk t)) tail))))
+
+@tl_star = (* (hk (t (tail out))))
+  & hk ~ *
+  & @factor ~ (t (tail fr))
+  & fr ~ (rest next)
+  & next ~ (1 ((1 42) after))
+  & @term_loop ~ ((rest after) out)
+
+// Parse a factor: a parenthesized expression or a decimal number.
+@factor = (l (tail out))
+  & @skip ~ (l s)
+  & @factor_dispatch ~ (s (tail out))
+
+@factor_dispatch = ((?((@fd_nil @fd_cons) (pl (tail out))) pl) (tail out))
+
+@fd_nil = (* (tail ((0 *) tail)))
+
+@fd_cons = (* ((h t) (tail out)))
+  & h ~ {hc hk}
+  & hc ~ $([=] $(40 z))
+  & z ~ ?((@fd_number @fd_group) (hk (t (tail out))))
+
+@fd_number = (hk (t (tail out)))
+  & @digits ~ ((1 (hk t)) (0 dr))
+  & dr ~ (rest val)
+  & tail ~ (1 ((0 val) next))
+  & out ~ (rest next)
+
+@fd_group = (* (hk (t (tail out))))
+  & hk ~ *
+  & @expr ~ (t (tail er))
+  & er ~ (mid next)
+  & @drop1 ~ (mid rest)
+  & out ~ (rest next)
+
+// Consume the closing parenthesis.
+@drop1 = ((?((@drop_nil @drop_cons) (pl out)) pl) out)
+
+@drop_nil = (* (0 *))
+
+@drop_cons = (* ((h t) out))
+  & h ~ *
+  & out ~ t
+
+// Read decimal digits, returning the remaining input and numeric value.
+@digits = ((?((@dig_nil @dig_cons) (pl (acc out))) pl) (acc out))
+
+@dig_nil = (* (acc ((0 *) acc)))
+
+@dig_cons = (* ((h t) (acc out)))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@dig_more @dig_stop) (hk (t (acc out))))
+
+@dig_stop = (* (hk (t (acc ((1 (hk t)) acc)))))
+
+@dig_more = (hk (t (acc out)))
+  & hk ~ $([-] $(48 digit))
+  & acc ~ $([*10] prod)
+  & prod ~ $([+] $(digit next))
+  & @digits ~ (t (next out))

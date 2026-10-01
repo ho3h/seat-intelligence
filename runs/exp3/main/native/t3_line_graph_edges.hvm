@@ -1,0 +1,23 @@
+@prog = ((* (?((@outer_nil (* (((u_q196 v_q196) {(?((@inner_nil @inner_cons) (p_q191_q196 (outer_q196 (u_q196 (v_q196 (acc_q196 out_q196)))))) p_q191_q196) outer_q196}) (acc_q196 out_q196)))) (p_q190 (0 out))) p_q190)) out)
+
+@outer_nil = (* (a a))
+
+@inner_nil = (* ((?((@outer_nil (* (((u_q201 v_q201) {(?((@inner_nil @inner_cons) (p_q191_q201 (outer_q201 (u_q201 (v_q201 (acc_q201 out_q201)))))) p_q191_q201) outer_q201}) (acc_q201 out_q201)))) (p_q192 (acc out))) p_q192) (* (* (acc out)))))
+
+@inner_cons = (* (((a b) itail) (outer (u (v (acc out))))))
+  & u ~ {ua {ub unext}}
+  & v ~ {va {vb vnext}}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & ua ~ $([=] $(a1 e1))
+  & ub ~ $([=] $(b1 e2))
+  & va ~ $([=] $(a2 e3))
+  & vb ~ $([=] $(b2 e4))
+  & e1 ~ $([|] $(e2 q1))
+  & e3 ~ $([|] $(e4 q2))
+  & q1 ~ $([|] $(q2 match))
+  & match ~ ?((@in_no @in_yes) (itail (outer (unext (vnext (acc out))))))
+
+@in_no = ((?((@inner_nil @inner_cons) (p_q193 (outer (u (v (acc out)))))) p_q193) (outer (u (v (acc out)))))
+
+@in_yes = (* ((?((@inner_nil @inner_cons) (p_q194 (outer (u (v (acc2 out)))))) p_q194) (outer (u (v ($([+1] acc2) out))))))

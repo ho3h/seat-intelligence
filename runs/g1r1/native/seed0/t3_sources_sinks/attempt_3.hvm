@@ -1,0 +1,60 @@
+// Count sources and sinks by scanning the edge list for each vertex.
+@prog = (input output)
+  & input ~ (n edges)
+  & @vloop ~ (n (0 (edges (0 (0 output)))))
+
+@vloop = (rem ctx)
+  & rem ~ ?((@v_done @v_iter) ctx)
+
+@v_done = ctx
+  & ctx ~ (idx (edges (src (sink out))))
+  & idx ~ *
+  & edges ~ *
+  & out ~ (src sink)
+
+@v_iter = (rem ctx)
+  & ctx ~ (idx (edges (src (sink out))))
+  & idx ~ {target idx_keep}
+  & edges ~ {scan_edges edges_keep}
+  & @scan ~
+    (scan_edges
+      (target
+        (0
+          (0
+            (rem
+              (idx_keep
+                (edges_keep
+                  (src (sink out))))))))
+
+@scan = (list (target (inflag (outflag ctx))))
+  & list ~
+    (?((@scan_nil @scan_cons)
+       (payload (target (inflag (outflag ctx)))))
+      payload)
+
+@scan_nil = (payload (target (inflag (outflag ctx))))
+  & payload ~ *
+  & target ~ *
+  & @vfinish ~ (inflag (outflag ctx))
+
+@scan_cons = (zero (payload (target (inflag (outflag ctx)))))
+  & zero ~ *
+  & payload ~ (head tail)
+  & head ~ (u v)
+  & target ~ {target_u target_rest}
+  & target_rest ~ {target_v target_keep}
+  & u ~ $([=] $(target_u eq_u))
+  & v ~ $([=] $(target_v eq_v))
+  & eq_u ~ $([|] $(outflag new_out))
+  & eq_v ~ $([|] $(inflag new_in))
+  & @scan ~ (tail (target_keep (new_in (new_out ctx))))
+
+@vfinish = (inflag (outflag ctx))
+  & ctx ~ (rem (idx (edges (src (sink out)))))
+  & edges ~ *
+  & inflag ~ $([=] $(0 no_in))
+  & outflag ~ $([=] $(0 no_out))
+  & src ~ $([+] $(no_in src_next))
+  & sink ~ $([+] $(no_out sink_next))
+  & idx ~ $([+1] idx_next)
+  & @vloop ~ (rem (idx_next (edges (src_next (sink_next out)))))

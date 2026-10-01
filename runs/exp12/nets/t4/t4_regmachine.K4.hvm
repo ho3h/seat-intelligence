@@ -1,0 +1,115 @@
+@prog = (input out)
+  & @run ~ (input ((0 (0 (0 (0 0)))) out))
+
+@run = (lv1 c)
+  & @run_cons_lw ~ (lv1 c)
+
+@run_nil = (payload (regs out))
+  & payload ~ *
+  & @emit ~ (regs out)
+
+@run_cons = (* ((instr tail) (regs out)))
+  & @step ~ (instr (regs next))
+  & @run_cons_lw ~ (tail (next out))
+
+@step = (instr (regs out))
+  & instr ~ (op (a b))
+  & @dispatch ~ (op (a (b (regs out))))
+
+@dispatch = (?((@step0 @stepS) c) c)
+
+@step0 = (a (b (regs out)))
+  & @set ~ (a (b (regs out)))
+
+@stepS = (?((@step1 @stepS2) c) c)
+
+@stepS2 = (?((@step2 @stepS3) c) c)
+
+@stepS3 = (?((@step3 @step4) c) c)
+
+@step1 = (a (b (regs out)))
+  & @add ~ (a (b (regs out)))
+
+@step2 = (a (b (regs out)))
+  & @sub ~ (a (b (regs out)))
+
+@step3 = (a (b (regs out)))
+  & @mul ~ (a (b (regs out)))
+
+@step4 = (z (a (b (regs out))))
+  & z ~ *
+  & @mov ~ (a (b (regs out)))
+
+@get = (?((@get0 @getS) c) c)
+
+@get0 = (regs out)
+  & regs ~ (r0 rest)
+  & r0 ~ out
+  & rest ~ *
+
+@getS = (n (regs out))
+  & regs ~ (r0 rest)
+  & r0 ~ *
+  & @get ~ (n (rest out))
+
+@set = (?((@set0 @setS) c) c)
+
+@set0 = (val (regs out))
+  & regs ~ (r0 rest)
+  & r0 ~ *
+  & out ~ (val rest)
+
+@setS = (n (val (regs out)))
+  & regs ~ (r0 rest)
+  & @set ~ (n (val (rest tail)))
+  & out ~ (r0 tail)
+
+@add = (a (b (regs out)))
+  & a ~ {ag as}
+  & regs ~ {pair keep}
+  & pair ~ {left right}
+  & @get ~ (ag (left av))
+  & @get ~ (b (right bv))
+  & av ~ $([+] $(bv val))
+  & @set ~ (as (val (keep out)))
+
+@sub = (a (b (regs out)))
+  & a ~ {ag as}
+  & regs ~ {pair keep}
+  & pair ~ {left right}
+  & @get ~ (ag (left av))
+  & @get ~ (b (right bv))
+  & av ~ $([-] $(bv val))
+  & @set ~ (as (val (keep out)))
+
+@mul = (a (b (regs out)))
+  & a ~ {ag as}
+  & regs ~ {pair keep}
+  & pair ~ {left right}
+  & @get ~ (ag (left av))
+  & @get ~ (b (right bv))
+  & av ~ $([*] $(bv val))
+  & @set ~ (as (val (keep out)))
+
+@mov = (a (b (regs out)))
+  & regs ~ {source keep}
+  & @get ~ (b (source val))
+  & @set ~ (a (val (keep out)))
+
+@emit = (regs out)
+  & regs ~ (r0 rest1)
+  & rest1 ~ (r1 rest2)
+  & rest2 ~ (r2 rest3)
+  & rest3 ~ (r3 sentinel)
+  & sentinel ~ *
+  & out ~ (1 (r0 (1 (r1 (1 (r2 (1 (r3 (0 *)))))))))
+
+@run_cons_lw = (ls24 q8)
+  & ls24 ~ (g19 (e15 (g20 (e16 (g21 (e17 (g22 (e18 tk23))))))))
+  & g19 ~ ?((@run_nil @run_cons_la) ((e15 q10) q8))
+  & g20 ~ ?((@run_nil @run_cons_la) ((e16 q12) q10))
+  & g21 ~ ?((@run_nil @run_cons_la) ((e17 q14) q12))
+  & g22 ~ ?((@run_nil @run_cons) ((e18 tk23) q14))
+
+@run_cons_la = (* ((instr (next out)) (regs out)))
+  & @step ~ (instr (regs next))

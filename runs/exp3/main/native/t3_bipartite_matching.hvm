@@ -1,0 +1,108 @@
+@prog = (({$([=0] ?((@loop_more @loop_done) (a_ctx_q104 (b_loop (edges (0 (0 (match out)))))))) a_ctx_q104} ({?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil (?((@zeros_nil @zeros_succ) tail_q139) (1 (0 tail_q139)))) tail_q138) (1 (0 tail_q138)))) tail_q137) (1 (0 tail_q137)))) tail_q136) (1 (0 tail_q136)))) tail_q135) (1 (0 tail_q135)))) tail_q134) (1 (0 tail_q134)))) tail_q133) (1 (0 tail_q133)))) tail_q132) (1 (0 tail_q132)))) tail_q131) (1 (0 tail_q131)))) tail_q130) (1 (0 tail_q130)))) tail_q129) (1 (0 tail_q129)))) tail_q128) (1 (0 tail_q128)))) tail_q127) (1 (0 tail_q127)))) tail_q126) (1 (0 tail_q126)))) tail_q125) (1 (0 tail_q125)))) match) b_loop} edges)) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_succ = (?((@zeros_nil (?((@zeros_nil @zeros_succ) tail_q150) (1 (0 tail_q150)))) tail) (1 (0 tail)))
+
+@loop_done = (junk (a (b (edges (i (count (match out)))))))
+  & junk ~ *
+  & a ~ *
+  & b ~ *
+  & edges ~ *
+  & i ~ *
+  & match ~ *
+  & out ~ count
+
+@loop_more = (a ({?((@zeros_nil (?((@zeros_nil @zeros_succ) tail_q144) (1 (0 tail_q144)))) visited) b_keep} ({{all_q107 (?((@try_nil @try_cons) (pl_q108 (i_dfs (all_q107 (match (visited (?((@loop_fail @loop_succ) (a (b_keep (edge_next (i_keep (count (match2 out))))))) (match2 *)))))))) pl_q108)} edge_next} ({i_dfs i_keep} (count (match out))))))
+
+@loop_fail = ({a_cmp_q109 a_ctx_q109} (b (edges ($([+1] {$([=] $(a_cmp_q109 ?((@loop_more @loop_done) (a_ctx_q109 (b (edges (i_ctx_q109 (count (match out))))))))) i_ctx_q109}) (count (match out))))))
+
+@loop_succ = (junk (a (b (edges (i (count (match out)))))))
+  & junk ~ *
+  & i ~ $([+1] i2)
+  & count ~ $([+1] count2)
+  & b ~ {b_cmp b_keep}
+  & count2 ~ {count_cmp count_keep}
+  & count_cmp ~ $([=] $(b_cmp full))
+  & full ~ ?((@loop_continue @loop_full) (a (b_keep (edges (i2 (count_keep (match out)))))))
+
+@loop_continue = ({a_cmp_q110 a_ctx_q110} (b (edges ({$([=] $(a_cmp_q110 ?((@loop_more @loop_done) (a_ctx_q110 (b (edges (i_ctx_q110 (count (match out))))))))) i_ctx_q110} (count (match out))))))
+
+@loop_full = (junk (a (b (edges (i (count (match out)))))))
+  & junk ~ *
+  & a ~ *
+  & b ~ *
+  & edges ~ *
+  & i ~ *
+  & match ~ *
+  & out ~ count
+
+@try_nil = (pl (left (all (match (vis out)))))
+  & pl ~ *
+  & left ~ *
+  & all ~ *
+  & out ~ (0 (match vis))
+
+@try_cons = (junk (payload (left (all (match (vis out))))))
+  & junk ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & left ~ {left_cmp left_keep}
+  & u ~ $([=] $(left_cmp eq))
+  & eq ~ ?((@edge_no @edge_yes) (tail (left_keep (all (v (match (vis out)))))))
+
+@edge_no = ((?((@try_nil @try_cons) (pl_q112 (left (all (match (vis out)))))) pl_q112) (left (all (* (match (vis out))))))
+
+@edge_yes = (* (tail (left (all ({v_get v_keep} (match ({(?((@get_nil @get_cons) (pl_q113 (v_get ?((@edge_unseen @edge_seen) (tail (left (all (v_keep (match (vis_keep out)))))))))) pl_q113) vis_keep} out)))))))
+
+@edge_seen = (* ((?((@try_nil @try_cons) (pl_q114 (left (all (match (vis out)))))) pl_q114) (left (all (* (match (vis out)))))))
+
+@edge_unseen = (tail (left (all ({v_set {v_get v_keep}} ({(?((@get_nil @get_cons) (pl_q116 (v_get ?((@slot_free @slot_taken) (tail (left (all (v_keep (match_keep (vmark out)))))))))) pl_q116) match_keep} ((?((@set_nil @set_cons) (pl_q115 (v_set (1 vmark)))) pl_q115) out))))))
+
+@slot_free = (* ($([+1] newval) (* (v ((?((@set_nil @set_cons) (pl_q117 (v (newval match2)))) pl_q117) (vmark (1 (match2 vmark))))))))
+
+@slot_taken = (occupant (tail (left ({{all_q118 (?((@try_nil @try_cons) (pl_q111_q118 (occupant (all_q118 (match (vmark (?((((?((@try_nil @try_cons) (pl_q119_q147 (left_q147 (edges_q147 (match_q147 (vis_q147 out_q147)))))) pl_q119_q147) (left_q147 (edges_q147 (* (match_q147 (vis_q147 out_q147)))))) @reassign_yes) (tail (left (edge_keep (v (match_rec (vis_rec out))))))) (match_rec vis_rec)))))))) pl_q111_q118)} edge_keep} (v (match (vmark out)))))))
+
+@reassign_yes = (* (* ($([+1] newval) (* (v ((?((@set_nil @set_cons) (pl_q140 (v (newval newmatch)))) pl_q140) (vis (1 (newmatch vis)))))))))
+
+@get_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (junk (pl (idx out)))
+  & junk ~ *
+  & pl ~ (head tail)
+  & idx ~ {idx_cmp idx_keep}
+  & idx_cmp ~ $([=0] z)
+  & z ~ ?((@get_next @get_head) (head (tail (idx_keep out))))
+
+@get_head = (junk (head (tail (idx out))))
+  & junk ~ *
+  & tail ~ *
+  & idx ~ *
+  & out ~ head
+
+@get_next = (* ((?((@get_nil @get_cons) (pl_q121 (idx2 out))) pl_q121) ($([:-1] idx2) out)))
+
+@set_nil = (pl (idx (val out)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (junk (pl (idx (val out))))
+  & junk ~ *
+  & pl ~ (head tail)
+  & idx ~ {idx_cmp idx_keep}
+  & idx_cmp ~ $([=0] z)
+  & z ~ ?((@set_next @set_head) (head (tail (idx_keep (val out)))))
+
+@set_head = (junk (head (tail (idx (val out)))))
+  & junk ~ *
+  & head ~ *
+  & idx ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (head ((?((@set_nil @set_cons) (pl_q123 (idx2 (val tail2)))) pl_q123) ($([:-1] idx2) (val (1 (head tail2))))))

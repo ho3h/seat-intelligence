@@ -1,0 +1,122 @@
+@prog = ((pred truth) out)
+  & @zip ~ (pred (truth rows))
+  & rows ~ {todo full}
+  & @outer ~ (todo (full ((0 *) (0 out))))
+
+@zip = ((?((@zip_nil @zip_cons) (pl (truth out))) pl) (truth out))
+
+@zip_nil = (* (truth out))
+  & truth ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((ph pt) (truth out)))
+  & @zipT ~ (truth (ph (pt out)))
+
+@zipT = ((?((@zipT_nil @zipT_cons) (pl (ph (pt out)))) pl) (ph (pt out)))
+
+@zipT_nil = (* (ph (pt out)))
+  & ph ~ *
+  & pt ~ *
+  & out ~ (0 *)
+
+@zipT_cons = (* ((th tt) (ph (pt out))))
+  & @zip ~ (pt (tt rest))
+  & out ~ (1 ((ph th) rest))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (* (q out))
+  & q ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (q out)))
+  & q ~ {q_cmp q_rec}
+  & h ~ $([=] $(q_cmp eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (q_rec out)))
+
+@mem_no = (* (t (q out)))
+  & @mem ~ (t (q out))
+
+@mem_yes = (* (t (q out)))
+  & t ~ *
+  & q ~ *
+  & out ~ 1
+
+@outer = ((?((@outer_nil @outer_cons) (pl (full (seen (acc out))))) pl) (full (seen (acc out))))
+
+@outer_nil = (* (full (seen (acc out))))
+  & full ~ *
+  & seen ~ *
+  & acc ~ out
+
+@outer_cons = (* (((p t) tail) (full (seen (acc out)))))
+  & full ~ {full_metric full_recur}
+  & seen ~ {seen_query seen_recur}
+  & p ~ {p_query p_more}
+  & p_more ~ {p_metric p_seen}
+  & @mem ~ (seen_query (p_query has))
+  & has ~ ?((@outer_new @outer_old) (tail (full_metric (full_recur (seen_recur (p_metric (p_seen (t (acc out))))))))
+
+@outer_old = (* (tail (full_metric (full_recur (seen_recur (p_metric (p_seen (t (acc out)))))))))
+  & full_metric ~ *
+  & p_metric ~ *
+  & p_seen ~ *
+  & t ~ *
+  & @outer ~ (tail (full_recur (seen_recur (acc out))))
+
+@outer_new = (* (tail (full_metric (full_recur (seen_recur (p_metric (p_seen (t (acc out)))))))))
+  & @metric ~ (full_metric (p_metric m))
+  & acc ~ $([+] $(m acc2))
+  & t ~ *
+  & @outer ~ (tail (full_recur ((1 (p_seen seen_recur)) (acc2 out))))
+
+@metric = ((?((@metric_nil @metric_cons) (pl (all (p (mx out))))) pl) (all (p (mx out))))
+
+@metric_nil = (* (all (p (mx out))))
+  & all ~ *
+  & p ~ *
+  & mx ~ out
+
+@metric_cons = (* (((cp ct) tail) (all (p (mx out)))))
+  & all ~ {all_count all_next}
+  & p ~ {p_cmp p_rest}
+  & p_rest ~ {p_count p_next}
+  & cp ~ $([=] $(p_cmp eq))
+  & eq ~ ?((@metric_no @metric_yes) (tail (ct (all_count (all_next (p_count (p_next (mx out)))))))
+
+@metric_no = (* (tail (ct (all_count (all_next (p_count (p_next (mx out))))))))
+  & ct ~ *
+  & all_count ~ *
+  & p_count ~ *
+  & @metric ~ (tail (all_next (p_next (mx out))))
+
+@metric_yes = (* (tail (ct (all_count (all_next (p_count (p_next (mx out))))))))
+  & @count ~ (all_count (p_count (ct cnt)))
+  & cnt ~ {cnt_cmp cnt_keep}
+  & mx ~ {mx_cmp mx_keep}
+  & cnt_cmp ~ $([>] $(mx_cmp gt))
+  & gt ~ ?((@metric_keep @metric_update) (tail (all_next (p_next (mx_keep (cnt_keep out))))))
+
+@metric_keep = (* (tail (all_next (p (mx (cnt out))))))
+  & cnt ~ *
+  & @metric ~ (tail (all_next (p (mx out))))
+
+@metric_update = (* (tail (all_next (p (mx (cnt out))))))
+  & mx ~ *
+  & @metric ~ (tail (all_next (p (cnt out))))
+
+@count = ((?((@count_nil @count_cons) (pl (p (t (acc out))))) pl) (p (t (acc out))))
+
+@count_nil = (* (p (t (acc out))))
+  & p ~ *
+  & t ~ *
+  & acc ~ out
+
+@count_cons = (* (((rp rt) tail) (p (t (acc out)))))
+  & p ~ {pc pr}
+  & t ~ {tc tr}
+  & rp ~ $([=] $(pc ep))
+  & rt ~ $([=] $(tc et))
+  & ep ~ $([*] $(et both))
+  & acc ~ $([+] $(both acc2))
+  & @count ~ (tail (pr (tr (acc2 out))))

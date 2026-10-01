@@ -1,0 +1,89 @@
+// Count vertices that can reach themselves by a nonempty directed path.
+
+@prog = ((n edges) out)
+  & @outer ~ (n (edges (0 (0 out))))
+
+@outer = (n (edges (i (count out))))
+  & n ~ {n_cmp n_keep}
+  & i ~ {i_cmp i_keep}
+  & i_cmp ~ $([<] $(n_cmp cond))
+  & cond ~ ?((@outer_done @outer_step) (n_keep (edges (i_keep (count out)))))
+
+@outer_done = (* (* (* (count out))))
+  & count ~ out
+
+@outer_step = (* (n (edges (i (count out)))))
+  & edges ~ {edges_reach edges_next}
+  & i ~ {i_reach i_next}
+  & @reach ~ (i_reach (edges_reach cyc))
+  & count ~ $([+] $(cyc count_next))
+  & i_next ~ $([+1] i_after)
+  & @outer ~ (n (edges_next (i_after (count_next out))))
+
+@reach = (src (edges out))
+  & src ~ {src_collect src_dfs}
+  & edges ~ {edges_collect edges_dfs}
+  & @collect ~ (edges_collect (src_collect ((0 *) stack)))
+  & @dfs ~ (stack (src_dfs (edges_dfs ((0 *) out))))
+
+@collect = ((?((@collect_nil @collect_cons) (payload (x (stack out)))) payload) (x (stack out)))
+
+@collect_nil = (* (x (stack out)))
+  & x ~ *
+  & stack ~ out
+
+@collect_cons = (* (((u v) tail) (x (stack out))))
+  & x ~ {x_cmp x_keep}
+  & x_cmp ~ $([=] $(u eq))
+  & eq ~ ?((@collect_skip @collect_add) (v (tail (x_keep (stack out)))))
+
+@collect_skip = (* (tail (x (stack out))))
+  & @collect ~ (tail (x (stack out)))
+
+@collect_add = (v (tail (x (stack out))))
+  & @collect ~ (tail (x ((1 (v stack)) out)))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (payload (src (edges (seen out))))) payload) (src (edges (seen out))))
+
+@dfs_nil = (* (* (* (* out))))
+  & out ~ 0
+
+@dfs_cons = (* ((x tail) (src (edges (seen out)))))
+  & x ~ {x_cmp x_keep}
+  & src ~ {src_cmp src_keep}
+  & x_cmp ~ $([=] $(src_cmp eq))
+  & eq ~ ?((@dfs_other @dfs_found) (tail (x_keep (src_keep (edges (seen out))))))
+
+@dfs_found = (* (* (* (* (* out)))))
+  & out ~ 1
+
+@dfs_other = (tail (x (src (edges (seen out)))))
+  & x ~ {xm xkeep}
+  & seen ~ {sm skeep}
+  & @member ~ (xm (sm mem))
+  & mem ~ ?((@dfs_unseen @dfs_seen) (tail (xkeep (src (edges (skeep out))))))
+
+@dfs_seen = (tail (* (src (edges (seen out)))))
+  & @dfs ~ (tail (src (edges (seen out))))
+
+@dfs_unseen = (tail (x (src (edges (seen out)))))
+  & edges ~ {edges_collect edges_keep}
+  & x ~ {x_collect x_seen}
+  & @collect ~ (edges_collect (x_collect (tail stack)))
+  & @dfs ~ (stack (src (edges_keep ((1 (x_seen seen)) out))))
+
+@member = ((?((@member_nil @member_cons) (payload (target out))) payload) (target out))
+
+@member_nil = (* (* out))
+  & out ~ 0
+
+@member_cons = (* ((head tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & head ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@member_no @member_yes) (tail (target_keep out)))
+
+@member_yes = (* (* out))
+  & out ~ 1
+
+@member_no = (tail (target out))
+  & @member ~ (tail (target out))

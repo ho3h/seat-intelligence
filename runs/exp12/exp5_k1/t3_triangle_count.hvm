@@ -1,0 +1,221 @@
+// t3_triangle_count (GRAPH-SWING, runs/exp5).
+// Data structures built while streaming the edge list, all by pre-expanded keyed updates:
+//   M: adjacency matrix, trie over u of row tries over word index, leaves 16-bit words; row u = N+(u) = {v > u}.
+//   Q: request trie over vertex id; leaf = (in out) end of a DUP multicast chain. Each edge (u<v) pushes two reply
+//      wires x1 (for row u) and x2 (for row v): wires are return addresses, so nothing has to be routed back.
+//   S: sum trie over u; edge (u, v) adds popcount(row u AND row v) at leaf u.
+// fin: zip M with Q (pure wiring: row w -> multicast chain of leaf w), then reduce S. Each triangle a<b<c is counted
+// once, by the edge (a, b).
+@prog = ((n es) out)
+  & n ~ ?((@tc_zero @tc_pos) (es out))
+@tc_zero = (* 0)
+@tc_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & @lg ~ (a D)
+  & b ~ $([>>] $(4 bw))
+  & @lg ~ (bw W)
+  & D ~ {D1 {D2 {D3 D4}}}
+  & W ~ {W1 W2}
+  & @zm ~ (D1 (W1 M0))
+  & @zq ~ (D2 Q0)
+  & @zt ~ (D3 S0)
+  & @w_blk ~ (es ((D4 (W2 (M0 (Q0 S0)))) out))
+
+@tc_step = ((D (W (M (Q S)))) ((a b) (Dn (Wn (M2 (Q2 S2))))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@tc_swap @tc_keep) (a2 (b2 (u v))))
+  & u ~ {u1 {u2 u3}}
+  & v ~ {v1 v2}
+  & D ~ {D1 {D2 {D3 {D4 Dn}}}}
+  & W ~ {W1 {W2 Wn}}
+  & @sb ~ (M (u1 (D1 ((v1 W1) M2))))
+  & @pu ~ (Q (u2 (D2 (x1 Qa))))
+  & @pu ~ (Qa (v2 (D3 (x2 Q2))))
+  & @pa ~ (x1 (x2 (W2 c)))
+  & @ad ~ (S (u3 (D4 (c S2))))
+@tc_swap = (a (b (b a)))
+@tc_keep = (* (a (b (a b))))
+
+@tc_fin = ((D (W (M (Q S)))) o)
+  & D ~ {D1 D2}
+  & W ~ *
+  & @zmq ~ (M (Q D1))
+  & @cnt ~ (S (D2 o))
+
+// set bit v in row u: row trie keyed by v>>4, word |= 1 << (v & 15)
+@sb_act = (row ((v W) o))
+  & v ~ {v1 v2}
+  & v1 ~ $([>>] $(4 kw))
+  & v2 ~ $([&] $(15 bi))
+  & 1 ~ $([<<] $(bi mask))
+  & @sr ~ (row (kw (W (mask o))))
+@sr_act = (w (mask o))
+  & w ~ $([|] $(mask o))
+// push a reply wire onto the multicast chain of a leaf
+@pu_act = ((i o) (x (i o2)))
+  & o ~ {x o2}
+// add c to a leaf
+@ad_act = (old (c o))
+  & old ~ $([+] $(c o))
+
+// zero matrix: depth-L trie of depth-W zero rows
+@zm = (L (W o))
+  & L ~ ?((@zm_leaf @zm_node) (W o))
+@zm_leaf = (W o)
+  & @zt ~ (W o)
+@zm_node = (lm (W (a b)))
+  & lm ~ {l1 l2}
+  & W ~ {w1 w2}
+  & @zm ~ (l1 (w1 a))
+  & @zm ~ (l2 (w2 b))
+// empty request trie: leaves are wire loops (y y)
+@zq = (?(((y y) @zq_node) o) o)
+@zq_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zq ~ (l1 a)
+  & @zq ~ (l2 b)
+// deliver row w of M to the multicast chain at leaf w of Q, erase the chain's end
+@zmq = (m (q L))
+  & L ~ ?((@zmq_leaf @zmq_node) (m q))
+@zmq_leaf = (R (R *))
+@zmq_node = (lm ((m1 m2) (q1 q2)))
+  & lm ~ {l1 l2}
+  & @zmq ~ (m1 (q1 l1))
+  & @zmq ~ (m2 (q2 l2))
+// pa(a, b, W): popcount of the AND of two depth-W word tries
+@pa = (a (b (L o)))
+  & L ~ ?((@pa_leaf @pa_node) (a (b o)))
+@pa_leaf = (a (b o))
+  & a ~ $([&] $(b w))
+  & @pop16 ~ (w o)
+@pa_node = (lm ((a1 a2) ((b1 b2) o)))
+  & lm ~ {l1 l2}
+  & @pa ~ (a1 (b1 (l1 x)))
+  & @pa ~ (a2 (b2 (l2 y)))
+  & x ~ $([+] $(y o))
+@pop16 = (x o)
+  & x ~ {x1 x2}
+  & x1 ~ $([>>] $(1 y))
+  & y ~ $([&] $(21845 y2))
+  & x2 ~ $([-] $(y2 a))
+  & a ~ {a1 a2}
+  & a1 ~ $([&] $(13107 p))
+  & a2 ~ $([>>] $(2 q))
+  & q ~ $([&] $(13107 q2))
+  & p ~ $([+] $(q2 b))
+  & b ~ {b1 b2}
+  & b2 ~ $([>>] $(4 r))
+  & b1 ~ $([+] $(r c))
+  & c ~ $([&] $(3855 c2))
+  & c2 ~ {c3 c4}
+  & c4 ~ $([>>] $(8 s))
+  & c3 ~ $([+] $(s e))
+  & e ~ $([&] $(31 o))
+@w_blk = (t (S0 o0))
+  & t ~ (T1 (E1 t1))
+  & T1 ~ ?((@w_nil @w_last) (S0 (o0 (E1 t1))))
+@w_nil = (S (o *))
+  & @tc_fin ~ (S o)
+@w_cons = (* (S (o (E (S2 o)))))
+  & @tc_step ~ (S (E S2))
+@w_last = (* (S (o (E t))))
+  & @tc_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+@sb = (t (k (L (P o))))
+  & L ~ ?((@sb_leaf @sb_node) (t (k (P o))))
+@sb_leaf = (t (* (P o)))
+  & @sb_act ~ (t (P o))
+@sb_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@sb_L @sb_R) (t (k2 (l2 (P o)))))
+@sb_L = ((l r) (k (L (P (l2 r)))))
+  & @sb ~ (l (k (L (P l2))))
+@sb_R = (* ((l r) (k (L (P (l r2))))))
+  & @sb ~ (r (k (L (P r2))))
+@sr = (t (k (L (P o))))
+  & L ~ ?((@sr_leaf @sr_node) (t (k (P o))))
+@sr_leaf = (t (* (P o)))
+  & @sr_act ~ (t (P o))
+@sr_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@sr_L @sr_R) (t (k2 (l2 (P o)))))
+@sr_L = ((l r) (k (L (P (l2 r)))))
+  & @sr ~ (l (k (L (P l2))))
+@sr_R = (* ((l r) (k (L (P (l r2))))))
+  & @sr ~ (r (k (L (P r2))))
+@pu = (t (k (L (P o))))
+  & L ~ ?((@pu_leaf @pu_node) (t (k (P o))))
+@pu_leaf = (t (* (P o)))
+  & @pu_act ~ (t (P o))
+@pu_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@pu_L @pu_R) (t (k2 (l2 (P o)))))
+@pu_L = ((l r) (k (L (P (l2 r)))))
+  & @pu ~ (l (k (L (P l2))))
+@pu_R = (* ((l r) (k (L (P (l r2))))))
+  & @pu ~ (r (k (L (P r2))))
+@ad = (t (k (L (P o))))
+  & L ~ ?((@ad_leaf @ad_node) (t (k (P o))))
+@ad_leaf = (t (* (P o)))
+  & @ad_act ~ (t (P o))
+@ad_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ad_L @ad_R) (t (k2 (l2 (P o)))))
+@ad_L = ((l r) (k (L (P (l2 r)))))
+  & @ad ~ (l (k (L (P l2))))
+@ad_R = (* ((l r) (k (L (P (l r2))))))
+  & @ad ~ (r (k (L (P r2))))
+// ---- shared trie primitives (depth-L complete binary trie, leaves are numbers, keyed by bits of the key, high bit first)
+// lg(x) = number of bits of x (0 for 0): trie depth for keys 0..x
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+// zt(L): trie of depth L with all leaves 0
+@zt = (?((0 @zt_node) o) o)
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+// cnt(t, L): sum of the leaves
+@cnt = (t (L o))
+  & L ~ ?((@cnt_leaf @cnt_node) (t o))
+@cnt_leaf = (x x)
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+// ins(t, k, L): set leaf k to 1. Control flow depends on k and L only, so it expands before t exists.
+@ins = (t (k (L o)))
+  & L ~ ?((@ins_leaf @ins_node) (t (k o)))
+@ins_leaf = (* (* 1))
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))

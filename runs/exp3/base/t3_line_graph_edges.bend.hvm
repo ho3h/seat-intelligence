@@ -1,0 +1,24 @@
+@count_pairs = ((@count_pairs__C1 a) a)
+
+@count_pairs__C0 = (* (b ({a c} ($([+] $(d e)) f))))
+  & @count_pairs ~ (a (e f))
+  & @count_with ~ (b (c (0 d)))
+
+@count_pairs__C1 = (?(((a a) @count_pairs__C0) b) b)
+
+@count_with = (a ((@count_with__C3 (a b)) b))
+
+@count_with__C0 = (a (c (b d)))
+  & @count_with ~ (a (b (c d)))
+
+@count_with__C1 = (* (a ($([+0x0000001] c) (b d))))
+  & @count_with ~ (a (b (c d)))
+
+@count_with__C2 = (* (({a d} {b f}) (j ({({$([=] $(a $([|] $(c $([|] $(e $([|] $(g ?((@count_with__C0 @count_with__C1) (h (i (j k)))))))))))) $([=] $(b c))} {$([=] $(d e)) $([=] $(f g))}) h} (i k)))))
+
+@count_with__C3 = (?(((* (a a)) @count_with__C2) b) b)
+
+@prog = ((* a) b)
+  & @count_pairs ~ (a (0 b))
+
+

@@ -1,0 +1,21 @@
+// Map each value in the tree to value + k.
+@prog = (input output)
+  & input ~ (k tree)
+  & @map ~ (k (tree output))
+
+@map = (k (tree out))
+  & tree ~ (?((@map_leaf @map_node) (k (out p))) p)
+
+@map_leaf = (k (out p))
+  & k ~ *
+  & p ~ *
+  & out ~ (0 *)
+
+@map_node = (* (k (out p)))
+  & p ~ (l (v r))
+  & k ~ {kl kr}
+  & kr ~ {kv kr2}
+  & @map ~ (kl (l lo))
+  & @map ~ (kr2 (r ro))
+  & v ~ $([+] $(kv nv))
+  & out ~ (1 (lo (nv ro)))

@@ -1,0 +1,59 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@get_at = ((@get_at__C2 a) a)
+
+@get_at__C0 = ($([+0x0000001] $([:-0x0000001] b)) (* (a c)))
+  & @get_at ~ (a (b c))
+
+@get_at__C1 = (* (b (c (?(((a (* a)) @get_at__C0) (b (c d))) d))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@make_labels = ({$([<] $(a ?(((* (* @List/Nil)) @make_labels__C0) (b (c d))))) b} ({a c} d))
+
+@make_labels__C0 = (* ({a $([+0x0000001] b)} (c e)))
+  & @List/Cons ~ (a (d e))
+  & @make_labels ~ (b (c d))
+
+@merge_edges = ((@merge_edges__C5 a) a)
+
+@merge_edges__C0 = (b (a (c (d f))))
+  & @merge_edges ~ (a (e f))
+  & @replace_label ~ (b (c (d e)))
+
+@merge_edges__C1 = (* (b (a (d (c f)))))
+  & @merge_edges ~ (a (e f))
+  & @replace_label ~ (b (c (d e)))
+
+@merge_edges__C2 = (b (c ({$([<] $(a ?((@merge_edges__C0 @merge_edges__C1) (b (c (d (e f))))))) d} ({a e} f))))
+
+@merge_edges__C3 = (* (b (a (* (* c)))))
+  & @merge_edges ~ (a (b c))
+
+@merge_edges__C4 = (* ((b d) (g ({f {c a}} j))))
+  & @get_at ~ (c (d {e i}))
+  & @get_at ~ (a (b {$([=] $(e ?((@merge_edges__C2 @merge_edges__C3) (f (g (h (i j))))))) h}))
+
+@merge_edges__C5 = (?(((a a) @merge_edges__C4) b) b)
+
+@prog = ((b a) d)
+  & @merge_edges ~ (a (c d))
+  & @make_labels ~ (0 (b c))
+
+@replace_label = ((@replace_label__C3 a) a)
+
+@replace_label__C0 = (c (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @replace_label ~ (b (c (d e)))
+
+@replace_label__C1 = (* (c ({a d} (* (b f)))))
+  & @List/Cons ~ (a (e f))
+  & @replace_label ~ (b (c (d e)))
+
+@replace_label__C2 = (* ({$([=] $(a ?((@replace_label__C0 @replace_label__C1) (b (c (d (e f))))))) d} (e ({a b} (c f)))))
+
+@replace_label__C3 = (?(((* (* @List/Nil)) @replace_label__C2) a) a)
+
+

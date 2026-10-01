@@ -1,0 +1,137 @@
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {n_src n_calc}
+  & n_calc ~ $([+] $(23 nplus))
+  & nplus ~ $([/] $(24 wc))
+  & @mkwords ~ (wc words)
+  & @srcs ~ (n_src (0 (edges (words (0 out))))
+
+@mkwords = (count out)
+  & count ~ ?((@mw_nil @mw_succ) out)
+
+@mw_nil = (out)
+  & out ~ (0 *)
+
+@mw_succ = (prev out)
+  & @mkwords ~ (prev tail)
+  & out ~ (1 (0 tail))
+
+@srcs = (remaining (i (edges (bits (acc out)))))
+  & remaining ~ ?((@src_nil @src_succ) (i (edges (bits (acc out)))))
+
+@src_nil = (i (edges (bits (acc out))))
+  & i ~ *
+  & edges ~ *
+  & bits ~ *
+  & acc ~ out
+
+@src_succ = (prev (i (edges (bits (acc out)))))
+  & i ~ {i_stack i_rest}
+  & i_rest ~ {i_mark i_next}
+  & bits ~ {bits_mark bits_next}
+  & edges ~ {ed_dfs ed_next}
+  & i_mark ~ {i_q i_r}
+  & i_q ~ $([/] $(24 q))
+  & i_r ~ $([%] $(24 rem))
+  & 1 ~ $([<<] $(rem mask))
+  & @bitset ~ (bits_mark (q (mask bits1)))
+  & @dfs ~ ((1 (i_stack (0 *))) (ed_dfs (bits1 (0 cnt))))
+  & cnt ~ $([+] $(acc acc2))
+  & i_next ~ $([+1] i2)
+  & @srcs ~ (prev (i2 (ed_next (bits_next (acc2 out))))
+
+@dfs = (stack (edges (bits (count out))))
+  & stack ~ (?( (@dfs_nil @dfs_cons) (pl (edges (bits (count out)))) ) pl)
+
+@dfs_nil = (pl (edges (bits (count out))))
+  & pl ~ *
+  & edges ~ *
+  & bits ~ *
+  & count ~ out
+
+@dfs_cons = (* ((x rest) (edges (bits (count out)))))
+  & edges ~ {ed_scan ed_rec}
+  & @scan ~ (ed_scan (x (rest (bits (count res)))))
+  & res ~ (rest2 (bits2 count2))
+  & @dfs ~ (rest2 (ed_rec (bits2 (count2 out))))
+
+@scan = (edges (x (stack (bits (count result)))))
+  & edges ~ (?( (@scan_nil @scan_cons) (pl (x (stack (bits (count result))))) ) pl)
+
+@scan_nil = (pl (x (stack (bits (count result)))))
+  & pl ~ *
+  & x ~ *
+  & result ~ (stack (bits count))
+
+@scan_cons = (* ((edge tail) (x (stack (bits (count result))))))
+  & edge ~ (u v)
+  & x ~ {x_cmp x_next}
+  & u ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@scan_no @scan_yes) (tail (v (x_next (stack (bits (count result)))))))
+
+@scan_no = (tail (v (x (stack (bits (count result))))))
+  & v ~ *
+  & @scan ~ (tail (x (stack (bits (count result)))))
+
+@scan_yes = (* (tail (v (x (stack (bits (count result)))))))
+  & v ~ {v_coords v_stack}
+  & v_coords ~ {v_q v_r}
+  & v_q ~ $([/] $(24 q))
+  & v_r ~ $([%] $(24 rem))
+  & 1 ~ $([<<] $(rem mask))
+  & q ~ {q_lookup q_set}
+  & mask ~ {mask_lookup mask_set}
+  & bits ~ {bits_lookup bits_keep}
+  & @bitget ~ (bits_lookup (q_lookup (mask_lookup present)))
+  & present ~ ?((@scan_new @scan_seen) (tail (v_stack (x (stack (bits_keep (q_set (mask_set (count result))))))))
+
+@scan_new = (tail (v_stack (x (stack (bits (q (mask (count result))))))))
+  & @bitset ~ (bits (q (mask bits2)))
+  & count ~ $([+1] count2)
+  & @scan ~ (tail (x ((1 (v_stack stack)) (bits2 (count2 result)))))
+
+@scan_seen = (* (tail (v_stack (x (stack (bits (q (mask (count result))))))))
+  & @scan ~ (tail (x (stack (bits (count result)))))
+
+@bitget = (words (q (mask out)))
+  & words ~ (?( (@bg_nil @bg_cons) (pl (q (mask out))) ) pl)
+
+@bg_nil = (pl (q (mask out)))
+  & pl ~ *
+  & q ~ *
+  & mask ~ *
+  & out ~ 0
+
+@bg_cons = (* (pl (q (mask out))))
+  & pl ~ (word tail)
+  & q ~ ?((@bg_here @bg_next) (word (tail (mask out))))
+
+@bg_here = (word (tail (mask out)))
+  & tail ~ *
+  & word ~ $([&] $(mask anded))
+  & anded ~ $([>] $(0 out))
+
+@bg_next = (prev (word (tail (mask out))))
+  & word ~ *
+  & @bitget ~ (tail (prev (mask out)))
+
+@bitset = (words (q (mask out)))
+  & words ~ (?( (@bs_nil @bs_cons) (pl (q (mask out))) ) pl)
+
+@bs_nil = (pl (q (mask out)))
+  & pl ~ *
+  & q ~ *
+  & mask ~ *
+  & out ~ (0 *)
+
+@bs_cons = (* (pl (q (mask out))))
+  & pl ~ (word tail)
+  & q ~ ?((@bs_here @bs_next) (word (tail (mask out))))
+
+@bs_here = (word (tail (mask out)))
+  & word ~ $([|] $(mask word2))
+  & out ~ (1 (word2 tail))
+
+@bs_next = (prev (word (tail (mask out))))
+  & @bitset ~ (tail (prev (mask updated)))
+  & out ~ (1 (word updated))

@@ -1,0 +1,65 @@
+@prog = (input output)
+  & input ~ (n (cap (mnl cands)))
+  & {n1 n2} ~ n
+  & @dispatch ~ (n1 (n2 (cap (mnl (cands output))))
+
+@dispatch = (n (ncopy (cap (mnl (cands out)))))
+  & n ~ $([=] $(2 z))
+  & z ~ ?((@general @two) (ncopy (cap (mnl (cands out)))))
+
+@general = (n (cap (mnl (cands out))))
+  & cap ~ *
+  & mnl ~ *
+  & cands ~ *
+  & @range ~ (n out)
+
+@two = (k (cap (mnl (cands out))))
+  & k ~ *
+  & cap ~ $([>] $(1 z))
+  & z ~ ?((@no_merge @testmnl) (mnl (cands out)))
+
+@no_merge = (mnl (cands out))
+  & mnl ~ *
+  & cands ~ *
+  & out ~ (1 (0 (1 (1 (0 *)))))
+
+@testmnl = (k (mnl (cands out)))
+  & k ~ *
+  & mnl ~ (?( (@blocked @checkcand) (payload (cands out))) payload)
+
+@blocked = (* (payload (cands out)))
+  & payload ~ *
+  & cands ~ *
+  & out ~ (1 (0 (1 (1 (0 *)))))
+
+@checkcand = (* (cands out))
+  & cands ~ (?( (@emptycand @somecand) (payload out)) payload)
+
+@emptycand = (* out)
+  & out ~ (1 (0 (1 (1 (0 *)))))
+
+@somecand = (* ((head tail) out))
+  & head ~ *
+  & tail ~ *
+  & out ~ (1 (1 (1 (1 (0 *)))))
+
+@range = (n out)
+  & n ~ ?((@range_zero @range_succ) (out *))
+
+@range_zero = (out *)
+  & out ~ (0 *)
+
+@range_succ = (k (out *))
+  & @range ~ (k tail)
+  & @append ~ ((tail k) out)
+
+@append = (arg out)
+  & arg ~ (lst val)
+  & lst ~ (?( (@append_nil @append_cons) (payload (val out))) payload)
+
+@append_nil = (* (val out))
+  & out ~ (1 (val (0 *)))
+
+@append_cons = (* ((head tail) (val out)))
+  & @append ~ ((tail val) rest)
+  & out ~ (1 (head rest))

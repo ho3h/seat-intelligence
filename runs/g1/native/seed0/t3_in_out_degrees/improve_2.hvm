@@ -1,0 +1,110 @@
+// Build a balanced degree tree, apply each edge's two increments,
+// then flatten the tree into the two output lists.
+@prog = ((n edges) out)
+  & n ~ ?((@prog_zero @prog_succ) (edges out))
+
+@prog_zero = (edges out)
+  & edges ~ *
+  & out ~ ((0 *) (0 *))
+
+@prog_succ = (m (edges out))
+  & m ~ $([+1] size)
+  & @bt ~ (size tree)
+  & @edproc ~ (edges (tree updated))
+  & @flat ~ (updated (((0 *) (0 *)) out))
+
+// Tree leaves are (0 (in out)); internal nodes are
+// (1 (left_length (right_length (left_tree right_tree)))).
+@bt = (n out)
+  & n ~ ?((@bt_zero @bt_succ) out)
+
+@bt_zero = out
+  & out ~ *
+
+@bt_succ = (m out)
+  & m ~ ?((@bt_leaf @bt_internal) out)
+
+@bt_leaf = out
+  & out ~ (0 (0 0))
+
+@bt_internal = (k out)
+  & k ~ $([+2] size)
+  & size ~ {n1 n2}
+  & n1 ~ $([/] $(2 leftlen))
+  & leftlen ~ {ls {ll lr}}
+  & n2 ~ $([-] $(ls rightlen))
+  & rightlen ~ {rs rr}
+  & @bt ~ (lr left)
+  & @bt ~ (rr right)
+  & out ~ (1 (ll (rs (left right))))
+
+// Traverse the edge list, updating the tree for each edge.
+@edproc = (edges (tree out))
+  & edges ~ (?( (@ep_nil @ep_cons) (payload (tree out)) ) payload)
+
+@ep_nil = (payload (tree out))
+  & payload ~ *
+  & out ~ tree
+
+@ep_cons = (* (payload (tree out)))
+  & payload ~ ((u v) tail)
+  & @upd ~ (1 (u (tree tree2)))
+  & @upd ~ (0 (v (tree2 tree3)))
+  & @edproc ~ (tail (tree3 out))
+
+// Update one endpoint in the tree. Mode 0 increments in-degree;
+// mode 1 increments out-degree.
+@upd = (mode (idx (tree out)))
+  & tree ~ (?( (@upd_leaf @upd_node) (payload (mode (idx out))) ) payload)
+
+@upd_leaf = (payload (mode (idx out)))
+  & payload ~ (ins outs)
+  & mode ~ ?((@upd_in @upd_out) (ins (outs (idx out))))
+
+@upd_in = (ins (outs (idx out)))
+  & ins ~ $([+1] ins2)
+  & idx ~ *
+  & out ~ (0 (ins2 outs))
+
+@upd_out = (* (ins (outs (idx out))))
+  & outs ~ $([+1] outs2)
+  & idx ~ *
+  & out ~ (0 (ins outs2))
+
+@upd_node = (* (payload (mode (idx out))))
+  & payload ~ (llen (rlen (left right)))
+  & llen ~ {lc lr}
+  & idx ~ {ic ir}
+  & ic ~ $([<] $(lc b))
+  & b ~ ?((@go_left @go_right) (mode (left (right (ir (lr (rlen out)))))))
+
+@go_left = (mode (left (right (idx (llen (rlen out)))))
+  & llen ~ {calllen keeplen}
+  & @upd ~ (mode (idx (calllen (left newleft))))
+  & out ~ (1 (keeplen (rlen (newleft right))))
+
+@go_right = (* (mode (left (right (idx (llen (rlen out))))))
+  & idx ~ {isub icall}
+  & llen ~ {sublen keeplen}
+  & isub ~ $([-] $(sublen ridx))
+  & rlen ~ {calllen keeprlen}
+  & @upd ~ (mode (ridx (calllen (right newright))))
+  & out ~ (1 (keeplen (keeprlen (left newright))))
+
+// Flatten in left-to-right order by using the right subtree as the
+// continuation for flattening the left subtree.
+@flat = (tree (tails out))
+  & tree ~ (?( (@flat_leaf @flat_node) (payload (tails out)) ) payload)
+
+@flat_leaf = (payload (tails out))
+  & payload ~ (ins outs)
+  & tails ~ (it ot)
+  & out ~ ((1 (ins it)) (1 (outs ot)))
+
+@flat_node = (* (payload (tails out)))
+  & payload ~ (llen (rlen (left right)))
+  & llen ~ *
+  & rlen ~ *
+  & @flat ~ (right (tails rightlists))
+  & rightlists ~ (ri ro)
+  & @flat ~ (left (rightlists out))

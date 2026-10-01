@@ -1,0 +1,51 @@
+# t3_wsp_all_from: Bellman-Ford from s over pre-wired arc channels (lib/chan_gen): for an arc u -> v of weight w,
+# v listens to u's distance stream with meta w; d_{r+1}(v) = min(d_r(v), min over in-arcs of d_r(u) + w) (a
+# balanced min over v's Braun tree of inputs). The global no-change test runs behind speculative rounds.
+#include base
+#include chan_gen
+def prog(x):
+  (n, s, es) = x
+  (l, m) = lvl(n, 0, 1)
+  T = chan_walk_fw(es, zio(l), l, m)
+  (F, z) = chan_gen(T, s, 3, l, n)
+  return seq(z, flatd(F, l, 0, n, []))
+
+def flatd(t, l, base, n, acc):
+  switch l:
+    case 0:
+      if base < n:
+        if t >= 8388608:
+          return List/Cons(16777215, acc)
+        else:
+          return List/Cons(t, acc)
+      else:
+        return acc
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return flatd(a, l-1, base, n, flatd(b, l-1, base + h, n, acc))
+
+def lab0(mode, base):
+  if base == mode:
+    return 0
+  else:
+    return 8388608
+
+def out(mode, st):
+  return st
+
+def pre(mode, w, h):
+  return h + w
+
+def unit(mode):
+  return 8388608
+
+def comb(mode, a, b):
+  return a - (a > b) * (a - b)
+
+def upd(mode, st, x):
+  t = st > x
+  return (st - t * (st - x), t)
+
+def fin(mode, base, st, ins):
+  return ([], st)

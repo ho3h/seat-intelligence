@@ -1,0 +1,106 @@
+// Initialize labels to 0..n-1, process each edge once, then count representatives.
+@prog = ((n edges) out)
+  & n ~ {n_init n_count}
+  & @init ~ (n_init ((0 *) labs))
+  & @edges ~ (edges (labs final))
+  & @count ~ (final (0 (0 out)))
+
+@init = (n (acc out))
+  & n ~ ?((@init_zero @init_succ) (acc out))
+
+@init_zero = (acc out)
+  & out ~ acc
+
+@init_succ = (k (acc out))
+  & k ~ {k1 k2}
+  & @init ~ (k1 ((1 (k2 acc)) out))
+
+// Get index i, returning (rebuilt_list, value).
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (i out))
+  & i ~ *
+  & out ~ ((0 *) 0)
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & h ~ {h1 h2}
+  & out ~ ((1 (h1 t)) h2)
+
+@get_next = (k (h (t out)))
+  & @get ~ (t (k mid))
+  & mid ~ (tail val)
+  & out ~ ((1 (h tail)) val)
+
+// Replace every occurrence of label from with label to.
+@merge = ((?((@merge_nil @merge_cons) (pl (from (to out)))) pl) (from (to out)))
+
+@merge_nil = (* (from (to out)))
+  & from ~ *
+  & to ~ *
+  & out ~ (0 *)
+
+@merge_cons = (* ((h t) (from (to out))))
+  & h ~ {hc hk}
+  & from ~ {fc fr}
+  & to ~ {tc tr}
+  & hc ~ $([=] $(fc z))
+  & z ~ ?((@merge_no @merge_yes) (hk (tc (fr (tr (t out))))))
+
+@merge_no = (h (replacement (from (to (tail out)))))
+  & replacement ~ *
+  & @merge ~ (tail (from (to mid)))
+  & out ~ (1 (h mid))
+
+@merge_yes = (h (replacement (from (to (tail out)))))
+  & h ~ *
+  & @merge ~ (tail (from (to mid)))
+  & out ~ (1 (replacement mid))
+
+// Process the edge list, merging the labels of each edge's endpoints.
+@edges = ((?((@edges_nil @edges_cons) (pl (labs out))) pl) (labs out))
+
+@edges_nil = (* (labs out))
+  & out ~ labs
+
+@edges_cons = (* (((u v) tail) (labs out)))
+  & @get ~ (labs (u m1))
+  & m1 ~ (labs1 lu)
+  & @get ~ (labs1 (v m2))
+  & m2 ~ (labs2 lv)
+  & lu ~ {lu_cmp lu_merge}
+  & lv ~ {lv_cmp lv_merge}
+  & lu_cmp ~ $([=] $(lv_cmp z))
+  & z ~ ?((@edges_same @edges_diff) (lu_merge (lv_merge (labs2 (tail out)))))
+
+@edges_same = (lu (lv (labs tail out)))
+  & lu ~ *
+  & lv ~ *
+  & @edges ~ (tail (labs out))
+
+@edges_diff = (lu (lv (labs tail out)))
+  & @merge ~ (labs (lu (lv merged)))
+  & @edges ~ (tail (merged out))
+
+// Count labels equal to their list indices.
+@count = ((?((@count_nil @count_cons) (pl (i (acc out)))) pl) (i (acc out)))
+
+@count_nil = (* (i (acc out)))
+  & i ~ *
+  & out ~ acc
+
+@count_cons = (* ((h t) (i (acc out))))
+  & i ~ {it ir}
+  & h ~ $([=] $(it z))
+  & z ~ ?((@count_no @count_yes) (ir (acc (t out))))
+
+@count_no = (i (acc (t out)))
+  & i ~ $([+1] i2)
+  & @count ~ (t (i2 (acc out)))
+
+@count_yes = (* (i (acc (t out))))
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @count ~ (t (i2 (acc2 out)))

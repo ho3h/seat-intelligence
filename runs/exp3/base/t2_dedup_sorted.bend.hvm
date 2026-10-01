@@ -1,0 +1,45 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@dedup_pairs = ((@dedup_pairs__C11 a) a)
+
+@dedup_pairs__C0 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@dedup_pairs__C1 = (* (* @List/Nil))
+
+@dedup_pairs__C10 = (* (b ((@dedup_pairs__C9 (a (b c))) (a c))))
+
+@dedup_pairs__C11 = (?(((* @List/Nil) @dedup_pairs__C10) a) a)
+
+@dedup_pairs__C2 = (a (b (c e)))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@dedup_pairs__C3 = (* (a (* b)))
+  & @List/Cons ~ (a b)
+
+@dedup_pairs__C4 = a
+  & @List/Cons ~ a
+
+@dedup_pairs__C5 = ({a b} ({$([=] $(a ?((@dedup_pairs__C2 @dedup_pairs__C3) (b (c d))))) c} d))
+
+@dedup_pairs__C6 = (* (a ({$([=] $(a ?((@dedup_pairs__C4 (* (* (b b)))) (c d)))) c} d)))
+
+@dedup_pairs__C7 = (a ({$([=] $(a ?((@dedup_pairs__C0 @dedup_pairs__C1) (b c)))) b} c))
+
+@dedup_pairs__C8 = (* ({c e} (d (a ({$([=] $(a ?((@dedup_pairs__C5 @dedup_pairs__C6) (b (c (f g)))))) b} g)))))
+  & @dedup_pairs ~ (d (e f))
+
+@dedup_pairs__C9 = (?((@dedup_pairs__C7 @dedup_pairs__C8) a) a)
+
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* ({a c} (b e)))
+  & @List/Cons ~ (a (d e))
+  & @dedup_pairs ~ (b (c d))
+
+@prog__C1 = (?((@List/Nil @prog__C0) a) a)
+
+

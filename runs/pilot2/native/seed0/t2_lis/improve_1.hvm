@@ -1,0 +1,68 @@
+@prog = (l out)
+  & @lis ~ (l (@zero out))
+
+@zero = (0 (@zero @zero))
+
+@lis = ((?((@lis_nil @lis_cons) (payload (tree out))) payload) (tree out))
+
+@lis_nil = (* (tree out))
+  & tree ~ (m (left right))
+  & left ~ *
+  & right ~ *
+  & out ~ m
+
+@lis_cons = (* (payload (tree out)))
+  & payload ~ (head tail)
+  & @tr ~ (24 (tree (head (0 trres))))
+  & trres ~ (newtree dp)
+  & dp ~ *
+  & @lis ~ (tail (newtree out))
+
+@tr = (?((@tr_leaf @tr_step) (node (x (acc out)))) (node (x (acc out))))
+
+@tr_step = (b (node (x (acc out))))
+  & b ~ {bs br}
+  & x ~ {xs xr}
+  & xs ~ $([>>] $(bs sh))
+  & sh ~ $([&] $(1 z))
+  & z ~ ?((@tr_left @tr_right) (node (xr (acc (br out))))
+
+@tr_leaf = (node (x (acc out)))
+  & x ~ *
+  & node ~ (m (left right))
+  & acc ~ $([+1] dp)
+  & dp ~ {dpm dpout}
+  & @max ~ (m (dpm nm))
+  & out ~ ((nm (left right)) dpout)
+
+@tr_left = (node (x (acc (b out))))
+  & node ~ (m (left right))
+  & @tr ~ (b (left (x (acc rec))))
+  & rec ~ (nl dp)
+  & dp ~ {dpm dpout}
+  & @max ~ (m (dpm nm))
+  & out ~ ((nm (nl right)) dpout)
+
+@tr_right = (node (x (acc (b out))))
+  & node ~ (m (left right))
+  & left ~ (lm (ll lr))
+  & lm ~ {lmc lmp}
+  & @max ~ (acc (lmc acc2))
+  & @tr ~ (b (right (x (acc2 rec))))
+  & rec ~ (nr dp)
+  & dp ~ {dpm dpout}
+  & @max ~ (m (dpm nm))
+  & out ~ ((nm ((lmp (ll lr)) nr)) dpout)
+
+@max = (a (b out))
+  & a ~ {ac ax}
+  & b ~ {bc bx}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@max_b @max_a) (ax (bx out)))
+
+@max_b = (* (b out))
+  & out ~ b
+
+@max_a = (* (a (b out)))
+  & b ~ *
+  & out ~ a

@@ -1,0 +1,28 @@
+@prog = (input output)
+  & input ~ (n (cap (mnl cands)))
+  & cap ~ *
+  & mnl ~ *
+  & cands ~ *
+  & @range ~ (n output)
+
+@range = (n out)
+  & n ~ ?((@range_zero @range_succ) (out *))
+
+@range_zero = (out *)
+  & out ~ (0 *)
+
+@range_succ = (k (out *))
+  & {k1 k2} ~ k
+  & @range ~ (k1 tail)
+  & @append ~ ((tail k2) out)
+
+@append = (arg out)
+  & arg ~ (lst val)
+  & lst ~ (?( (@append_nil @append_cons) (payload (val out))) payload)
+
+@append_nil = (* (val out))
+  & out ~ (1 (val (0 *)))
+
+@append_cons = (* ((head tail) (val out)))
+  & @append ~ ((tail val) rest)
+  & out ~ (1 (head rest))

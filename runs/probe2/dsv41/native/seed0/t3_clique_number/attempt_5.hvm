@@ -1,0 +1,143 @@
+@prog = (in out)
+  & in ~ (n edges)
+  & n ~ {n1 n2}
+  & @build_adj ~ (n1 (edges adj))
+  & @make_vertices ~ (n2 verts)
+  & @mc ~ (verts (0 (0 (adj out))))
+
+@make_vertices = (n out)
+  & n ~ ?(((0 *) @mv_succ) out)
+
+@mv_succ = (nm1 out)
+  & @make_vertices ~ (nm1 tail)
+  & out ~ (1 (nm1 tail))
+
+@build_adj = (n (edges out))
+  & @make_list ~ (n lst)
+  & @process_edges ~ (edges (lst out))
+
+@make_list = (n out)
+  & n ~ ?(((0 *) @ml_succ) out)
+
+@ml_succ = (nm1 out)
+  & @make_list ~ (nm1 tail)
+  & out ~ (1 ((0 *) tail))
+
+@process_edges = (edges (lst out))
+  & edges ~ (?((@pe_nil @pe_cons) (lst (pl out))) pl)
+
+@pe_nil = (lst (pl out))
+  & pl ~ *
+  & out ~ lst
+
+@pe_cons = (* (lst (((u v) rest) out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @add_at ~ (lst (u1 (v1 lst1)))
+  & @add_at ~ (lst1 (v2 (u2 lst2)))
+  & @process_edges ~ (rest (lst2 out))
+
+@add_at = (lst (idx (val out)))
+  & idx ~ ?((@add_at_zero @add_at_succ) (lst (val out)))
+
+@add_at_zero = ((1 (h t)) (val out))
+  & out ~ (1 ((1 (val h)) t))
+
+@add_at_succ = (idxm1 ((1 (h t)) (val out)))
+  & @add_at ~ (t (idxm1 (val newt)))
+  & out ~ (1 (h newt))
+
+@mc = (cands (curr (best (adj out))))
+  & cands ~ (?((@mc_nil @mc_cons) (curr (best (adj (pl out))))) pl)
+
+@mc_nil = (curr (best (adj (pl out))))
+  & pl ~ *
+  & adj ~ *
+  & @maxv ~ (best (curr out))
+
+@mc_cons = (* (curr (best (adj ((v rest) out)))))
+  & curr ~ {c1 c2}
+  & rest ~ {r1 r2}
+  & adj ~ {a1 a3}
+  & a3 ~ {a2 a4}
+  & @get ~ (a1 (v neigh))
+  & @intersect ~ (r1 (neigh ncands))
+  & c1 ~ $([+1] cplus)
+  & @mc ~ (ncands (cplus (best (a2 aux))))
+  & @mc ~ (r2 (c2 (aux (a4 out))))
+
+@maxv = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 c))
+  & c ~ ?((@maxv_false @maxv_true) (a2 (b2 out)))
+
+@maxv_false = (a (b out))
+  & b ~ *
+  & out ~ a
+
+@maxv_true = (* (a (b out)))
+  & a ~ *
+  & out ~ b
+
+@get = (lst (idx out))
+  & lst ~ (?((@get_nil @get_cons) (idx (pl out))) pl)
+
+@get_nil = (idx (pl out))
+  & idx ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@get_cons = (* (idx ((h t) out)))
+  & idx ~ ?((@gc_zero @gc_succ) (h (t out)))
+
+@gc_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@gc_succ = (idxm1 (h (t out)))
+  & h ~ *
+  & @get ~ (t (idxm1 out))
+
+@intersect = (cands (lst out))
+  & cands ~ (?((@int_nil @int_cons) (lst (pl out))) pl)
+
+@int_nil = (lst (pl out))
+  & lst ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@int_cons = (* (lst ((u rest) out)))
+  & u ~ {um uc}
+  & lst ~ {l1 l2}
+  & @mem ~ (um (l1 found))
+  & found ~ ?((@int_skip @int_keep) (uc (rest (l2 out))))
+
+@int_skip = (uc (rest (lst out)))
+  & uc ~ *
+  & @intersect ~ (rest (lst out))
+
+@int_keep = (* (uc (rest (lst out))))
+  & @intersect ~ (rest (lst tail))
+  & out ~ (1 (uc tail))
+
+@mem = (x (lst out))
+  & lst ~ (?((@mem_nil @mem_cons) (x (pl out))) pl)
+
+@mem_nil = (x (pl out))
+  & x ~ *
+  & pl ~ *
+  & out ~ 0
+
+@mem_cons = (* (x ((u rest) out)))
+  & x ~ {xm xk}
+  & u ~ $([=] $(xm eq))
+  & eq ~ ?((@mem_no @mem_yes) (xk (rest out)))
+
+@mem_no = (xk (rest out))
+  & @mem ~ (xk (rest out))
+
+@mem_yes = (* (xk (rest out)))
+  & xk ~ *
+  & rest ~ *
+  & out ~ 1

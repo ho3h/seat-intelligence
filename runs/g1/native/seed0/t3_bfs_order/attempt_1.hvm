@@ -1,0 +1,109 @@
+@prog = ((n (s edges)) out)
+  & s ~ {sq ss}
+  & @bfs ~ ((1 (sq (0 *))) (n (edges ((1 (ss (0 *))) ((0 *) out))))
+
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (n (edges (seen (acc out))))) pl) (n (edges (seen (acc out))))
+
+@bfs_nil = (pl (n (edges (seen (acc out)))))
+  & pl ~ *
+  & n ~ *
+  & edges ~ *
+  & seen ~ *
+  & out ~ acc
+
+@bfs_cons = (* ((u rest) (n (edges (seen (acc out))))))
+  & u ~ {uout ubuild}
+  & n ~ {rem nkeep}
+  & edges ~ {edgework edgekeep}
+  & @build ~ (ubuild (edgework ((0 *) neigh)))
+  & @append ~ (acc (uout acc2))
+  & @scan ~ (rem (0 (nkeep (edgekeep (neigh (rest (seen (acc2 out)))))))
+
+@append = (x ((?((@append_nil @append_cons) (pl (x out))) pl) out)
+
+@append_nil = (pl (x out))
+  & pl ~ *
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* ((h t) (x out)))
+  & @append ~ (x (t rest))
+  & out ~ (1 (h rest))
+
+@build = (u ((?((@build_nil @build_cons) (pl (u (acc out)))) pl) (acc out)))
+
+@build_nil = (pl (u (acc out)))
+  & pl ~ *
+  & u ~ *
+  & out ~ acc
+
+@build_cons = (* (((a b) tail) (u (acc out))))
+  & u ~ {ua {ub unext}}
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & acmp ~ $([=] $(ua ea))
+  & bcmp ~ $([=] $(ub eb))
+  & ea ~ ?((@build_a_no @build_a_yes) (eb (akeep (bkeep (unext (tail (acc out))))))
+
+@build_a_yes = (* (eb (akeep (bkeep (u (tail (acc out))))))
+  & eb ~ *
+  & akeep ~ *
+  & @build ~ (u (tail ((1 (bkeep acc)) out)))
+
+@build_a_no = (eb (akeep (bkeep (u (tail (acc out))))))
+  & eb ~ ?((@build_b_no @build_b_yes) (akeep (bkeep (u (tail (acc out))))))
+
+@build_b_no = (akeep (bkeep (u (tail (acc out)))))
+  & akeep ~ *
+  & bkeep ~ *
+  & @build ~ (u (tail (acc out)))
+
+@build_b_yes = (* (akeep (bkeep (u (tail (acc out))))))
+  & bkeep ~ *
+  & @build ~ (u (tail ((1 (akeep acc)) out)))
+
+@scan = (rem (v (n (edges (neighbors (q (seen (acc out))))))))
+  & rem ~ ?((@scan_done @scan_more) (v (n (edges (neighbors (q (seen (acc out))))))))
+
+@scan_done = (v (n (edges (neighbors (q (seen (acc out)))))))
+  & v ~ *
+  & neighbors ~ *
+  & @bfs ~ (q (n (edges (seen (acc out)))))
+
+@scan_more = (rem1 (v (n (edges (neighbors (q (seen (acc out))))))))
+  & v ~ {v_nb {v_seen vi}}
+  & neighbors ~ {neighbors_test neighbors_keep}
+  & seen ~ {seen_test seen_keep}
+  & @mem ~ (v_nb (neighbors_test mn))
+  & @mem ~ (v_seen (seen_test ms))
+  & vi ~ $([+1] vnext)
+  & ms ~ $([=] $(0 unseen))
+  & unseen ~ $([&] $(mn decision))
+  & decision ~ ?((@scan_skip @scan_add) (rem1 (vnext (n (edges (neighbors_keep (q (seen_keep (acc out))))))))
+
+@scan_skip = (rem1 (v (n (edges (neighbors (q (seen (acc out))))))))
+  & @scan ~ (rem1 (v (n (edges (neighbors (q (seen (acc out))))))))
+
+@scan_add = (* (rem1 (v (n (edges (neighbors (q (seen (acc out)))))))))
+  & v ~ {vseen vqueue}
+  & @append ~ (q (vqueue q2))
+  & @scan ~ (rem1 (v (n (edges (neighbors (q2 ((1 (vseen seen)) (acc out))))))))
+
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xcmp xkeep}
+  & h ~ $([=] $(xcmp z))
+  & z ~ ?((@mem_no @mem_yes) (xkeep (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1

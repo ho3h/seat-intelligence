@@ -1,0 +1,105 @@
+@prog = ((n (r edges)) out)
+  & {n1 n2} ~ n
+  & @init ~ (n1 (r parents))
+  & @loop ~ (n2 (edges (parents out)))
+
+@init = (n (r out))
+  & @build ~ (n (r ((0 *) out)))
+
+@build = (i (r (tail out)))
+  & i ~ ?((@build_done @build_step) (r (tail out)))
+
+@build_done = (* (tail out))
+  & tail ~ out
+
+@build_step = (p (r (tail out)))
+  & {p1 p2} ~ p
+  & p1 ~ $([=] $(r eq))
+  & @pick ~ (eq head)
+  & cell ~ (1 (head tail))
+  & @build ~ (p2 (r (cell out)))
+
+@pick = (cond out)
+  & cond ~ ?((@pick_no @pick_yes) (* out))
+
+@pick_no = (* out)
+  & out ~ 16777214
+
+@pick_yes = (* (* out))
+  & out ~ 16777215
+
+@loop = (n (edges (parents out)))
+  & n ~ ?((@loop_done @loop_step) (edges (parents out)))
+
+@loop_done = (* (parents out))
+  & parents ~ out
+
+@loop_step = (m (edges (parents out)))
+  & {e1 e2} ~ edges
+  & @scan_edges ~ (e1 (parents p1))
+  & @loop ~ (m (e2 (p1 out)))
+
+@scan_edges = ((tag payload) (parents out))
+  & tag ~ ?((@scan_nil @scan_cons) (payload (parents out)))
+
+@scan_nil = (* (parents out))
+  & parents ~ out
+
+@scan_cons = (* (((u v) rest) (parents out)))
+  & @process_edge ~ (u (v (rest (parents out))))
+
+@process_edge = (u (v (rest (parents out))))
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & {p1 p2} ~ parents
+  & {p1a p1b} ~ p1
+  & @get ~ (u1 (p1a pu))
+  & @get ~ (v1 (p1b pv))
+  & pu ~ $([!] $(16777214 pu_known))
+  & pv ~ $([!] $(16777214 pv_known))
+  & @decide ~ (pu_known (pv_known (u2 (v2 (p2 (rest out))))))
+
+@get = (i (list out))
+  & i ~ ?((@get_zero @get_succ) (list out))
+
+@get_zero = ((1 (head tail)) out)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (m ((1 (head tail)) out))
+  & head ~ *
+  & @get ~ (m (tail out))
+
+@set = (i (val (list out)))
+  & i ~ ?((@set_zero @set_succ) (val (list out)))
+
+@set_zero = (val ((1 (head tail)) out))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_succ = (m (val ((1 (head tail)) out)))
+  & head ~ *
+  & @set ~ (m (val (tail out)))
+
+@decide = (pu (pv (u (v (parents (rest out))))))
+  & pu ~ ?((@decide_pu0 @decide_pu1) (pv (u (v (parents (rest out))))))
+
+@decide_pu0 = (pv (u (v (parents (rest out)))))
+  & pv ~ ?((@decide_00 @decide_01) (u (v (parents (rest out)))))
+
+@decide_pu1 = (* (pv (u (v (parents (rest out))))))
+  & pv ~ ?((@decide_10 @decide_11) (u (v (parents (rest out)))))
+
+@decide_00 = (* (* (parents (rest out))))
+  & @scan_edges ~ (rest (parents out))
+
+@decide_01 = (* (u (v (parents (rest out)))))
+  & @set ~ (u (v (parents p1)))
+  & @scan_edges ~ (rest (p1 out))
+
+@decide_10 = (* (* (parents (rest out))))
+  & @scan_edges ~ (rest (parents out))
+
+@decide_11 = (* (u (v (parents (rest out)))))
+  & @set ~ (v (u (parents p1)))
+  & @scan_edges ~ (rest (p1 out))

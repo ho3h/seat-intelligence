@@ -1,0 +1,36 @@
+@prog = (l out)
+  & @prod ~ (l out)
+
+@prod = (lv1 out)
+  & @prod_cons_lw ~ (lv1 out)
+
+@prod_nil = (* 1)
+
+@prod_cons = (* ((h t) out))
+  & @prod2_cons_lw ~ (t (h out))
+
+@prod2 = (lv2 (h out))
+  & @prod2_cons_lw ~ (lv2 (h out))
+
+@prod2_nil = (* (a a))
+
+@prod2_cons = (* ((h2 t2) ($([*] $(h2 $([*] $(rest out)))) out)))
+  & @prod_cons_lw ~ (t2 rest)
+
+@prod_cons_lw = (ls34 q16)
+  & ls34 ~ (g29 (e25 (g30 (e26 (g31 (e27 (g32 (e28 tk33))))))))
+  & g29 ~ ?((@prod_nil @prod_cons_la) ((e25 (q18 q19)) q16))
+  & g30 ~ ?((@prod2_nil @prod2_cons_la) ((e26 q21) (q18 q19)))
+  & g31 ~ ?((@prod_nil @prod_cons_la) ((e27 (q23 q24)) q21))
+  & g32 ~ ?((@prod2_nil @prod2_cons) ((e28 tk33) (q23 q24)))
+
+@prod2_cons_lw = (ls54 (q36 q37))
+  & ls54 ~ (g49 (e45 (g50 (e46 (g51 (e47 (g52 (e48 tk53))))))))
+  & g49 ~ ?((@prod2_nil @prod2_cons_la) ((e45 q39) (q36 q37)))
+  & g50 ~ ?((@prod_nil @prod_cons_la) ((e46 (q41 q42)) q39))
+  & g51 ~ ?((@prod2_nil @prod2_cons_la) ((e47 q44) (q41 q42)))
+  & g52 ~ ?((@prod_nil @prod_cons) ((e48 tk53) q44))
+
+@prod_cons_la = (* ((h (h out)) out))
+
+@prod2_cons_la = (* ((h2 rest) ($([*] $(h2 $([*] $(rest out)))) out)))

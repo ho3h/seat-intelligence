@@ -1,0 +1,60 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@nonempty = ((@nonempty__C0 a) a)
+
+@nonempty__C0 = (?((0 (* (* (* 1)))) a) a)
+
+@prog = (a b)
+  & @radix_count ~ (a (22 b))
+
+@radix_count = ((@radix_count__C3 a) a)
+
+@radix_count__C0 = ({$([:-0x0000002] b) {$([:-0x0000002] d) {$([:-0x0000002] g) $([:-0x0000002] j)}}} (a (c (f (i l)))))
+  &!@radix_count ~ (a (b $([+] $(e $([+] $(h $([+] $(k l))))))))
+  &!@radix_count ~ (c (d e))
+  &!@radix_count ~ (f (g h))
+  &!@radix_count ~ (i (j k))
+
+@radix_count__C1 = (* (* (a (b (d (f h))))))
+  & @nonempty ~ (a $([+] $(c $([+] $(e $([+] $(g h)))))))
+  & @nonempty ~ (b c)
+  & @nonempty ~ (d e)
+  & @nonempty ~ (f g)
+
+@radix_count__C2 = (* (a (b ({d {$([=0x0000000] ?((@radix_count__C0 @radix_count__C1) (e (f (g (h (i j))))))) e}} j))))
+  & @split4 ~ (c (d (@List/Nil (@List/Nil (@List/Nil (@List/Nil (f (g (h i)))))))))
+  & @List/Cons ~ (a (b c))
+
+@radix_count__C3 = (?(((* 0) @radix_count__C2) a) a)
+
+@split4 = ((@split4__C8 a) a)
+
+@split4__C0 = (b (c (d (e (g (f (a i)))))))
+  & @split4 ~ (a (b (c (d (e (h i))))))
+  & @List/Cons ~ (f (g h))
+
+@split4__C1 = (* (b (c (d (f (h (e (a i))))))))
+  & @split4 ~ (a (b (c (d (g (h i))))))
+  & @List/Cons ~ (e (f g))
+
+@split4__C2 = (a (b (c (d (e (f (g ($([=0x0000002] ?((@split4__C0 @split4__C1) (a (b (c (d (e (f (g h))))))))) h))))))))
+
+@split4__C3 = (* (b (c (e (g (h (d (a (* i)))))))))
+  & @split4 ~ (a (b (c (f (g (h i))))))
+  & @List/Cons ~ (d (e f))
+
+@split4__C4 = (a (b (c (d (e (f (g ({$([=0x0000001] ?((@split4__C2 @split4__C3) (a (b (c (d (e (f (g (h i)))))))))) h} i))))))))
+
+@split4__C5 = (* (b (d (f (g (h (c (a (* i)))))))))
+  & @split4 ~ (a (b (e (f (g (h i))))))
+  & @List/Cons ~ (c (d e))
+
+@split4__C6 = (* (a (b (c (d (a (b (c d))))))))
+
+@split4__C7 = (* ({g $([>>] $(a $([&0x0000003] {$([=0x0000000] ?((@split4__C4 @split4__C5) (b (c (d (e (f (g (h (i j)))))))))) i})))} (h ({b a} (c (d (e (f j))))))))
+
+@split4__C8 = (?((@split4__C6 @split4__C7) a) a)
+
+

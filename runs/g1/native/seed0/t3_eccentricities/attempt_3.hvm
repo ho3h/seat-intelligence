@@ -1,0 +1,151 @@
+// Generate the ascending list [0, ..., n-1].
+@prog = (input out)
+  & input ~ (n edges)
+  & @range ~ (n verts)
+  & @eccs ~ (verts (edges out))
+
+@range = (n out)
+  & n ~ ?((@range_zero @range_succ) out)
+
+@range_zero = (0 *)
+
+@range_succ = (k out)
+  & k ~ {kn kh}
+  & @range ~ (kn tail)
+  & @append ~ (tail ((1 (kh (0 *))) out))
+
+// Append two lists.
+@append = (a (b out))
+  & a ~ (?( (@append_nil @append_cons) (p (b out))) p)
+
+@append_nil = (p (b out))
+  & p ~ *
+  & out ~ b
+
+@append_cons = (* ((h t) (b out)))
+  & @append ~ (t (b rest))
+  & out ~ (1 (h rest))
+
+// Compute one eccentricity for each vertex, in order.
+@eccs = (verts (edges out))
+  & verts ~ (?( (@ecc_nil @ecc_cons) (p (edges out))) p)
+
+@ecc_nil = (p (edges out))
+  & p ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@ecc_cons = (* ((x tail) (edges out)))
+  & edges ~ {eb er}
+  & @bfs_start ~ (x (eb ecc))
+  & @eccs ~ (tail (er rest))
+  & out ~ (1 (ecc rest))
+
+@bfs_start = (x (edges out))
+  & x ~ {s1 s2}
+  & @bfs ~ ((1 (s1 (0 *))) ((1 (s2 (0 *))) (edges (0 out))))
+
+// BFS state: (frontier, seen, edges, depth).
+@bfs = (front (seen (edges (depth out))))
+  & edges ~ {edge_calc edge_keep}
+  & @all_candidates ~ (edge_calc (front cand))
+  & @filter ~ (cand (seen pair))
+  & pair ~ (nf seen2)
+  & nf ~ (?( (@bfs_done @bfs_more) (p (seen2 (edge_keep (depth out))))) p)
+
+@bfs_done = (p (seen (edges (depth out))))
+  & p ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ depth
+
+@bfs_more = (* ((h t) (seen (edges (depth out)))))
+  & depth ~ $([+1] dnext)
+  & @bfs ~ ((1 (h t)) (seen (edges (dnext out))))
+
+// Scan each edge once and collect endpoints adjacent to the frontier.
+@all_candidates = (edges (front out))
+  & edges ~ (?( (@ac_nil @ac_cons) (p (front out))) p)
+
+@ac_nil = (p (front out))
+  & p ~ *
+  & front ~ *
+  & out ~ (0 *)
+
+@ac_cons = (* (((u v) tail) (front out)))
+  & front ~ {fu ftmp}
+  & ftmp ~ {fv frec}
+  & u ~ {um uk}
+  & v ~ {vm vk}
+  & @mem ~ (fu (um bu))
+  & @mem ~ (fv (vm bv))
+  & @all_candidates ~ (tail (frec rest))
+  & @scan_flags ~ (bu (bv (uk (vk (rest out))))
+
+@scan_flags = (bu (bv (u (v (rest out)))))
+  & bu ~ ?((@scan_u_no @scan_u_yes) (bv (u (v (rest out))))
+
+@scan_u_no = (bv (u (v (rest out))))
+  & v ~ *
+  & @scan_maybe_v ~ (bv (u (rest out)))
+
+@scan_u_yes = (* (bv (u (v (rest out)))))
+  & @scan_maybe_v ~ (bv (u (rest r)))
+  & out ~ (1 (v r))
+
+@scan_maybe_v = (bv (u (rest out)))
+  & bv ~ ?((@scan_v_no @scan_v_yes) (u (rest out)))
+
+@scan_v_no = (u (rest out))
+  & u ~ *
+  & out ~ rest
+
+@scan_v_yes = (* (u (rest out)))
+  & out ~ (1 (u rest))
+
+// Filter candidates against seen, also removing duplicates.
+@filter = (cand (seen out))
+  & cand ~ (?( (@filter_nil @filter_cons) (p (seen out))) p)
+
+@filter_nil = (p (seen out))
+  & p ~ *
+  & out ~ ((0 *) seen)
+
+@filter_cons = (* ((h tail) (seen out)))
+  & @filter ~ (tail (seen r))
+  & r ~ (nf seen2)
+  & seen2 ~ {seen_mem seen_out}
+  & h ~ {h_mem h_tmp}
+  & h_tmp ~ {h_new h_seen}
+  & @mem ~ (seen_mem (h_mem m))
+  & m ~ ?((@filter_add @filter_skip) (nf (seen_out (h_new (h_seen out))))
+
+@filter_add = (nf (seen_out (h_new (h_seen out))))
+  & out ~ ((1 (h_new nf)) (1 (h_seen seen_out)))
+
+@filter_skip = (* (nf (seen_out (h_new (h_seen out)))))
+  & h_new ~ *
+  & h_seen ~ *
+  & out ~ (nf seen_out)
+
+// Membership test: does x occur in list l?
+@mem = (l (x out))
+  & l ~ (?( (@mem_nil @mem_cons) (p (x out))) p)
+
+@mem_nil = (p (x out))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (x out)))
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (x_rec out)))
+
+@mem_no = (tail (x out))
+  & @mem ~ (tail (x out))
+
+@mem_yes = (* (tail (x out)))
+  & tail ~ *
+  & x ~ *
+  & out ~ 1

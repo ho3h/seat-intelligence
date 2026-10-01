@@ -1,0 +1,293 @@
+// Input: (n, tau, must-not-link pairs, candidate triples)
+@prog = (inp out)
+  & inp ~ (n (tau (mnl cands)))
+  & n ~ {ni ne}
+  & @init ~ (ni labs)
+  & @edges ~ (cands ((ne (tau (mnl labs))) out))
+
+// Build [0, 1, ..., n-1].
+@init = (?((@init_zero @init_succ) (out *)) out)
+
+@init_zero = (out dummy)
+  & dummy ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (out dummy))
+  & dummy ~ *
+  & k ~ {a b}
+  & @init ~ (a tail)
+  & out ~ (1 (b tail))
+
+// Repeatedly select the best remaining candidate, process it, and remove
+// every occurrence of its pair.
+@edges = ((?((@ed_nil @ed_cons) (pl (st out))) pl) (st out))
+
+@ed_nil = (pl (st out))
+  & pl ~ *
+  & st ~ (n (tau (mnl labs)))
+  & n ~ *
+  & tau ~ *
+  & mnl ~ *
+  & labs ~ out
+
+@ed_cons = (k (pl (st out)))
+  & k ~ *
+  & pl ~ {ps po}
+  & ps ~ (first rest)
+  & po ~ (oh ot)
+  & @scan ~ (rest (first best))
+  & @selected ~ (best ((1 (oh ot)) (st out)))
+
+@selected = (picked (orig (st out)))
+  & picked ~ {ptest pkeep}
+  & ptest ~ (u0 (v0 score))
+  & u0 ~ *
+  & v0 ~ *
+  & st ~ (n (tau (mnl labs)))
+  & tau ~ {ta1 ta2}
+  & mnl ~ {mc mn}
+  & score ~ {s1 s2}
+  & s1 ~ $([>] $(ta1 gt))
+  & s2 ~ $([=] $(ta2 eq))
+  & gt ~ $([|] $(eq z))
+  & z ~ ?((@sel_no @sel_yes) (orig (pkeep (n (ta (mn (mc (labs out)))))))
+
+@sel_no = (orig (pkeep (n (ta (mn (mc (labs out)))))))
+  & orig ~ *
+  & pkeep ~ *
+  & n ~ *
+  & ta ~ *
+  & mn ~ *
+  & mc ~ *
+  & labs ~ out
+
+@sel_yes = (k (orig (pkeep (n (ta (mn (mc (labs out)))))))
+  & k ~ *
+  & @accept ~ (orig (pkeep (n (ta (mn (mc (labs out))))))
+
+// Compare candidates by descending score, then ascending u, then ascending v.
+@better = (e1 (e2 out))
+  & e1 ~ (u1 (v1 s1))
+  & e2 ~ (u2 (v2 s2))
+  & s1 ~ {s1a s1b}
+  & s2 ~ {s2a s2b}
+  & u1 ~ {u1a u1b}
+  & u2 ~ {u2a u2b}
+  & v1 ~ {v1a v1b}
+  & v2 ~ {v2a v2b}
+  & s1a ~ $([>] $(s2a p))
+  & s1b ~ $([=] $(s2b q))
+  & q ~ {q1 q2}
+  & u1a ~ $([<] $(u2a r))
+  & u1b ~ $([=] $(u2b t))
+  & v1a ~ $([<] $(v2a w))
+  & q1 ~ $([&] $(r x))
+  & q2 ~ $([&] $(t y))
+  & y ~ $([&] $(w z))
+  & p ~ $([|] $(x a))
+  & a ~ $([|] $(z out))
+
+// Scan a nonempty candidate suffix while retaining its best candidate.
+@scan = ((?((@scan_nil @scan_cons) (pl (best out))) pl) (best out))
+
+@scan_nil = (pl (best out))
+  & pl ~ *
+  & best ~ out
+
+@scan_cons = (k (pl (best out)))
+  & k ~ *
+  & pl ~ (h t)
+  & h ~ {hc hk}
+  & best ~ {bc bk}
+  & @better ~ (hc (bc z))
+  & z ~ ?((@scan_no @scan_yes) (t (hk (bk out))))
+
+@scan_no = (t (h (b out)))
+  & h ~ *
+  & @scan ~ (t (b out))
+
+@scan_yes = (k (t (h (b out))))
+  & k ~ *
+  & b ~ *
+  & @scan ~ (t (h out))
+
+// Remove all candidates having the selected pair.
+@filter = ((?((@filter_nil @filter_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@filter_nil = (pl (u (v out)))
+  & pl ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@filter_cons = (k (pl (u (v out))))
+  & k ~ *
+  & pl ~ (h t)
+  & h ~ {hc hk}
+  & hc ~ (hu (hv hs))
+  & hs ~ *
+  & u ~ {uc ur}
+  & v ~ {vc vr}
+  & @filter ~ (t (ur (vr ft)))
+  & hu ~ $([=] $(uc eu))
+  & hv ~ $([=] $(vc ev))
+  & eu ~ $([&] $(ev same))
+  & same ~ ?((@filter_keep @filter_drop) (hk (ft out)))
+
+@filter_keep = (hk (ft out))
+  & out ~ (1 (hk ft))
+
+@filter_drop = (k (hk (ft out)))
+  & k ~ *
+  & hk ~ *
+  & out ~ ft
+
+@accept = (orig (edge (n (tau (mn (mc (labs (rem out)))))))
+  & edge ~ (u (v score))
+  & score ~ *
+  & u ~ {uf um}
+  & v ~ {vf vm}
+  & @filter ~ (orig (uf (vf filtered)))
+  & @merge ~ (um (vm (n (tau (mn (mc (labs (filtered out)))))))
+
+// Look up a list element by its zero-based index.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_cons = (k (pl (i out)))
+  & k ~ *
+  & pl ~ (h t)
+  & i ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & h ~ out
+
+@get_next = (k (h (t out)))
+  & h ~ *
+  & @get ~ (t (k out))
+
+// Merge the clusters containing u and v unless a must-not-link crosses them.
+@merge = (u (v (n (tau (mn (mc (labs (rem out)))))))
+  & labs ~ {la lb}
+  & lb ~ {lbu lbv}
+  & @get ~ (lbu (u a))
+  & @get ~ (lbv (v b))
+  & a ~ {ae am}
+  & b ~ {be bm}
+  & ae ~ $([=] $(be eq))
+  & eq ~ ?((@merge_diff @merge_same) (la (am (bm (n (tau (mn (mc (rem out))))))))
+
+@merge_same = (k (la (am (bm (n (tau (mn (mc (rem out))))))))
+  & k ~ *
+  & am ~ *
+  & bm ~ *
+  & mc ~ *
+  & @edges ~ (rem ((n (tau (mn la))) out))
+
+@merge_diff = (la (am (bm (n (tau (mn (mc (rem out)))))))
+  & am ~ {ac au}
+  & bm ~ {bc bu}
+  & la ~ {lc lu}
+  & @conflict ~ (mc (lc (ac (bc c)))
+  & c ~ ?((@merge_do @merge_skip) (n (tau (mn (lu (au (bu (rem out)))))))
+
+@merge_do = (n (tau (mn (lu (au (bu (rem out)))))))
+  & @update ~ (lu (au (bu updated)))
+  & @edges ~ (rem ((n (tau (mn updated))) out))
+
+@merge_skip = (k (n (tau (mn (lu (au (bu (rem out)))))))
+  & k ~ *
+  & au ~ *
+  & bu ~ *
+  & @edges ~ (rem ((n (tau (mn lu))) out))
+
+// Test whether any must-not-link pair crosses the two clusters.
+@conflict = ((?((@conf_nil @conf_cons) (pl (labs (a (b out))))) pl) (labs (a (b out))))
+
+@conf_nil = (pl (labs (a (b out))))
+  & pl ~ *
+  & labs ~ *
+  & a ~ *
+  & b ~ *
+  & out ~ 0
+
+@conf_cons = (k (pl (labs (a (b out)))))
+  & k ~ *
+  & pl ~ (pair tail)
+  & pair ~ (x y)
+  & labs ~ {lr lget}
+  & lget ~ {lxlist lylist}
+  & a ~ {ar ac}
+  & b ~ {br bc}
+  & ac ~ {aa ab}
+  & bc ~ {bb ba}
+  & @get ~ (lxlist (x lx))
+  & @get ~ (lylist (y ly))
+  & lx ~ {lx1 lx2}
+  & ly ~ {ly1 ly2}
+  & lx1 ~ $([=] $(aa e1))
+  & ly1 ~ $([=] $(bb e2))
+  & lx2 ~ $([=] $(ba e3))
+  & ly2 ~ $([=] $(ab e4))
+  & e1 ~ $([&] $(e2 both1))
+  & e3 ~ $([&] $(e4 both2))
+  & both1 ~ $([|] $(both2 z))
+  & z ~ ?((@conf_no @conf_yes) (tail (lr (ar (br out))))
+
+@conf_no = (tail (lr (ar (br out))))
+  & @conflict ~ (tail (lr (ar (br out))))
+
+@conf_yes = (k (tail (lr (ar (br out))))
+  & k ~ *
+  & tail ~ *
+  & lr ~ *
+  & ar ~ *
+  & br ~ *
+  & out ~ 1
+
+// Relabel the smaller representative to the larger one.
+@update = (labs (a (b out)))
+  & a ~ {ac aa}
+  & b ~ {bc bb}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@upd_ba @upd_ab) (labs (aa (bb out))))
+
+@upd_ba = (labs (a (b out)))
+  & @map ~ (labs (a (b out)))
+
+@upd_ab = (k (labs (a (b out))))
+  & k ~ *
+  & @map ~ (labs (b (a out)))
+
+// Replace every list element equal to old with new.
+@map = ((?((@map_nil @map_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@map_nil = (pl (old (new out)))
+  & pl ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@map_cons = (k (pl (old (new out))))
+  & k ~ *
+  & pl ~ (h t)
+  & h ~ {hc hk}
+  & old ~ {oc oldr}
+  & new ~ {newr newk}
+  & @map ~ (t (oldr (newr mt)))
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@map_keep @map_replace) (hk (newk (mt out))))
+
+@map_keep = (hk (newk (mt out)))
+  & newk ~ *
+  & out ~ (1 (hk mt))
+
+@map_replace = (k (hk (newk (mt out))))
+  & k ~ *
+  & hk ~ *
+  & out ~ (1 (newk mt))

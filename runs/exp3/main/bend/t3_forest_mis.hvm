@@ -1,0 +1,45 @@
+@List/Nil = ((0 a) a)
+
+@combine_children__C0 = ({b e} (f (g ({{g_q152 ((?(((* @List/Nil) (* (({$([=] $(a_q177 ?((({a_q179 b_q179} (c_q179 (d_q179 ($([=] $(a_q179 ?(((a_q181 (((?(((* @List/Nil) @get_neighbors__C4) a_q183) a_q183) (a_q181 c_q181)) (* c_q181))) @get_neighbors__C1) (b_q179 (c_q179 (d_q179 e_q179)))))) e_q179)))) @get_neighbors__C3) (b_q177 (c_q177 (d_q177 (e_q177 f_q177))))))) d_q177} e_q177) (c_q177 ({a_q177 b_q177} f_q177))))) a_q175) a_q175) (a_q152 ((?((@combine_children__C4 @combine_children__C5) a_q189) a_q189) (d_q152 (b (1 (g_q152 (1 (0 (((1 (h_q152 (@List/Nil c_i14_q152))) c_i14_q152) ({$([>] $(a_i9 ?(((* (b_i9 b_i9)) (* (c_i9 (* c_i9)))) (d_i9 (e_i9 m))))) d_i9} ({{a_i9 e_i9} i} p))))))))))))} h} ($([+] $(i j)) ($([+] $(m n)) ((@join__C1 (p q)) ({d_q152 {h_q152 a_q152}} ((@combine_children__C6 (e (f (g (h (j (n (q r)))))))) r)))))))))
+
+@combine_children__C1 = (* (b (c (d (e (f (g (h (* ((@combine_children__C6 (b (c (d (e (f (g (h i)))))))) i))))))))))
+
+@combine_children__C2 = ({b e} (f (g ({{g_q158 ((?(((* @List/Nil) @get_neighbors__C4) a_q190) a_q190) (a_q158 ((?((@combine_children__C4 @combine_children__C5) a_q195) a_q195) (d_q158 (b (1 (g_q158 (1 (0 (((1 (h_q158 (@List/Nil c_i14_q158))) c_i14_q158) ({$([>] $(a_i10 ?(((* (b_i10 b_i10)) (* (c_i10 (* c_i10)))) (d_i10 (e_i10 m))))) d_i10} ({{a_i10 e_i10} i} p))))))))))))} h} ($([+] $(i j)) ($([+] $(m n)) ((@join__C1 (p q)) ({d_q158 {h_q158 a_q158}} ((@combine_children__C6 (e (f (g (h (j (n (q r)))))))) r)))))))))
+
+@combine_children__C3 = (* (b ({a c} (d (e (f (g (h ({$([=] $(a ?((@combine_children__C0 @combine_children__C1) (b (c (d (e (f (g (h (i j))))))))))) i} j)))))))))
+
+@combine_children__C4 = (* (* (* (* (a (b (c (a (b c)))))))))
+
+@combine_children__C5 = (* (h (i (a (b ({$([=0x0000001] ?((@combine_children__C2 @combine_children__C3) (a (b (c (d (e (f (g (h (i j))))))))))) c} (d (e (f (g j))))))))))
+
+@combine_children__C6 = (?((@combine_children__C4 @combine_children__C5) a) a)
+
+@contains__C0 = (b ((@contains__C2 (b c)) c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@get_neighbors__C1 = (* (b ((@get_neighbors__C5 (b d)) (a ((1 (a (d c_i11))) c_i11)))))
+
+@get_neighbors__C2 = ({a b} (c (d ($([=] $(a ?(((a_q198 ((@get_neighbors__C5 (a_q198 c_q198)) (* c_q198))) @get_neighbors__C1) (b (c (d e)))))) e))))
+
+@get_neighbors__C3 = (* (b ((@get_neighbors__C5 (b d)) (* (a ((1 (a (d c_i12))) c_i12))))))
+
+@get_neighbors__C4 = (* (({$([=] $(a ?((@get_neighbors__C2 @get_neighbors__C3) (b (c (d (e f))))))) d} e) (c ({a b} f))))
+
+@get_neighbors__C5 = (?(((* @List/Nil) @get_neighbors__C4) a) a)
+
+@join__C0 = (* (a ((@join__C1 (c d)) (c ((1 (a (d c_i13))) c_i13)))))
+
+@join__C1 = (?(((a a) @join__C0) b) b)
+
+@prog = (({?(((* (* (* (* (b_q167 b_q167))))) @visit_roots__C2_s) (0 (d_q167 (b (@List/Nil (0 c)))))) d_q167} b) c)
+
+@visit_roots__C0 = ({{d_q171 {h_q171 a_q171}} $([+0x0000001] {$([=] $(a_q170 ?((@visit_roots__C2 (* (* (* (* (* (b_q170 b_q170))))))) (c_q170 (d_q170 (e (h (l m)))))))) c_q170})} ({a_q170 d_q170} ({{g_q171 (@get_neighbors__C5 (a_q171 (@combine_children__C6 (d_q171 (0 (0 (g_q171 (1 (0 (((1 (h_q171 (@List/Nil c_i14_q171))) c_i14_q171) ({$([>] $(a_i15 ?(((* (b_i15 b_i15)) (* (c_i15 (* c_i15)))) (d_i15 (e_i15 k))))) d_i15} ({a_i15 e_i15} g))))))))))))} e} ((@join__C1 (g h)) ($([+] $(k l)) m)))))
+
+@visit_roots__C1 = (* ($([+0x0000001] {$([=] $(a_q173 ?((@visit_roots__C2 (* (* (* (* (* (b_q173 b_q173))))))) (c_q173 (d_q173 e_q173))))) c_q173}) ({a_q173 d_q173} e_q173)))
+
+@visit_roots__C2 = ({b c} (d (e ({(@contains__C2 (b $([=0x0000001] ?((@visit_roots__C0 @visit_roots__C1) (c (d (e (f g)))))))) f} g))))
+
+@visit_roots__C2_s = (* ({b c} (d (e ({(@contains__C2 (b $([=0x0000001] ?((@visit_roots__C0 @visit_roots__C1) (c (d (e (f g)))))))) f} g)))))

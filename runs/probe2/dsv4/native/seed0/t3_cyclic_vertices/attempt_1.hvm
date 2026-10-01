@@ -1,0 +1,152 @@
+@prog = (p out)
+  & p ~ (n edges)
+  & @loop ~ (0 (n (0 (edges out))))
+
+@loop = (i (n (acc (edges out))))
+  & i ~ {i_arith i_ctx}
+  & n ~ {n_arith n_ctx}
+  & n_arith ~ $([-] $(i_arith diff))
+  & diff ~ ?((@loop_done @loop_step) (i_ctx (n_ctx (acc (edges out)))))
+
+@loop_done = (i (n (acc (edges out))))
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+  & acc ~ out
+
+@loop_step = (p (i (n (acc (edges out)))))
+  & p ~ *
+  & i ~ {i_test i_ctx}
+  & edges ~ {edges_test edges_ctx}
+  & @has_cycle ~ (i_test (edges_test b))
+  & b ~ ?((@cycle_no @cycle_yes) (i_ctx (n (acc (edges_ctx out)))))
+
+@cycle_no = (i (n (acc (edges out))))
+  & i ~ $([+1] i2)
+  & @loop ~ (i2 (n (acc (edges out))))
+
+@cycle_yes = (p (i (n (acc (edges out)))))
+  & p ~ *
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @loop ~ (i2 (n (acc2 (edges out))))
+
+@has_cycle = (v (edges out))
+  & v ~ {v_succ v_rest}
+  & v_rest ~ {v_target v_vis}
+  & edges ~ {e1 e2}
+  & @succs ~ (v_succ (e1 ((0 *) succs)))
+  & @dfs ~ (v_target (succs ((1 (v_vis (0 *))) (e2 out))))
+
+@succs = (v (edges (acc out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@succs_nil @succs_cons) (v (payload (acc out))))
+
+@succs_nil = (v (payload (acc out)))
+  & v ~ *
+  & payload ~ *
+  & acc ~ out
+
+@succs_cons = (p (v (payload (acc out))))
+  & p ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u w)
+  & v ~ {v_cmp v_ctx}
+  & u ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@succs_no @succs_yes) (v_ctx (w (tail (acc out)))))
+
+@succs_no = (v (w (tail (acc out))))
+  & w ~ *
+  & @succs ~ (v (tail (acc out)))
+
+@succs_yes = (p (v (w (tail (acc out)))))
+  & p ~ *
+  & @succs ~ (v (tail ((1 (w acc)) out)))
+
+@elem = (x (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@elem_nil @elem_cons) (x (payload out)))
+
+@elem_nil = (x (payload out))
+  & x ~ *
+  & payload ~ *
+  & out ~ 0
+
+@elem_cons = (p (x (payload out)))
+  & p ~ *
+  & payload ~ (h t)
+  & x ~ {x_cmp x_ctx}
+  & h ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@elem_no @elem_yes) (x_ctx (t out)))
+
+@elem_no = (x (t out))
+  & @elem ~ (x (t out))
+
+@elem_yes = (p (x (t out)))
+  & p ~ *
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@dfs = (target (stack (visited (edges out))))
+  & stack ~ (tag payload)
+  & tag ~ ?((@dfs_empty @dfs_pop) (target (payload (visited (edges out)))))
+
+@dfs_empty = (target (payload (visited (edges out))))
+  & target ~ *
+  & payload ~ *
+  & visited ~ *
+  & edges ~ *
+  & out ~ 0
+
+@dfs_pop = (p (target (payload (visited (edges out)))))
+  & p ~ *
+  & payload ~ (x rest)
+  & x ~ {x_succ x_vis}
+  & edges ~ {edges_succ edges_fut}
+  & @succs ~ (x_succ (edges_succ ((0 *) succs)))
+  & @proc_succs ~ (target (succs (rest ((1 (x_vis visited)) (edges_fut out)))))
+
+@proc_succs = (target (succs (stack (visited (edges out)))))
+  & succs ~ (tag payload)
+  & tag ~ ?((@proc_succs_nil @proc_succs_cons) (target (payload (stack (visited (edges out))))))
+
+@proc_succs_nil = (target (payload (stack (visited (edges out)))))
+  & payload ~ *
+  & @dfs ~ (target (stack (visited (edges out))))
+
+@proc_succs_cons = (p (target (payload (stack (visited (edges out))))))
+  & p ~ *
+  & payload ~ (y rest)
+  & @process_one ~ (target (y (rest (stack (visited (edges out))))))
+
+@process_one = (target (y (rest (stack (visited (edges out))))))
+  & target ~ {target_cmp target_ctx}
+  & y ~ {y_cmp y_ctx}
+  & y_cmp ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@one_not_target @one_is_target) (target_ctx (y_ctx (rest (stack (visited (edges out)))))))
+
+@one_not_target = (target (y (rest (stack (visited (edges out))))))
+  & y ~ {y_test y_ctx}
+  & visited ~ {visited_test visited_future}
+  & @elem ~ (y_test (visited_test visited_bool))
+  & visited_bool ~ ?((@not_visited @already_visited) (target (y_ctx (rest (stack (visited_future (edges out)))))))
+
+@not_visited = (target (y (rest (stack (visited (edges out))))))
+  & y ~ {y_stack y_visited}
+  & @proc_succs ~ (target (rest ((1 (y_stack stack)) ((1 (y_visited visited)) (edges out)))))
+
+@already_visited = (p (target (y (rest (stack (visited (edges out)))))))
+  & p ~ *
+  & y ~ *
+  & @proc_succs ~ (target (rest (stack (visited (edges out)))))
+
+@one_is_target = (p (target (y (rest (stack (visited (edges out)))))))
+  & p ~ *
+  & target ~ *
+  & y ~ *
+  & rest ~ *
+  & stack ~ *
+  & visited ~ *
+  & edges ~ *
+  & out ~ 1

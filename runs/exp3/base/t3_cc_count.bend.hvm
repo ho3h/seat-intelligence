@@ -1,0 +1,108 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_neighbors = ((@add_neighbors__C4 a) a)
+
+@add_neighbors__C0 = (c (f ({e b} (a h))))
+  & @add_neighbors ~ (a (d (g h)))
+  & @mark_seen ~ (b (c d))
+  & @List/Cons ~ (e (f g))
+
+@add_neighbors__C1 = (* (b (c (* (a d)))))
+  & @add_neighbors ~ (a (b (c d)))
+
+@add_neighbors__C2 = (a (b (a b)))
+
+@add_neighbors__C3 = (* ({a e} (f ({b c} (d g)))))
+  & @is_seen ~ (a (b $([=0x0000001] ?((@add_neighbors__C0 @add_neighbors__C1) (c (d (e (f g))))))))
+
+@add_neighbors__C4 = (?((@add_neighbors__C2 @add_neighbors__C3) a) a)
+
+@build_adj = ({$([=] $(a ?((@build_adj__C0 (* (* (* (* @List/Nil))))) (b (c d))))) b} ({a c} d))
+
+@build_adj__C0 = ({$([+0x0000001] d) a} (e ({f b} h)))
+  & @List/Cons ~ (c (g h))
+  & @get_neighbors ~ (a (b c))
+  & @build_adj ~ (d (e (f g)))
+
+@count_components = ({$([=] $(a ?((@count_components__C2 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@count_components__C0 = ({$([+0x0000001] a) {d g}} (b ({c f} (h ($([+0x0000001] k) l)))))
+  & @count_components ~ (a (b (c (j (k l)))))
+  & @explore ~ (e (f (i j)))
+  & @List/Cons ~ (d (@List/Nil e))
+  & @mark_seen ~ (g (h i))
+
+@count_components__C1 = (* ($([+0x0000001] a) b))
+  & @count_components ~ (a b)
+
+@count_components__C2 = ({a c} (d (e ({b f} g))))
+  & @is_seen ~ (a (b $([=0x0000001] ?((@count_components__C0 @count_components__C1) (c (d (e (f g))))))))
+
+@explore = ((@explore__C1 a) a)
+
+@explore__C0 = (* (a (e ({g b} (d i)))))
+  & @explore ~ (f (g (h i)))
+  & @add_neighbors ~ (c (d (e (h f))))
+  & @get_at ~ (a (b c))
+
+@explore__C1 = (?(((* (a a)) @explore__C0) b) b)
+
+@get_at = (a ((@get_at__C2 (a b)) b))
+
+@get_at__C0 = ($([:-0x0000001] a) (* b))
+  & @get_at ~ (a b)
+
+@get_at__C1 = (* (c (d ({$([=0x0000000] ?((@get_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@get_neighbors = (a ((@get_neighbors__C4 (a b)) b))
+
+@get_neighbors__C0 = (* a)
+  & @List/Cons ~ a
+
+@get_neighbors__C1 = (a (c ($([=] $(a ?(((* (b b)) @get_neighbors__C0) (c d)))) d)))
+
+@get_neighbors__C2 = (* (* (* a)))
+  & @List/Cons ~ a
+
+@get_neighbors__C3 = (* (({$([=] $(a ?((@get_neighbors__C1 @get_neighbors__C2) (b (c (d (g h))))))) c} d) (f ({a {b e}} h))))
+  & @get_neighbors ~ (e (f g))
+
+@get_neighbors__C4 = (?(((* @List/Nil) @get_neighbors__C3) a) a)
+
+@is_seen = ({$([:%0x0000018] c) $([:/0x0000018] a)} (b e))
+  & @get_at ~ (a (b $([&] $(d $([=0x0000000] ?((1 (* 0)) e))))))
+  & $(c d) ~ [<<0x0000001]
+
+@make_words = ({$([=0x0000000] ?((@make_words__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@make_words__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (0 (b c))
+  & @make_words ~ (a b)
+
+@mark_seen = ({$([:%0x0000018] b) $([:/0x0000018] a)} d)
+  & @update_word ~ (a (c d))
+  & $(b c) ~ [<<0x0000001]
+
+@prog = (({a {$([+0x0000017] $([:/0x0000018] e)) b}} c) g)
+  & @count_components ~ (0 (a (d (f (0 g)))))
+  & @build_adj ~ (0 (b (c d)))
+  & @make_words ~ (e f)
+
+@update_word = (a (b ((@update_word__C3 (a (b c))) c)))
+
+@update_word__C0 = ($([:-0x0000001] b) (c (a (d f))))
+  & @List/Cons ~ (a (e f))
+  & @update_word ~ (b (c (d e)))
+
+@update_word__C1 = (* (* (a ($([|] $(a b)) c))))
+  & @List/Cons ~ (b c)
+
+@update_word__C2 = (* (c (d ({$([=0x0000000] ?((@update_word__C0 @update_word__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@update_word__C3 = (?(((* (* @List/Nil)) @update_word__C2) a) a)
+
+

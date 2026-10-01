@@ -1,0 +1,41 @@
+// Count each unordered pair of edges once by checking each edge against its tail.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ *
+  & @outer ~ (edges (0 out))
+
+@outer = ((?((@outer_nil @outer_cons) (p (acc out))) p) (acc out))
+
+@outer_nil = (* (a a))
+
+@outer_cons = (* (((u v) tail) (acc out)))
+  & tail ~ {itail outer}
+  & @inner ~ (itail (outer (u (v (acc out)))))
+
+@inner = ((?((@inner_nil @inner_cons) (p (outer (u (v (acc out)))))) p) (outer (u (v (acc out)))))
+
+@inner_nil = (* (outer (u (v (acc out)))))
+  & u ~ *
+  & v ~ *
+  & @outer ~ (outer (acc out))
+
+@inner_cons = (* (((a b) itail) (outer (u (v (acc out))))))
+  & u ~ {ua {ub unext}}
+  & v ~ {va {vb vnext}}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & ua ~ $([=] $(a1 e1))
+  & ub ~ $([=] $(b1 e2))
+  & va ~ $([=] $(a2 e3))
+  & vb ~ $([=] $(b2 e4))
+  & e1 ~ $([|] $(e2 q1))
+  & e3 ~ $([|] $(e4 q2))
+  & q1 ~ $([|] $(q2 match))
+  & match ~ ?((@in_no @in_yes) (itail (outer (unext (vnext (acc out))))))
+
+@in_no = (itail (outer (u (v (acc out)))))
+  & @inner ~ (itail (outer (u (v (acc out)))))
+
+@in_yes = (* (itail (outer (u (v (acc out))))))
+  & acc ~ $([+1] acc2)
+  & @inner ~ (itail (outer (u (v (acc2 out)))))

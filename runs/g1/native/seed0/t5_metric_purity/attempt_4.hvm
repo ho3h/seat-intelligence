@@ -1,0 +1,106 @@
+// Pair the predicted and true label lists.
+@prog = (input output)
+  & input ~ (pred truth)
+  & @zip ~ (pred (truth zipped))
+  & @outer ~ (zipped (0 output))
+
+@zip = ((?((@zip_nil @zip_cons) (pl (truth out))) pl) (truth out))
+
+@zip_nil = (* (truth out))
+  & truth ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((ph pt) (truth out)))
+  & @zip_truth ~ (truth (ph (pt out)))
+
+@zip_truth = ((?((@zip_tnil @zip_tcons) (tl (ph (pt out)))) tl) (ph (pt out)))
+
+@zip_tnil = (* (ph (pt out)))
+  & ph ~ *
+  & pt ~ *
+  & out ~ (0 *)
+
+@zip_tcons = (* ((th tt) (ph (pt out))))
+  & @zip ~ (pt (tt zipped))
+  & out ~ (1 ((ph th) zipped))
+
+// Process one predicted-label group at a time.
+@outer = ((?((@outer_nil @outer_cons) (pl (acc out))) pl) (acc out))
+
+@outer_nil = (* (acc out))
+  & out ~ acc
+
+@outer_cons = (* (((p t) tail) (acc out)))
+  & p ~ {p_group p_part}
+  & @part ~ (tail (p_part part))
+  & part ~ (matches others)
+  & group ~ (1 ((p_group t) matches))
+  & group ~ {g_candidates g_scan}
+  & @mx ~ (g_candidates (g_scan (0 best)))
+  & acc ~ $([+] $(best acc2))
+  & @outer ~ (others (acc2 out))
+
+// Partition pairs by whether their predicted label equals p.
+@part = ((?((@part_nil @part_cons) (pl (p out))) pl) (p out))
+
+@part_nil = (* (p out))
+  & p ~ *
+  & out ~ ((0 *) (0 *))
+
+@part_cons = (* (((hp ht) tail) (p out)))
+  & hp ~ {hp_keep hp_cmp}
+  & p ~ {p_cmp p_rec}
+  & hp_cmp ~ $([=] $(p_cmp z))
+  & @part ~ (tail (p_rec part))
+  & part ~ (m r)
+  & z ~ ?((@part_no @part_yes) (hp_keep (ht (m (r out)))))
+
+@part_no = (* (hp (ht (m (r out)))))
+  & out ~ (m (1 ((hp ht) r)))
+
+@part_yes = (* (hp (ht (m (r out)))))
+  & out ~ ((1 ((hp ht) m)) r)
+
+// Find the largest true-label frequency in a group.
+@mx = ((?((@mx_nil @mx_cons) (pl (group (best out)))) pl) (group (best out)))
+
+@mx_nil = (* (group (best out)))
+  & group ~ *
+  & out ~ best
+
+@mx_cons = (* (((p t) tail) (group (best out))))
+  & p ~ *
+  & group ~ {g_count g_next}
+  & @cnt ~ (g_count (t (0 cnt)))
+  & cnt ~ {cnt_cmp cnt_keep}
+  & best ~ {best_cmp best_keep}
+  & cnt_cmp ~ $([>] $(best_cmp z))
+  & z ~ ?((@mx_no @mx_yes) (cnt_keep (best_keep (tail (g_next out))))
+
+@mx_no = (* (cnt_keep (best_keep (tail (group out)))))
+  & cnt_keep ~ *
+  & @mx ~ (tail (group (best_keep out)))
+
+@mx_yes = (* (cnt_keep (best_keep (tail (group out)))))
+  & best_keep ~ *
+  & @mx ~ (tail (group (cnt_keep out)))
+
+// Count occurrences of target among the true labels in a list of pairs.
+@cnt = ((?((@cnt_nil @cnt_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@cnt_nil = (* (target (acc out)))
+  & target ~ *
+  & out ~ acc
+
+@cnt_cons = (* (((p t) tail) (target (acc out))))
+  & p ~ *
+  & target ~ {target_cmp target_next}
+  & t ~ $([=] $(target_cmp z))
+  & z ~ ?((@cnt_no @cnt_yes) (tail (target_next (acc out))))
+
+@cnt_no = (* (tail (target (acc out))))
+  & @cnt ~ (tail (target (acc out)))
+
+@cnt_yes = (* (tail (target (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @cnt ~ (tail (target (acc2 out)))

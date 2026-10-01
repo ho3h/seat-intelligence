@@ -1,0 +1,24 @@
+@prog = (l out)
+  & @filter ~ (l out)
+
+@filter = (lv1 out)
+  & @filter_cons_lw ~ (lv1 out)
+
+@filter_nil = (* (0 *))
+
+@filter_cons = (* (({$([%] $(2 ?((@filter_even @filter_odd) (h_keep (rest out))))) h_keep} t) out))
+  & @filter_cons_lw ~ (t rest)
+
+@filter_even = (h (rest out))
+  & out ~ (1 (h rest))
+
+@filter_odd = (* (h (rest out)))
+  & h ~ *
+  & out ~ rest
+
+@filter_cons_lw = (ls16 q8)
+  & ls16 ~ (g13 (e11 (g14 (e12 tk15))))
+  & g13 ~ ?((@filter_nil @filter_cons_la) ((e11 q10) q8))
+  & g14 ~ ?((@filter_nil @filter_cons) ((e12 tk15) q10))
+
+@filter_cons_la = (* (({$([%] $(2 ?((@filter_even @filter_odd) (h_keep (rest out))))) h_keep} rest) out))

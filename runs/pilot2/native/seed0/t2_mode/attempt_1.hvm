@@ -1,0 +1,74 @@
+// Mode histogram construction
+@prog = (list out)
+  & @build ~ (list ((0 *) out))
+
+@build = ((?((@build_nil @build_cons) (pl (hist out))) pl) (hist out))
+
+@build_nil = (* (hist out))
+  & @finish ~ (hist out)
+
+@build_cons = (* ((x tail) (hist out)))
+  & @insert ~ (hist (x h2))
+  & @build ~ (tail (h2 out))
+
+// Insert a value into the histogram.
+@insert = ((?((@ins_nil @ins_cons) (pl (x out))) pl) (x out))
+
+@ins_nil = (* (x out))
+  & @one ~ (x out)
+
+@ins_cons = (* (((key count) tail) (x out)))
+  & x ~ {xc xr}
+  & key ~ {kc kout}
+  & xc ~ $([=] $(kc z))
+  & z ~ ?((@ins_ne @ins_eq) (xr (kout (count (tail out))))
+
+@ins_ne = (xr (key (count (tail out))))
+  & @insert ~ (tail (xr h2))
+  & @cell ~ (key (count (h2 out)))
+
+@ins_eq = (* (xr (key (count (tail out)))))
+  & xr ~ *
+  & count ~ $([+1] cnew)
+  & @cell ~ (key (cnew (tail out)))
+
+@one = (x out)
+  & out ~ (1 ((x 1) (0 *)))
+
+@cell = (key (count (tail out)))
+  & out ~ (1 ((key count) tail))
+
+// Select the most frequent histogram entry.
+@finish = ((?((@finish_nil @finish_cons) (pl out)) pl) out)
+
+@finish_nil = (* out)
+  & out ~ 0
+
+@finish_cons = (* (((key count) tail) out))
+  & @scan ~ (tail (key (count out)))
+
+// Scan the histogram, carrying the current best key and count.
+@scan = ((?((@scan_nil @scan_cons) (pl (bk (bc out)))) pl) (bk (bc out)))
+
+@scan_nil = (* (bk (* out)))
+  & bk ~ out
+
+@scan_cons = (* (((k c) tail) (bk (bc out))))
+  & c ~ {cc cr}
+  & bc ~ {bcc bcr}
+  & k ~ {kc kr}
+  & bk ~ {bkc bkr}
+  & cc ~ $([>] $(bcc z))
+  & z ~ ?((@scan_nogt @scan_take) (tail (kr (cr (bkr (bcr out)))))
+
+@scan_take = (* (tail (k (c (* (* out))))))
+  & @scan ~ (tail (k (c out)))
+
+@scan_nogt = (tail (k (c (bk (bc out)))))
+  & k ~ {kc kr}
+  & bk ~ {bkc bkr}
+  & kc ~ $([<] $(bkc z))
+  & z ~ ?((@scan_keep @scan_take) (tail (kr (c (bkr (bc out)))))
+
+@scan_keep = (tail (* (* (bk (bc out)))))
+  & @scan ~ (tail (bk (bc out)))

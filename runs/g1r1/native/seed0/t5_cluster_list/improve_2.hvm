@@ -1,0 +1,178 @@
+// Input: (n, edge-list). Output: connected components in canonical order.
+@prog = (input out)
+  & input ~ (n edges)
+  & @clusters ~ (0 (n ((0 *) (edges out))))
+
+// Membership test.
+@mem = (x (l out))
+  & l ~ (tag payload)
+  & tag ~ ?((@mem_nil @mem_cons) (payload (x out)))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* (payload (x out)))
+  & payload ~ (h t)
+  & x ~ {x_cmp x_rec}
+  & h ~ $([=] $(x_cmp z))
+  & z ~ ?((@mem_recur @mem_found) (x_rec (t out)))
+
+@mem_recur = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_found = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+// Gather the endpoints adjacent to node.
+@neighbors = (node (edges (work out)))
+  & edges ~ (tag payload)
+  & tag ~ ?((@neighbors_nil @neighbors_cons) (payload (node (work out))))
+
+@neighbors_nil = (payload (node (work out)))
+  & payload ~ *
+  & node ~ *
+  & out ~ work
+
+@neighbors_cons = (* (payload (node (work out))))
+  & payload ~ (edge rest)
+  & edge ~ (u v)
+  & node ~ {n_edge n_rec}
+  & @edge_neighbors ~ (u (v (n_edge (work work2))))
+  & @neighbors ~ (n_rec (rest (work2 out)))
+
+@edge_neighbors = (u (v (node (work out))))
+  & u ~ {u_cmp u_keep}
+  & node ~ {n_cmp n_keep}
+  & u_cmp ~ $([=] $(n_cmp z))
+  & z ~ ?((@edge_no @edge_yes) (u_keep (v (n_keep (work out)))))
+
+@edge_no = (u (v (node (work out))))
+  & v ~ $([=] $(node z))
+  & z ~ ?((@edge_no2 @edge_yes2) (u (work out)))
+
+@edge_yes = (* (u (v (node (work out)))))
+  & u ~ *
+  & node ~ *
+  & out ~ (1 (v work))
+
+@edge_no2 = (u (work out))
+  & u ~ *
+  & out ~ work
+
+@edge_yes2 = (* (u (work out)))
+  & out ~ (1 (u work))
+
+// Depth-first traversal. Returns the visited nodes as a list.
+@dfs = (work (seen (edges out)))
+  & work ~ (tag payload)
+  & tag ~ ?((@dfs_empty @dfs_more) (payload (seen (edges out))))
+
+@dfs_empty = (payload (seen (edges out)))
+  & payload ~ *
+  & edges ~ *
+  & out ~ seen
+
+@dfs_more = (* (payload (seen (edges out))))
+  & payload ~ (node rest)
+  & seen ~ {s_mem s_keep}
+  & node ~ {n_mem n_keep}
+  & @mem ~ (n_mem (s_mem z))
+  & z ~ ?((@dfs_unseen @dfs_found) (n_keep (rest (s_keep (edges out)))))
+
+@dfs_found = (* (node (rest (seen (edges out)))))
+  & node ~ *
+  & @dfs ~ (rest (seen (edges out)))
+
+@dfs_unseen = (node (rest (seen (edges out))))
+  & node ~ {n_seen n_neighbor}
+  & edges ~ {e_scan e_recur}
+  & @neighbors ~ (n_neighbor (e_scan (rest work2)))
+  & @dfs ~ (work2 ((1 (n_seen seen)) (e_recur out)))
+
+// Enumerate ids in ascending order. A traversal finds each whole component.
+@clusters = (i (n (seen (edges out))))
+  & i ~ {i_cmp i_keep}
+  & n ~ {n_cmp n_keep}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@clusters_done @clusters_more) (i_keep (n_keep (seen (edges out)))))
+
+@clusters_done = (i (n (seen (edges out))))
+  & i ~ *
+  & n ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@clusters_more = (* (i (n (seen (edges out)))))
+  & i ~ {i_mem i_keep}
+  & seen ~ {s_mem s_keep}
+  & @mem ~ (i_mem (s_mem z))
+  & z ~ ?((@cluster_new @cluster_skip) (i_keep (n (s_keep (edges out)))))
+
+@cluster_skip = (* (i (n (seen (edges out)))))
+  & i ~ $([+1] i2)
+  & @clusters ~ (i2 (n (seen (edges out))))
+
+@cluster_new = (i (n (seen (edges out))))
+  & i ~ {i_dfs i_next}
+  & edges ~ {e_dfs e_outer}
+  & @dfs ~ ((1 (i_dfs (0 *))) ((0 *) (e_dfs comp)))
+  & comp ~ {comp_sort comp_append}
+  & @sort ~ (comp_sort sorted)
+  & @append ~ (comp_append (seen seen2))
+  & @clusters ~ (i_next (n (seen2 (e_outer tail))))
+  & out ~ (1 (sorted tail))
+
+// Sort a list of ids by insertion into an ascending list.
+@sort = (list out)
+  & list ~ (tag payload)
+  & tag ~ ?((@sort_nil @sort_cons) (payload out))
+
+@sort_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* (payload out))
+  & payload ~ (h t)
+  & @sort ~ (t sorted)
+  & @insert ~ (h (sorted out))
+
+@insert = (x (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@insert_nil @insert_cons) (payload (x out)))
+
+@insert_nil = (payload (x out))
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@insert_cons = (* (payload (x out)))
+  & payload ~ (h t)
+  & x ~ {x_cmp x_keep}
+  & h ~ {h_cmp h_keep}
+  & x_cmp ~ $([<] $(h_cmp z))
+  & z ~ ?((@insert_after @insert_before) (x_keep (h_keep (t out))))
+
+@insert_before = (* (x (h (t out))))
+  & out ~ (1 (x (1 (h t))))
+
+@insert_after = (* (x (h (t out))))
+  & @insert ~ (x (t tail))
+  & out ~ (1 (h tail))
+
+// Append visited nodes to the global visited list.
+@append = (a (b out))
+  & a ~ (tag payload)
+  & tag ~ ?((@append_nil @append_cons) (payload (b out)))
+
+@append_nil = (payload (b out))
+  & payload ~ *
+  & out ~ b
+
+@append_cons = (* (payload (b out)))
+  & payload ~ (h t)
+  & @append ~ (t (b tail))
+  & out ~ (1 (h tail))

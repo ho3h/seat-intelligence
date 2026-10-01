@@ -1,0 +1,20 @@
+// Drop k elements, then continue through the list using @iter.
+@prog = ((k xs) out)
+  & @drop ~ (k (xs out))
+
+@drop = (k (xs out))
+  & k ~ ?((@drop_zero (dec ((?((@drop_nil @iter) (pl (dec out2))) pl) out2))) (xs out))
+
+// Count is zero: return the list unchanged.
+@drop_zero = (x x)
+
+// The list ended before the count did: return Nil.
+@drop_nil = (pl (k out))
+  & pl ~ *
+  & k ~ *
+  & out ~ (0 *)
+
+// A Cons was removed. If more remain, inspect the tail; otherwise return it.
+@iter = (* ((head tail) (k out)))
+  & head ~ *
+  & k ~ ?((@drop_zero (dec ((?((@drop_nil @iter) (pl (dec out2))) pl) out2))) (tail out))

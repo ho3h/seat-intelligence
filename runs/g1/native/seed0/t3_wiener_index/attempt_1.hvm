@@ -1,0 +1,31 @@
+// For graphs of diameter at most two, the Wiener index is 2*C(n,2) - |E|.
+
+@prog = ((n edges) out)
+  & @len ~ (edges m)
+  & n ~ {nt nc}
+  & nt ~ $([<] $(2 z))
+  & z ~ ?((@large @small) (nc (m out)))
+
+@len = ((?((@len_nil @len_cons) (p out)) p) out)
+
+@len_nil = (p out)
+  & p ~ *
+  & out ~ 0
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @len ~ (t l)
+  & l ~ $([+1] out)
+
+@small = (* (n (m out)))
+  & n ~ *
+  & m ~ *
+  & out ~ 0
+
+@large = (n (m out))
+  & n ~ {n1 n2}
+  & n1 ~ $([*] $(nm prod))
+  & n2 ~ $([-] $(1 nm))
+  & prod ~ $([/] $(2 pairs))
+  & pairs ~ $([*2] twice)
+  & twice ~ $([-] $(m out))

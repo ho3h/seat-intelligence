@@ -1,0 +1,81 @@
+@prog = (input output)
+  & input ~ ((c attrs) *)
+  & @collect ~ (c (attrs ((0 *) output)))
+
+@collect = (c (attrs (acc out)))
+  & attrs ~ (?((@coll_nil @coll_cons) (c (acc out))) *)
+
+@coll_nil = (c (acc out))
+  & * ~ c
+  & out ~ acc
+
+@coll_cons = (* (((n (k v)) tail) (c (acc out))))
+  & {c1 c2} ~ c
+  & @get_cid ~ (n (c1 cid_val))
+  & cid_val ~ (cid_num *)
+  & @collect ~ (c2 (tail (rec_acc out)))
+  & @insert_item ~ (cid_num k v (acc rec_acc))
+
+@get_cid = (n (c out))
+  & n ~ ?((@gc_z @gc_s) (c out))
+
+@gc_z = (c out)
+  & c ~ (h t)
+  & * ~ t
+  & out ~ h
+
+@gc_s = (((n_p out) c) *)
+  & @get_cid ~ (n_p (c out))
+
+@insert_item = (cid k v list out)
+  & list ~ (?((@ins_nil @ins_cons) out) *)
+
+@ins_nil = (cid k v out)
+  & out ~ (1 (((cid (k v)) (0 *)) *))
+
+@ins_cons = (* (((cid2 (k2 v2)) rest) (cid k v out)))
+  & {ca cb} ~ cid
+  & {c2a c2b} ~ cid2
+  & ca ~ $([<] $(c2a cmp))
+  & cmp ~ (?((@ins_lt @ins_ge) (cb c2b k k2 v v2 rest out)) *)
+
+@ins_lt = (cb c2b k k2 v v2 rest out)
+  & out ~ (1 (((cb (k v)) cont) *))
+  & @insert_item ~ (c2b k2 v2 rest cont)
+
+@ins_ge = (cb c2b k k2 v v2 rest out)
+  & cb ~ $([=] $(c2b ceq))
+  & ceq ~ (?((@ins_eq @ins_gt) (c2b k k2 v v2 rest out)) *)
+
+@ins_eq = (c2b k k2 v v2 rest out)
+  & {ka kb} ~ k
+  & {k2a k2b} ~ k2
+  & ka ~ $([=] $(k2a keq))
+  & keq ~ (?((@ins_same @ins_diff) (c2b kb k2b v v2 rest out)) *)
+
+@ins_same = (c2b kb k2b v v2 rest out)
+  & {va vb} ~ v
+  & {v2a v2b} ~ v2
+  & va ~ $([<] $(v2a veq))
+  & veq ~ (?((@ins_v1 @ins_v2) (c2b kb k2b vb v2b rest out)) *)
+
+@ins_v1 = (c2b kb k2b vb v2b rest out)
+  & * ~ v2b
+  & out ~ (1 (((c2b (kb vb)) cont) *))
+  & @insert_item ~ (c2b k2b v2b rest cont)
+
+@ins_v2 = (c2b kb k2b vb v2b rest out)
+  & * ~ vb
+  & out ~ (1 (((c2b (kb v2b)) cont) *))
+  & @insert_item ~ (c2b k2b v2b rest cont)
+
+@ins_diff = (c2b kb k2b v v2 rest out)
+  & * ~ v2
+  & out ~ (1 (((c2b (kb v)) cont) *))
+  & @insert_item ~ (c2b k2b v2 rest cont)
+
+@ins_gt = (c2b k k2 v v2 rest out)
+  & * ~ k2
+  & * ~ v2
+  & out ~ (1 (((c2b (k v)) cont) *))
+  & @insert_item ~ (c2b k2 v2 rest cont)

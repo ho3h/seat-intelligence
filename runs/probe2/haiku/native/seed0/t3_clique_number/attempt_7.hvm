@@ -1,0 +1,157 @@
+@prog = ((n edges) out)
+  & {n_pow n_iter} ~ n
+  & {e_pow e_iter} ~ edges
+  & e_pow ~ *
+  & @pow2 ~ ((n_pow 1) max_val)
+  & @iterate ~ ((0 (max_val (n_iter (e_iter (0 out))))) *)
+
+@pow2 = ((n acc) out)
+  & z ~ $(n [=] 0)
+  & z ~ ?((@p_done @p_cont) (n (acc out)))
+
+@p_done = (n (a o))
+  & n ~ *
+  & o ~ a
+
+@p_cont = (* (n (a o)))
+  & n1 ~ $(n [-] 1)
+  & a2 ~ $(a [*] 2)
+  & @pow2 ~ ((n1 a2) o)
+
+@iterate = ((mask (max (n (edges (best out))))) *)
+  & done ~ $(mask [=] max)
+  & done ~ ?((@i_done @i_step) ((mask (max (n (edges (best out)))))))
+
+@i_done = ((m (mx (n (e (b o))))))
+  & m ~ *
+  & mx ~ *
+  & n ~ *
+  & e ~ *
+  & o ~ b
+
+@i_step = (* ((mask (max (n (edges (best out)))))))
+  & @is_clique ~ ((mask (n edges)) (valid))
+  & valid ~ ?((@i_skip @i_count) ((mask (max (n (edges (best out)))))))
+
+@i_skip = ((m (mx (n (e (b o))))))
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 (mx (n (e (b o))))) *)
+
+@i_count = (* ((mask (max (n (edges (best out)))))))
+  & @popcount ~ (mask cnt)
+  & cmp ~ $(cnt [>] best)
+  & cmp ~ ?((@i_skip2 @i_new) ((mask (max (n (edges (best out)))))))
+
+@i_skip2 = ((m (mx (n (e (b o))))))
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 (mx (n (e (b o))))) *)
+
+@i_new = (* ((mask (max (n (edges (best out)))))))
+  & m1 ~ $(mask [+] 1)
+  & @iterate ~ ((m1 (max (n (edges cnt)))) *)
+
+@is_clique = ((mask (n edges)) (result out))
+  & @chk ~ ((mask (n edges) 0 0) (result out))
+
+@chk = ((mask (n edges i j) (result out))
+  & i_eq ~ $(i [=] n)
+  & i_eq ~ ?((@chk_ok @chk_j) (result out))
+
+@chk_ok = (r o)
+  & o ~ 1
+
+@chk_j = (* (r o))
+  & j_eq ~ $(j [=] n)
+  & j_eq ~ ?((@chk_i_next @chk_pair) ((mask (n edges i j (result out)))))
+
+@chk_i_next = ((m (n (e i j r o)))))
+  & i1 ~ $(i [+] 1)
+  & @chk ~ ((m (n e i1 0) (r o)))
+
+@chk_pair = (* ((mask (n edges i j (result out)))))
+  & j_gt ~ $(j [>] i)
+  & j_gt ~ ?((@chk_j_next @chk_bits) ((mask (n edges i j (result out)))))
+
+@chk_j_next = ((m (n (e i j r o)))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@chk_bits = (* ((mask (n edges i j (result out)))))
+  & i_in ~ $(i [&] mask)
+  & i_in ~ ?((@chk_j_next2 @chk_j_in) ((mask (n edges i j (result out)))))
+
+@chk_j_next2 = ((m (n (e i j r o)))))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@chk_j_in = (* ((mask (n edges i j (result out)))))
+  & j_in ~ $(j [&] mask)
+  & j_in ~ ?((@chk_j_next3 @chk_edge) ((i j (n edges (result out)))))
+
+@chk_j_next3 = ((i j n e r o)))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@chk_edge = (* ((i j n edges r o)))
+  & @find_edge ~ ((i j edges) (found))
+  & found ~ ?((@chk_fail @chk_j_next4) ((i j n edges r o)))
+
+@chk_fail = ((i j n e r o))
+  & o ~ 0
+
+@chk_j_next4 = (* ((i j n edges r o)))
+  & j1 ~ $(j [+] 1)
+  & @chk ~ ((m (n e i j1) (r o)))
+
+@find_edge = ((i j edges) (result out))
+  & edges ~ ?((@no_e @search_e) (result out))
+
+@no_e = (r o)
+  & o ~ 0
+
+@search_e = (* (r o))
+  & edges ~ ((u v) tail)
+  & e1 ~ $(u [=] i)
+  & e1 ~ ?((@chk_rev @chk_v) ((v i j tail (r o))))
+
+@chk_rev = ((v i j tail r o))
+  & e2 ~ $(u [=] j)
+  & e2 ~ ?((@skip_e @found_e) ((tail (r o))))
+
+@skip_e = ((tail r o))
+  & @find_edge ~ ((i j tail) (r o))
+
+@found_e = (* ((tail r o)))
+  & o ~ 1
+
+@chk_v = (* ((v i j tail r o)))
+  & e3 ~ $(v [=] j)
+  & e3 ~ ?((@skip_e2 @found_e2) ((tail (r o))))
+
+@skip_e2 = ((tail r o))
+  & @find_edge ~ ((i j tail) (r o))
+
+@found_e2 = (* ((tail r o)))
+  & o ~ 1
+
+@popcount = (mask out)
+  & @sum ~ ((mask 0) out)
+
+@sum = ((mask acc) out)
+  & zero ~ $(mask [=] 0)
+  & zero ~ ?((@sum_ret @sum_loop) (acc out))
+
+@sum_ret = (a o)
+  & o ~ a
+
+@sum_loop = (* (a o))
+  & bit ~ $(mask [%] 2)
+  & shr ~ $(mask [>>] 1)
+  & bit ~ ?((@sum_skip @sum_add) ((shr a o)))
+
+@sum_skip = ((s a o))
+  & @sum ~ ((s a) o)
+
+@sum_add = (* ((s a o)))
+  & a1 ~ $(a [+] 1)
+  & @sum ~ ((s a1) o)

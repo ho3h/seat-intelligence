@@ -1,0 +1,55 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@block16 = ({a {b {c {d {e {f {g {h {i {j {k {l {m {n {o p}}}}}}}}}}}}}}} (q gb))
+  & @List/Cons ~ (a (fb gb))
+  & @List/Cons ~ (b (eb fb))
+  & @List/Cons ~ (c (db eb))
+  & @List/Cons ~ (d (cb db))
+  & @List/Cons ~ (e (bb cb))
+  & @List/Cons ~ (f (ab bb))
+  & @List/Cons ~ (g (z ab))
+  & @List/Cons ~ (h (y z))
+  & @List/Cons ~ (i (x y))
+  & @List/Cons ~ (j (w x))
+  & @List/Cons ~ (k (v w))
+  & @List/Cons ~ (l (u v))
+  & @List/Cons ~ (m (t u))
+  & @List/Cons ~ (n (s t))
+  & @List/Cons ~ (o (r s))
+  & @List/Cons ~ (p (q r))
+
+@block64 = ({a {b {c d}}} (e i))
+  & @block16 ~ (a (h i))
+  & @block16 ~ (b (g h))
+  & @block16 ~ (c (f g))
+  & @block16 ~ (d (e f))
+
+@prog = ((a b) c)
+  & @replicate ~ (a (b c))
+
+@replicate = ({$([>0x0000040] a) b} c)
+  & $(a ?((@replicate__C2 @replicate__C3) (b c))) ~ [=0x0000000]
+
+@replicate__C0 = a
+  & @replicate_small ~ a
+
+@replicate__C1 = (* ($([:-0x0000010] b) ({a c} e)))
+  & @block16 ~ (a (d e))
+  & @replicate ~ (b (c d))
+
+@replicate__C2 = ({$([>0x0000010] a) b} c)
+  & $(a ?((@replicate__C0 @replicate__C1) (b c))) ~ [=0x0000000]
+
+@replicate__C3 = (* ($([:-0x0000040] b) ({a c} e)))
+  & @block64 ~ (a (d e))
+  & @replicate ~ (b (c d))
+
+@replicate_small = (?(((* @List/Nil) @replicate_small__C0) a) a)
+
+@replicate_small__C0 = ($([+0x0000001] $([:-0x0000001] b)) ({a c} e))
+  & @List/Cons ~ (a (d e))
+  & @replicate_small ~ (b (c d))
+
+

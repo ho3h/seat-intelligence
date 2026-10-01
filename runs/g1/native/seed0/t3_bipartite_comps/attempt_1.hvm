@@ -1,0 +1,174 @@
+// Create a list of n zeroes.
+@prog = ((n edges) out)
+  & n ~ {n_fill n_loop}
+  & @fill ~ (n_fill colors)
+  & @roots ~ (0 (n_loop (edges (colors (0 out))))
+
+@fill = (n out)
+  & n ~ ?((@fill_zero @fill_succ) out)
+
+@fill_zero = (0 *)
+
+@fill_succ = (k out)
+  & @fill ~ (k tail)
+  & out ~ (1 (0 tail))
+
+// Read the value at index idx in a list.
+@at = (idx ((tag payload) out))
+  & tag ~ ?((@at_nil @at_cons) (payload (idx out)))
+
+@at_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@at_cons = (z ((head tail) (idx out)))
+  & z ~ *
+  & idx ~ ?((@at_here @at_more) ((head tail) out))
+
+@at_here = ((head tail) out)
+  & tail ~ *
+  & out ~ head
+
+@at_more = (idx ((head tail) out))
+  & head ~ *
+  & @at ~ (idx (tail out))
+
+// Set the value at index idx in a list.
+@put = (idx (val ((tag payload) out)))
+  & tag ~ ?((@put_nil @put_cons) (payload (idx (val out))))
+
+@put_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@put_cons = (z ((head tail) (idx (val out))))
+  & z ~ *
+  & idx ~ ?((@put_here @put_more) ((head tail) (val out)))
+
+@put_here = ((head tail) (val out))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@put_more = (idx ((head tail) (val out)))
+  & head ~ *
+  & @put ~ (idx (val (tail tailout)))
+  & out ~ (1 (head tailout))
+
+// Visit a vertex, with its color already assigned.
+@visit = (v (c (edges (colors (good out)))))
+  & edges ~ {all rest}
+  & @scan ~ (v (c (all (rest (colors (good out)))))
+
+// Scan all edges for neighbors of v.
+@scan = (v (c (all ((tag payload) (colors (good out)))))
+  & tag ~ ?((@scan_nil @scan_cons) (payload (v (c (all (colors (good out))))))
+
+@scan_nil = (payload (v (c (all (colors (good out)))))
+  & payload ~ *
+  & v ~ *
+  & c ~ *
+  & all ~ *
+  & out ~ (colors good)
+
+@scan_cons = (z (((u w) rest) (v (c (all (colors (good out))))))
+  & z ~ *
+  & u ~ {u_cmp u_keep}
+  & v ~ {v_cmp v_keep}
+  & u_cmp ~ $([=] $(v_cmp eq))
+  & eq ~ ?((@scan_test_w @scan_hit_w) (v_keep (c (w (u_keep (all (rest (colors (good out))))))))
+
+@scan_hit_w = (z (v (c (w (u (all (rest (colors (good out))))))))
+  & z ~ *
+  & u ~ *
+  & @neighbor ~ (w (v (c (all (rest (colors (good out))))))
+
+@scan_test_w = (v (c (w (u (all (rest (colors (good out)))))))
+  & v ~ {v_cmp v_resume}
+  & w ~ $([=] $(v_cmp eq2))
+  & eq2 ~ ?((@scan_continue @scan_hit_u) (v_resume (c (u (all (rest (colors (good out))))))))
+
+@scan_continue = (v (c (u (all (rest (colors (good out)))))))
+  & u ~ *
+  & @scan ~ (v (c (all (rest (colors (good out))))))
+
+@scan_hit_u = (z (v (c (u (all (rest (colors (good out))))))))
+  & z ~ *
+  & @neighbor ~ (u (v (c (all (rest (colors (good out))))))
+
+// Check a neighbor's color; visit it if uncolored, otherwise check parity.
+@neighbor = (neighbor (v (c (all (rest (colors (good out)))))))
+  & neighbor ~ {nb_get nb_keep}
+  & colors ~ {colors_get colors_keep}
+  & @at ~ (nb_get (colors_get col))
+  & col ~ {col_cmp col_keep}
+  & col_cmp ~ $([=] $(0 iszero))
+  & iszero ~ ?((@neighbor_occupied @neighbor_empty) (nb_keep (v (c (all (rest (colors_keep (col_keep (good out))))))))
+
+@neighbor_empty = (z (nb (v (c (all (rest (colors (col (good out))))))))
+  & z ~ *
+  & col ~ *
+  & nb ~ {nb_put nb_visit}
+  & c ~ {c_calc c_resume}
+  & all ~ {all_visit all_resume}
+  & 3 ~ $([-] $(c_calc exp))
+  & exp ~ {exp_put exp_visit}
+  & @put ~ (nb_put (exp_put (colors colors2)))
+  & @visit ~ (nb_visit (exp_visit (all_visit (colors2 (good (colors3 good3)))))
+  & @scan ~ (v (c_resume (all_resume (rest (colors3 (good3 out))))))
+
+@neighbor_occupied = (nb (v (c (all (rest (colors (col (good out))))))))
+  & nb ~ *
+  & c ~ {c_calc c_resume}
+  & 3 ~ $([-] $(c_calc exp))
+  & exp ~ $([=] $(col eq))
+  & eq ~ ?((@neighbor_conflict @neighbor_match) (v (c_resume (all (rest (colors (good out))))))
+
+@neighbor_match = (z (v (c (all (rest (colors (good out)))))))
+  & z ~ *
+  & @scan ~ (v (c (all (rest (colors (good out))))))
+
+@neighbor_conflict = (v (c (all (rest (colors (good out))))))
+  & good ~ *
+  & @scan ~ (v (c (all (rest (colors (0 out))))))
+
+// Process vertices in order, starting a search at each uncolored vertex.
+@roots = (i (rem (edges (colors (count out)))))
+  & rem ~ ?((@roots_done @roots_step) (i (edges (colors (count out)))))
+
+@roots_done = (i (edges (colors (count out))))
+  & i ~ *
+  & edges ~ *
+  & colors ~ *
+  & out ~ count
+
+@roots_step = (rem (i (edges (colors (count out)))))
+  & i ~ {i_get i_keep}
+  & colors ~ {colors_get colors_keep}
+  & @at ~ (i_get (colors_get state))
+  & state ~ $([=] $(0 iszero))
+  & iszero ~ ?((@roots_assigned @roots_new) (i_keep (rem (edges (colors_keep (count out))))))
+
+@roots_assigned = (i (rem (edges (colors (count out)))))
+  & i ~ $([+1] i_next)
+  & @roots ~ (i_next (rem (edges (colors (count out))))))
+
+@roots_new = (z (i (rem (edges (colors (count out))))))
+  & z ~ *
+  & i ~ {i_put i_rest}
+  & i_rest ~ {i_visit i_inc}
+  & edges ~ {edges_visit edges_loop}
+  & @put ~ (i_put (1 (colors colored)))
+  & @visit ~ (i_visit (1 (edges_visit (colored (1 (colors2 good)))))
+  & i_inc ~ $([+1] i_next)
+  & good ~ ?((@roots_bad @roots_bip) (i_next (rem (edges_loop (colors2 (count out))))))
+
+@roots_bad = (i (rem (edges (colors (count out)))))
+  & @roots ~ (i (rem (edges (colors (count out))))))
+
+@roots_bip = (z (i (rem (edges (colors (count out))))))
+  & z ~ *
+  & count ~ $([+1] count2)
+  & @roots ~ (i (rem (edges (colors (count2 out))))))

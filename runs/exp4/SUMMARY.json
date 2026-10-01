@@ -1,0 +1,25 @@
+{
+ "date": "2026-09-30",
+ "dataset": {"verified_nets": 2461, "roundtrip_exact": 2461, "roundtrip_exec_checked": "30/30 pass", "train_books": 1679, "train_used": "724 non-composed + 400 composed", "dev": 80, "test": 157, "test_defs": 1178, "compose_dropped_for_leakage": 545},
+ "step1_gold_skeleton_heldout_tasks_n157": {
+  "random": {"def_exact": 0.221, "net_exact": 0.013, "exec_pass": 0.013},
+  "nearest": {"def_exact": 0.200, "net_exact": 0.0, "exec_pass": 0.0},
+  "lookup": {"def_exact": 0.712, "net_exact": 0.134, "exec_pass": 0.159, "wilson95": [0.11, 0.225]},
+  "model": {"def_exact": 0.686, "net_exact": 0.255, "exec_pass": 0.389, "wilson95": [0.316, 0.467]},
+  "hybrid": {"def_exact": 0.756, "net_exact": 0.242, "exec_pass": 0.331},
+  "rerank": {"def_exact": 0.736, "net_exact": 0.248, "exec_pass": 0.331}
+ },
+ "step1b_correct_skeletons_of_iid_test_from_native_v1_passes": {"nets": 138, "exec_pass": 0.746, "tasks": 45, "tasks_with_rewired_pass": 32},
+ "step2_iid_test_n4": {
+  "baseline_native_v1_n8": {"pass@1": 0.144, "ci": [0.099, 0.191]},
+  "skeleton_lm_plus_model": {"pass@1": 0.0875, "ci": [0.054, 0.127], "paired_delta": -0.056, "paired_ci": [-0.092, -0.022], "odd_blank_samples": "318/480"},
+  "skeleton_lm_plus_hybrid": {"pass@1": 0.0958, "ci": [0.056, 0.142], "paired_delta": -0.048, "paired_ci": [-0.084, -0.011]},
+  "skeleton_lm_plus_model_parity_repair": {"pass@1": 0.0938, "ci": [0.06, 0.133], "paired_delta": -0.05, "paired_ci": [-0.086, -0.017]}
+ },
+ "rewire_native_v1_samples": {
+  "lint_rejected_only_lam3": {"rescued": "17/487", "pass@1": 0.1615, "paired_delta": 0.0177, "paired_ci": [0.009, 0.027]},
+  "all_lam0": {"pass@1": 0.1229, "paired_delta": -0.021, "fail_to_pass": 3, "pass_to_fail": 35},
+  "all_lam3": {"pass@1": 0.1437, "paired_delta": 0.0, "fail_to_pass": 3, "pass_to_fail": 20}
+ },
+ "parity": {"named_lm_samples_with_odd_def": "385/960 (0.40), 9.5% of defs", "skeleton_lm_samples_with_odd_def": "318/480 (0.66), 20% of defs"}
+}

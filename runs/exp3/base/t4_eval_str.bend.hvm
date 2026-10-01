@@ -1,0 +1,88 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@expr_tail = (a b)
+  & @skip_spaces ~ (a (@expr_tail__C6 b))
+
+@expr_tail__C0 = ($([+] $(a b)) (a (c (d (b e)))))
+  & @List/Cons ~ (c (d e))
+
+@expr_tail__C1 = (* ($([+] $(c d)) (c (* (a f)))))
+  & @expr_tail ~ (b (d (e f)))
+  & @parse_factor ~ (a (e b))
+
+@expr_tail__C2 = (a (b ({$([=0x000002B] ?((@expr_tail__C0 @expr_tail__C1) (a (b (c d))))) c} d)))
+
+@expr_tail__C3 = (* (c ($([*] $(d e)) (* (a f)))))
+  & @expr_tail ~ (b (c (e f)))
+  & @parse_factor ~ (a (d b))
+
+@expr_tail__C4 = ($([+] $(a b)) (a (b @List/Nil)))
+
+@expr_tail__C5 = (* ({$([=0x000002A] ?((@expr_tail__C2 @expr_tail__C3) (a (b (c (d e)))))) c} (d (a (b e)))))
+
+@expr_tail__C6 = (?((@expr_tail__C4 @expr_tail__C5) a) a)
+
+@parse_expr = (a d)
+  & @expr_tail ~ (b (0 (c d)))
+  & @parse_factor ~ (a (c b))
+
+@parse_factor = (a b)
+  & @skip_spaces ~ (a (@parse_factor__C6 b))
+
+@parse_factor__C0 = (a (a @List/Nil))
+
+@parse_factor__C1 = (* (* (b (a (a b)))))
+
+@parse_factor__C2 = (?((@parse_factor__C0 @parse_factor__C1) a) a)
+
+@parse_factor__C3 = (a (b d))
+  & @parse_number ~ (c (0 d))
+  & @List/Cons ~ (a (b c))
+
+@parse_factor__C4 = (* (* (a d)))
+  & @skip_spaces ~ (b (@parse_factor__C2 (c d)))
+  & @parse_expr ~ (a (c b))
+
+@parse_factor__C5 = (* ({$([=0x0000028] ?((@parse_factor__C3 @parse_factor__C4) (a b))) a} b))
+
+@parse_factor__C6 = (?(((0 @List/Nil) @parse_factor__C5) a) a)
+
+@parse_number = ((@parse_number__C6 a) a)
+
+@parse_number__C0 = (a (b (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@parse_number__C1 = (* ($([*0x000000A] $([+] $(b c))) ($([:-0x0000030] b) (a d))))
+  & @parse_number ~ (a (c d))
+
+@parse_number__C2 = (a (b (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@parse_number__C3 = (* (b ({$([<0x0000039] a) c} d)))
+  & $(a ?((@parse_number__C0 @parse_number__C1) (b (c d)))) ~ [=0x0000000]
+
+@parse_number__C4 = (a (a @List/Nil))
+
+@parse_number__C5 = (* ({$([>0x0000030] a) c} (d (b e))))
+  & $(a ?((@parse_number__C2 @parse_number__C3) (b (c (d e))))) ~ [=0x0000000]
+
+@parse_number__C6 = (?((@parse_number__C4 @parse_number__C5) a) a)
+
+@prog = (a b)
+  & @parse_expr ~ (a (b *))
+
+@skip_spaces = ((@skip_spaces__C3 a) a)
+
+@skip_spaces__C0 = a
+  & @List/Cons ~ a
+
+@skip_spaces__C1 = (* (* a))
+  & @skip_spaces ~ a
+
+@skip_spaces__C2 = (* ({$([=0x0000020] ?((@skip_spaces__C0 @skip_spaces__C1) (a b))) a} b))
+
+@skip_spaces__C3 = (?((@List/Nil @skip_spaces__C2) a) a)
+
+

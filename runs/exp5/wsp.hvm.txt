@@ -1,0 +1,37 @@
+// t3_wsp_all_from (GRAPH-SWING, runs/exp5): adjacency trie built by pre-expanded pushes while streaming the edges,
+// then frontier Bellman-Ford over tries (sssp core), then the distance trie is flattened to a list of the first n
+// entries (tail threaded through the traversal, so all cells are built in parallel).
+@prog = ((n (s es)) out)
+  & n ~ ?((@wsp_zero @wsp_pos) (s (es out)))
+@wsp_zero = (* (* (0 *)))
+@wsp_pos = (nm1 (s (es out)))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sssp_start ~ (n1 (s (L3 (16777215 (G Df)))))
+  & @tl ~ (Df (L4 (0 (n2 ((0 *) out)))))
+@wsp_step = ((L g) ((u (v w)) (L3 g2)))
+  & L ~ {L1 L3}
+  & @gp ~ (g (u (L1 ((v w) g2))))
+@wsp_fin = ((* g) g)
+
+// tl(t, L, base, n, tail): the leaves of t with index < n, in order, prepended to tail
+@tl = (t (L (base (n (tail o)))))
+  & L ~ ?((@tl_leaf @tl_node) (t (base (n (tail o)))))
+@tl_leaf = (x (base (n (tail o))))
+  & base ~ $([<] $(n keep))
+  & keep ~ ?((@tl_drop @tl_keep) (x (tail o)))
+@tl_drop = (* (t t))
+@tl_keep = (* (x (t (1 (x t)))))
+@tl_node = (lm ((a b) (base (n (tail o)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {b1 b2}
+  & n ~ {n1 n2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @tl ~ (a (l1 (b1 (n1 (mid o)))))
+  & @tl ~ (b (l2 (bR (n2 (tail mid)))))

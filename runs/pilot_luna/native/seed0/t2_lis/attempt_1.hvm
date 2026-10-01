@@ -1,0 +1,49 @@
+// Longest strictly increasing subsequence via patience sorting.
+// @ins replaces the first tail >= x, or appends x and returns flag 1.
+
+@prog = (l out)
+  & @lis ~ (l ((0 *) (0 out)))
+
+@lis = ((?((@lis_nil @lis_cons) (p (tails (count out)))) p) (tails (count out)))
+
+@lis_nil = (p (tails (count out)))
+  & p ~ *
+  & tails ~ *
+  & count ~ out
+
+@lis_cons = ((h t) (tails (count out)))
+  & @ins ~ ((h tails) ((0 *) res))
+  & res ~ (newtails flag)
+  & count ~ $([+] $(flag next_count))
+  & @lis ~ (t (newtails (next_count out)))
+
+@ins = ((x (?( (@ins_nil @ins_cons) (p (x (pre out))) ) p)) (pre out))
+
+@ins_nil = (p (x (pre out)))
+  & p ~ *
+  & @rapp ~ (pre ((1 (x (0 *))) r))
+  & out ~ (r 1)
+
+@ins_cons = ((h t) (x (pre out)))
+  & h ~ {hc hp}
+  & x ~ {xc xr}
+  & hc ~ $([>] $(xc z))
+  & z ~ ?((@ins_no @ins_yes) (hp (t (xr (pre out))))
+
+@ins_no = (hp (t (xr (pre out))))
+  & @ins ~ ((xr t) ((1 (hp pre)) out))
+
+@ins_yes = (hp (t (xr (pre out))))
+  & hp ~ *
+  & @rapp ~ (pre ((1 (xr t)) r))
+  & out ~ (r 0)
+
+// Reverse the prefix list onto the supplied suffix.
+@rapp = ((?((@rapp_nil @rapp_cons) (p (s out))) p) (s out))
+
+@rapp_nil = (p (s out))
+  & p ~ *
+  & s ~ out
+
+@rapp_cons = ((h t) (s out))
+  & @rapp ~ (t ((1 (h s)) out))

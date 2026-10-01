@@ -1,0 +1,121 @@
+@init2 = (n out)
+  & n ~ ?((@init2_nil (?((@init2_nil @init2_cons) (tail_q264 *)) ((1 (2 tail_q264)) *))) (out *))
+
+@init2_nil = (out unused)
+  & unused ~ *
+  & out ~ (0 *)
+
+@init2_cons = (?((@init2_nil @init2_cons) (tail *)) ((1 (2 tail)) *))
+
+@bad_fill = (n out)
+  & n ~ ?((@bad_fill_nil @bad_fill_cons) (out *))
+
+@bad_fill_nil = (out unused)
+  & unused ~ *
+  & out ~ (0 *)
+
+@bad_fill_cons = (n (out unused))
+  & unused ~ *
+  & @bad_fill ~ (n tail)
+  & out ~ (1 (16777215 tail))
+
+@get_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_here @get_step) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_step = (i (* ((?((@get_nil @get_cons) (pl_q218 (i out))) pl_q218) out)))
+
+@set_nil = (i (v (pl out)))
+  & i ~ *
+  & v ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (i (v ((h t) out))))
+  & i ~ ?((@set_here (i_q262 (v_q262 (h_q262 ((?((@set_nil @set_cons) (i_q262 (v_q262 (pl_q220_q262 tail_q262)))) pl_q220_q262) (1 (h_q262 tail_q262))))))) (v (h (t out))))
+
+@set_here = (v (h (t out)))
+  & h ~ *
+  & out ~ (1 (v t))
+
+@pv_uncoloured = (* (u (v (ck (cv (colors (changed (bad out))))))))
+  & cv ~ {cvt cvk}
+  & cvt ~ $([=2] z)
+  & z ~ ?((@pv_setu @pv_both_uncoloured) (u (v (ck (cvk (colors (changed (bad out))))))))
+
+@pv_both_uncoloured = (* (u (v (ck (cv (colors (changed (bad out))))))))
+  & u ~ *
+  & v ~ *
+  & ck ~ *
+  & cv ~ *
+  & out ~ (colors (changed bad))
+
+@pv_setu = (u (* (* ($([-1] val) ((?((@set_nil @set_cons) (u (val (pl_q228 nc)))) pl_q228) (* (bad (nc (1 bad)))))))))
+
+@pv_assigned = (u (v (ck (cv (colors (changed (bad out)))))))
+  & cv ~ {cvt cvk}
+  & cvt ~ $([=2] z)
+  & z ~ ?((@pv_compare @pv_setv) (u (v (ck (cvk (colors (changed (bad out))))))))
+
+@pv_setv = (* (* (v ($([-1] val) (* ((?((@set_nil @set_cons) (v (val (pl_q230 nc)))) pl_q230) (* (bad (nc (1 bad))))))))))
+
+@pv_compare = (u (v (ck (cv (colors (changed (bad out)))))))
+  & ck ~ $([=] $(cv z))
+  & u ~ *
+  & v ~ *
+  & z ~ ?((@pv_no_conflict @pv_conflict) (colors (changed (bad out))))
+
+@pv_no_conflict = (colors (changed (bad out)))
+  & out ~ (colors (changed bad))
+
+@pv_conflict = (* (colors (changed (bad out))))
+  & bad ~ *
+  & out ~ (colors (changed 1))
+
+@scan_nil = (pl (colors (changed (bad out))))
+  & pl ~ *
+  & out ~ ((0 *) (colors (changed bad)))
+
+@scan_cons = (* ((({up {ug_q232 uu_q232}} {vp {vg_q232 vv_q232}}) (?((@scan_nil @scan_cons) (pl_q234 (c2 (ch2 (b2 (erest (cr (chr br)))))))) pl_q234)) ({(?((@get_nil @get_cons) (pl_q222_q232 (ug_q232 {$([=2] ?((@pv_assigned @pv_uncoloured) (uu_q232 (vv_q232 (ck_q226_q232 (cv_q232 (cc_q232 (changed (bad (c2 (ch2 b2))))))))))) ck_q226_q232}))) pl_q222_q232) {(?((@get_nil @get_cons) (pl_q224_q232 (vg_q232 cv_q232))) pl_q224_q232) cc_q232}} (changed (bad ((1 ((up vp) erest)) (cr (chr br))))))))
+
+@repeat = ((?((@scan_nil @scan_cons) (pl_q236 (colors (0 (bad (newedges (newcolors (changed ?((@repeat_check @repeat_bad) (newedges (newcolors (changed out)))))))))))) pl_q236) (colors (bad out)))
+
+@repeat_bad = (* (newedges (newcolors (changed out))))
+  & changed ~ *
+  & out ~ (newedges (newcolors 1))
+
+@repeat_check = (newedges (newcolors (changed out)))
+  & changed ~ ?((@repeat_done @repeat_more) (newedges (newcolors out)))
+
+@repeat_done = (newedges (newcolors out))
+  & out ~ (newedges (newcolors 0))
+
+@repeat_more = (* (newedges (newcolors out)))
+  & @repeat ~ (newedges (newcolors (0 out)))
+
+@loop_done = (* (n (edges (colors (?((@final_ok @final_invalid) (n (edges (colors out)))) out)))))
+
+@loop_more = (* ({ig ic} (n (edges ({(?((@get_nil @get_cons) (pl_q242 (ig $([=2] ?((($([+1] {$([<] $(ntest_q245_q259 ?((@loop_done @loop_more) (ikeep_q245_q259 (nkeep_q245_q259 (edges_q259 (colors_q259 (bad_q259 out_q259)))))))) ikeep_q245_q259}) ({ntest_q245_q259 nkeep_q245_q259} (edges_q259 (colors_q259 (bad_q259 out_q259))))) @loop_uncoloured) (ic (n (edges (ck (bad out)))))))))) pl_q242) ck} (bad out))))))
+
+@loop_uncoloured = (* ({iset $([+1] {$([<] $(ntest_q254 ?((@loop_done @loop_more) (ikeep_q254 (nkeep_q254 (newedges (newcolors (newbad out)))))))) ikeep_q254})} ({ntest_q254 nkeep_q254} ((?((@scan_nil @scan_cons) (pl_q236_q251 (seeded (0 (bad (newedges_q251 (newcolors_q251 (changed_q251 ?((@repeat_check @repeat_bad) (newedges_q251 (newcolors_q251 (changed_q251 (newedges (newcolors newbad)))))))))))))) pl_q236_q251) ((?((@set_nil @set_cons) (iset (0 (pl_q248 seeded)))) pl_q248) (bad out))))))
+
+@final_ok = (n (edges (colors out)))
+  & n ~ *
+  & edges ~ *
+  & out ~ colors
+
+@final_invalid = (* (n (edges (colors out))))
+  & edges ~ *
+  & colors ~ *
+  & @bad_fill ~ (n out)
+
+@prog = (({nfill {?((@loop_done @loop_more) (0 (nkeep_q257 (edges (colors (0 out)))))) nkeep_q257}} edges) out)
+  & @init2 ~ (nfill colors)

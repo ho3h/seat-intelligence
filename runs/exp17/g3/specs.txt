@@ -1,0 +1,211 @@
+===== t3_bfs_order | sizes [1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Input is (n, s, edges) with s < n. The graph is UNDIRECTED: n is the number of vertices, numbered 0..n-1, and edges is a list of undirected edges (u, v) with u < n, v < n and u != v; each edge appears exactly once, in either orientation ((u, v) and (v, u) denote the same edge and never both appear), there are no self loops, and the order of the list is arbitrary. Output the order in which breadth-first search from s visits vertices: start with a FIFO queue holding only s (s is marked seen); repeatedly remove the front vertex u, append u to the output, then scan the neighbours of u in INCREASING vertex-id order and append each not-yet-seen neighbour to the back of the queue, marking it seen. Stop when the queue is empty. The output starts with s and contains every vertex connected to s exactly once, and no other vertex.
+IN: tuple[u24, u24, list[tuple[u24, u24]]]  OUT: list[u24]
+def _bfs_order(x):
+    n, s, es = x
+    a = uadj(n, es); seen = [False] * n; seen[s] = True; q = deque([s]); out = []
+    while q:
+        u = q.popleft(); out.append(u)
+        for v in a[u]:
+            if not seen[v]: seen[v] = True; q.append(v)
+    return out
+
+===== t3_bipartite_matching | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Bipartite graph given by its two sides. Input is (a, b, edges): the left side has vertices 0..a-1, the right side has vertices 0..b-1 (a separate numbering), and each edge (u, v) joins left vertex u (u < a) to right vertex v (v < b); no pair appears twice. Output the size of a maximum matching: the largest number of edges that can be chosen so that no two chosen edges share a left vertex or share a right vertex.
+IN: tuple[u24, u24, list[tuple[u24, u24]]]  OUT: u24
+def _matching(x):
+    a, b, edges = x
+    adj = [[] for _ in range(a)]
+    for u, v in edges: adj[u].append(v)
+    for l in adj: l.sort()
+    match_r = [-1] * b
+
+    def aug(u, seen):
+        for v in adj[u]:
+            if not seen[v]:
+                seen[v] = True
+                if match_r[v] < 0 or aug(match_r[v], seen):
+                    match_r[v] = u; return True
+        return False
+    return sum(1 for u in range(a) if aug(u, [False] * b))
+
+===== t3_clique_number | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Undirected unweighted graph. Input is (n, edges) with edges (u, v). Output the size of the largest clique: the largest number of vertices that are pairwise adjacent. Any single vertex is a clique of size 1, so n >= 1 with no edges gives 1; n = 0 gives 0.
+IN: tuple[u24, list[tuple[u24, u24]]]  OUT: u24
+def _clique(x):
+    n, edges = x
+    if n == 0: return 0
+    nb = [set() for _ in range(n)]
+    for u, v in edges: nb[u].add(v); nb[v].add(u)
+    best = 0
+
+    def bk(size, P, X):
+        nonlocal best
+        if not P and not X:
+            best = max(best, size); return
+        if size + len(P) <= best: return
+        piv = max(P | X, key=lambda u: len(nb[u] & P))
+        for v in list(P - nb[piv]):
+            bk(size + 1, P & nb[v], X & nb[v])
+            P = P - {v}; X = X | {v}
+    bk(0, set(range(n)), set())
+    return best
+
+===== t3_in_out_degrees | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Input is (n, edges). The graph is DIRECTED: n is the number of vertices, numbered 0..n-1, and edges is a list of directed edges (u, v) meaning an edge from u to v, with u < n, v < n and u != v; no ordered pair appears twice (u->v and v->u may both be present), there are no self loops, and the order of the list is arbitrary. Output a pair (ins, outs) of lists of length n: ins[v] is the number of edges (u, v) ending at v and outs[v] the number of edges (v, w) starting at v. n = 0 gives ([], []).
+IN: tuple[u24, list[tuple[u24, u24]]]  OUT: tuple[list[u24], list[u24]]
+def _in_out(x):
+    n, es = x; i = [0] * n; o = [0] * n
+    for u, v in es: o[u] += 1; i[v] += 1
+    return (i, o)
+
+===== t3_max_degree_vertex | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Undirected unweighted graph. Input is (n, edges) with edges (u, v). The degree of a vertex is the number of edges touching it. Output the vertex of largest degree; on ties output the smallest such vertex id (so a graph with no edges and n >= 1 gives 0). n = 0 gives 16777215.
+IN: tuple[u24, list[tuple[u24, u24]]]  OUT: u24
+def _maxdeg(x):
+    n, edges = x
+    if n == 0: return INF
+    deg = [0] * n
+    for u, v in edges: deg[u] += 1; deg[v] += 1
+    best = max(deg)
+    return deg.index(best)
+
+===== t3_max_flow | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Directed weighted graph read as a flow network. Input is (n, s, t, edges) with edges (u, v, w) meaning an arc u -> v of capacity w (arcs u -> v and v -> u may both exist, each with its own capacity). Output the value of a maximum flow from source s to sink t (equivalently the minimum total capacity of arcs whose removal leaves no directed path from s to t), mod 2^24. If s == t, or s >= n, or t >= n, output 0.
+IN: tuple[u24, u24, u24, list[tuple[u24, u24, u24]]]  OUT: u24
+def _maxflow(x):
+    n, s, t, edges = x
+    if s >= n or t >= n or s == t: return 0
+    cap = [dict() for _ in range(n)]
+    for u, v, w in edges:
+        cap[u][v] = cap[u].get(v, 0) + w
+        cap[v].setdefault(u, 0)
+    flow = 0
+    while True:
+        par = {s: None}; q = deque([s])
+        while q and t not in par:
+            u = q.popleft()
+            for v, c in cap[u].items():
+                if c > 0 and v not in par: par[v] = u; q.append(v)
+        if t not in par: return flow & M
+        b, v = INF, t
+        while par[v] is not None: b = min(b, cap[par[v]][v]); v = par[v]
+        v = t
+        while par[v] is not None:
+            u = par[v]; cap[u][v] -= b; cap[v][u] += b; v = u
+        flow += b
+
+===== t3_msf_weight | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Undirected weighted graph, not necessarily connected. Input is (n, edges) with edges (u, v, w). Output the total weight of a minimum spanning forest: the sum, over all connected components, of the weight of a minimum spanning tree of that component (isolated vertices contribute 0), mod 2^24. No edges gives 0.
+IN: tuple[u24, list[tuple[u24, u24, u24]]]  OUT: u24
+        tup(u24, E3), u24, lambda x: _kruskal(x[0], x[1])[0] & M,
+
+===== t3_reach_queries | sizes [1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Input is (n, queries, edges). The graph is DIRECTED: n is the number of vertices, numbered 0..n-1, and edges is a list of directed edges (u, v) meaning an edge from u to v, with u < n, v < n and u != v; no ordered pair appears twice (u->v and v->u may both be present), there are no self loops, and the order of the list is arbitrary. queries is a list of pairs (a, b) with a < n and b < n (repeats allowed; a may equal b). Output a list with one entry per query, in the same order as queries: 1 if there is a directed path (following edges forward, length 0 allowed) from a to b, else 0. In particular (a, a) gives 1. An empty query list gives [].
+IN: tuple[u24, list[tuple[u24, u24]], list[tuple[u24, u24]]]  OUT: list[u24]
+def _reach_queries(x):
+    n, qs, es = x
+    rs = reach_sets(n, es)
+    return [1 if b in rs[a] else 0 for a, b in qs]
+
+===== t3_wsp_dist | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8] test [64, 128]
+DESC: Undirected weighted graph. Input is (n, s, t, edges) with edges (u, v, w). Output the minimum total weight of a path from s to t (sum of its edge weights). s == t (with s < n) gives 0. If t is unreachable from s, or s >= n, or t >= n, output 16777215. (Path sums never reach 2^24 for the sizes used.)
+IN: tuple[u24, u24, u24, list[tuple[u24, u24, u24]]]  OUT: u24
+def _st_dist(x):
+    n, s, t, edges = x
+    if s >= n or t >= n: return INF
+    return _dijkstra(n, s, _adj(n, edges))[t]
+
+===== t5_cluster_canon_of | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (n, x, pairs): n >= 1 nodes with ids 0..n-1, a node x < n, and pairs, a list of merge edges (u, v) with u < v < n (repeated pairs may occur). Clusters are the connected components of the undirected graph on nodes 0..n-1 with these edges (the transitive closure of the merges); a node in no pair is a cluster of size 1. Output the canonical id of x's cluster: its largest member id (x itself if x is a singleton or the largest).
+IN: tuple[u24, u24, list[tuple[u24, u24]]]  OUT: u24
+        tup(u24, u24, PAIRS), u24, lambda a: _members(a)[-1], _gen_x, S, TS, edges=CXE, pre=CXPRE)
+
+===== t5_cluster_implied_unproposed | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (n, pairs): n nodes with ids 0..n-1 and pairs, a list of merge edges (u, v) with u < v < n (repeated pairs may occur). Clusters are the connected components of the undirected graph on nodes 0..n-1 with these edges (the transitive closure of the merges); a node in no pair is a cluster of size 1. Output the number of unordered node pairs {a, b}, a < b, that lie in the same cluster but do not occur in the input as a pair (u, v) = (a, b): pairs implied by transitivity but never proposed. This is the sum over clusters of s * (s - 1) / 2 (s = cluster size) minus the number of distinct pairs in the input (a pair repeated in the input counts once).
+IN: tuple[u24, list[tuple[u24, u24]]]  OUT: u24
+        tup(u24, PAIRS), u24, lambda a: _closure(a) - len(set(a[1])), CGEN, S, TS, edges=CE, pre=CPRE)
+
+===== t5_cluster_label | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (n, pairs): n nodes with ids 0..n-1 and pairs, a list of merge edges (u, v) with u < v < n (repeated pairs may occur). Clusters are the connected components of the undirected graph on nodes 0..n-1 with these edges (the transitive closure of the merges); a node in no pair is a cluster of size 1. Output a list of length n whose entry i is the smallest node id in i's cluster (so a singleton i gets i). n = 0 gives [].
+IN: tuple[u24, list[tuple[u24, u24]]]  OUT: list[u24]
+def _label(a):
+    n, ps = a; out = [0] * n
+    for c in _clusters(n, ps):
+        for i in c: out[i] = c[0]
+    return out
+
+===== t5_cluster_members_of | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (n, x, pairs): n >= 1 nodes with ids 0..n-1, a node x < n, and pairs, a list of merge edges (u, v) with u < v < n (repeated pairs may occur). Clusters are the connected components of the undirected graph on nodes 0..n-1 with these edges (the transitive closure of the merges); a node in no pair is a cluster of size 1. Output the ascending list of the member ids of x's cluster (it always contains x; a singleton gives [x]).
+IN: tuple[u24, u24, list[tuple[u24, u24]]]  OUT: list[u24]
+def _members(a):
+    n, x, ps = a
+    return next(c for c in _clusters(n, ps) if x in c)
+
+===== t5_cluster_merge_count | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (n, tau, cands): n nodes with ids 0..n-1, tau an integer threshold 0..1000, and cands a list of candidate triples (u, v, score) with u < v < n and score an integer 0..1000 (the same pair may occur more than once). The accepted triples are those with score >= tau. Start from n singleton clusters and process the accepted triples one at a time in the order descending score, ties broken by ascending u, then ascending v; each merges the clusters of u and v. Output the number of accepted triples whose u and v were in different clusters at the moment they were processed (merges that actually joined two clusters; a triple whose ends are already connected, including a repeat of an earlier pair, is not counted).
+IN: tuple[u24, u24, list[tuple[u24, u24, u24]]]  OUT: u24
+def _merge_count(a):
+    n, tau, ts = a
+    parent = list(range(n))
+
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]; x = parent[x]
+        return x
+    k = 0
+    for u, v, _ in sorted([t for t in ts if t[2] >= tau], key=_order_key):
+        a_, b_ = find(u), find(v)
+        if a_ != b_: parent[a_] = b_; k += 1
+    return k
+
+===== t5_cluster_sizes | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (n, pairs): n nodes with ids 0..n-1 and pairs, a list of merge edges (u, v) with u < v < n (repeated pairs may occur). Clusters are the connected components of the undirected graph on nodes 0..n-1 with these edges (the transitive closure of the merges); a node in no pair is a cluster of size 1. The canonical id of a cluster is its largest member id. Output the sizes (member counts) of all clusters, singletons included, one entry per cluster, listed in ascending order of the clusters' canonical ids. The entries sum to n. n = 0 gives [].
+IN: tuple[u24, list[tuple[u24, u24]]]  OUT: list[u24]
+        tup(u24, PAIRS), L, lambda a: [len(c) for c in sorted(_clusters(*a), key=lambda c: c[-1])], CGEN, S, TS,
+
+===== t5_decide_drop_known | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (known, cands): known is a list of already existing SAME_AS pairs (a, b) with a < b (any order, repeats possible) and cands is a list of candidate triples (u, v, score): u, v are node ids with u < v, score an integer 0..1000 (per-mille match confidence); the same pair may occur more than once. Output the triples of cands whose pair (u, v) is not equal to any known pair (exact match of both ids, (u, v) == (a, b); only direct pairs count, not pairs implied transitively), unchanged and in original order, repeats kept. No score threshold is applied.
+IN: tuple[list[tuple[u24, u24]], list[tuple[u24, u24, u24]]]  OUT: list[tuple[u24, u24, u24]]
+def _drop_known(a):
+    known = set(a[0])
+    return [t for t in a[1] if (t[0], t[1]) not in known]
+
+===== t5_decide_stage_cap | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is (tau, cap, cands): tau is an integer threshold 0..1000, cap >= 0 the maximum number of pairs staged per run, and cands is a list of candidate triples (u, v, score): u, v are node ids with u < v, score an integer 0..1000 (per-mille match confidence); the same pair may occur more than once. The accepted triples (score >= tau) are put in processing order: descending score, ties broken by ascending u, then ascending v (repeats kept, each occurrence is its own item). The first cap accepted triples in that order are staged; the remaining accepted ones are deferred. Output (staged, deferred): staged is the list of the staged pairs (u, v) (scores dropped) in processing order, deferred the number of accepted triples not staged (0 if at most cap are accepted).
+IN: tuple[u24, u24, list[tuple[u24, u24, u24]]]  OUT: tuple[list[tuple[u24, u24]], u24]
+def _stage_cap(a):
+    tau, cap, ts = a
+    acc = sorted([t for t in ts if t[2] >= tau], key=_order_key)
+    return [(u, v) for u, v, _ in acc[:cap]], max(0, len(acc) - cap)
+
+===== t5_metric_pairwise | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Pairwise clustering confusion counts. Input is (pred, truth), two label lists of the same length n (node i has predicted label pred[i] and true label truth[i]); labels are arbitrary numbers and only equality matters. Over all unordered node pairs i < j: tp counts pairs with pred[i] == pred[j] and truth[i] == truth[j]; fp counts pairs with pred equal but truth different; fn counts pairs with truth equal but pred different. Output the tuple (tp, fp, fn), each mod 2^24.
+IN: tuple[list[u24], list[u24]]  OUT: tuple[u24, u24, u24]
+        tup(L, L), tup(u24, u24, u24), lambda a: _pair_counts(a)[:3], _gen_metric, S, TS, edges=E_METRIC, pre=_pre_metric)
+
+===== t5_prop_conflict_keys | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Property-conflict list. Input is (c, attrs). A clustering c is a list of length n (nodes are 0..n-1) where c[i] is the canonical id of node i's cluster: nodes i and j are in the same cluster iff c[i] == c[j], and a cluster's canonical id is its largest node id (so c[i] >= i and c[c[i]] == c[i]). Attributes are triples (node, key, value) with node < n, key in 0..3, any value; each (node, key) occurs at most once; list order is arbitrary. A node may lack some keys. For a cluster and a key, collect the values of that key over all nodes of the cluster; the (cluster, key) is a property conflict if it has more than one distinct value. Output every conflicting combination as (canonical id, key), sorted ascending lexicographically (by first component, then second, then third). No conflicts gives [].
+IN: tuple[list[u24], list[tuple[u24, u24, u24]]]  OUT: list[tuple[u24, u24]]
+def _prop_conflict_keys(a):
+    c, attrs = a
+    vals = {}
+    for x, k, v in attrs: vals.setdefault((c[x], k), set()).add(v)
+    return sorted(ck for ck, vs in vals.items() if len(vs) > 1)
+
+===== t5_prop_distinct_per_key | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Input is attrs, a list of (node, key, value) triples with key in 0..3 (any node and value, any order, repeats allowed). Output a list of exactly 4 counts: entry k is the number of distinct values that key k takes over the whole list (0 if key k never occurs).
+IN: list[tuple[u24, u24, u24]]  OUT: list[u24]
+        TRIPLES, L, lambda at: [len({v for _, k, v in at if k == key}) for key in range(4)],
+
+===== t5_rewrite_neighbours | sizes [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] test [72, 144]
+DESC: Neighbours of one cluster in the merged graph. Input is (k, c, edges). A clustering c is a list of length n (nodes are 0..n-1) where c[i] is the canonical id of node i's cluster: nodes i and j are in the same cluster iff c[i] == c[j], and a cluster's canonical id is its largest node id (so c[i] >= i and c[c[i]] == c[i]). Edges are undirected pairs (u, v) with u, v < n in either order; self loops (u == v) and repeated edges may occur. Rewriting maps edge (u, v) to (min(c[u], c[v]), max(c[u], c[v])), drops it if c[u] == c[v] (self loop), and collapses duplicates, so the rewritten graph is a set of pairs (x, y) with x < y. Output the canonical ids adjacent to k in the rewritten graph (every y with (k, y) or (y, k) a rewritten pair), distinct, ascending. k never neighbours itself. If k is not a canonical id or has no edges, output [].
+IN: tuple[u24, list[u24], list[tuple[u24, u24]]]  OUT: list[u24]
+def _neigh(a):
+    k, c, edges = a
+    out = set()
+    for x, y in _rewrite(c, edges):
+        if x == k: out.add(y)
+        if y == k: out.add(x)
+    return sorted(out)
+

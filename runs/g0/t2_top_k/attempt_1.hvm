@@ -1,0 +1,38 @@
+@prog = ((k xs) out)
+  & @sort ~ (xs ((0 *) sorted))
+  & @take ~ (k (sorted out))
+
+// sort: insert each element into a descending accumulator
+@sort = ((?((@sort_nil @sort_cons) (pl (acc out))) pl) (acc out))
+
+@sort_nil = (* (a a))
+
+@sort_cons = (* ((h t) (acc out)))
+  & @insert ~ (h (acc acc2))
+  & @sort ~ (t (acc2 out))
+
+// insert x into a descending list
+@insert = (x ((?((@ins_nil @ins_cons) (pl (x out))) pl) out))
+
+@ins_nil = (* (x (1 (x (0 *)))))
+
+@ins_cons = (* (({h1 h2} t) ({x1 x2} out)))
+  & x1 ~ $([<] $(h1 c))
+  & c ~ ?((@ins_ge @ins_lt) (x2 (h2 (t out))))
+
+@ins_ge = (x (h (t (1 (x (1 (h t)))))))
+
+@ins_lt = (* (x (h (t (1 (h r))))))
+  & @insert ~ (x (t r))
+
+// take first k elements
+@take = (?((@take_z @take_s) (l out)) (l out))
+
+@take_z = (* (0 *))
+
+@take_s = (k1 ((?((@take_nil @take_cons) (pl (k1 out))) pl) out))
+
+@take_nil = (* (* (0 *)))
+
+@take_cons = (* ((h t) (k1 (1 (h r)))))
+  & @take ~ (k1 (t r))

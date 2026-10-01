@@ -1,0 +1,61 @@
+@prog = ((k xs) out)
+  & @sort ~ (xs sorted)
+  & @take ~ (k (sorted out))
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @insert ~ (h (sorted out))
+  & @sort_cons_lw ~ (t sorted)
+
+@insert = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (pl out))
+  & pl ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {xc xk}
+  & h ~ {hc hk}
+  & xc ~ $([>] $(hc z))
+  & z ~ ?((@ins_no @ins_yes) (xk (hk (t out))))
+
+@ins_no = (x (h (t out)))
+  & @insert ~ (x (t rest))
+  & out ~ (1 (h rest))
+
+@ins_yes = (* (x (h (t out))))
+  & out ~ (1 (x (1 (h t))))
+
+@take = (?((@take_zero @take_pos) ctx) ctx)
+
+@take_zero = (xs out)
+  & xs ~ *
+  & out ~ (0 *)
+
+@take_pos = (km ((?((@take_nil @take_cons) (pl (km out))) pl) out))
+
+@take_nil = (pl (km out))
+  & pl ~ *
+  & km ~ *
+  & out ~ (0 *)
+
+@take_cons = (* (pl (km out)))
+  & pl ~ (h t)
+  & @take ~ (km (t rest))
+  & out ~ (1 (h rest))
+
+@sort_cons_lw = (ls24 q8)
+  & ls24 ~ (g19 (e15 (g20 (e16 (g21 (e17 (g22 (e18 tk23))))))))
+  & g19 ~ ?((@sort_nil @sort_cons_la) ((e15 q10) q8))
+  & g20 ~ ?((@sort_nil @sort_cons_la) ((e16 q12) q10))
+  & g21 ~ ?((@sort_nil @sort_cons_la) ((e17 q14) q12))
+  & g22 ~ ?((@sort_nil @sort_cons) ((e18 tk23) q14))
+
+@sort_cons_la = (* ((h sorted) out))
+  & @insert ~ (h (sorted out))

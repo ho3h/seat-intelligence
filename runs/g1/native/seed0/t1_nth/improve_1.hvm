@@ -1,0 +1,10 @@
+// @nth uses (index, previous-head, remaining-list, output).
+// The previous head is erased; this lets the successor branch recurse directly.
+@prog = (inp out)
+  & inp ~ (i xs)
+  & @nth ~ (i (* (xs out)))
+
+@nth = (i (* ((?(((* (* 0)) @nth_cons) (pl (i out))) pl) out))
+
+@nth_cons = (* ((h t) (i out)))
+  & i ~ ?(((x (* x)) @nth) (h (t out)))

@@ -1,0 +1,128 @@
+@prog = ((c attrs) out)
+  & c ~ {c_enum c_map}
+  & @map ~ (attrs (c_map mapped_raw))
+  & @copylist ~ (mapped_raw mapped)
+  & @enum ~ (c_enum (mapped (0 out)))
+
+@map = ((?((@map_nil @map_cons) (pl (c (out)))) pl) (c (out)))
+
+@map_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@map_cons = (* (((node (key val)) tail) (c out)))
+  & c ~ {c_nth c_rec}
+  & @nth ~ (c_nth (node cid))
+  & @map ~ (tail (c_rec mapped_tail))
+  & out ~ (1 ((cid (key val)) mapped_tail))
+
+@copylist = ((?((@copy_nil @copy_cons) (pl out)) pl) out)
+
+@copy_nil = (* out)
+  & out ~ (0 *)
+
+@copy_cons = (* ((head tail) out))
+  & @copylist ~ (tail rest)
+  & out ~ (1 (head rest))
+
+@enum = ((?((@enum_nil @enum_cons) (pl (attrs (idx out)))) pl) (attrs (idx out)))
+
+@enum_nil = (* (attrs (idx out)))
+  & attrs ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@enum_cons = (* ((cid tail) (attrs (idx out))))
+  & cid ~ {cid_cmp cid_drop}
+  & idx ~ {idx_cmp idx_keep}
+  & cid_cmp ~ $([=] $(idx_cmp eq))
+  & cid_drop ~ *
+  & eq ~ ?((@enum_nonroot @enum_root) (tail (attrs (idx_keep out))))
+
+@enum_nonroot = (tail (attrs (idx out)))
+  & idx ~ $([+1] ni)
+  & @enum ~ (tail (attrs (ni out)))
+
+@enum_root = (* (tail (attrs (idx out))))
+  & idx ~ {candidate next}
+  & next ~ $([+1] ni)
+  & @keys ~ (candidate (0 (attrs (tail (ni out)))))
+
+@keys = (cid (key (attrs (iter (idx out)))))
+  & key ~ {kcmp kkeep}
+  & kcmp ~ $([<] $(4 valid))
+  & valid ~ ?((@keys_end @keys_scan) (cid (kkeep (attrs (iter (idx out))))))
+
+@keys_end = (cid (key (attrs (iter (idx out)))))
+  & cid ~ *
+  & key ~ *
+  & @enum ~ (iter (attrs (idx out)))
+
+@keys_scan = (* (cid (key (attrs (iter (idx out))))))
+  & cid ~ {cid_scan cid_keep}
+  & key ~ {key_scan key_keep}
+  & attrs ~ {attrs_scan attrs_keep}
+  & @scan ~ (attrs_scan (cid_scan (key_scan (0 (0 (0 conf))))))
+  & conf ~ ?((@keys_no @keys_yes) (cid_keep (key_keep (attrs_keep (iter (idx out))))))
+
+@keys_no = (cid (key (attrs (iter (idx out)))))
+  & key ~ $([+1] nk)
+  & @keys ~ (cid (nk (attrs (iter (idx out)))))
+
+@keys_yes = (* (cid (key (attrs (iter (idx out))))))
+  & cid ~ {cid_out cid_rec}
+  & key ~ {key_rec key_out}
+  & key_rec ~ $([+1] nk)
+  & @keys ~ (cid_rec (nk (attrs (iter (idx rest)))))
+  & out ~ (1 ((cid_out key_out) rest))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cid (key (seen (base (found out))))))) pl) (cid (key (seen (base (found out))))))
+
+@scan_nil = (* (cid (key (seen (base (found out))))))
+  & cid ~ *
+  & key ~ *
+  & seen ~ *
+  & base ~ *
+  & out ~ found
+
+@scan_cons = (* (((ac (akey val)) tail) (cid (key (seen (base (found out)))))))
+  & cid ~ {cid_cmp cid_rec}
+  & key ~ {key_cmp key_rec}
+  & ac ~ $([=] $(cid_cmp eqcluster))
+  & akey ~ $([=] $(key_cmp eqkey))
+  & eqcluster ~ $([&] $(eqkey relevant))
+  & relevant ~ ?((@scan_other @scan_match) (tail (cid_rec (key_rec (seen (base (found (val out))))))))
+
+@scan_other = (tail (cid (key (seen (base (found (val out)))))))
+  & val ~ *
+  & @scan ~ (tail (cid (key (seen (base (found out))))))
+
+@scan_match = (* (tail (cid (key (seen (base (found (val out))))))))
+  & seen ~ ?((@scan_first @scan_later) (tail (cid (key (base (found (val out)))))))
+
+@scan_first = (tail (cid (key (base (found (val out))))))
+  & base ~ *
+  & @scan ~ (tail (cid (key (1 (val (found out))))))
+
+@scan_later = (* (tail (cid (key (base (found (val out)))))))
+  & base ~ {base_cmp base_keep}
+  & val ~ $([!] $(base_cmp diff))
+  & found ~ $([|] $(diff nf))
+  & @scan ~ (tail (cid (key (1 (base_keep (nf out))))))
+
+@nth = ((?((@nth_nil @nth_cons) (pl (idx out))) pl) (idx out))
+
+@nth_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@nth_here @nth_later) (head (tail out)))
+
+@nth_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@nth_later = (idxm (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idxm out))

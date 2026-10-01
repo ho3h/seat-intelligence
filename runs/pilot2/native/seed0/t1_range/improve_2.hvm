@@ -1,0 +1,27 @@
+// Build an interval by splitting it in half; the right interval supplies
+// the tail for the left interval.
+@prog = (n out)
+  & @build ~ (0 (n ((0 *) out)))
+
+@build = (s (n (tail out)))
+  & n ~ ?((@bzero @bpos) (s (tail out)))
+
+@bzero = (s (tail out))
+  & s ~ *
+  & out ~ tail
+
+@bpos = (k (s (tail out)))
+  & k ~ ?((@bone @bmore) (s (tail out)))
+
+@bone = (s (tail out))
+  & out ~ (1 (s tail))
+
+@bmore = (j (s (tail out)))
+  & j ~ {j1 j2}
+  & j1 ~ $([/2] $([+1] llen))
+  & j2 ~ $([+1] $([/2] $([+1] rlen)))
+  & llen ~ {llen1 llen2}
+  & s ~ {sl sr}
+  & sr ~ $([+] $(llen2 rs))
+  & @build ~ (sl (llen1 (mid out)))
+  & @build ~ (rs (rlen (tail mid)))

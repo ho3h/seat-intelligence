@@ -1,0 +1,185 @@
+@prog = (input out)
+  & input ~ (n pairs)
+  & n ~ {n1 n2}
+  & @build ~ (n1 (0 parents))
+  & @ones ~ (n2 sizes)
+  & @edges ~ (pairs (parents (sizes done)))
+  & done ~ (finalparents finalsizes)
+  & finalparents ~ *
+  & @maxlist ~ (finalsizes (0 out))
+
+@build = (n (idx out))
+  & n ~ ?((@b_zero @b_succ) (idx out))
+
+@b_zero = (idx out)
+  & idx ~ *
+  & out ~ (0 *)
+
+@b_succ = (m (idx out))
+  & idx ~ {i1 i2}
+  & out ~ (1 (i1 tail))
+  & i2 ~ $([+1] next)
+  & @build ~ (m (next tail))
+
+@ones = (n out)
+  & n ~ ?((@o_zero @o_succ) out)
+
+@o_zero = out
+  & out ~ (0 *)
+
+@o_succ = (m out)
+  & out ~ (1 tail)
+  & @ones ~ (m tail)
+
+@edges = ((?((@e_nil @e_cons) (payload (parents (sizes out)))) payload) (parents (sizes out)))
+
+@e_nil = (payload (parents (sizes out)))
+  & payload ~ *
+  & out ~ (parents sizes)
+
+@e_cons = (* ((edge tail) (parents (sizes out))))
+  & edge ~ (u v)
+  & @union ~ (u (v (parents (sizes next))))
+  & @edges ~ (tail (next out))
+
+@union = (u (v (parents (sizes out))))
+  & parents ~ {p1 rest}
+  & rest ~ {p2 p3}
+  & @find ~ (u (p1 ru))
+  & @find ~ (v (p2 rv))
+  & @union_roots ~ (ru (rv (p3 (sizes out)))
+
+@find = (x (parents out))
+  & x ~ {xe xr}
+  & parents ~ {pa pb}
+  & @get ~ (xe (pa p))
+  & p ~ {pe pr}
+  & pe ~ $([=] $(xe z))
+  & z ~ ?((@f_done @f_more) (pr (xr (pb out))))
+
+@f_done = (pr (xr (pb out)))
+  & pr ~ *
+  & pb ~ *
+  & out ~ xr
+
+@f_more = (* (pr (xr (pb out))))
+  & xr ~ *
+  & @find ~ (pr (pb out))
+
+@union_roots = (ru (rv (parents (sizes out))))
+  & ru ~ {ru1 ru2}
+  & rv ~ {rv1 rv2}
+  & ru1 ~ $([=] $(rv1 z))
+  & z ~ ?((@ur_same @ur_diff) (ru2 (rv2 (parents (sizes out))))
+
+@ur_same = (ru (rv (parents (sizes out))))
+  & ru ~ *
+  & rv ~ *
+  & out ~ (parents sizes)
+
+@ur_diff = (ru (rv (parents (sizes out))))
+  & ru ~ {ru1 ru2}
+  & rv ~ {rv1 rv2}
+  & sizes ~ {s1 rest}
+  & rest ~ {s2 s3}
+  & @get ~ (ru1 (s1 su))
+  & @get ~ (rv1 (s2 sv))
+  & @select ~ (ru2 (rv2 (su (sv (parents (s3 out)))))
+
+@select = (ru (rv (su (sv (parents (sizes out)))))
+  & su ~ {suc sua}
+  & sv ~ {svc sva}
+  & suc ~ $([>] $(svc z))
+  & sua ~ $([+] $(sva sum))
+  & z ~ ?((@sel_v @sel_u) (ru (rv (sum (parents (sizes out)))))
+
+@sel_v = (ru (rv (sum (parents (sizes out)))))
+  & @link ~ (rv (ru (sum (parents (sizes out)))))
+
+@sel_u = (* (ru (rv (sum (parents (sizes out))))))
+  & @link ~ (ru (rv (sum (parents (sizes out)))))
+
+@link = (large (small (sum (parents (sizes out)))))
+  & large ~ {lp ls}
+  & @set ~ (small (lp (parents newparents)))
+  & @set ~ (ls (sum (sizes newsizes)))
+  & out ~ (newparents newsizes)
+
+@get = (idx (list out))
+  & idx ~ ?((@g_zero @g_succ) (list out))
+
+@g_zero = ((?((@g_nil @g_cons) (payload out)) payload) out)
+
+@g_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@g_cons = (* (payload out))
+  & payload ~ (h t)
+  & t ~ *
+  & out ~ h
+
+@g_succ = (idx (list out))
+  & @g_s_list ~ (list (idx out))
+
+@g_s_list = ((?((@gs_nil @gs_cons) (payload (idx out))) payload) (idx out))
+
+@gs_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@gs_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (idx (t out))
+
+@set = (idx (val (list out)))
+  & idx ~ ?((@set_zero @set_succ) (val (list out)))
+
+@set_zero = (val (list out))
+  & list ~ (?((@sz_nil @sz_cons) (payload (val out))) payload)
+
+@sz_nil = (payload (val out))
+  & payload ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@sz_cons = (* (payload (val out)))
+  & payload ~ (h t)
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_succ = (idx (val (list out)))
+  & list ~ (?((@ss_nil @ss_cons) (payload (idx (val out)))) payload)
+
+@ss_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@ss_cons = (* (payload (idx (val out))))
+  & payload ~ (h t)
+  & @set ~ (idx (val (t rest)))
+  & out ~ (1 (h rest))
+
+@maxlist = ((?((@mx_nil @mx_cons) (payload (acc out))) payload) (acc out))
+
+@mx_nil = (payload (acc out))
+  & payload ~ *
+  & out ~ acc
+
+@mx_cons = (* ((h t) (acc out)))
+  & h ~ {hc hr}
+  & acc ~ {ac ar}
+  & hc ~ $([>] $(ac z))
+  & z ~ ?((@mx_no @mx_yes) (hr (ar (t out))))
+
+@mx_no = (hr (ar (t out)))
+  & hr ~ *
+  & @maxlist ~ (t (ar out))
+
+@mx_yes = (* (hr (ar (t out))))
+  & ar ~ *
+  & @maxlist ~ (t (hr out))

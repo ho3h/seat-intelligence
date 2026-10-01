@@ -1,0 +1,4317 @@
+{
+"meta": {
+"model": "mlx-community/Qwen3-1.7B-4bit",
+"adapter": "adapters/exp15_1p7b_lr5e5",
+"set": "runs/exp15/sets/para.json",
+"n": 4,
+"temp": 0.7,
+"top_p": 0.95,
+"max_tokens": 160,
+"batch": 64,
+"vocab": false,
+"seed": 0,
+"out": "runs/exp15/samples/1p7b_lr5e5_para.json",
+"seconds": 32.4,
+"score_seconds": 1.1
+},
+"specs": [
+[
+"para",
+"pipeline",
+10001
+],
+[
+"para",
+"pipeline",
+10005
+],
+[
+"para",
+"pipeline",
+10006
+],
+[
+"para",
+"pipeline",
+10007
+],
+[
+"para",
+"pipeline",
+10008
+],
+[
+"para",
+"pipeline",
+10011
+],
+[
+"para",
+"pipeline",
+10014
+],
+[
+"para",
+"pipeline",
+10017
+],
+[
+"para",
+"pipeline",
+10018
+],
+[
+"para",
+"pipeline",
+10019
+],
+[
+"para",
+"pipeline",
+10021
+],
+[
+"para",
+"pipeline",
+10025
+],
+[
+"para",
+"pipeline",
+10026
+],
+[
+"para",
+"pipeline",
+10027
+],
+[
+"para",
+"pipeline",
+10028
+],
+[
+"para",
+"pipeline",
+10029
+],
+[
+"para",
+"pipeline",
+10031
+],
+[
+"para",
+"pipeline",
+10034
+],
+[
+"para",
+"pipeline",
+10035
+],
+[
+"para",
+"pipeline",
+10038
+],
+[
+"para",
+"pipeline",
+10039
+],
+[
+"para",
+"pipeline",
+10041
+],
+[
+"para",
+"pipeline",
+10042
+],
+[
+"para",
+"pipeline",
+10043
+],
+[
+"para",
+"pipeline",
+10046
+],
+[
+"para",
+"pipeline",
+10047
+],
+[
+"para",
+"pipeline",
+10055
+],
+[
+"para",
+"pipeline",
+10056
+],
+[
+"para",
+"pipeline",
+10058
+],
+[
+"para",
+"pipeline",
+10059
+],
+[
+"para",
+"pipeline",
+10060
+],
+[
+"para",
+"pipeline",
+10062
+],
+[
+"para",
+"pipeline",
+10063
+],
+[
+"para",
+"pipeline",
+10065
+],
+[
+"para",
+"pipeline",
+10070
+],
+[
+"para",
+"pipeline",
+10073
+],
+[
+"para",
+"pipeline",
+10074
+],
+[
+"para",
+"pipeline",
+10077
+],
+[
+"para",
+"pipeline",
+10078
+],
+[
+"para",
+"pipeline",
+10079
+],
+[
+"para",
+"pipeline",
+10081
+],
+[
+"para",
+"pipeline",
+10082
+],
+[
+"para",
+"pipeline",
+10083
+],
+[
+"para",
+"pipeline",
+10086
+],
+[
+"para",
+"pipeline",
+10088
+],
+[
+"para",
+"pipeline",
+10089
+],
+[
+"para",
+"pipeline",
+10091
+],
+[
+"para",
+"pipeline",
+10094
+],
+[
+"para",
+"pipeline",
+10098
+],
+[
+"para",
+"pipeline",
+10100
+],
+[
+"para",
+"pipeline",
+10101
+],
+[
+"para",
+"pipeline",
+10103
+],
+[
+"para",
+"pipeline",
+10104
+],
+[
+"para",
+"pipeline",
+10106
+],
+[
+"para",
+"pipeline",
+10107
+],
+[
+"para",
+"pipeline",
+10108
+],
+[
+"para",
+"pipeline",
+10109
+],
+[
+"para",
+"pipeline",
+10110
+],
+[
+"para",
+"pipeline",
+10111
+],
+[
+"para",
+"pipeline",
+10112
+],
+[
+"para",
+"reduce",
+10000
+],
+[
+"para",
+"reduce",
+10001
+],
+[
+"para",
+"reduce",
+10002
+],
+[
+"para",
+"reduce",
+10004
+],
+[
+"para",
+"reduce",
+10005
+],
+[
+"para",
+"reduce",
+10007
+],
+[
+"para",
+"reduce",
+10008
+],
+[
+"para",
+"reduce",
+10012
+],
+[
+"para",
+"reduce",
+10013
+],
+[
+"para",
+"reduce",
+10015
+],
+[
+"para",
+"reduce",
+10016
+],
+[
+"para",
+"reduce",
+10017
+],
+[
+"para",
+"reduce",
+10019
+],
+[
+"para",
+"reduce",
+10020
+],
+[
+"para",
+"reduce",
+10026
+],
+[
+"para",
+"reduce",
+10027
+],
+[
+"para",
+"reduce",
+10037
+],
+[
+"para",
+"reduce",
+10038
+],
+[
+"para",
+"reduce",
+10048
+],
+[
+"para",
+"reduce",
+10049
+],
+[
+"para",
+"reduce",
+10050
+],
+[
+"para",
+"reduce",
+10051
+],
+[
+"para",
+"reduce",
+10052
+],
+[
+"para",
+"reduce",
+10053
+],
+[
+"para",
+"reduce",
+10055
+],
+[
+"para",
+"reduce",
+10056
+],
+[
+"para",
+"reduce",
+10057
+],
+[
+"para",
+"reduce",
+10059
+],
+[
+"para",
+"reduce",
+10060
+],
+[
+"para",
+"reduce",
+10066
+],
+[
+"para",
+"reduce",
+10068
+],
+[
+"para",
+"reduce",
+10069
+],
+[
+"para",
+"reduce",
+10070
+],
+[
+"para",
+"reduce",
+10071
+],
+[
+"para",
+"reduce",
+10075
+],
+[
+"para",
+"reduce",
+10076
+],
+[
+"para",
+"reduce",
+10077
+],
+[
+"para",
+"reduce",
+10078
+],
+[
+"para",
+"reduce",
+10092
+],
+[
+"para",
+"reduce",
+10093
+],
+[
+"para",
+"reduce",
+10094
+],
+[
+"para",
+"reduce",
+10096
+],
+[
+"para",
+"reduce",
+10098
+],
+[
+"para",
+"reduce",
+10099
+],
+[
+"para",
+"reduce",
+10100
+],
+[
+"para",
+"reduce",
+10104
+],
+[
+"para",
+"reduce",
+10108
+],
+[
+"para",
+"reduce",
+10109
+],
+[
+"para",
+"reduce",
+10113
+],
+[
+"para",
+"reduce",
+10114
+],
+[
+"para",
+"reduce",
+10117
+],
+[
+"para",
+"reduce",
+10118
+],
+[
+"para",
+"reduce",
+10130
+],
+[
+"para",
+"reduce",
+10138
+],
+[
+"para",
+"reduce",
+10139
+],
+[
+"para",
+"reduce",
+10140
+],
+[
+"para",
+"reduce",
+10141
+],
+[
+"para",
+"reduce",
+10150
+],
+[
+"para",
+"reduce",
+10154
+],
+[
+"para",
+"reduce",
+10155
+]
+],
+"scored": {
+"para_pipeline_10001": [
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\nmap add 2"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\nmap add 2"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\nmap add 2"
+},
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\nmap add 2"
+}
+],
+"para_pipeline_10005": [
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1",
+"exact": true,
+"itrs": 1053,
+"why": ""
+}
+],
+"para_pipeline_10006": [
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8",
+"exact": true,
+"itrs": 171,
+"why": ""
+}
+],
+"para_pipeline_10007": [
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6843,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6843,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6843,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 10\ntake 2\nrunsum",
+"exact": true,
+"itrs": 6843,
+"why": ""
+}
+],
+"para_pipeline_10008": [
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nmap xor 63",
+"exact": true,
+"itrs": 1191,
+"why": ""
+}
+],
+"para_pipeline_10011": [
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10562,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10562,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10562,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter ge 5\nreverse\nfilter ge 5",
+"exact": true,
+"itrs": 10562,
+"why": ""
+}
+],
+"para_pipeline_10014": [
+{
+"status": "parse",
+"why": "bad predicate: not eq prev",
+"text": "filter not eq prev\nsort\nmap mod 3"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq 3",
+"text": "filter modeq 3\nsort\nmap mod 3"
+},
+{
+"status": "parse",
+"why": "bad predicate: predeq",
+"text": "filter predeq\nsort\nmap mod 3"
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nmap mod 3",
+"exact": true,
+"itrs": 385617,
+"why": ""
+}
+],
+"para_pipeline_10017": [
+{
+"status": "fail",
+"prog": "sort\nreverse\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "pass",
+"prog": "sort\nreverse\nrunsum",
+"exact": true,
+"itrs": 442995,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "sort\nreverse\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+},
+{
+"status": "fail",
+"prog": "sort\nreverse\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"para_pipeline_10018": [
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6164,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6164,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6164,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndedup",
+"exact": true,
+"itrs": 6164,
+"why": ""
+}
+],
+"para_pipeline_10019": [
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 428455,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 428455,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 428455,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap mod 8\ndrop 8",
+"exact": true,
+"itrs": 428455,
+"why": ""
+}
+],
+"para_pipeline_10021": [
+{
+"status": "pass",
+"prog": "map div 3\nfilter odd\ndedup",
+"exact": true,
+"itrs": 11614,
+"why": ""
+},
+{
+"status": "parse",
+"why": "unknown word: drop\u76f8\u540c\u7684",
+"text": "map div 3\nfilter odd\ndrop\u76f8\u540c\u7684"
+},
+{
+"status": "parse",
+"why": "unknown word: drop<|endoftext|></think>",
+"text": "map div 3\nfilter odd\ndrop<|endoftext|></think>\n\nmap div 3\nfilter odd\ndrop<|endoftext|></think>\n\nmap div 3\nfilter odd\ndrop<|endoftext|>drop\n!<|endoftext|>drop\n!drop\ndrop\n!drop\n!drop\n!drop\n!drop\n!drop\n!"
+},
+{
+"status": "parse",
+"why": "unknown word: drop<|endoftext|></think>",
+"text": "map div 3\nfilter odd\ndrop<|endoftext|></think>\n\nmap div 3\nfilter odd\ndrop<|endoftext|></think>\n\nmap div 3\nfilter odd\ndrop"
+}
+],
+"para_pipeline_10025": [
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nmap xor 15",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad expression: prefix-sum",
+"text": "drop 1\nmap prefix-sum\nmap xor 15"
+}
+],
+"para_pipeline_10026": [
+{
+"status": "fail",
+"prog": "sort\nfilter gt 50\ntake 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 50\ntake 8",
+"exact": true,
+"itrs": 431087,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "sort\nfilter gt 50\ntake 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "sort\nfilter gt 50\ntake 8",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"para_pipeline_10027": [
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndedup",
+"exact": true,
+"itrs": 1354,
+"why": ""
+}
+],
+"para_pipeline_10028": [
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 3",
+"exact": true,
+"itrs": 3340,
+"why": ""
+}
+],
+"para_pipeline_10029": [
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 8\nmap lin 2 0",
+"exact": true,
+"itrs": 7245,
+"why": ""
+}
+],
+"para_pipeline_10031": [
+{
+"status": "pass",
+"prog": "reverse\ndrop 1\ndedup",
+"exact": true,
+"itrs": 9496,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 1\ndedup",
+"exact": true,
+"itrs": 9496,
+"why": ""
+},
+{
+"status": "parse",
+"why": "unknown word: remove equal\tprev",
+"text": "reverse\ndrop 1\nremove equal\tprev"
+},
+{
+"status": "parse",
+"why": "bad predicate: not equal<|endoftext|></think>",
+"text": "reverse\ndrop 1\nfilter not equal<|endoftext|></think>\n\nreverse\ndrop 1\nfilter not equal"
+}
+],
+"para_pipeline_10034": [
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 414240,
+"why": ""
+},
+{
+"status": "parse",
+"why": "unknown word: -prefixsum",
+"text": "sort\n-prefixsum\nmap xor 255"
+},
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 414240,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nrunsum\nmap xor 255",
+"exact": true,
+"itrs": 414240,
+"why": ""
+}
+],
+"para_pipeline_10035": [
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\ndrop 1",
+"exact": true,
+"itrs": 103,
+"why": ""
+}
+],
+"para_pipeline_10038": [
+{
+"status": "parse",
+"why": "unknown word: delete equal",
+"text": "filter gt 5\ndelete equal\nmap and 63"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq 5",
+"text": "filter modeq 5\nfilter equal\nmap and 63"
+},
+{
+"status": "parse",
+"why": "not a number: r\u00e9p",
+"text": "filter lt 5\ndrop r\u00e9p\nmap and 63"
+},
+{
+"status": "parse",
+"why": "unknown word: remove eq",
+"text": "filter lt 5\nremove eq\nmap and 63"
+}
+],
+"para_pipeline_10039": [
+{
+"status": "pass",
+"prog": "map mod 11\nrunsum",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nrunsum",
+"exact": true,
+"itrs": 7708,
+"why": ""
+},
+{
+"status": "parse",
+"why": "not a number: prefix",
+"text": "map mod 11\ntake prefix"
+},
+{
+"status": "fail",
+"prog": "map mod 11\nreduce sum",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on []"
+}
+],
+"para_pipeline_10041": [
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 20",
+"exact": true,
+"itrs": 5638,
+"why": ""
+}
+],
+"para_pipeline_10042": [
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 7139,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 7139,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 7139,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreverse",
+"exact": true,
+"itrs": 7139,
+"why": ""
+}
+],
+"para_pipeline_10043": [
+{
+"status": "fail",
+"prog": "drop 8\nfilter gt 500\ndrop 8",
+"exact": false,
+"itrs": null,
+"why": "wrong answer (large case, compared by digest of the full output)"
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter lt 500\ndrop 8",
+"exact": true,
+"itrs": 5810,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "drop 8\nfilter gt 500\ndrop 8",
+"exact": false,
+"itrs": null,
+"why": "wrong answer (large case, compared by digest of the full output)"
+},
+{
+"status": "fail",
+"prog": "drop 8\nfilter gt 500\ndrop 8",
+"exact": false,
+"itrs": null,
+"why": "wrong answer (large case, compared by digest of the full output)"
+}
+],
+"para_pipeline_10046": [
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10003,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10003,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10003,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\nfilter ge 3",
+"exact": true,
+"itrs": 10003,
+"why": ""
+}
+],
+"para_pipeline_10047": [
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 22478,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 22478,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 22478,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 2\nsort\nreverse",
+"exact": true,
+"itrs": 22478,
+"why": ""
+}
+],
+"para_pipeline_10055": [
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5542,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5542,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5542,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 10",
+"exact": true,
+"itrs": 5542,
+"why": ""
+}
+],
+"para_pipeline_10056": [
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreverse",
+"exact": true,
+"itrs": 5559,
+"why": ""
+}
+],
+"para_pipeline_10058": [
+{
+"status": "parse",
+"why": "bad predicate: modeqnequal",
+"text": "filter modeqnequal\ndrop 3"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeqneq prev",
+"text": "filter modeqneq prev\ndrop 3"
+},
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\ndrop 3"
+},
+{
+"status": "parse",
+"why": "bad predicate: neqprev",
+"text": "filter neqprev\ndrop 3"
+}
+],
+"para_pipeline_10059": [
+{
+"status": "parse",
+"why": "bad predicate: not eq",
+"text": "filter not eq\nfilter even\ntake 2"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq prev",
+"text": "filter not eq prev\nfilter even\ntake 2"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq prev",
+"text": "filter modeq prev\nfilter even\ntake 2"
+},
+{
+"status": "parse",
+"why": "bad predicate: neq previous",
+"text": "filter neq previous\nfilter odd\ntake 2"
+}
+],
+"para_pipeline_10060": [
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\nmap add 9"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq",
+"text": "filter not eq\nmap add 9"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq prev",
+"text": "filter not eq prev\nmap add 9"
+},
+{
+"status": "parse",
+"why": "unknown word: drop equal prev",
+"text": "drop equal prev\nmap add 9"
+}
+],
+"para_pipeline_10062": [
+{
+"status": "parse",
+"why": "unknown word: delete consecutive",
+"text": "runsum\nfilter odd\ndelete consecutive"
+},
+{
+"status": "parse",
+"why": "unknown word: drop\u76f8\u540c\u7684",
+"text": "runsum\nfilter odd\ndrop\u76f8\u540c\u7684"
+},
+{
+"status": "parse",
+"why": "not a number: consecutive",
+"text": "runsum\nfilter odd\ndrop consecutive"
+},
+{
+"status": "parse",
+"why": "unknown word: delete equal",
+"text": "runsum\nfilter odd\ndelete equal"
+}
+],
+"para_pipeline_10063": [
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6996,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6996,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6996,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 3 2\ndrop 1\nreverse",
+"exact": true,
+"itrs": 6996,
+"why": ""
+}
+],
+"para_pipeline_10065": [
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 2\nmap div 2",
+"exact": true,
+"itrs": 6681,
+"why": ""
+}
+],
+"para_pipeline_10070": [
+{
+"status": "pass",
+"prog": "sort\ndedup\nsort",
+"exact": true,
+"itrs": 438804,
+"why": ""
+},
+{
+"status": "parse",
+"why": "not a number: equal",
+"text": "sort\ndrop equal\nsort"
+},
+{
+"status": "parse",
+"why": "not a number: duplicates",
+"text": "sort\ndrop duplicates\nsort"
+},
+{
+"status": "parse",
+"why": "unknown word: drop",
+"text": "sort\ndrop\nsort"
+}
+],
+"para_pipeline_10073": [
+{
+"status": "fail",
+"prog": "filter gt 50\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 50\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 50\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 50\nfilter odd",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"para_pipeline_10074": [
+{
+"status": "pass",
+"prog": "map xor 7\nfilter lt 50",
+"exact": true,
+"itrs": 8740,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 7\nfilter lt 50",
+"exact": true,
+"itrs": 8740,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "map xor 7\nfilter gt 50",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "map xor 7\nfilter gt 50",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+}
+],
+"para_pipeline_10077": [
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nsort\nmap and 3",
+"exact": true,
+"itrs": 1116,
+"why": ""
+}
+],
+"para_pipeline_10078": [
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6164,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6164,
+"why": ""
+},
+{
+"status": "parse",
+"why": "not a number: even",
+"text": "drop even\ndrop 1\ntake 8"
+},
+{
+"status": "pass",
+"prog": "filter odd\ndrop 1\ntake 8",
+"exact": true,
+"itrs": 6164,
+"why": ""
+}
+],
+"para_pipeline_10079": [
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63",
+"exact": true,
+"itrs": 3340,
+"why": ""
+}
+],
+"para_pipeline_10081": [
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nsort",
+"exact": true,
+"itrs": 884871,
+"why": ""
+}
+],
+"para_pipeline_10082": [
+{
+"status": "parse",
+"why": "bad predicate: not-equal",
+"text": "filter not-equal\nmap sq"
+},
+{
+"status": "parse",
+"why": "bad predicate: not_EQUAL prev",
+"text": "filter not_EQUAL prev\nmap sq"
+},
+{
+"status": "parse",
+"why": "bad predicate: modeq prev",
+"text": "filter modeq prev\nmap sq"
+},
+{
+"status": "parse",
+"why": "not a number: equal",
+"text": "drop equal\nmap sq"
+}
+],
+"para_pipeline_10083": [
+{
+"status": "fail",
+"prog": "filter gt 20\ndedup\nsort",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "filter gt 20\ndedup\nsort",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "filter gt 20\ndedup\nsort",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "parse",
+"why": "unknown word: delete\u76f8\u540c",
+"text": "filter gt 20\ndelete\u76f8\u540c\nsort"
+}
+],
+"para_pipeline_10086": [
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map sq\ndrop 5",
+"exact": true,
+"itrs": 3964,
+"why": ""
+}
+],
+"para_pipeline_10088": [
+{
+"status": "parse",
+"why": "not a number: equal",
+"text": "drop equal\ntake 3"
+},
+{
+"status": "pass",
+"prog": "dedup\ntake 3",
+"exact": true,
+"itrs": 7123,
+"why": ""
+},
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\ntake 3"
+},
+{
+"status": "parse",
+"why": "bad predicate: not equal",
+"text": "filter not equal\ntake 3"
+}
+],
+"para_pipeline_10089": [
+{
+"status": "parse",
+"why": "bad predicate: modeqnequalseq",
+"text": "filter modeqnequalseq\nfilter modeqnequalseq\nfilter odd"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq prev",
+"text": "filter not eq prev\nfilter not eq prev\nfilter odd"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eqprev",
+"text": "filter not eqprev\nfilter not eqprev\nfilter odd"
+},
+{
+"status": "parse",
+"why": "bad predicate: not equal prev",
+"text": "filter not equal prev\nfilter not equal prev\nfilter odd"
+}
+],
+"para_pipeline_10091": [
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1396,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1396,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1396,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ndrop 5\nsort",
+"exact": true,
+"itrs": 1396,
+"why": ""
+}
+],
+"para_pipeline_10094": [
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse",
+"exact": true,
+"itrs": 7710,
+"why": ""
+}
+],
+"para_pipeline_10098": [
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\ndrop 2",
+"exact": true,
+"itrs": 163,
+"why": ""
+}
+],
+"para_pipeline_10100": [
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nmap lin 10 7",
+"exact": true,
+"itrs": 7195,
+"why": ""
+}
+],
+"para_pipeline_10101": [
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 421036,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 421036,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 421036,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndrop 3\nsort",
+"exact": true,
+"itrs": 421036,
+"why": ""
+}
+],
+"para_pipeline_10103": [
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 63\nrunsum\nreverse",
+"exact": true,
+"itrs": 11049,
+"why": ""
+}
+],
+"para_pipeline_10104": [
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 444095,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 444095,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 444095,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\ntake 5",
+"exact": true,
+"itrs": 444095,
+"why": ""
+}
+],
+"para_pipeline_10106": [
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 2\ntake 2",
+"exact": true,
+"itrs": 1133,
+"why": ""
+}
+],
+"para_pipeline_10107": [
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 8\ntake 8\ndrop 3",
+"exact": true,
+"itrs": 1395,
+"why": ""
+}
+],
+"para_pipeline_10108": [
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nrunsum\ndrop 2",
+"exact": true,
+"itrs": 4435,
+"why": ""
+}
+],
+"para_pipeline_10109": [
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 434120,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 434120,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter lt 10\nsort",
+"exact": true,
+"itrs": 434120,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad predicate: leq 10",
+"text": "sort\nfilter leq 10\nsort"
+}
+],
+"para_pipeline_10110": [
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\nmap lin 2 100\nsort",
+"exact": true,
+"itrs": 1118,
+"why": ""
+}
+],
+"para_pipeline_10111": [
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreverse",
+"exact": true,
+"itrs": 1193,
+"why": ""
+}
+],
+"para_pipeline_10112": [
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nrunsum\nfilter gt 10",
+"exact": true,
+"itrs": 13351,
+"why": ""
+}
+],
+"para_reduce_10000": [
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce last",
+"exact": true,
+"itrs": 1198,
+"why": ""
+}
+],
+"para_reduce_10001": [
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 441911,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 441911,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 441911,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nfilter gt 20\nreduce first",
+"exact": true,
+"itrs": 441911,
+"why": ""
+}
+],
+"para_reduce_10002": [
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 2 100\ndrop 5\nreduce sum",
+"exact": true,
+"itrs": 7993,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad expression: lin 2",
+"text": "map lin 2\nmap add 100\ndrop 5\nreduce sum"
+}
+],
+"para_reduce_10004": [
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10329,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10329,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10329,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"exact": true,
+"itrs": 10329,
+"why": ""
+}
+],
+"para_reduce_10005": [
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce first",
+"exact": true,
+"itrs": 8746,
+"why": ""
+},
+{
+"status": "parse",
+"why": "unknown word: pre",
+"text": "reverse\npre\nreduce first"
+}
+],
+"para_reduce_10007": [
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 7803,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 7803,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 7803,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nfilter even\nreduce xor",
+"exact": true,
+"itrs": 7803,
+"why": ""
+}
+],
+"para_reduce_10008": [
+{
+"status": "parse",
+"why": "not a number: odd",
+"text": "drop odd\ndrop 5\nreduce cntgtfirst"
+},
+{
+"status": "pass",
+"prog": "filter even\ndrop 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8552,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter even\ndrop 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8552,
+"why": ""
+},
+{
+"status": "parse",
+"why": "not a number: odd",
+"text": "drop odd\ndrop 5\nreduce cntgtfirst"
+}
+],
+"para_reduce_10012": [
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 2\nreduce min",
+"exact": true,
+"itrs": 5501,
+"why": ""
+}
+],
+"para_reduce_10013": [
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10206,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10206,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10206,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nfilter ge 3\nreduce xor",
+"exact": true,
+"itrs": 10206,
+"why": ""
+}
+],
+"para_reduce_10015": [
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce first",
+"exact": true,
+"itrs": 1081,
+"why": ""
+}
+],
+"para_reduce_10016": [
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreverse\nreduce last",
+"exact": true,
+"itrs": 6937,
+"why": ""
+}
+],
+"para_reduce_10017": [
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6270,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6270,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6270,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter modeq 5 4\ntake 2\nreduce max",
+"exact": true,
+"itrs": 6270,
+"why": ""
+}
+],
+"para_reduce_10019": [
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\ndedup\nreduce xor",
+"exact": true,
+"itrs": 13404,
+"why": ""
+}
+],
+"para_reduce_10020": [
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9761,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9761,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9761,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 255\nreduce min",
+"exact": true,
+"itrs": 9761,
+"why": ""
+}
+],
+"para_reduce_10026": [
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map div 10\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "parse",
+"why": "unknown word: div 10",
+"text": "div 10\nreduce count"
+}
+],
+"para_reduce_10027": [
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7392,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7392,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7392,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter odd\nreduce sum",
+"exact": true,
+"itrs": 7392,
+"why": ""
+}
+],
+"para_reduce_10037": [
+{
+"status": "fail",
+"prog": "filter gt 100\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "drop 100\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "filter gt 100\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+},
+{
+"status": "fail",
+"prog": "drop 100\nreduce cntgtfirst",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [5, 3, 5, 9, 0]"
+}
+],
+"para_reduce_10038": [
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\ntake 8\nreduce count",
+"exact": true,
+"itrs": 1323,
+"why": ""
+}
+],
+"para_reduce_10048": [
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\nreverse\nreduce min"
+},
+{
+"status": "parse",
+"why": "not a number: equal",
+"text": "drop equal\nreverse\nreduce min"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq",
+"text": "filter not eq\nreverse\nreduce min"
+},
+{
+"status": "parse",
+"why": "unknown word: drop.equal",
+"text": "drop.equal\nreverse\nreduce min"
+}
+],
+"para_reduce_10049": [
+{
+"status": "parse",
+"why": "unknown word: <tool_call>",
+"text": "<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_call>\n<tool_ca"
+},
+{
+"status": "pass",
+"prog": "runsum\ndedup\nreduce count",
+"exact": true,
+"itrs": 14594,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad predicate: distinct",
+"text": "runsum\nfilter distinct\nreduce count"
+},
+{
+"status": "pass",
+"prog": "runsum\ndedup\nreduce count",
+"exact": true,
+"itrs": 14594,
+"why": ""
+}
+],
+"para_reduce_10050": [
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nmap and 63\nreduce last",
+"exact": true,
+"itrs": 6942,
+"why": ""
+}
+],
+"para_reduce_10051": [
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 442936,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 442936,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 442936,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nmap lin 3 2\nreduce min",
+"exact": true,
+"itrs": 442936,
+"why": ""
+}
+],
+"para_reduce_10052": [
+{
+"status": "fail",
+"prog": "runsum\ndrop 20\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [1, 1, 1]"
+},
+{
+"status": "fail",
+"prog": "runsum\nfilter gt 20\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "runsum\nfilter gt 20\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "runsum\nfilter gt 20\nreduce first",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+],
+"para_reduce_10053": [
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 437300,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 437300,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 437300,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "sort\nreduce max",
+"exact": true,
+"itrs": 437300,
+"why": ""
+}
+],
+"para_reduce_10055": [
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\ndedup\nreduce xor",
+"exact": true,
+"itrs": 9613,
+"why": ""
+}
+],
+"para_reduce_10056": [
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 1\ntake 1\nreduce min",
+"exact": true,
+"itrs": 1127,
+"why": ""
+}
+],
+"para_reduce_10057": [
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8362,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8362,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8362,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter gt 500\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8362,
+"why": ""
+}
+],
+"para_reduce_10059": [
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "filter lt 100\nreduce sum",
+"exact": true,
+"itrs": 9755,
+"why": ""
+}
+],
+"para_reduce_10060": [
+{
+"status": "parse",
+"why": "bad predicate: prev",
+"text": "filter prev\nsort\nreduce cntgtfirst"
+},
+{
+"status": "pass",
+"prog": "dedup\nsort\nreduce cntgtfirst",
+"exact": true,
+"itrs": 396498,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq",
+"text": "filter not eq\nsort\nreduce cntgtfirst"
+},
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\nsort\nreduce cntgtfirst"
+}
+],
+"para_reduce_10066": [
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 6\ndrop 1\nreduce first",
+"exact": true,
+"itrs": 4404,
+"why": ""
+}
+],
+"para_reduce_10068": [
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 5\nreduce xor",
+"exact": true,
+"itrs": 7451,
+"why": ""
+}
+],
+"para_reduce_10069": [
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce first",
+"exact": true,
+"itrs": 1097,
+"why": ""
+}
+],
+"para_reduce_10070": [
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 3\nreduce min",
+"exact": true,
+"itrs": 6417,
+"why": ""
+}
+],
+"para_reduce_10071": [
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nreverse\nreduce cntgtfirst",
+"exact": true,
+"itrs": 8871,
+"why": ""
+}
+],
+"para_reduce_10075": [
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ndrop 8\nreduce last",
+"exact": true,
+"itrs": 8024,
+"why": ""
+}
+],
+"para_reduce_10076": [
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 5\nreduce xor",
+"exact": true,
+"itrs": 1208,
+"why": ""
+}
+],
+"para_reduce_10077": [
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6734,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6734,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6734,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 8\nfilter modeq 4 2\nreduce count",
+"exact": true,
+"itrs": 6734,
+"why": ""
+}
+],
+"para_reduce_10078": [
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "take 2\ntake 5\nreduce first",
+"exact": true,
+"itrs": 1148,
+"why": ""
+}
+],
+"para_reduce_10092": [
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\ntake 2\nreduce sum",
+"exact": true,
+"itrs": 1141,
+"why": ""
+}
+],
+"para_reduce_10093": [
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\ntake 1\nreduce max",
+"exact": true,
+"itrs": 1137,
+"why": ""
+}
+],
+"para_reduce_10094": [
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\ntake 5\nreduce cntgtfirst",
+"exact": true,
+"itrs": 5596,
+"why": ""
+}
+],
+"para_reduce_10096": [
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nreduce count",
+"exact": true,
+"itrs": 4126,
+"why": ""
+}
+],
+"para_reduce_10098": [
+{
+"status": "pass",
+"prog": "dedup\nrunsum\nreduce min",
+"exact": true,
+"itrs": 15782,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq",
+"text": "filter not eq\nmap sum\nreduce min"
+},
+{
+"status": "parse",
+"why": "bad predicate: not eq",
+"text": "filter not eq\nmap sum\nreduce min"
+},
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\nrunsum\nreduce min"
+}
+],
+"para_reduce_10099": [
+{
+"status": "pass",
+"prog": "take 5\nfilter lt 50\nreduce count",
+"exact": true,
+"itrs": 1329,
+"why": ""
+},
+{
+"status": "fail",
+"prog": "take 5\ndrop 50\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "fail",
+"prog": "take 5\ndrop 50\nreduce count",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [0]"
+},
+{
+"status": "pass",
+"prog": "take 5\nfilter lt 50\nreduce count",
+"exact": true,
+"itrs": 1329,
+"why": ""
+}
+],
+"para_reduce_10100": [
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 2\nreduce sum",
+"exact": true,
+"itrs": 4130,
+"why": ""
+}
+],
+"para_reduce_10104": [
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14573,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14573,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14573,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nreverse\nreduce min",
+"exact": true,
+"itrs": 14573,
+"why": ""
+}
+],
+"para_reduce_10108": [
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map and 63\nreduce count",
+"exact": true,
+"itrs": 7451,
+"why": ""
+}
+],
+"para_reduce_10109": [
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6407,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6407,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6407,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 5\nreduce min",
+"exact": true,
+"itrs": 6407,
+"why": ""
+}
+],
+"para_reduce_10113": [
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map add 1\nreduce min",
+"exact": true,
+"itrs": 9763,
+"why": ""
+}
+],
+"para_reduce_10114": [
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894971,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894971,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894971,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nsort\nreduce last",
+"exact": true,
+"itrs": 894971,
+"why": ""
+}
+],
+"para_reduce_10117": [
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "drop 1\nrunsum\nreduce last",
+"exact": true,
+"itrs": 7965,
+"why": ""
+}
+],
+"para_reduce_10118": [
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 435000,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 435000,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 435000,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nsort\nreduce min",
+"exact": true,
+"itrs": 435000,
+"why": ""
+}
+],
+"para_reduce_10130": [
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13533,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13533,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13533,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "runsum\nfilter even\nreduce min",
+"exact": true,
+"itrs": 13533,
+"why": ""
+}
+],
+"para_reduce_10138": [
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map xor 3\nreduce min",
+"exact": true,
+"itrs": 9759,
+"why": ""
+}
+],
+"para_reduce_10139": [
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map mod 11\nmap mod 11\nreduce last",
+"exact": true,
+"itrs": 10278,
+"why": ""
+}
+],
+"para_reduce_10140": [
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13104,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13104,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13104,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nreverse\nreduce min",
+"exact": true,
+"itrs": 13104,
+"why": ""
+}
+],
+"para_reduce_10141": [
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "map lin 10 2\nreduce count",
+"exact": true,
+"itrs": 7963,
+"why": ""
+},
+{
+"status": "parse",
+"why": "bad expression: lin 10",
+"text": "map lin 10\nmap add 2\nreduce count"
+}
+],
+"para_reduce_10150": [
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\nmap add 5\nreduce last"
+},
+{
+"status": "parse",
+"why": "not a number: prev",
+"text": "drop prev\nmap add 5\nreduce last"
+},
+{
+"status": "parse",
+"why": "bad predicate: not equal",
+"text": "filter not equal\nmap add 5\nreduce last"
+},
+{
+"status": "parse",
+"why": "not a number: equal",
+"text": "drop equal\nmap add 5\nreduce last"
+}
+],
+"para_reduce_10154": [
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+},
+{
+"status": "pass",
+"prog": "reverse\nrunsum\nreduce cntgtfirst",
+"exact": true,
+"itrs": 13347,
+"why": ""
+}
+],
+"para_reduce_10155": [
+{
+"status": "fail",
+"prog": "filter gt 50\nsort\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 50\nsort\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 50\nsort\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+},
+{
+"status": "fail",
+"prog": "filter gt 50\nsort\nreduce last",
+"exact": false,
+"itrs": null,
+"why": "refuted by word semantics on [16777215]"
+}
+]
+},
+"depth": {
+"para_pipeline_10001": 1,
+"para_pipeline_10005": 1,
+"para_pipeline_10006": 1,
+"para_pipeline_10007": 3,
+"para_pipeline_10008": 2,
+"para_pipeline_10011": 3,
+"para_pipeline_10014": 3,
+"para_pipeline_10017": 3,
+"para_pipeline_10018": 2,
+"para_pipeline_10019": 3,
+"para_pipeline_10021": 3,
+"para_pipeline_10025": 3,
+"para_pipeline_10026": 3,
+"para_pipeline_10027": 2,
+"para_pipeline_10028": 1,
+"para_pipeline_10029": 3,
+"para_pipeline_10031": 3,
+"para_pipeline_10034": 3,
+"para_pipeline_10035": 2,
+"para_pipeline_10038": 3,
+"para_pipeline_10039": 2,
+"para_pipeline_10041": 1,
+"para_pipeline_10042": 2,
+"para_pipeline_10043": 3,
+"para_pipeline_10046": 2,
+"para_pipeline_10047": 3,
+"para_pipeline_10055": 1,
+"para_pipeline_10056": 3,
+"para_pipeline_10058": 2,
+"para_pipeline_10059": 3,
+"para_pipeline_10060": 2,
+"para_pipeline_10062": 3,
+"para_pipeline_10063": 3,
+"para_pipeline_10065": 2,
+"para_pipeline_10070": 3,
+"para_pipeline_10073": 2,
+"para_pipeline_10074": 2,
+"para_pipeline_10077": 3,
+"para_pipeline_10078": 3,
+"para_pipeline_10079": 1,
+"para_pipeline_10081": 3,
+"para_pipeline_10082": 2,
+"para_pipeline_10083": 3,
+"para_pipeline_10086": 2,
+"para_pipeline_10088": 2,
+"para_pipeline_10089": 3,
+"para_pipeline_10091": 3,
+"para_pipeline_10094": 2,
+"para_pipeline_10098": 2,
+"para_pipeline_10100": 2,
+"para_pipeline_10101": 3,
+"para_pipeline_10103": 3,
+"para_pipeline_10104": 2,
+"para_pipeline_10106": 3,
+"para_pipeline_10107": 3,
+"para_pipeline_10108": 3,
+"para_pipeline_10109": 3,
+"para_pipeline_10110": 3,
+"para_pipeline_10111": 2,
+"para_pipeline_10112": 3,
+"para_reduce_10000": 2,
+"para_reduce_10001": 3,
+"para_reduce_10002": 3,
+"para_reduce_10004": 3,
+"para_reduce_10005": 3,
+"para_reduce_10007": 3,
+"para_reduce_10008": 3,
+"para_reduce_10012": 3,
+"para_reduce_10013": 3,
+"para_reduce_10015": 2,
+"para_reduce_10016": 3,
+"para_reduce_10017": 3,
+"para_reduce_10019": 3,
+"para_reduce_10020": 2,
+"para_reduce_10026": 2,
+"para_reduce_10027": 2,
+"para_reduce_10037": 2,
+"para_reduce_10038": 3,
+"para_reduce_10048": 3,
+"para_reduce_10049": 3,
+"para_reduce_10050": 3,
+"para_reduce_10051": 3,
+"para_reduce_10052": 3,
+"para_reduce_10053": 2,
+"para_reduce_10055": 3,
+"para_reduce_10056": 3,
+"para_reduce_10057": 2,
+"para_reduce_10059": 2,
+"para_reduce_10060": 3,
+"para_reduce_10066": 3,
+"para_reduce_10068": 2,
+"para_reduce_10069": 2,
+"para_reduce_10070": 2,
+"para_reduce_10071": 3,
+"para_reduce_10075": 3,
+"para_reduce_10076": 2,
+"para_reduce_10077": 3,
+"para_reduce_10078": 3,
+"para_reduce_10092": 3,
+"para_reduce_10093": 3,
+"para_reduce_10094": 3,
+"para_reduce_10096": 2,
+"para_reduce_10098": 3,
+"para_reduce_10099": 3,
+"para_reduce_10100": 2,
+"para_reduce_10104": 3,
+"para_reduce_10108": 2,
+"para_reduce_10109": 2,
+"para_reduce_10113": 2,
+"para_reduce_10114": 3,
+"para_reduce_10117": 3,
+"para_reduce_10118": 3,
+"para_reduce_10130": 3,
+"para_reduce_10138": 2,
+"para_reduce_10139": 3,
+"para_reduce_10140": 3,
+"para_reduce_10141": 2,
+"para_reduce_10150": 3,
+"para_reduce_10154": 3,
+"para_reduce_10155": 3
+},
+"gold": {
+"para_pipeline_10001": "map lin 2 2",
+"para_pipeline_10005": "take 1",
+"para_pipeline_10006": "drop 8",
+"para_pipeline_10007": "filter ge 10\ntake 2\nrunsum",
+"para_pipeline_10008": "take 5\nmap xor 63",
+"para_pipeline_10011": "filter ge 5\nreverse\nfilter ge 5",
+"para_pipeline_10014": "dedup\nsort\nmap mod 3",
+"para_pipeline_10017": "sort\nreverse\nrunsum",
+"para_pipeline_10018": "drop 5\ndedup",
+"para_pipeline_10019": "sort\nmap mod 8\ndrop 8",
+"para_pipeline_10021": "map div 3\nfilter odd\ndedup",
+"para_pipeline_10025": "drop 1\nrunsum\nmap xor 15",
+"para_pipeline_10026": "sort\nfilter lt 50\ntake 8",
+"para_pipeline_10027": "take 8\ndedup",
+"para_pipeline_10028": "map mod 3",
+"para_pipeline_10029": "reverse\ndrop 8\nmap lin 2 0",
+"para_pipeline_10031": "reverse\ndrop 1\ndedup",
+"para_pipeline_10034": "sort\nrunsum\nmap xor 255",
+"para_pipeline_10035": "drop 3\ndrop 1",
+"para_pipeline_10038": "filter lt 5\ndedup\nmap and 63",
+"para_pipeline_10039": "map mod 11\nrunsum",
+"para_pipeline_10041": "filter gt 20",
+"para_pipeline_10042": "filter odd\nreverse",
+"para_pipeline_10043": "drop 8\nfilter lt 500\ndrop 8",
+"para_pipeline_10046": "map sq\nfilter ge 3",
+"para_pipeline_10047": "filter modeq 5 2\nsort\nreverse",
+"para_pipeline_10055": "filter gt 10",
+"para_pipeline_10056": "runsum\ntake 5\nreverse",
+"para_pipeline_10058": "dedup\ndrop 3",
+"para_pipeline_10059": "dedup\nfilter odd\ntake 2",
+"para_pipeline_10060": "dedup\nmap add 9",
+"para_pipeline_10062": "runsum\nfilter odd\ndedup",
+"para_pipeline_10063": "filter modeq 3 2\ndrop 1\nreverse",
+"para_pipeline_10065": "map add 2\nmap div 2",
+"para_pipeline_10070": "sort\ndedup\nsort",
+"para_pipeline_10073": "filter lt 50\nfilter odd",
+"para_pipeline_10074": "map xor 7\nfilter lt 50",
+"para_pipeline_10077": "take 1\nsort\nmap and 3",
+"para_pipeline_10078": "filter odd\ndrop 1\ntake 8",
+"para_pipeline_10079": "map and 63",
+"para_pipeline_10081": "drop 1\nrunsum\nsort",
+"para_pipeline_10082": "dedup\nmap sq",
+"para_pipeline_10083": "filter lt 20\ndedup\nsort",
+"para_pipeline_10086": "map sq\ndrop 5",
+"para_pipeline_10088": "dedup\ntake 3",
+"para_pipeline_10089": "dedup\ndedup\nfilter even",
+"para_pipeline_10091": "take 8\ndrop 5\nsort",
+"para_pipeline_10094": "runsum\nreverse",
+"para_pipeline_10098": "drop 5\ndrop 2",
+"para_pipeline_10100": "reverse\nmap lin 10 7",
+"para_pipeline_10101": "reverse\ndrop 3\nsort",
+"para_pipeline_10103": "map xor 63\nrunsum\nreverse",
+"para_pipeline_10104": "sort\ntake 5",
+"para_pipeline_10106": "take 1\ntake 2\ntake 2",
+"para_pipeline_10107": "take 8\ntake 8\ndrop 3",
+"para_pipeline_10108": "drop 2\nrunsum\ndrop 2",
+"para_pipeline_10109": "sort\nfilter lt 10\nsort",
+"para_pipeline_10110": "take 1\nmap lin 2 100\nsort",
+"para_pipeline_10111": "take 5\nreverse",
+"para_pipeline_10112": "map add 1\nrunsum\nfilter gt 10",
+"para_reduce_10000": "take 5\nreduce last",
+"para_reduce_10001": "sort\nfilter gt 20\nreduce first",
+"para_reduce_10002": "map lin 2 100\ndrop 5\nreduce sum",
+"para_reduce_10004": "reverse\nfilter modeq 5 1\nreduce cntgtfirst",
+"para_reduce_10005": "reverse\nrunsum\nreduce first",
+"para_reduce_10007": "drop 3\nfilter even\nreduce xor",
+"para_reduce_10008": "filter even\ndrop 5\nreduce cntgtfirst",
+"para_reduce_10012": "runsum\ntake 2\nreduce min",
+"para_reduce_10013": "drop 1\nfilter ge 3\nreduce xor",
+"para_reduce_10015": "drop 2\nreduce first",
+"para_reduce_10016": "drop 2\nreverse\nreduce last",
+"para_reduce_10017": "filter modeq 5 4\ntake 2\nreduce max",
+"para_reduce_10019": "reverse\ndedup\nreduce xor",
+"para_reduce_10020": "map and 255\nreduce min",
+"para_reduce_10026": "map div 10\nreduce count",
+"para_reduce_10027": "filter odd\nreduce sum",
+"para_reduce_10037": "filter lt 100\nreduce cntgtfirst",
+"para_reduce_10038": "take 5\ntake 8\nreduce count",
+"para_reduce_10048": "dedup\nreverse\nreduce min",
+"para_reduce_10049": "runsum\ndedup\nreduce count",
+"para_reduce_10050": "drop 1\nmap and 63\nreduce last",
+"para_reduce_10051": "sort\nmap lin 3 2\nreduce min",
+"para_reduce_10052": "runsum\nfilter lt 20\nreduce first",
+"para_reduce_10053": "sort\nreduce max",
+"para_reduce_10055": "drop 8\ndedup\nreduce xor",
+"para_reduce_10056": "take 1\ntake 1\nreduce min",
+"para_reduce_10057": "filter gt 500\nreduce cntgtfirst",
+"para_reduce_10059": "filter lt 100\nreduce sum",
+"para_reduce_10060": "dedup\nsort\nreduce cntgtfirst",
+"para_reduce_10066": "map mod 6\ndrop 1\nreduce first",
+"para_reduce_10068": "map add 5\nreduce xor",
+"para_reduce_10069": "drop 3\nreduce first",
+"para_reduce_10070": "drop 3\nreduce min",
+"para_reduce_10071": "drop 8\nreverse\nreduce cntgtfirst",
+"para_reduce_10075": "runsum\ndrop 8\nreduce last",
+"para_reduce_10076": "take 5\nreduce xor",
+"para_reduce_10077": "drop 8\nfilter modeq 4 2\nreduce count",
+"para_reduce_10078": "take 2\ntake 5\nreduce first",
+"para_reduce_10092": "drop 1\ntake 2\nreduce sum",
+"para_reduce_10093": "drop 2\ntake 1\nreduce max",
+"para_reduce_10094": "runsum\ntake 5\nreduce cntgtfirst",
+"para_reduce_10096": "drop 1\nreduce count",
+"para_reduce_10098": "dedup\nrunsum\nreduce min",
+"para_reduce_10099": "take 5\nfilter lt 50\nreduce count",
+"para_reduce_10100": "drop 2\nreduce sum",
+"para_reduce_10104": "runsum\nreverse\nreduce min",
+"para_reduce_10108": "map and 63\nreduce count",
+"para_reduce_10109": "drop 5\nreduce min",
+"para_reduce_10113": "map add 1\nreduce min",
+"para_reduce_10114": "runsum\nsort\nreduce last",
+"para_reduce_10117": "drop 1\nrunsum\nreduce last",
+"para_reduce_10118": "map mod 11\nsort\nreduce min",
+"para_reduce_10130": "runsum\nfilter even\nreduce min",
+"para_reduce_10138": "map xor 3\nreduce min",
+"para_reduce_10139": "map mod 11\nmap mod 11\nreduce last",
+"para_reduce_10140": "reverse\nreverse\nreduce min",
+"para_reduce_10141": "map lin 10 2\nreduce count",
+"para_reduce_10150": "dedup\nmap add 5\nreduce last",
+"para_reduce_10154": "reverse\nrunsum\nreduce cntgtfirst",
+"para_reduce_10155": "filter lt 50\nsort\nreduce last"
+}
+}

@@ -1,0 +1,28 @@
+@prog = (l out)
+  & @go ~ (l (0 (0 out)))
+
+@go = ((?((@nil @cons) (pl (a (b out)))) pl) (a (b out)))
+
+@nil = (* (* (b b)))
+
+@cons = (* ((h t) (a (b out))))
+  & h ~ {h1 h2}
+  & a ~ {a1 a2}
+  & h1 ~ $([>] $(a1 c))
+  & c ~ ?((@c_no @c_yes) (h2 (a2 (b (t out)))))
+
+@c_yes = (* (h (a (b (t out)))))
+  & b ~ *
+  & @go ~ (t (h (a out)))
+
+@c_no = (h (a (b (t out))))
+  & h ~ {h1 h2}
+  & b ~ {b1 b2}
+  & h1 ~ $([>] $(b1 d))
+  & d ~ ?((@d_no @d_yes) (h2 (b2 (a (t out)))))
+
+@d_no = (* (b (a (t out))))
+  & @go ~ (t (a (b out)))
+
+@d_yes = (* (h (* (a (t out)))))
+  & @go ~ (t (a (h out)))

@@ -1,0 +1,82 @@
+@prog = (inp out)
+  & @fold ~ (inp ((0 *) out))
+
+@fold = ((?((@fold_nil @fold_cons) (pl (acc out))) pl) (acc out))
+
+@fold_nil = (* (a a))
+
+@fold_cons = (* ((h t) (acc out)))
+  & @normalize ~ (h (t (acc out)))
+
+@normalize = ((u (v s)) (t (acc out)))
+  & u ~ {ul ur}
+  & v ~ {vl vr}
+  & ul ~ $([<] $(vl z))
+  & z ~ ?((@norm_swap @norm_keep) (ur (vr (s (t (acc out)))))
+
+@norm_keep = (* (u (v (s (t (acc out))))))
+  & @insert ~ (u (v (s (acc newacc))))
+  & @fold ~ (t (newacc out))
+
+@norm_swap = (u (v (s (t (acc out)))))
+  & @insert ~ (v (u (s (acc newacc))))
+  & @fold ~ (t (newacc out))
+
+@insert = ((u (v s)) ((?((@ins_nil @ins_cons) (pl (u (v (s out))))) pl) out))
+
+@ins_nil = (* (u (v (s out))))
+  & out ~ (1 ((u (v s)) (0 *)))
+
+@ins_cons = (* (((a (b q)) xs) (u (v (s out)))))
+  & u ~ {uc uh}
+  & a ~ {ac ah}
+  & uc ~ $([<] $(ac z))
+  & z ~ ?((@ins_notbefore @ins_before) (uh (ah (v (s (b (q (xs out)))))))
+
+@ins_before = (* (u (a (v (s (b (q (xs out))))))))
+  & out ~ (1 ((u (v s)) (1 ((a (b q)) xs))))
+
+@ins_notbefore = (uh (ah (v (s (b (q (xs out)))))))
+  & uh ~ {uc uh2}
+  & ah ~ {ac ah2}
+  & uc ~ $([=] $(ac z))
+  & z ~ ?((@ins_u_unequal @ins_u_equal) (uh2 (ah2 (v (s (b (q (xs out)))))))
+
+@ins_u_unequal = (u (a (v (s (b (q (xs out)))))))
+  & @insert ~ (u (v (s (xs r))))
+  & out ~ (1 ((a (b q)) r))
+
+@ins_u_equal = (* (u (a (v (s (b (q (xs out))))))))
+  & v ~ {vc vh}
+  & b ~ {bc bh}
+  & vc ~ $([<] $(bc z))
+  & z ~ ?((@ins_v_notbefore @ins_v_before) (u (a (vh (s (bh (q (xs out)))))))
+
+@ins_v_before = (* (u (a (v (s (b (q (xs out))))))))
+  & out ~ (1 ((u (v s)) (1 ((a (b q)) xs))))
+
+@ins_v_notbefore = (u (a (vh (s (bh (q (xs out)))))))
+  & vh ~ {vc vh2}
+  & bh ~ {bc bh2}
+  & vc ~ $([=] $(bc z))
+  & z ~ ?((@ins_v_unequal @ins_v_equal) (u (a (vh2 (s (bh2 (q (xs out)))))))
+
+@ins_v_unequal = (u (a (v (s (b (q (xs out)))))))
+  & @insert ~ (u (v (s (xs r))))
+  & out ~ (1 ((a (b q)) r))
+
+@ins_v_equal = (* (u (a (v (s (b (q (xs out))))))))
+  & a ~ *
+  & b ~ *
+  & s ~ {sc sh}
+  & q ~ {qc qh}
+  & sc ~ $([>] $(qc z))
+  & z ~ ?((@ins_score_no @ins_score_yes) (u (v (sh (qh (xs out))))))
+
+@ins_score_yes = (* (u (v (s (q (xs out))))))
+  & q ~ *
+  & out ~ (1 ((u (v s)) xs))
+
+@ins_score_no = (u (v (s (q (xs out)))))
+  & s ~ *
+  & out ~ (1 ((u (v q)) xs))

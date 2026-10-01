@@ -1,0 +1,95 @@
+// Build one 24-bit incidence mask per block of 24 node IDs, mark edge endpoints,
+// then count set bits and subtract the number of incident nodes from n.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ {ncalc norig}
+  & ncalc ~ $([+23] nplus)
+  & nplus ~ $([/24] groups)
+  & @mk_groups ~ (groups masks)
+  & @walk_edges ~ (edges (masks masks2))
+  & @count_groups ~ (masks2 (0 used))
+  & norig ~ $([-] $(used answer))
+  & answer ~ out
+
+// Construct a list of zero-valued masks.
+@mk_groups = (k out)
+  & k ~ ?((@mk_nil @mk_cons) out)
+
+@mk_nil = out
+  & out ~ (0 *)
+
+@mk_cons = (rem out)
+  & @mk_groups ~ (rem rest)
+  & out ~ (1 (0 rest))
+
+// Update both endpoints of every edge.
+@walk_edges = ((?((@edges_nil @edges_cons) (payload (masks out))) payload) (masks out))
+
+@edges_nil = (* (masks out))
+  & out ~ masks
+
+@edges_cons = (* ((u v) (tail (masks out))))
+  & u ~ {u_group_in u_offset_in}
+  & u_group_in ~ $([/24] u_group)
+  & u_offset_in ~ $([%24] u_offset)
+  & 1 ~ $([<<] $(u_offset u_bit))
+  & @set_bit ~ (masks (u_group (u_bit masks1)))
+  & v ~ {v_group_in v_offset_in}
+  & v_group_in ~ $([/24] v_group)
+  & v_offset_in ~ $([%24] v_offset)
+  & 1 ~ $([<<] $(v_offset v_bit))
+  & @set_bit ~ (masks1 (v_group (v_bit masks2)))
+  & @walk_edges ~ (tail (masks2 out))
+
+// Set the requested bits in the mask at index idx.
+@set_bit = (masks (idx (bit out)))
+  & idx ~ ?((@set_here @set_more) (masks (bit out)))
+
+@set_here = ((tag (head tail)) (bit out))
+  & tag ~ *
+  & head ~ $([|] $(bit newhead))
+  & out ~ (1 (newhead tail))
+
+@set_more = (rem ((tag (head tail)) (bit out)))
+  & tag ~ *
+  & @set_bit ~ (tail (rem (bit subout)))
+  & out ~ (1 (head subout))
+
+// Count the set bits in every mask.
+@count_groups = ((?((@count_nil @count_cons) (payload (acc out))) payload) (acc out))
+
+@count_nil = (* (acc out))
+  & acc ~ out
+
+@count_cons = (* ((mask tail) (acc out)))
+  & @popcount ~ (mask (acc acc2))
+  & @count_groups ~ (tail (acc2 out))
+
+// Parallel SWAR popcount for a 24-bit number.
+@popcount = (mask (acc out))
+  & mask ~ {p1 p2}
+  & p1 ~ $([>>] $(1 shifted1))
+  & shifted1 ~ $([&] $(5592405 subtrahend))
+  & p2 ~ $([-] $(subtrahend x1))
+
+  & x1 ~ {q1 q2}
+  & q1 ~ $([&] $(3355443 a))
+  & q2 ~ $([>>] $(2 shifted2))
+  & shifted2 ~ $([&] $(3355443 b))
+  & a ~ $([+] $(b x2))
+
+  & x2 ~ {r1 r2}
+  & r1 ~ $([+] $(shifted4 sum4))
+  & r2 ~ $([>>] $(4 shifted4))
+  & sum4 ~ $([&] $(986895 x3))
+
+  & x3 ~ {s1 s2}
+  & s1 ~ $([+] $(shifted8 x4))
+  & s2 ~ $([>>] $(8 shifted8))
+
+  & x4 ~ {t1 t2}
+  & t1 ~ $([+] $(shifted16 x5))
+  & t2 ~ $([>>] $(16 shifted16))
+
+  & x5 ~ $([&] $(63 count))
+  & count ~ $([+] $(acc out))

@@ -1,0 +1,60 @@
+exp13 word filling, held-out generated tasks (indices >= 20000, not in any taskset): 150 tasks
+  by family: {'pipeline': 50, 'reduce': 50, 'scan': 25, 'position': 25}
+
+COVERAGE (ground-truth shape parsed from the description; the search never sees it)
+  core library (words named in the brief): 99/150 (66%)
+  extended library (+ runmax runmin runxor diff ind-map idxfirst idxlast idxsum argmax cntgtfirst): 150/150 (100%) inside the search space
+  shapes outside the core library: {'cntgtfirst': 2, 'reverse|cntgtfirst': 1, 'take|map|cntgtfirst': 1, 'dedup|reverse|cntgtfirst': 1, 'runxor': 7, 'map_ind|runsum': 3, 'runmax': 5, 'diff': 3, 'runmin': 7, 'argmax': 5, 'idxlast': 6, 'idxsum': 5, 'idxfirst': 5}
+  distinct task shapes: 65 (core covers 52)
+
+SOLVE RATE, k=3 examples (net composed from word templates passes genome.verify seeds 0,1,2)
+  covered tasks solved: 121/150 (81%); search found a consistent program: 150/150 (100%)
+    pipeline  36/50 (72%)
+    reduce    42/50 (84%)
+    scan      25/25 (100%)
+    position  18/25 (72%)
+  core-covered subset: 75/99 (76%)
+  spurious fits (fit the examples, fail the hidden suite): 29/150 (19%)
+  lowering failures (program right in Python, net fails verify): 0 []
+  by ground-truth size (words incl. reducer): 1: 90/97 (93%), 2: 26/40 (65%), 3: 5/13 (38%)
+  spurious examples (found program vs truth):
+    gen_pipeline_20002: found []  truth ['map(and(63))']
+    gen_pipeline_20014: found ['sort']  truth ['sort', 'dedup']
+    gen_pipeline_20024: found ['filter(lt(1))']  truth ['filter(odd)', 'filter(even)', 'reverse']
+    gen_pipeline_20026: found ['map(add(5))']  truth ['map(add(5))', 'dedup']
+    gen_pipeline_20036: found ['sort', 'runsum']  truth ['sort', 'runsum', 'dedup']
+    gen_pipeline_20055: found ['drop(3)']  truth ['drop(3)', 'dedup']
+    gen_pipeline_20060: found []  truth ['filter(gt(10))']
+    gen_pipeline_20061: found ['filter(even)']  truth ['filter(even)', 'dedup']
+    gen_pipeline_20073: found ['dedup', 'drop(5)']  truth ['drop(5)', 'dedup']
+    gen_pipeline_20076: found ['filter(lt(1))']  truth ['sort', 'take(5)', 'drop(8)']
+    gen_pipeline_20082: found ['filter(gt(3))']  truth ['filter(ge(5))']
+    gen_pipeline_20089: found []  truth ['filter(ge(10))']
+
+EXAMPLES NEEDED (Python-level check of the found program on the hidden suites, seeds 0,1,2; nested example sets)
+  k= 3: 121/150 (81%)  median search 26 us, max 0.39 s
+  k= 4: 125/150 (83%)  median search 33 us, max 0.61 s
+  k= 5: 125/150 (83%)  median search 37 us, max 0.76 s
+  k= 6: 127/150 (85%)  median search 37 us, max 0.89 s
+  k= 8: 130/150 (87%)  median search 45 us, max 0.99 s
+  k=10: 134/150 (89%)  median search 59 us, max 1.08 s
+  still wrong at k=10: 16: gen_pipeline_20002 found [] truth ['map(and(63))']; gen_pipeline_20024 found ['filter(lt(1))'] truth ['filter(odd)', 'filter(even)', 'reverse']; gen_pipeline_20055 found ['dedup', 'drop(3)'] truth ['drop(3)', 'dedup']; gen_pipeline_20060 found ['filter(gt(4))'] truth ['filter(gt(10))']; gen_pipeline_20073 found ['dedup', 'drop(5)'] truth ['drop(5)', 'dedup']; gen_pipeline_20076 found ['filter(lt(1))'] truth ['sort', 'take(5)', 'drop(8)']; gen_pipeline_20089 found [] truth ['filter(ge(10))']; gen_pipeline_20092 found ['take(8)'] truth ['take(8)', 'dedup']; gen_reduce_20020 found ['idxfirst(lt(1000))'] truth ['take(1)', 'map(mod(11))', 'cntgtfirst']; gen_reduce_20021 found ['idxfirst(lt(10))'] truth ['map(sq)', 'filter(ge(100))', 'count']
+
+TIME PER TASK (k=3): search median 26 us, mean 8.0 ms, max 0.39 s, timeouts 0; lowering < 1 ms; verify (3 seeds, ~95 HVM runs each) median 3.9 s
+  OE classes built per task: median 2, max 18853
+
+WITH COUNTEREXAMPLE FEEDBACK (the LLM authors' loop: on failure add the smallest failing seed-0 input + expected, re-search; <= 8 rounds; final net judged on seeds 0,1,2)
+  solved 148/150 (99%); rounds used by solved tasks {1: 121, 2: 17, 3: 6, 4: 1, 5: 1, 6: 1, 7: 1}
+  net passed seed 0 but failed seed 1/2: 0; unsolved: gen_pipeline_20024 last [['runmax', 'filter(modeq(9,8))']]; gen_pipeline_20076 last [['runmax', 'filter(modeq(8,3))']]
+  wall-clock per task incl. feedback rounds (search only): median 0.82 ms, max 0.27 s
+
+  failures: gen_pipeline_00095 ['drop(1)', 'filter(modeq(5,4))'] (spurious); gen_pipeline_00086 ['filter(lt(1))'] (spurious); gen_pipeline_00125 ['filter(modeq(3,2))', 'map(add(9))'] (spurious); gen_pipeline_00254 ['take(2)', 'sort'] (spurious); gen_pipeline_00378 ['sort', 'take(7)', 'filter(modeq(4,0))'] (spurious); gen_pipeline_00347 ['take(2)', 'reverse'] (spurious); gen_pipeline_00184 ['take(2)'] (spurious); gen_reduce_00142 ['idxsum(lt(1))'] (spurious); gen_reduce_00045 ['first'] (spurious); gen_reduce_00084 ['filter(gt(2))', 'first'] (spurious); gen_reduce_00188 ['runsum', 'xor'] (spurious); gen_reduce_00054 ['filter(gt(9))', 'sum'] (spurious); gen_reduce_00072 ['map(lin(10,7))', 'max'] (spurious); gen_reduce_00105 ['filter(modeq(7,6))', 'map(mod(11))', 'sum'] (spurious); gen_reduce_00100 ['filter(odd)', 'idxsum(lt(4))'] (spurious); gen_scan_00251 ['map(div(6))', 'runsum'] (spurious); gen_position_00162 ['filter(gt(5))', 'count'] (spurious); gen_position_01083 ['idxfirst(gt(500))'] (spurious); gen_position_00186 ['idxlast(gt(16))'] (spurious); gen_position_00309 ['idxfirst(gt(20))'] (spurious)
+VS LLM-AUTHORED NATIVE NETS (training tasks with an accepted, audited Luna Pro net; k=6 examples; seed-0 metrics)
+  word filling solves 60/80 (75%) of these tasks (Luna Pro: all by selection; its overall train rate 785/824 = 95%)
+  interactions (median, largest inputs): ours/LLM geomean 1.11x, median 1.02x, ours better on 13/60, range 0.33-4.21
+  depth (median, largest inputs): ours/LLM geomean 0.87x, median 1.00x, ours better on 28/60, range 0.31-3.45
+    pipeline  n=25 itrs 1.11x depth 1.03x
+    reduce    n=16 itrs 1.09x depth 0.92x
+    scan      n=7 itrs 1.21x depth 0.50x
+    position  n=12 itrs 1.10x depth 0.79x
+  largest depth ratios: gen_reduce_00234 ['map(and(7))', 'first'] 1803 vs 522; gen_pipeline_00313 ['reverse', 'filter(modeq(3,1))', 'take(2)'] 6237 vs 2389; gen_pipeline_00133 ['reverse', 'map(add(2))', 'map(div(5))'] 3606 vs 1801; gen_pipeline_00011 ['drop(1)'] 20 vs 10; gen_pipeline_00078 ['reverse', 'runsum', 'take(3)'] 3602 vs 2358

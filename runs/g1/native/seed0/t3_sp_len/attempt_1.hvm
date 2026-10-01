@@ -1,0 +1,133 @@
+// Entry point
+@prog = ((n (s (t edges))) out)
+  & n ~ *
+  & s ~ {s_eq s_bfs}
+  & t ~ {t_eq t_bfs}
+  & s_eq ~ $([=] $(t_eq same))
+  & same ~ ?((@prog_same @prog_diff) (s_bfs (t_bfs (edges out))))
+
+@prog_same = (s (t (edges out)))
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@prog_diff = (* (s (t (edges out))))
+  & s ~ {sf sv}
+  & @bfs ~ (t (edges ((1 (sf (0 *))) ((1 (sv (0 *))) (0 out))))
+
+// Membership test: returns (reconstructed_list, found_boolean).
+@mem = (candidate ((?((@mem_nil @mem_cons) (pl (candidate out))) pl) out))
+
+@mem_nil = (* (candidate out))
+  & candidate ~ *
+  & out ~ ((0 *) 0)
+
+@mem_cons = (* ((head tail) (candidate out)))
+  & candidate ~ {c_eq c_rec}
+  & head ~ {h_eq h_keep}
+  & h_eq ~ $([=] $(c_eq eq))
+  & @mem ~ (c_rec (tail res))
+  & res ~ (tail2 found)
+  & eq ~ $([|] $(found any))
+  & out ~ ((1 (h_keep tail2)) any)
+
+// Add candidate to seen and next only if it is not already in seen.
+@consider = (candidate (seen (next out)))
+  & candidate ~ {cmem cadd}
+  & @mem ~ (cmem (seen mr))
+  & mr ~ (seen2 found)
+  & found ~ ?((@consider_add @consider_keep) (cadd (seen2 (next out))))
+
+@consider_add = (candidate (seen (next out)))
+  & candidate ~ {cseen cnext}
+  & out ~ ((1 (cseen seen)) (1 (cnext next)))
+
+@consider_keep = (* (candidate (seen (next out))))
+  & candidate ~ *
+  & out ~ (seen next)
+
+// Test both orientations of an undirected edge against the current vertex.
+// Returns (u, v, updated_seen, updated_next).
+@edge = (vertex (u (v (seen (next out))))
+  & vertex ~ {vu vm}
+  & u ~ {ue ur}
+  & ue ~ $([=] $(vu z))
+  & z ~ ?((@edge_umiss @edge_umatch) (vm (ur (v (seen (next out))))))
+
+@edge_umiss = (vertex (u (v (seen (next out)))))
+  & v ~ {vtest vret}
+  & vtest ~ $([=] $(vertex q))
+  & q ~ ?((@edge_none @edge_vmatch) (u (vret (seen (next out)))))
+
+@edge_umatch = (* (vertex (u (v (seen (next out))))))
+  & vertex ~ *
+  & v ~ {cand vret}
+  & @consider ~ (cand (seen (next st)))
+  & st ~ (seen2 next2)
+  & out ~ (u (vret (seen2 next2)))
+
+@edge_none = (u (v (seen (next out))))
+  & out ~ (u (v (seen next)))
+
+@edge_vmatch = (* (u (v (seen (next out)))))
+  & u ~ {cand uret}
+  & @consider ~ (cand (seen (next st)))
+  & st ~ (seen2 next2)
+  & out ~ (uret (v (seen2 next2)))
+
+// Scan and rebuild the entire edge list for one vertex.
+@scan = ((?((@scan_nil @scan_cons) (pl (vertex (seen (next out))))) pl) (vertex (seen (next out))))
+
+@scan_nil = (* (vertex (seen (next out))))
+  & vertex ~ *
+  & out ~ ((0 *) (seen next))
+
+@scan_cons = (* (((u v) tail) (vertex (seen (next out)))))
+  & vertex ~ {vp vr}
+  & @edge ~ (vp (u (v (seen (next st))))
+  & st ~ (u2 (v2 (seen2 next2)))
+  & @scan ~ (tail (vr (seen2 (next2 st2))))
+  & st2 ~ (edges_tail (seen_final next_final))
+  & out ~ ((1 ((u2 v2) edges_tail)) (seen_final next_final))
+
+// Expand every vertex in the current frontier.
+@expand = ((?((@expand_nil @expand_cons) (pl (edges (seen (next out))))) pl) (edges (seen (next out))))
+
+@expand_nil = (* (edges (seen (next out))))
+  & out ~ ((0 *) (seen next))
+
+@expand_cons = (* ((vertex rest) (edges (seen (next out)))))
+  & @scan ~ (vertex (edges (seen (next st))))
+  & st ~ (edges2 (seen2 next2))
+  & @expand ~ (rest (edges2 (seen2 (next2 out))))
+
+// Breadth-first search. Check the current frontier before expanding it.
+@bfs = (target (edges (front (seen (depth out))))
+  & target ~ {tm tc}
+  & @mem ~ (tm (front mr))
+  & mr ~ (front2 found)
+  & found ~ ?((@bfs_more @bfs_hit) (tc (edges (front2 (seen (depth out))))))
+
+@bfs_hit = (* (target (edges (front (seen (depth out))))))
+  & target ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ depth
+
+@bfs_more = (target (edges (front (seen (depth out)))))
+  & @expand ~ (front (edges (seen ((0 *) ex))))
+  & ex ~ (edges2 (seen2 next))
+  & next ~ ((?((@bfs_empty @bfs_continue) (pl (target (edges2 (seen2 (depth out)))))) pl)
+
+@bfs_empty = (* (target (edges (seen (depth out)))))
+  & target ~ *
+  & edges ~ *
+  & seen ~ *
+  & depth ~ *
+  & out ~ 16777215
+
+@bfs_continue = (* ((head tail) (target (edges (seen (depth out))))))
+  & depth ~ $([+1] d2)
+  & @bfs ~ (target (edges ((1 (head tail)) (seen (d2 out))))

@@ -1,0 +1,43 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@collect_members__C0 = (* (a_q335 (b_q335 ((1 (a_q335 (b_q335 c_q335))) c_q335))))
+
+@collect_members__C1 = (* ($([=] $(a ?(((* (b b)) @collect_members__C0) (c (g h))))) (((?(((* (* @List/Nil)) @collect_members__C1) a_q337) a_q337) (e (f g))) ({c $([+0x0000001] e)} ({a f} h)))))
+
+@collect_roots__C0 = (* (((?(((* (* @List/Nil)) @collect_members__C1) a_q341) a_q341) (0 (b c))) (b (b_i7 ((1 (c (b_i7 c_i7))) c_i7)))))
+
+@collect_roots__C1 = (* ($([=] $(a ?(((* (* (b b))) @collect_roots__C0) (c (d (h i)))))) (((?(((* (* @List/Nil)) @collect_roots__C1) a_q346) a_q346) (f (g h))) ({c f} ({a {d $([+0x0000001] g)}} i)))))
+
+@collect_roots__C2 = (?(((* (* @List/Nil)) @collect_roots__C1) a) a)
+
+@get_label__C1 = (* (c (d ({?(((* (a (* a))) (* ($([:-0x0000001] b_q353) (* ((@get_label__C2 (b_q353 c_q353)) c_q353))))) (b (c (d e)))) b} e))))
+
+@get_label__C2 = (?(((* 0) @get_label__C1) a) a)
+
+@make_labels__C0 = ({a $([+0x0000001] {$([=] $(a_q324 ?((({a_q365 $([+0x0000001] {$([=] $(a_q324_q365 ?((@make_labels__C0 (* (* (* @List/Nil)))) (b_q324_q365 (c_q324_q365 d_q365))))) b_q324_q365})} ({a_q324_q365 c_q324_q365} ((1 (a_q365 (d_q365 c_i8_q365))) c_i8_q365))) (* (* (* @List/Nil)))) (b_q324 (c_q324 d))))) b_q324})} ({a_q324 c_q324} ((1 (a (d c_i8))) c_i8)))
+
+@merge_edges__C0 = @replace_label
+
+@merge_edges__C1 = (* ((@replace_label__C3 (b (c d))) (c (b d))))
+
+@merge_edges__C2 = (c ((@merge_edges__C5 (f g)) ({$([<] $(b ?((@merge_edges__C0 @merge_edges__C1) (c (d (e f)))))) d} ({b e} g))))
+
+@merge_edges__C3 = (* (b ((@merge_edges__C5 (b c)) (* (* c)))))
+
+@merge_edges__C4 = (* ((b d) (g ({f {(@get_label__C2 (d {e i})) (@get_label__C2 (b {$([=] $(e ?((@merge_edges__C2 @merge_edges__C3) (f (g (h (i j))))))) h}))}} j))))
+
+@merge_edges__C5 = (?(((a a) @merge_edges__C4) b) b)
+
+@prog = (({?(((* (* @List/Nil)) @make_labels__C0_s) (0 (c_q332 c))) c_q332} (@merge_edges__C5 (c {(@collect_roots__C2 (e (0 f))) e}))) f)
+
+@replace_label = ((@replace_label__C3 a) a)
+
+@replace_label__C0 = (* @List/Cons)
+
+@replace_label__C1 = (* (a (* (b_i9 ((1 (a (b_i9 c_i9))) c_i9)))))
+
+@replace_label__C3 = (?(((* (* @List/Nil)) (* ({$([=] $(a_q359 ?((@replace_label__C0 @replace_label__C1) (b_q359 (c_q359 (g_q359 h_q359)))))) c_q359} ((@replace_label__C3 (e_q359 (f_q359 g_q359))) ({a_q359 e_q359} ({b_q359 f_q359} h_q359)))))) a) a)
+
+@make_labels__C0_s = (* ({a $([+0x0000001] {$([=] $(a_q324 ?((@make_labels__C0 (* (* (* @List/Nil)))) (b_q324 (c_q324 d))))) b_q324})} ({a_q324 c_q324} ((1 (a (d c_i8))) c_i8))))

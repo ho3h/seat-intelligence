@@ -1,0 +1,103 @@
+@prog = ((n pairs) out)
+  & @build ~ (n (0 labels))
+  & @edges ~ (pairs (labels out))
+
+@build = (?((@bzero @bsucc) (idx out)) (idx out))
+
+@bzero = (idx out)
+  & idx ~ *
+  & out ~ (0 *)
+
+@bsucc = (k (idx out))
+  & idx ~ {head next}
+  & next ~ $([+1] next2)
+  & @build ~ (k (next2 tail))
+  & out ~ (1 (head tail))
+
+@edges = ((?((@ed_nil @ed_cons) (pl (labels out))) pl) (labels out))
+
+@ed_nil = (* (labels out))
+  & @count ~ (labels out)
+
+@ed_cons = (* ((edge tail) (labels out)))
+  & edge ~ (u v)
+  & labels ~ {lab1 labx}
+  & labx ~ {lab2 lab3}
+  & @get ~ (lab1 (u ru))
+  & @get ~ (lab2 (v rv))
+  & @replace ~ (lab3 (rv (ru nextlabels)))
+  & @edges ~ (tail (nextlabels out))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@at_here @at_next) (head (tail out)))
+
+@at_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@at_next = (k (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (k out))
+
+@replace = ((?((@rp_nil @rp_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@rp_nil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rp_cons = (* ((head tail) (old (new out))))
+  & head ~ {hc hs}
+  & old ~ {oc os}
+  & new ~ {nv nr}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@rp_diff @rp_same) (hs (tail (os (nv (nr out)))))
+
+@rp_diff = (head (tail (old (newh (newr out)))))
+  & newh ~ *
+  & @replace ~ (tail (old (newr tailout)))
+  & out ~ (1 (head tailout))
+
+@rp_same = (* (head (tail (old (newh (newr out))))))
+  & head ~ *
+  & @replace ~ (tail (old (newr tailout)))
+  & out ~ (1 (newh tailout))
+
+@count = (labels out)
+  & @outer ~ (labels (0 out))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (acc out))) pl) (acc out))
+
+@outer_nil = (* (acc out))
+  & pl ~ *
+  & acc ~ out
+
+@outer_cons = (* ((head tail) (acc out)))
+  & tail ~ {ti to}
+  & @inner ~ (ti (head (0 cnt)))
+  & cnt ~ $([+] $(acc acc2))
+  & @outer ~ (to (acc2 out))
+
+@inner = ((?((@in_nil @in_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@in_nil = (* (target (acc out)))
+  & target ~ *
+  & acc ~ out
+
+@in_cons = (* ((value rest) (target (acc out))))
+  & target ~ {tc tr}
+  & value ~ $([=] $(tc eq))
+  & eq ~ ?((@in_no @in_yes) (rest (tr (acc out))))
+
+@in_no = (rest (target (acc out)))
+  & @inner ~ (rest (target (acc out)))
+
+@in_yes = (* (rest (target (acc out))))
+  & acc ~ $([+1] acc2)
+  & @inner ~ (rest (target (acc2 out)))

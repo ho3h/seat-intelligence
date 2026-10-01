@@ -1,0 +1,126 @@
+@prog = ((n edges) out)
+  & n ~ {n_init n_unused}
+  & n_unused ~ *
+  & @init ~ (n_init (0 initial))
+  & @edges ~ (edges (initial final))
+  & @emit ~ (final (0 out))
+
+@init = (n (i out))
+  & n ~ ?((@init_zero @init_more) (i out))
+
+@init_zero = (i out)
+  & i ~ *
+  & (0 *) ~ out
+
+@init_more = (k (i out))
+  & i ~ {i_a i_b}
+  & i_a ~ $([+1] i_next)
+  & @init ~ (k (i_next rest))
+  & (1 (i_b rest)) ~ out
+
+@edges = ((?((@edges_nil @edges_cons) (payload (labs out))) payload) (labs out))
+
+@edges_nil = (payload (labs out))
+  & payload ~ *
+  & labs ~ out
+
+@edges_cons = (* (((u v) tail) (labs out)))
+  & labs ~ {labs_a labs_rest}
+  & labs_rest ~ {labs_b labs_c}
+  & @get ~ (labs_a (u x))
+  & @get ~ (labs_b (v y))
+  & @edge_decide ~ (x (y (labs_c (tail out))))
+
+@edge_decide = (x (y (labs (tail out))))
+  & x ~ {xx x_keep}
+  & y ~ {yy y_keep}
+  & xx ~ $([<] $(yy z))
+  & z ~ ?((@edge_ge @edge_lt) (x_keep (y_keep (labs (tail out))))
+
+@edge_ge = (x (y (labs (tail out))))
+  & @merge ~ (y (x (labs (tail out))))
+
+@edge_lt = (* (x (y (labs (tail out)))))
+  & @merge ~ (x (y (labs (tail out))))
+
+@merge = (old (new (labs (tail out))))
+  & old ~ {old_cmp old_keep}
+  & new ~ {new_cmp new_keep}
+  & old_cmp ~ $([=] $(new_cmp z))
+  & z ~ ?((@merge_same @merge_diff) (old_keep (new_keep (labs (tail out))))
+
+@merge_same = (old (new (labs (tail out))))
+  & old ~ *
+  & new ~ *
+  & @edges ~ (tail (labs out))
+
+@merge_diff = (* (old (new (labs (tail out)))))
+  & @replace ~ (labs (old (new changed_labs)))
+  & @edges ~ (tail (changed_labs out))
+
+@replace = ((?((@replace_nil @replace_cons) (payload (old (new out)))) payload) (old (new out)))
+
+@replace_nil = (payload (old (new out)))
+  & payload ~ *
+  & old ~ *
+  & new ~ *
+  & (0 *) ~ out
+
+@replace_cons = (* ((head tail) (old (new out))))
+  & old ~ {old_cmp old_rest}
+  & new ~ {new_emit new_rest}
+  & head ~ {head_cmp head_keep}
+  & head_cmp ~ $([=] $(old_cmp z))
+  & z ~ ?((@replace_same @replace_change) (head_keep (new_emit (tail (old_rest (new_rest out))))))
+
+@replace_same = (head (new (tail (old (newer out)))))
+  & new ~ *
+  & @replace ~ (tail (old (newer rest)))
+  & (1 (head rest)) ~ out
+
+@replace_change = (* (head (new (tail (old (newer out))))))
+  & head ~ *
+  & @replace ~ (tail (old (newer rest)))
+  & (1 (new rest)) ~ out
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & 0 ~ out
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (k (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (k out))
+
+@emit = ((?((@emit_nil @emit_cons) (payload (i out))) payload) (i out))
+
+@emit_nil = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & (0 *) ~ out
+
+@emit_cons = (* ((head tail) (i out)))
+  & i ~ {i_cmp i_rest}
+  & i_rest ~ {i_inc i_pair}
+  & head ~ {h_cmp h_pair}
+  & i_cmp ~ $([=] $(h_cmp z))
+  & i_inc ~ $([+1] i_next)
+  & @emit ~ (tail (i_next rest))
+  & z ~ ?((@emit_diff @emit_equal) (i_pair (h_pair (rest out))))
+
+@emit_diff = (i (h (rest out)))
+  & (1 ((i h) rest)) ~ out
+
+@emit_equal = (* (i (h (rest out))))
+  & i ~ *
+  & h ~ *
+  & rest ~ out

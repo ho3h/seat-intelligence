@@ -1,0 +1,134 @@
+@prog = (s out)
+  & @expr ~ (s r)
+  & r ~ (v rest)
+  & out ~ v
+  & rest ~ *
+
+@skip = ((?((@sk_nil @sk_cons) (pl out)) pl) out)
+
+@sk_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@sk_cons = (* ((h t) out))
+  & h ~ {c d}
+  & c ~ $([=] $(32 z))
+  & z ~ ?((@sk_keep @sk_space) (d (t out)))
+
+@sk_keep = (d (t out))
+  & out ~ (1 (d t))
+
+@sk_space = (* (d (t out)))
+  & d ~ *
+  & @skip ~ (t out)
+
+@expr = (s out)
+  & @term ~ (s r)
+  & r ~ (v rest)
+  & @eloop ~ (rest (v out))
+
+@term = (s out)
+  & @factor ~ (s r)
+  & r ~ (v rest)
+  & @tloop ~ (rest (v out))
+
+@eloop = (s (acc out))
+  & @skip ~ (s clean)
+  & clean ~ ((?((@el_nil @el_cons) (pl (acc out))) pl) (acc out))
+
+@el_nil = (pl (acc out))
+  & pl ~ *
+  & out ~ (acc (0 *))
+
+@el_cons = (* ((h t) (acc out)))
+  & h ~ {c d}
+  & c ~ $([=] $(43 z))
+  & z ~ ?((@el_stop @el_more) (d (t (acc out))))
+
+@el_stop = (d (t (acc out)))
+  & out ~ (acc (1 (d t)))
+
+@el_more = (* (d (t (acc out))))
+  & d ~ *
+  & @term ~ (t r)
+  & r ~ (v rest)
+  & acc ~ $([+] $(v sum))
+  & @eloop ~ (rest (sum out))
+
+@tloop = (s (acc out))
+  & @skip ~ (s clean)
+  & clean ~ ((?((@tl_nil @tl_cons) (pl (acc out))) pl) (acc out))
+
+@tl_nil = (pl (acc out))
+  & pl ~ *
+  & out ~ (acc (0 *))
+
+@tl_cons = (* ((h t) (acc out)))
+  & h ~ {c d}
+  & c ~ $([=] $(42 z))
+  & z ~ ?((@tl_stop @tl_more) (d (t (acc out))))
+
+@tl_stop = (d (t (acc out)))
+  & out ~ (acc (1 (d t)))
+
+@tl_more = (* (d (t (acc out))))
+  & d ~ *
+  & @factor ~ (t r)
+  & r ~ (v rest)
+  & acc ~ $([*] $(v prod))
+  & @tloop ~ (rest (prod out))
+
+@factor = (s out)
+  & @skip ~ (s clean)
+  & clean ~ ((?((@f_nil @f_cons) (pl out)) pl) out)
+
+@f_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 (0 *))
+
+@f_cons = (* ((h t) out))
+  & h ~ {c d}
+  & c ~ $([=] $(40 z))
+  & z ~ ?((@f_num @f_open) (d (t out)))
+
+@f_num = (d (t out))
+  & @digits ~ ((1 (d t)) (0 out))
+
+@f_open = (* (d (t out)))
+  & d ~ *
+  & @expr ~ (t r)
+  & r ~ (v rest)
+  & @close ~ (rest after)
+  & out ~ (v after)
+
+@digits = ((?((@dg_nil @dg_cons) (pl (acc out))) pl) (acc out))
+
+@dg_nil = (pl (acc out))
+  & pl ~ *
+  & out ~ (acc (0 *))
+
+@dg_cons = (* ((h t) (acc out)))
+  & h ~ {c d}
+  & c ~ $([<] $(48 z))
+  & z ~ ?((@dg_digit @dg_stop) (d (t (acc out))))
+
+@dg_stop = (* (d (t (acc out))))
+  & out ~ (acc (1 (d t)))
+
+@dg_digit = (* (d (t (acc out))))
+  & d ~ $([-] $(48 digit))
+  & acc ~ $([*] $(10 prod))
+  & prod ~ $([+] $(digit next))
+  & @digits ~ (t (next out))
+
+@close = (s out)
+  & @skip ~ (s clean)
+  & clean ~ ((?((@cl_nil @cl_cons) (pl out)) pl) out)
+
+@cl_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@cl_cons = (* ((h t) out))
+  & h ~ *
+  & out ~ t

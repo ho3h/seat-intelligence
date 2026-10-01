@@ -1,0 +1,174 @@
+@prog = (input out)
+  & @start ~ (input out)
+
+@start = ((n (?((@start_nil @start_some) (pl (n out))) pl)) out)
+
+@start_nil = (* (n out))
+  & n ~ *
+  & out ~ 16777215
+
+@start_some = (* ((h t) (n out)))
+  & @scan ~ (n (0 ((1 (h t)) (0 (16777215 (16777215 ((0 *) out)))))))
+
+@scan = (?((@scan_done @scan_step) (id (edges (oc (omin (nmin (nzlist out))))))) (id (edges (oc (omin (nmin (nzlist out)))))))
+
+@scan_done = (id (edges (oc (omin (nmin (nzlist out))))))
+  & @expand ~ (id (edges (1 (nmin (0 *)) reach)))
+  & @allin ~ (nzlist (reach connected))
+  & @select ~ (connected (candidate out))
+  & oc ~ {oc0 oc2}
+  & oc0 ~ $([=] $(0 z))
+  & oc2 ~ $([=] $(2 t))
+  & z ~ {zprod ztest}
+  & t ~ {tprod ttest}
+  & ztest ~ $([=] $(0 notz))
+  & ttest ~ $([=] $(0 nott))
+  & nmin ~ {nstart ncalc}
+  & ncalc ~ $([*] $(zprod nterm))
+  & omin ~ $([*] $(tprod oterm))
+  & notz ~ $([*] $(nott fallback))
+  & fallback ~ $([*] $(16777215 fallbackterm))
+  & nterm ~ $([+] $(oterm sum))
+  & sum ~ $([+] $(fallbackterm candidate))
+
+@scan_step = (rem (id (edges (oc (omin (nmin (nzlist out)))))))
+  & @deg ~ (edges_degree (id_degree d))
+  & @cond_add ~ (has_for_list (id_nz (nzlist newlist)))
+  & @scan ~ (rem (nextid (edges_next (newoc (newomin (newnmin (newlist out))))))
+  & id ~ {id_degree id_rest}
+  & id_rest ~ {id_inc id_rest2}
+  & id_rest2 ~ {id_nz id_rest3}
+  & id_rest3 ~ {id_omin id_nmin}
+  & edges ~ {edges_degree edges_next}
+  & d ~ {d_has d_odd}
+  & d_has ~ $([>] $(0 has))
+  & d_odd ~ $([%] $(2 odd))
+  & has ~ {has_for_n has_for_list}
+  & odd ~ {odd_count odd_for_min}
+  & nmin ~ {nmin_test nmin_rest}
+  & nmin_rest ~ {nmin_sub nmin_add}
+  & nmin_test ~ $([=] $(16777215 nempty))
+  & has_for_n ~ $([*] $(nempty nflag))
+  & id_nmin ~ $([-] $(nmin_sub delta_n))
+  & delta_n ~ $([*] $(nflag delta_scaled_n))
+  & nmin_add ~ $([+] $(delta_scaled_n newnmin))
+  & omin ~ {omin_test omin_rest}
+  & omin_rest ~ {omin_sub omin_add}
+  & omin_test ~ $([=] $(16777215 oempty))
+  & odd_for_min ~ $([*] $(oempty oflag))
+  & id_omin ~ $([-] $(omin_sub delta_o))
+  & delta_o ~ $([*] $(oflag delta_scaled_o))
+  & omin_add ~ $([+] $(delta_scaled_o newomin))
+  & oc ~ $([+] $(odd_count newoc))
+  & id_inc ~ $([+] $(1 nextid))
+
+@deg = ((?((@deg_nil @deg_cons) (pl (id out))) pl) (id out))
+
+@deg_nil = (* (id out))
+  & id ~ *
+  & out ~ 0
+
+@deg_cons = (* ((u v) (id out)))
+  & id ~ {i1 ir}
+  & ir ~ {i2 irec}
+  & @deg ~ (t (irec d))
+  & u ~ $([=] $(i1 a))
+  & v ~ $([=] $(i2 b))
+  & d ~ $([+] $(a sum))
+  & sum ~ $([+] $(b out))
+
+@expand = (?((@expand_done @expand_step) (edges (visited out))) (edges (visited out)))
+
+@expand_done = (edges (visited out))
+  & edges ~ *
+  & out ~ visited
+
+@expand_step = (* (edges (visited out)))
+  & edges ~ {edges_spread edges_next}
+  & @spread ~ (edges_spread (visited newvisited))
+  & @expand ~ (rem (edges_next (newvisited out)))
+
+@spread = ((?((@spread_nil @spread_cons) (pl (visited out))) pl) (visited out))
+
+@spread_nil = (* (visited out))
+  & out ~ visited
+
+@spread_cons = (* ((u v) (visited out)))
+  & u ~ {u_member u_add}
+  & v ~ {v_add v_member}
+  & visited ~ {visited_member visited_cond}
+  & @member ~ (visited_member (u_member bu))
+  & @cond_add ~ (bu (v_add (visited_cond l1)))
+  & l1 ~ {l1_member l1_add}
+  & @member ~ (l1_member (v_member bv))
+  & @cond_add ~ (bv (u_add (l1_add l2)))
+  & @spread ~ (t (l2 out))
+
+@member = ((?((@member_nil @member_cons) (pl (x out))) pl) (x out))
+
+@member_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@member_cons = (* ((h t) (x out)))
+  & x ~ {x_eq x_rec}
+  & h ~ $([=] $(x_eq b))
+  & b ~ ?((@member_no @member_yes) (t (x_rec out)))
+
+@member_no = (t (x out))
+  & @member ~ (t (x out))
+
+@member_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@cond_add = (?((@cond_no @cond_yes) (value (visited out))) (value (visited out)))
+
+@cond_no = (value (visited out))
+  & value ~ *
+  & out ~ visited
+
+@cond_yes = (* (value (visited out)))
+  & @insert ~ (value (visited out))
+
+@insert = (value (visited out))
+  & value ~ {v_member v_branch}
+  & visited ~ {l_member l_branch}
+  & @member ~ (l_member (v_member b))
+  & b ~ ?((@insert_no @insert_yes) (v_branch (l_branch out)))
+
+@insert_no = (v (l out))
+  & v ~ *
+  & out ~ l
+
+@insert_yes = (* (v (l out)))
+  & out ~ (1 (v l))
+
+@allin = ((?((@allin_nil @allin_cons) (pl (reach out))) pl) (reach out))
+
+@allin_nil = (* (reach out))
+  & reach ~ *
+  & out ~ 1
+
+@allin_cons = (* ((h t) (reach out)))
+  & reach ~ {r_member r_switch}
+  & @member ~ (r_member (h b))
+  & b ~ ?((@allin_fail @allin_next) (t (r_switch out)))
+
+@allin_fail = (t (reach out))
+  & t ~ *
+  & reach ~ *
+  & out ~ 0
+
+@allin_next = (* (t (reach out)))
+  & @allin ~ (t (reach out))
+
+@select = (?((@select_no @select_yes) (candidate out)) candidate)
+
+@select_no = (candidate out)
+  & candidate ~ *
+  & out ~ 16777215
+
+@select_yes = (* (candidate out))
+  & out ~ candidate

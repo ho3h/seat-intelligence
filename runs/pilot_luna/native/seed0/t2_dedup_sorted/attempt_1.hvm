@@ -1,0 +1,21 @@
+// @prog deduplicates a sorted list by recursively deduplicating its tail,
+// then keeping the head only when it differs from the first output value.
+@prog = (input output)
+  & @dd ~ (input output)
+
+@dd = ((?((@dd_nil @dd_cons) (pl out)) pl) out)
+
+@dd_nil = (* (0 *))
+
+@dd_cons = (* ((h t) out))
+  & @dd ~ (t (?( (@res_nil @res_cons) (payload (h out)) ) payload))
+
+@res_nil = (* ({* hd} (1 (hd (0 *))))
+
+@res_cons = (* (({xc xt} tail) ({hc ht} out)))
+  & xc ~ $([=] $(hc eq))
+  & eq ~ ?((@different @equal) (xt (tail (ht out))))
+
+@different = (xt (tail (ht (1 (ht (1 (xt tail)))))))
+
+@equal = (* (xt (tail (* (1 (xt tail))))))

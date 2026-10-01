@@ -1,0 +1,799 @@
+@prog = (in out)
+  & in ~ (n (tau (mnl (cands (edges attrs)))))
+  & @aggregate_cands ~ (cands tau accepted)
+  & @union_phase ~ (accepted n mnl clusters)
+  & @build_C ~ (clusters n C)
+  & @build_E ~ (edges C E)
+  & @build_P ~ (attrs C P)
+  & out ~ (C (E P))
+
+// ------------- candidate aggregation -------------
+
+@aggregate_cands = (cands tau out)
+  & @cands_update_all ~ (cands (0 *) best)
+  & @filter_score ~ (best tau filtered)
+  & @map_accept ~ (filtered mapped)
+  & @sort_accept ~ (mapped out)
+
+@cands_update_all = (lst acc out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@cu_nil @cu_cons) (payload acc out))
+
+@cu_nil = (payload acc out)
+  & payload ~ *
+  & out ~ acc
+
+@cu_cons = (nminus (payload acc out))
+  & nminus ~ *
+  & payload ~ (cand rest)
+  & @cand_insert ~ (cand acc newacc)
+  & @cands_update_all ~ (rest newacc out)
+
+@cand_insert = (cand lst out)
+  & cand ~ (u (v score))
+  & @ci_scan ~ (u v score lst out)
+
+@ci_scan = (u v score lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@ci_nil @ci_cons) (payload u v score out))
+
+@ci_nil = (payload u v score out)
+  & payload ~ *
+  & out ~ (1 ((u (v score)) (0 *)))
+
+@ci_cons = (nminus (payload u v score out))
+  & nminus ~ *
+  & payload ~ (entry rest)
+  & entry ~ (eu (ev escore))
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & eu ~ $([=] $(u1 equ))
+  & ev ~ $([=] $(v1 eqv))
+  & equ ~ $([&] $(eqv same_key))
+  & same_key ~ ?((@ci_diff @ci_same) (u2 v2 score entry rest out))
+
+@ci_diff = (u v score entry rest out)
+  & @ci_scan ~ (u v score rest newrest)
+  & out ~ (1 (entry newrest))
+
+@ci_same = (nminus u v score entry rest out)
+  & nminus ~ *
+  & score ~ $([>] $(escore gt))
+  & gt ~ ?((@ci_keep @ci_replace) (u v score entry rest out))
+
+@ci_keep = (u v score entry rest out)
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & out ~ (1 (entry rest))
+
+@ci_replace = (nminus u v score entry rest out)
+  & nminus ~ *
+  & entry ~ (eu (ev escore))
+  & eu ~ *
+  & ev ~ *
+  & escore ~ *
+  & out ~ (1 ((u (v score)) rest))
+
+@filter_score = (lst tau out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@fs_nil @fs_cons) (payload tau out))
+
+@fs_nil = (payload tau out)
+  & payload ~ *
+  & tau ~ *
+  & out ~ (0 *)
+
+@fs_cons = (nminus (payload tau out))
+  & nminus ~ *
+  & payload ~ (entry rest)
+  & entry ~ (u (v score))
+  & score ~ $([<] $(tau less))
+  & less ~ ?((@fs_keep @fs_drop) (entry rest tau out))
+
+@fs_keep = (entry rest tau out)
+  & @filter_score ~ (rest tau newrest)
+  & out ~ (1 (entry newrest))
+
+@fs_drop = (nminus entry rest tau out)
+  & nminus ~ *
+  & entry ~ (u (v score))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & @filter_score ~ (rest tau out)
+
+@map_accept = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@ma_nil @ma_cons) (payload out))
+
+@ma_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@ma_cons = (nminus (payload out))
+  & nminus ~ *
+  & payload ~ (entry rest)
+  & entry ~ (u (v score))
+  & @map_accept ~ (rest rest2)
+  & out ~ (1 ((score (u v)) rest2))
+
+// ------------- sorting accepted pairs -------------
+
+@sort_accept = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@sa_nil @sa_cons) (payload out))
+
+@sa_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@sa_cons = (nminus (payload out))
+  & nminus ~ *
+  & payload ~ (x rest)
+  & @sort_accept ~ (rest sortedRest)
+  & @insert_accept ~ (x sortedRest out)
+
+@insert_accept = (x lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@ia_nil @ia_cons) (payload x out))
+
+@ia_nil = (payload x out)
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ia_cons = (nminus (payload x out))
+  & nminus ~ *
+  & payload ~ (y rest)
+  & @le_accept ~ (x y le)
+  & le ~ ?((@ia_after @ia_before) (x y rest out))
+
+@ia_after = (x y rest out)
+  & @insert_accept ~ (x rest newrest)
+  & out ~ (1 (y newrest))
+
+@ia_before = (nminus x y rest out)
+  & nminus ~ *
+  & out ~ (1 (x (1 (y rest))))
+
+@le_accept = (a b out)
+  & a ~ (sa (ua va))
+  & b ~ (sb (ub vb))
+  & {sa1 sa2} ~ sa
+  & {sb1 sb2} ~ sb
+  & sa1 ~ $([>] $(sb1 gt_score))
+  & gt_score ~ ?((@le_check_lt @le_true) (sa2 ua va sb2 ub vb out))
+
+@le_true = (nminus sa ua va sb ub vb out)
+  & nminus ~ *
+  & sa ~ *
+  & ua ~ *
+  & va ~ *
+  & sb ~ *
+  & ub ~ *
+  & vb ~ *
+  & out ~ 1
+
+@le_check_lt = (sa ua va sb ub vb out)
+  & sa ~ $([<] $(sb lt_score))
+  & lt_score ~ ?((@le_check_u @le_false) (ua va ub vb out))
+
+@le_false = (nminus ua va ub vb out)
+  & nminus ~ *
+  & ua ~ *
+  & va ~ *
+  & ub ~ *
+  & vb ~ *
+  & out ~ 0
+
+@le_check_u = (ua va ub vb out)
+  & {ua1 ua2} ~ ua
+  & {ub1 ub2} ~ ub
+  & ua1 ~ $([<] $(ub1 lt_u))
+  & lt_u ~ ?((@le_check_u_gt @le_true2) (ua2 va ub2 vb out))
+
+@le_true2 = (nminus ua va ub vb out)
+  & nminus ~ *
+  & ua ~ *
+  & va ~ *
+  & ub ~ *
+  & vb ~ *
+  & out ~ 1
+
+@le_check_u_gt = (ua va ub vb out)
+  & ua ~ $([>] $(ub gt_u))
+  & gt_u ~ ?((@le_check_v @le_false2) (va vb out))
+
+@le_false2 = (nminus va vb out)
+  & nminus ~ *
+  & va ~ *
+  & vb ~ *
+  & out ~ 0
+
+@le_check_v = (va vb out)
+  & va ~ $([>] $(vb gt_v))
+  & gt_v ~ ?((@le_v_le @le_false3) out)
+
+@le_v_le = (out)
+  & out ~ 1
+
+@le_false3 = (nminus out)
+  & nminus ~ *
+  & out ~ 0
+
+// ------------- union phase -------------
+
+@union_phase = (pairs n mnl out)
+  & @range_clusters ~ (n (0 *) clusters)
+  & @process_pairs ~ (pairs mnl clusters out)
+
+@range_clusters = (n acc out)
+  & n ~ ?((@rc_stop @rc_step) (acc out))
+
+@rc_stop = (acc out)
+  & out ~ acc
+
+@rc_step = (nminus acc out)
+  & {next idx} ~ nminus
+  & @range_clusters ~ (next (1 ((1 (idx (0 *))) acc)) out)
+
+@process_pairs = (pairs mnl clusters out)
+  & pairs ~ (tag payload)
+  & tag ~ ?((@pp_nil @pp_cons) (payload mnl clusters out))
+
+@pp_nil = (payload mnl clusters out)
+  & payload ~ *
+  & out ~ clusters
+
+@pp_cons = (nminus (payload mnl clusters out))
+  & nminus ~ *
+  & payload ~ (pair rest)
+  & pair ~ (score (u v))
+  & score ~ *
+  & @process_one ~ (u v mnl clusters rest out)
+
+@process_one = (u v mnl clusters tail out)
+  & @find_cluster ~ (u clusters A)
+  & @member ~ (v A same)
+  & same ~ ?((@po_skip_same @po_continue) (u v mnl clusters tail out))
+
+@po_skip_same = (nminus u v mnl clusters tail out)
+  & nminus ~ *
+  & u ~ *
+  & v ~ *
+  & @process_pairs ~ (tail mnl clusters out)
+
+@po_continue = (u v mnl clusters tail out)
+  & @remove_cluster ~ (u clusters restA)
+  & @find_cluster ~ (v restA B)
+  & @remove_cluster ~ (v restA restB)
+  & @has_mnl_between ~ (A B mnl conflict)
+  & conflict ~ ?((@po_skip @po_merge) (A B mnl restB tail out))
+
+@po_skip = (A B mnl restB tail out)
+  & @process_pairs ~ (tail mnl (1 (A (1 (B restB)))) out)
+
+@po_merge = (nminus A B mnl restB tail out)
+  & nminus ~ *
+  & @append ~ (A B merged)
+  & @process_pairs ~ (tail mnl (1 (merged restB)) out)
+
+@find_cluster = (x clusters out)
+  & clusters ~ (tag payload)
+  & tag ~ ?((@fc_fail @fc_cons) (payload x out))
+
+@fc_fail = (payload x out)
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@fc_cons = (nminus (payload x out))
+  & nminus ~ *
+  & payload ~ (cluster rest)
+  & @member ~ (x cluster found)
+  & found ~ ?((@fc_no @fc_yes) (cluster rest x out))
+
+@fc_no = (cluster rest x out)
+  & cluster ~ *
+  & @find_cluster ~ (x rest out)
+
+@fc_yes = (nminus cluster rest x out)
+  & nminus ~ *
+  & rest ~ *
+  & x ~ *
+  & out ~ cluster
+
+@remove_cluster = (x clusters out)
+  & clusters ~ (tag payload)
+  & tag ~ ?((@rm_fail @rm_cons) (payload x out))
+
+@rm_fail = (payload x out)
+  & payload ~ *
+  & x ~ *
+  & out ~ (0 *)
+
+@rm_cons = (nminus (payload x out))
+  & nminus ~ *
+  & payload ~ (cluster rest)
+  & @member ~ (x cluster found)
+  & found ~ ?((@rm_not_found @rm_found) (cluster rest x out))
+
+@rm_not_found = (cluster rest x out)
+  & @remove_cluster ~ (x rest recout)
+  & out ~ (1 (cluster recout))
+
+@rm_found = (nminus cluster rest x out)
+  & nminus ~ *
+  & cluster ~ *
+  & x ~ *
+  & out ~ rest
+
+@member = (x lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@m_nil @m_cons) (payload x out))
+
+@m_nil = (payload x out)
+  & payload ~ *
+  & out ~ 0
+
+@m_cons = (nminus (payload x out))
+  & nminus ~ *
+  & payload ~ (h t)
+  & h ~ $([=] $(x eq))
+  & eq ~ ?((@m_rec @m_yes) (t x out))
+
+@m_rec = (t x out)
+  & @member ~ (x t out)
+
+@m_yes = (nminus t x out)
+  & nminus ~ *
+  & t ~ *
+  & x ~ *
+  & out ~ 1
+
+@has_mnl_between = (A B mnl out)
+  & mnl ~ (tag payload)
+  & tag ~ ?((@hm_nil @hm_cons) (payload A B out))
+
+@hm_nil = (payload A B out)
+  & payload ~ *
+  & out ~ 0
+
+@hm_cons = (nminus (payload A B out))
+  & nminus ~ *
+  & payload ~ (pair rest)
+  & pair ~ (a b)
+  & @mnl_pair_conflict ~ (a b A B conflict)
+  & conflict ~ ?((@hm_continue @hm_yes) (rest A B out))
+
+@hm_continue = (rest A B out)
+  & @has_mnl_between ~ (A B rest out)
+
+@hm_yes = (nminus rest A B out)
+  & nminus ~ *
+  & rest ~ *
+  & A ~ *
+  & B ~ *
+  & out ~ 1
+
+@mnl_pair_conflict = (a b A B out)
+  & {a1 a2} ~ a
+  & {b1 b2} ~ b
+  & {A1 A2} ~ A
+  & {B1 B2} ~ B
+  & @member ~ (a1 A1 inA)
+  & @member ~ (b1 B1 inB)
+  & inA ~ $([&] $(inB ab))
+  & @member ~ (a2 B2 inA2)
+  & @member ~ (b2 A2 inB2)
+  & inA2 ~ $([&] $(inB2 ba))
+  & ab ~ $([|] $(ba out))
+
+@append = (A B out)
+  & A ~ (tag payload)
+  & tag ~ ?((@app_nil @app_cons) (payload B out))
+
+@app_nil = (payload B out)
+  & payload ~ *
+  & out ~ B
+
+@app_cons = (nminus (payload B out))
+  & nminus ~ *
+  & payload ~ (h t)
+  & @append ~ (t B rest)
+  & out ~ (1 (h rest))
+
+// ------------- build C -------------
+
+@build_C = (clusters n out)
+  & @bc_range ~ (n clusters (0 *) acc)
+  & @reverse ~ (acc out)
+
+@bc_range = (n clusters acc out)
+  & n ~ ?((@bc_stop @bc_step) (clusters acc out))
+
+@bc_stop = (clusters acc out)
+  & clusters ~ *
+  & out ~ acc
+
+@bc_step = (nminus clusters acc out)
+  & {next idx} ~ nminus
+  & @canonical_for ~ (idx clusters cid)
+  & @bc_range ~ (next clusters (1 (cid acc)) out)
+
+@canonical_for = (i clusters out)
+  & @find_cluster ~ (i clusters cluster)
+  & @max_list ~ (cluster out)
+
+@max_list = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@max_nil @max_cons) (payload out))
+
+@max_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@max_cons = (nminus (payload out))
+  & nminus ~ *
+  & payload ~ (h t)
+  & @max_list ~ (t restmax)
+  & h ~ $([>] $(restmax gt))
+  & gt ~ ?((@max_rest @max_h) (h restmax out))
+
+@max_rest = (h restmax out)
+  & h ~ *
+  & out ~ restmax
+
+@max_h = (nminus h restmax out)
+  & nminus ~ *
+  & restmax ~ *
+  & out ~ h
+
+@reverse = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@rev_nil @rev_cons) (payload out))
+
+@rev_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@rev_cons = (nminus (payload out))
+  & nminus ~ *
+  & payload ~ (h t)
+  & @reverse ~ (t revt)
+  & @append_last ~ (revt h out)
+
+@append_last = (lst x out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@al_nil @al_cons) (payload x out))
+
+@al_nil = (payload x out)
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@al_cons = (nminus (payload x out))
+  & nminus ~ *
+  & payload ~ (h t)
+  & @append_last ~ (t x rest)
+  & out ~ (1 (h rest))
+
+@list_nth = (i lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@ln_fail @ln_cons) (payload i out))
+
+@ln_fail = (payload i out)
+  & payload ~ *
+  & i ~ *
+  & out ~ 0
+
+@ln_cons = (nminus (payload i out))
+  & nminus ~ *
+  & payload ~ (h t)
+  & i ~ ?((@ln_hd @ln_tl) (h t out))
+
+@ln_hd = (h t out)
+  & t ~ *
+  & out ~ h
+
+@ln_tl = (nminus h t out)
+  & nminus ~ *
+  & h ~ *
+  & @list_nth ~ (nminus t out)
+
+// ------------- build E -------------
+
+@build_E = (edges C out)
+  & @map_edges ~ (edges C (0 *) raw)
+  & @sort_edges ~ (raw out)
+
+@map_edges = (edges C acc out)
+  & edges ~ (tag payload)
+  & tag ~ ?((@me_nil @me_cons) (payload C acc out))
+
+@me_nil = (payload C acc out)
+  & payload ~ *
+  & out ~ acc
+
+@me_cons = (nminus (payload C acc out))
+  & nminus ~ *
+  & payload ~ (edge rest)
+  & edge ~ (u v)
+  & @list_nth ~ (u C cu)
+  & @list_nth ~ (v C cv)
+  & cu ~ $([=] $(cv eq))
+  & eq ~ ?((@me_add @me_skip) (cu cv rest C acc out))
+
+@me_skip = (nminus cu cv rest C acc out)
+  & nminus ~ *
+  & cu ~ *
+  & cv ~ *
+  & @map_edges ~ (rest C acc out)
+
+@me_add = (cu cv rest C acc out)
+  & cu ~ $([<] $(cv lt))
+  & lt ~ ?((@me_yx @me_xy) (cu cv rest C acc out))
+
+@me_xy = (nminus cu cv rest C acc out)
+  & nminus ~ *
+  & @add_unique_edge ~ ((cu cv) acc newacc)
+  & @map_edges ~ (rest C newacc out)
+
+@me_yx = (cu cv rest C acc out)
+  & @add_unique_edge ~ ((cv cu) acc newacc)
+  & @map_edges ~ (rest C newacc out)
+
+@add_unique_edge = (edge acc out)
+  & @edge_member ~ (edge acc found)
+  & found ~ ?((@ae_add @ae_skip) (edge acc out))
+
+@ae_add = (edge acc out)
+  & out ~ (1 (edge acc))
+
+@ae_skip = (nminus edge acc out)
+  & nminus ~ *
+  & edge ~ (x y)
+  & x ~ *
+  & y ~ *
+  & out ~ acc
+
+@edge_member = (edge lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@em_nil @em_cons) (payload edge out))
+
+@em_nil = (payload edge out)
+  & payload ~ *
+  & out ~ 0
+
+@em_cons = (nminus (payload edge out))
+  & nminus ~ *
+  & payload ~ (e rest)
+  & @edge_eq ~ (edge e eq)
+  & eq ~ ?((@em_rec @em_yes) (rest edge out))
+
+@em_rec = (rest edge out)
+  & @edge_member ~ (edge rest out)
+
+@em_yes = (nminus rest edge out)
+  & nminus ~ *
+  & rest ~ *
+  & edge ~ (x y)
+  & x ~ *
+  & y ~ *
+  & out ~ 1
+
+@edge_eq = (e1 e2 out)
+  & e1 ~ (x1 y1)
+  & e2 ~ (x2 y2)
+  & x1 ~ $([=] $(x2 ex))
+  & y1 ~ $([=] $(y2 ey))
+  & ex ~ $([&] $(ey out))
+
+@sort_edges = (lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@se_nil @se_cons) (payload out))
+
+@se_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@se_cons = (nminus (payload out))
+  & nminus ~ *
+  & payload ~ (x rest)
+  & @sort_edges ~ (rest sortedRest)
+  & @insert_edge ~ (x sortedRest out)
+
+@insert_edge = (x lst out)
+  & lst ~ (tag payload)
+  & tag ~ ?((@ie_nil @ie_cons) (payload x out))
+
+@ie_nil = (payload x out)
+  & payload ~ *
+  & out ~ (1 (x (0 *)))
+
+@ie_cons = (nminus (payload x out))
+  & nminus ~ *
+  & payload ~ (y rest)
+  & @le_edge ~ (x y le)
+  & le ~ ?((@ie_after @ie_before) (x y rest out))
+
+@ie_after = (x y rest out)
+  & @insert_edge ~ (x rest newrest)
+  & out ~ (1 (y newrest))
+
+@ie_before = (nminus x y rest out)
+  & nminus ~ *
+  & out ~ (1 (x (1 (y rest))))
+
+@le_edge = (e1 e2 out)
+  & e1 ~ (x1 y1)
+  & e2 ~ (x2 y2)
+  & x1 ~ $([<] $(x2 lt_x))
+  & lt_x ~ ?((@le_edge_true @le_edge_check_eq) (x1 y1 x2 y2 out))
+
+@le_edge_true = (x1 y1 x2 y2 out)
+  & x1 ~ *
+  & y1 ~ *
+  & x2 ~ *
+  & y2 ~ *
+  & out ~ 1
+
+@le_edge_check_eq = (x1 y1 x2 y2 out)
+  & x1 ~ $([=] $(x2 eq_x))
+  & eq_x ~ ?((@le_edge_check_y @le_edge_false) (y1 y2 out))
+
+@le_edge_false = (y1 y2 out)
+  & y1 ~ *
+  & y2 ~ *
+  & out ~ 0
+
+@le_edge_check_y = (y1 y2 out)
+  & y1 ~ $([<] $(y2 lt_y))
+  & lt_y ~ ?((@le_edge_true2 @le_edge_eq_check) (y1 y2 out))
+
+@le_edge_true2 = (y1 y2 out)
+  & y1 ~ *
+  & y2 ~ *
+  & out ~ 1
+
+@le_edge_eq_check = (y1 y2 out)
+  & y1 ~ $([=] $(y2 eq_y))
+  & eq_y ~ ?((@le_edge_true3 @le_edge_false2) out)
+
+@le_edge_true3 = (out)
+  & out ~ 1
+
+@le_edge_false2 = (nminus out)
+  & nminus ~ *
+  & out ~ 0
+
+// ------------- build P -------------
+
+@build_P = (attrs C out)
+  & @map_attrs ~ (attrs C (0 *) rawTriples)
+  & @group_attrs ~ (rawTriples (0 *) grouped)
+  & @mode_groups ~ (grouped (0 *) triples)
+  & @sort_attr_triples ~ (triples out)
+
+@map_attrs = (attrs C acc out)
+  & attrs ~ (tag payload)
+  & tag ~ ?((@map_attrs_nil @map_attrs_cons) (payload C acc out))
+
+@map_attrs_nil = (payload C acc out)
+  & payload ~ *
+  & out ~ acc
+
+@map_attrs_cons = (nminus (payload C acc out))
+  & nminus ~ *
+  & payload ~ (attr rest)
+  & attr ~ (node (key value))
+  & @list_nth ~ (node C cid)
+  & @map_attrs ~ (rest C acc tailAcc)
+  & out ~ (1 ((cid (key value)) tailAcc))
+
+@group_attrs = (triples acc out)
+  & triples ~ (tag payload)
+  & tag ~ ?((@group_nil @group_cons) (payload acc out))
+
+@group_nil = (payload acc out)
+  & payload ~ *
+  & out ~ acc
+
+@group_cons = (nminus (payload acc out))
+  & nminus ~ *
+  & payload ~ (trip rest)
+  & @group_insert ~ (trip acc newacc)
+  & @group_attrs ~ (rest newacc out)
+
+@group_insert = (trip groups out)
+  & trip ~ (cid (key value))
+  & @search_group ~ (cid key groups found_group)
+  & found_group ~ ?((@group_add @group_new) (cid key value trip groups out))
+
+@group_new = (cid key value trip groups out)
+  & trip ~ *
+  & cid ~ *
+  & key ~ *
+  & value ~ *
+  & out ~ (1 ((cid (key (1 (value (0 *))))) groups))
+
+@group_add = (nminus cid key value trip groups out)
+  & nminus ~ *
+  & trip ~ *
+  & @add_value_to_group ~ (cid key value groups out)
+
+@search_group = (cid key groups out)
+  & groups ~ (tag payload)
+  & tag ~ ?((@sg_nil @sg_cons) (payload cid key out))
+
+@sg_nil = (payload cid key out)
+  & payload ~ *
+  & cid ~ *
+  & key ~ *
+  & out ~ 0
+
+@sg_cons = (nminus (payload cid key out))
+  & nminus ~ *
+  & payload ~ (g rest)
+  & g ~ (gcid (gkey vals))
+  & gcid ~ $([=] $(cid eq_cid))
+  & gkey ~ $([=] $(key eq_key))
+  & eq_cid ~ $([&] $(eq_key same))
+  & same ~ ?((@sg_no @sg_yes) (cid key g rest out))
+
+@sg_no = (cid key g rest out)
+  & g ~ *
+  & @search_group ~ (cid key rest out)
+
+@sg_yes = (nminus cid key g rest out)
+  & nminus ~ *
+  & cid ~ *
+  & key ~ *
+  & g ~ *
+  & rest ~ *
+  & out ~ 1
+
+@add_value_to_group = (cid key value groups out)
+  & groups ~ (tag payload)
+  & tag ~ ?((@avg_nil @avg_cons) (payload cid key value out))
+
+@avg_nil = (payload cid key value out)
+  & payload ~ *
+  & cid ~ *
+  & key ~ *
+  & value ~ *
+  & out ~ groups
+
+@avg_cons = (nminus (payload cid key value out))
+  & nminus ~ *
+  & payload ~ (g rest)
+  & g ~ (gcid (gkey vals))
+  & gcid ~ $([=] $(cid eq_cid))
+  & gkey ~ $([=] $(key eq_key))
+  & eq_cid ~ $([&] $(eq_key same))
+  & same ~ ?((@avg_no @avg_yes) (cid key value g rest out))
+
+@avg_no = (cid key value g rest out)
+  & g ~ *
+  & @add_value_to_group ~ (cid key value rest out)
+
+@avg_yes = (nminus cid key value g rest out)
+  & nminus ~ *
+  & cid ~ *
+  & key ~ *
+  & value ~ *
+  & g ~ (gcid (gkey vals))
+  & gcid ~ *
+  & gkey ~ *
+  & @value_member ~ (value vals found)
+  & found ~ ?((@avg_add_value @avg_inc_value) (value vals rest out))
+
+@avg_add_value = (value vals rest out)
+  & vals ~ (0 *)
+  & value ~ *
+  & out ~ (1 ((gcid (gkey (1 (value (0 *))))) rest))
+
+@mode_groups = (grouped acc out)
+  & out ~ grouped
+
+@sort_attr_triples = (triples out)
+  & out ~ triples

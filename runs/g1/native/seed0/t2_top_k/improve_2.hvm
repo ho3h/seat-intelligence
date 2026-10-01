@@ -1,0 +1,97 @@
+// Balanced merge sort, followed by taking at most k elements.
+
+@prog = ((k xs) out)
+  & @msort ~ (xs sorted)
+  & @take ~ (k (sorted out))
+
+@msort = ((?((@msort_nil @msort_cons) (pl out)) pl) out)
+
+@msort_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@msort_cons = (* ((h t) out))
+  & @msort_tail ~ (t (h out))
+
+@msort_tail = ((?((@msort_tail_nil @msort_tail_cons) (pl (h out))) pl) (h out))
+
+@msort_tail_nil = (pl (h out))
+  & pl ~ *
+  & out ~ (1 (h (0 *)))
+
+@msort_tail_cons = (* ((h2 t2) (h out)))
+  & @split ~ ((1 (h (1 (h2 t2)))) halves)
+  & halves ~ (left right)
+  & @msort ~ (left sl)
+  & @msort ~ (right sr)
+  & @merge ~ (sl (sr out))
+
+// Distribute alternating list elements into two lists.
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split_tail ~ (t (h out))
+
+@split_tail = ((?((@split_tail_nil @split_tail_cons) (pl (h out))) pl) (h out))
+
+@split_tail_nil = (pl (h out))
+  & pl ~ *
+  & out ~ ((1 (h (0 *))) (0 *))
+
+@split_tail_cons = (* ((h2 t2) (h out)))
+  & @split ~ (t2 halves)
+  & halves ~ (a b)
+  & out ~ ((1 (h a)) (1 (h2 b)))
+
+// Merge two descending lists.
+@merge = ((?((@merge_a_nil @merge_a_cons) (pa (b out))) pa) (b out))
+
+@merge_a_nil = (pa (b out))
+  & pa ~ *
+  & out ~ b
+
+@merge_a_cons = (* ((ha ta) (b out)))
+  & @merge_b ~ (b (ha (ta out)))
+
+@merge_b = ((?((@merge_b_nil @merge_b_cons) (pb (ha (ta out)))) pb) (ha (ta out)))
+
+@merge_b_nil = (pb (ha (ta out)))
+  & pb ~ *
+  & out ~ (1 (ha ta))
+
+@merge_b_cons = (* ((hb tb) (ha (ta out))))
+  & ha ~ {ha_cmp ha_keep}
+  & hb ~ {hb_cmp hb_keep}
+  & ha_cmp ~ $([<] $(hb_cmp z))
+  & z ~ ?((@merge_take_a @merge_take_b) (ha_keep (ta (hb_keep (tb out))))
+
+@merge_take_a = (ha (ta (hb (tb out))))
+  & @merge ~ (ta ((1 (hb tb)) rest))
+  & out ~ (1 (ha rest))
+
+@merge_take_b = (* (ha (ta (hb (tb out)))))
+  & @merge ~ ((1 (ha ta)) (tb rest))
+  & out ~ (1 (hb rest))
+
+// Return Nil for k=0; otherwise consume one element and decrement k.
+@take = (?((@take_zero @take_pos) ctx) ctx)
+
+@take_zero = (xs out)
+  & xs ~ *
+  & out ~ (0 *)
+
+@take_pos = (km ((?((@take_nil @take_cons) (pl (km out))) pl) out))
+
+@take_nil = (pl (km out))
+  & pl ~ *
+  & km ~ *
+  & out ~ (0 *)
+
+@take_cons = (* (pl (km out)))
+  & pl ~ (h t)
+  & @take ~ (km (t rest))
+  & out ~ (1 (h rest))

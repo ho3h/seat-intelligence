@@ -1,0 +1,51 @@
+@prog = (l out)
+  & @build ~ (l ((0 *) s))
+  & @best ~ (s (0 (0 out)))
+
+@build = ((?((@build_nil @build_cons) (pl (acc out))) pl) (acc out))
+
+@build_nil = (* (a a))
+
+@build_cons = (* ((h t) (acc out)))
+  & @ins ~ (h (acc acc2))
+  & @build ~ (t (acc2 out))
+
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* (1 ((x 1) (0 *)))))
+
+@ins_cons = (* (x (((v c) t) out)))
+  & x ~ {x1 x2}
+  & v ~ {v1 v2}
+  & x1 ~ $([<] $(v1 lt))
+  & lt ~ ?((@ins_ge @ins_lt) (x2 (v2 (c (t out)))))
+
+@ins_lt = (* (x (v (c (t (1 ((x 1) (1 ((v c) t)))))))))
+
+@ins_ge = (x (v (c (t out))))
+  & x ~ {x1 x2}
+  & v ~ {v1 v2}
+  & x1 ~ $([=] $(v1 eq))
+  & eq ~ ?((@ins_gt @ins_eq) (x2 (v2 (c (t out)))))
+
+@ins_gt = (x (v (c (t (1 ((v c) rest))))))
+  & @ins ~ (x (t rest))
+
+@ins_eq = (* (* (v (c (t (1 ((v c2) t)))))))
+  & c ~ $([+] $(1 c2))
+
+@best = ((?((@best_nil @best_cons) (pl (bv (bc out)))) pl) (bv (bc out)))
+
+@best_nil = (* (a (* a)))
+
+@best_cons = (* (((v c) t) (bv (bc out))))
+  & c ~ {c1 c2}
+  & bc ~ {bc1 bc2}
+  & c1 ~ $([>] $(bc1 gt))
+  & gt ~ ?((@best_no @best_yes) (v (c2 (bv (bc2 (t out))))))
+
+@best_no = (* (* (bv (bc (t out)))))
+  & @best ~ (t (bv (bc out)))
+
+@best_yes = (* (v (c (* (* (t out))))))
+  & @best ~ (t (v (c out)))

@@ -1,0 +1,34 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = ((?((@lis_nil @lis_cons) (pl (tails out))) pl) (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails (0 out))
+
+@lis_cons = (* ((h t) (tails out)))
+  & @ins ~ (tails (h tails2))
+  & @lis ~ (t (tails2 out))
+
+@ins = ((?((@ins_nil @ins_cons) (pl (x res))) pl) (x res))
+
+@ins_nil = (* (x (1 (x (0 *)))))
+
+@ins_cons = (* ((h t) (x res)))
+  & h ~ {h1 h2}
+  & x ~ {x1 x2}
+  & h1 ~ $([<] $(x1 c))
+  & c ~ ?((@ins_ge @ins_lt) (h2 (x2 (t res))))
+
+@ins_ge = (* (x (t (1 (x t)))))
+
+@ins_lt = (* (h (x (t (1 (h rest))))))
+  & @ins ~ (t (x rest))
+
+@len = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) (acc out)))
+  & acc ~ $([+] $(1 acc2))
+  & @len ~ (t (acc2 out))

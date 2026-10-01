@@ -1,0 +1,43 @@
+@prog = (input out)
+  & input ~ (k xs)
+  & @sort ~ (xs sorted)
+  & @nth ~ (k (sorted out))
+
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* (0 *))
+
+@sort_cons = (* ((h t) out))
+  & @sort ~ (t sorted)
+  & @ins ~ (h (sorted out))
+
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* (1 (x (0 *)))))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x_cmp x_keep}
+  & h ~ {h_cmp h_keep}
+  & x_cmp ~ $([>] $(h_cmp z))
+  & z ~ ?((@ins_before @ins_after) (x_keep (h_keep (t out))))
+
+@ins_before = (x (h (t (1 (x (1 (h t)))))))
+
+@ins_after = (* (x (h (t out))))
+  & @ins ~ (x (t tail))
+  & out ~ (1 (h tail))
+
+@nth = (k ((?((@nth_nil @nth_cons) (k (pl out))) pl) out))
+
+@nth_nil = (* (* 0))
+
+@nth_cons = (* (k ((h t) out)))
+  & k ~ ?((@nth_head @nth_tail) (h (t out)))
+
+@nth_head = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@nth_tail = (k (h (t out)))
+  & h ~ *
+  & @nth ~ (k (t out))

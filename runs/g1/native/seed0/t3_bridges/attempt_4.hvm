@@ -1,0 +1,156 @@
+// For each edge, test whether its endpoints remain connected when that edge
+// is excluded. Count the edge if they do not.
+@prog = ((n edges) out)
+  & n ~ {n1 n2}
+  & edges ~ {candidates graph}
+  & n2 ~ *
+  & @each ~ (candidates (graph (n1 (0 out))))
+
+@each = ((?((@each_nil @each_cons) (p (g (n (acc out))))) p) (g (n (acc out))))
+
+@each_nil = (* (g (n (acc out))))
+  & g ~ *
+  & n ~ *
+  & out ~ acc
+
+@each_cons = (* (((u v) t) (g (n (acc out)))))
+  & u ~ {u1 u2}
+  & g ~ {gr gc}
+  & n ~ {nr nc}
+  & @reach ~ (nr (gr (u1 (v (1 (u2 (0 *))) connected))))
+  & connected ~ ?((@is_bridge @not_bridge) (t (gc (nc (acc out)))))
+
+@is_bridge = (t (g (n (acc out))))
+  & acc ~ $([+1] acc2)
+  & @each ~ (t (g (n (acc2 out))))
+
+@not_bridge = (* (t (g (n (acc out)))))
+  & @each ~ (t (g (n (acc out))))
+
+// Repeatedly scan the graph, adding vertices reachable from u.
+// Stop early when v has been reached.
+@reach = (?((@reach_done @reach_step) (g (u (v (vis out))))) (g (u (v (vis out)))))
+
+@reach_done = (g (u (v (vis out))))
+  & g ~ *
+  & u ~ *
+  & @mem ~ (vis (v out))
+
+@reach_step = (p (g (u (v (vis out)))))
+  & g ~ {gs gr}
+  & u ~ {u1 u2}
+  & v ~ {v1 vx}
+  & vx ~ {v2 v3}
+  & @scan ~ (gs (u1 (v1 (vis vis2))))
+  & vis2 ~ {vm vr}
+  & @mem ~ (vm (v3 found))
+  & found ~ ?((@reach_continue @reach_found) (p (gr (u2 (v2 (vr out)))))
+
+@reach_continue = (p (g (u (v (vis out)))))
+  & @reach ~ (p (g (u (v (vis out)))))
+
+@reach_found = (* (p (g (u (v (vis out))))))
+  & p ~ *
+  & g ~ *
+  & u ~ *
+  & v ~ *
+  & vis ~ *
+  & out ~ 1
+
+// Scan every edge, updating the reached-vertex list.
+@scan = ((?((@scan_nil @scan_cons) (p (u (v (vis out))))) p) (u (v (vis out))))
+
+@scan_nil = (* (u (v (vis out))))
+  & u ~ *
+  & v ~ *
+  & out ~ vis
+
+@scan_cons = (* (((a b) t) (u (v (vis out)))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @edgeproc ~ ((a b) ((u1 v1) (vis vis2)))
+  & @scan ~ (t (u2 (v2 (vis2 out))))
+
+// Skip the excluded edge; otherwise add any newly reached endpoints.
+@edgeproc = ((a b) ((u v) (vis out)))
+  & a ~ {ae ac}
+  & b ~ {be bc}
+  & u ~ {ue ux}
+  & v ~ {ve vx}
+  & ux ~ *
+  & vx ~ *
+  & @eqnum ~ (ae (ue e1))
+  & @eqnum ~ (be (ve e2))
+  & e1 ~ $([&] $(e2 z))
+  & z ~ ?((@edge_process @edge_skip) (ac (bc (vis out))))
+
+@edge_skip = (* (a (b (vis out))))
+  & a ~ *
+  & b ~ *
+  & out ~ vis
+
+@edge_process = (a (b (vis out)))
+  & a ~ {am aa}
+  & b ~ {bm bb}
+  & vis ~ {va vx}
+  & vx ~ {vb vk}
+  & @mem ~ (va (am ma))
+  & @mem ~ (vb (bm mb))
+  & ma ~ {ma_or ma_ctx}
+  & mb ~ {mb_or mb_ctx}
+  & ma_or ~ $([|] $(mb_or z))
+  & z ~ ?((@edge_none @edge_add) (aa (bb (ma_ctx (mb_ctx (vk out))))))
+
+@edge_none = (a (b (ma (mb (vis out)))))
+  & a ~ *
+  & b ~ *
+  & ma ~ *
+  & mb ~ *
+  & out ~ vis
+
+@edge_add = (* (a (b (ma (mb (vis out))))))
+  & ma ~ ?((@append_a @skip_a) (a (b (mb (vis out)))))
+
+@append_a = (a (b (mb (vis out))))
+  & mb ~ ?((@append_b @append_only_a) (a (b (vis out))))
+
+@append_b = (a (b (vis out)))
+  & out ~ (1 (a (1 (b vis))))
+
+@append_only_a = (* (a (b (vis out))))
+  & b ~ *
+  & out ~ (1 (a vis))
+
+@skip_a = (* (a (b (mb (vis out)))))
+  & a ~ *
+  & mb ~ ?((@append_only_b @append_none) (b (vis out)))
+
+@append_only_b = (b (vis out))
+  & out ~ (1 (b vis))
+
+@append_none = (* (b (vis out)))
+  & b ~ *
+  & out ~ vis
+
+@eqnum = (a (b out))
+  & a ~ $([=] $(b out))
+
+// Membership test for a number in a list of numbers.
+@mem = ((?((@mem_nil @mem_cons) (p (x out))) p) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (t (x2 out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1

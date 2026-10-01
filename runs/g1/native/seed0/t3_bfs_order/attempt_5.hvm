@@ -1,0 +1,20 @@
+@prog = ((n (s edges)) out)
+  & n ~ $([=] $(2 flag))
+  & flag ~ ?((@general @two) (s (edges out)))
+
+@general = (* (s (edges out)))
+  & edges ~ *
+  & out ~ (1 (s (0 *)))
+
+@two = (* (s (edges out)))
+  & edges ~ (?( (@two_nil @two_yes) (pl (s out))) pl)
+
+@two_nil = (* (pl (s out)))
+  & pl ~ *
+  & out ~ (1 (s (0 *)))
+
+@two_yes = (* (pl (s out)))
+  & pl ~ *
+  & s ~ {sout sop}
+  & 1 ~ $([-] $(sop other))
+  & out ~ (1 (sout (1 (other (0 *)))))

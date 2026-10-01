@@ -1,0 +1,50 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@collect_bad = ((@collect_bad__C2 a) a)
+
+@collect_bad__C0 = (* a)
+  & @List/Cons ~ a
+
+@collect_bad__C1 = (* ((b d) (h ({i {c a}} k))))
+  & @value_at ~ (a (b {$([=] $(e ?(((* (f f)) @collect_bad__C0) (g (j k))))) g}))
+  & @value_at ~ (c (d e))
+  & @collect_bad ~ (h (i j))
+
+@collect_bad__C2 = (?(((* @List/Nil) @collect_bad__C1) a) a)
+
+@contains = ((@contains__C2 a) a)
+
+@contains__C0 = (b (a c))
+  & @contains ~ (a (b c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@prog = (({a {b d}} c) f)
+  & @scan_nodes ~ (a (b (e (0 f))))
+  & @collect_bad ~ (c (d e))
+
+@scan_nodes = (a ((@scan_nodes__C2 (a b)) b))
+
+@scan_nodes__C0 = (* (a (b d)))
+  & @List/Cons ~ (c d)
+  & @contains ~ (a (b c))
+
+@scan_nodes__C1 = (* ($([=] $(a ?(((* (* (b b))) @scan_nodes__C0) (c (d (i j)))))) (f (e ({c g} ({a {d $([+0x0000001] h)}} j))))))
+  & @scan_nodes ~ (e (f (g (h i))))
+
+@scan_nodes__C2 = (?(((* (* (* @List/Nil))) @scan_nodes__C1) a) a)
+
+@value_at = ((@value_at__C2 a) a)
+
+@value_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @value_at ~ (a (b c))
+
+@value_at__C1 = (* (c (d ({$([=0x0000000] ?((@value_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@value_at__C2 = (?(((* 0) @value_at__C1) a) a)
+
+

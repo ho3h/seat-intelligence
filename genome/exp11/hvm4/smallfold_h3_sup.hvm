@@ -1,0 +1,19 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@sel = λ{ 0: λa. λb. b; _: λc. λa. λb. a }
+@min = λ&a. λ&b. @sel((a < b), a, b)
+@max = λ&a. λ&b. @sel((a < b), b, a)
+@ev = λ{
+  #A: λa. λx. a
+  #X: λa. λx. x
+  #K: λk. λa. λx. k
+  #Mod: λm. λe. λa. λx. (@ev(e, a, x) % m)
+  #Add: λl. λr. λ&a. λ&x. (@ev(l, a, x) + @ev(r, a, x))
+  #Mul: λl. λr. λ&a. λ&x. (@ev(l, a, x) * @ev(r, a, x))
+  #Xor: λl. λr. λ&a. λ&x. (@ev(l, a, x) ^ @ev(r, a, x))
+}
+
+@fold = λ{ []: λacc. λp. acc; <>: λx. λxs. λacc. λ&p. @fold(xs, @ev(p, acc, x), p) }
+@chk = λ{ []: λys. λp. p; <>: λxs. λxss. λ{ <>: λy. λys. λ&p. @g((@fold(xs, 0, p) == y), @chk(xss, ys, p)); []: λp. &{} } }
+@P = &LCY{&LCZ{#A{},&LDA{#X{},#K{1}}},&LDB{#Add{&LM{&LN{#A{},&LO{#X{},#K{1}}},&LP{#Add{&LA{#A{},&LB{#X{},#K{1}}},&LC{#A{},&LD{#X{},#K{1}}}},&LQ{#Mul{&LE{#A{},&LF{#X{},#K{1}}},&LG{#A{},&LH{#X{},#K{1}}}},#Xor{&LI{#A{},&LJ{#X{},#K{1}}},&LK{#A{},&LL{#X{},#K{1}}}}}}},&LAD{&LAE{#A{},&LAF{#X{},#K{1}}},&LAG{#Add{&LR{#A{},&LS{#X{},#K{1}}},&LT{#A{},&LU{#X{},#K{1}}}},&LAH{#Mul{&LV{#A{},&LW{#X{},#K{1}}},&LX{#A{},&LY{#X{},#K{1}}}},#Xor{&LZ{#A{},&LAA{#X{},#K{1}}},&LAB{#A{},&LAC{#X{},#K{1}}}}}}}},&LDC{#Mul{&LAU{&LAV{#A{},&LAW{#X{},#K{1}}},&LAX{#Add{&LAI{#A{},&LAJ{#X{},#K{1}}},&LAK{#A{},&LAL{#X{},#K{1}}}},&LAY{#Mul{&LAM{#A{},&LAN{#X{},#K{1}}},&LAO{#A{},&LAP{#X{},#K{1}}}},#Xor{&LAQ{#A{},&LAR{#X{},#K{1}}},&LAS{#A{},&LAT{#X{},#K{1}}}}}}},&LBL{&LBM{#A{},&LBN{#X{},#K{1}}},&LBO{#Add{&LAZ{#A{},&LBA{#X{},#K{1}}},&LBB{#A{},&LBC{#X{},#K{1}}}},&LBP{#Mul{&LBD{#A{},&LBE{#X{},#K{1}}},&LBF{#A{},&LBG{#X{},#K{1}}}},#Xor{&LBH{#A{},&LBI{#X{},#K{1}}},&LBJ{#A{},&LBK{#X{},#K{1}}}}}}}},#Xor{&LCC{&LCD{#A{},&LCE{#X{},#K{1}}},&LCF{#Add{&LBQ{#A{},&LBR{#X{},#K{1}}},&LBS{#A{},&LBT{#X{},#K{1}}}},&LCG{#Mul{&LBU{#A{},&LBV{#X{},#K{1}}},&LBW{#A{},&LBX{#X{},#K{1}}}},#Xor{&LBY{#A{},&LBZ{#X{},#K{1}}},&LCA{#A{},&LCB{#X{},#K{1}}}}}}},&LCT{&LCU{#A{},&LCV{#X{},#K{1}}},&LCW{#Add{&LCH{#A{},&LCI{#X{},#K{1}}},&LCJ{#A{},&LCK{#X{},#K{1}}}},&LCX{#Mul{&LCL{#A{},&LCM{#X{},#K{1}}},&LCN{#A{},&LCO{#X{},#K{1}}}},#Xor{&LCP{#A{},&LCQ{#X{},#K{1}}},&LCR{#A{},&LCS{#X{},#K{1}}}}}}}}}}}
+@main = @chk([[2,9,1,4],[1,7,7,7],[6,3,1,7]], [45,400,36], @P)

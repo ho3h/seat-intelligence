@@ -1,0 +1,58 @@
+# t3_walk_count: meet in the middle. Walks of length k from s to t = sum over v of (walks s ~> v of length k1) *
+# (walks v ~> t of length k2), k1 + k2 = k. One list walk wires two channel networks (lib/chan_gen): forward (v
+# listens to u for an arc u -> v) and backward (u listens to v). Each runs a fixed number of synchronous rounds with
+# no global test (c_{r+1}(v) = sum of the neighbours' c_r, a balanced add over the Braun tree of input streams):
+# ceil(k/2) rounds from s forwards and floor(k/2) from t backwards, in parallel. Answer: a balanced dot product.
+#include base
+#include chan_gen
+def prog(x):
+  (n, s, t, k, es) = x
+  if (s >= n) | (t >= n):
+    return 0
+  else:
+    (l, m) = lvl(n, 0, 1)
+    (TF, TB) = walk2(es, zio(l), zio(l), l, m)
+    (F, z1) = run_fixed(TF, s, (k + 1) / 2, l, n)
+    (B, z2) = run_fixed(TB, t, k / 2, l, n)
+    return z1 + z2 + dot(F, B, l, 0, n)
+
+def walk2(es, TF, TB, l, m):
+  match es:
+    case List/Nil:
+      return (TF, TB)
+    case List/Cons:
+      (u, v) = es.head
+      TF2 = add_in(add_out(TF, u, l, m, lambda $a: 0), v, l, m, (0, $a))
+      TB2 = add_in(add_out(TB, v, l, m, lambda $b: 0), u, l, m, (0, $b))
+      return walk2(es.tail, TF2, TB2, l, m)
+
+def dot(F, B, l, base, n):
+  switch l:
+    case 0:
+      return (base < n) * F * B
+    case _:
+      (f1, f2) = F
+      (b1, b2) = B
+      h = 1 << (l-1)
+      return dot(f1, b1, l-1, base, n) + dot(f2, b2, l-1, base + h, n)
+
+def lab0(mode, base):
+  return base == mode
+
+def out(mode, st):
+  return st
+
+def pre(mode, meta, h):
+  return h
+
+def unit(mode):
+  return 0
+
+def comb(mode, a, b):
+  return a + b
+
+def upd(mode, st, x):
+  return (x, 0)
+
+def fin(mode, base, st, ins):
+  return ([], st)

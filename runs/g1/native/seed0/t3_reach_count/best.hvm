@@ -1,0 +1,68 @@
+// Depth-first traversal using a worklist and a visited list.
+@prog = (input out)
+  & input ~ (n (s edges))
+  & n ~ *
+  & @walk ~ ((1 (s (0 *))) ((0 *) (edges (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (visited (edges (count out))))) pl) (visited (edges (count out))))
+
+@walk_nil = (* (visited (edges (count out))))
+  & visited ~ *
+  & edges ~ *
+  & count ~ out
+
+@walk_cons = (* ((v tail) (visited (edges (count out)))))
+  & v ~ {v_mem v_keep}
+  & visited ~ {vis_mem vis_keep}
+  & @mem ~ (vis_mem (v_mem z))
+  & z ~ ?((@walk_new @walk_seen) (tail (v_keep (vis_keep (edges (count out))))))
+
+@walk_new = (tail (v (visited (edges (count out)))))
+  & v ~ {src_scan v_visit}
+  & edges ~ {edge_scan edge_walk}
+  & count ~ $([+] $(1 count2))
+  & @scan ~ (edge_scan (src_scan (tail scanned)))
+  & @walk ~ (scanned ((1 (v_visit visited)) (edge_walk (count2 out))))
+
+@walk_seen = (* (tail (v (visited (edges (count out))))))
+  & v ~ *
+  & @walk ~ (tail (visited (edges (count out))))
+
+// Scan edges, adding destinations whose source is the current vertex.
+@scan = ((?((@scan_nil @scan_cons) (pl (src (stack out)))) pl) (src (stack out)))
+
+@scan_nil = (* (src (stack out)))
+  & src ~ *
+  & stack ~ out
+
+@scan_cons = (* (((u dest) rest) (src (stack out))))
+  & src ~ {src_cmp src_keep}
+  & u ~ $([=] $(src_cmp z))
+  & z ~ ?((@scan_skip @scan_push) (rest (src_keep (stack (dest out)))))
+
+@scan_skip = (rest (src (stack (dest out))))
+  & dest ~ *
+  & @scan ~ (rest (src (stack out)))
+
+@scan_push = (* (rest (src (stack (dest out)))))
+  & @scan ~ (rest (src ((1 (dest stack)) out)))
+
+// Test whether target is in a list.
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & h ~ $([=] $(target_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (tail (target_keep out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1

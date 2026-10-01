@@ -1,0 +1,140 @@
+@prog = (input out)
+  & input ~ (n pairs)
+  & @build ~ (n (0 labels))
+  & @edges ~ (pairs (labels done))
+  & done ~ {cand all}
+  & @largest ~ (cand (all out))
+
+@build = (n (idx out))
+  & n ~ ?((@b_zero @b_succ) (idx out))
+
+@b_zero = (idx out)
+  & idx ~ *
+  & out ~ (0 *)
+
+@b_succ = (m (idx out))
+  & @build_step ~ (m (idx out))
+
+@build_step = (m (idx out))
+  & idx ~ {i1 i2}
+  & out ~ (1 (i1 tail))
+  & i2 ~ $([+1] next)
+  & @build ~ (m (next tail))
+
+@edges = ((?((@e_nil @e_cons) (payload (labels out))) payload) (labels out))
+
+@e_nil = (payload (labels out))
+  & payload ~ *
+  & labels ~ out
+
+@e_cons = (* ((edge tail) (labels out)))
+  & edge ~ (u v)
+  & @merge ~ (u (v (labels next)))
+  & @edges ~ (tail (next out))
+
+@merge = (u (v (labels out)))
+  & labels ~ {l1 rest}
+  & rest ~ {l2 l3}
+  & @get ~ (u (l1 lu))
+  & @get ~ (v (l2 lv))
+  & @replace ~ (l3 (lu (lv out)))
+
+@get = (idx (list out))
+  & idx ~ ?((@g_zero @g_succ) (list out))
+
+@g_zero = ((?((@g_nil @g_cons) (payload out)) payload) out)
+
+@g_nil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@g_cons = (* (payload out))
+  & payload ~ (h t)
+  & t ~ *
+  & out ~ h
+
+@g_succ = (idx (list out))
+  & @g_s_list ~ (list (idx out))
+
+@g_s_list = ((?((@gs_nil @gs_cons) (payload (idx out))) payload) (idx out))
+
+@gs_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@gs_cons = (* (payload (idx out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (idx (t out))
+
+@replace = ((?((@r_nil @r_cons) (payload (old (new out)))) payload) (old (new out)))
+
+@r_nil = (payload (old (new out)))
+  & payload ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@r_cons = (* ((h t) (old (new out))))
+  & @rep_one ~ (h (old (new (t out))))
+
+@rep_one = (h (old (new (t out))))
+  & h ~ {hc hr}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@rp_no @rp_yes) (hr (nc (or (nr (t out))))))
+
+@rp_no = (hr (nc (or (nr (t out)))))
+  & nc ~ *
+  & @replace ~ (t (or (nr rest)))
+  & out ~ (1 (hr rest))
+
+@rp_yes = (* (hr (nc (or (nr (t out))))))
+  & hr ~ *
+  & @replace ~ (t (or (nr rest)))
+  & out ~ (1 (nc rest))
+
+@largest = ((?((@l_nil @l_cons) (payload (all out))) payload) (all out))
+
+@l_nil = (payload (all out))
+  & payload ~ *
+  & all ~ *
+  & out ~ 0
+
+@l_cons = (* ((h t) (all out)))
+  & all ~ {a1 a2}
+  & @count ~ (a1 (h c))
+  & @largest ~ (t (a2 r))
+  & c ~ {cc cr}
+  & r ~ {rr rt}
+  & cc ~ $([>] $(rr z))
+  & z ~ ?((@max_no @max_yes) (cr (rt out)))
+
+@max_no = (cr (rt out))
+  & cr ~ *
+  & out ~ rt
+
+@max_yes = (* (cr (rt out)))
+  & rt ~ *
+  & cr ~ out
+
+@count = ((?((@c_nil @c_cons) (payload (target out))) payload) (target out))
+
+@c_nil = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ 0
+
+@c_cons = (* ((h t) (target out)))
+  & target ~ {tc tr}
+  & h ~ $([=] $(tc z))
+  & z ~ ?((@c_no @c_yes) (t (tr out)))
+
+@c_no = (t (tr out))
+  & @count ~ (t (tr out))
+
+@c_yes = (* (t (tr out)))
+  & @count ~ (t (tr sub))
+  & sub ~ $([+1] out)

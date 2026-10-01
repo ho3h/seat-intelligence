@@ -1,0 +1,75 @@
+# t3_bridges: exact bridge test by subtree XOR of incident-edge bitsets over a BFS forest.
+# 1. Channel label propagation (lib/chan_id) with labels root * 1024 + dist (min over neighbours + 1): every
+#    vertex learns its component's smallest id and its BFS distance to it.
+# 2. After the last round every vertex v picks its parent: the largest-id neighbour w with label(w) + 1 ==
+#    label(v) (the slot metadata gives w and the edge index i), and appends (parent, S_v) to its stream, where
+#    S_v = XOR of bit(i) over its incident edges XOR the S of the neighbours that chose v as parent (gated on
+#    their parent field only, so the dataflow runs leaves-up without cycles).
+# 3. S_v is the set of edges with exactly one end in v's subtree; the tree edge to v's parent is a bridge iff
+#    S_v == {that edge}. Bitsets are balanced trees of 24-bit words (lib/bits), depth from the edge count.
+#include base
+#include chan_id
+#include bits
+def prog(x):
+  (n, es) = x
+  (l, m) = lvl(n, 0, 1)
+  (T, cnt) = chan_walk(es, zio(l), l, m, 0)
+  (wl, q) = lvl(cnt / 24 + 1, 0, 1)
+  (F, z) = chan_gen(T, wl, 3, l, n)
+  return z + tsum(F, l, 0, n)
+
+def tsum(t, l, base, n):
+  switch l:
+    case 0:
+      return (base < n) * t
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return tsum(a, l-1, base, n) + tsum(b, l-1, base + h, n)
+
+def lab0(mode, base):
+  return base * 1024
+
+def upd(mode, lab, x):
+  y = x + (x < 16777215)
+  return lab - (lab > y) * (lab - y)
+
+def fin(mode, base, lab, ins):
+  (p, X, G) = scan(ins, lab, base, mode)
+  S = bxor(X, G, mode)
+  br = (p != 0) & beq(S, bit(p % 4096, mode), mode)
+  return ([(p, S)], br)
+
+# over the slots: (best parent candidate, XOR of incident edge bits, XOR of children's subtree sets)
+def scan(t, lab, v, wl):
+  match t:
+    case Br/Leaf:
+      return (0, bzero(wl), bzero(wl))
+    case Br/Node:
+      ((w, i), s) = t.e
+      (p1, x1, g1) = scan(t.l, lab, v, wl)
+      (p2, x2, g2) = scan(t.r, lab, v, wl)
+      (lw, pw, sw) = last2(s)
+      c = (lw + 1 == lab) * ((w + 1) * 4096 + i)
+      g = gate(pw / 4096 == v + 1, sw, wl)
+      return (max(c, max(p1, p2)), bxor(bit(i, wl), bxor(x1, x2, wl), wl), bxor(g, bxor(g1, g2, wl), wl))
+
+def gate(ok, s, wl):
+  if ok:
+    return s
+  else:
+    return bzero(wl)
+
+# the rest of a neighbour's stream after the last round: [label, (parent, S)]
+def last2(s):
+  match s:
+    case List/Nil:
+      return (16777215, 0, 0)
+    case List/Cons:
+      lw = s.head
+      match s.tail:
+        case List/Nil:
+          return (lw, 0, 0)
+        case List/Cons:
+          (pw, sw) = s.tail.head
+          return (lw, pw, sw)

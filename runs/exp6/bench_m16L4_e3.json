@@ -1,0 +1,31 @@
+{
+ "tag": "m16L4_e3",
+ "dsl_size": 16,
+ "max_len": 4,
+ "n_examples": 3,
+ "n_candidates": 69904,
+ "sup_itrs": 9512453,
+ "sup_wall": 0.709094762802124,
+ "sup_heap": 22227599,
+ "sup_survivors": 4,
+ "py_survivors": 4,
+ "ind_sample": 200,
+ "ind_mean_itrs": 251.76,
+ "ind_min": 86,
+ "ind_max": 650,
+ "ind_total_itrs_extrap": 17599031.04,
+ "ind_wall_extrap": 4766.094274063111,
+ "gain_itrs": 1.8501043884264132,
+ "first_sols": [
+  "[#Map{#Aff{2,1}},#Sort{},#Take{3},#Rev{}]",
+  "[#Sort{},#Map{#Aff{2,1}},#Take{3},#Rev{}]",
+  "[#Sort{},#Take{3},#Map{#Aff{2,1}},#Rev{}]",
+  "[#Sort{},#Take{3},#Rev{},#Map{#Aff{2,1}}]"
+ ],
+ "target": [
+  "sort",
+  "take3",
+  "aff2_1",
+  "rev"
+ ]
+}

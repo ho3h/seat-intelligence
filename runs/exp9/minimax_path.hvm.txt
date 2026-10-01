@@ -1,0 +1,15 @@
+// t3_minimax_path (GRAPH-SWING-2, runs/exp9): the wsp_dist net with the frontier core re-instantiated over the (min, max)
+// semiring: an emitted candidate is max(d, w) instead of d + w. Bellman-Ford converges to the bottleneck distance.
+@prog = ((n (s (t es))) out)
+  & n ~ ?((@mm_zero @mm_pos) (s (t (es out))))
+@mm_zero = (* (* (* 16777215)))
+@mm_pos = (nm1 (s (t (es out))))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 L4}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & @sssp_start ~ (n1 (s (L3 (16777215 (G Df)))))
+  & @get ~ (Df (t (n2 (L4 out))))

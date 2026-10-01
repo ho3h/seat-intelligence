@@ -1,0 +1,147 @@
+@prog = ((n (k pairs)) out)
+  & @build ~ (n (0 labels))
+  & @edges ~ (pairs (labels done))
+  & @count ~ (done (k out))
+
+@build = (rem (i out))
+  & rem ~ ?((@build_nil @build_cons) (i out))
+
+@build_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@build_cons = (rem (i out))
+  & i ~ {ih ir}
+  & ir ~ $([+1] i1)
+  & @build ~ (rem (i1 tail))
+  & out ~ (1 (ih tail))
+
+@edges = ((?((@edges_nil @edges_cons) (payload (labels out))) payload) (labels out))
+
+@edges_nil = (payload (labels out))
+  & payload ~ *
+  & out ~ labels
+
+@edges_cons = (zero (payload (labels out)))
+  & zero ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & labels ~ {lu lrest}
+  & lrest ~ {lv lmap}
+  & @get ~ (lu (u ulabel))
+  & @get ~ (lv (v vlabel))
+  & @replaceall ~ (lmap (vlabel (ulabel labels2)))
+  & @edges ~ (tail (labels2 out))
+
+@replaceall = ((?((@ra_nil @ra_cons) (payload (old (new out)))) payload) (old (new out)))
+
+@ra_nil = (payload (old (new out)))
+  & payload ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@ra_cons = (zero (payload (old (new out))))
+  & zero ~ *
+  & payload ~ (head tail)
+  & head ~ {hcmp hkeep}
+  & old ~ {ocmp okeep}
+  & new ~ {nhead nrest}
+  & hcmp ~ $([=] $(ocmp flag))
+  & flag ~ ?((@ra_no @ra_yes) (tail (hkeep (nhead (okeep (nrest out))))))
+
+@ra_no = (tail (head (new (old (newtail out)))))
+  & new ~ *
+  & @replaceall ~ (tail (old (newtail rest)))
+  & out ~ (1 (head rest))
+
+@ra_yes = (zero (tail (head (new (old (newtail out))))))
+  & zero ~ *
+  & head ~ *
+  & @replaceall ~ (tail (old (newtail rest)))
+  & out ~ (1 (new rest))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (zero (payload (idx out)))
+  & zero ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@get_here @get_later) (head (tail out)))
+
+@get_here = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_later = (rem (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (rem result))
+  & out ~ result
+
+@count = (labels (k out))
+  & labels ~ {walk master}
+  & @walk ~ (walk (master (k (0 (0 out)))))
+
+@walk = ((?((@walk_nil @walk_cons) (payload (master (k (i (acc out)))))) payload) (master (k (i (acc out)))))
+
+@walk_nil = (payload (master (k (i (acc out)))))
+  & payload ~ *
+  & master ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ acc
+
+@walk_cons = (zero (payload (master (k (i (acc out))))))
+  & zero ~ *
+  & payload ~ (head tail)
+  & master ~ {mf mn}
+  & k ~ {kf kn}
+  & i ~ {ic rest}
+  & rest ~ {target next}
+  & head ~ $([=] $(ic flag))
+  & flag ~ ?((@walk_no @walk_yes) (tail (mf (mn (kf (kn (target (next (acc out)))))))))
+
+@walk_no = (tail (mf (mn (kf (kn (target (next (acc out))))))))
+  & mf ~ *
+  & kf ~ *
+  & target ~ *
+  & @walk ~ (tail (mn (kn (next (acc out)))))
+
+@walk_yes = (zero (tail (mf (mn (kf (kn (target (next (acc out)))))))))
+  & zero ~ *
+  & @freq ~ (mf (target (0 f)))
+  & f ~ $([<] $(kf flag2))
+  & flag2 ~ ?((@qual_yes @qual_no) (tail (mn (kn (next (acc out))))))
+
+@qual_yes = (tail (master (k (i (acc out)))))
+  & acc ~ $([+1] acc1)
+  & @walk ~ (tail (master (k (i (acc1 out)))))
+
+@qual_no = (zero (tail (master (k (i (acc out))))))
+  & zero ~ *
+  & @walk ~ (tail (master (k (i (acc out)))))
+
+@freq = ((?((@freq_nil @freq_cons) (payload (target (cnt out)))) payload) (target (cnt out)))
+
+@freq_nil = (payload (target (cnt out)))
+  & payload ~ *
+  & target ~ *
+  & out ~ cnt
+
+@freq_cons = (zero (payload (target (cnt out))))
+  & zero ~ *
+  & payload ~ (head tail)
+  & target ~ {tc tr}
+  & head ~ $([=] $(tc flag))
+  & flag ~ ?((@freq_no @freq_yes) (tail (tr (cnt out))))
+
+@freq_no = (tail (target (cnt out)))
+  & @freq ~ (tail (target (cnt out)))
+
+@freq_yes = (tail (target (cnt out)))
+  & cnt ~ $([+1] cnt1)
+  & @freq ~ (tail (target (cnt1 out)))

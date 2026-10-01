@@ -1,0 +1,131 @@
+@prog = (input out)
+  & input ~ (n (k edges))
+  & @range ~ (n alive)
+  & @round ~ (alive (k (edges out)))
+
+@range = (n out)
+  & n ~ ?((@range_nil @range_succ) out)
+
+@range_nil = out
+  & out ~ (0 *)
+
+@range_succ = (rem out)
+  & rem ~ (r1 r2)
+  & @range ~ (r1 tail)
+  & out ~ (1 (r2 tail))
+
+@has = (target (lst out))
+  & lst ~ ?((@has_nil @has_cons) (payload (target out)))
+
+@has_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@has_cons = (* ((head tail) (target out)))
+  & target ~ {t1 t2}
+  & head ~ $([=] $(t1 z))
+  & z ~ ?((@has_no @has_yes) (tail (t2 out)))
+
+@has_no = (tail (target out))
+  & @has ~ (target (tail out))
+
+@has_yes = (tail (target out))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1
+
+@deg = (vertex (edges (alive (acc out))))
+  & edges ~ ?((@deg_nil @deg_cons) (payload (vertex (alive (acc out)))))
+
+@deg_nil = (* (vertex (alive (acc out))))
+  & vertex ~ *
+  & alive ~ *
+  & out ~ acc
+
+@deg_cons = (* (((u w) tail) (vertex (alive (acc out)))))
+  & @ec ~ (u (w (vertex (alive (tail (acc out))))))
+
+@ec = (u (w (vertex (alive (tail (acc out))))))
+  & u ~ {ueq uhas}
+  & w ~ {whas weq}
+  & vertex ~ {veq1 vtmp}
+  & vtmp ~ {veq2 vrec}
+  & alive ~ {alive1 atmp}
+  & atmp ~ {alive2 arec}
+  & ueq ~ $([=] $(veq1 e1))
+  & @has ~ (whas (alive1 h1))
+  & weq ~ $([=] $(veq2 e2))
+  & @has ~ (uhas (alive2 h2))
+  & @edge_sum ~ (e1 (h1 (e2 (h2 (tail (vrec (arec (acc out))))))))
+
+@edge_sum = (e1 (h1 (e2 (h2 (tail (vertex (alive (acc out))))))))
+  & e1 ~ $([*] $(h1 x))
+  & e2 ~ $([*] $(h2 y))
+  & x ~ $([+] $(y z))
+  & z ~ $([+] $(acc next))
+  & @deg ~ (vertex (tail (alive (next out))))
+
+@filter = (verts (k (edges (alive out))))
+  & verts ~ ?((@filter_nil @filter_cons) (payload (k (edges (alive out))))
+
+@filter_nil = (* (k (edges (alive out))))
+  & k ~ *
+  & edges ~ *
+  & alive ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((v tail) (k (edges (alive out)))))
+  & @f_check ~ (v (tail (k (edges (alive out)))))
+
+@f_check = (v (tail (k (edges (alive out)))))
+  & v ~ {vd vk}
+  & k ~ {kc kt}
+  & edges ~ {ed et}
+  & alive ~ {ad at}
+  & @deg ~ (vd (ed (ad (0 d))))
+  & d ~ $([<] $(kc lt))
+  & lt ~ $([=] $(0 keep))
+  & keep ~ ?((@f_drop @f_keep) (vk (tail (kt (et (at out))))))
+
+@f_drop = (v (tail (k (edges (alive out)))))
+  & v ~ *
+  & @filter ~ (tail (k (edges (alive out))))
+
+@f_keep = (* (v (tail (k (edges (alive out))))))
+  & @filter ~ (tail (k (edges (alive rest))))
+  & out ~ (1 (v rest))
+
+@round = (alive (k (edges out)))
+  & alive ~ {vertices tmp}
+  & tmp ~ {alive_filter oldalive}
+  & k ~ {kf kr}
+  & edges ~ {ef er}
+  & @filter ~ (vertices (kf (ef (alive_filter filtered))))
+  & @size ~ (oldalive oldsize)
+  & @round_after ~ (filtered (oldsize (kr (er out))))
+
+@round_after = (newalive (oldsize (k (edges out))))
+  & newalive ~ {size_list next_alive}
+  & @size ~ (size_list newsize)
+  & oldsize ~ $([=] $(newsize same))
+  & same ~ ?((@round_more @round_done) (newsize (next_alive (k (edges out)))))
+
+@round_more = (* (newsize (next_alive (k (edges out)))))
+  & @round ~ (next_alive (k (edges out)))
+
+@round_done = (newsize (next_alive (k (edges out))))
+  & next_alive ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ newsize
+
+@size = (lst out)
+  & lst ~ ?((@size_nil @size_cons) (payload out))
+
+@size_nil = (* out)
+  & out ~ 0
+
+@size_cons = (* ((head tail) out))
+  & head ~ *
+  & @size ~ (tail t)
+  & t ~ $([+1] out)

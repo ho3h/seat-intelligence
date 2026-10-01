@@ -1,0 +1,25 @@
+@prog = (input out)
+  & input ~ (lo (hi xs))
+  & @count ~ (xs (lo (hi out)))
+
+@count = (lv1 (lo (hi out)))
+  & @count_cons_lw ~ (lv1 (lo (hi out)))
+
+@count_nil = (* (* (* out)))
+  & out ~ 0
+
+@count_cons = (* (({$([<] $(lo_cmp $([|] $(hi_bad $([=] $(0 valid)))))) $([>] $(hi_cmp hi_bad))} t) ({lo_cmp lo_rec} ({hi_cmp hi_rec} out))))
+  & @count_cons_lw ~ (t (lo_rec (hi_rec $([+] $(valid out)))))
+
+@count_cons_lw = (ls60 (q12 (q13 q14)))
+  & ls60 ~ (g51 (e43 (g52 (e44 (g53 (e45 (g54 (e46 (g55 (e47 (g56 (e48 (g57 (e49 (g58 (e50 tk59))))))))))))))))
+  & g51 ~ ?((@count_nil @count_cons_la) ((e43 (q16 (q17 q18))) (q12 (q13 q14))))
+  & g52 ~ ?((@count_nil @count_cons_la) ((e44 (q20 (q21 q22))) (q16 (q17 q18))))
+  & g53 ~ ?((@count_nil @count_cons_la) ((e45 (q24 (q25 q26))) (q20 (q21 q22))))
+  & g54 ~ ?((@count_nil @count_cons_la) ((e46 (q28 (q29 q30))) (q24 (q25 q26))))
+  & g55 ~ ?((@count_nil @count_cons_la) ((e47 (q32 (q33 q34))) (q28 (q29 q30))))
+  & g56 ~ ?((@count_nil @count_cons_la) ((e48 (q36 (q37 q38))) (q32 (q33 q34))))
+  & g57 ~ ?((@count_nil @count_cons_la) ((e49 (q40 (q41 q42))) (q36 (q37 q38))))
+  & g58 ~ ?((@count_nil @count_cons) ((e50 tk59) (q40 (q41 q42))))
+
+@count_cons_la = (* (({$([<] $(lo_cmp $([|] $(hi_bad $([=] $(0 valid)))))) $([>] $(hi_cmp hi_bad))} (lo_rec (hi_rec $([+] $(valid out))))) ({lo_cmp lo_rec} ({hi_cmp hi_rec} out))))

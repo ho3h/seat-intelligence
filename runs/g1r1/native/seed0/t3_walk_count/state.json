@@ -1,0 +1,48 @@
+{
+ "pid": "t3_walk_count",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 387,
+    "itrs_median_big": 6655009,
+    "itrs_max": 10616020,
+    "depth_median_big": 37855,
+    "depth_max": 53551
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 241371,
+ "best": {
+  "itrs_median_small": 387,
+  "itrs_median_big": 6655009,
+  "itrs_max": 10616020,
+  "depth_median_big": 37855,
+  "depth_max": 53551
+ },
+ "usd": 0.058084135,
+ "free_rejects": 1,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

@@ -1,0 +1,71 @@
+// Accumulator: (tp (fp (fn out))).
+@prog = ((p t) out)
+  & @outer ~ (p (t (0 (0 (0 out)))))
+
+@outer = ((?((@onil @ocons) (pl (t (tp (fp (fn out)))))) pl) (t (tp (fp (fn out)))))
+
+@onil = (* (pl (t (tp (fp (fn out))))))
+  & pl ~ *
+  & t ~ *
+  & out ~ (tp (fp fn))
+
+@ocons = (* ((p ps) (t (tp (fp (fn out))))))
+  & @touter ~ (t (p (ps (tp (fp (fn out))))))
+
+@touter = ((?((@tnil @tcons) (pl (p (ps (tp (fp (fn out))))))) pl) (p (ps (tp (fp (fn out))))))
+
+@tnil = (* (pl (p (ps (tp (fp (fn out)))))))
+  & pl ~ *
+  & p ~ *
+  & ps ~ *
+  & out ~ (tp (fp fn))
+
+@tcons = (* ((q ts) (p (ps (tp (fp (fn out)))))))
+  & @inner ~ (ps (ts (p (q (tp (fp (fn r)))))))
+  & r ~ (pr (tr (tp2 (fp2 fn2))))
+  & @outer ~ (pr (tr (tp2 (fp2 (fn2 out))))
+
+@inner = ((?((@inil @icons) (pl (ts (p (q (tp (fp (fn out)))))))) pl) (ts (p (q (tp (fp (fn out)))))))
+
+@inil = (* (pl (ts (p (q (tp (fp (fn out))))))))
+  & pl ~ *
+  & ts ~ *
+  & p ~ *
+  & q ~ *
+  & out ~ ((0 *) ((0 *) (tp (fp fn))))
+
+@icons = (* ((x xs) (ts (p (q (tp (fp (fn out))))))))
+  & @scantruth ~ (ts (x (xs (p (q (tp (fp (fn out))))))))
+
+@scantruth = ((?((@stnil @stcons) (pl (x (xs (p (q (tp (fp (fn out))))))))) pl) (x (xs (p (q (tp (fp (fn out)))))))
+
+@stnil = (* (pl (x (xs (p (q (tp (fp (fn out)))))))))
+  & pl ~ *
+  & x ~ *
+  & xs ~ *
+  & p ~ *
+  & q ~ *
+  & out ~ ((0 *) ((0 *) (tp (fp fn))))
+
+@stcons = (* ((y ys) (x (xs (p (q (tp (fp (fn out)))))))))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & p ~ {pc pn}
+  & q ~ {qc qn}
+  & xc ~ $([=] $(pc ex))
+  & yc ~ $([=] $(qc ey))
+  & ex ~ {ex1 exrest}
+  & exrest ~ {ex2 ex3}
+  & ey ~ {ey1 eyrest}
+  & eyrest ~ {ey2 ey3}
+  & ey3 ~ $([^] $(1 eyn))
+  & ex3 ~ $([^] $(1 exn))
+  & ex1 ~ $([&] $(ey1 btp))
+  & ex2 ~ $([&] $(eyn bfp))
+  & exn ~ $([&] $(ey2 bfn))
+  & tp ~ $([+] $(btp tp2))
+  & fp ~ $([+] $(bfp fp2))
+  & fn ~ $([+] $(bfn fn2))
+  & @inner ~ (xs (ys (pn (qn (tp2 (fp2 (fn2 tail))))))
+  & tail ~ (pr (tr (tpr (fpr fnr))))
+  & out ~ ((1 (xkeep pr)) ((1 (ykeep tr)) (tpr (fpr fnr))))

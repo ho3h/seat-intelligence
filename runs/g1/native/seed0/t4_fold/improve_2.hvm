@@ -1,0 +1,156 @@
+// Internal fold results are (is_nonliteral (literal_value expression)).
+// Nonliteral results use 0 as their unused literal_value.
+@prog = (input out)
+  & @fold ~ (input folded)
+  & folded ~ (kind (value expr))
+  & kind ~ *
+  & value ~ *
+  & out ~ expr
+
+@fold = ((?((@fold_lit @fold_after0) (p out)) p) out)
+
+@fold_lit = (n out)
+  & n ~ {v e}
+  & out ~ (0 (v (0 e)))
+
+@fold_after0 = (n (p out))
+  & n ~ ?((@fold_add @fold_after1) (p out))
+
+@fold_after1 = (n (p out))
+  & n ~ ?((@fold_mul @fold_after2) (p out))
+
+@fold_after2 = (n (p out))
+  & n ~ ?((@fold_var @fold_invalid) (p out))
+
+@fold_var = (i out)
+  & out ~ (1 (0 (3 i)))
+
+@fold_invalid = (* (p out))
+  & p ~ *
+  & out ~ *
+
+@fold_add = ((l r) out)
+  & @fold ~ (l a)
+  & @fold ~ (r b)
+  & @add_combine ~ (a (b out))
+
+@fold_mul = ((l r) out)
+  & @fold ~ (l a)
+  & @fold ~ (r b)
+  & @mul_combine ~ (a (b out))
+
+// Add: first classify the folded left operand.
+@add_combine = ((ka (va ea)) ((kb (vb eb)) out))
+  & ka ~ ?((@add_left_lit @add_left_other) (va (ea (kb (vb (eb out))))))
+
+@add_left_lit = (va (ea (kb (vb (eb out)))))
+  & kb ~ ?((@add_b_lit @add_b_other) (va (ea (vb (eb out)))))
+
+@add_b_lit = (va (ea (vb (eb out))))
+  & va ~ $([+] $(vb sum))
+  & sum ~ {sv se}
+  & ea ~ *
+  & eb ~ *
+  & out ~ (0 (sv (0 se)))
+
+@add_b_other = (n (va (ea (vb (eb out)))))
+  & n ~ *
+  & vb ~ *
+  & va ~ ?((@add_a_zero @add_a_nonzero) (ea (eb out)))
+
+@add_a_zero = (ea (eb out))
+  & ea ~ *
+  & out ~ (1 (0 eb))
+
+@add_a_nonzero = (n (ea (eb out)))
+  & n ~ *
+  & out ~ (1 (0 (1 (ea eb))))
+
+// Left operand is nonliteral; test whether the right operand is literal.
+@add_left_other = (n (va (ea (kb (vb (eb out))))))
+  & n ~ *
+  & kb ~ ?((@add_other_b_lit @add_other_b_other) (va (ea (vb (eb out)))))
+
+@add_other_b_lit = (va (ea (vb (eb out))))
+  & va ~ *
+  & vb ~ ?((@add_other_b_zero @add_other_b_nonzero) (ea (eb out)))
+
+@add_other_b_zero = (ea (eb out))
+  & eb ~ *
+  & out ~ (1 (0 ea))
+
+@add_other_b_nonzero = (n (ea (eb out)))
+  & n ~ *
+  & out ~ (1 (0 (1 (ea eb))))
+
+@add_other_b_other = (n (va (ea (vb (eb out)))))
+  & n ~ *
+  & va ~ *
+  & vb ~ *
+  & out ~ (1 (0 (1 (ea eb))))
+
+// Mul: first classify the folded left operand.
+@mul_combine = ((ka (va ea)) ((kb (vb eb)) out))
+  & ka ~ ?((@mul_left_lit @mul_left_other) (va (ea (kb (vb (eb out))))))
+
+@mul_left_lit = (va (ea (kb (vb (eb out)))))
+  & kb ~ ?((@mul_b_lit @mul_b_other) (va (ea (vb (eb out)))))
+
+@mul_b_lit = (va (ea (vb (eb out))))
+  & va ~ $([*] $(vb product))
+  & product ~ {pv pe}
+  & ea ~ *
+  & eb ~ *
+  & out ~ (0 (pv (0 pe)))
+
+@mul_b_other = (n (va (ea (vb (eb out)))))
+  & n ~ *
+  & vb ~ *
+  & va ~ ?((@mul_a_zero @mul_a_nonzero) (ea (eb out)))
+
+@mul_a_zero = (ea (eb out))
+  & ea ~ *
+  & eb ~ *
+  & out ~ (0 (0 (0 0)))
+
+@mul_a_nonzero = (n (ea (eb out)))
+  & n ~ ?((@mul_a_one @mul_a_many) (ea (eb out)))
+
+@mul_a_one = (ea (eb out))
+  & ea ~ *
+  & out ~ (1 (0 eb))
+
+@mul_a_many = (k (ea (eb out)))
+  & k ~ *
+  & out ~ (1 (0 (2 (ea eb))))
+
+// Left operand is nonliteral; test whether the right operand is literal.
+@mul_left_other = (n (va (ea (kb (vb (eb out))))))
+  & n ~ *
+  & kb ~ ?((@mul_other_b_lit @mul_other_b_other) (va (ea (vb (eb out)))))
+
+@mul_other_b_lit = (va (ea (vb (eb out))))
+  & va ~ *
+  & vb ~ ?((@mul_other_b_zero @mul_other_b_nonzero) (ea (eb out)))
+
+@mul_other_b_zero = (ea (eb out))
+  & ea ~ *
+  & eb ~ *
+  & out ~ (0 (0 (0 0)))
+
+@mul_other_b_nonzero = (n (ea (eb out)))
+  & n ~ ?((@mul_other_b_one @mul_other_b_many) (ea (eb out)))
+
+@mul_other_b_one = (ea (eb out))
+  & eb ~ *
+  & out ~ (1 (0 ea))
+
+@mul_other_b_many = (k (ea (eb out)))
+  & k ~ *
+  & out ~ (1 (0 (2 (ea eb))))
+
+@mul_other_b_other = (n (va (ea (vb (eb out)))))
+  & n ~ *
+  & va ~ *
+  & vb ~ *
+  & out ~ (1 (0 (2 (ea eb))))

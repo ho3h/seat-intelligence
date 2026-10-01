@@ -1,0 +1,43 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@prog = (a b)
+  & @reverse_blocks ~ (a (@List/Nil b))
+
+@reverse_blocks = ((@reverse_blocks__C10 a) a)
+
+@reverse_blocks__C0 = (d (c (b (a g))))
+  & @List/Cons ~ (a (f g))
+  & @List/Cons ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@reverse_blocks__C1 = (* (b (a (f (e (d (c k)))))))
+  & @reverse_blocks ~ (a (j k))
+  & @List/Cons ~ (b (i j))
+  & @List/Cons ~ (c (h i))
+  & @List/Cons ~ (d (g h))
+  & @List/Cons ~ (e (f g))
+
+@reverse_blocks__C10 = (?(((a a) @reverse_blocks__C9) b) b)
+
+@reverse_blocks__C2 = (?((@reverse_blocks__C0 @reverse_blocks__C1) a) a)
+
+@reverse_blocks__C3 = (c (b (a e)))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@reverse_blocks__C4 = (* (d ((@reverse_blocks__C2 (a (b (c (d e))))) (a (b (c e))))))
+
+@reverse_blocks__C5 = (?((@reverse_blocks__C3 @reverse_blocks__C4) a) a)
+
+@reverse_blocks__C6 = (b (a c))
+  & @List/Cons ~ (a (b c))
+
+@reverse_blocks__C7 = (* (c ((@reverse_blocks__C5 (a (b (c d)))) (a (b d)))))
+
+@reverse_blocks__C8 = (?((@reverse_blocks__C6 @reverse_blocks__C7) a) a)
+
+@reverse_blocks__C9 = (* (b ((@reverse_blocks__C8 (a (b c))) (a c))))
+
+

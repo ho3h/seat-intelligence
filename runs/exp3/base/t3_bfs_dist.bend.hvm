@@ -1,0 +1,58 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@dist_at = ((@dist_at__C2 a) a)
+
+@dist_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @dist_at ~ (a (b c))
+
+@dist_at__C1 = (* (c (d ({$([=0x0000000] ?((@dist_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@dist_at__C2 = (?(((* 16777215) @dist_at__C1) a) a)
+
+@dist_put = ((@dist_put__C3 a) a)
+
+@dist_put__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @dist_put ~ (b (c (d e)))
+
+@dist_put__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@dist_put__C2 = (* (c (d ({$([=0x0000000] ?((@dist_put__C0 @dist_put__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@dist_put__C3 = (?(((* (* @List/Nil)) @dist_put__C2) a) a)
+
+@make_distances = ({$([=0x0000000] ?((@make_distances__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@make_distances__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (16777215 (b c))
+  & @make_distances ~ (a b)
+
+@prog = (({f b} (d a)) g)
+  & @relax_rounds ~ (a (e (f g)))
+  & @dist_put ~ (c (d (0 e)))
+  & @make_distances ~ (b c)
+
+@relax_edges = ((@relax_edges__C3 a) a)
+
+@relax_edges__C0 = (* a)
+  & @dist_put ~ a
+
+@relax_edges__C1 = (* (c (d ($([+0x0000001] {$([<] $(a ?(((b (* (* b))) @relax_edges__C0) (c (d (e f)))))) e}) (a f)))))
+
+@relax_edges__C2 = (* ((b {f i}) (c ({e {h a}} l))))
+  & @relax_edges ~ (c (k l))
+  & @dist_at ~ (a (b {$([!0x0FFFFFF] ?(((d (* (* (* d)))) @relax_edges__C1) (e (f (g (j k)))))) g}))
+  & @dist_at ~ (h (i j))
+
+@relax_edges__C3 = (?(((a a) @relax_edges__C2) b) b)
+
+@relax_rounds = (b (c ({$([=0x0000000] ?((@relax_rounds__C0 (* (* (a (* a))))) (b (c (d e))))) d} e)))
+
+@relax_rounds__C0 = ({a b} (c ($([:-0x0000001] e) f)))
+  & @relax_rounds ~ (a (d (e f)))
+  & @relax_edges ~ (b (c d))
+
+

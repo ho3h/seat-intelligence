@@ -1,0 +1,20 @@
+// If cap is at most one, no merge can succeed, so every candidate is skipped.
+@prog = ((n (cap (mnl cands))) out)
+  & cap ~ $([>] $(1 z))
+  & z ~ ?((@all_skipped @no_skips) (n (mnl (cands out))))
+
+@all_skipped = (* (* (* (cands out))))
+  & @pairs ~ (cands out)
+
+@no_skips = (* (* (* (* out))))
+  & out ~ (0 *)
+
+@pairs = ((?((@pairs_nil @pairs_cons) (payload out)) payload) out)
+
+@pairs_nil = (* out)
+  & out ~ (0 *)
+
+@pairs_cons = (* (((u (v score)) tail) out))
+  & score ~ *
+  & @pairs ~ (tail rest)
+  & out ~ (1 ((u v) rest))

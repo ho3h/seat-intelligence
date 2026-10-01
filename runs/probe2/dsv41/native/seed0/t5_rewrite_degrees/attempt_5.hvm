@@ -1,0 +1,171 @@
+@prog = ((c edges) out)
+  & c ~ {cA cB}
+  & @length ~ (cA n)
+  & @loop ~ (cB (edges (0 (n ((0 *) tmp)))))
+  & @reverse ~ (tmp out)
+
+@length = (l out)
+  & l ~ (?(cases ctx) pl)
+  & cases ~ (@len_nil @len_cons)
+  & ctx ~ (pl out)
+
+@len_nil = (pl out)
+  & pl ~ *
+  & out ~ 0
+
+@len_cons = (z (pl out))
+  & z ~ *
+  & pl ~ (h t)
+  & h ~ *
+  & @length ~ (t len)
+  & len ~ $([+1] out)
+
+@nth = (l (ix out))
+  & l ~ (?(cases ctx) pl)
+  & cases ~ (@nth_nil @nth_cons)
+  & ctx ~ (pl (ix out))
+
+@nth_nil = (pl (ix out))
+  & pl ~ *
+  & ix ~ *
+  & out ~ 0
+
+@nth_cons = (z (pl (ix out)))
+  & z ~ *
+  & pl ~ (h t)
+  & ix ~ {ix1 ix2}
+  & ix1 ~ ?((@nth_ret @nth_rec) (h (t (ix2 out))))
+
+@nth_ret = (h (t (ix out)))
+  & t ~ *
+  & ix ~ *
+  & h ~ out
+
+@nth_rec = (im1 (h (t (ix out))))
+  & h ~ *
+  & @nth ~ (t (im1 out))
+
+@member = (l (x out))
+  & l ~ (?(cases ctx) pl)
+  & cases ~ (@mem_nil @mem_cons)
+  & ctx ~ (pl (x out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (z (pl (x out)))
+  & z ~ *
+  & pl ~ (h t)
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 eq))
+  & eq ~ ?((@mem_no @mem_yes) (x2 (t out)))
+
+@mem_no = (x (t out))
+  & @member ~ (t (x out))
+
+@mem_yes = (z (x (t out)))
+  & z ~ *
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@reverse = (l out)
+  & @rev_acc ~ (l ((0 *) out))
+
+@rev_acc = (l (acc out))
+  & l ~ (?(cases ctx) pl)
+  & cases ~ (@rev_nil @rev_cons)
+  & ctx ~ (pl (acc out))
+
+@rev_nil = (pl (acc out))
+  & pl ~ *
+  & acc ~ out
+
+@rev_cons = (z (pl (acc out)))
+  & z ~ *
+  & pl ~ (h t)
+  & acc_next ~ (1 (h acc))
+  & @rev_acc ~ (t (acc_next out))
+
+@loop = (c (edges (i (n (acc out)))))
+  & i ~ {i1 i2}
+  & n ~ {n1 n2}
+  & i1 ~ $([=] $(n1 eq))
+  & eq ~ ?((@loop_step @loop_done) (c (edges (i2 (n2 (acc out))))))
+
+@loop_done = (z (c (edges (i (n (acc out))))))
+  & z ~ *
+  & c ~ *
+  & edges ~ *
+  & i ~ *
+  & n ~ *
+  & acc ~ out
+
+@loop_step = (c (edges (i (n (acc out)))))
+  & c ~ {ca cb}
+  & i ~ {ia ib}
+  & ia ~ {ia1 ia2}
+  & @nth ~ (ca (ia1 ci))
+  & ci ~ $([=] $(ia2 is_canon))
+  & is_canon ~ ?((@loop_skip @loop_process) (cb (edges (ib (n (acc out))))))
+
+@loop_skip = (c (edges (i (n (acc out)))))
+  & i ~ $([+1] i_next)
+  & @loop ~ (c (edges (i_next (n (acc out)))))
+
+@loop_process = (z (c (edges (i (n (acc out))))))
+  & z ~ *
+  & c ~ {c1 c2}
+  & edges ~ {e1 e2}
+  & i ~ {i1 i2}
+  & @degree ~ (c1 (e1 (i1 deg)))
+  & acc_next ~ (1 (deg acc))
+  & i2 ~ $([+1] i_next)
+  & @loop ~ (c2 (e2 (i_next (n (acc_next out)))))
+
+@degree = (c (edges (i out)))
+  & @scan ~ (c (edges (i ((0 *) count))))
+  & @length ~ (count out)
+
+@scan = (c (edges (i (seen out))))
+  & edges ~ (?(cases ctx) pl)
+  & cases ~ (@scan_nil @scan_cons)
+  & ctx ~ (pl (c (i (seen out))))
+
+@scan_nil = (pl (c (i (seen seen))))
+  & pl ~ *
+  & c ~ *
+  & i ~ *
+
+@scan_cons = (z (pl (c (i (seen out)))))
+  & z ~ *
+  & pl ~ ((u v) rest)
+  & c ~ {c1 c2}
+  & c1 ~ {c1a c1b}
+  & @nth ~ (c1a (u cu))
+  & @nth ~ (c1b (v cv))
+  & i ~ {i1 i2}
+  & i1 ~ {i1a i1b}
+  & cu ~ {cu12 cu3}
+  & cu12 ~ {cu1 cu2}
+  & cv ~ {cv12 cv3}
+  & cv12 ~ {cv1 cv2}
+  & cu1 ~ $([!] $(cv1 neq))
+  & cu2 ~ $([=] $(i1a eqcu))
+  & cv2 ~ $([=] $(i1b eqcv))
+  & eqcu ~ $([|] $(eqcv isone))
+  & neq ~ $([&] $(isone doit))
+  & cu3 ~ $([+] $(cv3 sum))
+  & sum ~ $([-] $(i2 other))
+  & doit ~ ?((@scan_skip_i @scan_add) (c2 (rest (i2 (other (seen out))))))
+
+@scan_skip_i = (c (rest (i (other (seen out)))))
+  & other ~ *
+  & @scan ~ (c (rest (i (seen out))))
+
+@scan_add = (z (c (rest (i (other (seen out))))))
+  & z ~ *
+  & seen_next ~ (1 (other seen))
+  & @scan ~ (c (rest (i (seen_next out))))

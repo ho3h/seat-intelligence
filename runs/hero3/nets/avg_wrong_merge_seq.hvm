@@ -1,0 +1,22 @@
+@prog = (l out)
+  & @sw ~ (l ((0 0) s))
+  & @fin ~ (s out)
+
+@sw = ((?((@sw_nil @sw_cons) (pl (acc out))) pl) (acc out))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((h t) (acc out)))
+  & @step ~ (acc (h acc2))
+  & @sw ~ (t (acc2 out))
+
+@step = ((a0 a1) (b (w6 w7)))
+  & a1 ~ {a1_0 a1_t0}
+  & a1_t0 ~ {a1_1 a1_2}
+  & a0 ~ $([*] $(a1_0 w2))
+  & w2 ~ $([+] $(b w4))
+  & a1_1 ~ $([+] $(1 w5))
+  & w4 ~ $([/] $(w5 w6))
+  & a1_2 ~ $([+] $(1 w7))
+
+@fin = ((a0 *) a0)

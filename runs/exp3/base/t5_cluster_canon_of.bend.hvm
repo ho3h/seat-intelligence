@@ -1,0 +1,94 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@explore = ((@explore__C1 a) a)
+
+@explore__C0 = (* (b (d (c (e ({a i} j))))))
+  & @explore ~ (f (g (h (i j))))
+  & @scan_edges ~ (a (b (c (d (e (f (g h)))))))
+
+@explore__C1 = (?(((* (a (* a))) @explore__C0) b) b)
+
+@get_mask = ((@get_mask__C2 a) a)
+
+@get_mask__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_mask ~ (a (b c))
+
+@get_mask__C1 = (* (c (d ({$([=0x0000000] ?((@get_mask__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_mask__C2 = (?(((* 0) @get_mask__C1) a) a)
+
+@larger = ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f))
+
+@marked = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @get_mask ~ (a (b $([&] $(d $([!0x0000000] e)))))
+  & $(c d) ~ [<<0x0000001]
+
+@prog = (($([+0x0000017] $([:/0x0000018] c)) ({a {g e}} h)) i)
+  & @explore ~ (b (f (g (h i))))
+  & @List/Cons ~ (a (@List/Nil b))
+  & @set_node ~ (d (e f))
+  & @zero_masks ~ (c d)
+
+@scan_edges = ((@scan_edges__C10 a) a)
+
+@scan_edges__C0 = (b (c (g (i (a ({j {f d}} l))))))
+  & @scan_edges ~ (a (b (e (h (k l)))))
+  & @set_node ~ (c (d e))
+  & @List/Cons ~ (f (g h))
+  & @larger ~ (i (j k))
+
+@scan_edges__C1 = (* (b (c (d (e (a (* f)))))))
+  & @scan_edges ~ (a (b (c (d (e f)))))
+
+@scan_edges__C10 = (?((@scan_edges__C8 @scan_edges__C9) a) a)
+
+@scan_edges__C2 = (b (c (d (e (a (* f))))))
+  & @scan_edges ~ (a (b (c (d (e f)))))
+
+@scan_edges__C3 = (* (c ({a d} (e (f (g ({b h} i)))))))
+  & @marked ~ (a (b ?((@scan_edges__C0 @scan_edges__C1) (c (d (e (f (g (h i)))))))))
+
+@scan_edges__C4 = (b (c (g (i (a ({j {f d}} l))))))
+  & @scan_edges ~ (a (b (e (h (k l)))))
+  & @set_node ~ (c (d e))
+  & @List/Cons ~ (f (g h))
+  & @larger ~ (i (j k))
+
+@scan_edges__C5 = (* (b (c (d (e (a (* f)))))))
+  & @scan_edges ~ (a (b (c (d (e f)))))
+
+@scan_edges__C6 = ({$([=] $(a ?((@scan_edges__C2 @scan_edges__C3) (b (c (d (e (f (g h))))))))) b} (c (d (e (f (g (a h)))))))
+
+@scan_edges__C7 = (* (c ({a d} (e (f (g (* ({b h} i))))))))
+  & @marked ~ (a (b ?((@scan_edges__C4 @scan_edges__C5) (c (d (e (f (g (h i)))))))))
+
+@scan_edges__C8 = (* (b (a (c (a (b c))))))
+
+@scan_edges__C9 = (* (({a g} h) (f ({$([=] $(a ?((@scan_edges__C6 @scan_edges__C7) (b (c (d (e (f (g (h i)))))))))) b} (c (d (e i)))))))
+
+@set_mask = ((@set_mask__C3 a) a)
+
+@set_mask__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_mask ~ (b (c (d e)))
+
+@set_mask__C1 = (* (* (a ($([|] $(a b)) c))))
+  & @List/Cons ~ (b c)
+
+@set_mask__C2 = (* (c (d ({$([=0x0000000] ?((@set_mask__C0 @set_mask__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_mask__C3 = (?(((* (* @List/Nil)) @set_mask__C2) a) a)
+
+@set_node = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @set_mask ~ (a (b (d e)))
+  & $(c d) ~ [<<0x0000001]
+
+@zero_masks = (?((@List/Nil @zero_masks__C0) a) a)
+
+@zero_masks__C0 = ($([+0x0000001] $([:-0x0000001] a)) c)
+  & @List/Cons ~ (0 (b c))
+  & @zero_masks ~ (a b)
+
+

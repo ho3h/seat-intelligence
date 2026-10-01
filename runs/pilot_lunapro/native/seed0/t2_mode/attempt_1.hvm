@@ -1,0 +1,51 @@
+// Count each distinct value, then scan the frequency map for the mode.
+@prog = (l out)
+  & @count ~ (l ((0 *) m))
+  & @mode ~ (m (0 (0 out)))
+
+@count = ((?((@cnt_nil @cnt_cons) (pl (map out))) pl) (map out))
+
+@cnt_nil = (* (map out))
+  & map ~ out
+
+@cnt_cons = (* ((h t) (map out)))
+  & @ins ~ (h (map map2))
+  & @count ~ (t (map2 out))
+
+// Insert x into the frequency map.
+@ins = (x ((?((@ins_nil @ins_cons) (pl (x out))) pl) out))
+
+@ins_nil = (* (x out))
+  & out ~ (1 ((x 1) (0 *)))
+
+@ins_cons = (* ((({vkeep vcmp} {ckeep ccmp}) t) ({xrec xcmp} out)))
+  & xcmp ~ $([=] $(vcmp eq))
+  & eq ~ ?((@ins_neq @ins_eq) (xrec (vkeep (ckeep (ccmp (t out)))))
+
+@ins_eq = (* (* (v (* (cp (t out))))))
+  & cp ~ $([+1] cp2)
+  & out ~ (1 ((v cp2) t))
+
+@ins_neq = (x (v (c (* (t out)))))
+  & @ins ~ (x (t tail2))
+  & out ~ (1 ((v c) tail2))
+
+// Scan the map, carrying the best value and its frequency.
+@mode = ((?((@mode_nil @mode_cons) (pl (bv (bc out))) ) pl) (bv (bc out)))
+
+@mode_nil = (* (bv (* out)))
+  & out ~ bv
+
+@mode_cons = (* ((({vkeep vcmp} {ckeep {cgt ceq}}) t) ({bvkeep bvcomp} ({bckeep {bcgt bceq}} out))))
+  & cgt ~ $([>] $(bcgt gt))
+  & ceq ~ $([=] $(bceq eq))
+  & vcmp ~ $([<] $(bvcomp lt))
+  & eq ~ $([&] $(lt both))
+  & gt ~ $([|] $(both upd))
+  & upd ~ ?((@mode_keep @mode_take) (t (vkeep (ckeep (bvkeep (bckeep out)))))
+
+@mode_keep = (t (* (* (bv (bc out)))))
+  & @mode ~ (t (bv (bc out)))
+
+@mode_take = (t (v (c (* (* out)))))
+  & @mode ~ (t (v (c out)))

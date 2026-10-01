@@ -1,0 +1,15 @@
+// Count set bits by repeatedly clearing the least significant set bit.
+@prog = (n out)
+  & @pop ~ (n (0 out))
+
+@pop = (n (acc out))
+  & n ~ ?((@pop_zero @pop_succ) (acc out))
+
+@pop_zero = (x x)
+
+@pop_succ = (m (acc out))
+  & m ~ {m1 m2}
+  & acc ~ $([+1] acc2)
+  & m1 ~ $([&] $(mplus next))
+  & m2 ~ $([+1] mplus)
+  & @pop ~ (next (acc2 out))

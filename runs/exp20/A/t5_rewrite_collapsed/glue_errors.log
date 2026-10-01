@@ -1,0 +1,52 @@
+--- 05:01:59
+step of stream `counter` (@counter_step): 1 value(s) never used:
+    `x` (num, argument `elem` of step of stream `counter`, made at build.py:26)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:02:04
+build.py:43: wire `L` (depth, argument `L` of step of stream `cluster_builder`, made at build.py:43) is used a second time (returned as `L`); it was already used at build.py:35 (update `upd_set` (act set) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:02:12
+build.py:53: wire `c_trie` (trie[num], argument `c_trie` of step of stream `edge_processor`, made at build.py:85) is used a second time (get `gt` port `t`); it was already used at build.py:52 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:02:49
+build.py:55: wire `L_cluster` (depth, argument `L_cluster` of step of stream `edge_processor`, made at build.py:87) is used a second time (update `pk` (act peek) port `L`); it was already used at build.py:52 (update `pk` (act peek) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_cluster, 2)  and use each once.
+--- 05:03:03
+build.py:70: wire `r` (num, result of `<`, made at build.py:68) is used a second time (select condition); it was already used at build.py:69 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:03:10
+build.py:71: wire `P3` (num, copy 3 of `P`, made at build.py:62) is used a second time (select if_true); it was already used at build.py:70 (select if_false). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(P3, 2)  and use each once.
+--- 05:03:28
+build.py:82: wire `histogram` (trie[num], argument `histogram` of step of stream `edge_processor`, made at build.py:93) is used a second time (select if_true); it was already used at build.py:80 (update `upd_set` (act set) port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:03:44
+build.py:87: wire `histogram` (trie[num], argument `passed[0]` of branch nonzero case of step of stream `edge_processor`, made at build.py:89) belongs to branch nonzero case of step of stream `edge_processor` (@edge_processor_step_b1s), but is used in step of stream `edge_processor` (@edge_processor_step) (update `upd_set` (act set) port `t`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:04:00
+build.py:87: wire `histogram` (trie[num], argument `passed[0]` of branch nonzero case of step of stream `edge_processor`, made at build.py:89) belongs to branch nonzero case of step of stream `edge_processor` (@edge_processor_step_b1s), but is used in step of stream `edge_processor` (@edge_processor_step) (update `upd_set` (act set) port `t`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:04:11
+build.py:100: wire `L_cluster` (depth, argument `L_cluster` of step of stream `edge_processor`, made at build.py:100) is used a second time (returned as `L_cluster`); it was already used at build.py:52 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_cluster, 2)  and use each once.
+--- 05:04:21
+build.py:100: wire `L_hist` (depth, argument `L_hist` of step of stream `edge_processor`, made at build.py:100) is used a second time (returned as `L_hist`); it was already used at build.py:89 (branch passed[2]). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_hist, 2)  and use each once.
+--- 05:04:30
+fin of stream `edge_processor` (@edge_processor_fin): 1 value(s) never used:
+    `L_hist` (depth, argument `L_hist` of fin of stream `edge_processor`, made at build.py:102)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:04:35
+fin of stream `edge_processor` must return exactly one value (the result); returned 2
+--- 05:05:06
+wrong arity: step of stream `edge_counter` is called as f(d, n:num, e0:num, e1:num), i.e. d plus 3 value(s); your function `step_count` takes 3 parameter(s) (d, n, x).
+--- 05:05:13
+build.py:120: kind mismatch at stream `counter` port `init`: expected num, got (num) (0,).
+--- 05:05:45
+build.py:133: wire `nm1` (num, argument `cm1` of branch nonzero case of @prog (t5_rewrite_collapsed), made at build.py:159) is used a second time (left operand of `+`); it was already used at build.py:130 (lg port `x`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(nm1, 2)  and use each once.
+--- 05:05:53
+build.py:141: wire `c_list` (list[num], argument `in0` of @prog (t5_rewrite_collapsed), made at build.py:164) belongs to @prog (t5_rewrite_collapsed) (@prog), but is used in branch nonzero case of @prog (t5_rewrite_collapsed) (@prog_b2s) (stream `cluster_builder` port `list`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:06:03
+build.py:144: cannot fanout wire `edges_list` (list[(num num)], argument `passed[1]` of branch nonzero case of @prog (t5_rewrite_collapsed), made at build.py:162): a list[(num num)] cannot be duplicated safely (HVM2 DUPs are unlabelled). Use it once, or get a copy from a primitive (mc_deliver_keep, mapreduce).
+--- 05:06:34
+fin of stream `edge_processor` must return exactly one value (the result); returned 2
+--- 05:06:53
+build.py:101: wire `L_hist` (depth, argument `L_hist` of fin of stream `edge_processor`, made at build.py:106) is used a second time (reduce `r_sum` (+) port `L`); it was already used at build.py:99 (erased). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L_hist, 2)  and use each once.
+--- 05:07:01
+build.py:145: fanout(w, n) needs n >= 2 (got 1); a single use needs no fanout
+--- 05:07:16
+branch nonzero case of @prog (t5_rewrite_collapsed) (@prog_b2s): 1 value(s) never used:
+    `r` (num, result of `+`, made at build.py:135)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:07:28
+build.py:143: wire `c_list` (list[num], argument `in0` of @prog (t5_rewrite_collapsed), made at build.py:145) is used a second time (branch passed[0]); it was already used at build.py:119 (stream `counter` port `list`). A wire has exactly two ends. A list[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).

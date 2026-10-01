@@ -1,0 +1,65 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_vec = ({$([=] $(a ?((@build_vec__C0 (* (* (* (* (* @List/Nil)))))) (b (c d))))) b} ({a c} d))
+
+@build_vec__C0 = ({$([+0x0000001] e) b} (f ({g a} ({h c} j))))
+  & @List/Cons ~ (d (i j))
+  & @sum_from ~ (a (b (c (0 d))))
+  & @build_vec ~ (e (f (g (h i))))
+
+@init_vec = ({$([=] $(a ?((@init_vec__C2 (* (* (* (* @List/Nil))))) (b (c d))))) b} ({a c} d))
+
+@init_vec__C0 = ($([+0x0000001] a) (b (c e)))
+  & @List/Cons ~ (0 (d e))
+  & @init_vec ~ (a (b (c d)))
+
+@init_vec__C1 = (* ($([+0x0000001] a) (b (c e))))
+  & @List/Cons ~ (1 (d e))
+  & @init_vec ~ (a (b (c d)))
+
+@init_vec__C2 = ({$([=] $(a ?((@init_vec__C0 @init_vec__C1) (b (c (d e)))))) b} (c ({a d} e)))
+
+@prog = (({a c} ({$([<] $(a b)) d} (e (f g)))) h)
+  & $(b ?((@prog__C1 (* (* (* (* (* (* 0))))))) (c (d (e (f (g h))))))) ~ [=0x0000000]
+
+@prog__C0 = ({b e} (c (f (a (d h)))))
+  & @walk_steps ~ (a (b (c (d (g h)))))
+  & @init_vec ~ (0 (e (f g)))
+
+@prog__C1 = ({a c} (d ({$([<] $(a b)) e} f)))
+  & $(b ?((@prog__C0 (* (* (* (* (* (* 0))))))) (c (d (e f))))) ~ [=0x0000000]
+
+@sum_from = ((@sum_from__C3 a) a)
+
+@sum_from__C0 = (b (c (d (a (* e)))))
+  & @sum_from ~ (a (b (c (d e))))
+
+@sum_from__C1 = (* (b ({c d} ($([+] $(f g)) (a (e h))))))
+  & @sum_from ~ (a (b (c (g h))))
+  & @vec_get ~ (d (e f))
+
+@sum_from__C2 = (* (($([=] $(a ?((@sum_from__C0 @sum_from__C1) (b (c (d (e (f g)))))))) f) (e ({a b} (c (d g))))))
+
+@sum_from__C3 = (?(((* (* (a a))) @sum_from__C2) b) b)
+
+@vec_get = ((@vec_get__C2 a) a)
+
+@vec_get__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @vec_get ~ (a (b c))
+
+@vec_get__C1 = (* (c (d ({$([=0x0000000] ?((@vec_get__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@vec_get__C2 = (?(((* 0) @vec_get__C1) a) a)
+
+@walk_steps = ({$([=0x0000000] ?((@walk_steps__C0 @walk_steps__C1) (a b))) a} b)
+
+@walk_steps__C0 = ($([:-0x0000001] a) ({b e} (c ({d f} (g i)))))
+  & @walk_steps ~ (a (b (c (d (h i)))))
+  & @build_vec ~ (0 (e (f (g h))))
+
+@walk_steps__C1 = (* (* (* (b (* (a c))))))
+  & @vec_get ~ (a (b c))
+
+

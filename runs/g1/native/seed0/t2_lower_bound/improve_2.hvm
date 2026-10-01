@@ -1,0 +1,40 @@
+@prog = ((xs t) out)
+  & @lb ~ (xs (t (0 out)))
+
+@lb = (l (t (acc out)))
+  & l ~ (?( (@lb_nil @lb_first) (payload (t (acc out))) ) payload)
+
+@lb_nil = (* (* (a a)))
+
+@lb_first = (* ((h tail1) (t (acc out))))
+  & @lb_second ~ (tail1 (h (t (acc out))))
+
+@lb_second = (l (h (t (acc out))))
+  & l ~ (?( (@lb_odd @lb_pair) (payload (h (t (acc out)))) ) payload)
+
+@lb_odd = (payload (h (t (acc out))))
+  & payload ~ *
+  & h ~ $([<] $(t z))
+  & z ~ ?((@lb_stop0 @lb_stop1) (* (acc out)))
+
+@lb_pair = (* ((h2 tail2) (h1 (t (acc out)))))
+  & t ~ {tc tr}
+  & h2 ~ $([<] $(tc z2))
+  & z2 ~ ?((@lb_high @lb_both) (h1 (tr (tail2 (acc out)))))
+
+@lb_high = (h1 (tr (tail2 (acc out))))
+  & h1 ~ $([<] $(tr z1))
+  & z1 ~ ?((@lb_stop0 @lb_stop1) (tail2 (acc out)))
+
+@lb_both = (* (h1 (tr (tail2 (acc out)))))
+  & h1 ~ *
+  & acc ~ $([+2] acc2)
+  & @lb ~ (tail2 (tr (acc2 out)))
+
+@lb_stop0 = (tail (acc out))
+  & tail ~ *
+  & acc ~ out
+
+@lb_stop1 = (* (tail (acc out)))
+  & tail ~ *
+  & acc ~ $([+1] out)

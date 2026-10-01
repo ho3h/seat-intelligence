@@ -1,0 +1,115 @@
+# t5_decide_order: bucket sort on the score (the contract bounds it to 0..1000). One list walk pushes every triple
+# onto the bucket for key 1023 - score of a 1024-leaf tuple-tree (keyed pushes pipeline behind the walk; the accept
+# test sits at the leaf). Each bucket is then sorted by (u, v) with an insertion sort (lazy, so successive inserts
+# pipeline), and the buckets are flattened in key order (= descending score), tail-threaded.
+# ---- base: levels, constant trees, keyed increment, flatten (first n leaves, tail-threaded)
+def lvl(n, l, p):
+  if p >= n:
+    return (l, p >> 1)
+  else:
+    return lvl(n, l + 1, p << 1)
+
+def zt(l):
+  switch l:
+    case 0:
+      return 0
+    case _:
+      return (zt(l-1), zt(l-1))
+
+def inc(t, k, l, m):
+  switch l:
+    case 0:
+      return t + 1
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, inc(b, k, l-1, m >> 1))
+      else:
+        return (inc(a, k, l-1, m >> 1), b)
+
+def flat(t, l, base, n, acc):
+  switch l:
+    case 0:
+      if base < n:
+        return List/Cons(t, acc)
+      else:
+        return acc
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return flat(a, l-1, base, n, flat(b, l-1, base + h, n, acc))
+
+def max(a, b):
+  return a + (b > a) * (b - a)
+
+def min(a, b):
+  return a - (a > b) * (a - b)
+def prog(x):
+  (tau, cs) = x
+  B = walk(cs, tau, zl(10))
+  return flatb(B, 10, 0, [])
+
+def zl(l):
+  switch l:
+    case 0:
+      return []
+    case _:
+      return (zl(l-1), zl(l-1))
+
+def pushif(t, k, l, m, e, ok):
+  switch l:
+    case 0:
+      if ok:
+        return List/Cons(e, t)
+      else:
+        return t
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, pushif(b, k, l-1, m >> 1, e, ok))
+      else:
+        return (pushif(a, k, l-1, m >> 1, e, ok), b)
+
+def walk(xs, tau, B):
+  match xs:
+    case List/Nil:
+      return B
+    case List/Cons:
+      (u, v, s) = xs.head
+      return walk(xs.tail, tau, pushif(B, 1023 - s, 10, 512, (u, v), s >= tau))
+
+def ins(x, ys):
+  match ys:
+    case List/Nil:
+      return [x]
+    case List/Cons:
+      (a, b) = x
+      (c, d) = ys.head
+      if (a < c) | ((a == c) & (b <= d)):
+        return List/Cons((a, b), ys)
+      else:
+        return List/Cons((c, d), ins((a, b), ys.tail))
+
+def isort(xs, acc):
+  match xs:
+    case List/Nil:
+      return acc
+    case List/Cons:
+      return isort(xs.tail, ins(xs.head, acc))
+
+def emit(xs, s, acc):
+  match xs:
+    case List/Nil:
+      return acc
+    case List/Cons:
+      (u, v) = xs.head
+      return List/Cons((u, v, s), emit(xs.tail, s, acc))
+
+def flatb(t, l, base, acc):
+  switch l:
+    case 0:
+      return emit(isort(t, []), 1023 - base, acc)
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return flatb(a, l-1, base, flatb(b, l-1, base + h, acc))

@@ -1,0 +1,201 @@
+@prog = ((n edges) out)
+  & n ~ {nr nt}
+  & @sources ~ (nr (nt (edges (0 (0 out))))
+
+@sources = (?((@sources_done @sources_more) (total (edges (u (sum out))))) (total (edges (u (sum out)))))
+
+@sources_done = (total (edges (u (sum out))))
+  & total ~ *
+  & edges ~ *
+  & u ~ *
+  & sum ~ $([>>] $(1 result))
+  & out ~ result
+
+@sources_more = (remaining (total (edges (u (sum out)))))
+  & edges ~ {ebfs er}
+  & u ~ {ub ui}
+  & total ~ {tn tr}
+  & tn ~ $([/] $(24 quotient))
+  & quotient ~ $([+] $(1 count))
+  & @zeros ~ (count emptybits)
+  & ub ~ {us useed}
+  & useed ~ {uf uv}
+  & ui ~ $([+1] unext)
+  & @setbit ~ (emptybits (uv bits))
+  & @bfs ~ ((1 (uf (0 *))) (us (ebfs (bits (0 (sum res)))))
+  & @sources ~ (remaining (tr (er (unext (res out))))
+
+@zeros = (?((@zeros_done @zeros_more) out) out)
+
+@zeros_done = out
+  & out ~ (0 *)
+
+@zeros_more = (remaining out)
+  & @zeros ~ (remaining tail)
+  & out ~ (1 (0 tail))
+
+@bfs = ((?((@bfs_done @bfs_more) (payload (source (edges (visited (depth (sum out))))))) payload) (source (edges (visited (depth (sum out))))))
+
+@bfs_done = (payload (source (edges (visited (depth (sum out))))))
+  & payload ~ *
+  & source ~ *
+  & edges ~ *
+  & visited ~ *
+  & depth ~ *
+  & out ~ sum
+
+@bfs_more = (* ((head tail) (source (edges (visited (depth (sum out)))))))
+  & edges ~ {ee er}
+  & source ~ {se sr}
+  & depth ~ $([+1] dtemp)
+  & dtemp ~ {de dx}
+  & @expand ~ ((1 (head tail)) (ee (visited ((0 *) (se (de (sum (vnew (nnew snew)))))))))
+  & @bfs ~ (nnew (sr (er (vnew (dx (snew out))))))
+
+@expand = ((?((@expand_nil @expand_cons) (payload (edges (visited (next (source (dist (sum out)))))))) payload) (edges (visited (next (source (dist (sum out)))))))
+
+@expand_nil = (payload (edges (visited (next (source (dist (sum out)))))))
+  & payload ~ *
+  & edges ~ *
+  & source ~ *
+  & dist ~ *
+  & out ~ (visited (next sum))
+
+@expand_cons = (* ((x tail) (edges (visited (next (source (dist (sum out))))))))
+  & edges ~ {es er}
+  & source ~ {ss sr}
+  & dist ~ {ds dr}
+  & @scan ~ (es (x (visited (next (ss (ds (sum (v2 (n2 s2)))))))))
+  & @expand ~ (tail (er (v2 (n2 (sr (dr (s2 out)))))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (x (visited (next (source (dist (sum out)))))))) payload) (x (visited (next (source (dist (sum out)))))))
+
+@scan_nil = (payload (x (visited (next (source (dist (sum out)))))))
+  & payload ~ *
+  & x ~ *
+  & source ~ *
+  & dist ~ *
+  & out ~ (visited (next sum))
+
+@scan_cons = (* (((a b) tail) (x (visited (next (source (dist (sum out))))))))
+  & x ~ {xe xr}
+  & source ~ {se sr}
+  & dist ~ {de dr}
+  & @edge ~ (a (b (xe (visited (next (se (de (sum (v2 (n2 s2))))))))))
+  & @scan ~ (tail (xr (v2 (n2 (sr (dr (s2 out)))))))
+
+@edge = (a (b (x (visited (next (source (dist (sum out))))))))
+  & a ~ {ac ar}
+  & x ~ {xc xr}
+  & ac ~ $([=] $(xc z))
+  & z ~ ?((@edge_a_no @edge_a_yes) (ar (b (xr (visited (next (source (dist (sum out)))))))))
+
+@edge_a_yes = (* (a (b (x (visited (next (source (dist (sum out)))))))))
+  & a ~ *
+  & x ~ *
+  & @discover ~ (b (visited (next (source (dist (sum out))))))
+
+@edge_a_no = (a (b (x (visited (next (source (dist (sum out))))))))
+  & b ~ $([=] $(x z))
+  & z ~ ?((@edge_none @edge_b_yes) (a (visited (next (source (dist (sum out)))))))
+
+@edge_none = (a (visited (next (source (dist (sum out))))))
+  & a ~ *
+  & source ~ *
+  & dist ~ *
+  & out ~ (visited (next sum))
+
+@edge_b_yes = (* (a (visited (next (source (dist (sum out)))))))
+  & @discover ~ (a (visited (next (source (dist (sum out))))))
+
+@discover = (cand (visited (next (source (dist (sum out))))))
+  & cand ~ {cm cr}
+  & cr ~ {cc cr2}
+  & cr2 ~ {cv cn}
+  & visited ~ {vm vr}
+  & @mem ~ (vm (cm found))
+  & found ~ ?((@discover_new @discover_seen) (cc (cv (cn (vr (next (source (dist (sum out)))))))))
+
+@discover_seen = (* (cand (cvis (cnext (visited (next (source (dist (sum out)))))))))
+  & cand ~ *
+  & cvis ~ *
+  & cnext ~ *
+  & source ~ *
+  & dist ~ *
+  & out ~ (visited (next sum))
+
+@discover_new = (cand (cvis (cnext (visited (next (source (dist (sum out))))))))
+  & cand ~ {ca cb}
+  & @setbit ~ (visited (ca bits))
+  & cb ~ $([>] $(source z))
+  & z ~ ?((@discover_low @discover_high) (bits (cvis (cnext (next (dist (sum out)))))))
+
+@discover_low = (bits (cvis (cnext (next (dist (sum out))))))
+  & dist ~ *
+  & out ~ ((1 (cvis bits)) ((1 (cnext next)) sum))
+
+@discover_high = (bits (cvis (cnext (next (dist (sum out))))))
+  & sum ~ $([+] $(dist total))
+  & out ~ ((1 (cvis bits)) ((1 (cnext next)) total))
+
+@mem = (bits (target out))
+  & target ~ {tdiv tmod}
+  & tdiv ~ $([/] $(24 idx))
+  & tmod ~ $([%] $(24 rem))
+  & 1 ~ $([<<] $(rem mask))
+  & mask ~ {mget mand}
+  & @getword ~ (bits (idx (mget word)))
+  & word ~ $([&] $(mand z))
+  & z ~ ?((@mem_false @mem_true) out)
+
+@mem_false = out
+  & out ~ 0
+
+@mem_true = out
+  & out ~ 1
+
+@getword = ((?((@get_nil @get_cons) (idx (mask out))) payload) (idx (mask out)))
+
+@get_nil = (payload (idx (mask out)))
+  & payload ~ *
+  & idx ~ *
+  & mask ~ *
+  & out ~ 0
+
+@get_cons = (* ((word tail) (idx (mask out))))
+  & idx ~ ?((@get_head @get_tail) (word (tail (mask out))))
+
+@get_head = (word (tail (mask out)))
+  & tail ~ *
+  & mask ~ *
+  & out ~ word
+
+@get_tail = (remaining (word (tail (mask out))))
+  & word ~ *
+  & @getword ~ (tail (remaining (mask out)))
+
+@setbit = (bits (target out))
+  & target ~ {tdiv tmod}
+  & tdiv ~ $([/] $(24 idx))
+  & tmod ~ $([%] $(24 rem))
+  & 1 ~ $([<<] $(rem mask))
+  & @putword ~ (bits (idx (mask out)))
+
+@putword = ((?((@put_nil @put_cons) (idx (mask out))) payload) (idx (mask out)))
+
+@put_nil = (payload (idx (mask out)))
+  & payload ~ *
+  & idx ~ *
+  & mask ~ *
+  & out ~ (0 *)
+
+@put_cons = (* ((word tail) (idx (mask out))))
+  & idx ~ ?((@put_head @put_tail) (word (tail (mask out))))
+
+@put_head = (word (tail (mask out)))
+  & word ~ $([|] $(mask newword))
+  & out ~ (1 (newword tail))
+
+@put_tail = (remaining (word (tail (mask out))))
+  & @putword ~ (tail (remaining (mask rest)))
+  & out ~ (1 (word rest))

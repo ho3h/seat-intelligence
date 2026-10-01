@@ -1,0 +1,8 @@
+// Sum a list with a running accumulator. Inline the two switch branches
+// to avoid expanding separate branch references for every list element.
+@prog = (l out)
+  & @sum ~ (l (0 out))
+
+@sum = ((?(((* (n n)) (* ((h t) (a b)))) (pl (acc out))) pl) (acc out))
+  & h ~ $([+] $(a next))
+  & @sum ~ (t (next b))

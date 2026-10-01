@@ -1,0 +1,18 @@
+// Compute f(Leaf) = 0 and
+// f(Node(l, v, r)) = 2*f(l) + 3*v + 5*f(r) + 1 (mod 2^24).
+@prog = (input output)
+  & @fold ~ (input output)
+
+@fold = ((?((@fold_leaf @fold_node) (pl out)) pl) out)
+
+@fold_leaf = (* 0)
+
+@fold_node = (* ((left (value right)) out))
+  & @fold ~ (left fl)
+  & @fold ~ (right fr)
+  & fl ~ $([*2] a)
+  & value ~ $([*3] b)
+  & fr ~ $([*5] c)
+  & b ~ $([+1] bp)
+  & a ~ $([+] $(c ac))
+  & ac ~ $([+] $(bp out))

@@ -1,0 +1,121 @@
+@prog = ((c edges) out)
+  & c ~ {cf cw}
+  & @enum ~ (cw (cf (edges (0 out))))
+
+@enum = ((?((@enum_nil @enum_cons) (pl (cf (edges (i out))))) pl) (cf (edges (i out))))
+
+@enum_nil = (* (cf (edges (i out))))
+  & cf ~ *
+  & edges ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@enum_cons = (* ((h t) ({cf1 cf2} ({e1 e2} ({i1 {i2 i3}} out)))))
+  & i1 ~ $([=] $(h z))
+  & @scan ~ (e2 (cf2 (i2 ((0 *) (0 d)))))
+  & i3 ~ $([+1] next)
+  & z ~ ?((@enum_no @enum_yes) (t (cf1 (e1 (next (d out))))))
+
+@enum_no = (t (cf (e (next (d out)))))
+  & d ~ *
+  & @enum ~ (t (cf (e (next out))))
+
+@enum_yes = (t (cf (e (next (d out)))))
+  & @enum ~ (t (cf (e (next rest))))
+  & out ~ (1 (d rest))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cf (id (seen (count out)))))) pl) (cf (id (seen (count out))))
+
+@scan_nil = (* (cf (id (seen (count out)))))
+  & cf ~ *
+  & id ~ *
+  & seen ~ *
+  & out ~ count
+
+@scan_cons = (* ((u v) ({cfr cfm} (id (seen (count out))))))
+  & @mapedge ~ ((u v) (cfm mapped))
+  & @action ~ (mapped (id (seen (count (tail (cfr out))))))
+
+@mapedge = ((u v) ({c1 c2} out))
+  & @lookup ~ (c1 (u x))
+  & @lookup ~ (c2 (v y))
+  & out ~ (x y)
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (i out))) pl) (i out))
+
+@lookup_nil = (* (i out))
+  & i ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) ({i1 i2} out)))
+  & i1 ~ $([=] $(0 z))
+  & z ~ ?((@lookup_no @lookup_yes) (h (t (i2 out))))
+
+@lookup_no = (h (t (i out)))
+  & h ~ *
+  & i ~ $([-] $(1 i2))
+  & @lookup ~ (t (i2 out))
+
+@lookup_yes = (h (t (i out)))
+  & t ~ *
+  & i ~ *
+  & out ~ h
+
+@action = (({a1 a2} {b1 b2}) ({id1 {id2 idkeep}} (seen (count (tail (cf out))))))
+  & a1 ~ $([=] $(b1 z))
+  & z ~ ?((@action_nonself @action_self) (a2 (b2 (id1 (id2 (idkeep (seen (count (tail (cf out)))))))))
+
+@action_self = (a (b (id1 (id2 (idkeep (seen (count (tail (cf out)))))))))
+  & a ~ *
+  & b ~ *
+  & id1 ~ *
+  & id2 ~ *
+  & @scan ~ (tail (cf (idkeep (seen (count out)))))
+
+@action_nonself = ({ac an} (b (id1 (id2 (idkeep (seen (count (tail (cf out)))))))))
+  & ac ~ $([=] $(id1 z))
+  & z ~ ?((@action_check_b @action_take_b) (an (b (id2 (idkeep (seen (count (tail (cf out)))))))))
+
+@action_take_b = (a (b (id (seen (count (tail (cf out)))))))
+  & a ~ *
+  & @record ~ (b (id (seen (count (tail (cf out))))))
+
+@action_check_b = (a (b (idcmp (idkeep (seen (count (tail (cf out))))))))
+  & b ~ $([=] $(idcmp z))
+  & z ~ ?((@action_skip @action_take_a) (a (idkeep (seen (count (tail (cf out)))))))
+
+@action_take_a = (a (id (seen (count (tail (cf out))))))
+  & @record ~ (a (id (seen (count (tail (cf out))))))
+
+@action_skip = (a (id (seen (count (tail (cf out))))))
+  & a ~ *
+  & @scan ~ (tail (cf (id (seen (count out)))))
+
+@record = ({n1 n2} (id ({s1 s2} (count (tail (cf out))))))
+  & @member ~ (s1 (n1 found))
+  & found ~ ?((@record_new @record_old) (n2 (id (s2 (count (tail (cf out)))))))
+
+@record_new = (n (id (seen (count (tail (cf out))))))
+  & count ~ $([+1] count2)
+  & @scan ~ (tail (cf (id ((1 (n seen)) (count2 out)))))
+
+@record_old = (n (id (seen (count (tail (cf out))))))
+  & n ~ *
+  & id ~ *
+  & @scan ~ (tail (cf (id (seen (count out)))))
+
+@member = ((?((@member_nil @member_cons) (pl (target out))) pl) (target out))
+
+@member_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@member_cons = (* ((h t) ({target1 target2} out)))
+  & h ~ $([=] $(target1 z))
+  & z ~ ?((@member_no @member_yes) (t (target2 out)))
+
+@member_no = (t (target out))
+  & @member ~ (t (target out))
+
+@member_yes = (* (* out))
+  & out ~ 1

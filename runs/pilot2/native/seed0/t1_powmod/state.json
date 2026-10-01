@@ -1,0 +1,53 @@
+{
+ "pid": "t1_powmod",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 23,
+    "itrs_median_big": null,
+    "itrs_max": 64,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 312,
+    "itrs_median_big": 767,
+    "itrs_max": 841,
+    "depth_median_big": 358,
+    "depth_max": 388
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 153000,
+ "best": {
+  "itrs_median_small": 312,
+  "itrs_median_big": 767,
+  "itrs_max": 841,
+  "depth_median_big": 358,
+  "depth_max": 388
+ },
+ "usd": 0.03700787,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

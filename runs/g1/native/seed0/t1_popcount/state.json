@@ -1,0 +1,54 @@
+{
+ "pid": "t1_popcount",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 71,
+    "itrs_median_big": 206,
+    "itrs_max": 371,
+    "depth_median_big": 111,
+    "depth_max": 127
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 45,
+    "itrs_median_big": 45,
+    "itrs_max": 45,
+    "depth_median_big": 31,
+    "depth_max": 31
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 33,
+    "itrs_median_big": 33,
+    "itrs_max": 33,
+    "depth_median_big": 24,
+    "depth_max": 24
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 84513,
+ "best": {
+  "itrs_median_small": 33,
+  "itrs_median_big": 33,
+  "itrs_max": 33,
+  "depth_median_big": 24,
+  "depth_max": 24
+ },
+ "usd": 0.019152574999999998,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

@@ -1,0 +1,36 @@
+@prog = ((?((@scan_nil @scan_cons) (pl_q299 output)) pl_q299) output)
+
+@scan_nil = (* out)
+  & out ~ (0 *)
+
+@scan_cons = (* ((h t) out))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@scan_digit @scan_nondigit) (hk (t out)))
+
+@scan_digit = ($([:-48] first) ((?((@num_nil @num_cons) (pl_q300 (first out))) pl_q300) out))
+
+@scan_nondigit = (* ({$([=32] ?((@symbol @space) (hk_q301 (t out)))) hk_q301} (t out)))
+
+@num_nil = (* (acc out))
+  & out ~ (1 ((0 acc) (0 *)))
+
+@num_cons = (* ((h t) (acc out)))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@num_digit @num_nondigit) (hk (t (acc out))))
+
+@num_digit = ($([:-48] digit) ((?((@num_nil @num_cons) (pl_q302 (acc2 out))) pl_q302) ($([*10] $([+] $(digit acc2))) out)))
+
+@num_nondigit = (* ({$([=32] ?((@symbol @space) (hk_q303 (t out2)))) hk_q303} (t (acc (1 ((0 acc) out2))))))
+
+@space = (* (* ((?((@scan_nil @scan_cons) (pl_q304 out)) pl_q304) out)))
+
+@symbol = (ch (t out))
+  & ch ~ {hc hv}
+  & hc ~ $([<] $(42 z))
+  & z ~ ?((@operator @paren) (hv (t out)))
+
+@paren = (* (v ((?((@scan_nil @scan_cons) (pl_q305 out2)) pl_q305) (1 ((2 v) out2)))))
+
+@operator = (v ((?((@scan_nil @scan_cons) (pl_q306 out2)) pl_q306) (1 ((1 v) out2))))

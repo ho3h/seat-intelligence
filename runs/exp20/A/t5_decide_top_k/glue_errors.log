@@ -1,0 +1,24 @@
+--- 05:46:53
+wrong arity: step of stream `sort_stream` is called as f(d, sorted_list:list[(num num num)], e0:num, e1:num), i.e. d plus 3 value(s); your function `step` takes 3 parameter(s) (d2, sorted_list, triple).
+--- 05:47:25
+wrong arity: step of stream `sort_stream` is called as f(d, sorted_list:list[(num num num)], e0:num, e1:num), i.e. d plus 3 value(s); your function `step` takes 5 parameter(s) (d2, sorted_list, u, v, score).
+--- 05:47:43
+build.py:50: kind mismatch at step of stream `sort_stream` result `sorted_list`: expected list[(num num num)], got list[(num num)] `cell` from cons (made at build.py:31).
+--- 05:48:00
+build.py:29: split needs a tuple wire or an explicit n; `v_score` is num
+--- 05:48:23
+build.py:53: kind mismatch at step of stream `sort_stream` result `sorted_list`: expected list[(num num num)], got list[(num (num num))] `cell` from cons (made at build.py:34).
+--- 05:48:46
+branch nonzero case of branch nonzero case of @prog (t5_decide_top_k) (@prog_b1s_b2s): 1 value(s) never used:
+    `k_m1` (num, argument `cm1` of branch nonzero case of branch nonzero case of @prog (t5_decide_top_k), made at build.py:52)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:49:25
+build.py:76: kind mismatch at step of stream `sort_stream` result `sorted_list`: expected list[(num num num)], got list[(num (num num))] `cell` from cons (made at build.py:50).
+--- 05:49:42
+build.py:45: kind mismatch at step of stream `sort_stream` result `sorted_list`: expected list[(num num num)], got list[(num (num num))] `cell` from cons (made at build.py:25).
+--- 05:49:53
+build.py:41: wire `r` (num, result of `+`, made at build.py:19) belongs to branch nonzero case of @prog (t5_decide_top_k) (@prog_b1s), but is used in fin of stream `sort_stream` (@sort_stream_fin) (branch condition). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:51:24
+build.py:57: wire `u` (num, argument `e0` of step of stream `take_stream`, made at build.py:76) belongs to step of stream `take_stream` (@take_stream_step), but is used in branch zero case of step of stream `take_stream` (@take_stream_step_b2z) (erased). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:51:41
+build.py:48: wire `u` (num, argument `e0` of step of stream `take_stream`, made at build.py:59) belongs to step of stream `take_stream` (@take_stream_step), but is used in branch nonzero case of step of stream `take_stream` (@take_stream_step_b2s) (cons head). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.

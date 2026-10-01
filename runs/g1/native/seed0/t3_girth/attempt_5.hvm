@@ -1,0 +1,25 @@
+// Count edges. If there are at least as many edges as vertices,
+// report a cycle; otherwise report a forest.
+@prog = ((n edges) out)
+  & @len ~ (edges m)
+  & m ~ $([<] $(n less))
+  & less ~ ?((@cyclic @acyclic) out)
+
+@cyclic = out
+  & out ~ 3
+
+@acyclic = (k out)
+  & k ~ *
+  & out ~ 0
+
+@len = (l out)
+  & @len_go ~ (l (0 out))
+
+@len_go = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+] $(1 acc2))
+  & @len_go ~ (t (acc2 out))

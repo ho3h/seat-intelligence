@@ -1,0 +1,154 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@all_eccentricities = ({$([=] $(a ?((@all_eccentricities__C0 (* (* (* (* (* (* @List/Nil))))))) (b (c d))))) b} ({a c} d))
+
+@all_eccentricities__C0 = ({$([+0x0000001] j) {c g}} (k ({l a} ({m b} ({n e} p)))))
+  & @List/Cons ~ (i (o p))
+  & @bfs_eccentricity ~ (a (b (d (h (0 i)))))
+  & @List/Cons ~ (c (@List/Nil d))
+  & @mark_vertex ~ (f (g h))
+  & @zero_words ~ (0 (e f))
+  & @all_eccentricities ~ (j (k (l (m (n o)))))
+
+@bfs_eccentricity = ({b e} ({c f} (a (d (g i)))))
+  & @expand_frontier ~ (a (b (c (d (@List/Nil (h (@bfs_eccentricity__C1 (e (f (g (h i)))))))))))
+
+@bfs_eccentricity__C0 = (* (c (d (a (b ($([+0x0000001] g) (f h)))))))
+  & @bfs_eccentricity ~ (a (b (e (f (g h)))))
+  & @List/Cons ~ (c (d e))
+
+@bfs_eccentricity__C1 = (?(((* (* (a (* a)))) @bfs_eccentricity__C0) b) b)
+
+@build_adjacency = ({$([=] $(a ?((@build_adjacency__C0 (* (* (* (* @List/Nil))))) (b (c d))))) b} ({a c} d))
+
+@build_adjacency__C0 = ({$([+0x0000001] d) a} (e ({f b} h)))
+  & @List/Cons ~ (c (g h))
+  & @find_neighbors ~ (a (b (@List/Nil c)))
+  & @build_adjacency ~ (d (e (f g)))
+
+@build_tree = (a ({$([=0x0000001] ?((@build_tree__C1 @build_tree__C2) (a (b c)))) b} c))
+
+@build_tree__C0 = (?((@List/Nil (* (a (* a)))) b) b)
+
+@build_tree__C1 = (a ($([:/0x0000002] {b {g d}}) (e h)))
+  &!@build_tree ~ (c (d e))
+  & @split_list ~ (a (b (c f)))
+  &!@build_tree ~ (f (g h))
+
+@build_tree__C2 = (* ((@build_tree__C0 a) (* a)))
+
+@expand_frontier = ((@expand_frontier__C2 a) a)
+
+@expand_frontier__C0 = (* (* (a (b (a b)))))
+
+@expand_frontier__C1 = (* (b (g ({h a} ({i c} (e (f l)))))))
+  & @expand_frontier ~ (g (h (i (j (k l)))))
+  & @expand_neighbors ~ (d (e (f (j k))))
+  & @tree_lookup ~ (a (b (c d)))
+
+@expand_frontier__C2 = (?((@expand_frontier__C0 @expand_frontier__C1) a) a)
+
+@expand_neighbors = ((@expand_neighbors__C4 a) a)
+
+@expand_neighbors__C0 = (b (c (a (* d))))
+  & @expand_neighbors ~ (a (b (c d)))
+
+@expand_neighbors__C1 = (* (b (f (a ({e c} h)))))
+  & @expand_neighbors ~ (a (d (g h)))
+  & @mark_vertex ~ (b (c d))
+  & @List/Cons ~ (e (f g))
+
+@expand_neighbors__C2 = (a (b (a b)))
+
+@expand_neighbors__C3 = (* ({b f} (e ({a c} (d g)))))
+  & @has_vertex ~ (a (b $([=0x0000000] ?((@expand_neighbors__C0 @expand_neighbors__C1) (c (d (e (f g))))))))
+
+@expand_neighbors__C4 = (?((@expand_neighbors__C2 @expand_neighbors__C3) a) a)
+
+@find_neighbors = (a ((@find_neighbors__C1 (a b)) b))
+
+@find_neighbors__C0 = (* (({e $([=] $(f g))} {$([=] $(c d)) h}) (b ({a {c f}} (i l)))))
+  & @find_neighbors ~ (a (b (k l)))
+  & @maybe_prepend ~ (d (e (j k)))
+  & @maybe_prepend ~ (g (h (i j)))
+
+@find_neighbors__C1 = (?(((* (a a)) @find_neighbors__C0) b) b)
+
+@get_word = ((@get_word__C2 a) a)
+
+@get_word__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_word ~ (a (b c))
+
+@get_word__C1 = (* (c (d ({$([=0x0000000] ?((@get_word__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_word__C2 = (?(((* 0) @get_word__C1) a) a)
+
+@has_vertex = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @get_word ~ (a (b $([&] $(d $([=0x0000000] ?((1 (* 0)) e))))))
+  & $(c d) ~ [<<0x0000001]
+
+@mark_vertex = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @set_word ~ (a (b (d e)))
+  & $(c d) ~ [<<0x0000001]
+
+@maybe_prepend = (?(((* (a a)) @maybe_prepend__C0) b) b)
+
+@maybe_prepend__C0 = (* a)
+  & @List/Cons ~ a
+
+@padded_size = ({a d} ({$([<] $(a b)) e} f))
+  & $(b ?((@padded_size__C0 (* (* (c c)))) (d (e f)))) ~ [=0x0000000]
+
+@padded_size__C0 = (a ($([*0x0000002] b) c))
+  & @padded_size ~ (a (b c))
+
+@prog = (({b {$([+0x0000017] $([:/0x0000018] i)) {a c}}} d) j)
+  & @all_eccentricities ~ (0 (b (g (h (i j)))))
+  & @padded_size ~ (a (1 {h f}))
+  & @build_tree ~ (e (f g))
+  & @build_adjacency ~ (0 (c (d e)))
+
+@set_word = ((@set_word__C3 a) a)
+
+@set_word__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_word ~ (b (c (d e)))
+
+@set_word__C1 = (* (* (a ($([|] $(a b)) c))))
+  & @List/Cons ~ (b c)
+
+@set_word__C2 = (* (c (d ({$([=0x0000000] ?((@set_word__C0 @set_word__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_word__C3 = (?(((* (* @List/Nil)) @set_word__C2) a) a)
+
+@split_list = (a ({$([=0x0000000] ?((@split_list__C2 @split_list__C3) (a (b c)))) b} c))
+
+@split_list__C0 = (* (c (a ($([:-0x0000001] b) (e f)))))
+  & @List/Cons ~ (c (d e))
+  & @split_list ~ (a (b (d f)))
+
+@split_list__C1 = (?(((* (@List/Nil @List/Nil)) @split_list__C0) a) a)
+
+@split_list__C2 = ((@split_list__C1 a) a)
+
+@split_list__C3 = (* (a (* (@List/Nil a))))
+
+@tree_lookup = (b (c ({$([=0x0000001] ?((@tree_lookup__C2 (* (a (* (* a))))) (b (c (d e))))) d} e)))
+
+@tree_lookup__C0 = ($([-] $(b c)) ({b d} (* (a e))))
+  & @tree_lookup ~ (a (c (d e)))
+
+@tree_lookup__C1 = (* (b (c (a (* d)))))
+  & @tree_lookup ~ (a (b (c d)))
+
+@tree_lookup__C2 = ((d e) ({$([<] $(a ?((@tree_lookup__C0 @tree_lookup__C1) (b (c (d (e f))))))) b} ($([:/0x0000002] {a c}) f)))
+
+@zero_words = ({$([=] $(a ?((@zero_words__C0 (* (* (* @List/Nil)))) (b (c d))))) b} ({a c} d))
+
+@zero_words__C0 = ($([+0x0000001] a) (b d))
+  & @List/Cons ~ (0 (c d))
+  & @zero_words ~ (a (b c))
+
+

@@ -1,0 +1,14 @@
+--- 04:20:33
+wrong arity: step of stream `build` is called as f(d, L:depth, t:trie[num], elem:num), i.e. d plus 3 value(s); your function `step` takes 5 parameter(s) (d, L, t, idx, x).
+--- 04:20:59
+build.py:26: wire `idx` (num, argument `idx` of step of stream `build`, made at build.py:34) is used a second time (left operand of `+`); it was already used at build.py:25 (update `u_set` (act set) port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(idx, 2)  and use each once.
+--- 04:21:06
+wrong arity: @prog (t5_rewrite_sameas_roots) is called as f(d, input:list[num]), i.e. d plus 1 value(s); your function `prog` takes 3 parameter(s) (d, n, es).
+--- 04:21:45
+fin of stream `build` must return exactly one value (the result); returned 2
+--- 04:22:35
+fin of stream `build` must return exactly one value (the result); returned 2
+--- 04:23:49
+wrong arity: leaf of reduce `cnt` (+) is called as f(d, x:num, E:num), i.e. d plus 2 value(s); your function `<lambda>` takes 2 parameter(s) (d, x).
+--- 04:23:57
+build.py:84: split needs a tuple wire or an explicit n; `lst` is list[num]

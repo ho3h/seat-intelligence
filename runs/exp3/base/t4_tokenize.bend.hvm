@@ -1,0 +1,107 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@parse = ((@parse__C5 a) a)
+
+@parse__C0 = (b (a c))
+  & @parse_char ~ (a (b c))
+
+@parse__C1 = (* ($([:-0x0000030] b) (a f)))
+  & @List/Cons ~ ((0 c) (e f))
+  & @read_digits ~ (a (b (c d)))
+  & @parse ~ (d e)
+
+@parse__C2 = (b (a c))
+  & @parse_char ~ (a (b c))
+
+@parse__C3 = (* ({$([<0x0000039] a) b} c))
+  & $(a ?((@parse__C0 @parse__C1) (b c))) ~ [=0x0000000]
+
+@parse__C4 = (* ({$([>0x0000030] a) b} c))
+  & $(a ?((@parse__C2 @parse__C3) (b c))) ~ [=0x0000000]
+
+@parse__C5 = (?((@List/Nil @parse__C4) a) a)
+
+@parse_char = (a ({$([=0x0000020] ?((@parse_char__C4 @parse_char__C5) (a (b c)))) b} c))
+
+@parse_char__C0 = (b (a d))
+  & @List/Cons ~ ((1 a) (c d))
+  & @parse ~ (b c)
+
+@parse_char__C1 = (* (b (a d)))
+  & @List/Cons ~ ((2 a) (c d))
+  & @parse ~ (b c)
+
+@parse_char__C2 = (a ({$([=0x0000029] ?((@parse_char__C0 @parse_char__C1) (a (b c)))) b} c))
+
+@parse_char__C3 = (* (b (a d)))
+  & @List/Cons ~ ((2 a) (c d))
+  & @parse ~ (b c)
+
+@parse_char__C4 = (a ({$([=0x0000028] ?((@parse_char__C2 @parse_char__C3) (a (b c)))) b} c))
+
+@parse_char__C5 = (* (a (* b)))
+  & @parse ~ (a b)
+
+@prog = a
+  & @parse ~ a
+
+@read_digits = ((@read_digits__C20 a) a)
+
+@read_digits__C0 = (b (c (a (a d))))
+  & @List/Cons ~ (b (c d))
+
+@read_digits__C1 = (* (b (a ($([*0x000000A] $([+] $(b $([:-0x0000030] c)))) d))))
+  & @read_digits ~ (a (c d))
+
+@read_digits__C10 = (* (b ({$([<0x0000039] a) c} d)))
+  & $(a ?((@read_digits__C7 @read_digits__C8) (b (c d)))) ~ [=0x0000000]
+
+@read_digits__C11 = (a (a @List/Nil))
+
+@read_digits__C12 = (* ({$([>0x0000030] a) c} (d (b e))))
+  & $(a ?((@read_digits__C9 @read_digits__C10) (b (c (d e))))) ~ [=0x0000000]
+
+@read_digits__C13 = (?((@read_digits__C11 @read_digits__C12) a) a)
+
+@read_digits__C14 = (a (b (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@read_digits__C15 = (* ($([*0x000000A] $([+] $(a $([:-0x0000030] b)))) (a ((@read_digits__C13 (b c)) c))))
+
+@read_digits__C16 = (a (b (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@read_digits__C17 = (* (b ({$([<0x0000039] a) c} d)))
+  & $(a ?((@read_digits__C14 @read_digits__C15) (b (c d)))) ~ [=0x0000000]
+
+@read_digits__C18 = (a (a @List/Nil))
+
+@read_digits__C19 = (* ({$([>0x0000030] a) c} (d (b e))))
+  & $(a ?((@read_digits__C16 @read_digits__C17) (b (c (d e))))) ~ [=0x0000000]
+
+@read_digits__C2 = (b (c (a (a d))))
+  & @List/Cons ~ (b (c d))
+
+@read_digits__C20 = (?((@read_digits__C18 @read_digits__C19) a) a)
+
+@read_digits__C3 = (* ({$([<0x0000039] a) b} c))
+  & $(a ?((@read_digits__C0 @read_digits__C1) (b c))) ~ [=0x0000000]
+
+@read_digits__C4 = (a (a @List/Nil))
+
+@read_digits__C5 = (* ({$([>0x0000030] a) b} c))
+  & $(a ?((@read_digits__C2 @read_digits__C3) (b c))) ~ [=0x0000000]
+
+@read_digits__C6 = (?((@read_digits__C4 @read_digits__C5) a) a)
+
+@read_digits__C7 = (a (b (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+@read_digits__C8 = (* ($([*0x000000A] $([+] $(a $([:-0x0000030] b)))) (a ((@read_digits__C6 (b c)) c))))
+
+@read_digits__C9 = (a (b (c (a d))))
+  & @List/Cons ~ (b (c d))
+
+

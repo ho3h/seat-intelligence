@@ -1,0 +1,102 @@
+@prog = (input out)
+  & input ~ (cl attrs)
+  & @count ~ (attrs (cl ((0 *) (0 out))))
+
+@at = ((?((@at_nil @at_cons) (pay (idx out))) pay) (idx out))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@at_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@at_hit @at_more) (head (tail out)))
+
+@at_hit = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@at_more = (idx (head (tail out)))
+  & head ~ *
+  & @at ~ (tail (idx out))
+
+@find = ((?((@find_nil @find_cons) (pay (cl (tc (tk out))))) pay) (cl (tc (tk out))))
+
+@find_nil = (* (cl (tc (tk out))))
+  & cl ~ *
+  & tc ~ *
+  & tk ~ *
+  & out ~ (0 0)
+
+@find_cons = (* (((node (key val)) tail) (cl (tc (tk out)))))
+  & cl ~ {cl_at cl_rec}
+  & tc ~ {tc_cmp tc_rec}
+  & tk ~ {tk_cmp tk_rec}
+  & @at ~ (cl_at (node got))
+  & got ~ $([=] $(tc_cmp ec))
+  & key ~ $([=] $(tk_cmp ek))
+  & ec ~ $([*] $(ek cond))
+  & cond ~ ?((@find_miss @find_hit) (tail (cl_rec (tc_rec (tk_rec (out val))))))
+
+@find_miss = (tail (cl (tc (tk (out val)))))
+  & val ~ *
+  & @find ~ (tail (cl (tc (tk out))))
+
+@find_hit = (* (tail (cl (tc (tk (out val))))))
+  & tail ~ *
+  & cl ~ *
+  & tc ~ *
+  & tk ~ *
+  & out ~ (1 val)
+
+@different = ((?((@different_nil @different_cons) (pay (cl (tc (tk (base out))))) pay) (cl (tc (tk (base out)))))
+
+@different_nil = (* (cl (tc (tk (base out)))))
+  & cl ~ *
+  & tc ~ *
+  & tk ~ *
+  & base ~ *
+  & out ~ 0
+
+@different_cons = (* (((node (key val)) tail) (cl (tc (tk (base out))))))
+  & cl ~ {cl_at cl_rec}
+  & tc ~ {tc_cmp tc_rec}
+  & tk ~ {tk_cmp tk_rec}
+  & base ~ {base_cmp base_rec}
+  & @at ~ (cl_at (node got))
+  & got ~ $([=] $(tc_cmp ec))
+  & key ~ $([=] $(tk_cmp ek))
+  & val ~ $([!] $(base_cmp en))
+  & ec ~ $([*] $(ek c1))
+  & c1 ~ $([*] $(en cond))
+  & @different ~ (tail (cl_rec (tc_rec (tk_rec (base_rec rr)))))
+  & cond ~ $([|] $(rr out))
+
+@count = ((?((@count_nil @count_cons) (pay (cl (pre (acc out))))) pay) (cl (pre (acc out))))
+
+@count_nil = (* (cl (pre (acc out))))
+  & cl ~ *
+  & pre ~ *
+  & acc ~ out
+
+@count_cons = (* (((node (key val)) tail) (cl (pre (acc out)))))
+  & cl ~ {cl_at cl_rest1}
+  & cl_rest1 ~ {cl_find cl_rest2}
+  & cl_rest2 ~ {cl_diff cl_rec}
+  & pre ~ {pre_find pre_rest}
+  & pre_rest ~ {pre_diff pre_next}
+  & node ~ {node_at node_pre}
+  & key ~ {key_find key_rest}
+  & key_rest ~ {key_diff key_pre}
+  & val ~ {val_cmp val_pre}
+  & @at ~ (cl_at (node_at cid))
+  & cid ~ {cid_find cid_diff}
+  & @find ~ (pre_find (cl_find (cid_find (key_find (found baseline))))
+  & baseline ~ {baseline_diff baseline_cmp}
+  & @different ~ (pre_diff (cl_diff (cid_diff (key_diff (baseline_diff prevconf)))))
+  & val_cmp ~ $([!] $(baseline_cmp newdiff))
+  & prevconf ~ $([=] $(0 notconf))
+  & found ~ $([*] $(notconf n1))
+  & n1 ~ $([*] $(newdiff inc))
+  & acc ~ $([+] $(inc acc2))
+  & pre_new ~ (1 ((node_pre (key_pre val_pre)) pre_next))
+  & @count ~ (tail (cl_rec (pre_new (acc2 out))))

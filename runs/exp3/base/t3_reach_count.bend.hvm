@@ -1,0 +1,75 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_all = ((@add_all__C1 a) a)
+
+@add_all__C0 = (* (b (a (c e))))
+  & @add_all ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@add_all__C1 = (?(((a a) @add_all__C0) b) b)
+
+@discover = ((@discover__C7 a) a)
+
+@discover__C0 = (b (c (d (a (* e)))))
+  & @discover ~ (a (b (c (d e))))
+
+@discover__C1 = (* (b (c (e (a (d g))))))
+  & @discover ~ (a (b (c (f g))))
+  & @List/Cons ~ (d (e f))
+
+@discover__C2 = (b (c (d (a (* e)))))
+  & @discover ~ (a (b (c (d e))))
+
+@discover__C3 = (* (c (d ({a e} (f ({b g} h))))))
+  & @member ~ (a (b $([=0x0000000] ?((@discover__C0 @discover__C1) (c (d (e (f (g h)))))))))
+
+@discover__C4 = (b (c (d (a (* e)))))
+  & @discover ~ (a (b (c (d e))))
+
+@discover__C5 = (* (c ({a d} (e (f ({b g} h))))))
+  & @member ~ (a (b $([=0x0000000] ?((@discover__C2 @discover__C3) (c (d (e (f (g h)))))))))
+
+@discover__C6 = (* ((b g) (f ({a c} (d (e h))))))
+  & @member ~ (a (b $([=0x0000001] ?((@discover__C4 @discover__C5) (c (d (e (f (g h)))))))))
+
+@discover__C7 = (?(((* (* (a a))) @discover__C6) b) b)
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @length ~ (a b)
+
+@length__C1 = (?((0 @length__C0) a) a)
+
+@member = ((@member__C2 a) a)
+
+@member__C0 = (b (a c))
+  & @member ~ (a (b c))
+
+@member__C1 = (* ($([=] $(a ?((@member__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@member__C2 = (?(((* 0) @member__C1) a) a)
+
+@prog = ((* ({b d} a)) f)
+  & @reach ~ (a (c (e f)))
+  & @List/Cons ~ (b (@List/Nil c))
+  & @List/Cons ~ (d (@List/Nil e))
+
+@reach = ({d a} ({e c} (b f)))
+  & @discover ~ (a (b (c (@List/Nil (@reach__C2 (d (e f)))))))
+
+@reach__C0 = (* a)
+  & @length ~ a
+
+@reach__C1 = (* ({g b} ({h c} (a (e j)))))
+  & @reach ~ (a (f (i j)))
+  & @add_all ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+  & @List/Cons ~ (g (h i))
+
+@reach__C2 = (?((@reach__C0 @reach__C1) a) a)
+
+

@@ -1,0 +1,730 @@
+[
+ {
+  "id": "dev_limit_01",
+  "rules_in_order": [
+   "Seat guests in order of their RSVP rank number, lowest number first.",
+   "In every section of 5 seats there may be at most 1 guest(s) from the category government officials."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_limit_06",
+  "rules_in_order": [
+   "In every section of 5 seats there may be at most 2 guest(s) from the category software and security firms."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_limit_11",
+  "rules_in_order": [
+   "In every section of 4 seats there may be at most 2 guest(s) from the category big tech firms."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_limit_16",
+  "rules_in_order": [
+   "In every section of 10 seats there may be at most 2 guest(s) from the category AI labs."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_pair_01",
+  "rules_in_order": [
+   "Every guest from the category AI labs must sit right next to a guest from the category chip makers (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_pair_06",
+  "rules_in_order": [
+   "Seat companies in this priority order (other companies come afterwards): Anthropic > Microsoft.",
+   "Every guest from the category investors must sit right next to a guest from the category chip makers (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_pair_11",
+  "rules_in_order": [
+   "Every guest from the category investors must sit right next to a guest from the category big tech firms (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_pair_16",
+  "rules_in_order": [
+   "Every guest from the category AI labs must sit right next to a guest from the category chip makers (pair them up one to one).",
+   "Guests of the same category must sit together, each category forming one block."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_apart_01",
+  "rules_in_order": [
+   "Keep the guests of Service Now and the guests of Google away from each other: Service Now at one end of the table and Google at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_apart_06",
+  "rules_in_order": [
+   "Keep the guests of Broadcom and the guests of Service Now away from each other: Broadcom at one end of the table and Service Now at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_apart_11",
+  "rules_in_order": [
+   "Keep the guests of Social Capital and the guests of OpenAI away from each other: Social Capital at one end of the table and OpenAI at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_apart_16",
+  "rules_in_order": [
+   "Keep the guests of Nvidia and the guests of NASA away from each other: Nvidia at one end of the table and NASA at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_vip_01",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 8 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_vip_06",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 8 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_vip_11",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 5 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_vip_16",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 12 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_stagger_01",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 3 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_stagger_06",
+  "rules_in_order": [
+   "Seat companies in this priority order (other companies come afterwards): Microsoft > NASA > AMD > Palantir.",
+   "Seat guests in rounds: in each round a company may contribute at most 1 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_stagger_11",
+  "rules_in_order": [
+   "Guests from the same company must sit together, each company forming one block.",
+   "Seat guests in rounds: in each round a company may contribute at most 1 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_stagger_16",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 2 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_headseat_01",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_headseat_06",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_headseat_11",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_headseat_16",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_bigfirst_01",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_bigfirst_06",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_bigfirst_11",
+  "rules_in_order": [
+   "Seat categories in this priority order (categories not listed come afterwards): investors > AI labs > big tech firms > government officials.",
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_bigfirst_16",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last.",
+   "Seat categories in this priority order (categories not listed come afterwards): software and security firms > AI labs > chip makers."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "dev_waitlist_01",
+  "rules_in_order": [
+   "Only the first 2 guest(s) of the category chip makers keep their place in the seating order; any further guests of that category are sent to the very end.",
+   "Seat categories in this priority order (categories not listed come afterwards): government officials > chip makers."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_waitlist_06",
+  "rules_in_order": [
+   "Only the first 4 guest(s) of the category chip makers keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_waitlist_11",
+  "rules_in_order": [
+   "Only the first 3 guest(s) of the category software and security firms keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_waitlist_16",
+  "rules_in_order": [
+   "Only the first 1 guest(s) of the category chip makers keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_snake_01",
+  "rules_in_order": [
+   "Seat categories in this priority order (categories not listed come afterwards): big tech firms.",
+   "With sections of 9 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_snake_06",
+  "rules_in_order": [
+   "With sections of 10 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_snake_11",
+  "rules_in_order": [
+   "With sections of 9 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_snake_16",
+  "rules_in_order": [
+   "With sections of 10 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_sectionlead_01",
+  "rules_in_order": [
+   "In every section of 8 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_sectionlead_06",
+  "rules_in_order": [
+   "In every section of 6 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_sectionlead_11",
+  "rules_in_order": [
+   "In every section of 9 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "dev_sectionlead_16",
+  "rules_in_order": [
+   "Seat companies in this priority order (other companies come afterwards): OpenAI > Altimeter > Exiger > Google.",
+   "In every section of 8 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_limit_01",
+  "rules_in_order": [
+   "In every section of 8 seats there may be at most 1 guest(s) from the category investors."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_limit_06",
+  "rules_in_order": [
+   "In every section of 7 seats there may be at most 2 guest(s) from the category government officials."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_limit_11",
+  "rules_in_order": [
+   "In every section of 10 seats there may be at most 2 guest(s) from the category big tech firms."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_limit_16",
+  "rules_in_order": [
+   "In every section of 7 seats there may be at most 1 guest(s) from the category big tech firms."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_limit_21",
+  "rules_in_order": [
+   "In every section of 6 seats there may be at most 2 guest(s) from the category investors."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_limit_26",
+  "rules_in_order": [
+   "In every section of 7 seats there may be at most 2 guest(s) from the category government officials."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_pair_01",
+  "rules_in_order": [
+   "Every guest from the category big tech firms must sit right next to a guest from the category software and security firms (pair them up one to one).",
+   "Guests of the same category must sit together, each category forming one block."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_pair_06",
+  "rules_in_order": [
+   "Seat guests in order of their RSVP rank number, lowest number first.",
+   "Every guest from the category big tech firms must sit right next to a guest from the category software and security firms (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_pair_11",
+  "rules_in_order": [
+   "Guests from the same company must sit together, each company forming one block.",
+   "Every guest from the category government officials must sit right next to a guest from the category software and security firms (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_pair_16",
+  "rules_in_order": [
+   "Every guest from the category chip makers must sit right next to a guest from the category government officials (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_pair_21",
+  "rules_in_order": [
+   "Every guest from the category government officials must sit right next to a guest from the category AI labs (pair them up one to one)."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_pair_26",
+  "rules_in_order": [
+   "Every guest from the category big tech firms must sit right next to a guest from the category investors (pair them up one to one).",
+   "Seat guests in order of their RSVP rank number, highest number first."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_apart_01",
+  "rules_in_order": [
+   "Keep the guests of Palo Alto Networks and the guests of Exiger away from each other: Palo Alto Networks at one end of the table and Exiger at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_apart_06",
+  "rules_in_order": [
+   "Keep the guests of Microsoft and the guests of Palantir away from each other: Microsoft at one end of the table and Palantir at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_apart_11",
+  "rules_in_order": [
+   "Keep the guests of Microsoft and the guests of Anthropic away from each other: Microsoft at one end of the table and Anthropic at the other end, everyone else in between.",
+   "Seat categories in this priority order (categories not listed come afterwards): software and security firms > chip makers > investors."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_apart_16",
+  "rules_in_order": [
+   "Keep the guests of NASA and the guests of Social Capital away from each other: NASA at one end of the table and Social Capital at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_apart_21",
+  "rules_in_order": [
+   "Keep the guests of Meta and the guests of Micron away from each other: Meta at one end of the table and Micron at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_apart_26",
+  "rules_in_order": [
+   "Keep the guests of AMD and the guests of Palo Alto Networks away from each other: AMD at one end of the table and Palo Alto Networks at the other end, everyone else in between."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_vip_01",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 10 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_vip_06",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 2 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_vip_11",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 8 or lower (better) are moved to the first seats; everyone else keeps their relative order after them.",
+   "Guests from the same company must sit together, each company forming one block."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_vip_16",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 10 or lower (better) are moved to the first seats; everyone else keeps their relative order after them.",
+   "Seat companies in this priority order (other companies come afterwards): Altimeter > Service Now > Exiger."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_vip_21",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 4 or lower (better) are moved to the first seats; everyone else keeps their relative order after them.",
+   "Guests from the same company must sit together, each company forming one block."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_vip_26",
+  "rules_in_order": [
+   "Guests whose RSVP rank number is 2 or lower (better) are moved to the first seats; everyone else keeps their relative order after them."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_stagger_01",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 2 guest(s); the remaining guests of that company wait for later rounds.",
+   "Seat categories in this priority order (categories not listed come afterwards): investors > AI labs > chip makers."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_stagger_06",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 1 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_stagger_11",
+  "rules_in_order": [
+   "Seat guests in order of their RSVP rank number, lowest number first.",
+   "Seat guests in rounds: in each round a company may contribute at most 1 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_stagger_16",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 2 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_stagger_21",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 2 guest(s); the remaining guests of that company wait for later rounds."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_stagger_26",
+  "rules_in_order": [
+   "Seat guests in rounds: in each round a company may contribute at most 2 guest(s); the remaining guests of that company wait for later rounds.",
+   "Seat categories in this priority order (categories not listed come afterwards): government officials > chip makers > software and security firms."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_headseat_01",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_headseat_06",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_headseat_11",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 10 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_headseat_16",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_headseat_21",
+  "rules_in_order": [
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_headseat_26",
+  "rules_in_order": [
+   "Guests of the same category must sit together, each category forming one block.",
+   "The guest with the lowest RSVP rank number takes the very first seat of the table; everyone else keeps the current order."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_bigfirst_01",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_bigfirst_06",
+  "rules_in_order": [
+   "Guests of the same category must sit together, each category forming one block.",
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_bigfirst_11",
+  "rules_in_order": [
+   "Seat guests in order of their RSVP rank number, lowest number first.",
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_bigfirst_16",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_bigfirst_21",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_bigfirst_26",
+  "rules_in_order": [
+   "Companies that brought more guests are seated before companies that brought fewer (equal sizes: any fixed order); guests without a company come last."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_waitlist_01",
+  "rules_in_order": [
+   "Only the first 1 guest(s) of the category big tech firms keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_waitlist_06",
+  "rules_in_order": [
+   "Only the first 2 guest(s) of the category investors keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_waitlist_11",
+  "rules_in_order": [
+   "Only the first 2 guest(s) of the category investors keep their place in the seating order; any further guests of that category are sent to the very end.",
+   "Seat companies in this priority order (other companies come afterwards): Anthropic > NASA > Altimeter."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_waitlist_16",
+  "rules_in_order": [
+   "Only the first 2 guest(s) of the category big tech firms keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_waitlist_21",
+  "rules_in_order": [
+   "Seat guests in order of their RSVP rank number, highest number first.",
+   "Only the first 4 guest(s) of the category software and security firms keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 8 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_waitlist_26",
+  "rules_in_order": [
+   "Only the first 2 guest(s) of the category AI labs keep their place in the seating order; any further guests of that category are sent to the very end."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_snake_01",
+  "rules_in_order": [
+   "Seat guests in order of their RSVP rank number, highest number first.",
+   "With sections of 9 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_snake_06",
+  "rules_in_order": [
+   "With sections of 9 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_snake_11",
+  "rules_in_order": [
+   "With sections of 5 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_snake_16",
+  "rules_in_order": [
+   "With sections of 6 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is only the captain of each section (the guest with the lowest RSVP rank number)."
+ },
+ {
+  "id": "tv2_snake_21",
+  "rules_in_order": [
+   "With sections of 7 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_snake_26",
+  "rules_in_order": [
+   "With sections of 9 seats, every second section (the 2nd, 4th, 6th, ...) is seated in reverse direction.",
+   "Seat guests in order of their RSVP rank number, lowest number first."
+  ],
+  "table": "The table is divided into sections of 9 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_sectionlead_01",
+  "rules_in_order": [
+   "In every section of 5 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_sectionlead_06",
+  "rules_in_order": [
+   "In every section of 7 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 7 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_sectionlead_11",
+  "rules_in_order": [
+   "In every section of 5 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 5 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_sectionlead_16",
+  "rules_in_order": [
+   "In every section of 4 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 4 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_sectionlead_21",
+  "rules_in_order": [
+   "In every section of 6 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 6 seats; the answer is which section each guest is in."
+ },
+ {
+  "id": "tv2_sectionlead_26",
+  "rules_in_order": [
+   "In every section of 3 seats, the guest with the lowest RSVP rank number takes that section's first seat."
+  ],
+  "table": "The table is divided into sections of 3 seats; the answer is which section each guest is in."
+ }
+]

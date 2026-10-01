@@ -1,0 +1,106 @@
+// @prog multiplies two little-endian base-4096 bignums.
+@prog = ((a b) out)
+  & @mul ~ (a (b raw))
+  & @norm ~ (raw out)
+
+// Multiply a by b, processing a one digit at a time.
+@mul = ((?((@mul_nil @mul_cons) (pa (b out))) pa) (b out))
+
+@mul_nil = (* (* out))
+  & out ~ (1 (0 (0 *)))
+
+@mul_cons = (* ((h t) (b out)))
+  & b ~ {b_mul b_scale}
+  & @mul ~ (t (b_mul p))
+  & @scale ~ (b_scale (h (0 s)))
+  & @shift ~ (p q)
+  & @add ~ (q (s (0 out)))
+
+// Prepend a zero digit.
+@shift = (p out)
+  & out ~ (1 (0 p))
+
+// Multiply every digit of a list by a single digit, carrying in base 4096.
+@scale = ((?((@scale_nil @scale_cons) (pl (factor (carry out)))) pl) (factor (carry out)))
+
+@scale_nil = (* (factor (carry out)))
+  & factor ~ *
+  & out ~ (1 (carry (0 *)))
+
+@scale_cons = (* ((h t) (factor (carry out))))
+  & factor ~ {fc fr}
+  & h ~ $([*] $(fc prod))
+  & prod ~ $([+] $(carry total))
+  & total ~ {tot_div tot_mod}
+  & tot_div ~ $([/] $(4096 carry2))
+  & tot_mod ~ $([%] $(4096 digit))
+  & @scale ~ (t (fr (carry2 rest)))
+  & out ~ (1 (digit rest))
+
+// Add two lists with an incoming carry.
+@add = ((?((@add_anil @add_acon) (pa (b (carry out)))) pa) (b (carry out)))
+
+@add_anil = (* (b (carry out)))
+  & @add_bonly ~ (b (carry out))
+
+@add_acon = (* ((h ta) ((?((@add_bnil @add_bcon) (pb (h (ta (carry out))))) pb) (carry out))))
+
+@add_bnil = (* (h (ta (carry out))))
+  & h ~ $([+] $(carry total))
+  & total ~ {tot_div tot_mod}
+  & tot_div ~ $([/] $(4096 carry2))
+  & tot_mod ~ $([%] $(4096 digit))
+  & @add ~ (ta ((0 *) (carry2 rest)))
+  & out ~ (1 (digit rest))
+
+@add_bcon = (* ((bd bt) (h (ta (carry out)))))
+  & h ~ $([+] $(bd sum1))
+  & sum1 ~ $([+] $(carry total))
+  & total ~ {tot_div tot_mod}
+  & tot_div ~ $([/] $(4096 carry2))
+  & tot_mod ~ $([%] $(4096 digit))
+  & @add ~ (ta (bt (carry2 rest)))
+  & out ~ (1 (digit rest))
+
+// Add a carry to a list when the other list has ended.
+@add_bonly = ((?((@add_bonly_nil @add_bonly_con) (pb (carry out))) pb) (carry out))
+
+@add_bonly_nil = (* (carry out))
+  & out ~ (1 (carry (0 *)))
+
+@add_bonly_con = (* ((d t) (carry out)))
+  & d ~ $([+] $(carry total))
+  & total ~ {tot_div tot_mod}
+  & tot_div ~ $([/] $(4096 carry2))
+  & tot_mod ~ $([%] $(4096 digit))
+  & @add_bonly ~ (t (carry2 rest))
+  & out ~ (1 (digit rest))
+
+// Normalize the most-significant end of a little-endian list.
+// The flag is 1 exactly when the normalized list represents zero.
+@norm = ((?((@norm_nil @norm_cons) (pl out)) pl) out)
+
+@norm_nil = (* out)
+  & out ~ ((1 (0 (0 *))) 1)
+
+@norm_cons = (* ((h t) out))
+  & @norm ~ (t (nt zt))
+  & zt ~ ?((@norm_tail_nonzero @norm_tail_zero) (h (nt out)))
+
+@norm_tail_nonzero = (h (nt out))
+  & nt ~ *
+  & out ~ ((1 (h nt)) 0)
+
+@norm_tail_zero = (* (h (nt out)))
+  & h ~ {hv ht}
+  & ht ~ $([=] $(0 z))
+  & z ~ ?((@norm_h_nonzero @norm_h_zero) (hv (nt out)))
+
+@norm_h_nonzero = (hv (nt out))
+  & nt ~ *
+  & out ~ ((1 (hv (0 *))) 0)
+
+@norm_h_zero = (* (hv (nt out)))
+  & hv ~ *
+  & nt ~ *
+  & out ~ ((1 (0 (0 *))) 1)

@@ -1,0 +1,24 @@
+// Produce the initial cluster labels [0, 1, ..., n-1].
+@prog = ((n (mnl cands)) out)
+  & mnl ~ *
+  & cands ~ *
+  & @init ~ (n out)
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_succ) (0 out))
+
+@init_zero = (* (0 *))
+
+@init_succ = (k (0 out))
+  & k ~ {k_rec k_value}
+  & @init ~ (k_rec tail)
+  & @append ~ (tail (k_value out))
+
+// Append x to a list.
+@append = ((?((@append_nil @append_cons) (payload (x out))) payload) (x out))
+
+@append_nil = (* (x (1 (x (0 *))))
+
+@append_cons = (* ((head tail) (x out)))
+  & @append ~ (tail (x rest))
+  & out ~ (1 (head rest))

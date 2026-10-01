@@ -1,0 +1,48 @@
+@prog = ((?((@m_false @m_ge1) (payload_q184 {$([-] $(b_q185 {$([&51] $([+] $(e_q185 {$([+] $(h_q185 $([&15] out))) $([:>>4] h_q185)}))) $([:>>2] $([&51] e_q185))})) $([:>>1] $([&85] b_q185))})) payload_q184) out)
+
+@m_false = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@m_ge1 = (n ctx)
+  & n ~ ?((@m_true @m_ge2) ctx)
+
+@m_true = (payload out)
+  & payload ~ *
+  & out ~ 255
+
+@m_ge2 = (n ctx)
+  & n ~ ?((@m_var @m_ge3) ctx)
+
+@m_var = (i out)
+  & i ~ ?((@m_v0 @m_vpos) out)
+
+@m_v0 = out
+  & out ~ 170
+
+@m_vpos = (n out)
+  & n ~ ?((@m_v1 @m_v2) out)
+
+@m_v1 = out
+  & out ~ 204
+
+@m_v2 = (n out)
+  & n ~ *
+  & out ~ 240
+
+@m_ge3 = (n ctx)
+  & n ~ ?((@m_not @m_ge4) ctx)
+
+@m_not = ((?((@m_false @m_ge1) (payload_q186 $([^255] out))) payload_q186) out)
+
+@m_ge4 = (n ctx)
+  & n ~ ?((@m_and @m_ge5) ctx)
+
+@m_and = (((?((@m_false @m_ge1) (payload_q187 $([&] $(y out)))) payload_q187) (?((@m_false @m_ge1) (payload_q188 y)) payload_q188)) out)
+
+@m_ge5 = (n ctx)
+  & n ~ ?(((((?((@m_false @m_ge1) (payload_q189_q193 $([|] $(y_q193 out_q193)))) payload_q189_q193) (?((@m_false @m_ge1) (payload_q190_q193 y_q193)) payload_q190_q193)) out_q193) @m_bad) ctx)
+
+@m_bad = (n ctx)
+  & n ~ *
+  & ctx ~ *

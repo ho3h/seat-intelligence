@@ -1,0 +1,38 @@
+@prog = (input out)
+  & input ~ (b (e m))
+  & m ~ {m_call m_base}
+  & b ~ $([%] $(m_base bnorm))
+  & @pow ~ (bnorm (e (m_call out)))
+
+@pow = (b (e (m out)))
+  & e ~ {e_test e_calc}
+  & e_test ~ $([!] $(0 nz))
+  & nz ~ ?((@pow_zero @pow_nonzero) (b (q (r (m out))))
+  & e_calc ~ {e_div e_mod}
+  & e_div ~ $([/] $(2 q))
+  & e_mod ~ $([%] $(2 r))
+
+@pow_zero = (b (q (r (m out))))
+  & b ~ *
+  & q ~ *
+  & r ~ *
+  & 1 ~ $([%] $(m out))
+
+@pow_nonzero = (* (b (q (r (m out)))))
+  & b ~ {b_rec b_mul}
+  & m ~ {m_rec m_rest}
+  & m_rest ~ {m_sq m_odd}
+  & @pow ~ (b_rec (q (m_rec x)))
+  & x ~ {x1 x2}
+  & x1 ~ $([*] $(x2 prod))
+  & prod ~ $([%] $(m_sq y))
+  & r ~ ?((@pow_even @pow_odd) (y (b_mul (m_odd out))))
+
+@pow_even = (* (y (b (m out))))
+  & b ~ *
+  & m ~ *
+  & y ~ out
+
+@pow_odd = (* (y (b (m out))))
+  & y ~ $([*] $(b prod))
+  & prod ~ $([%] $(m out))

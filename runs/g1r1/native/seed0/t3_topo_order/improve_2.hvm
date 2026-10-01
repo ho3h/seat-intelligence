@@ -1,0 +1,136 @@
+// Build indegrees, then run Kahn's algorithm, always selecting the smallest zero.
+@prog = (({n1 n2} {e1 e2}) out)
+  & @zeros ~ (n1 counts0)
+  & @inc_edges ~ (e1 (counts0 counts))
+  & @kahn ~ (n2 (counts (e2 ((0 *) out))))
+
+// Construct a list of n zeroes.
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) out)
+
+@zeros_nil = (out)
+  & out ~ (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Increment the count at an index in a list.
+@inc = (idx (list out))
+  & idx ~ ?((@inc_here @inc_next) (list out))
+
+@inc_here = (list out)
+  & list ~ (tag payload)
+  & tag ~ 1
+  & payload ~ (head tail)
+  & head ~ $([+] $(1 head2))
+  & out ~ (1 (head2 tail))
+
+@inc_next = (idx (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @inc ~ (idx (tail updated))
+  & out ~ (1 (head updated))
+
+// Scan edges once to compute all indegrees.
+@inc_edges = ((?((@ie_nil @ie_cons) (payload (counts out))) payload) (counts out))
+
+@ie_nil = (payload (counts out))
+  & payload ~ *
+  & counts ~ out
+
+@ie_cons = (* ((edge tail) (counts out)))
+  & edge ~ (u v)
+  & u ~ *
+  & @inc ~ (v (counts counts2))
+  & @inc_edges ~ (tail (counts2 out))
+
+// Find the first zero count, mark it, and return its index.
+@pick = ((?((@pick_nil @pick_cons) (payload (idx (result updated)))) payload) (idx (result updated)))
+
+@pick_nil = (payload (idx (result updated)))
+  & payload ~ *
+  & idx ~ *
+  & result ~ 0
+  & updated ~ (0 *)
+
+@pick_cons = (* ((head tail) (idx (result updated))))
+  & head ~ {hcheck hkeep}
+  & hcheck ~ $([=] $(0 eq))
+  & eq ~ ?((@pick_nonzero @pick_zero) (hkeep (tail (idx (result updated)))))
+
+@pick_zero = (* (head (tail (idx (result updated)))))
+  & head ~ *
+  & result ~ idx
+  & updated ~ (1 (16777215 tail))
+
+@pick_nonzero = (head (tail (idx (result updated))))
+  & idx ~ $([+1] idx2)
+  & @pick ~ (idx2 (tail (result rest)))
+  & updated ~ (1 (head rest))
+
+// Decrement the count at an index in a list.
+@dec = (idx (list out))
+  & idx ~ ?((@dec_here @dec_next) (list out))
+
+@dec_here = (list out)
+  & list ~ (tag payload)
+  & tag ~ 1
+  & payload ~ (head tail)
+  & head ~ $([-] $(1 head2))
+  & out ~ (1 (head2 tail))
+
+@dec_next = (idx (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @dec ~ (idx (tail updated))
+  & out ~ (1 (head updated))
+
+// Scan edges, decrementing the indegree of each edge's destination
+// when its source is the selected vertex.
+@reduce = ((?((@red_nil @red_cons) (payload (chosen (counts out)))) payload) (chosen (counts out)))
+
+@red_nil = (payload (chosen (counts out)))
+  & payload ~ *
+  & chosen ~ *
+  & counts ~ out
+
+@red_cons = (* (((u v) tail) (chosen (counts out))))
+  & chosen ~ {c1 c2}
+  & u ~ $([=] $(c1 eq))
+  & eq ~ ?((@red_skip @red_hit) (v (tail (c2 (counts out)))))
+
+@red_skip = (v (tail (chosen (counts out))))
+  & v ~ *
+  & @reduce ~ (tail (chosen (counts out)))
+
+@red_hit = (* (v (tail (chosen (counts out)))))
+  & @dec ~ (v (counts counts2))
+  & @reduce ~ (tail (chosen (counts2 out)))
+
+// Kahn's algorithm. Accumulate the order in reverse.
+@kahn = (remaining (counts (edges (acc out))))
+  & remaining ~ ?((@k_done @k_step) (counts (edges (acc out))))
+
+@k_done = (counts (edges (acc out)))
+  & counts ~ *
+  & edges ~ *
+  & @rev ~ (acc out)
+
+@k_step = (remaining (counts (edges (acc out))))
+  & @pick ~ (counts (0 (vertex marked)))
+  & edges ~ {scan_edges carry_edges}
+  & @reduce ~ (scan_edges vertex (marked updated))
+  & @kahn ~ (remaining (updated (carry_edges ((1 (vertex acc)) out)))
+
+// Reverse the accumulated list.
+@rev = ((?((@rev_nil @rev_cons) (payload (acc out))) payload) (acc out))
+
+@rev_nil = (payload (acc out))
+  & payload ~ *
+  & acc ~ out
+
+@rev_cons = (* ((head tail) (acc out)))
+  & @rev ~ (tail ((1 (head acc)) out))

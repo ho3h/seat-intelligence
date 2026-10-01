@@ -1,0 +1,63 @@
+// Merge the sorted lists, then remove adjacent duplicates.
+@prog = ((xs ys) out)
+  & @merge ~ (xs (ys merged))
+  & @dedup ~ (merged out)
+
+@merge = ((?((@merge_xnil @merge_xcons) (px (ys out))) px) (ys out))
+
+@merge_xnil = (* (ys out))
+  & ys ~ out
+
+@merge_xcons = (* ((h t) (ys out)))
+  & @merge_y ~ (h (t (ys out)))
+
+@merge_y = (h (t ((?((@merge_ynil @merge_ycons) (h (t (py out)))) py) out)))
+
+@merge_ynil = (h (t (* out)))
+  & out ~ (1 (h t))
+
+@merge_ycons = (* (h (t ((g u) out))))
+  & h ~ {hc hk}
+  & g ~ {gc gk}
+  & hc ~ $([<] $(gc z))
+  & z ~ ?((@merge_ge @merge_lt) (hk (t (gk (u out))))
+
+@merge_ge = (hk (t (gk (u out))))
+  & @merge ~ ((1 (hk t)) (u r))
+  & out ~ (1 (gk r))
+
+@merge_lt = (* (hk (t (gk (u out)))))
+  & @merge ~ (t ((1 (gk u)) r))
+  & out ~ (1 (hk r))
+
+@dedup = ((?((@dedup_nil @dedup_cons) (pl out)) pl) out)
+
+@dedup_nil = (* out)
+  & out ~ (0 *)
+
+@dedup_cons = (* ((h t) out))
+  & h ~ {head prev}
+  & @dedup_seen ~ (prev (t rest))
+  & out ~ (1 (head rest))
+
+@dedup_seen = (prev ((?((@seen_nil @seen_cons) (prev (pl out))) pl) out))
+
+@seen_nil = (prev (* out))
+  & prev ~ *
+  & out ~ (0 *)
+
+@seen_cons = (* (prev ((h t) out)))
+  & prev ~ {pc pk}
+  & h ~ {hc hk}
+  & hc ~ $([=] $(pc z))
+  & z ~ ?((@seen_diff @seen_same) (pk (hk (t out))))
+
+@seen_diff = (pk (hk (t out)))
+  & pk ~ *
+  & hk ~ {head prev2}
+  & @dedup_seen ~ (prev2 (t rest))
+  & out ~ (1 (head rest))
+
+@seen_same = (* (pk (hk (t out))))
+  & hk ~ *
+  & @dedup_seen ~ (pk (t out))

@@ -1,0 +1,28 @@
+@prog = ((b (e m)) out)
+  & m ~ {m1 {m2 m3}}
+  & b ~ $([%] $(m1 bm))
+  & 1 ~ $([%] $(m2 r0))
+  & @loop ~ (e (bm (r0 (m3 out))))
+
+@loop = (e (b (r (m out))))
+  & e ~ {e1 e2}
+  & e1 ~ ?((@loop_z @loop_s) (e2 (b (r (m out)))))
+
+@loop_z = (* (* (r (* r))))
+
+@loop_s = (* (e (b (r (m out)))))
+  & e ~ {e1 e2}
+  & e1 ~ $([&] $(1 bit))
+  & e2 ~ $([>>] $(1 e3))
+  & m ~ {m1 {m2 m3}}
+  & b ~ {b1 {b2 b3}}
+  & bit ~ ?((@pm_no @pm_yes) (b3 (r (m3 r2))))
+  & b1 ~ $([*] $(b2 bb))
+  & bb ~ $([%] $(m1 bn))
+  & @loop ~ (e3 (bn (r2 (m2 out))))
+
+@pm_no = (* (r (* r)))
+
+@pm_yes = (* (b (r (m out))))
+  & r ~ $([*] $(b t))
+  & t ~ $([%] $(m out))

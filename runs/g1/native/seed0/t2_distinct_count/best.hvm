@@ -1,0 +1,61 @@
+// Count values by inserting them into a binary trie, consuming one key bit
+// per level. Trie nodes are (1 (terminal (left right))); empty is (0 *).
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (count out)))) pl) (seen (count out)))
+
+@dc_nil = (* (seen (count out)))
+  & seen ~ *
+  & count ~ out
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & @trie ~ (seen (h result))
+  & result ~ (seen2 added)
+  & added ~ ?((@dc_skip @dc_add) (t (seen2 (count out))))
+
+@dc_skip = (t (seen (count out)))
+  & @dc ~ (t (seen (count out)))
+
+@dc_add = (* (t (seen (count out))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t (seen (count2 out)))
+
+// Insert key into a trie; return (updated_trie, is_new).
+@trie = ((?((@trie_empty @trie_node) (pl (key out))) pl) (key out))
+
+@trie_empty = (* (key out))
+  & @step ~ ((0 ((0 *) (0 *))) (key out))
+
+@trie_node = (* ((terminal children) (key out)))
+  & children ~ (left right)
+  & @step ~ ((terminal (left right)) (key out))
+
+@step = ((terminal (left right)) (key out))
+  & key ~ ?((@step_zero @step_more) ((terminal (left right)) out))
+
+@step_zero = ((terminal (left right)) out)
+  & terminal ~ ?((@step_new @step_old) ((left right) out))
+
+@step_new = ((left right) out)
+  & out ~ ((1 (1 (left right))) 1)
+
+@step_old = (* ((left right) out))
+  & out ~ ((1 (1 (left right))) 0)
+
+@step_more = (km ((terminal (left right)) out))
+  & km ~ $([+1] key)
+  & key ~ {k1 k2}
+  & k1 ~ $([%] $(2 bit))
+  & k2 ~ $([/] $(2 q))
+  & bit ~ ?((@step_left @step_right) ((terminal (left right)) (q out)))
+
+@step_left = ((terminal (left right)) (q out))
+  & @trie ~ (left (q result))
+  & result ~ (newchild added)
+  & out ~ ((1 (terminal (newchild right))) added)
+
+@step_right = (* ((terminal (left right)) (q out)))
+  & @trie ~ (right (q result))
+  & result ~ (newchild added)
+  & out ~ ((1 (terminal (left newchild))) added)

@@ -1,0 +1,58 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@append_one__C0__M_insert_sorted__C4 = (a ((1 (a (((0 a_q123) a_q123) c_i14))) c_i14))
+
+@append_one__C1 = (* (a (((?((@append_one__C0__M_insert_sorted__C4 @append_one__C1) a_q124) a_q124) (c d)) (c ((1 (a (d c_i15))) c_i15)))))
+
+@append_one__C2 = (?((@append_one__C0__M_insert_sorted__C4 (* (a_q128 (((?((@append_one__C0__M_insert_sorted__C4 (* (a_q133 (((?((@append_one__C0__M_insert_sorted__C4 @append_one__C1) a_q124_q133) a_q124_q133) (c_q133 d_q133)) (c_q133 ((1 (a_q133 (d_q133 c_i15_q133))) c_i15_q133)))))) a_q124_q128) a_q124_q128) (c_q128 d_q128)) (c_q128 ((1 (a_q128 (d_q128 c_i15_q128))) c_i15_q128)))))) a) a)
+
+@bfs__C0 = (* (((?(((a_q140 a_q140) @reverse__C0) b_q140) b_q140) (@List/Nil b)) (* b)))
+
+@bfs__C1 = (* ({h a} (d (e (i ({k (@collect_neighbors__C5 (a (@List/Nil (@enqueue_neighbors__C4 (d (e ((@bfs__C2 (g (((1 (h (i c_i16))) c_i16) (k l)))) g)))))))} l))))))
+
+@bfs__C2 = (?((@bfs__C0 @bfs__C1) a) a)
+
+@collect_neighbors__C0 = (a (c ((@collect_neighbors__C5 (a (c d))) (* d))))
+
+@collect_neighbors__C1 = (* (a ((@insert_sorted__C6 (c e)) ((@collect_neighbors__C5 (a (e f))) (c f)))))
+
+@collect_neighbors__C3 = (* (a ((@insert_sorted__C6 (c e)) ((@collect_neighbors__C5 (a (e f))) (* (c f))))))
+
+@collect_neighbors__C5 = (?(((* (a a)) (* (({$([=] $(a_q142 ?((({a_q144 b_q144} (c_q144 (d_q144 (e_q144 ($([=] $(a_q144 ?((@collect_neighbors__C0 @collect_neighbors__C1) (b_q144 (c_q144 (d_q144 (e_q144 f_q144))))))) f_q144))))) @collect_neighbors__C3) (b_q142 (c_q142 (d_q142 (e_q142 (f_q142 g_q142)))))))) e_q142} f_q142) (d_q142 ({a_q142 b_q142} (c_q142 g_q142)))))) b) b)
+
+@contains__C0 = (b ((@contains__C2 (b c)) c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@enqueue_neighbors__C2 = (a (b (a b)))
+
+@enqueue_neighbors__C3 = (* ({b e} (f (c ({(@contains__C2 (b ?((@enqueue_neighbors__C1_z @enqueue_neighbors__C0_s) (c (d (e (f g))))))) d} g)))))
+
+@enqueue_neighbors__C4 = (?((@enqueue_neighbors__C2 @enqueue_neighbors__C3) a) a)
+
+@insert_sorted__C0 = (b (a ((@insert_sorted__C6 (b d)) ((1 (a (d c_i18))) c_i18))))
+
+@insert_sorted__C1 = (* (* @List/Cons))
+
+@insert_sorted__C2 = ({$([=] $(a ?((@insert_sorted__C0 @insert_sorted__C1) (b (c d))))) b} ({a c} d))
+
+@insert_sorted__C3 = (* (a (b (c ((1 (a (((1 (b (c c_i20))) c_i20) c_i19))) c_i19)))))
+
+@insert_sorted__C5 = (* ({a c} (d ({$([<] $(a ?((@insert_sorted__C2 @insert_sorted__C3) (b (c (d e)))))) b} e))))
+
+@insert_sorted__C6 = (?((@append_one__C0__M_insert_sorted__C4 @insert_sorted__C5) a) a)
+
+@prog = ((* ({a c} e)) f)
+  & ?((@bfs__C0 @bfs__C1) (a (@List/Nil (((1 (c (((0 a_q143) a_q143) c_i22))) c_i22) (((0 a_q146) a_q146) (e f)))))) ~ 1
+
+@reverse__C0 = (* (b ((@reverse__C1 (((1 (b (c c_i23))) c_i23) e)) (c e))))
+
+@reverse__C1 = (?(((a a) @reverse__C0) b) b)
+
+@enqueue_neighbors__C1_z = ((@append_one__C2 (c d)) (f ({e c} ((@enqueue_neighbors__C4 (d (((1 (e (f c_i17))) c_i17) h))) h))))
+
+@enqueue_neighbors__C0_s = (* (b (c (* ((@enqueue_neighbors__C4 (b (c d))) d)))))

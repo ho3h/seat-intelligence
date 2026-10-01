@@ -1,0 +1,24 @@
+@prog = (input out)
+  & input ~ (i xs)
+  & @nth ~ (i (xs out))
+
+@nth = (i (xs out))
+  & xs ~ (?((@nth_nil @nth_cons) (pl (i out))) pl)
+
+@nth_nil = (pl (i out))
+  & pl ~ *
+  & i ~ *
+  & out ~ 0
+
+@nth_cons = (d (pl (i out)))
+  & d ~ *
+  & pl ~ (h t)
+  & i ~ ?((@nth_hit @nth_step) (h (t out)))
+
+@nth_hit = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@nth_step = (d (h (t out)))
+  & h ~ *
+  & @nth ~ (d (t out))

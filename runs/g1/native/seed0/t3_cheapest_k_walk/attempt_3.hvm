@@ -1,0 +1,188 @@
+// Exact-k shortest walks. Each iteration builds a fresh distance list and
+// relaxes every edge using distances from the previous iteration.
+
+@prog = (input output)
+  & @start ~ (input output)
+
+@start = (arg out)
+  & arg ~ (n (s (t (k edges))))
+  & n ~ {nc nk}
+  & s ~ {sc sk}
+  & sc ~ $([<] $(nc ok))
+  & ok ~ ?((@invalid @checkT) (nk (sk (t (k (edges out))))))
+
+@invalid = (n (s (t (k (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@checkT = (rem (n (s (t (k (edges out))))))
+  & rem ~ *
+  & n ~ {nc nk}
+  & t ~ {tc tk}
+  & tc ~ $([<] $(nc ok))
+  & ok ~ ?((@invalid @valid) (nk (s (tk (k (edges out))))))
+
+@valid = (rem (n (s (t (k (edges out))))))
+  & rem ~ *
+  & n ~ {nm nr}
+  & nr ~ {nf nrun}
+  & @make ~ (nm base)
+  & @set ~ ((base (s 0)) initial)
+  & @run ~ (k (nrun (t (edges initial)))) out
+
+@make = (n out)
+  & n ~ ?((@makeNil @makeCons) out)
+
+@makeNil = out
+  & out ~ (0 *)
+
+@makeCons = (rem out)
+  & @make ~ (rem tail)
+  & out ~ (1 (16777215 tail))
+
+@run = (arg out)
+  & arg ~ (steps (n (t (edges dist))))
+  & steps ~ ?((@runDone @runMore) (n (t (edges (dist out)))))
+
+@runDone = (n (t (edges (dist out))))
+  & n ~ *
+  & edges ~ *
+  & @get ~ ((dist t) out)
+
+@runMore = (rem (n (t (edges (dist out)))))
+  & n ~ {nm nr}
+  & nr ~ {nf nnext}
+  & @make ~ (nm fresh)
+  & @fold ~ ((edges (nf (dist fresh))) next)
+  & @run ~ (rem (nnext (t (edges next)))) out
+
+@fold = (arg out)
+  & arg ~ (es (n (old next)))
+  & es ~ (?( (@foldNil @foldCons) (payload (n (old (next out))))) payload)
+
+@foldNil = (payload (n (old (next out))))
+  & payload ~ *
+  & n ~ *
+  & old ~ *
+  & out ~ next
+
+@foldCons = (rem (payload (n (old (next out)))))
+  & rem ~ *
+  & payload ~ (u (v w))
+  & n ~ {ncmp nkeep}
+  & u ~ {ucmp ukeep}
+  & ucmp ~ $([<] $(ncmp ok))
+  & ok ~ ?((@foldBadU @foldCheckV) (ukeep (v (w (tail (nkeep (old (next out)))))))
+
+@foldBadU = (u (v (w (tail (n (old (next out))))))
+  & u ~ *
+  & v ~ *
+  & w ~ *
+  & @fold ~ ((tail (n (old next))) out)
+
+@foldCheckV = (rem (u (v (w (tail (n (old (next out)))))))
+  & rem ~ *
+  & v ~ {vcmp vkeep}
+  & n ~ {ncmp nkeep}
+  & vcmp ~ $([<] $(ncmp ok))
+  & ok ~ ?((@foldBadV @edgeReachable) (vkeep (u (w (tail (nkeep (old (next out)))))))
+
+@foldBadV = (v (u (w (tail (n (old (next out))))))
+  & v ~ *
+  & u ~ *
+  & w ~ *
+  & @fold ~ ((tail (n (old next))) out)
+
+@edgeReachable = (rem (v (u (w (tail (n (old (next out)))))))
+  & rem ~ *
+  & old ~ {old_read old_keep}
+  & @get ~ ((old_read u) d)
+  & d ~ {dcmp dadd}
+  & dcmp ~ $([=] $(16777215 eq))
+  & eq ~ ?((@edgeSkip @edgeFinite) (dadd (v (w (tail (n (old_keep (next out)))))))
+
+@edgeSkip = (dadd (v (w (tail (n (old (next out)))))))
+  & dadd ~ *
+  & v ~ *
+  & w ~ *
+  & @fold ~ ((tail (n (old next))) out)
+
+@edgeFinite = (rem (dadd (v (w (tail (n (old (next out))))))))
+  & rem ~ *
+  & dadd ~ {base add}
+  & add ~ $([+] $(w cand))
+  & cand ~ {cc ck}
+  & cc ~ $([<] $(base ov))
+  & ov ~ ?((@edgeCandidate @edgeOverflow) (ck (v (tail (n (old (next out)))))))
+
+@edgeOverflow = (cand (v (tail (n (old (next out))))))
+  & cand ~ *
+  & v ~ *
+  & @fold ~ ((tail (n (old next))) out)
+
+@edgeCandidate = (cand (v (tail (n (old (next out))))))
+  & next ~ {next_read next_write}
+  & v ~ {v_read v_keep}
+  & @get ~ ((next_read v_read) cur)
+  & cand ~ {c_cmp c_set}
+  & c_cmp ~ $([<] $(cur lt))
+  & lt ~ ?((@edgeNoImprove @edgeImprove) (c_set (v_keep (tail (n (old (next_write out)))))))
+
+@edgeNoImprove = (cand (v (tail (n (old (next out))))))
+  & cand ~ *
+  & v ~ *
+  & @fold ~ ((tail (n (old next))) out)
+
+@edgeImprove = (rem (cand (v (tail (n (old (next out))))))
+  & rem ~ *
+  & @set ~ ((next (v cand)) updated)
+  & @fold ~ ((tail (n (old updated))) out)
+
+@get = (arg out)
+  & arg ~ (list idx)
+  & list ~ (?( (@getNil @getCons) (payload (idx out))) payload)
+
+@getNil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 16777215
+
+@getCons = (rem (payload (idx out)))
+  & rem ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@getHere @getNext) (head (tail out)))
+
+@getHere = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@getNext = (rem (head (tail out)))
+  & head ~ *
+  & @get ~ ((tail rem) out)
+
+@set = (arg out)
+  & arg ~ (list (idx value))
+  & list ~ (?( (@setNil @setCons) (payload (idx (value out)))) payload)
+
+@setNil = (payload (idx (value out)))
+  & payload ~ *
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@setCons = (rem (payload (idx (value out))))
+  & rem ~ *
+  & payload ~ (head tail)
+  & idx ~ ?((@setHere @setNext) (head (tail (value out))))
+
+@setHere = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@setNext = (rem (head (tail (value out))))
+  & @set ~ ((tail (rem value)) newtail)
+  & out ~ (1 (head newtail))

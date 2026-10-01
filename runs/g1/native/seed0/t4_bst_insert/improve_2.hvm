@@ -1,0 +1,36 @@
+// Insert x into a BST, ignoring duplicates.
+@prog = (input out)
+  & input ~ (x tree)
+  // Inline the initial @ins call; recursive calls use @ins below.
+  & ((?((@ins_leaf @ins_node) (payload (a b))) payload) (a b)) ~ (tree (x out))
+
+@ins = ((?((@ins_leaf @ins_node) (payload (x out))) payload) (x out))
+
+@ins_leaf = (payload (x out))
+  & payload ~ *
+  & out ~ (1 ((0 *) (x (0 *))))
+
+@ins_node = (* (payload (x out)))
+  & payload ~ (l (v r))
+  & x ~ {xcmp xkeep}
+  & v ~ {vcmp vkeep}
+  & xcmp ~ $([<] $(vcmp z))
+  & z ~ ?((@ins_ge @ins_lt) ((l (vkeep r)) (xkeep out)))
+
+@ins_lt = (* ((l (v r)) (x out)))
+  & @ins ~ (l (x newl))
+  & out ~ (1 (newl (v r)))
+
+@ins_ge = ((l (v r)) (x out))
+  & x ~ {xcmp xkeep}
+  & v ~ {vcmp vkeep}
+  & xcmp ~ $([>] $(vcmp z))
+  & z ~ ?((@ins_eq @ins_gt) ((l (vkeep r)) (xkeep out)))
+
+@ins_eq = ((l (v r)) (x out))
+  & x ~ *
+  & out ~ (1 (l (v r)))
+
+@ins_gt = (* ((l (v r)) (x out)))
+  & @ins ~ (r (x newr))
+  & out ~ (1 (l (v newr)))

@@ -1,0 +1,100 @@
+model check (fused and unfused nets vs python model):
+   ['group', 'mask_gov'] mismatches: 0
+   ['mask_gov', 'group'] mismatches: 0
+   ['group', 'mask_gov', 'hint'] mismatches: 0
+   ['group', 'mask_key0'] mismatches: 0
+   ['bump', 'group'] mismatches: 0
+
+### H1 group ; filter  vs  filter ; group (should commute)
+==============================================================================
+CERTIFICATE   PROVED EQUAL
+  pipeline A : group ; mask_gov
+  pipeline B : mask_gov ; group
+      group      = group key := company mod 5
+      mask_gov   = mask out government guests
+      compact    = keep guests whose alive flag is nonzero (shared last step)   [compiled as: fused_net]
+  verdict    : equal for EVERY guest list (any length) and EVERY field value  [tier S]
+  how        : both nets normalised by the HVM2 rewrite rules with the interface (guest list in, seating out) left open;
+               the residual nets are isomorphic (fingerprint 5a72c70c7bf14e87)
+               per-guest body (identical on both sides): operators ['[!]', '[%]', '[*]'], 2 copy nodes, 1 switch (on the alive flag), 2 erasers
+               12 definitions in 5 classes; residual 8 / 8 nodes; 4 / 4 interactions spent
+  assumption : none beyond HVM2's own rewrite rules (exact)
+  not shown  : that either pipeline is the right seating rule; only that A and B are the same program.
+  executor   : 300/300 random guest lists agree between A and B on the real HVM2 runtime
+==============================================================================
+
+### H2 three independent stages in a different order (should commute)
+==============================================================================
+CERTIFICATE   PROVED EQUAL
+  pipeline A : group ; mask_gov ; hint
+  pipeline B : hint ; group ; mask_gov
+      group      = group key := company mod 5
+      mask_gov   = mask out government guests
+      hint       = hint := company * 3
+      compact    = keep guests whose alive flag is nonzero (shared last step)   [compiled as: fused_net]
+  verdict    : equal for EVERY guest list (any length) and EVERY field value  [tier D]
+  how        : both nets normalised by the HVM2 rewrite rules with the interface (guest list in, seating out) left open;
+               the residual nets are isomorphic (fingerprint 77ace48f8bebcbbd)
+               per-guest body (identical on both sides): operators ['[!]', '[%]', '[*3]', '[*]'], 3 copy nodes, 1 switch (on the alive flag), 3 erasers
+               12 definitions in 5 classes; residual 12 / 12 nodes; 4 / 4 interactions spent
+  assumption : the values that get copied are plain numbers (a duplicator never meets a duplicator); true for encoded guest records
+  not shown  : that either pipeline is the right seating rule; only that A and B are the same program.
+  executor   : 300/300 random guest lists agree between A and B on the real HVM2 runtime
+==============================================================================
+
+### H3 the filter reads the group key (should NOT commute)
+==============================================================================
+CERTIFICATE   REFUTED (counterexample found)
+  pipeline A : group ; mask_key0
+  pipeline B : mask_key0 ; group
+      group      = group key := company mod 5
+      mask_key0  = mask out group key 0
+      compact    = keep guests whose alive flag is nonzero (shared last step)   [compiled as: fused_net]
+  verdict    : NOT equal: 227/300 random guest lists give different seatings
+  smallest   : guests [(50, 1, 5, 1, 19)]
+               A -> []
+               B -> [(50, 1, 0, 1, 19)]
+  executor   : 73/300 random guest lists agree between A and B on the real HVM2 runtime
+==============================================================================
+
+### H4 the group key is made from a company that another stage changes (should NOT commute)
+==============================================================================
+CERTIFICATE   REFUTED (counterexample found)
+  pipeline A : bump ; group
+  pipeline B : group ; bump
+      bump       = company := company + 101
+      group      = group key := company mod 5
+      compact    = keep guests whose alive flag is nonzero (shared last step)   [compiled as: fused_net]
+  verdict    : NOT equal: 261/300 random guest lists give different seatings
+  smallest   : guests [(119, 5, 3, 1, 31)]
+               A -> [(220, 5, 0, 1, 31)]
+               B -> [(220, 5, 4, 1, 31)]
+  executor   : 39/300 random guest lists agree between A and B on the real HVM2 runtime
+==============================================================================
+
+### H5 two filters, other order (equal, but needs commutativity of *, which normalization does not know)
+==============================================================================
+CERTIFICATE   NO PROOF FOUND (they agree on every sample, which is evidence, not proof)
+  pipeline A : mask_gov ; mask_bigco
+  pipeline B : mask_bigco ; mask_gov
+      mask_gov   = mask out government guests
+      mask_bigco = mask out companies >= 50
+      compact    = keep guests whose alive flag is nonzero (shared last step)   [compiled as: fused_net]
+  verdict    : no proof (residual nets differ (A 12 nodes, B 12 nodes)); 300/300 random guest lists agree on the real runtime
+  executor   : 300/300 random guest lists agree between A and B on the real HVM2 runtime
+==============================================================================
+
+### H6 as H1 but one list pass per stage (equal, but needs loop fusion, out of reach)
+==============================================================================
+CERTIFICATE   NO PROOF FOUND (they agree on every sample, which is evidence, not proof)
+  pipeline A : group ; mask_gov
+  pipeline B : mask_gov ; group
+      group      = group key := company mod 5
+      mask_gov   = mask out government guests
+      compact    = keep guests whose alive flag is nonzero (shared last step)   [compiled as: unfused_net]
+  verdict    : no proof (residual nets differ (A 32 nodes, B 32 nodes)); 300/300 random guest lists agree on the real runtime
+  executor   : 300/300 random guest lists agree between A and B on the real HVM2 runtime
+==============================================================================
+
+### real chart: 34 seats, 19 printed organisations
+   group;mask_gov and mask_gov;group give the same seating on the real chart: True; 26 of 34 guests kept (non-government)

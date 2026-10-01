@@ -1,0 +1,40 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 output)
+  & @sort_cons_lw ~ (lv1 output)
+
+@sort_nil = (* (0 *))
+
+@sort_cons = (* ((head tail) output))
+  & @insert ~ (head (sorted output))
+  & @sort_cons_lw ~ (tail sorted)
+
+@insert = (item ((?((@ins_nil @ins_cons) (item (payload output))) payload) output))
+
+@ins_nil = (item (payload output))
+  & payload ~ *
+  & output ~ (1 (item (0 *)))
+
+@ins_cons = (* (item ((head tail) output)))
+  & item ~ {item_cmp item_branch}
+  & head ~ {head_cmp head_branch}
+  & head_cmp ~ $([<] $(item_cmp less))
+  & less ~ ?((@ins_before @ins_after) (head_branch (tail (item_branch output))))
+
+@ins_before = (head (tail (item output)))
+  & output ~ (1 (item (1 (head tail))))
+
+@ins_after = (* (head (tail (item output))))
+  & @insert ~ (item (tail sorted))
+  & output ~ (1 (head sorted))
+
+@sort_cons_lw = (ls24 q8)
+  & ls24 ~ (g19 (e15 (g20 (e16 (g21 (e17 (g22 (e18 tk23))))))))
+  & g19 ~ ?((@sort_nil @sort_cons_la) ((e15 q10) q8))
+  & g20 ~ ?((@sort_nil @sort_cons_la) ((e16 q12) q10))
+  & g21 ~ ?((@sort_nil @sort_cons_la) ((e17 q14) q12))
+  & g22 ~ ?((@sort_nil @sort_cons) ((e18 tk23) q14))
+
+@sort_cons_la = (* ((head sorted) output))
+  & @insert ~ (head (sorted output))

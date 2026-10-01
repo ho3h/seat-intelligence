@@ -1,0 +1,141 @@
+// Initialize distances, then perform n-1 full edge-relaxation passes.
+@prog = ((n (s edges)) out)
+  & n ~ {nb nr}
+  & @build ~ (nb (0 (s d0)))
+  & @round0 ~ (nr (edges (d0 out)))
+
+@build = (n (idx (s out)))
+  & n ~ ?((@bzero @bmore) (idx (s out)))
+
+@bzero = (idx (s out))
+  & idx ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@bmore = (rem (idx (s out)))
+  & idx ~ {ix1 ix2}
+  & s ~ {sc sr}
+  & ix1 ~ $([=] $(sc z))
+  & ix2 ~ $([+1] idxnext)
+  & z ~ ?((@bhead_no @bhead_yes) (rem (idxnext (sr out))))
+
+@bhead_no = (rem (idx (s out)))
+  & @build ~ (rem (idx (s tail)))
+  & out ~ (1 (16777215 tail))
+
+@bhead_yes = (* (rem (idx (s out))))
+  & @build ~ (rem (idx (s tail)))
+  & out ~ (1 (0 tail))
+
+// Convert the vertex count n to n-1 passes, with zero handled separately.
+@round0 = (count (edges (d out)))
+  & count ~ ?((@r0zero @r0more) (edges (d out)))
+
+@r0zero = (edges (d out))
+  & edges ~ *
+  & d ~ out
+
+@r0more = (rem (edges (d out)))
+  & @round ~ (rem (edges (d out)))
+
+// Run the requested number of passes.
+@round = (count (edges (d out)))
+  & count ~ ?((@rdone @rstep) (edges (d out)))
+
+@rdone = (edges (d out))
+  & edges ~ *
+  & d ~ out
+
+@rstep = (count (edges (d out)))
+  & edges ~ {e1 e2}
+  & @relax ~ (e1 (d d1))
+  & @round ~ (count (e2 (d1 out)))
+
+// Relax each edge in the list once.
+@relax = ((?((@rnil @rcons) (p (d out))) p) (d out))
+
+@rnil = (p (d out))
+  & p ~ *
+  & d ~ out
+
+@rcons = (* (((u (v w)) tail) (d out)))
+  & @edge ~ ((u (v w)) (d d1))
+  & @relax ~ (tail (d1 out))
+
+// Relax one edge, returning the updated distance list.
+@edge = ((u (v w)) (d out))
+  & @get ~ (d (u g1))
+  & g1 ~ (du d1)
+  & du ~ {du_for_add ducheck}
+  & ducheck ~ $([=] $(16777215 zinf))
+  & zinf ~ ?((@check_edge @skip_edge) (du_for_add (d1 (v (w out)))))
+
+@skip_edge = (* (du (d (v (w out)))))
+  & du ~ *
+  & v ~ *
+  & w ~ *
+  & d ~ out
+
+@check_edge = (du (d (v (w out))))
+  & du ~ $([+] $(w cand))
+  & v ~ {vget vset}
+  & @get ~ (d (vget got))
+  & got ~ (dv d2)
+  & cand ~ {ccmp cset}
+  & ccmp ~ $([<] $(dv z))
+  & z ~ ?((@no_update @update) (cset (vset (d2 out))))
+
+@no_update = (c (v (d out)))
+  & c ~ *
+  & v ~ *
+  & d ~ out
+
+@update = (* (c (v (d out))))
+  & @set ~ (d (v (c nd)))
+  & out ~ nd
+
+// Lookup an indexed distance, returning (value, rebuilt-list).
+@get = ((?((@gnil @gcons) (p (i out))) p) (i out))
+
+@gnil = (p (i out))
+  & p ~ *
+  & i ~ *
+  & out ~ (16777215 (0 *))
+
+@gcons = (* ((h t) (i out)))
+  & @gidx ~ (i (h (t out)))
+
+@gidx = (i (h (t out)))
+  & i ~ ?((@gzero @gmore) (h (t out)))
+
+@gzero = (h (t out))
+  & h ~ {a b}
+  & out ~ (a (1 (b t)))
+
+@gmore = (im1 (h (t out)))
+  & @get ~ (t (im1 got))
+  & got ~ (v rt)
+  & out ~ (v (1 (h rt)))
+
+// Set an indexed distance.
+@set = ((?((@snil @scons) (p (i (val out)))) p) (i (val out)))
+
+@snil = (p (i (val out)))
+  & p ~ *
+  & i ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@scons = (* ((h t) (i (val out))))
+  & @sidx ~ (i (h (t (val out))))
+
+@sidx = (i (h (t (val out))))
+  & i ~ ?((@szero @smore) (h (t (val out))))
+
+@szero = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@smore = (im1 (h (t (val out))))
+  & @set ~ (t (im1 (val st)))
+  & out ~ (1 (h st))

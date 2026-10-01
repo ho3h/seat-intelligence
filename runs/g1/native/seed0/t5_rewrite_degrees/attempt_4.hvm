@@ -1,0 +1,135 @@
+@prog = ((c edges) out)
+  & c ~ {ci ca}
+  & @build ~ (ci (ca (edges (0 out))))
+
+@build = ((?((@build_nil @build_cons) (pl (all (edges (idx out))))) pl) (all (edges (idx out))))
+
+@build_nil = (pl (all (edges (idx out))))
+  & pl ~ *
+  & all ~ *
+  & edges ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@build_cons = (* ((v tail) (all (edges (idx out)))))
+  & idx ~ {ic {icl inext}}
+  & v ~ $([=] $(ic eq))
+  & eq ~ ?((@build_noncanon @build_canon) (tail (all (edges (icl (inext out))))))
+
+@build_noncanon = (* (tail (all (edges (icl (inext out))))))
+  & icl ~ *
+  & @build ~ (tail (all (edges (inext out))))
+
+@build_canon = (* (tail (all (edges (icl (inext out))))))
+  & all ~ {all_deg all_rec}
+  & edges ~ {ed_deg ed_rec}
+  & @deg ~ (ed_deg (all_deg (icl ((0 *) (0 degout)))))
+  & @build ~ (tail (all_rec (ed_rec (inext rest))))
+  & out ~ (1 (degout rest))
+
+@deg = ((?((@deg_nil @deg_cons) (pl (c (x (seen (acc out)))))) pl) (c (x (seen (acc out)))))
+
+@deg_nil = (pl (c (x (seen (acc out)))))
+  & pl ~ *
+  & c ~ *
+  & x ~ *
+  & seen ~ *
+  & acc ~ out
+
+@deg_cons = (* ((u v) (tail (c (x (seen (acc out)))))))
+  & c ~ {cu {cv cr}}
+  & @get ~ (cu (u a))
+  & @get ~ (cv (v b))
+  & @edge_mapped ~ (a (b (tail (cr (x (seen (acc out)))))))
+
+@edge_mapped = (a (b (tail (c (x (seen (acc out)))))))
+  & a ~ {ae {ax an}}
+  & b ~ {be {bx bn}}
+  & x ~ {xa {xb xr}}
+  & ae ~ $([=] $(be eq))
+  & eq ~ ?((@edge_diff @edge_self) (ax (an (bx (bn (tail (c (xa (xb (xr (seen (acc out))))))))))))
+
+@edge_self = (* (ax (an (bx (bn (tail (c (xa (xb (xr (seen (acc out))))))))))))
+  & ax ~ *
+  & an ~ *
+  & bx ~ *
+  & bn ~ *
+  & xa ~ *
+  & xb ~ *
+  & @deg ~ (tail (c (xr (seen (acc out)))))
+
+@edge_diff = (* (ax (an (bx (bn (tail (c (xa (xb (xr (seen (acc out))))))))))))
+  & ax ~ $([=] $(xa eq2))
+  & eq2 ~ ?((@edge_not_a @edge_is_a) (an (bx (bn (tail (c (xb (xr (seen (acc out))))))))))
+
+@edge_is_a = (* (an (bx (bn (tail (c (xb (xr (seen (acc out))))))))))
+  & an ~ *
+  & bx ~ *
+  & xb ~ *
+  & @candidate ~ (bn (tail (c (xr (seen (acc out))))))
+
+@edge_not_a = (* (an (bx (bn (tail (c (xa (xb (xr (seen (acc out)))))))))))
+  & xa ~ *
+  & bx ~ $([=] $(xb eq3))
+  & eq3 ~ ?((@edge_unrelated @edge_is_b) (an (bn (tail (c (xr (seen (acc out))))))))
+
+@edge_unrelated = (* (an (bn (tail (c (xr (seen (acc out))))))))
+  & an ~ *
+  & bn ~ *
+  & @deg ~ (tail (c (xr (seen (acc out)))))
+
+@edge_is_b = (* (an (bn (tail (c (xr (seen (acc out))))))))
+  & bn ~ *
+  & @candidate ~ (an (tail (c (xr (seen (acc out))))))
+
+@candidate = (n (tail (c (x (seen (acc out))))))
+  & n ~ {nk ns}
+  & seen ~ {sm ss}
+  & @mem ~ (sm (nk found))
+  & found ~ ?((@candidate_new @candidate_old) (ns (tail (c (x (ss (acc out)))))))
+
+@candidate_old = (* (ns (tail (c (x (ss (acc out)))))))
+  & ns ~ *
+  & @deg ~ (tail (c (x (ss (acc out)))))
+
+@candidate_new = (* (ns (tail (c (x (ss (acc out)))))))
+  & acc ~ $([+1] acc2)
+  & @deg ~ (tail (c (x ((1 (ns ss)) (acc2 out)))))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (key out))) pl) (key out))
+
+@mem_nil = (pl (key out))
+  & pl ~ *
+  & key ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (key out)))
+  & key ~ {kt kr}
+  & h ~ $([=] $(kt eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (kr out)))
+
+@mem_no = (t (k out))
+  & @mem ~ (t (k out))
+
+@mem_yes = (* (t (k out)))
+  & t ~ *
+  & k ~ *
+  & out ~ 1
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_zero @get_pos) (h (t out)))
+
+@get_zero = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@get_pos = (idx (h (t out)))
+  & h ~ *
+  & @get ~ (t (idx out))

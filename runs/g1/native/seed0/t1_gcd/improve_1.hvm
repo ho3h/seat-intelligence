@@ -1,0 +1,19 @@
+// Euclidean gcd. Duplicate b into the switch test and two copies for the
+// modulo step; the two useful copies are ready in parallel with the test.
+@prog = (input out)
+  & input ~ (a b)
+  & @gcd ~ ((a b) out)
+
+@gcd = ((a b) out)
+  & b ~ {test {div nexta}}
+  & test ~ ?((@gcd_zero @gcd_succ) (a (div (nexta out))))
+
+@gcd_zero = (a (div (nexta out)))
+  & a ~ out
+  & div ~ *
+  & nexta ~ *
+
+@gcd_succ = (k (a (div (nexta out))))
+  & k ~ *
+  & a ~ $([%] $(div rem))
+  & @gcd ~ ((nexta rem) out)

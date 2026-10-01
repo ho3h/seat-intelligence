@@ -1,0 +1,42 @@
+// State: (has_previous (previous (current_run (best_run output))))
+
+@prog = (input output)
+  & @loop ~ (input (0 (0 (0 (0 output)))))
+
+@loop = ((?((@loop_nil @loop_cons) (payload (has (prev (run (best out)))))) payload) (has (prev (run (best out)))))
+
+@loop_nil = (* (* (* (* (best best)))))
+
+@loop_cons = (* ((head tail) (has (prev (run (best out))))))
+  & has ~ ?((@loop_first @loop_seen) (head (tail (prev (run (best out))))))
+
+@loop_first = (head (tail (prev (run (best out)))))
+  & prev ~ *
+  & run ~ *
+  & best ~ *
+  & @loop ~ (tail (1 (head (1 (1 out)))))
+
+@loop_seen = (* (head (tail (prev (run (best out))))))
+  & head ~ {head_copy head_test}
+  & head_test ~ $([=] $(prev equal))
+  & equal ~ ?((@loop_different @loop_same) (tail (head_copy (run (best out)))))
+
+@loop_different = (tail (head_copy (run (best out))))
+  & run ~ *
+  & @loop ~ (tail (1 (head_copy (1 (best out)))))
+
+@loop_same = (* (tail (head_copy (run (best out)))))
+  & run ~ $([+1] incremented)
+  & incremented ~ {run_cmp remainder}
+  & remainder ~ {run_next candidate}
+  & best ~ {best_cmp best_next}
+  & run_cmp ~ $([>] $(best_cmp greater))
+  & greater ~ ?((@loop_keep_best @loop_new_best) (tail (head_copy (run_next (candidate (best_next out))))))
+
+@loop_keep_best = (tail (head_copy (run_next (candidate (best out)))))
+  & candidate ~ *
+  & @loop ~ (tail (1 (head_copy (run_next (best out)))))
+
+@loop_new_best = (* (tail (head_copy (run_next (candidate (best out))))))
+  & best ~ *
+  & @loop ~ (tail (1 (head_copy (run_next (candidate out)))))

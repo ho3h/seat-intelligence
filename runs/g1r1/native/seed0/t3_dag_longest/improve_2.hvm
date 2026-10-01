@@ -1,0 +1,114 @@
+@prog = ((n edges) out)
+  & n ~ {n_make n_bound}
+  & @makezeros ~ (n_make dist)
+  & @dec ~ (n_bound rounds)
+  & @rounds ~ (rounds (edges (dist out)))
+
+@dec = (?((@dec0 @decS) out) out)
+
+@dec0 = out
+  & out ~ 0
+
+@decS = (k out)
+  & out ~ k
+
+@makezeros = (?((@mz0 @mzS) out) out)
+
+@mz0 = out
+  & out ~ (0 *)
+
+@mzS = (k out)
+  & @makezeros ~ (k rest)
+  & out ~ (1 (0 rest))
+
+@rounds = ((?((@rd0 @rdS) (edges (dist out))) edges) (dist out))
+
+@rd0 = (edges (dist out))
+  & edges ~ *
+  & @maxlist ~ (dist out)
+
+@rdS = (k (edges (dist out)))
+  & edges ~ {e1 e2}
+  & @pass ~ (e1 (dist d2))
+  & @rounds ~ (k (e2 (d2 out)))
+
+@pass = ((?((@p0 @pS) (payload (dist out))) payload) (dist out))
+
+@p0 = (payload (dist out))
+  & payload ~ *
+  & dist ~ out
+
+@pS = (* ((edge tail) (dist out)))
+  & @update ~ (edge (dist next))
+  & @pass ~ (tail (next out))
+
+@get = (idx ((?((@g0 @gS) (payload (idx out))) payload) out))
+
+@g0 = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@gS = (k ((head tail) (idx out)))
+  & k ~ *
+  & idx ~ ?((@gi0 @giS) (head (tail out)))
+
+@gi0 = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@giS = (k (head (tail out)))
+  & head ~ *
+  & @get ~ (k (tail out))
+
+@update = (((u v) dist) out)
+  & dist ~ {dget dset}
+  & @get ~ (u (dget du))
+  & du ~ $([+1] cand)
+  & @setmax ~ (v (dset (cand out)))
+
+@setmax = (idx ((?((@sm0 @smS) (payload (idx (cand out)))) payload) (cand out)))
+
+@sm0 = (head (tail (cand out)))
+  & head ~ {head_test head_ctx}
+  & cand ~ {cand_test cand_ctx}
+  & cand_test ~ $([>] $(head_test cmp))
+  & cmp ~ ?((@sm_no @sm_yes) (cand_ctx (head_ctx (tail out))))
+
+@sm_no = (cand (head (tail out)))
+  & cand ~ *
+  & out ~ (1 (head tail))
+
+@sm_yes = (* (cand (head (tail out))))
+  & head ~ *
+  & out ~ (1 (cand tail))
+
+@smS = (* ((head tail) (idx (cand out))))
+  & idx ~ ?((@sm0 @smsiS) (head (tail (cand out))))
+
+@smsiS = (j (head (tail (cand out))))
+  & @setmax ~ (j (tail (cand newtail)))
+  & out ~ (1 (head newtail))
+
+@maxlist = (list out)
+  & @maxacc ~ (list (0 out))
+
+@maxacc = ((?((@ma0 @maS) (payload (acc out))) payload) (acc out))
+
+@ma0 = (payload (acc out))
+  & payload ~ *
+  & out ~ acc
+
+@maS = (* ((head tail) (acc out)))
+  & head ~ {head_test head_ctx}
+  & acc ~ {acc_test acc_ctx}
+  & head_test ~ $([>] $(acc_test cmp))
+  & cmp ~ ?((@ma_no @ma_yes) (head_ctx (tail (acc_ctx out))))
+
+@ma_no = (head (tail (acc out)))
+  & head ~ *
+  & @maxacc ~ (tail (acc out))
+
+@ma_yes = (* (head (tail (acc out))))
+  & acc ~ *
+  & @maxacc ~ (tail (head out))

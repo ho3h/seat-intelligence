@@ -1,0 +1,246 @@
+@prog = ((n edges) out)
+  & @norm ~ (edges norm)
+  & norm ~ {ef er0}
+  & er0 ~ {er ea}
+  & @fold ~ (ef ((0 *) (16777215 foldout)))
+  & foldout ~ (odd mn)
+  & @oddscan ~ (odd (0 (16777215 osout)))
+  & osout ~ (count low)
+  & mn ~ {seed decision}
+  & @rounds ~ (n (er ((1 (seed (0 *))) reached)))
+  & @all ~ (ea (reached connected))
+  & @decide ~ (decision (connected (count (low out))))
+
+@norm = ((?((@norm_nil @norm_cons) (pl out)) pl) out)
+
+@norm_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@norm_cons = (* ((u v) (t out)))
+  & u ~ $([+0] un)
+  & v ~ $([+0] vn)
+  & @norm ~ (t r)
+  & out ~ (1 ((un vn) r))
+
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_no @mem_yes) (xr (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@toggle = (x (l out))
+  & x ~ {xc xk}
+  & l ~ {lc lk}
+  & @mem ~ (xc (lc found))
+  & found ~ ?((@toggle_add @toggle_del) (xk (lk out)))
+
+@toggle_add = (x (l out))
+  & out ~ (1 (x l))
+
+@toggle_del = (* (x (l out)))
+  & @remove ~ (x (l out))
+
+@remove = (x ((?((@remove_nil @remove_cons) (pl (x out))) pl) out))
+
+@remove_nil = (pl (x out))
+  & pl ~ *
+  & x ~ *
+  & out ~ (0 *)
+
+@remove_cons = (* ((h t) (x out)))
+  & x ~ {xc xk}
+  & h ~ {hc hk}
+  & hc ~ $([=] $(xc z))
+  & z ~ ?((@remove_no @remove_yes) (xk (hk (t out))))
+
+@remove_no = (x (h (t out)))
+  & @remove ~ (x (t r))
+  & out ~ (1 (h r))
+
+@remove_yes = (* (x (h (t out))))
+  & x ~ *
+  & h ~ *
+  & out ~ t
+
+@min = (a (b out))
+  & a ~ {ac ak}
+  & b ~ {bc bk}
+  & ac ~ $([<] $(bc z))
+  & z ~ ?((@min_b @min_a) (ak (bk out)))
+
+@min_b = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_a = (* (a (b out)))
+  & b ~ *
+  & out ~ a
+
+@fold = ((?((@fold_nil @fold_cons) (pl (odd (min out)))) pl) (odd (min out)))
+
+@fold_nil = (pl (odd (min out)))
+  & pl ~ *
+  & out ~ (odd min)
+
+@fold_cons = (* (((u v) t) (odd (min out))))
+  & u ~ {ut um}
+  & v ~ {vt vm}
+  & @toggle ~ (ut (odd p1))
+  & @toggle ~ (vt (p1 p2))
+  & @min ~ (min (um m1))
+  & @min ~ (m1 (vm m2))
+  & @fold ~ (t ((p2 m2) out))
+
+@oddscan = ((?((@odd_nil @odd_cons) (pl (count (low out)))) pl) (count (low out)))
+
+@odd_nil = (pl (count (low out)))
+  & pl ~ *
+  & out ~ (count low)
+
+@odd_cons = (* ((h t) (count (low out))))
+  & @min ~ (low (h low2))
+  & count ~ $([+1] count2)
+  & @oddscan ~ (t ((count2 low2) out))
+
+@rounds = (k (edges (vis out)))
+  & k ~ ?((@round_done @round_more) (edges (vis out)))
+
+@round_done = (edges (vis out))
+  & edges ~ *
+  & out ~ vis
+
+@round_more = (k (edges (vis out)))
+  & edges ~ {escan enext}
+  & @reach_pass ~ (escan (vis vis2))
+  & @rounds ~ (k (enext (vis2 out)))
+
+@reach_pass = ((?((@pass_nil @pass_cons) (pl (vis out))) pl) (vis out))
+
+@pass_nil = (pl (vis out))
+  & pl ~ *
+  & out ~ vis
+
+@pass_cons = (* (((u v) t) (vis out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @tryreach ~ (u1 (v1 (vis vis1)))
+  & @tryreach ~ (v2 (u2 (vis1 vis2)))
+  & @reach_pass ~ (t (vis2 out))
+
+@tryreach = (x (y (vis out)))
+  & vis ~ {vm vr}
+  & @mem ~ (x (vm found))
+  & found ~ ?((@try_no @try_yes) (y (vr out)))
+
+@try_no = (y (vis out))
+  & y ~ *
+  & out ~ vis
+
+@try_yes = (* (y (vis out)))
+  & @insert ~ (y (vis out))
+
+@insert = (x (l out))
+  & x ~ {xc xk}
+  & l ~ {lc lk}
+  & @mem ~ (xc (lc found))
+  & found ~ ?((@insert_no @insert_yes) (xk (lk out)))
+
+@insert_no = (x (l out))
+  & out ~ (1 (x l))
+
+@insert_yes = (* (x (l out)))
+  & x ~ *
+  & out ~ l
+
+@all = ((?((@all_nil @all_cons) (pl (vis out))) pl) (vis out))
+
+@all_nil = (pl (vis out))
+  & pl ~ *
+  & vis ~ *
+  & out ~ 1
+
+@all_cons = (* (((u v) t) (vis out)))
+  & u ~ {ucheck ukeep}
+  & vis ~ {vcheck vkeep}
+  & @mem ~ (ucheck (vcheck hu))
+  & hu ~ ?((@all_u_no @all_u_yes) (ukeep (v (t (vkeep out)))))
+
+@all_u_no = (u (v (t (vis out))))
+  & u ~ *
+  & v ~ *
+  & t ~ *
+  & vis ~ *
+  & out ~ 0
+
+@all_u_yes = (* (u (v (t (vis out)))))
+  & u ~ *
+  & vis ~ {vc vk}
+  & @mem ~ (v (vc hv))
+  & hv ~ ?((@all_v_no @all_v_yes) (t (vk out)))
+
+@all_v_no = (t (vis out))
+  & t ~ *
+  & vis ~ *
+  & out ~ 0
+
+@all_v_yes = (* (t (vis out)))
+  & @all ~ (t (vis out))
+
+@decide = (active (connected (count (low out))))
+  & active ~ {ac ak}
+  & ac ~ $([=] $(16777215 z))
+  & z ~ ?((@dec_edges @dec_none) (ak (connected (count (low out)))))
+
+@dec_none = (* (active (connected (count (low out)))))
+  & active ~ *
+  & connected ~ *
+  & count ~ *
+  & low ~ *
+  & out ~ 16777215
+
+@dec_edges = (active (connected (count (low out))))
+  & connected ~ ?((@dec_disconnected @dec_connected) (active (count (low out))))
+
+@dec_disconnected = (active (count (low out)))
+  & active ~ *
+  & count ~ *
+  & low ~ *
+  & out ~ 16777215
+
+@dec_connected = (* (active (count (low out))))
+  & count ~ {ctest ckeep}
+  & ctest ~ $([=] $(0 z0))
+  & z0 ~ ?((@dec_nonzero @dec_circuit) (active (ckeep (low out))))
+
+@dec_circuit = (* (active (count (low out))))
+  & active ~ *
+  & count ~ *
+  & out ~ low
+
+@dec_nonzero = (active (count (low out)))
+  & count ~ $([=] $(2 z2))
+  & z2 ~ ?((@dec_bad @dec_two) (active (low out)))
+
+@dec_bad = (active (low out))
+  & active ~ *
+  & low ~ *
+  & out ~ 16777215
+
+@dec_two = (* (active (low out)))
+  & active ~ *
+  & out ~ low

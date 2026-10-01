@@ -1,0 +1,41 @@
+// t3_cheapest_k_walk (GRAPH-SWING-2, runs/exp9): k ungated (min, +) push rounds (rounds template), the same net as
+// walk_count with a min-update and a saturating add (a candidate from an INF leaf stays INF).
+@prog = ((n (s (t (k es)))) out)
+  & n ~ ?((@ck_zero @ck_pos) (s (t (k (es out)))))
+@ck_zero = (* (* (* (* 16777215))))
+@ck_pos = (nm1 (s (t (k (es out)))))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 L6}}}}}
+  & n ~ {n1 n2}
+  & @zl ~ (L1 G0)
+  & @w_blk ~ (es ((L2 G0) G))
+  & s ~ {s1 s2}
+  & s1 ~ $([<] $(n1 inr))
+  & inr ~ {i1 i2}
+  & s2 ~ $([*] $(i1 key))
+  & i2 ~ ?((16777215 (* 0)) val)
+  & @zi ~ (L3 Z)
+  & @mu ~ (Z (key (L4 (val C0))))
+  & @wr ~ (k (G (C0 (L5 Cf))))
+  & @get ~ (Cf (t (n2 (L6 out))))
+@ck_step = ((L g) ((u (v w)) (L2 g2)))
+  & L ~ {L1 L2}
+  & @gp ~ (g (u (L1 ((v w) g2))))
+@ck_fin = ((* g) g)
+@re_zero = (L z)
+  & @zi ~ (L z)
+@re_emit = ((?((@km_nil @km_cons) (p (c (z (l2 (zo Lf)))))) p) (c (z (l2 (zo Lf)))))
+@km_nil = (* (* (z ((0 *) (z *)))))
+@km_cons = (* (((v w) rest) (c (z ((1 ((v2 w2) rest2)) (zo Lf))))))
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & c ~ {c1 {c2 c3}}
+  & Lf ~ {f1 f2}
+  & c1 ~ $([+] $(w1 sm))
+  & c2 ~ $([>>] $(23 hi))
+  & hi ~ $([*] $(16777215 msk))
+  & sm ~ $([|] $(msk cand))
+  & @mu ~ (z (v1 (f1 (cand zm))))
+  & @re_emit ~ (rest (c3 (zm (rest2 (zo f2)))))

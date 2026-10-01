@@ -1,0 +1,37 @@
+@prog = ((n edges) out)
+  & @zeros ~ (n zlist)
+  & @process ~ (edges (zlist out))
+
+@zeros = (?((@z_end @z_more) out) out)
+
+@z_end = out
+  & out ~ (0 *)
+
+@z_more = (rem out)
+  & out ~ (1 (0 tail))
+  & @zeros ~ (rem tail)
+
+@process = ((?((@p_end @p_cons) (pl (deg out))) pl) (deg out))
+
+@p_end = (* (a a))
+
+@p_cons = (* (((u v) tail) (deg out)))
+  & @inc ~ (deg (u deg2))
+  & @inc ~ (deg2 (v deg3))
+  & @process ~ (tail (deg3 out))
+
+@inc = ((?((@inc_nil @inc_cons) (pl (idx out))) pl) (idx out))
+
+@inc_nil = (* (* out))
+  & out ~ (0 *)
+
+@inc_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@i_here @i_later) (head (tail out)))
+
+@i_here = (head (tail out))
+  & head ~ $([+1] h2)
+  & out ~ (1 (h2 tail))
+
+@i_later = (idx (head (tail out)))
+  & @inc ~ (tail (idx tail2))
+  & out ~ (1 (head tail2))

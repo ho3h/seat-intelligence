@@ -1,0 +1,8 @@
+@prog = ((?((@map_nil @map_cons) (pl out)) pl) out)
+
+@map_nil = (* (0 *))
+
+@map_cons = (* ((h t) out))
+  & out ~ (1 (d tail_out))
+  & h ~ $([<<1] d)
+  & t ~ (?( (@map_nil @map_cons) (pl tail_out)) pl)

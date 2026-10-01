@@ -1,0 +1,148 @@
+@prog = ((n (r edges)) out)
+  & {n1 n2} ~ n
+  & @make_list ~ (n1 base_list)
+  & @set_root ~ (r (base_list list0))
+  & @repeat ~ (n2 (edges (list0 out)))
+
+@make_list = (n out)
+  & n ~ ?((@make_nil @make_cons) out)
+
+@make_nil = out
+  & out ~ (0 *)
+
+@make_cons = (m out)
+  & cell ~ (1 (16777214 tail))
+  & @make_list ~ (m (tail out))
+
+@set_root = (r (list out))
+  & r ~ ?((@set_root_zero @set_root_succ) (list out))
+
+@set_root_zero = (list out)
+  & list ~ ?((@sr_zero_nil @sr_zero_cons) out)
+
+@sr_zero_nil = out
+  & out ~ *
+
+@sr_zero_cons = (head tail out)
+  & head ~ *
+  & out ~ (1 (16777215 tail))
+
+@set_root_succ = (m (list out))
+  & list ~ ?((@sr_succ_nil @sr_succ_cons) out)
+
+@sr_succ_nil = out
+  & out ~ *
+
+@sr_succ_cons = (head tail out)
+  & head ~ *
+  & @set_root ~ (m (tail out2))
+  & out ~ (1 (head out2))
+
+@repeat = (count (edges (arr out)))
+  & count ~ ?((@repeat_done @repeat_step) (edges (arr out)))
+
+@repeat_done = (edges (arr out))
+  & edges ~ *
+  & arr ~ out
+
+@repeat_step = (m (edges (arr out)))
+  & {edges_scan edges_next} ~ edges
+  & @scan_edges ~ (edges_scan (arr arr2))
+  & @repeat ~ (m (edges_next (arr2 out)))
+
+@scan_edges = (edges (arr out))
+  & edges ~ ?((@scan_nil @scan_cons) (arr out))
+
+@scan_nil = (arr out)
+  & arr ~ out
+
+@scan_cons = (pre (payload (arr out)))
+  & pre ~ *
+  & payload ~ (edge rest)
+  & @process_edge ~ (edge (rest (arr out)))
+
+@process_edge = (edge (rest (arr out)))
+  & edge ~ (u v)
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & {arrA arrBC} ~ arr
+  & {arrB arrC} ~ arrBC
+  & @get ~ (u1 (arrA pu))
+  & @get ~ (v1 (arrB pv))
+  & pu ~ $([!] $(16777214 pu_set))
+  & pv ~ $([!] $(16777214 pv_set))
+  & @decide ~ (pu_set (pv_set (u2 (v2 (rest (arrC out))))))
+
+@get = (i (list out))
+  & i ~ ?((@get_zero @get_succ) (list out))
+
+@get_zero = (list out)
+  & list ~ ?((@get_zero_nil @get_zero_cons) out)
+
+@get_zero_nil = out
+  & out ~ *
+
+@get_zero_cons = (head tail out)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (m (list out))
+  & list ~ ?((@get_succ_nil @get_succ_cons) out)
+
+@get_succ_nil = out
+  & out ~ *
+
+@get_succ_cons = (head tail out)
+  & head ~ *
+  & @get ~ (m (tail out))
+
+@set = (i (val (list out)))
+  & i ~ ?((@set_zero @set_succ) (val (list out)))
+
+@set_zero = (val (list out))
+  & list ~ ?((@set_zero_nil @set_zero_cons) out)
+
+@set_zero_nil = out
+  & out ~ *
+
+@set_zero_cons = (head tail out)
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_succ = (m (val (list out)))
+  & list ~ ?((@set_succ_nil @set_succ_cons) out)
+
+@set_succ_nil = out
+  & out ~ *
+
+@set_succ_cons = (head tail out)
+  & head ~ *
+  & @set ~ (m (val (tail out2)))
+  & out ~ (1 (head out2))
+
+@decide = (pu (pv (u (v (rest (arr out))))))
+  & pu ~ ?((@decide_pu0 @decide_pu1) (pv (u (v (rest (arr out))))))
+
+@decide_pu0 = (pv (u (v (rest (arr out)))))
+  & pv ~ ?((@decide_00 @decide_01) (u (v (rest (arr out)))))
+
+@decide_pu1 = (pv (u (v (rest (arr out)))))
+  & pv ~ ?((@decide_10 @decide_11) (u (v (rest (arr out)))))
+
+@decide_00 = (u (v (rest (arr out))))
+  & u ~ *
+  & v ~ *
+  & @scan_edges ~ (rest (arr out))
+
+@decide_01 = (u (v (rest (arr out))))
+  & @set ~ (u (v (arr arr2)))
+  & @scan_edges ~ (rest (arr2 out))
+
+@decide_10 = (u (v (rest (arr out))))
+  & @set ~ (v (u (arr arr2)))
+  & @scan_edges ~ (rest (arr2 out))
+
+@decide_11 = (u (v (rest (arr out))))
+  & u ~ *
+  & v ~ *
+  & @scan_edges ~ (rest (arr out))

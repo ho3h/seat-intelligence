@@ -1,0 +1,33 @@
+--- 04:17:55
+wrong arity: act of frontier `cnt` is called as f(d, X:num, dv:(num num), c:(num num)), i.e. d plus 3 value(s); your function `act_body` takes 3 parameter(s) (b, state, incoming).
+--- 04:18:26
+build.py:36: wire `r` (num, result of `+`, made at build.py:34) is used a second time (left operand of `=`); it was already used at build.py:35 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 04:18:53
+build.py:38: wire `state_0` (num, field 0 of `state`, made at build.py:31) is used a second time (right operand of `=`); it was already used at build.py:37 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(state_0, 2)  and use each once.
+--- 04:19:21
+build.py:40: wire `r` (num, result of `<`, made at build.py:34) is used a second time (select condition); it was already used at build.py:36 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 04:19:41
+build.py:41: wire `incoming_1` (num, field 1 of `incoming`, made at build.py:28) is used a second time (select if_true); it was already used at build.py:39 (select if_true). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(incoming_1, 2)  and use each once.
+--- 04:20:02
+build.py:63: wire `sel` (num, select, made at build.py:36) is used a second time (returned as `m`); it was already used at build.py:63 (returned as `d2`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(sel, 2)  and use each once.
+--- 04:20:25
+build.py:43: fanout needs a wire or an int; got (<wire sel: num in @cnt_act>, <wire sel: num in @cnt_act>)
+--- 04:21:34
+build.py:49: wire `r2` (num, copy 2 of `r`, made at build.py:34) is used a second time (left operand of `|`); it was already used at build.py:40 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r2, 2)  and use each once.
+--- 04:22:10
+build.py:42: wire `r1` (num, copy 1 of `r`, made at build.py:35) is used a second time (select condition); it was already used at build.py:39 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r1, 2)  and use each once.
+--- 04:22:25
+wrong arity: branch zero case of @prog (t3_sp_count) is called as f(d, passed[0]:num, passed[1]:num, passed[2]:list[(num num)]), i.e. d plus 3 value(s); your function `empty` takes 2 parameter(s) (b, es).
+--- 04:22:42
+branch nonzero case of @prog (t3_sp_count) (@prog_b1s): 4 value(s) never used:
+    `L5` (depth, copy 5 of `L`, made at build.py:41)
+    `L6` (depth, copy 6 of `L`, made at build.py:41)
+    `L7` (depth, copy 7 of `L`, made at build.py:41)
+    `L8` (depth, copy 8 of `L`, made at build.py:41)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 04:23:40
+build.py:61: wire `s` (num, argument `passed[0]` of branch nonzero case of @prog (t3_sp_count), made at build.py:78) is used a second time (update `set1` (act set1) port `k`); it was already used at build.py:49 (sssp `sp` port `s`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(s, 2)  and use each once.
+--- 04:23:58
+build.py:50: wire `s` (num, argument `passed[0]` of branch nonzero case of @prog (t3_sp_count), made at build.py:65) is used a second time (fanout into 2); it was already used at build.py:44 (sssp `sp` port `s`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(s, 2)  and use each once.
+--- 04:24:20
+build.py:54: wire `out` (adj (trie[list[(num num)]]), output `out` of stream `w`, made at build.py:42) is used a second time (relax `cnt` (max) port `G`); it was already used at build.py:44 (sssp `sp` port `G`). A wire has exactly two ends. A adj (trie[list[(num num)]]) cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).

@@ -1,0 +1,68 @@
+@prog = ((n edges) out)
+  & @count_cyclic ~ (0 (n (edges (0 out))))
+
+@count_cyclic = (v (n (edges (count out))))
+  & done ~ $([=] $(v n_cmp))
+  & n_cmp ~ ?((return continue) (v (n (edges (count out)))))
+
+@return = (* (a a))
+  & count ~ out
+
+@continue = (* (a a))
+  & {edges e1} ~ edges
+  & @is_v_cyclic ~ (v (e1 (n (edges (result out)))))
+  & result ~ ?((skip add) (v (n (edges (count out)))))
+
+@skip = (* (a a))
+  & v_inc ~ $([+] $(1 v1))
+  & @count_cyclic ~ (v1 (n (edges (count out))))
+
+@add = (* (a a))
+  & v_inc ~ $([+] $(1 v1))
+  & count_inc ~ $([+] $(1 count1))
+  & @count_cyclic ~ (v1 (n (edges (count1 out))))
+
+@is_v_cyclic = (v (edges (result out)))
+  & @find_neighbors ~ (v (edges (edges (result out))))
+
+@find_neighbors = (v (edges (full_edges (result out))))
+  & edges ~ ?((nil cons) (v (full_edges (result out))))
+
+@nil = (* (a a))
+  & result ~ 0
+
+@cons = ((u (target rest)) (v (full_edges (result out))))
+  & u_eq_v ~ $([=] $(u v_match))
+  & v_match ~ ?((skip explore) (target (rest (v (full_edges (result out))))))
+
+@skip = (* (target (rest (v (full_edges (result out))))))
+  & @find_neighbors ~ (v (rest (full_edges (result out))))
+
+@explore = (* (target (rest (v (full_edges (result out))))))
+  & @dfs ~ (target (v (full_edges (result out))))
+
+@dfs = (curr (v (full_edges (found out))))
+  & curr_eq_v ~ $([=] $(curr v_match))
+  & v_match ~ ?((not_found is_found) (curr (v (full_edges (found out)))))
+
+@is_found = (* (a a))
+  & found ~ 1
+
+@not_found = (* (a a))
+  & @find_next ~ (curr (v (full_edges (found out))))
+
+@find_next = (curr (v (full_edges (found out))))
+  & full_edges ~ ?((nil2 cons2) (curr (v (found out))))
+
+@nil2 = (* (a a))
+  & found ~ 0
+
+@cons2 = ((u2 (target2 rest2)) (curr (v (found out))))
+  & u2_eq_curr ~ $([=] $(u2 curr_match))
+  & curr_match ~ ?((skip2 explore2) (target2 (rest2 (curr (v (full_edges (found out)))))))
+
+@skip2 = (* (target2 (rest2 (curr (v (full_edges (found out)))))))
+  & @find_next ~ (curr (rest2 (v (full_edges (found out)))))
+
+@explore2 = (* (target2 (rest2 (curr (v (full_edges (found out)))))))
+  & @dfs ~ (target2 (v (full_edges (found out))))

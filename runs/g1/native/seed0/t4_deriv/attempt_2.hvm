@@ -1,0 +1,37 @@
+//
+@prog = (input output)
+  & @der ~ (input output)
+
+@der = ((tag payload) out)
+  & tag ~ ?((@der_lit @der_rest) (payload out))
+
+@der_lit = (* (0 0))
+
+@der_rest = (n (payload out))
+  & n ~ ?((@der_add @der_rest2) (payload out))
+
+@der_rest2 = (n (payload out))
+  & n ~ ?((@der_mul @der_var) (payload out))
+
+@der_add = (p out)
+  & p ~ (a b)
+  & @der ~ (a da)
+  & @der ~ (b db)
+  & out ~ (1 (da db))
+
+@der_mul = (p out)
+  & p ~ (a b)
+  & a ~ {ad ao}
+  & b ~ {bd bo}
+  & @der ~ (ad da)
+  & @der ~ (bd db)
+  & out ~ (1 ((2 (da bo)) (2 (ao db))))
+
+@der_var = (n (p out))
+  & n ~ *
+  & p ~ $([=] $(0 z))
+  & z ~ ?(((0 0) @der_var_one) out)
+
+@der_var_one = (n out)
+  & n ~ *
+  & out ~ (0 1)

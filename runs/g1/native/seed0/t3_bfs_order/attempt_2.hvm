@@ -1,0 +1,104 @@
+@prog = ((n (s edges)) out)
+  & s ~ {sq ss}
+  & @bfs ~ ((1 (sq (0 *))) (n (edges ((1 (ss (0 *))) ((0 *) out))))
+
+@bfs = ((?((@bfs_nil @bfs_cons) (pl (n (edges (seen (acc out)))))) pl) (n (edges (seen (acc out))))
+
+@bfs_nil = (* (n (edges (seen (acc out)))))
+  & n ~ *
+  & edges ~ *
+  & seen ~ *
+  & out ~ acc
+
+@bfs_cons = (* ((u rest) (n (edges (seen (acc out))))))
+  & u ~ {u_append u_scan}
+  & @append ~ (acc (u_append acc2))
+  & @scan_v ~ (0 (n (edges (u_scan (rest (seen (acc2 out)))))))
+
+@append = ((?((@append_nil @append_cons) (pl (x out))) pl) (x out))
+
+@append_nil = (* (x out))
+  & x ~ *
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* ((h t) (x out)))
+  & @append ~ (t (x rest))
+  & out ~ (1 (h rest))
+
+@scan_v = (v (n (edges (u (q (seen (acc out))))))
+  & v ~ {vtest vkeep}
+  & n ~ {ntest nkeep}
+  & vtest ~ $([<] $(ntest flag))
+  & flag ~ ?((@scan_done @scan_more) (vkeep (nkeep (edges (u (q (seen (acc out)))))))
+
+@scan_done = (v (n (edges (u (q (seen (acc out))))))
+  & v ~ *
+  & u ~ *
+  & @bfs ~ (q (n (edges (seen (acc out)))))
+
+@scan_more = (* (v (n (edges (u (q (seen (acc out))))))))
+  & edges ~ {ea ek}
+  & @adj ~ (ea (u (v (n (ek (q (seen (acc out))))))))
+
+@scan_next = (v (n (edges (u (q (seen (acc out))))))
+  & v ~ $([+1] vn)
+  & @scan_v ~ (vn (n (edges (u (q (seen (acc out)))))))
+
+@adj = ((?((@adj_nil @adj_cons) (pl (u (v (n (edges (q (seen (acc out)))))))) pl) (u (v (n (edges (q (seen (acc out)))))))
+
+@adj_nil = (* (u (v (n (edges (q (seen (acc out))))))))
+  & @scan_next ~ (v (n (edges (u (q (seen (acc out)))))))
+
+@adj_cons = (* ((a b) (tail (u (v (n (edges (q (seen (acc out)))))))))
+  & a ~ {a1 {a2 adrop}}
+  & b ~ {b1 {b2 bdrop}}
+  & u ~ {u1 {u2 uk}}
+  & v ~ {v1 {v2 vk}}
+  & adrop ~ *
+  & bdrop ~ *
+  & a1 ~ $([=] $(u1 e1))
+  & b1 ~ $([=] $(v1 e2))
+  & a2 ~ $([=] $(v2 e3))
+  & b2 ~ $([=] $(u2 e4))
+  & e1 ~ $([&] $(e2 direct))
+  & e3 ~ $([&] $(e4 reverse))
+  & direct ~ $([|] $(reverse matched))
+  & matched ~ ?((@adj_no @adj_yes) (tail (uk (vk (n (edges (q (seen (acc out))))))))
+
+@adj_no = (tail (u (v (n (edges (q (seen (acc out))))))))
+  & @adj ~ (tail (u (v (n (edges (q (seen (acc out))))))))
+
+@adj_yes = (* (tail (u (v (n (edges (q (seen (acc out)))))))))
+  & tail ~ *
+  & v ~ {v_target v_keep}
+  & seen ~ {seen_scan seen_keep}
+  & @mem ~ (seen_scan (v_target ((v_keep (n (edges (u (q (seen_keep (acc out))))))) memres))
+  & memres ~ (found state2)
+  & found ~ ?((@mem_seen @mem_unseen) state2)
+
+@mem_seen = (v (n (edges (u (q (seen (acc out))))))
+  & @scan_next ~ (v (n (edges (u (q (seen (acc out)))))))
+
+@mem_unseen = (* (v (n (edges (u (q (seen (acc out))))))))
+  & v ~ {vq {vs vn}}
+  & @append ~ (q (vq q2))
+  & @scan_next ~ (vn (n (edges (u (q2 ((1 (vs seen)) (acc out)))))))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x (ctx out)))) pl) (x (ctx out)))
+
+@mem_nil = (* (x (ctx out)))
+  & x ~ *
+  & out ~ (0 ctx)
+
+@mem_cons = (* ((h t) (x (ctx out))))
+  & x ~ {xt xkeep}
+  & xt ~ $([=] $(h z))
+  & z ~ ?((@mem_no @mem_yes) (t (xkeep (ctx out))))
+
+@mem_no = (t (x (ctx out)))
+  & @mem ~ (t (x (ctx out)))
+
+@mem_yes = (* (t (x (ctx out))))
+  & t ~ *
+  & x ~ *
+  & out ~ (1 ctx)

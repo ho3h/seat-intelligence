@@ -1,0 +1,54 @@
+{
+ "pid": "t5_reconcile_canon",
+ "arm": "b1",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 781,
+    "itrs_median_big": 1083329,
+    "itrs_max": 2603188,
+    "depth_median_big": 167825,
+    "depth_max": 445676
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 4126,
+    "itrs_median_big": 1682438,
+    "itrs_max": 3456832,
+    "depth_median_big": 36806,
+    "depth_max": 98915
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 3682,
+    "itrs_median_big": 3650668,
+    "itrs_max": 7772415,
+    "depth_median_big": 38252,
+    "depth_max": 102468
+   }
+  }
+ ],
+ "accepted": true,
+ "tokens": 64767,
+ "best": {
+  "itrs_median_small": 781,
+  "itrs_median_big": 1083329,
+  "itrs_max": 2603188,
+  "depth_median_big": 167825,
+  "depth_max": 445676
+ },
+ "usd": 0.015864245,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

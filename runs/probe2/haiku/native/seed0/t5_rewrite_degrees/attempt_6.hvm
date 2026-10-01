@@ -1,0 +1,71 @@
+@prog = (input output)
+  & input ~ (c (e rest))
+  & rest ~ *
+  & @solve ~ (c (e output))
+
+@solve = (c (e output))
+  & @match_list ~ (e (c output))
+
+@match_list = (e ctx)
+  & e ~ ?((@done @one_more) ctx)
+
+@done = (c output)
+  & c ~ *
+  & output ~ (0 *)
+
+@one_more = (* ((u v) (tail (c output))))
+  & {c1 c2} ~ c
+  & @lookup ~ (c1 (u cu_res))
+  & @lookup ~ (c2 (v cv_res))
+  & {cu1 cu2} ~ cu_res
+  & {cv1 cv2} ~ cv_res
+  & cmp ~ $([!] $(cv1 cmp_result))
+  & cu1 ~ cmp
+  & cmp_result ~ ?((@same @diff) ((cu2 (cv2 output_rest))))
+
+@same = (cu (cv output_rest))
+  & cu ~ *
+  & cv ~ *
+  & @match_list ~ (tail (c output_rest))
+
+@diff = (dummy (cu (cv output_rest)))
+  & dummy ~ *
+  & lt ~ $([<] $(cv_a lt_result))
+  & cu ~ (cv_a cu_b)
+  & cv ~ (cv_b_val cv_b_rest)
+  & cv_b_val ~ cv_b
+  & lt_result ~ ?((@add_cu_cv @add_cv_cu) ((cu_b (cv_b_rest output_rest))))
+
+@add_cu_cv = (cu (cv output_rest))
+  & new_list ~ (1 ((cu (cv tail_rec))))
+  & tail_rec ~ (c output_rest)
+  & @match_list ~ (new_list (c output_rest))
+
+@add_cv_cu = (dummy (cu (cv output_rest)))
+  & dummy ~ *
+  & new_list ~ (1 ((cv (cu tail_rec))))
+  & tail_rec ~ (c output_rest)
+  & @match_list ~ (new_list (c output_rest))
+
+@lookup = (lst (idx result))
+  & idx ~ ?((@lz @ls) ((lst result)))
+
+@lz = (ctx)
+  & ctx ~ (lst result)
+  & lst ~ (h t)
+  & t ~ *
+  & h ~ result
+
+@ls = (pred (lst result))
+  & lst ~ (h t)
+  & h ~ *
+  & @lookup ~ (t (pred result))
+
+@output_degrees = (rewrites output)
+  & rewrites ~ ?((@od_nil @od_cons) (output))
+
+@od_nil = output ~ (0 *)
+
+@od_cons = ((u v) (rest output_rest))
+  & output ~ (1 (u (1 (v output_cont))))
+  & @output_degrees ~ ((rest output_rest))

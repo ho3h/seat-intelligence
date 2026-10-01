@@ -1,0 +1,65 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@at = ((@at__C2 a) a)
+
+@at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @at ~ (a (b c))
+
+@at__C1 = (* (c (d ({$([=0x0000000] ?((@at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@at__C2 = (?(((* 0) @at__C1) a) a)
+
+@insert_sorted = (a ((@insert_sorted__C6 (a b)) b))
+
+@insert_sorted__C0 = (b (a (c e)))
+  & @List/Cons ~ (a (d e))
+  & @insert_sorted ~ (b (c d))
+
+@insert_sorted__C1 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@insert_sorted__C2 = ({$([<] $(a ?((@insert_sorted__C0 @insert_sorted__C1) (b (c d))))) b} ({a c} d))
+
+@insert_sorted__C3 = (* (* a))
+  & @List/Cons ~ a
+
+@insert_sorted__C4 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@insert_sorted__C5 = (* ({a c} (d ({$([=] $(a ?((@insert_sorted__C2 @insert_sorted__C3) (b (c (d e)))))) b} e))))
+
+@insert_sorted__C6 = (?((@insert_sorted__C4 @insert_sorted__C5) a) a)
+
+@neighbours = (a (b ((@neighbours__C7 (a (b c))) c)))
+
+@neighbours__C0 = (a (b (d (c (* e)))))
+  & @neighbours ~ (a (b (c (d e))))
+
+@neighbours__C1 = (* (a (b (e (c (d g))))))
+  & @neighbours ~ (a (b (c (f g))))
+  & @insert_sorted ~ (d (e f))
+
+@neighbours__C2 = (a (b (e (c (d g)))))
+  & @neighbours ~ (a (b (c (f g))))
+  & @insert_sorted ~ (d (e f))
+
+@neighbours__C3 = (* (a (b (d (c (* e))))))
+  & @neighbours ~ (a (b (c (d e))))
+
+@neighbours__C4 = ({a b} (c (d (e (f ($([=] $(a ?((@neighbours__C0 @neighbours__C1) (b (c (d (e (f g)))))))) g))))))
+
+@neighbours__C5 = (* ({a b} (c (d (e (* ({$([=] $(a ?((@neighbours__C2 @neighbours__C3) (b (c (d (e (f g)))))))) f} g)))))))
+
+@neighbours__C6 = (* ((b j) (g ({c d} ({e {i a}} (f l))))))
+  & @at ~ (a (b {$([=] $(c ?((@neighbours__C4 @neighbours__C5) (d (e (f (g (h (k l))))))))) h}))
+  & @at ~ (i (j k))
+
+@neighbours__C7 = (?(((* (* (a a))) @neighbours__C6) b) b)
+
+@prog = ((a (b c)) d)
+  & @neighbours ~ (a (b (c (@List/Nil d))))
+
+

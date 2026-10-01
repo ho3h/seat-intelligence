@@ -1,0 +1,134 @@
+// Build a list of n zeros.
+@zeros = (?((@zeros_nil @zeros_more) out) out)
+
+@zeros_nil = (0 *)
+
+@zeros_more = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+
+// Set the element at index idx in a list.
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (* (* (0 *))))
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_later) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_later = (idx (h (t (val out))))
+  & @set ~ (t (idx (val tail)))
+  & out ~ (1 (h tail))
+
+
+// Increment the element at index idx in a list.
+@incAt = ((?((@inc_nil @inc_cons) (pl (idx out))) pl) (idx out))
+
+@inc_nil = (* (* (0 *)))
+
+@inc_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@inc_here @inc_later) (h (t out)))
+
+@inc_here = (h (t out))
+  & h ~ $([+1] h2)
+  & out ~ (1 (h2 t))
+
+@inc_later = (idx (h (t out)))
+  & @incAt ~ (t (idx tail))
+  & out ~ (1 (h tail))
+
+
+// Decrement the element at index idx in a list.
+@decAt = ((?((@dec_nil @dec_cons) (pl (idx out))) pl) (idx out))
+
+@dec_nil = (* (* (0 *)))
+
+@dec_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@dec_here @dec_later) (h (t out)))
+
+@dec_here = (h (t out))
+  & h ~ $([-1] h2)
+  & out ~ (1 (h2 t))
+
+@dec_later = (idx (h (t out)))
+  & @decAt ~ (t (idx tail))
+  & out ~ (1 (h tail))
+
+
+// Find the first zero in a list, returning its index.
+@find = ((?((@find_nil @find_cons) (pl (idx out))) pl) (idx out))
+
+@find_nil = (* (* 0))
+
+@find_cons = (* ((h t) (idx out)))
+  & h ~ ?((@find_zero @find_nonzero) (t (idx out)))
+
+@find_zero = (t (idx out))
+  & t ~ *
+  & out ~ idx
+
+@find_nonzero = (hm (t (idx out)))
+  & hm ~ *
+  & idx ~ $([+1] idx2)
+  & @find ~ (t (idx2 out))
+
+
+// Build indegrees by processing the edge list.
+@builddeg = ((?((@bd_nil @bd_cons) (pl (deg out))) pl) (deg out))
+
+@bd_nil = (* (x x))
+
+@bd_cons = (* (((u v) tail) (deg out)))
+  & u ~ *
+  & @incAt ~ (deg (v mid))
+  & @builddeg ~ (tail (mid out))
+
+
+// For a selected vertex v, decrement indegrees of its out-neighbours.
+@remove = ((?((@remove_nil @remove_cons) (pl (v (deg out)))) pl) (v (deg out)))
+
+@remove_nil = (* (v (x x)))
+  & v ~ *
+
+@remove_cons = (* (((u w) tail) (v (deg out))))
+  & v ~ {vtest vctx}
+  & u ~ $([=] $(vtest z))
+  & z ~ ?((@remove_no @remove_yes) (w (tail (vctx (deg out))))
+
+@remove_no = (w (tail (v (deg out))))
+  & w ~ *
+  & @remove ~ (tail (v (deg out)))
+
+@remove_yes = (* (w (tail (v (deg out)))))
+  & @decAt ~ (deg (w newdeg))
+  & @remove ~ (tail (v (newdeg out)))
+
+
+// Repeatedly choose the smallest available vertex.
+@topo = (?((@topo_nil @topo_step) (deg (edges out))) (deg (edges out)))
+
+@topo_nil = (deg (edges (0 *)))
+  & deg ~ *
+  & edges ~ *
+
+@topo_step = (rem (deg (edges out)))
+  & deg ~ {d_find d_set}
+  & edges ~ {e_remove e_rec}
+  & @find ~ (d_find (0 found))
+  & found ~ {v_set (v_remove v_out)}
+  & @set ~ (d_set (v_set (16777215 marked)))
+  & @remove ~ (v_remove (e_remove (marked dec)))
+  & @topo ~ (rem (dec (e_rec tail)))
+  & out ~ (1 (v_out tail))
+
+
+@prog = (n (edges out))
+  & n ~ {n_zero n_topo}
+  & edges ~ {e_build e_topo}
+  & @zeros ~ (n_zero zeroes)
+  & @builddeg ~ (e_build (zeroes deg))
+  & @topo ~ (n_topo (deg (e_topo out)))

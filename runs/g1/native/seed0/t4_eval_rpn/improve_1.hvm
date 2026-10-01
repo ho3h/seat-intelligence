@@ -1,0 +1,40 @@
+// Use an untagged constructor chain for the internal value stack.
+@prog = (input out)
+  & @eval ~ (input (* out))
+
+// Dispatch on the input list tag.
+@eval = ((?((@eval_nil @eval_cons) (pl (stk out))) pl) (stk out))
+
+// The valid final stack is exactly one value followed by the empty sentinel.
+@eval_nil = (* ((value *) value))
+
+// Split a cons cell and dispatch on the token kind.
+@eval_cons = (* (((?((@push @operator) (val (tail (stk out)))) val) tail) (stk out))
+
+// Push the token value and continue.
+@push = (val (tail (stk out)))
+  & @eval ~ (tail ((val stk) out))
+
+// Pop b, then a; check whether the opcode is '+'.
+@operator = (* (op (tail ((b (a rest)) out))))
+  & op ~ {test keep}
+  & test ~ $([=] $(43 eq))
+  & eq ~ ?((@check_sub @do_add) (keep (a (b (rest (tail out))))))
+
+// If the opcode was not '+', check whether it is '-'.
+@check_sub = (keep (a (b (rest (tail out)))))
+  & keep ~ $([=] $(45 check))
+  & check ~ ?((@do_mul @do_sub) (a (b (rest (tail out)))))
+
+// Apply the selected operation and continue with the updated stack.
+@do_add = (* (* (a (b (rest (tail out))))))
+  & a ~ $([+] $(b result))
+  & @eval ~ (tail ((result rest) out))
+
+@do_sub = (* (a (b (rest (tail out)))))
+  & a ~ $([-] $(b result))
+  & @eval ~ (tail ((result rest) out))
+
+@do_mul = (a (b (rest (tail out))))
+  & a ~ $([*] $(b result))
+  & @eval ~ (tail ((result rest) out))

@@ -1,0 +1,86 @@
+@prog = (({n1 n2} (s edges)) out)
+  & @init ~ (n1 (s (0 initdist)))
+  & @round ~ (n2 (edges (initdist out)))
+
+@init = (?((@init_zero @init_cons) ctx) ctx)
+
+@init_zero = (* (* out))
+  & out ~ (0 *)
+
+@init_cons = (k ({s1 s2} ({i1 i2} out)))
+  & i1 ~ $([=] $(s1 z))
+  & i2 ~ $([+1] i3)
+  & @init ~ (k (s2 (i3 tail)))
+  & @init_val ~ (z (tail out))
+
+@init_val = (?((@init_far @init_near) ctx) ctx)
+
+@init_far = (tail out)
+  & out ~ (1 (16777215 tail))
+
+@init_near = (* (tail out))
+  & out ~ (1 (0 tail))
+
+@round = (?((@round_zero @round_succ) ctx) ctx)
+
+@round_zero = (* (d d))
+
+@round_succ = (k ({e_now e_next} (dist out)))
+  & @scan ~ (e_now (dist dist2))
+  & @round ~ (k (e_next (dist2 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (dist out))) pl) (dist out))
+
+@scan_nil = (* (d d))
+
+@scan_cons = (* (((u v) tail) (dist out)))
+  & @relax ~ (u (v (dist dist2)))
+  & @scan ~ (tail (dist2 out))
+
+@relax = (u ({v1 v2} ({d1 {d2 d3}} out)))
+  & @get ~ (d1 (u du))
+  & @get ~ (d2 (v1 dv))
+  & du ~ {du_a du_b}
+  & du_a ~ $([<] $(16777215 finite))
+  & du_b ~ $([+1] cand)
+  & cand ~ {cand_cmp cand_set}
+  & cand_cmp ~ $([<] $(dv less))
+  & less ~ $([&] $(finite change))
+  & change ~ ?((@relax_no @relax_yes) (d3 (v2 (cand_set out))))
+
+@relax_no = (d (* (* d)))
+
+@relax_yes = (d (v (cand out)))
+  & @set ~ (d (v (cand out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (* out))
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & @get_dispatch ~ (idx (head (tail out)))
+
+@get_dispatch = (?((@get_here @get_later) ctx) ctx)
+
+@get_here = (h (* h))
+
+@get_later = (k (* (tail out)))
+  & @get ~ (tail (k out))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & @set_dispatch ~ (idx (head (tail (val out))))
+
+@set_dispatch = (?((@set_here @set_later) ctx) ctx)
+
+@set_here = (* (tail (val out)))
+  & out ~ (1 (val tail))
+
+@set_later = (k (head (tail (val out))))
+  & @set ~ (tail (k (val tail2)))
+  & out ~ (1 (head tail2))

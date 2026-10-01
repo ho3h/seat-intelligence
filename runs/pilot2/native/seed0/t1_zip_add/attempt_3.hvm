@@ -1,0 +1,25 @@
+@prog = ((xs ys) out)
+  & @zip ~ (xs (ys out))
+
+@zip = ((?((@zip_xnil @zip_xcons) (px (ys out))) px) (ys out))
+
+@zip_xnil = (px (ys out))
+  & px ~ *
+  & ys ~ *
+  & out ~ (0 *)
+
+@zip_xcons = (* ((xh xt) (ys out)))
+  & @zip_y ~ (ys (xh (xt out)))
+
+@zip_y = ((?((@zip_ynil @zip_ycons) (py (xh (xt out)))) py) (xh (xt out)))
+
+@zip_ynil = (py (xh (xt out)))
+  & py ~ *
+  & xh ~ *
+  & xt ~ *
+  & out ~ (0 *)
+
+@zip_ycons = (* ((yh yt) (xh (xt out))))
+  & xh ~ $([+] $(yh sum))
+  & @zip ~ (xt (yt tailout))
+  & out ~ (1 (sum tailout))

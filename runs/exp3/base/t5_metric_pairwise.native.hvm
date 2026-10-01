@@ -1,0 +1,45 @@
+// Initialize empty history and zero pair counts.
+@prog = (input out)
+  & input ~ (pred truth)
+  & @walk ~ (pred (truth ((0 *) (0 (0 (0 out))))))
+
+// Process aligned prediction and truth lists.
+@walk = ((?((@wnil @wcons) (pl (truth (hist (tp (fp (fn out))))))) pl) (truth (hist (tp (fp (fn out))))))
+
+@wnil = (* (* (* (tp (fp (fn out))))))
+  & out ~ (tp (fp fn))
+
+@wcons = (* ((h pt) (truth (hist (tp (fp (fn out)))))))
+  & truth ~ (1 (th tt))
+  & h ~ {hs hk}
+  & th ~ {ts tk}
+  & @scan ~ (hist (hs (ts (tp (fp (fn sout))))))
+  & sout ~ (newhist (stp (sfp sfn)))
+  & @walk ~ (pt (tt ((1 ((hk tk) newhist)) (stp (sfp (sfn out))))))
+
+// Scan prior pairs, accumulating this node's pairwise counts.
+@scan = ((?((@snil @scons) (pl (p (t (tp (fp (fn out))))))) pl) (p (t (tp (fp (fn out))))))
+
+@snil = (* (* (* (tp (fp (fn out))))))
+  & out ~ ((0 *) (tp (fp fn)))
+
+@scons = (* (((prevp prevt) rest) (p (t (tp (fp (fn out)))))))
+  & prevp ~ {oldp keep_p}
+  & prevt ~ {oldt keep_t}
+  & p ~ {peq nextp}
+  & t ~ {teq nextt}
+  & peq ~ $([=] $(oldp ep))
+  & teq ~ $([=] $(oldt et))
+  & ep ~ {ep_mul ep_sub}
+  & et ~ {et_mul et_sub}
+  & ep_mul ~ $([*] $(et_mul bit_tp))
+  & bit_tp ~ {bt_acc bt_rest}
+  & bt_rest ~ {bt_fp bt_fn}
+  & ep_sub ~ $([-] $(bt_fp bit_fp))
+  & et_sub ~ $([-] $(bt_fn bit_fn))
+  & tp ~ $([+] $(bt_acc next_tp))
+  & fp ~ $([+] $(bit_fp next_fp))
+  & fn ~ $([+] $(bit_fn next_fn))
+  & @scan ~ (rest (nextp (nextt (next_tp (next_fp (next_fn sout))))))
+  & sout ~ (newrest (rtp (rfp rfn)))
+  & out ~ ((1 ((keep_p keep_t) newrest)) (rtp (rfp rfn)))

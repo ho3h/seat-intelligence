@@ -1,0 +1,44 @@
+Fetching 11 files:   0%|          | 0/11 [00:00<?, ?it/s]Fetching 11 files: 100%|██████████| 11/11 [00:00<00:00, 61434.55it/s]
+generated 16/288  26s
+generated 32/288  41s
+generated 48/288  61s
+generated 64/288  80s
+generated 80/288  98s
+generated 96/288  119s
+generated 112/288  158s
+generated 128/288  202s
+generated 144/288  245s
+generated 160/288  295s
+generated 176/288  343s
+generated 192/288  364s
+generated 208/288  387s
+generated 224/288  408s
+generated 240/288  432s
+generated 256/288  459s
+generated 272/288  475s
+generated 288/288  492s
+{
+ "model": "mlx-community/Qwen3-4B-Instruct-2507-4bit",
+ "adapter": "adapters/native_v1",
+ "arm": "native",
+ "split": "holdout",
+ "n": 2,
+ "tasks": 144,
+ "samples": 288,
+ "pass@1": 0.006944444444444444,
+ "pass@2": 0.013888888888888888,
+ "outcomes": {
+  "static": 226,
+  "fail": 58,
+  "noblock": 2,
+  "pass": 2
+ },
+ "per_family_pass1": {
+  "group": 0.0,
+  "zip2": 0.0,
+  "recon": 0.0,
+  "treemap": 0.03333333333333333,
+  "treetrav": 0.0
+ },
+ "seconds": 549.6108801364899
+}

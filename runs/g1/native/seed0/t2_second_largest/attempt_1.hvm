@@ -1,0 +1,30 @@
+@prog = (l out)
+  & @scan ~ (l (0 (0 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (hi (lo out)))) pl) (hi (lo out)))
+
+@scan_nil = (* (* (a a)))
+
+@scan_cons = (* ((h t) (hi (lo out))))
+  & @step ~ (h (t (hi (lo out))))
+
+@step = (h (t (hi (lo out))))
+  & h ~ {hc hk}
+  & hi ~ {hic hik}
+  & hc ~ $([>] $(hic z))
+  & z ~ ?((@test_lo @yes_hi) (hk (t (hik (lo out)))))
+
+@yes_hi = (* (hk (t (hik (* out)))))
+  & @scan ~ (t (hik (hk out)))
+
+@test_lo = (hk (t (hik (lo out))))
+  & hk ~ {hcmp hkeep}
+  & lo ~ {locmp lkeep}
+  & hcmp ~ $([>] $(locmp z))
+  & z ~ ?((@keep @take_second) (hkeep (t (hik (lkeep out)))))
+
+@keep = (* (t (hik (lo out))))
+  & @scan ~ (t (hik (lo out)))
+
+@take_second = (* (hk (t (hik (* out)))))
+  & @scan ~ (t (hik (hk out)))

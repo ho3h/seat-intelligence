@@ -1,0 +1,111 @@
+@prog = ((n (tau cands)) out)
+  & @init ~ (n (0 labels))
+  & @proc ~ (cands (tau (labels (0 out))))
+
+@proc = ((?((@proc_nil @proc_cons) (tau (pl (labels (count out))))) pl) (tau (labels (count out)))
+
+@proc_nil = (tau (pl (labels (count out))))
+  & tau ~ *
+  & pl ~ *
+  & labels ~ *
+  & out ~ count
+
+@proc_cons = (z (tau (pl (labels (count out)))))
+  & z ~ *
+  & pl ~ (edge tail)
+  & edge ~ (u (v score))
+  & tau ~ {tau_next tau_cmp}
+  & score ~ {score_keep score_cmp}
+  & score_cmp ~ $([<] $(tau_cmp lt))
+  & lt ~ ?((@proc_accept @proc_reject) (tau_next (u (v (score_keep (tail (labels (count out))))))))
+
+@proc_reject = (z (tau (u (v (score (tail (labels (count out))))))))
+  & z ~ *
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & @proc ~ (tail (tau (labels (count out))))
+
+@proc_accept = (tau (u (v (score (tail (labels (count out)))))))
+  & score ~ *
+  & @nk ~ (u (labels r1))
+  & r1 ~ (lu labels1)
+  & @nk ~ (v (labels1 r2))
+  & r2 ~ (lv labels2)
+  & lu ~ {lu_cmp lu_old}
+  & lv ~ {lv_cmp lv_new}
+  & lu_cmp ~ $([!] $(lv_cmp neq))
+  & neq ~ ?((@proc_same @proc_diff) (lu_old (lv_new (tau (labels2 (tail (count out))))))
+
+@proc_same = (old (new (tau (labels (tail (count out))))))
+  & old ~ *
+  & new ~ *
+  & @proc ~ (tail (tau (labels (count out))))
+
+@proc_diff = (z (old (new (tau (labels (tail (count out)))))))
+  & z ~ *
+  & count ~ $([+1] count2)
+  & @replace ~ (old (new (labels updated)))
+  & @proc ~ (tail (tau (updated (count2 out))))
+
+@init = (rem (id out))
+  & rem ~ ?((@init_nil @init_cons) (id out))
+
+@init_nil = (id out)
+  & id ~ *
+  & out ~ (0 *)
+
+@init_cons = (rem (id out))
+  & id ~ {head nextin}
+  & nextin ~ $([+1] id2)
+  & @init ~ (rem (id2 tail))
+  & out ~ (1 (head tail))
+
+@nk = (idx ((?((@nk_nil @nk_cons) (idx (pl out))) pl) out))
+
+@nk_nil = (idx (pl out))
+  & idx ~ *
+  & pl ~ *
+  & out ~ (0 (0 *))
+
+@nk_cons = (z (idx (pl out)))
+  & z ~ *
+  & pl ~ (h t)
+  & idx ~ ?((@nk_hit @nk_more) (h (t out)))
+
+@nk_hit = (h (t out))
+  & h ~ {value h_keep}
+  & out ~ (value (1 (h_keep t)))
+
+@nk_more = (idx (h (t out)))
+  & @nk ~ (idx (t r))
+  & r ~ (value tail_new)
+  & out ~ (value (1 (h tail_new)))
+
+@replace = (old (new ((?((@replace_nil @replace_cons) (old (new (pl out)))) pl) out)))
+
+@replace_nil = (old (new (pl out)))
+  & old ~ *
+  & new ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@replace_cons = (z (old (new (pl out))))
+  & z ~ *
+  & pl ~ (h tail)
+  & old ~ {old_cmp old_rec}
+  & new ~ {new_head new_rec}
+  & h ~ {h_cmp h_keep}
+  & h_cmp ~ $([=] $(old_cmp eq))
+  & eq ~ ?((@replace_no @replace_yes) (old_rec (new_rec (h_keep (new_head (tail out))))))
+
+@replace_no = (old (new (h_keep (new_head (tail out)))))
+  & new_head ~ *
+  & @replace ~ (old (new (tail r)))
+  & out ~ (1 (h_keep r))
+
+@replace_yes = (z (old (new (h_keep (new_head (tail out))))))
+  & z ~ *
+  & h_keep ~ *
+  & @replace ~ (old (new (tail r)))
+  & out ~ (1 (new_head r))

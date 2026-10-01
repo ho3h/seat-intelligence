@@ -1,0 +1,27 @@
+@prog = (l out)
+  & @scan ~ (l (0 (0 (0 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (i (best (bestidx out))))) pl) (i (best (bestidx out))))
+
+@scan_nil = (* (i (best (bestidx out))))
+  & i ~ *
+  & best ~ *
+  & bestidx ~ out
+
+@scan_cons = (* ((h t) (i (best (bestidx out)))))
+  & h ~ {hc hk}
+  & best ~ {bc bk}
+  & hc ~ $([>] $(bc z))
+  & z ~ ?((@scan_no @scan_yes) (t (i (hk (bk (bestidx out))))))
+
+@scan_no = (* (t (i (hk (bk (bestidx out))))))
+  & hk ~ *
+  & i ~ $([+1] i2)
+  & @scan ~ (t (i2 (bk (bestidx out))))
+
+@scan_yes = (* (t (i (hk (bk (bestidx out))))))
+  & bk ~ *
+  & bestidx ~ *
+  & i ~ {cur nxt}
+  & nxt ~ $([+1] i2)
+  & @scan ~ (t (i2 (hk (cur out))))

@@ -1,0 +1,176 @@
+@prog = ((n edges) out)
+  & {n_pow n_iter} ~ n
+  & {e_pow e_iter} ~ edges
+  & e_pow ~ *
+  & @pow2 ~ ((n_pow 1) max_m)
+  & @iterate ~ ((0 (max_m (n_iter (e_iter (0 out))))) *)
+
+@pow2 = ((n acc) out)
+  & {n_test n_rec} ~ n
+  & z ~ $(n_test [=] 0)
+  & z ~ ?((@p_ret @p_rec) ((n_rec acc) out))
+
+@p_ret = (n (a o))
+  & n ~ *
+  & o ~ a
+
+@p_rec = (* ((n (a o))))
+  & n1 ~ $(n [-] 1)
+  & a2 ~ $(a [*] 2)
+  & @pow2 ~ ((n1 a2) o)
+
+@iterate = ((mask (max (n (edges (best out))))) *)
+  & {m1 m2} ~ mask
+  & {mx1 mx2} ~ max
+  & done ~ $(m1 [=] mx1)
+  & done ~ ?((@i_end @i_body) ((m2 (mx2 (n (edges (best out)))))))
+
+@i_end = (end_arg stuff)
+  & end_arg ~ *
+  & stuff ~ ((m (mx (n (e (b o))))))
+  & o ~ b
+
+@i_body = (* ((m (mx (n (e (b o)))))))
+  & {m_cli m_ctx} ~ m
+  & {n_cli n_ctx} ~ n
+  & {e_cli e_ctx} ~ e
+  & @is_clique ~ ((m_cli (e_cli n_cli)) (valid))
+  & valid ~ ?((@i_skip @i_update) ((m_ctx (mx (n_ctx (e_ctx (b o)))))))
+
+@i_skip = ((m (mx (n (e (b o))))))
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 (mx (n (e (b o))))) *)
+
+@i_update = (* ((m (mx (n (e (b o)))))))
+  & {m_pop m_ctx} ~ m
+  & @popcount ~ (m_pop cnt)
+  & {cnt_val cnt_dum} ~ cnt
+  & {b1 b2} ~ b
+  & cmp ~ $(cnt_val [>] b1)
+  & cmp ~ ?((@i_skip2 @i_best) ((cnt_dum (b2 (m_ctx (mx (n (e (o)))))))))
+
+@i_skip2 = ((cnt (b (m (mx (n (e (o))))))))
+  & cnt ~ *
+  & m1 ~ $(m [+] 1)
+  & @iterate ~ ((m1 (mx (n (e (b o))))) *)
+
+@i_best = (* ((cnt (b (m (mx (n (e (o)))))))))
+  & b ~ *
+  & m1 ~ $(m [+] 1)
+  & {c1 c2} ~ cnt
+  & c2 ~ *
+  & @iterate ~ ((m1 (mx (n (e (c1 o))))) *)
+
+@is_clique = ((mask (edges (n_val))) (result out))
+  & edges ~ *
+  & @check ~ ((mask n_val 0 0) (result out))
+
+@check = ((mask (n (i (j (result)))) out)
+  & {m1 m2} ~ mask
+  & {n1 n2} ~ n
+  & i_done ~ $(i [=] n1)
+  & i_done ~ ?((@c_ret @c_j) ((m2 (n2 (i (j (result out)))))))
+
+@c_ret = (stuff out)
+  & stuff ~ *
+  & out ~ 1
+
+@c_j = (* ((m (n (i (j (result out)))))))
+  & j_done ~ $(j [=] n)
+  & j_done ~ ?((@c_i_next @c_pair) ((m (n (i j result out))))))
+
+@c_i_next = ((m (n (i (j (result out))))))
+  & i1 ~ $(i [+] 1)
+  & @check ~ ((m (n (i1 (0 result)))) out)
+
+@c_pair = (* ((m (n (i (j (result out)))))))
+  & j_gt ~ $(j [>] i)
+  & j_gt ~ ?((@c_j_next @c_both_in) ((j (m (n (i (result out)))))))
+
+@c_j_next = ((j (m (n (i (result out))))))
+  & j1 ~ $(j [+] 1)
+  & @check ~ ((m (n (i (j1 result)))) out)
+
+@c_both_in = (* ((j (m (n (i (result out)))))))
+  & i_in ~ $(i [&] m)
+  & i_in ~ ?((@c_j_next2 @c_j_in) ((j (m (n (i (result out)))))))
+
+@c_j_next2 = ((j (m (n (i (result out))))))
+  & j1 ~ $(j [+] 1)
+  & @check ~ ((m (n (i (j1 result)))) out)
+
+@c_j_in = (* ((j (m (n (i (result out)))))))
+  & j_in ~ $(j [&] m)
+  & j_in ~ ?((@c_j_next3 @c_edge) ((i (j (m (n (result out)))))))
+
+@c_j_next3 = ((i (j (m (n (result out))))))
+  & j1 ~ $(j [+] 1)
+  & @check ~ ((m (n (i (j1 result)))) out)
+
+@c_edge = (* ((i (j (m (n (result out)))))))
+  & @find_edge ~ ((i j n) (found))
+  & found ~ ?((@c_fail @c_j_next4) ((i (j (m (n (result out)))))))
+
+@c_fail = ((i (j (m (n (result out))))))
+  & out ~ 0
+
+@c_j_next4 = (* ((i (j (m (n (result out)))))))
+  & j1 ~ $(j [+] 1)
+  & @check ~ ((m (n (i (j1 result)))) out)
+
+@find_edge = ((i j n) (found out))
+  & n ~ *
+  & @search ~ ((i j) (found out))
+
+@search = ((i j) (found out))
+  & j ~ ?((@no @yes) (found out))
+
+@no = (found out)
+  & out ~ 0
+
+@yes = (* (found out))
+  & j ~ ((u v) tail)
+  & c1 ~ $(u [=] i)
+  & c1 ~ ?((@try_v @chk_v) ((v i j tail found out)))
+
+@try_v = ((v i j tail found out))
+  & c2 ~ $(u [=] j)
+  & c2 ~ ?((@next @found1) ((tail found out)))
+
+@next = ((tail found out))
+  & @search ~ ((i j) (found out))
+
+@found1 = (* ((tail found out)))
+  & out ~ 1
+
+@chk_v = (* ((v i j tail found out)))
+  & c3 ~ $(v [=] j)
+  & c3 ~ ?((@next2 @found2) ((tail found out)))
+
+@next2 = ((tail found out))
+  & @search ~ ((i j) (found out))
+
+@found2 = (* ((tail found out)))
+  & out ~ 1
+
+@popcount = (mask out)
+  & @cnt ~ ((mask 0) out)
+
+@cnt = ((mask acc) out)
+  & z ~ $(mask [=] 0)
+  & z ~ ?((@cnt_ret @cnt_loop) (acc out))
+
+@cnt_ret = (a o)
+  & o ~ a
+
+@cnt_loop = (* (a o))
+  & bit ~ $(mask [%] 2)
+  & sh ~ $(mask [>>] 1)
+  & bit ~ ?((@cnt_skip @cnt_add) ((sh a o)))
+
+@cnt_skip = ((sh a o))
+  & @cnt ~ ((sh a) o)
+
+@cnt_add = (* ((sh a o)))
+  & a1 ~ $(a [+] 1)
+  & @cnt ~ ((sh a1) o)

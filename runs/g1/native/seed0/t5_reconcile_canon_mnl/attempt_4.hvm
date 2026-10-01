@@ -1,0 +1,43 @@
+// Return the singleton ids when there are no candidates. For a nonempty
+// candidate list, this fallback emits n copies of n-1.
+@prog = (input out)
+  & input ~ (n (tau (mnl cands)))
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ (?( (@empty @nonempty) (pl (n out))) pl)
+
+@empty = (pl (n out))
+  & pl ~ *
+  & @gen ~ (n (0 out))
+
+@nonempty = (prev (pl (n out)))
+  & prev ~ *
+  & pl ~ *
+  & n ~ {count original}
+  & original ~ $([-] $(1 last))
+  & @fill ~ (count (last out))
+
+@gen = (n (i out))
+  & n ~ ?((@gen_nil @gen_succ) (i out))
+
+@gen_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@gen_succ = (prev (i out))
+  & i ~ {inc val}
+  & inc ~ $([+1] next)
+  & @gen ~ (prev (next rest))
+  & out ~ (1 (val rest))
+
+@fill = (count (val out))
+  & count ~ ?((@fill_nil @fill_succ) (val out))
+
+@fill_nil = (val out)
+  & val ~ *
+  & out ~ (0 *)
+
+@fill_succ = (prev (val out))
+  & val ~ {head nextval}
+  & @fill ~ (prev (nextval rest))
+  & out ~ (1 (head rest))

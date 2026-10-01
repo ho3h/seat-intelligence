@@ -1,0 +1,84 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@append = ((@append__C1 a) a)
+
+@append__C0 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @append ~ (b (c d))
+
+@append__C1 = (?(((a a) @append__C0) b) b)
+
+@build = (a ({$([=0x0000001] ?((@build__C2 @build__C3) (a (b c)))) b} c))
+
+@build__C0 = (* ({a b} (c ((a b) c))))
+
+@build__C1 = (?((((0 0) @List/Nil) @build__C0) a) a)
+
+@build__C2 = (a ({$([-] $(e f)) $([:/0x0000002] {b e})} ((c g) h)))
+  &!@build ~ (d (f (g h)))
+  &!@build ~ (a (b (c d)))
+
+@build__C3 = (* ((@build__C1 a) (* a)))
+
+@flatten = (a ({$([=0x0000001] ?((@flatten__C0 @flatten__C1) (a (b c)))) b} c))
+
+@flatten__C0 = ((a d) ({$([-] $(e f)) $([:/0x0000002] {b e})} h))
+  & @append ~ (c (g h))
+  &!@flatten ~ (a (b c))
+  &!@flatten ~ (d (f g))
+
+@flatten__C1 = (* ((a *) (* b)))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@get_tree = (a (b ({$([=0x0000001] ?((@get_tree__C2 @get_tree__C3) (a (b (c d))))) c} d)))
+
+@get_tree__C0 = ($([-] $(b c)) ($([-] $(d e)) (* (a ({b d} f)))))
+  & @get_tree ~ (a (c (e f)))
+
+@get_tree__C1 = (* (b (* (a (* c)))))
+  & @get_tree ~ (a (b c))
+
+@get_tree__C2 = ((d e) ({$([<] $(a ?((@get_tree__C0 @get_tree__C1) (b (c (d (e (f g)))))))) b} ({c $([:/0x0000002] {a f})} g)))
+
+@get_tree__C3 = (* ((a *) (* (* a))))
+
+@jump_tree = (a (b (c ({$([=0x0000001] ?((@jump_tree__C2 @jump_tree__C3) (a (b (c (d e)))))) d} e))))
+
+@jump_tree__C0 = ({a b} ((a b) 0))
+
+@jump_tree__C1 = (* ({a b} ((a b) 1)))
+
+@jump_tree__C2 = ((a f) ({b g} ({c h} ({$([-] $(i j)) $([:/0x0000002] {d i})} ((e k) m)))))
+  &!@jump_tree ~ (f (g (h (j (k l)))))
+  &!@jump_tree ~ (a (b (c (d (e $([*] $(l m)))))))
+
+@jump_tree__C3 = (* (({$([=] $(d ?((@jump_tree__C0 @jump_tree__C1) (e f)))) b} *) (a (c (* f)))))
+  & @get_tree ~ (a (b (c {d e})))
+
+@length = ((@length__C1 a) a)
+
+@length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @length ~ (a b)
+
+@length__C1 = (?((0 @length__C0) a) a)
+
+@prog = ({b a} d)
+  & @length ~ (a {$([=0x0000000] ?((@prog__C0 (* (* (* @List/Nil)))) (b (c d)))) c})
+
+@prog__C0 = (a ({b d} e))
+  & @solve ~ (c (d e))
+  & @build ~ (a (b (c *)))
+
+@solve = ({a {b e}} ({c {d f}} h))
+  & @jump_tree ~ (a (b (c (d (g $([=0x0000001] ?((@solve__C0 @solve__C1) (e (f (g h))))))))))
+
+@solve__C0 = (* (b (a c)))
+  & @solve ~ (a (b c))
+
+@solve__C1 = (* (a (b (* c))))
+  & @flatten ~ (a (b c))
+
+

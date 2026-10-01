@@ -1,0 +1,48 @@
+@prog = (xs out)
+  & @inv ~ (xs ((0 *) (0 out)))
+
+@inv = (lv1 (seen (acc out)))
+  & @inv_cons_lw ~ (lv1 (seen (acc out)))
+
+@inv_nil = (* (* (a a)))
+
+@inv_cons = (* (({h1 h2} t) ({s1 s2} (acc out))))
+  & @count ~ (h1 (s1 (0 $([+] $(acc acc2)))))
+  & @inv_cons_lw ~ (t ((1 (h2 s2)) (acc2 out)))
+
+@count = (h (lv2 (acc out)))
+  & @count_cons_lw ~ (lv2 (h (acc out)))
+
+@count_nil = (* (* (a a)))
+
+@count_cons = (* (($([>] $(h1 z15)) ys) ({h1 h2} (acc out))))
+  & z15 ~ ?((@count_no_hz @count_yes_hz) (h2 (xw35 (acc out))))
+  & @count_cons_lw ~ (ys xw35)
+
+@count_no = (h (ys (acc out)))
+  & @count ~ (h (ys (acc out)))
+
+@count_yes = (* (h (ys (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count ~ (h (ys (acc2 out)))
+
+@inv_cons_lw = (ls51 (q39 (q40 q41)))
+  & ls51 ~ (g48 (e46 (g49 (e47 tk50))))
+  & g48 ~ ?((@inv_nil @inv_cons_la) ((e46 (q43 (q44 q45))) (q39 (q40 q41))))
+  & g49 ~ ?((@inv_nil @inv_cons) ((e47 tk50) (q43 (q44 q45))))
+
+@count_cons_lw = (ls65 (q53 (q54 q55)))
+  & ls65 ~ (g62 (e60 (g63 (e61 tk64))))
+  & g62 ~ ?((@count_nil @count_cons_la) ((e60 (q57 (q58 q59))) (q53 (q54 q55))))
+  & g63 ~ ?((@count_nil @count_cons) ((e61 tk64) (q57 (q58 q59))))
+
+@inv_cons_la = (* (({h1 h2} ((1 (h2 s2)) (acc2 out))) ({s1 s2} (acc out))))
+  & @count ~ (h1 (s1 (0 $([+] $(acc acc2)))))
+
+@count_no_hz = (q16 (hw24 (q18 q19)))
+  & hw24 ~ (q16 (q18 q19))
+
+@count_yes_hz = (* (q25 (hw34 ($([+] $(1 q29)) q28))))
+  & hw34 ~ (q25 (q29 q28))
+
+@count_cons_la = (* (($([>] $(h1 ?((@count_no_hz @count_yes_hz) (h2 (xw35 (acc out)))))) xw35) ({h1 h2} (acc out))))

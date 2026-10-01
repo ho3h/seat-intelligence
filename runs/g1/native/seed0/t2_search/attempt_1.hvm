@@ -1,0 +1,37 @@
+// Search an ascending list, carrying the target and current index.
+@prog = ((xs targ) out)
+  & @bs ~ (xs (targ (0 out)))
+
+@bs = ((?((@bs_nil @bs_cons) (pl (targ (i out)))) pl) (targ (i out)))
+
+@bs_nil = (* (targ (i out)))
+  & targ ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@bs_cons = (* ((h tail) (targ (i out))))
+  & targ ~ {tg tr}
+  & tr ~ {te tn}
+  & h ~ $([>] $(tg gt))
+  & gt ~ ?((@bs_not_gt @bs_gt) (h (tail (te (tn (i out))))))
+
+@bs_not_gt = (h (tail (te (tn (i out)))))
+  & h ~ $([=] $(te eq))
+  & eq ~ ?((@bs_less @bs_equal) (tail (tn (i out))))
+
+@bs_gt = (* (h (tail (te (tn (i out))))))
+  & h ~ *
+  & tail ~ *
+  & te ~ *
+  & tn ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@bs_less = (tail (tn (i out)))
+  & i ~ $([+1] idx)
+  & @bs ~ (tail (tn (idx out)))
+
+@bs_equal = (* (tail (tn (i out))))
+  & tail ~ *
+  & tn ~ *
+  & i ~ out

@@ -1,0 +1,9 @@
+@prog = (n out)
+  & @go ~ (n ((0 *) out))
+
+@go = (?((@go_z @go_s) c) c)
+
+@go_z = (a a)
+
+@go_s = ({p1 p2} (acc out))
+  & @go ~ (p1 ((1 (p2 acc)) out))

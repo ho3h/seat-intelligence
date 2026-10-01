@@ -1,0 +1,16 @@
+@prog = ((?((@emit_lit @emit_nonlit) (payload_q246 ((0 *) out))) payload_q246) out)
+
+@emit_lit = ({$([<] $(10 ?((({$([:/10] {$([<] $(10 ?((@digit_large @digit_small) (n_value_q254_q256 ((1 (char_q256 tail_q256)) out_q256))))) n_value_q254_q256}) $([:%10] $([+48] char_q256))} (tail_q256 out_q256)) @digit_small) (n_value_q247 (tail out))))) n_value_q247} (tail out))
+
+@emit_nonlit = (idx (payload (tail out)))
+  & idx ~ ?((@emit_add @emit_mul) (payload (tail out)))
+
+@emit_add = (((?((@emit_lit @emit_nonlit) (payload_q250 ((1 (43 right_result_q248)) left_result_q248))) payload_q250) (?((@emit_lit @emit_nonlit) (payload_q249 ((1 (41 tail)) right_result_q248))) payload_q249)) (tail (1 (40 left_result_q248))))
+
+@emit_mul = (* (((?((@emit_lit @emit_nonlit) (payload_q253 ((1 (42 right_result_q251)) left_result_q251))) payload_q253) (?((@emit_lit @emit_nonlit) (payload_q252 ((1 (41 tail)) right_result_q251))) payload_q252)) (tail (1 (40 left_result_q251)))))
+
+@digit_small = (* (n (tail out)))
+  & n ~ $([+48] char)
+  & out ~ (1 (char tail))
+
+@digit_large = ({$([:/10] {$([<] $(10 ?((@digit_large @digit_small) (n_value_q254 ((1 (char tail)) out))))) n_value_q254}) $([:%10] $([+48] char))} (tail out))

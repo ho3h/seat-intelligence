@@ -1,0 +1,58 @@
+@prog = (({{nl_i8_q200 nr_i8_q200} n_build_q200} (x_q200 {(?((@len_nil @len_cons) (pl_q201 {$($(nl_i8_q200 ?((@min_n @min_m) (mr_i8_q200 (nr_i8_q200 ?((@round_done @round_more) (pairs_run_q200 ((1 (x_q200 (0 *))) (n_build_q200 out)))))))) [<]) mr_i8_q200})) pl_q201) pairs_run_q200})) out)
+
+@len_nil = (* 0)
+
+@len_cons = (* ((* (?((@len_nil @len_cons) (pl_q203 $([+1] out))) pl_q203)) out))
+
+@min_n = (* (a a))
+
+@min_m = (* (m (* m)))
+
+@round_done = (* (members (?((@build_nil @build_more) (members out)) out)))
+
+@round_more = (?((@round_done @round_more) (pnext (members2 (n out)))) ({(?((@scan_nil @scan_cons) (pl_q205 (members members2))) pl_q205) pnext} (members (n out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (members out))) pl) (members out))
+
+@scan_nil = (* (a a))
+
+@scan_cons = (* ((({uq ukeep} {vq vkeep}) tail) ({(?((@mem_nil (* (($([=] $(te_q244 ?((@mem_no @mem_yes) (tail_q244 (tr_q244 out_q244))))) tail_q244) ({te_q244 tr_q244} out_q244)))) (pl_q207 (uq $([|] $(hv ?((@scan_no @scan_yes) (tail (ukeep (vkeep (work out)))))))))) pl_q207) {(?((@mem_nil @mem_cons) (pl_q208 (vq hv))) pl_q208) work}} out)))
+
+@scan_no = ((?((@scan_nil @scan_cons) (pl_q209 (work out))) pl_q209) (* (* (work out))))
+
+@scan_yes = (* (tail (u (v (work out)))))
+  & @insert ~ (work (u tmp))
+  & @insert ~ (tmp (v tmp2))
+  & @scan ~ (tail (tmp2 out))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* (($([=] $(te ?((@mem_no @mem_yes) (tail (tr out))))) tail) ({te tr} out)))
+
+@mem_no = ((?((@mem_nil @mem_cons) (pl_q213 (target out))) pl_q213) (target out))
+
+@mem_yes = (* (* (* 1)))
+
+@insert = ({mcheck mkeep} ({iq ikeep} out))
+  & @mem ~ (mcheck (iq ?((@insert_no @insert_yes) (mkeep (ikeep out)))))
+
+@insert_no = (members (id (1 (id members))))
+
+@insert_yes = (* (members (* members)))
+
+@build_nil = (* (0 *))
+
+@build_more = ({iq ikeep} ({(?((@mem_nil @mem_cons) (pl_q218 (iq ?((@build_no @build_yes) (ikeep (mkeep out)))))) pl_q218) mkeep} out))
+
+@build_no = (?((@build_nil @build_more) (members out)) (members out))
+
+@build_yes = (* ({?((@build_nil @build_more) (members (?((@append_nil @append_cons) (pl_q233 (i_head out))) pl_q233))) i_head} (members out)))
+
+@append = ((?((@append_nil @append_cons) (pl (id out))) pl) (id out))
+
+@append_nil = (* (id (1 (id (0 *)))))
+
+@append_cons = (* ((head tail) (id (1 (head rest)))))
+  & @append ~ (tail (id rest))

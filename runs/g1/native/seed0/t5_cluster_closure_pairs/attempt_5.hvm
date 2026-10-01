@@ -1,0 +1,97 @@
+@prog = ((n pairs) out)
+  & @build ~ (n (0 labels))
+  & @edges ~ (pairs (labels out))
+
+@build = (?((@bzero @bsucc) (idx out)) (idx out))
+
+@bzero = (idx out)
+  & idx ~ *
+  & out ~ (0 *)
+
+@bsucc = (k (idx out))
+  & idx ~ {head next}
+  & next ~ $([+1] next2)
+  & @build ~ (k (next2 tail))
+  & out ~ (1 (head tail))
+
+@edges = ((?((@enil @econs) (pl (labels out))) pl) (labels out))
+
+@enil = (* (labels out))
+  & @count ~ (labels out)
+
+@econs = (* (((u v) tail) (labels out)))
+  & @getcopy ~ (labels (u (ru labels1)))
+  & @getcopy ~ (labels1 (v (rv labels2)))
+  & @replace ~ (labels2 (rv (ru newlabels)))
+  & @edges ~ (tail (newlabels out))
+
+@getcopy = ((?((@gc_nil @gc_cons) (pl (idx (valueout listout)))) pl) (idx (valueout listout)))
+
+@gc_nil = (* (idx (valueout listout)))
+  & idx ~ *
+  & valueout ~ 0
+  & listout ~ (0 *)
+
+@gc_cons = (* ((head tail) (idx (valueout listout))))
+  & idx ~ ?((@gc_zero @gc_succ) (head (tail (valueout listout))))
+
+@gc_zero = (head (tail (valueout listout)))
+  & head ~ {v h2}
+  & valueout ~ v
+  & listout ~ (1 (h2 tail))
+
+@gc_succ = (k (head (tail (valueout listout))))
+  & @getcopy ~ (tail (k (valueout newtail)))
+  & listout ~ (1 (head newtail))
+
+@replace = ((?((@rnil @rcons) (pl (old (new out)))) pl) (old (new out)))
+
+@rnil = (* (old (new out)))
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@rcons = (* ((head tail) (old (new out))))
+  & head ~ {hc hp}
+  & old ~ {oc op}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@rdiff @rsame) (hp (tail (op (new out)))))
+
+@rdiff = (head (tail (old (new out))))
+  & @replace ~ (tail (old (new tailout)))
+  & out ~ (1 (head tailout))
+
+@rsame = (head (tail (old (new out))))
+  & head ~ *
+  & new ~ {newhead newrec}
+  & @replace ~ (tail (old (newrec tailout)))
+  & out ~ (1 (newhead tailout))
+
+@count = (labels out)
+  & @outer ~ (labels (0 out))
+
+@outer = ((?((@onil @ocons) (pl (acc out))) pl) (acc out))
+
+@onil = (* (acc out))
+  & acc ~ out
+
+@ocons = (* ((head tail) (acc out)))
+  & @inner ~ (tail (head (cnt tailcopy)))
+  & acc ~ $([+] $(cnt acc2))
+  & @outer ~ (tailcopy (acc2 out))
+
+@inner = ((?((@inil @icons) (pl (target (countout listout)))) pl) (target (countout listout)))
+
+@inil = (* (target (countout listout)))
+  & target ~ *
+  & countout ~ 0
+  & listout ~ (0 *)
+
+@icons = (* ((head tail) (target (countout listout))))
+  & head ~ {hc hp}
+  & target ~ {tc tr}
+  & hc ~ $([=] $(tc eq))
+  & @inner ~ (tail (tr (subcount tailcopy)))
+  & eq ~ $([+] $(subcount count))
+  & countout ~ count
+  & listout ~ (1 (hp tailcopy))

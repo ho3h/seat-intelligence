@@ -1,0 +1,23 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@add = λ{ 0n: λb. b; 1n+: λp. λb. 1n+@add(p, b) }
+@mul = λ{ 0n: λb. 0n; 1n+: λp. λ&b. @add(b, @mul(p, b)) }
+@min = λ{ 0n: λb. 0n; 1n+: λp. λb. @min1(b, p) }
+@min1 = λ{ 0n: λp. 0n; 1n+: λq. λp. 1n+@min(p, q) }
+@max = λ{ 0n: λb. b; 1n+: λp. λb. @max1(b, p) }
+@max1 = λ{ 0n: λp. 1n+p; 1n+: λq. λp. 1n+@max(p, q) }
+@sub = λ{ 0n: λb. 0n; 1n+: λp. λb. @sub1(b, p) }
+@sub1 = λ{ 0n: λp. 1n+p; 1n+: λq. λp. @sub(p, q) }
+@eqn = λ{ 0n: λ{ 0n: 1; 1n+: λq. 0 }; 1n+: λp. λ{ 0n: 0; 1n+: λq. @eqn(p, q) } }
+@ev = λ{
+  #X: λx. x
+  #K: λk. λx. k
+  #Add: λl. λr. λ&x. @add(@ev(l, x), @ev(r, x))
+  #Mul: λl. λr. λ&x. @mul(@ev(l, x), @ev(r, x))
+  #Min: λl. λr. λ&x. @min(@ev(l, x), @ev(r, x))
+  #Max: λl. λr. λ&x. @max(@ev(l, x), @ev(r, x))
+  #Sub: λl. λr. λ&x. @sub(@ev(l, x), @ev(r, x))
+}
+@chk = λ{ []: λys. λp. p; <>: λx. λxs. λ{ <>: λy. λys. λ&p. @g(@eqn(@ev(p, x), y), @chk(xs, ys, p)); []: λp. &{} } }
+@P = &LA{&LB{#X{},&LC{#K{0n},#K{1n}}},&LD{&LE{#K{2n},#K{3n}},&LF{#K{4n},#K{5n}}}}
+@main = @chk([2n,1n,4n,1n,7n,7n,7n,6n], [2n,1n,4n,1n,7n,7n,7n,6n], @P)

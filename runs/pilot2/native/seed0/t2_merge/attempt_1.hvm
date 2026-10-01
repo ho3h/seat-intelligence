@@ -1,0 +1,32 @@
+// Merge two sorted lists by repeatedly selecting the smaller head.
+
+@prog = (input output)
+  & input ~ (xs ys)
+  & @merge ~ (xs (ys output))
+
+@merge = ((?((@merge_nil @merge_cons) (p (ys out))) p) (ys out))
+
+@merge_nil = (p (ys out))
+  & p ~ *
+  & ys ~ out
+
+@merge_cons = (* ((x xt) (ys out)))
+  & ys ~ ((?((@merge_y_nil @merge_y_cons) (q (x (xt out)))) q) (x (xt out)))
+
+@merge_y_nil = (q (x (xt out)))
+  & q ~ *
+  & out ~ (1 (x xt))
+
+@merge_y_cons = (* ((y yt) (x (xt out))))
+  & x ~ {xc xk}
+  & y ~ {yc yk}
+  & yc ~ $([<] $(xc z))
+  & z ~ ?((@merge_y_ge @merge_y_lt) (xk (xt (yk (yt out)))))
+
+@merge_y_ge = (x (xt (y (yt out))))
+  & @merge ~ (xt ((1 (y yt)) rest))
+  & out ~ (1 (x rest))
+
+@merge_y_lt = (* (x (xt (y (yt out)))))
+  & @merge ~ ((1 (x xt)) (yt rest))
+  & out ~ (1 (y rest))

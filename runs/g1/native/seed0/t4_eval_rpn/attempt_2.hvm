@@ -1,0 +1,41 @@
+// Entry point: evaluate the token list with an empty stack.
+@prog = (input out)
+  & @eval ~ (input ((0 *) out))
+
+// Dispatch on the list tag.
+@eval = ((?((@eval_nil @eval_cons) (pl (stk out))) pl) (stk out))
+
+// At the end, the stack contains exactly one value.
+@eval_nil = (* ((1 (value (0 *))) value))
+
+// A cons cell contains a token and the remaining list.
+@eval_cons = (* (((?((@push @operator) (val (tail (stk out)))) val) tail) (stk out)))
+
+// Push a number token and continue.
+@push = (val (tail (stk out)))
+  & @eval ~ (tail ((1 (val stk)) out))
+
+// For an operator token, pop b and then a. Copy the opcode for testing.
+@operator = (* (op (tail ((1 (b (1 (a rest)))) out))))
+  & op ~ {test keep}
+  & test ~ $([=] $(43 eq))
+  & eq ~ ?((@check_sub @do_add) (keep (a (b (rest (tail out))))))
+
+// If the opcode was not '+', check for '-'.
+@check_sub = (keep (a (b (rest (tail out)))))
+  & keep ~ $([=] $(45 check))
+  & check ~ ?((@do_mul @do_sub) (a (b (rest (tail out)))))
+
+// The true branches receive the switch's successor value, zero.
+@do_add = (* (* (a (b (rest (tail out))))))
+  & a ~ $([+] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@do_sub = (* (a (b (rest (tail out)))))
+  & a ~ $([-] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+// The zero branch of the subtraction test is multiplication.
+@do_mul = (a (b (rest (tail out))))
+  & a ~ $([*] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))

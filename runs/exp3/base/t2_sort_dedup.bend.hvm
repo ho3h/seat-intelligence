@@ -1,0 +1,38 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@insert_unique = (a ((@insert_unique__C6 (a b)) b))
+
+@insert_unique__C0 = (b (a (c e)))
+  & @List/Cons ~ (a (d e))
+  & @insert_unique ~ (b (c d))
+
+@insert_unique__C1 = (* (* a))
+  & @List/Cons ~ a
+
+@insert_unique__C2 = ({$([=] $(a ?((@insert_unique__C0 @insert_unique__C1) (b (c d))))) b} ({a c} d))
+
+@insert_unique__C3 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@insert_unique__C4 = (a b)
+  & @List/Cons ~ (a (@List/Nil b))
+
+@insert_unique__C5 = (* ({a c} (d ({$([<] $(a ?((@insert_unique__C2 @insert_unique__C3) (b (c (d e)))))) b} e))))
+
+@insert_unique__C6 = (?((@insert_unique__C4 @insert_unique__C5) a) a)
+
+@prog = a
+  & @sort_dedup ~ a
+
+@sort_dedup = ((@sort_dedup__C1 a) a)
+
+@sort_dedup__C0 = (* (a (b d)))
+  & @insert_unique ~ (a (c d))
+  & @sort_dedup ~ (b c)
+
+@sort_dedup__C1 = (?((@List/Nil @sort_dedup__C0) a) a)
+
+

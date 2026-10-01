@@ -1,0 +1,19 @@
+// Overlay two trees, adding values where both trees have nodes.
+@prog = (input output)
+  & input ~ (a b)
+  & @merge ~ (a (b output))
+
+@merge = ((?(((* (x x)) @ma_node) (p (b out))) p) (b out))
+
+@ma_node = (n (p (b out)))
+  & n ~ *
+  & p ~ (l (v r))
+  & b ~ (?( ((* (x (y (z (1 (x (y z))))))) @mb_node) (pb (l (v (r out)))) ) pb)
+
+@mb_node = (n (pb (l (v (r out)))))
+  & n ~ *
+  & pb ~ (l2 (v2 r2))
+  & @merge ~ (l (l2 left_out))
+  & @merge ~ (r (r2 right_out))
+  & v ~ $([+] $(v2 sum))
+  & out ~ (1 (left_out (sum right_out)))

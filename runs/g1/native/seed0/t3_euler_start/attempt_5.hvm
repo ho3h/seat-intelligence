@@ -1,0 +1,42 @@
+@prog = ((n edges) out)
+  & n ~ *
+  & @check ~ (edges out)
+
+@check = ((?((@empty @some) (pl out)) pl) out)
+
+@empty = (* out)
+  & out ~ 16777215
+
+@some = (* ((edge tail) out))
+  & edge ~ (u v)
+  & @is_empty ~ (tail empty)
+  & empty ~ ?((@multiple @single) (u (v out)))
+
+@multiple = (* (u (v out)))
+  & u ~ *
+  & v ~ *
+  & out ~ 16777215
+
+@single = (* (u (v out)))
+  & u ~ {u_cmp u_ctx}
+  & v ~ {v_cmp v_ctx}
+  & u_cmp ~ $([<] $(v_cmp less))
+  & less ~ ?((@single_v @single_u) (u_ctx (v_ctx out)))
+
+@single_v = (u (v out))
+  & u ~ *
+  & out ~ v
+
+@single_u = (* (u (v out)))
+  & v ~ *
+  & out ~ u
+
+@is_empty = ((?((@ie_nil @ie_cons) (pl out)) pl) out)
+
+@ie_nil = (* out)
+  & out ~ 1
+
+@ie_cons = (* ((h t) out))
+  & h ~ *
+  & t ~ *
+  & out ~ 0

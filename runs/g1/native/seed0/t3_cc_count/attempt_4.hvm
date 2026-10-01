@@ -1,0 +1,94 @@
+// Count vertices in order, flood-filling each vertex not already visited.
+@prog = (input out)
+  & input ~ (n edges)
+  & @count ~ (n (edges (0 ((0 *) (0 out)))))
+
+@count = (?((@c_zero @c_succ) (edges (i (visited (acc out))))) (edges (i (visited (acc out)))))
+
+@c_zero = (* (* (* (a a))))
+
+@c_succ = (nleft (i (edges (visited (acc out)))))
+  & i ~ {imem irest}
+  & irest ~ {istart inext}
+  & visited ~ {vmem vsaved}
+  & @mem ~ (vmem (imem has))
+  & has ~ ?((@c_new @c_seen) (nleft (istart (inext (edges (vsaved (acc out)))))))
+
+@c_new = (nleft (istart (inext (edges (visited (acc out))))))
+  & @flood ~ ((1 (istart (0 *))) (edges (visited vnew)))
+  & acc ~ $([+1] acc2)
+  & @count ~ (nleft (edges (inext (vnew (acc2 out)))))
+
+@c_seen = (* (nleft (istart (inext (edges (visited (acc out)))))))
+  & istart ~ *
+  & @count ~ (nleft (edges (inext (visited (acc out)))))
+
+// List membership: return 1 if target is present, otherwise 0.
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (* out))
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (target out)))
+  & target ~ {tcmp trec}
+  & head ~ $([=] $(tcmp eq))
+  & eq ~ ?((@mem_no @mem_yes) (tail (trec out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (* out))
+  & out ~ 1
+
+// Flood-fill the pending list, updating visited.
+@flood = ((?((@f_nil @f_cons) (pl (edges (visited out)))) pl) (edges (visited out)))
+
+@f_nil = (* (* (a a)))
+
+@f_cons = (* ((v rest) (edges (visited out))))
+  & v ~ {vcheck vkeep}
+  & visited ~ {vmem vsaved}
+  & @mem ~ (vmem (vcheck has))
+  & has ~ ?((@f_new @f_skip) (vkeep (rest (edges (vsaved out)))))
+
+@f_new = (v (rest (edges (visited out))))
+  & v ~ {vscan vmark}
+  & edges ~ {escan eflood}
+  & @scan ~ (escan (vscan (rest pending2)))
+  & @flood ~ (pending2 (eflood ((1 (vmark visited)) out)))
+
+@f_skip = (* (v (rest (edges (visited out)))))
+  & v ~ *
+  & @flood ~ (rest (edges (visited out)))
+
+// Scan all edges, adding neighbors of target to pending.
+@scan = ((?((@scan_nil @scan_cons) (pl (target (pending out)))) pl) (target (pending out)))
+
+@scan_nil = (* (* (a a)))
+
+@scan_cons = (* (((u v) tail) (target (pending out))))
+  & target ~ {tc tr}
+  & u ~ {uc uk}
+  & uc ~ $([=] $(tc eq))
+  & eq ~ ?((@scan_u_no @scan_u_yes) (uk (v (tail (tr (pending out))))))
+
+@scan_u_yes = (* (v (tail (target (pending out)))))
+  & pending ~ (1 (v pending2))
+  & @scan ~ (tail (target (pending2 out)))
+
+@scan_u_no = (u (v (tail (target (pending out)))))
+  & @scan_check ~ (u (v (tail (target (pending out)))))
+
+@scan_check = (u (v (tail (target (pending out)))))
+  & v ~ {vc vk}
+  & target ~ {tc tr}
+  & vc ~ $([=] $(tc eq))
+  & eq ~ ?((@scan_v_no @scan_v_yes) (u (vk (tail (tr (pending out))))))
+
+@scan_v_no = (u (* (tail (target (pending out)))))
+  & u ~ *
+  & @scan ~ (tail (target (pending out)))
+
+@scan_v_yes = (u (* (tail (target (pending out)))))
+  & pending ~ (1 (u pending2))
+  & @scan ~ (tail (target (pending2 out)))

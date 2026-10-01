@@ -1,0 +1,158 @@
+@prog = ((n edges) out)
+  & n ~ {n_build n_count}
+  & edges ~ {edges_build edges_count}
+  & @adj_build ~ (n_build (0 (edges_build adj)))
+  & @count_vertices ~ (n_count (0 (0 (adj out))))
+
+@adj_build = (n (i (edges out)))
+  & i ~ {i_cmp i_ctx}
+  & n ~ {n_cmp n_ctx}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@adj_done @adj_step) (n_ctx (i_ctx (edges out))))
+
+@adj_done = (n (i (edges out)))
+  & n ~ *
+  & i ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@adj_step = (* (n (i (edges out))))
+  & i ~ {i_scan i_inc}
+  & edges ~ {edges_scan edges_next}
+  & @scan ~ (i_scan (edges_scan ((0 *) neighbors)))
+  & i_inc ~ $([+1] i2)
+  & @adj_build ~ (n (i2 (edges_next rest)))
+  & out ~ (1 (neighbors rest))
+
+@count_vertices = (n (i (acc (adj out))))
+  & i ~ {i_cmp i_ctx}
+  & n ~ {n_cmp n_ctx}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@count_done @count_step) (n_ctx (i_ctx (acc (adj out)))))
+
+@count_done = (n (i (acc (adj out))))
+  & n ~ *
+  & i ~ *
+  & adj ~ *
+  & out ~ acc
+
+@count_step = (* (n (i (acc (adj out)))))
+  & i ~ {i_test i_next}
+  & adj ~ {adj_test adj_next}
+  & @vertex_test ~ (i_test (adj_test cyc))
+  & cyc ~ ?((@count_no @count_yes) (n (i_next (acc (adj_next out)))))
+
+@count_no = (n (i (acc (adj out))))
+  & i ~ $([+1] i2)
+  & @count_vertices ~ (n (i2 (acc (adj out))))
+
+@count_yes = (* (n (i (acc (adj out)))))
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @count_vertices ~ (n (i2 (acc2 (adj out))))
+
+@vertex_test = (start (adj out))
+  & start ~ {start_nth start_dfs}
+  & adj ~ {adj_nth adj_dfs}
+  & @nth ~ (start_nth (adj_nth neighbors))
+  & @dfs ~ (start_dfs (neighbors ((0 *) (adj_dfs out))))
+
+@nth = (idx (list out))
+  & list ~ (?((@nth_nil @nth_cons) (payload (idx out))) payload)
+
+@nth_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@nth_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@nth_found @nth_next) (head (tail out)))
+
+@nth_found = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@nth_next = (idx (head (tail out)))
+  & head ~ *
+  & @nth ~ (idx (tail out))
+
+@dfs = (start (queue (seen (adj out))))
+  & queue ~ (?((@dfs_nil @dfs_cons) (payload (start (seen (adj out))))) payload)
+
+@dfs_nil = (payload (start (seen (adj out))))
+  & payload ~ *
+  & start ~ *
+  & seen ~ *
+  & adj ~ *
+  & out ~ 0
+
+@dfs_cons = (* ((candidate rest) (start (seen (adj out)))))
+  & candidate ~ {candidate_eq candidate_keep}
+  & start ~ {start_eq start_keep}
+  & candidate_eq ~ $([=] $(start_eq eq))
+  & eq ~ ?((@dfs_check @dfs_found) (candidate_keep (rest (start_keep (seen (adj out))))))
+
+@dfs_found = (* (candidate (rest (start (seen (adj out))))))
+  & candidate ~ *
+  & rest ~ *
+  & start ~ *
+  & seen ~ *
+  & adj ~ *
+  & out ~ 1
+
+@dfs_check = (candidate (rest (start (seen (adj out)))))
+  & candidate ~ {target candidate_keep}
+  & seen ~ {seen_test seen_keep}
+  & @contains ~ (target (seen_test z))
+  & z ~ ?((@dfs_expand @dfs_skip) (candidate_keep (rest (start (seen_keep (adj out))))))
+
+@dfs_skip = (* (candidate (rest (start (seen (adj out))))))
+  & candidate ~ *
+  & @dfs ~ (start (rest (seen (adj out))))
+
+@dfs_expand = (candidate (rest (start (seen (adj out)))))
+  & candidate ~ {candidate_nth candidate_mark}
+  & adj ~ {adj_nth adj_recur}
+  & @nth ~ (candidate_nth (adj_nth neighbors))
+  & @dfs ~ (start (neighbors ((1 (candidate_mark seen)) (adj_recur out))))
+
+@contains = (target (list out))
+  & list ~ (?((@contains_nil @contains_cons) (payload (target out))) payload)
+
+@contains_nil = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ 0
+
+@contains_cons = (* ((head tail) (target out)))
+  & target ~ {target_eq target_keep}
+  & head ~ $([=] $(target_eq z))
+  & z ~ ?((@contains_no @contains_yes) (tail (target_keep out)))
+
+@contains_no = (tail (target out))
+  & @contains ~ (target (tail out))
+
+@contains_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1
+
+@scan = (source (list (work out)))
+  & list ~ (?((@scan_nil @scan_cons) (payload (source (work out)))) payload)
+
+@scan_nil = (payload (source (work out)))
+  & payload ~ *
+  & source ~ *
+  & out ~ work
+
+@scan_cons = (* (((u v) tail) (source (work out))))
+  & source ~ {source_eq source_keep}
+  & u ~ $([=] $(source_eq z))
+  & z ~ ?((@scan_no @scan_yes) (v (tail (source_keep (work out)))))
+
+@scan_no = (v (tail (source (work out))))
+  & v ~ *
+  & @scan ~ (source (tail (work out)))
+
+@scan_yes = (* (v (tail (source (work out)))))
+  & @scan ~ (source (tail ((1 (v work)) out)))

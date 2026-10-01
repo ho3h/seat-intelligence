@@ -1,0 +1,400 @@
+@prog = ((n (tau (mnl cands))) out)
+  & @dedup ~ (cands ((0 *) (n (tau (mnl out)))))
+
+// ------- deduplicate candidates: keep max score per pair -------
+
+@dedup = (cands (acc cont))
+  & cands ~ (tag payload)
+  & tag ~ ?((@dedup_nil @dedup_cons) (payload (acc cont)))
+
+@dedup_nil = (* (acc cont))
+  & @after_dedup ~ (acc cont)
+
+@dedup_cons = (* ((c cs) (acc cont)))
+  & @upd ~ (c (acc (cs cont)))
+
+@upd = ((u (v s)) (acc (cs cont)))
+  & @upd_scan ~ ((s (u v)) (acc newacc))
+  & @dedup ~ (cs (newacc cont))
+
+@upd_scan = (s (p (acc out)))
+  & acc ~ (tag payload)
+  & tag ~ ?((@upd_nil @upd_cons) (s (p (payload out))))
+
+@upd_nil = (s (p (* out)))
+  & out ~ (1 ((s p) (0 *)))
+
+@upd_cons = (* (s (p ((h t) out))))
+  & h ~ (old_s oldp)
+  & p ~ {p_eq p_out}
+  & oldp ~ {oldp_eq oldp_out}
+  & @same_pair ~ (p_eq (oldp_eq same))
+  & same ~ ?((@upd_diff @upd_same) (s (p_out (old_s (oldp_out (t out))))))
+
+@same_pair = ((u v) ((ou ov) out))
+  & u ~ $([=] $(ou eq1))
+  & eq1 ~ ?((@same_false @same_eq_v) (v (ov out)))
+
+@same_false = (* (* out))
+  & out ~ 0
+
+@same_eq_v = (* (v (ov out)))
+  & v ~ $([=] $(ov out))
+
+@upd_diff = (s (p (old_s (oldp (t out)))))
+  & @upd_scan ~ ((s p) (t newtail))
+  & out ~ (1 ((old_s oldp) newtail))
+
+@upd_same = (* (s (p (old_s (oldp (t out))))))
+  & s ~ {s_cmp s_out}
+  & old_s ~ {old_cmp old_out}
+  & s_cmp ~ $([>] $(old_cmp gt))
+  & gt ~ ?((@upd_keep @upd_replace) (s_out (p (old_out (oldp (t out))))))
+
+@upd_keep = (* (* (old_out (oldp (t out)))))
+  & out ~ (1 ((old_out oldp) t))
+
+@upd_replace = (* (s_out (p (* (* (t out))))))
+  & out ~ (1 ((s_out p) t))
+
+@after_dedup = (acc (n (tau (mnl out))))
+  & n ~ {n1 n2}
+  & @filter ~ (acc (tau filtered))
+  & @sort ~ (filtered sorted)
+  & @build ~ (n1 clusters)
+  & @process ~ (sorted (clusters (mnl (n2 out))))
+
+// ------- filter accepted pairs: score >= tau -------
+
+@filter = (lst (tau out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@filter_nil @filter_cons) (tau (payload out)))
+
+@filter_nil = (* (* out))
+  & out ~ (0 *)
+
+@filter_cons = (* (tau ((h t) out)))
+  & h ~ (s p)
+  & tau ~ {tau1 tau2}
+  & s ~ {s1 s2}
+  & s1 ~ $([<] $(tau1 lt))
+  & lt ~ ?((@filter_keep @filter_drop) (tau2 ((s2 p) (t out))))
+
+@filter_keep = (tau ((s p) (t out)))
+  & @filter ~ (t (tau newtail))
+  & out ~ (1 ((s p) newtail))
+
+@filter_drop = (* (tau (* (t out))))
+  & @filter ~ (t (tau out))
+
+// ------- insertion sort on (score, u, v) -------
+
+@sort = (lst out)
+  & @sort_acc ~ (lst ((0 *) out))
+
+@sort_acc = (lst (acc out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@sort_nil @sort_cons) (payload (acc out)))
+
+@sort_nil = (* (acc out))
+  & out ~ acc
+
+@sort_cons = (* ((h t) (acc out)))
+  & @insert_sorted ~ (h (acc newacc))
+  & @sort_acc ~ (t (newacc out))
+
+@insert_sorted = (c (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@ins_nil @ins_cons) (c (payload out)))
+
+@ins_nil = (c (* out))
+  & out ~ (1 (c (0 *)))
+
+@ins_cons = (* (c ((h t) out)))
+  & c ~ {c1 c2}
+  & h ~ {h1 h2}
+  & @cmp_cand ~ (c1 (h1 cmp))
+  & cmp ~ ?((@ins_after @ins_before) (c2 (h2 (t out))))
+
+@ins_after = (c (h (t out)))
+  & @insert_sorted ~ (c (t newtail))
+  & out ~ (1 (h newtail))
+
+@ins_before = (* (c (h (t out))))
+  & out ~ (1 (c (1 (h t))))
+
+// ------- candidate comparator: descending score, then u, then v -------
+
+@cmp_cand = ((s1 (u1 v1)) ((s2 (u2 v2)) out))
+  & s1 ~ {s1a s1b}
+  & s2 ~ {s2a s2b}
+  & s1a ~ $([>] $(s2a gt1))
+  & gt1 ~ ?((@cmp_not_gt1 @cmp_yes1) (s1b (s2b ((u1 v1) ((u2 v2) out)))))
+
+@cmp_yes1 = (* (* (* (* (* out)))))
+  & out ~ 1
+
+@cmp_not_gt1 = (s1b (s2b (p1 (p2 out))))
+  & s2b ~ $([>] $(s1b gt2))
+  & gt2 ~ ?((@cmp_s_eq @cmp_no) (p1 (p2 out)))
+
+@cmp_no = (* (* (* out)))
+  & out ~ 0
+
+@cmp_s_eq = (p1 (p2 out))
+  & p1 ~ (u1 v1)
+  & p2 ~ (u2 v2)
+  & u1 ~ {u1a u1b}
+  & u2 ~ {u2a u2b}
+  & u1a ~ $([<] $(u2a lt1))
+  & lt1 ~ ?((@cmp_u_not_lt @cmp_yes2) (u1b (u2b (v1 (v2 out)))))
+
+@cmp_yes2 = (* (* (* (* out))))
+  & out ~ 1
+
+@cmp_u_not_lt = (u1b (u2b (v1 (v2 out))))
+  & u2b ~ $([<] $(u1b lt2))
+  & lt2 ~ ?((@cmp_u_eq @cmp_no2) (v1 (v2 out)))
+
+@cmp_no2 = (* (* out))
+  & out ~ 0
+
+@cmp_u_eq = (v1 (v2 out))
+  & v1 ~ $([<] $(v2 lt3))
+  & lt3 ~ ?((@cmp_no3 @cmp_yes3) out)
+
+@cmp_no3 = (* out)
+  & out ~ 0
+
+@cmp_yes3 = (* out)
+  & out ~ 1
+
+// ------- initial singleton clusters 0..n-1 -------
+
+@build = (n out)
+  & n ~ ?((@build_zero @build_pos) out)
+
+@build_zero = out
+  & out ~ (0 *)
+
+@build_pos = (prev out)
+  & prev ~ {p1 p2}
+  & @build ~ (p1 tail)
+  & out ~ (1 ((1 (p2 (0 *))) tail))
+
+// ------- process accepted pairs -------
+
+@process = (pairs (clusters (mnl (n out))))
+  & pairs ~ (tag payload)
+  & tag ~ ?((@proc_nil @proc_cons) (payload (clusters (mnl (n out)))))
+
+@proc_nil = (* (clusters (* (n out))))
+  & @output_ids ~ (n (clusters out))
+
+@proc_cons = (* ((h t) (clusters (mnl (n out)))))
+  & h ~ (s p)
+  & p ~ (u v)
+  & s ~ *
+  & mnl ~ {mnl1 mnl2}
+  & @process_pair ~ (u (v (clusters (mnl1 newclusters))))
+  & @process ~ (t (newclusters (mnl2 (n out))))
+
+@process_pair = (u (v (clusters (mnl newclusters))))
+  & v ~ {v1 v2}
+  & @take_cluster ~ (u (clusters pu))
+  & pu ~ (cu restU)
+  & cu ~ {cu_mem cu_branch}
+  & @member ~ (v1 (cu_mem same))
+  & same ~ ?((@pp_same @pp_diff) (cu_branch (restU (v2 (mnl newclusters)))))
+
+@pp_same = (* (cu (restU (* (* newclusters)))))
+  & newclusters ~ (1 (cu restU))
+
+@pp_diff = (cu (restU (v (mnl newclusters))))
+  & @take_cluster ~ (v (restU pv))
+  & pv ~ (cv restUV)
+  & cu ~ {cu_conf cu_branch}
+  & cv ~ {cv_conf cv_branch}
+  & @conflict ~ (cu_conf (cv_conf (mnl conflict)))
+  & conflict ~ ?((@pp_merge @pp_skip) (cu_branch (cv_branch (restUV newclusters))))
+
+@pp_merge = (cu (cv (restUV newclusters)))
+  & @append ~ (cu (cv combined))
+  & newclusters ~ (1 (combined restUV))
+
+@pp_skip = (* (cu (cv (restUV newclusters))))
+  & newclusters ~ (1 (cu (1 (cv restUV))))
+
+// ------- take cluster containing id -------
+
+@take_cluster = (id (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@take_nil @take_cons) (id (payload out)))
+
+@take_nil = (* (* out))
+  & out ~ (0 *)
+
+@take_cons = (* (id ((c t) out)))
+  & id ~ {id1 id2}
+  & c ~ {c1 c2}
+  & @member ~ (id1 (c1 bool))
+  & bool ~ ?((@take_not @take_found) (id2 (c2 (t out))))
+
+@take_not = (id (c (t out)))
+  & @take_cluster ~ (id (t fr))
+  & fr ~ (found rest)
+  & out ~ (found (1 (c rest)))
+
+@take_found = (* (* (c (t out))))
+  & out ~ (c t)
+
+// ------- membership -------
+
+@member = (id (lst out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@member_nil @member_cons) (id (payload out)))
+
+@member_nil = (* (* out))
+  & out ~ 0
+
+@member_cons = (* (id ((x xs) out)))
+  & id ~ {id1 id2}
+  & id1 ~ $([=] $(x eq))
+  & eq ~ ?((@member_tail @member_yes) (id2 (xs out)))
+
+@member_tail = (id (xs out))
+  & @member ~ (id (xs out))
+
+@member_yes = (* (* out))
+  & out ~ 1
+
+// ------- conflict check -------
+
+@conflict = (cu (cv (mnl out)))
+  & mnl ~ (tag payload)
+  & tag ~ ?((@conf_nil @conf_cons) (cu (cv (payload out))))
+
+@conf_nil = (* (* (* out)))
+  & out ~ 0
+
+@conf_cons = (* (cu (cv (((a b) t) out))))
+  & cu ~ {cu_cross cu_branch}
+  & cv ~ {cv_cross cv_branch}
+  & @cross ~ (a (b (cu_cross (cv_cross found))))
+  & found ~ ?((@conf_tail @conf_yes) (cu_branch (cv_branch (t out))))
+
+@conf_tail = (cu (cv (t out)))
+  & @conflict ~ (cu (cv (t out)))
+
+@conf_yes = (* (* (* (* out))))
+  & out ~ 1
+
+@cross = (a (b (cu (cv out))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & cu ~ {cu1 cu2}
+  & cv ~ {cv1 cv2}
+  & @member ~ (a1 (cu1 ma))
+  & @member ~ (b1 (cv1 mb))
+  & @and ~ (ma (mb and1))
+  & @member ~ (b2 (cu2 mc))
+  & @member ~ (a2 (cv2 md))
+  & @and ~ (mc (md and2))
+  & @or ~ (and1 (and2 out))
+
+@and = (a (b out))
+  & a ~ ?((@and_false @and_true) (b out))
+
+@and_false = (* out)
+  & out ~ 0
+
+@and_true = (* (b out))
+  & out ~ b
+
+@or = (a (b out))
+  & a ~ ?((@or_false @or_true) (b out))
+
+@or_false = (b out)
+  & out ~ b
+
+@or_true = (* (* out))
+  & out ~ 1
+
+// ------- append two lists -------
+
+@append = (a (b out))
+  & a ~ (tag payload)
+  & tag ~ ?((@append_nil @append_cons) (payload (b out)))
+
+@append_nil = (* (b out))
+  & out ~ b
+
+@append_cons = (* ((x xs) (b out)))
+  & @append ~ (xs (b rest))
+  & out ~ (1 (x rest))
+
+// ------- final output list of canonical ids -------
+
+@output_ids = (n (clusters out))
+  & n ~ ?((@out_zero @out_pos) (clusters out))
+
+@out_zero = (clusters out)
+  & clusters ~ *
+  & out ~ (0 *)
+
+@out_pos = (prev (clusters out))
+  & @build_rev ~ (prev (clusters ((0 *) revlist)))
+  & @reverse ~ (revlist out)
+
+@build_rev = (m (clusters (acc out)))
+  & m ~ {m_switch m_use}
+  & m_switch ~ ?((@br_zero @br_pos) (m_use (clusters (acc out))))
+
+@br_zero = (* (clusters (acc out)))
+  & @canonical ~ (0 (clusters max))
+  & out ~ (1 (max acc))
+
+@br_pos = (prev (m (clusters (acc out))))
+  & clusters ~ {clus_canon clus_rec}
+  & @canonical ~ (m (clus_canon max))
+  & @build_rev ~ (prev (clus_rec (1 (max acc)) out))
+
+@canonical = (id (clusters maxout))
+  & @take_cluster ~ (id (clusters pair))
+  & pair ~ (cluster rest)
+  & rest ~ *
+  & @list_max ~ (cluster (0 maxout))
+
+@list_max = (lst (best out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@lmax_nil @lmax_cons) (best (payload out)))
+
+@lmax_nil = (best (* out))
+  & out ~ best
+
+@lmax_cons = (* (best ((x xs) out)))
+  & best ~ {best_cmp best_ctx}
+  & x ~ {x_cmp x_ctx}
+  & best_cmp ~ $([<] $(x_cmp gt))
+  & gt ~ ?((@lmax_old @lmax_new) (x_ctx (best_ctx (xs out))))
+
+@lmax_old = (* (best (xs out)))
+  & @list_max ~ (xs (best out))
+
+@lmax_new = (x (* (xs out)))
+  & @list_max ~ (xs (x out))
+
+// ------- reverse list -------
+
+@reverse = (lst out)
+  & @rev_acc ~ (lst ((0 *) out))
+
+@rev_acc = (lst (acc out))
+  & lst ~ (tag payload)
+  & tag ~ ?((@rev_nil @rev_cons) (payload (acc out)))
+
+@rev_nil = (* (acc out))
+  & out ~ acc
+
+@rev_cons = (* ((x xs) (acc out)))
+  & @rev_acc ~ (xs (1 (x acc) out))

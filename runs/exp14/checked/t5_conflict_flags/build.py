@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+"""Build t5_conflict_flags."""
+
+import sys, os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))))
+
+from genome.lib.graphprims import Book
+
+def build():
+    b = Book()
+
+    # List indexing
+    b.add("""
+@get_at = (l (i o))
+  & i ~ ?((@get_z @get_s) (l o))
+
+@get_z = (l (* l))
+
+@get_s = (* (l (n o)))
+  & l ~ (tag (v rest))
+  & tag ~ *
+  & v ~ *
+  & n ~ ?((@dec_z @dec_s) (rest (nm o)))
+  & nm ~ $([-] $(1 n))
+
+@dec_z = (l (* *))
+
+@dec_s = (* (l (nm o)))
+  & @get_at ~ (l (nm o))
+""")
+
+    # Main algorithm
+    b.add("""
+@prog = ((c (mnl o)))
+  & c ~ ?((@c_end @c_more) ((mnl o)))
+
+@c_end = (state o)
+  & state ~ *
+  & o ~ (0 *)
+
+@c_more = (* (state ((cid tc) o)))
+  & state ~ (c (mnl (out)))
+  & c ~ {c1 c2}
+  & mnl ~ {m1 m2}
+  & out ~ {out1 out2}
+  & @has_conf ~ (m1 (c1 (cid (conf))))
+  & conf ~ (c2 (m2 (out1 (conf2 out2))))
+  & conf2 ~ ?((@emit_0 @emit_1) (state (out)))
+
+@emit_0 = (state (o rest))
+  & state ~ (c (mnl (out)))
+  & @c_more ~ (c ((* cid) (o rest)))
+
+@emit_1 = (* (state (o rest)))
+  & state ~ (c (mnl (out)))
+  & o ~ $([|] $(1 o_new))
+  & o_new ~ ?((@emit_0 @emit_1) (state (o_new rest)))
+
+@has_conf = (mnl (c (cid (result))))
+  & mnl ~ ?((@hc_done @hc_check) (c (cid (result))))
+
+@hc_done = (c (cid (* result)))
+  & c ~ *
+  & cid ~ *
+  & result ~ 0
+
+@hc_check = (* (mnl (st ((a b) tm))))
+  & st ~ (c (cid (result)))
+  & c ~ {c1 c2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & tm ~ {tm1 tm2}
+  & result ~ {r1 r2}
+  & @get_at ~ (c1 (a1 ca))
+  & @get_at ~ (c2 (b1 cb))
+  & ca ~ $([=] $(cid eq_a))
+  & eq_a ~ ?((@hc_skip @hc_both) (cb (st (tm1 (r1 r2)))))
+
+@hc_skip = (cb (st (rest result)))
+  & st ~ (c (cid (result)))
+  & cb ~ *
+  & result ~ (r1 r2)
+  & @has_conf ~ (mnl (c (cid (r1))))
+
+@hc_both = (* (cb (st (rest (r1 r2)))))
+  & st ~ (c (cid (result)))
+  & rest ~ *
+  & cb ~ $([=] $(cid eq_b))
+  & eq_b ~ ?((@hc_skip @hc_found) (c (cid (r1))))
+
+@hc_found = (* (st result))
+  & st ~ (c (cid (r)))
+  & r ~ *
+  & c ~ *
+  & cid ~ *
+  & mnl ~ *
+  & result ~ 1
+""")
+
+    return b
+
+if __name__ == "__main__":
+    b = build()
+    out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "net.hvm")
+    with open(out_path, "w") as f:
+        f.write(b.text())
+    print(f"Wrote {out_path}")

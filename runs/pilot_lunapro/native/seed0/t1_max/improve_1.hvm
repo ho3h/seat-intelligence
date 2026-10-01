@@ -1,0 +1,29 @@
+// Initialize the accumulator from the first element, since every u24 is >= 0.
+@prog = (l out)
+  & @max_start ~ (l out)
+
+@max_start = ((?((@max_empty @max_first) (pl out)) pl) out)
+
+@max_empty = (* out)
+  & out ~ 0
+
+@max_first = (* ((h t) out))
+  & @max ~ (t (h out))
+
+@max = ((?((@max_nil @max_cons) (pl (acc out))) pl) (acc out))
+
+@max_nil = (* (a a))
+
+@max_cons = (* ((h t) (acc out)))
+  & h ~ {hv hc}
+  & acc ~ {av ac}
+  & hc ~ $([>] $(ac z))
+  & z ~ ?((@max_keep @max_take) (t (hv (av out))))
+
+@max_keep = (acc (t (hv (av out))))
+  & hv ~ *
+  & @max ~ (t (av out))
+
+@max_take = (* (t (hv (av out))))
+  & av ~ *
+  & @max ~ (t (hv out))

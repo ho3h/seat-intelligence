@@ -1,0 +1,44 @@
+@prog = (({?((@clusters_done (* ({i_mem_q356 i_keep_q356} (n_q356 ({(?(((* (* 0)) @mem_cons) (payload_q345_q356 (i_mem_q356 ?((@cluster_new @cluster_skip) (i_keep_q356 (n_q356 (s_keep_q356 (edges_q356 out_q356)))))))) payload_q345_q356) s_keep_q356} (edges_q356 out_q356)))))) (0 (n_keep_q338 ((0 *) (edges out))))) n_keep_q338} edges) out)
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* (($([=] $(x_cmp ?(((x_q362 ((?((@mem_nil @mem_cons) (payload_q339_q362 (x_q362 out_q362))) payload_q339_q362) out_q362)) @mem_found) (x_rec (t out))))) t) ({x_cmp x_rec} out)))
+
+@mem_found = (* (* (* 1)))
+
+@neighbors_nil = (* (* (work work)))
+
+@neighbors_cons = (* ((({$([=] $(n_cmp_i12 ?(((u_q369 ($([=] $(node_q369 ?(((* (work_q376 work_q376)) @edge_yes2) (u_q369 (work_q369 out_q369))))) (node_q369 (work_q369 out_q369)))) @edge_yes) (u_keep_i12 (v (n_keep_i12 (work work2))))))) u_keep_i12} v) (?((@neighbors_nil @neighbors_cons) (payload_q340 (n_rec (work2 out)))) payload_q340)) ({{n_cmp_i12 n_keep_i12} n_rec} (work out))))
+
+@edge_yes = (* (* (v (* (work (1 (v work)))))))
+
+@edge_yes2 = (* (u (work (1 (u work)))))
+
+@dfs_empty = (* (seen (* seen)))
+
+@dfs_more = (* (({n_mem n_keep} rest) ({(?((@mem_nil @mem_cons) (payload_q341 (n_mem ?((@dfs_unseen @dfs_found) (n_keep (rest (s_keep (edges out)))))))) payload_q341) s_keep} (edges out))))
+
+@dfs_found = (* (* ((?((@dfs_empty @dfs_more) (payload_q342 (seen (edges out)))) payload_q342) (seen (edges out)))))
+
+@dfs_unseen = ({n_seen n_neighbor} (rest (seen ({(?((@neighbors_nil @neighbors_cons) (payload_q343 (n_neighbor (rest (?((@dfs_empty @dfs_more) (payload_q344 ((1 (n_seen seen)) (e_recur out)))) payload_q344))))) payload_q343) e_recur} out))))
+
+@clusters_done = (* (* (* (* (0 *)))))
+
+@clusters_more = (* ({i_mem i_keep} (n ({(?((@mem_nil @mem_cons) (payload_q345 (i_mem ?((@cluster_new @cluster_skip) (i_keep (n (s_keep (edges out)))))))) payload_q345) s_keep} (edges out)))))
+
+@cluster_skip = (* ($([+1] {$([<] $(n_cmp_q346 ?((@clusters_done @clusters_more) (i_keep_q346 (n_keep_q346 (seen (edges out))))))) i_keep_q346}) ({n_cmp_q346 n_keep_q346} (seen (edges out)))))
+
+@cluster_new = ({i_dfs {$([<] $(n_cmp_q350 ?((@clusters_done @clusters_more) (i_keep_q350 (n_keep_q350 (seen2 (e_outer tail))))))) i_keep_q350}} ({{?((@filter_done @filter_more) (0 (n_keep_q348 (comp_filter sorted)))) n_keep_q348} {n_cmp_q350 n_keep_q350}} (seen ({e_dfs e_outer} (1 (sorted tail))))))
+  & ?((@dfs_empty @dfs_more) ((i_dfs (0 *)) ((0 *) (e_dfs {comp_filter (?((@append_nil @append_cons) (payload_q349 (seen seen2))) payload_q349)})))) ~ 1
+
+@filter_done = (* (* (* (0 *))))
+
+@filter_more = (* ({i_mem i_keep} (n ({(?((@mem_nil @mem_cons) (payload_q351 (i_mem ?((@filter_no @filter_yes) (i_keep (n (m_keep out))))))) payload_q351) m_keep} out))))
+
+@filter_no = ($([+1] {$([<] $(n_cmp_q352 ?((@filter_done @filter_more) (i_keep_q352 (n_keep_q352 (members out)))))) i_keep_q352}) ({n_cmp_q352 n_keep_q352} (members out)))
+
+@filter_yes = (* ({i_cons $([+1] {$([<] $(n_cmp_q353 ?((@filter_done @filter_more) (i_keep_q353 (n_keep_q353 (members tail)))))) i_keep_q353})} ({n_cmp_q353 n_keep_q353} (members (1 (i_cons tail))))))
+
+@append_nil = (* (b b))
+
+@append_cons = (* ((h (?((@append_nil @append_cons) (payload_q354 (b tail))) payload_q354)) (b (1 (h tail)))))

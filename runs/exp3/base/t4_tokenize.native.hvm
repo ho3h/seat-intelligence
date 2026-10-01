@@ -1,0 +1,60 @@
+@prog = (input output)
+  & @scan ~ (input output)
+
+@scan = ((?((@scan_nil @scan_cons) (pl out)) pl) out)
+
+@scan_nil = (* out)
+  & out ~ (0 *)
+
+@scan_cons = (* ((h t) out))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@scan_digit @scan_nondigit) (hk (t out)))
+
+@scan_digit = (h (t out))
+  & h ~ $([-] $(48 first))
+  & @number ~ (t (first out))
+
+@scan_nondigit = (* (h (t out)))
+  & @charproc ~ (h (t out))
+
+@number = ((?((@num_nil @num_cons) (pl (acc out))) pl) (acc out))
+
+@num_nil = (* (acc out))
+  & out ~ (1 ((0 acc) (0 *)))
+
+@num_cons = (* ((h t) (acc out)))
+  & h ~ {hc hk}
+  & hc ~ $([<] $(48 z))
+  & z ~ ?((@num_digit @num_nondigit) (hk (t (acc out))))
+
+@num_digit = (h (t (acc out)))
+  & acc ~ $([*] $(10 prod))
+  & h ~ $([-] $(48 digit))
+  & prod ~ $([+] $(digit acc2))
+  & @number ~ (t (acc2 out))
+
+@num_nondigit = (* (h (t (acc out))))
+  & @charproc ~ (h (t out2))
+  & out ~ (1 ((0 acc) out2))
+
+@charproc = (ch (t out))
+  & ch ~ {hc hk}
+  & hc ~ $([=] $(32 z))
+  & z ~ ?((@symbol @space) (hk (t out)))
+
+@space = (* (* (t out)))
+  & @scan ~ (t out)
+
+@symbol = (ch (t out))
+  & ch ~ {hc hv}
+  & hc ~ $([<] $(42 z))
+  & z ~ ?((@operator @paren) (hv (t out)))
+
+@paren = (* (v (t out)))
+  & @scan ~ (t out2)
+  & out ~ (1 ((2 v) out2))
+
+@operator = (v (t out))
+  & @scan ~ (t out2)
+  & out ~ (1 ((1 v) out2))

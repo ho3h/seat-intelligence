@@ -1,0 +1,58 @@
+// Order the query values so the tree walk can use the interval [x, y].
+@prog = (inp out)
+  & inp ~ (x (y t))
+  & @sort ~ (x (y (t out)))
+
+@sort = (x (y (t out)))
+  & x ~ {xa xb}
+  & y ~ {ya yb}
+  & xa ~ $([<] $(ya b))
+  & b ~ ?((@sort_no @sort_yes) (xb (yb (t out))))
+
+@sort_no = (x (y (t out)))
+  & @lca ~ (y (x (t out)))
+
+@sort_yes = (* (x (y (t out))))
+  & @lca ~ (x (y (t out)))
+
+@lca = (x (y (t out)))
+  & t ~ (tag payload)
+  & tag ~ ?((@lca_leaf @lca_node) (x (y (payload out))))
+
+@lca_leaf = (x (y (payload out)))
+  & x ~ *
+  & y ~ *
+  & payload ~ *
+  & out ~ 0
+
+// Compute both bounds comparisons concurrently at each Node.
+@lca_node = (* (x (y (p out))))
+  & p ~ (l (v r))
+  & x ~ {xc xkeep}
+  & y ~ {yc ykeep}
+  & v ~ {vc vkeep}
+  & vc ~ {vleft vright}
+  & yc ~ $([<] $(vleft a))
+  & xc ~ $([>] $(vright b))
+  & a ~ ?((@notleft @go_left) (xkeep (ykeep (b (vkeep (l (r out))))))
+
+@notleft = (x (y (b (v (l (r out))))))
+  & b ~ ?((@found @go_right) (x (y (v (l (r out))))))
+
+@go_left = (* (x (y (b (v (l (r out)))))))
+  & b ~ *
+  & v ~ *
+  & r ~ *
+  & @lca ~ (x (y (l out)))
+
+@go_right = (* (x (y (v (l (r out))))))
+  & v ~ *
+  & l ~ *
+  & @lca ~ (x (y (r out)))
+
+@found = (x (y (v (l (r out)))))
+  & x ~ *
+  & y ~ *
+  & l ~ *
+  & r ~ *
+  & v ~ out

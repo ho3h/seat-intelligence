@@ -1,0 +1,27 @@
+// Scan the text with accumulator (unmatched closes, currently open parentheses).
+@prog = (l out)
+  & @scan ~ (l ((0 0) out))
+
+@scan = ((?((@scan_nil @scan_cons) (p (a out))) p) (a out))
+
+@scan_nil = (* (a a))
+
+@scan_cons = (* ((h t) ((u v) out)))
+  & h ~ $([=] $(40 eq))
+  & eq ~ ?((@scan_close_char @scan_open_char) (t ((u v) out)))
+
+@scan_open_char = (* (t ((u v) out)))
+  & v ~ $([+] $(1 vv))
+  & @scan ~ (t ((u vv) out))
+
+@scan_close_char = (t ((u {vcheck vkeep}) out))
+  & vcheck ~ $([>] $(0 z))
+  & z ~ ?((@scan_unmatched @scan_matched) (t ((u vkeep) out)))
+
+@scan_unmatched = (t ((u v) out))
+  & u ~ $([+] $(1 uu))
+  & @scan ~ (t ((uu v) out))
+
+@scan_matched = (* (t ((u v) out)))
+  & v ~ $([-] $(1 vv))
+  & @scan ~ (t ((u vv) out))

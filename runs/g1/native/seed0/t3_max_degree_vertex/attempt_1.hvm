@@ -1,0 +1,70 @@
+@prog = ((n edges) out)
+  & n ~ {n_cmp n_keep}
+  & n_cmp ~ $([=] $(0 iszero))
+  & iszero ~ ?((@prog_nonzero @prog_zero) (n_keep (edges out)))
+
+@prog_nonzero = (n (edges out))
+  & @zeros ~ (n zero_list)
+  & @count_edges ~ (edges (zero_list degrees))
+  & @maxlist ~ (degrees (0 (0 (0 out))))
+
+@prog_zero = (* (* (* 16777215)))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_succ) out)
+
+@zeros_nil = (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+@count_edges = (l (degrees out))
+  & l ~ (?( (@ce_nil @ce_cons) (payload (degrees out))) payload)
+
+@ce_nil = (* (x x))
+
+@ce_cons = (* (((u v) tail) (degrees out)))
+  & @inc_at ~ (u (degrees deg1))
+  & @inc_at ~ (v (deg1 deg2))
+  & @count_edges ~ (tail (deg2 out))
+
+@inc_at = (?((@inc_zero @inc_succ) ctx) ctx)
+
+@inc_zero = (l out)
+  & l ~ (?( (@inc_z_nil @inc_z_cons) (payload out)) payload)
+
+@inc_z_nil = (* (0 *))
+
+@inc_z_cons = (* ((head tail) out))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_succ = (idx (l out))
+  & l ~ (?( (@inc_s_nil @inc_s_cons) (payload (idx out))) payload)
+
+@inc_s_nil = (* (* (0 *)))
+
+@inc_s_cons = (* ((head tail) (idx out)))
+  & @inc_at ~ (idx (tail tail_out))
+  & out ~ (1 (head tail_out))
+
+@maxlist = (l (id (bd (bi out))))
+  & l ~ (?( (@max_nil @max_cons) (payload (id (bd (bi out))))) payload)
+
+@max_nil = (* (* (* (bi bi))))
+
+@max_cons = (* ((head tail) (id (bd (bi out)))))
+  & head ~ {head_cmp head_ctx}
+  & bd ~ {bd_cmp bd_ctx}
+  & head_cmp ~ $([>] $(bd_cmp greater))
+  & greater ~ ?((@max_keep @max_update) (tail (id (bd_ctx (bi (head_ctx out)))))
+
+@max_keep = (tail (id (bd (bi (* out)))))
+  & id ~ $([+1] id_next)
+  & @maxlist ~ (tail (id_next (bd (bi out))))
+
+@max_update = (* (tail (id (* (* (head out))))))
+  & id ~ {best_id id_inc}
+  & id_inc ~ $([+1] id_next)
+  & @maxlist ~ (tail (id_next (head (best_id out))))

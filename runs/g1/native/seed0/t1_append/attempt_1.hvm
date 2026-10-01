@@ -1,0 +1,10 @@
+@prog = ((xs ys) out)
+  & @append ~ (xs (ys out))
+
+@append = ((?((@append_nil @append_cons) (payload (ys out))) payload) (ys out))
+
+@append_nil = (* (a a))
+
+@append_cons = (* ((head tail) (ys out)))
+  & @append ~ (tail (ys rest))
+  & out ~ (1 (head rest))

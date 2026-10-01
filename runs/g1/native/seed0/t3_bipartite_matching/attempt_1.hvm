@@ -1,0 +1,198 @@
+@prog = (input output)
+  & input ~ (a (b edges))
+  & b ~ {b_zeros b_outer}
+  & @zeros ~ (b_zeros matches)
+  & @outer ~ (a (b_outer (edges (matches (0 output))))
+
+@zeros = (n out)
+  & n ~ ?((@zeros_nil @zeros_step) out)
+
+@zeros_nil = out
+  & out ~ (0 *)
+
+@zeros_step = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+@outer = (n (b (edges (matches (count out))))
+  & n ~ ?((@outer_done @outer_step) (b (edges (matches (count out))))
+
+@outer_done = (b (edges (matches (count out))))
+  & b ~ *
+  & edges ~ *
+  & matches ~ *
+  & out ~ count
+
+@outer_step = (idx (b (edges (matches (count out))))
+  & idx ~ {cur next}
+  & edges ~ {edge_keep edge_scan}
+  & @zeros ~ (b vis)
+  & @scan ~ (cur (edge_scan (vis (matches res))))
+  & res ~ (ok (vis2 matches2))
+  & ok ~ ?((@outer_fail @outer_succ) (next (b (edge_keep (vis2 (matches2 (count out)))))
+
+@outer_fail = (idx (b (edges (visited (matches (count out)))))
+  & @outer ~ (idx (b (edges (matches (count out)))))
+
+@outer_succ = (dummy (idx (b (edges (visited (matches (count out))))))
+  & dummy ~ *
+  & count ~ $([+1] count2)
+  & @outer ~ (idx (b (edges (matches (count2 out)))))
+
+@scan = (left (full (visited (matches out))))
+  & full ~ {f c}
+  & @scan_loop ~ (left (f (c (visited (matches out)))))
+
+@scan_loop = (left (full (cursor (visited (matches out)))))
+  & cursor ~ (?( (@scan_nil @scan_cons) (payload (left (full (visited (matches out))))) ) payload)
+
+@scan_nil = (payload (left (full (visited (matches out))))
+  & payload ~ *
+  & left ~ *
+  & full ~ *
+  & out ~ (0 (visited matches))
+
+@scan_cons = (dummy (payload (left (full (visited (matches out)))))
+  & dummy ~ *
+  & payload ~ (u v)
+  & left ~ {lc lk}
+  & u ~ $([=] $(lc eq))
+  & eq ~ ?((@scan_skip @scan_try) (v (tail (lk (full (visited (matches out)))))
+
+@scan_skip = (v (tail (left (full (visited (matches out)))))
+  & v ~ *
+  & @scan_loop ~ (left (full (tail (visited (matches out)))))
+
+@scan_try = (dummy (v (tail (left (full (visited (matches out))))))
+  & dummy ~ *
+  & left ~ {ltry lkeep}
+  & full ~ {ftry fkeep}
+  & @try ~ (ltry (v (ftry (visited (matches tr))))
+  & tr ~ (ok (vis2 matches2))
+  & ok ~ ?((@scan_try_no @scan_try_yes) (tail (lkeep (fkeep (vis2 (matches2 out)))))
+
+@scan_try_no = (tail (left (full (visited (matches out))))
+  & @scan_loop ~ (left (full (tail (visited (matches out)))))
+
+@scan_try_yes = (dummy (tail (left (full (visited (matches out)))))
+  & dummy ~ *
+  & tail ~ *
+  & left ~ *
+  & full ~ *
+  & out ~ (1 (visited matches))
+
+@try = (left (v (full (visited (matches out))))
+  & v ~ {vmark vkeep}
+  & @mark ~ (vmark (visited mr))
+  & mr ~ (was marked)
+  & was ~ ?((@try_seen @try_fresh) (left (vkeep (full (marked (matches out)))))
+
+@try_seen = (left (v (full (visited (matches out))))
+  & left ~ *
+  & v ~ *
+  & full ~ *
+  & out ~ (0 (visited matches))
+
+@try_fresh = (dummy (left (v (full (visited (matches out)))))
+  & dummy ~ *
+  & v ~ {vclaim vkeep}
+  & @claim ~ (vclaim (matches cr))
+  & cr ~ (occ same)
+  & occ ~ ?((@try_empty @try_occupied) (left (vkeep (full (visited (same out)))))
+
+@try_empty = (left (v (full (visited (matches out))))
+  & full ~ *
+  & left ~ $([+1] value)
+  & @put ~ (v (value (matches updated)))
+  & out ~ (1 (visited updated))
+
+@try_occupied = (prev (left (v (full (visited (matches out)))))
+  & @scan ~ (prev (full (visited (matches rec))))
+  & rec ~ (ok (vis2 matches2))
+  & ok ~ ?((@try_recur_no @try_recur_yes) (left (v (vis2 (matches2 out)))))
+
+@try_recur_no = (left (v (visited (matches out))))
+  & left ~ *
+  & v ~ *
+  & out ~ (0 (visited matches))
+
+@try_recur_yes = (dummy (left (v (visited (matches out)))))
+  & dummy ~ *
+  & left ~ $([+1] value)
+  & @put ~ (v (value (matches updated)))
+  & out ~ (1 (visited updated))
+
+@mark = (idx (list out))
+  & list ~ (?( (@mark_nil @mark_cons) (payload (idx out))) payload)
+
+@mark_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@mark_cons = (dummy (payload (idx out)))
+  & dummy ~ *
+  & payload ~ (head tail)
+  & @mark_choose ~ (idx (head (tail out)))
+
+@mark_choose = (idx (head (tail out)))
+  & idx ~ ?((@mark_here @mark_next) (head (tail out)))
+
+@mark_here = (head (tail out))
+  & out ~ (head (1 (1 tail)))
+
+@mark_next = (idx (head (tail out)))
+  & @mark ~ (idx (tail tmp))
+  & tmp ~ (old newtail)
+  & out ~ (old (1 (head newtail)))
+
+@claim = (idx (list out))
+  & list ~ (?( (@claim_nil @claim_cons) (payload (idx out))) payload)
+
+@claim_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@claim_cons = (dummy (payload (idx out)))
+  & dummy ~ *
+  & payload ~ (head tail)
+  & @claim_choose ~ (idx (head (tail out)))
+
+@claim_choose = (idx (head (tail out)))
+  & idx ~ ?((@claim_here @claim_next) (head (tail out)))
+
+@claim_here = (head (tail out))
+  & head ~ {h1 h2}
+  & out ~ (h1 (1 (h2 tail)))
+
+@claim_next = (idx (head (tail out)))
+  & @claim ~ (idx (tail tmp))
+  & tmp ~ (old newtail)
+  & out ~ (old (1 (head newtail)))
+
+@put = (idx (value (list out)))
+  & list ~ (?( (@put_nil @put_cons) (payload (idx (value out)))) payload)
+
+@put_nil = (payload (idx (value out)))
+  & payload ~ *
+  & idx ~ *
+  & value ~ *
+  & out ~ (0 *)
+
+@put_cons = (dummy (payload (idx (value out))))
+  & dummy ~ *
+  & payload ~ (head tail)
+  & @put_choose ~ (idx (head (tail (value out))))
+
+@put_choose = (idx (head (tail (value out))))
+  & idx ~ ?((@put_here @put_next) (head (tail (value out))))
+
+@put_here = (head (tail (value out)))
+  & head ~ *
+  & out ~ (1 (value tail))
+
+@put_next = (idx (head (tail (value out))))
+  & @put ~ (idx (value (tail tmp)))
+  & tmp ~ newtail
+  & out ~ (1 (head newtail))

@@ -1,0 +1,41 @@
+@prog = (l out)
+  & @am ~ (l (0 (0 (0 out))))
+
+@am = (lv1 (idx (bv (bi out))))
+  & @am_cons_lw ~ (lv1 (idx (bv (bi out))))
+
+@am_nil = (* (idx (bv (bi out))))
+  & idx ~ *
+  & bv ~ *
+  & bi ~ out
+
+@am_cons = (* (({$([>] $(bc z7)) hnew} t) ({inx ibest} ({bc bvkeep} (bi out)))))
+  & z7 ~ ?((@am_no_hz @am_yes_hz) (xw36 (inx (hnew (bvkeep (ibest (bi out)))))))
+  & @am_cons_lw ~ (t xw36)
+
+@am_no = (t (inx (hnew (bvkeep (ibest (bi out))))))
+  & hnew ~ *
+  & ibest ~ *
+  & inx ~ $([+1] idx2)
+  & @am ~ (t (idx2 (bvkeep (bi out))))
+
+@am_yes = (* (t (inx (hnew (bvkeep (ibest (bi out)))))))
+  & bvkeep ~ *
+  & bi ~ *
+  & inx ~ $([+1] idx2)
+  & @am ~ (t (idx2 (hnew (ibest out))))
+
+@am_cons_lw = (ls67 (q39 (q40 (q41 q42))))
+  & ls67 ~ (g62 (e58 (g63 (e59 (g64 (e60 (g65 (e61 tk66))))))))
+  & g62 ~ ?((@am_nil @am_cons_la) ((e58 (q44 (q45 (q46 q47)))) (q39 (q40 (q41 q42)))))
+  & g63 ~ ?((@am_nil @am_cons_la) ((e59 (q49 (q50 (q51 q52)))) (q44 (q45 (q46 q47)))))
+  & g64 ~ ?((@am_nil @am_cons_la) ((e60 (q54 (q55 (q56 q57)))) (q49 (q50 (q51 q52)))))
+  & g65 ~ ?((@am_nil @am_cons) ((e61 tk66) (q54 (q55 (q56 q57)))))
+
+@am_no_hz = (hw21 ($([+1] q15) (* (q11 (* (q13 q14))))))
+  & hw21 ~ (q15 (q11 (q13 q14)))
+
+@am_yes_hz = (* (hw35 ($([+1] q29) (q24 (* (q26 (* q28)))))))
+  & hw35 ~ (q29 (q24 (q26 q28)))
+
+@am_cons_la = (* (({$([>] $(bc ?((@am_no_hz @am_yes_hz) (xw36 (inx (hnew (bvkeep (ibest (bi out))))))))) hnew} xw36) ({inx ibest} ({bc bvkeep} (bi out)))))

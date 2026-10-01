@@ -1,0 +1,168 @@
+@prog = ((n (tau cands)) out)
+  & @filter ~ (tau (cands sorted))
+  & @init ~ (n (0 labels))
+  & @run ~ (sorted (labels (0 out)))
+
+@before = ((ua (va sa)) ((ub (vb sb)) out))
+  & sa ~ {sa_keep {sa_gt sa_eq}}
+  & sb ~ {sb_keep {sb_gt sb_eq}}
+  & ua ~ {ua_keep {ua_lt ua_eq}}
+  & ub ~ {ub_keep {ub_lt ub_eq}}
+  & va ~ {va_keep va_lt}
+  & vb ~ {vb_keep vb_lt}
+  & sa_gt ~ $([>] $(sb_gt gt))
+  & sa_eq ~ $([=] $(sb_eq se))
+  & ua_lt ~ $([<] $(ub_lt ul))
+  & ua_eq ~ $([=] $(ub_eq ue))
+  & va_lt ~ $([<] $(vb_lt vl))
+  & ue ~ $([&] $(vl ueqvl))
+  & ul ~ $([|] $(ueqvl utie))
+  & se ~ $([&] $(utie stie))
+  & gt ~ $([|] $(stie result))
+  & out ~ (result ((ua_keep (va_keep sa_keep)) (ub_keep (vb_keep sb_keep))))
+
+@ins = (edge ((?((@ins_nil @ins_cons) (pl (edge out))) pl) out))
+
+@ins_nil = (pl (edge out))
+  & pl ~ *
+  & out ~ (1 (edge (0 *)))
+
+@ins_cons = (z (pl (edge out)))
+  & pl ~ (cur rest)
+  & z ~ *
+  & @before ~ (edge (cur cmp))
+  & cmp ~ (is (ea ec))
+  & is ~ ?((@ins_after @ins_before) (ea (ec (rest out))))
+
+@ins_after = (z (ea (ec (rest out))))
+  & z ~ *
+  & @ins ~ (ea (rest r))
+  & out ~ (1 (ec r))
+
+@ins_before = (z (ea (ec (rest out))))
+  & z ~ *
+  & out ~ (1 (ea (1 (ec rest))))
+
+@filter = (tau ((?((@filter_nil @filter_cons) (tau (pl out))) pl) out))
+
+@filter_nil = (tau (pl out))
+  & tau ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (z (tau (pl out)))
+  & pl ~ (edge tail)
+  & edge ~ (u (v score))
+  & z ~ *
+  & tau ~ {tau_next tau_cmp}
+  & score ~ {score_keep score_cmp}
+  & score_cmp ~ $([<] $(tau_cmp lt))
+  & lt ~ ?((@filter_keep @filter_drop) (u (v (score_keep (tail (tau_next out)))))
+
+@filter_keep = (z (u (v (score (tail (tau out)))))
+  & z ~ *
+  & @filter ~ (tau (tail filtered))
+  & @ins ~ ((u (v score)) (filtered out))
+
+@filter_drop = (z (u (v (score (tail (tau out)))))
+  & z ~ *
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & @filter ~ (tau (tail out))
+
+@init = (rem (id out))
+  & rem ~ ?((@init_nil @init_cons) (id out))
+
+@init_nil = (id out)
+  & id ~ *
+  & out ~ (0 *)
+
+@init_cons = (rem (id out))
+  & id ~ {head idnext}
+  & idnext ~ $([+1] id2)
+  & @init ~ (rem (id2 tail))
+  & out ~ (1 (head tail))
+
+@nk = (idx ((?((@nk_nil @nk_cons) (idx (pl out))) pl) out))
+
+@nk_nil = (idx (pl out))
+  & idx ~ *
+  & pl ~ *
+  & out ~ (0 (0 *))
+
+@nk_cons = (z (idx (pl out)))
+  & z ~ *
+  & pl ~ (h t)
+  & idx ~ ?((@nk_hit @nk_more) (h (t out)))
+
+@nk_hit = (h (t out))
+  & h ~ {h1 h2}
+  & out ~ (h1 (1 (h2 t)))
+
+@nk_more = (idx (h (t out)))
+  & @nk ~ (idx (t r))
+  & r ~ (val trest)
+  & out ~ (val (1 (h trest)))
+
+@replace = (old (new ((?((@replace_nil @replace_cons) (old (new (pl out)))) pl) out)))
+
+@replace_nil = (old (new (pl out)))
+  & old ~ *
+  & new ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@replace_cons = (z (old (new (pl out))))
+  & pl ~ (h t)
+  & z ~ *
+  & old ~ {old_cmp old_rec}
+  & new ~ {new_head new_rec}
+  & h ~ {h_cmp h_keep}
+  & h_cmp ~ $([=] $(old_cmp eq))
+  & eq ~ ?((@replace_no @replace_yes) (old_rec (new_rec (h_keep (new_head (t out)))))
+
+@replace_no = (z (old (new (h_keep (new_head (t out))))))
+  & z ~ *
+  & new_head ~ *
+  & @replace ~ (old (new (t r)))
+  & out ~ (1 (h_keep r))
+
+@replace_yes = (z (old (new (h_keep (new_head (t out))))))
+  & z ~ *
+  & h_keep ~ *
+  & @replace ~ (old (new (t r)))
+  & out ~ (1 (new_head r))
+
+@run = ((?((@run_nil @run_cons) (pl (labels (count out)))) pl) (labels (count out)))
+
+@run_nil = (pl (labels (count out)))
+  & pl ~ *
+  & labels ~ *
+  & out ~ count
+
+@run_cons = (z (pl (labels (count out))))
+  & pl ~ (edge tail)
+  & edge ~ (u (v score))
+  & z ~ *
+  & score ~ *
+  & @nk ~ (u (labels r1))
+  & r1 ~ (lu labels1)
+  & @nk ~ (v (labels1 r2))
+  & r2 ~ (lv labels2)
+  & lu ~ {lu_cmp lu_old}
+  & lv ~ {lv_cmp lv_new}
+  & lu_cmp ~ $([!] $(lv_cmp neq))
+  & neq ~ ?((@run_same @run_diff) (lu_old (lv_new (labels2 (tail (count out)))))
+
+@run_same = (z (old (new (labels tail count out))))
+  & z ~ *
+  & old ~ *
+  & new ~ *
+  & @run ~ (tail (labels (count out)))
+
+@run_diff = (z (old (new (labels tail count out))))
+  & z ~ *
+  & count ~ $([+1] count2)
+  & @replace ~ (old (new (labels updated)))
+  & @run ~ (tail (updated (count2 out)))

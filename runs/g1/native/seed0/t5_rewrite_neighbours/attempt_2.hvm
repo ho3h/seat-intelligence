@@ -1,0 +1,112 @@
+// Scan cluster IDs in ascending order. For each canonical ID, search the
+// original edges, translating their endpoints through the clustering list.
+@prog = (input out)
+  & input ~ (k (c edges))
+  & c ~ {c_scan c_edge}
+  & @scan ~ (c_scan (0 (k (edges (c_edge out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (i (k (edges (ctab out))))) pl) (i (k (edges (ctab out))))
+
+@scan_nil = (pl (i (k (edges (ctab out)))))
+  & pl ~ *
+  & i ~ *
+  & k ~ *
+  & edges ~ *
+  & ctab ~ *
+  & out ~ (0 *)
+
+@scan_cons = (* ((h t) (i (k (edges (ctab out))))))
+  & i ~ {i_cmp i_inc}
+  & i_inc ~ $([+1] i_next)
+  & h ~ {h_cmp h_keep}
+  & h_cmp ~ $([=] $(i_cmp z))
+  & z ~ ?((@scan_skip @scan_canon) (t (i_next (h_keep (k (edges (ctab out))))))
+
+@scan_skip = (t (i (h (k (edges (ctab out))))))
+  & h ~ *
+  & @scan ~ (t (i (k (edges (ctab out))))
+
+@scan_canon = (* (t (i (h (k (edges (ctab out)))))))
+  & k ~ {k_eq k_keep}
+  & h ~ {h_eq h_keep}
+  & k_eq ~ $([=] $(h_eq z))
+  & z ~ ?((@scan_not_self @scan_self) (t (i (h_keep (k_keep (edges (ctab out))))))
+
+@scan_self = (* (t (i (h (k (edges (ctab out)))))))
+  & h ~ *
+  & @scan ~ (t (i (k (edges (ctab out))))
+
+@scan_not_self = (t (i (h (k (edges (ctab out))))))
+  & edges ~ {e_test e_rec}
+  & ctab ~ {c_test c_rec}
+  & k ~ {k_test k_rec}
+  & h ~ {h_test h_rec}
+  & @edge_has ~ (e_test (c_test (k_test (h_test found))))
+  & found ~ ?((@scan_miss @scan_hit) (t (i (h_rec (k_rec (e_rec (c_rec out))))))
+
+@scan_miss = (t (i (h (k (edges (ctab out))))))
+  & h ~ *
+  & @scan ~ (t (i (k (edges (ctab out))))
+
+@scan_hit = (* (t (i (h (k (edges (ctab out)))))))
+  & @scan ~ (t (i (k (edges (ctab rest))))
+  & out ~ (1 (h rest))
+
+// edge_has returns 1 if an edge translates to one joining k and i.
+@edge_has = ((?((@eh_nil @eh_cons) (pl (ctab (k (i out))))) pl) (ctab (k (i out))))
+
+@eh_nil = (pl (ctab (k (i out))))
+  & pl ~ *
+  & ctab ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ 0
+
+@eh_cons = (* (((u v) t) (ctab (k (i out)))))
+  & ctab ~ {c_rec c_tmp}
+  & c_tmp ~ {c_u c_v}
+  & @lookup ~ (c_u (u cu))
+  & @lookup ~ (c_v (v cv))
+  & k ~ {k_rec k_cmp}
+  & i ~ {i_rec i_cmp}
+  & k_cmp ~ {k1 k2}
+  & i_cmp ~ {i1 i2}
+  & cu ~ {cu_k cu_i}
+  & cv ~ {cv_i cv_k}
+  & cu_k ~ $([=] $(k1 eq1))
+  & cv_i ~ $([=] $(i1 eq2))
+  & cu_i ~ $([=] $(i2 eq3))
+  & cv_k ~ $([=] $(k2 eq4))
+  & eq1 ~ $([&] $(eq2 both1))
+  & eq3 ~ $([&] $(eq4 both2))
+  & both1 ~ $([|] $(both2 z))
+  & z ~ ?((@eh_no @eh_yes) (t (c_rec (k_rec (i_rec out))))
+
+@eh_no = (t (ctab (k (i out))))
+  & @edge_has ~ (t (ctab (k (i out))))
+
+@eh_yes = (* (t (ctab (k (i out)))))
+  & t ~ *
+  & ctab ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ 1
+
+// Look up the value at index idx in a list.
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_here @lookup_next) (h (t out)))
+
+@lookup_here = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@lookup_next = (idx (h (t out)))
+  & h ~ *
+  & @lookup ~ (t (idx out))

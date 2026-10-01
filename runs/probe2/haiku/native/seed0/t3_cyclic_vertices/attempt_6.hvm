@@ -1,0 +1,108 @@
+@prog = ((n edges) out)
+  & @loop ~ (0 (n (edges (0 out))))
+
+@loop = (v (n (edges (count out))))
+  & is_eq ~ $([=] $(v n))
+  & is_eq ~ ?((@done @check) (v (n (edges (count out)))))
+
+@done = (v (n (edges (count out))))
+  & v ~ *
+  & n ~ *
+  & edges ~ *
+  & count ~ out
+
+@check = (v (n (edges (count out))))
+  & {v1 v2} ~ v
+  & {n1 n2} ~ n
+  & {edges1 edges2} ~ edges
+  & {out1 out2} ~ out
+  & @is_on_cycle ~ (v1 (edges1 (res out1)))
+  & res ~ ?((@skip @add) (v2 (n2 (edges2 (count out2)))))
+
+@skip = (v2 (n2 (edges2 (count out2))))
+  & v_inc ~ $([+] $(1 v2))
+  & @loop ~ (v_inc (n2 (edges2 (count out2))))
+
+@add = ((dec_res (v2 (n2 (edges2 (count out2))))))
+  & dec_res ~ *
+  & v_inc ~ $([+] $(1 v2))
+  & c_inc ~ $([+] $(1 count))
+  & @loop ~ (v_inc (n2 (edges2 (c_inc out2))))
+
+@is_on_cycle = (v (edges (res out)))
+  & {edges1 edges2} ~ edges
+  & @find_edge ~ (v (edges1 (edges2 (res out))))
+
+@find_edge = (v (edges (all_edges (res out))))
+  & edges ~ ?((@no_edges @yes_edges) (v (all_edges (res out))))
+
+@no_edges = (v (all_edges (res out)))
+  & v ~ *
+  & all_edges ~ *
+  & res ~ 0
+
+@yes_edges = ((dec_tag ((u (t rest)) (v (all_edges (res out))))))
+  & dec_tag ~ *
+  & eq ~ $([=] $(u v))
+  & eq ~ ?((@skip_edge @try_edge) (t (rest (v (all_edges (res out))))))
+
+@skip_edge = (t (rest (v (all_edges (res out)))))
+  & t ~ *
+  & @find_edge ~ (v (rest (all_edges (res out))))
+
+@try_edge = (t (rest (v (all_edges (res out)))))
+  & @dfs ~ (t (v (all_edges (found out))))
+  & found ~ ?((@no_cycle @found_cycle) (rest (v (all_edges (res out)))))
+
+@no_cycle = (rest (v (all_edges (res out))))
+  & @find_edge ~ (v (rest (all_edges (res out))))
+
+@found_cycle = (rest (v (all_edges (res out))))
+  & rest ~ *
+  & v ~ *
+  & all_edges ~ *
+  & res ~ 1
+
+@dfs = (curr (v (all_edges (found out))))
+  & eq ~ $([=] $(curr v))
+  & eq ~ ?((@dfs_no @dfs_yes) (curr (v (all_edges (found out)))))
+
+@dfs_yes = (curr (v (all_edges (found out))))
+  & curr ~ *
+  & v ~ *
+  & all_edges ~ *
+  & found ~ 1
+
+@dfs_no = (curr (v (all_edges (found out))))
+  & @find_next ~ (curr (all_edges (v (found out))))
+
+@find_next = (curr (all_edges (v (found out))))
+  & all_edges ~ ?((@no_next @yes_next) (curr (v (found out))))
+
+@no_next = (curr (v (found out)))
+  & curr ~ *
+  & v ~ *
+  & found ~ 0
+
+@yes_next = ((dec_tag2 ((u2 (t2 rest2)) (curr (v (found out))))))
+  & dec_tag2 ~ *
+  & eq2 ~ $([=] $(u2 curr))
+  & eq2 ~ ?((@skip_next @explore_next) (t2 (rest2 (curr (v (all_edges (found out)))))))
+
+@skip_next = (t2 (rest2 (curr (v (all_edges (found out))))))
+  & t2 ~ *
+  & @find_next ~ (curr (rest2 (v (found out))))
+
+@explore_next = (t2 (rest2 (curr (v (all_edges (found out))))))
+  & @dfs ~ (t2 (v (all_edges (res out))))
+  & res ~ ?((@continue @found) (rest2 (curr (v (all_edges (found out))))))
+
+@continue = (rest2 (curr (v (all_edges (found out)))))
+  & @find_next ~ (curr (rest2 (v (found out))))
+
+@found = (rest2 (curr (v (all_edges (found out)))))
+  & rest2 ~ *
+  & curr ~ *
+  & v ~ *
+  & all_edges ~ *
+  & found ~ 1

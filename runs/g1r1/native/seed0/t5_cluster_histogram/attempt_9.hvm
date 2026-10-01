@@ -1,0 +1,197 @@
+@prog = ((n edges) out)
+  & n ~ {ni ns}
+  & @init ~ (ni (0 labels))
+  & @edges ~ (edges (labels done))
+  & @zero_hist ~ (0 hist)
+  & @scan ~ (ns (0 (done (hist out))))
+
+@init = (n (i out))
+  & n ~ ?((@init_nil @init_cons) (i out))
+
+@init_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_cons = (rem (i out))
+  & i ~ {ih ic}
+  & ic ~ $([+1] next)
+  & @init ~ (rem (next tail))
+  & out ~ (1 (ih tail))
+
+@edges = ((?((@edges_nil @edges_cons) (pl (labels out))) pl) (labels out))
+
+@edges_nil = (pl (labels out))
+  & pl ~ *
+  & out ~ labels
+
+@edges_cons = (rem (pl (labels out)))
+  & rem ~ *
+  & pl ~ (edge tail)
+  & edge ~ (u v)
+  & labels ~ {l1 lrest}
+  & lrest ~ {l2 l3}
+  & @lookup ~ (u (l1 lu))
+  & @lookup ~ (v (l2 lv))
+  & @merge ~ (lu (lv (tail (l3 out))))
+
+@lookup = (idx (list out))
+  & idx ~ ?((@lookup_zero @lookup_more) (list out))
+
+@lookup_zero = (list out)
+  & list ~ (1 (head tail))
+  & tail ~ *
+  & out ~ head
+
+@lookup_more = (rem (list out))
+  & list ~ (1 (head tail))
+  & head ~ *
+  & @lookup ~ (rem (tail out))
+
+@merge = (a (b (tail (labels out))))
+  & a ~ {ac aa}
+  & b ~ {bc bb}
+  & ac ~ $([<] $(bc flag))
+  & flag ~ ?((@merge_notless @merge_less) (aa (bb (tail (labels out)))))
+
+@merge_less = (* (aa (bb (tail (labels out)))))
+  & @replace ~ (labels (bb (aa repl)))
+  & @edges ~ (tail (repl out))
+
+@merge_notless = (aa (bb (tail (labels out))))
+  & aa ~ {ae ao}
+  & bb ~ {be bn}
+  & ae ~ $([=] $(be eq))
+  & eq ~ ?((@merge_unequal @merge_equal) (ao (bn (tail (labels out)))))
+
+@merge_unequal = (ao (bn (tail (labels out))))
+  & @replace ~ (labels (ao (bn repl)))
+  & @edges ~ (tail (repl out))
+
+@merge_equal = (* (ao (bn (tail (labels out)))))
+  & ao ~ *
+  & bn ~ *
+  & @edges ~ (tail (labels out))
+
+@replace = ((?((@replace_nil @replace_cons) (pl (old (new out)))) pl) (old (new out)))
+
+@replace_nil = (pl (old (new out)))
+  & pl ~ *
+  & old ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (rem (pl (old (new out))))
+  & rem ~ *
+  & pl ~ (head tail)
+  & head ~ {hc hv}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hc ~ $([=] $(oc eq))
+  & eq ~ ?((@replace_no @replace_yes) (hv (or (nc (nr (tail out))))))
+
+@replace_no = (hv (or (nc (nr (tail out)))))
+  & nc ~ *
+  & @replace ~ (tail (or (nr rest)))
+  & out ~ (1 (hv rest))
+
+@replace_yes = (* (hv (or (nc (nr (tail out))))))
+  & hv ~ *
+  & @replace ~ (tail (or (nr rest)))
+  & out ~ (1 (nc rest))
+
+@scan = (n (i (labels (hist out))))
+  & n ~ ?((@scan_nil @scan_more) (i (labels (hist out))))
+
+@scan_nil = (i (labels (hist out)))
+  & i ~ *
+  & labels ~ *
+  & out ~ hist
+
+@scan_more = (rem (i (labels (hist out))))
+  & i ~ {iq ir}
+  & ir ~ {icmp inext}
+  & inext ~ $([+1] next)
+  & labels ~ {ll lr}
+  & @lookup ~ (iq (ll value))
+  & value ~ {vcomp vtarget}
+  & vcomp ~ $([=] $(icmp eq))
+  & eq ~ ?((@scan_nonroot @scan_root) (rem (next (lr (vtarget (hist out))))))
+
+@scan_nonroot = (rem (next (labs (target (hist out)))))
+  & target ~ *
+  & @scan ~ (rem (next (labs (hist out))))
+
+@scan_root = (* (rem (next (labs (target (hist out))))))
+  & labs ~ {lc lr}
+  & @count ~ (lc (target (0 size)))
+  & @hinc ~ (size (hist nhist))
+  & @scan ~ (rem (next (lr (nhist out))))
+
+@count = ((?((@count_nil @count_cons) (pl (target (acc out)))) pl) (target (acc out)))
+
+@count_nil = (pl (target (acc out)))
+  & pl ~ *
+  & target ~ *
+  & out ~ acc
+
+@count_cons = (rem (pl (target (acc out))))
+  & rem ~ *
+  & pl ~ (head tail)
+  & target ~ {tc tr}
+  & head ~ {hc hh}
+  & hh ~ *
+  & hc ~ $([=] $(tc eq))
+  & eq ~ ?((@count_no @count_yes) (tr (tail (acc out))))
+
+@count_no = (tr (tail (acc out)))
+  & @count ~ (tail (tr (acc out)))
+
+@count_yes = (* (tr (tail (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (tr (acc2 out)))
+
+@hinc = (size (hist out))
+  & size ~ {scomp skeep}
+  & scomp ~ $([>] $(7 flag))
+  & flag ~ ?((@hinc_small @hinc_large) (skeep (hist out)))
+
+@hinc_small = (skeep (hist out))
+  & skeep ~ $([-] $(1 idx))
+  & @inc_at ~ (idx (hist out))
+
+@hinc_large = (* (skeep (hist out)))
+  & skeep ~ *
+  & @inc_at ~ (7 (hist out))
+
+@inc_at = (idx (hist out))
+  & idx ~ ?((@inc_zero @inc_more) (hist out))
+
+@inc_zero = (hist out)
+  & hist ~ (1 (head tail))
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_more = (rem (hist out))
+  & hist ~ (1 (head tail))
+  & @inc_at ~ (rem (tail sub))
+  & out ~ (1 (head sub))
+
+@zero_hist = (x out)
+  & x ~ *
+  & out ~ (1 (0
+    (1 (0
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (0 *)
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    ))
+  ))

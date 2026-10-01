@@ -1,0 +1,41 @@
+@prog = (input output)
+  & @dedup ~ (input output)
+
+@dedup = (lv1 output)
+  & @dd_first_lw ~ (lv1 output)
+
+@dd_nil = (* output)
+  & output ~ (0 *)
+
+@dd_first = (* (({prev emitted} tail) (1 (emitted rest))))
+  & @dr_cons_lw ~ (tail (prev rest))
+
+@dedup_rest = (lv2 (prev output))
+  & @dr_cons_lw ~ (lv2 (prev output))
+
+@dr_nil = (* (prev output))
+  & prev ~ *
+  & output ~ (0 *)
+
+@dr_cons = (* (({$([=] $(prev ?((@dr_keep @dr_skip) (emitted (rest output))))) {next emitted}} tail) (prev output)))
+  & @dr_cons_lw ~ (tail (next rest))
+
+@dr_keep = (emitted (rest output))
+  & output ~ (1 (emitted rest))
+
+@dr_skip = (* (emitted (rest rest)))
+  & emitted ~ *
+
+@dd_first_lw = (ls26 q17)
+  & ls26 ~ (g23 (e21 (g24 (e22 tk25))))
+  & g23 ~ ?((@dd_nil @dd_first_la) ((e21 (q19 q20)) q17))
+  & g24 ~ ?((@dr_nil @dr_cons) ((e22 tk25) (q19 q20)))
+
+@dr_cons_lw = (ls38 (q28 q29))
+  & ls38 ~ (g35 (e33 (g36 (e34 tk37))))
+  & g35 ~ ?((@dr_nil @dr_cons_la) ((e33 (q31 q32)) (q28 q29)))
+  & g36 ~ ?((@dr_nil @dr_cons) ((e34 tk37) (q31 q32)))
+
+@dd_first_la = (* (({prev emitted} (prev rest)) (1 (emitted rest))))
+
+@dr_cons_la = (* (({$([=] $(prev ?((@dr_keep @dr_skip) (emitted (rest output))))) {next emitted}} (next rest)) (prev output)))

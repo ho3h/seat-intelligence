@@ -1,0 +1,21 @@
+// Produces the singleton-cluster result; the edge and property lists are empty.
+@prog = (inp out)
+  & inp ~ (n (tau (mnl (cands (edges attrs)))))
+  & out ~ (c (e p))
+  & @range ~ (n ((0 *) c))
+  & e ~ (0 *)
+  & p ~ (0 *)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & edges ~ *
+  & attrs ~ *
+
+@range = ( ?((@rzero @rsucc) ctx) ctx)
+
+@rzero = (acc out)
+  & acc ~ out
+
+@rsucc = (k (acc out))
+  & k ~ {x y}
+  & @range ~ (y ((1 (x acc)) out))

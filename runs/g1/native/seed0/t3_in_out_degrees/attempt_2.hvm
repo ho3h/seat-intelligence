@@ -1,0 +1,40 @@
+// Create a list of n zeros.
+@prog = ((n edges) out)
+  & n ~ {na nb}
+  & @zeros ~ (na ins)
+  & @zeros ~ (nb outs)
+  & @edproc ~ (edges (ins (outs out)))
+
+@zeros = (?((@zeros_nil @zeros_succ) ctx) ctx)
+
+@zeros_nil = (0 *)
+
+@zeros_succ = (n out)
+  & @zeros ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Increment the list element at index idx.
+@inc = (?((@inc_at @inc_after) ctx) ctx)
+
+@inc_at = (l out)
+  & l ~ (1 (head tail))
+  & head ~ $([+1] newhead)
+  & out ~ (1 (newhead tail))
+
+@inc_after = (idx (l out))
+  & l ~ (1 (head tail))
+  & @inc ~ (idx (tail newtail))
+  & out ~ (1 (head newtail))
+
+// Process the edge list, updating the in- and out-degree lists.
+@edproc = ((?((@ep_nil @ep_cons) (payload ctx)) payload) ctx)
+
+@ep_nil = (payload (ins (outs out)))
+  & payload ~ *
+  & out ~ (ins outs)
+
+@ep_cons = (* (payload (ins (outs out))))
+  & payload ~ ((u v) tail)
+  & @inc ~ (u (outs outs2))
+  & @inc ~ (v (ins ins2))
+  & @edproc ~ (tail (ins2 (outs2 out)))

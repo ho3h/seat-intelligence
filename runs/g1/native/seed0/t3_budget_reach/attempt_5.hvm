@@ -1,0 +1,208 @@
+// Distance entries are (0 *) when unreachable and (1 distance) when reachable.
+
+@prog = (input out)
+  & input ~ (n (s (b edges)))
+  & n ~ {ncmp nb}
+  & s ~ {scmp si}
+  & scmp ~ $([<] $(ncmp valid_flag))
+  & valid_flag ~ ?((@invalid @valid) (nb (si (b (edges out)))))
+
+@invalid = (n (s (b (edges out))))
+  & n ~ *
+  & s ~ *
+  & b ~ *
+  & edges ~ *
+  & out ~ 0
+
+@valid = (* (n (s (b (edges out)))))
+  & n ~ {n_build n_pass}
+  & @build ~ (n_build (0 (s initial)))
+  & @passes ~ (n_pass (edges (initial final)))
+  & @count ~ (final (b (0 out)))
+
+@build = (n (i (s out)))
+  & n ~ ?((@build_nil @build_succ) (i (s out)))
+
+@build_nil = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@build_succ = (k (i (s out)))
+  & i ~ {ic ii}
+  & s ~ {sc sr}
+  & ic ~ $([=] $(sc eq))
+  & ii ~ $([+1] i2)
+  & eq ~ ?((@build_no @build_yes) (k (i2 (sr out))))
+
+@build_no = (k (i (s out)))
+  & @build ~ (k (i (s tail)))
+  & out ~ (1 ((0 *) tail))
+
+@build_yes = (* (k (i (s out))))
+  & @build ~ (k (i (s tail)))
+  & out ~ (1 ((1 0) tail))
+
+@passes = (k (edges (dist out)))
+  & k ~ ?((@passes_nil @passes_succ) (edges (dist out)))
+
+@passes_nil = (edges (dist out))
+  & edges ~ *
+  & out ~ dist
+
+@passes_succ = (k (edges (dist out)))
+  & edges ~ {scan_edges keep_edges}
+  & @scan ~ (scan_edges (dist next))
+  & @passes ~ (k (keep_edges (next out)))
+
+@scan = (edges (dist out))
+  & edges ~ (tag payload)
+  & tag ~ ?((@scan_nil @scan_cons) (payload (dist out)))
+
+@scan_nil = (payload (dist out))
+  & payload ~ *
+  & out ~ dist
+
+@scan_cons = (* (payload (dist out)))
+  & payload ~ (edge tail)
+  & @edge ~ (edge (dist next))
+  & @scan ~ (tail (next out))
+
+@edge = (edge (dist out))
+  & edge ~ (u (v w))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & w ~ {w1 w2}
+  & @relax ~ (dist (u1 (v1 (w1 mid))))
+  & @relax ~ (mid (v2 (u2 (w2 out))))
+
+@get = (list (idx out))
+  & list ~ (tag payload)
+  & tag ~ ?((@get_nil @get_cons) (payload (idx out)))
+
+@get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@get_cons = (* (payload (idx out)))
+  & payload ~ (item tail)
+  & idx ~ ?((@get_here @get_next) (item (tail out)))
+
+@get_here = (item (tail out))
+  & tail ~ *
+  & out ~ item
+
+@get_next = (idx (item (tail out)))
+  & item ~ *
+  & @get ~ (tail (idx out))
+
+@set = (list (idx (val out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@set_nil @set_cons) (payload (idx (val out))))
+
+@set_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* (payload (idx (val out))))
+  & payload ~ (item tail)
+  & idx ~ ?((@set_here @set_next) (item (tail (val out))))
+
+@set_here = (item (tail (val out)))
+  & item ~ *
+  & out ~ (1 (val tail))
+
+@set_next = (idx (item (tail (val out))))
+  & @set ~ (tail (idx (val rest)))
+  & out ~ (1 (item rest))
+
+@relax = (dist (src (dst (w out))))
+  & dist ~ {src_list rem}
+  & rem ~ {target_list base}
+  & dst ~ {dst_get dst_set}
+  & @get ~ (src_list (src src_entry))
+  & @source_case ~ (src_entry (target_list (base (dst_get (dst_set (w out))))))
+
+@source_case = (entry (target_list (base (dst_get (dst_set (w out))))))
+  & entry ~ (flag d)
+  & flag ~ ?((@source_no @source_yes) (d (target_list (base (dst_get (dst_set (w out)))))))
+
+@source_no = (d (target_list (base (dst_get (dst_set (w out))))))
+  & d ~ *
+  & target_list ~ *
+  & dst_get ~ *
+  & dst_set ~ *
+  & w ~ *
+  & out ~ base
+
+@source_yes = (* (d (target_list (base (dst_get (dst_set (w out)))))))
+  & d ~ {dadd dcmp}
+  & dadd ~ $([+] $(w cand))
+  & cand ~ {candcmp candkeep}
+  & candcmp ~ $([<] $(dcmp overflow))
+  & overflow ~ ?((@candidate_ok @candidate_overflow) (target_list (base (dst_get (dst_set (candkeep out))))))
+
+@candidate_overflow = (* (target_list (base (dst_get (dst_set (cand out))))))
+  & target_list ~ *
+  & dst_get ~ *
+  & dst_set ~ *
+  & cand ~ *
+  & out ~ base
+
+@candidate_ok = (target_list (base (dst_get (dst_set (cand out)))))
+  & @get ~ (target_list (dst_get target_entry))
+  & @target_case ~ (target_entry (base (dst_set (cand out))))
+
+@target_case = (entry (base (dst (cand out))))
+  & entry ~ (flag old)
+  & flag ~ ?((@target_unreachable @target_reachable) (old (base (dst (cand out)))))
+
+@target_unreachable = (old (base (dst (cand out))))
+  & old ~ *
+  & @set ~ (base (dst ((1 cand) out)))
+
+@target_reachable = (* (old (base (dst (cand out)))))
+  & cand ~ {cc cv}
+  & cc ~ $([<] $(old improve))
+  & improve ~ ?((@target_keep @target_improve) (base (dst (cv out))))
+
+@target_keep = (base (dst (cand out)))
+  & cand ~ *
+  & dst ~ *
+  & out ~ base
+
+@target_improve = (* (base (dst (cand out))))
+  & @set ~ (base (dst ((1 cand) out)))
+
+@count = (list (b (acc out)))
+  & list ~ (tag payload)
+  & tag ~ ?((@count_nil @count_cons) (payload (b (acc out))))
+
+@count_nil = (payload (b (acc out)))
+  & payload ~ *
+  & b ~ *
+  & out ~ acc
+
+@count_cons = (* (payload (b (acc out))))
+  & payload ~ (item tail)
+  & item ~ (flag d)
+  & flag ~ ?((@count_unreachable @count_reachable) (d (tail (b (acc out)))))
+
+@count_unreachable = (d (tail (b (acc out))))
+  & d ~ *
+  & @count ~ (tail (b (acc out)))
+
+@count_reachable = (* (d (tail (b (acc out)))))
+  & b ~ {bc br}
+  & d ~ $([>] $(bc gt))
+  & gt ~ ?((@count_yes @count_no) (tail (br (acc out))))
+
+@count_no = (tail (b (acc out)))
+  & @count ~ (tail (b (acc out)))
+
+@count_yes = (* (tail (b (acc out))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (b (acc2 out)))

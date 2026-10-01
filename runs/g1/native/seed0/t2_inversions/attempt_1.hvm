@@ -1,0 +1,32 @@
+// Inversions are counted online: for each element, count larger values
+// already seen, then add it to the seen list.
+
+@prog = (xs out)
+  & @inv ~ (xs ((0 *) (0 out)))
+
+@inv = ((?((@inv_nil @inv_cons) (pl (seen (acc out)))) pl) (seen (acc out)))
+
+@inv_nil = (* (* (a a)))
+
+@inv_cons = (* ((h t) (seen (acc out))))
+  & h ~ {h1 h2}
+  & seen ~ {s1 s2}
+  & @gt ~ (h1 (s1 (0 k)))
+  & k ~ $([+] $(acc acc2))
+  & @inv ~ (t ((1 (h2 s2)) (acc2 out)))
+
+@gt = (x ((?((@gt_nil @gt_cons) (pl (x (cnt out)))) pl) (cnt out)))
+
+@gt_nil = (* (* (a a)))
+
+@gt_cons = (* ((y ys) (x (cnt out))))
+  & x ~ {x1 x2}
+  & x1 ~ $([>] $(y b))
+  & b ~ ?((@gt_no @gt_yes) (x2 (ys (cnt out))))
+
+@gt_no = (x (ys (cnt out)))
+  & @gt ~ (x (ys (cnt out)))
+
+@gt_yes = (* (x (ys (cnt out))))
+  & cnt ~ $([+] $(1 cnt2))
+  & @gt ~ (x (ys (cnt2 out)))

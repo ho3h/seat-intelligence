@@ -1,0 +1,26 @@
+// Overlay two trees; matching nodes add their values and merge their children.
+@prog = (input output)
+  & input ~ (a b)
+  & @merge ~ (a (b output))
+
+// Match the first tree directly. Its Node branch parses its payload and
+// switches on the second tree.
+@merge = ((?((@ma_leaf (* (ap (bb bo)))) (p (b out))) p) (b out))
+  & ap ~ (l (v r))
+  & bb ~ (?((@mb_leaf @mb_node) (pb (l (v (r bo))))) pb)
+
+@ma_leaf = (p (b out))
+  & p ~ *
+  & out ~ b
+
+@mb_leaf = (pb (l (v (r out))))
+  & pb ~ *
+  & out ~ (1 (l (v r)))
+
+@mb_node = (n (pb (l (v (r out)))))
+  & n ~ *
+  & pb ~ (l2 (v2 r2))
+  & @merge ~ (l (l2 left_out))
+  & @merge ~ (r (r2 right_out))
+  & v ~ $([+] $(v2 sum))
+  & out ~ (1 (left_out (sum right_out)))

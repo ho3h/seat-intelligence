@@ -1,0 +1,112 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_neighbor = ({a c} ({$([:%0x0000018] e) $([:/0x0000018] {b d})} h))
+  & @set_mask ~ (a (b (g h)))
+  & @get_mask ~ (c (d $([|] $(f g))))
+  & $(e f) ~ [<<0x0000001]
+
+@build_row = ((@build_row__C3 a) a)
+
+@build_row__C0 = (* a)
+  & @add_neighbor ~ a
+
+@build_row__C1 = (* (b (a c)))
+  & @add_neighbor ~ (a (b c))
+
+@build_row__C2 = (* (({e $([=] $(f ?(((g (* g)) @build_row__C0) (h (i j)))))} {$([=] $(c ?(((* (d d)) @build_row__C1) (e (j k))))) i}) (a ({b {c f}} (h l)))))
+  & @build_row ~ (a (b (k l)))
+
+@build_row__C3 = (?(((* (a a)) @build_row__C2) b) b)
+
+@count_common = ((@count_common__C7 a) a)
+
+@count_common__C0 = (* (a a))
+
+@count_common__C1 = (* ($([:%0x0000018] $([+0x0000001] a)) ($([&] $(c d)) d)))
+  & $(b c) ~ [-0x0FFFFFF]
+  & $(a $([:-0x0000001] b)) ~ [<<0x0000001]
+
+@count_common__C2 = ({$([+0x0000001] c) $([=] $(f ?((@count_common__C0 @count_common__C1) (g (i j)))))} ({d f} ({e g} ($([+] $(k l)) ($([&] $(h i)) (a (h (b m))))))))
+  & @count_common ~ (a (b (c (d (e (l m))))))
+  & @popcount24 ~ (j k)
+
+@count_common__C3 = (* ($([+0x0000001] c) (d (e (f (* (a (* (b g)))))))))
+  & @count_common ~ (a (b (c (d (e (f g))))))
+
+@count_common__C4 = (* (h (i ({$([<] $(a ?((@count_common__C2 @count_common__C3) (b (c (d (e (f (g (h (i j))))))))))) b} ({a c} (d (e (f (g j)))))))))
+
+@count_common__C5 = (?(((* (* (* (a (* (* a)))))) @count_common__C4) b) b)
+
+@count_common__C6 = (* (e (f ((@count_common__C5 (a (b (c (d (e (f g))))))) (a (b (c (d g))))))))
+
+@count_common__C7 = (?(((* (* (* (* (a a))))) @count_common__C6) b) b)
+
+@count_later = ((@count_later__C2 a) a)
+
+@count_later__C0 = (* (a ({$([:/0x0000018] c) d} ($([+] $(e f)) (b f)))))
+  & @count_common ~ (a (b (0 (c (d (0 e))))))
+
+@count_later__C1 = (* (j (a ({b {d g}} ({$([+0x0000001] c) {e h}} (i l))))))
+  & @count_later ~ (a (b (c (k l))))
+  & @has_bit ~ (d (e ?(((* (* (f (* f)))) @count_later__C0) (g (h (i (j k)))))))
+
+@count_later__C2 = (?(((* (* (a a))) @count_later__C1) b) b)
+
+@count_triangles = ((@count_triangles__C1 a) a)
+
+@count_triangles__C0 = (* (b ({d a} (e ({$([+0x0000001] f) $([+0x0000001] c)} h)))))
+  & @count_later ~ (a (b (c (0 $([+] $(g h))))))
+  & @count_triangles ~ (d (e (f g)))
+
+@count_triangles__C1 = (?(((* (* 0)) @count_triangles__C0) a) a)
+
+@get_mask = ((@get_mask__C2 a) a)
+
+@get_mask__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_mask ~ (a (b c))
+
+@get_mask__C1 = (* (c (d ({$([=0x0000000] ?((@get_mask__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_mask__C2 = (?(((* 0) @get_mask__C1) a) a)
+
+@has_bit = (a ({$([:%0x0000018] c) $([:/0x0000018] b)} e))
+  & @get_mask ~ (a (b $([&] $(d $([!0x0000000] e)))))
+  & $(c d) ~ [<<0x0000001]
+
+@make_rows = ({a c} (d (e ({$([<] $(a b)) f} g))))
+  & $(b ?((@make_rows__C0 (* (* (* (* (* @List/Nil)))))) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@make_rows__C0 = (f ({g c} ({h a} ({$([+0x0000001] i) b} k))))
+  & @List/Cons ~ (e (j k))
+  & @build_row ~ (a (b (d e)))
+  & @zero_list ~ (c d)
+  & @make_rows ~ (f (g (h (i j))))
+
+@popcount24 = ({$([-] $(a {$([&0x0333333] $([+] $(b {$([+] $(c $([&0x00F0F0F] {$([+] $(d {$([+] $(e $([&0x000003F] f))) $([:>>0x0000010] e)})) $([:>>0x0000008] d)}))) $([:>>0x0000004] c)}))) $([:>>0x0000002] $([&0x0333333] b))})) $([:>>0x0000001] $([&0x0555555] a))} f)
+
+@prog = (({a $([+0x0000017] $([:/0x0000018] {e b}))} c) f)
+  & @count_triangles ~ (d (e (0 f)))
+  & @make_rows ~ (a (b (c (0 d))))
+
+@set_mask = ((@set_mask__C3 a) a)
+
+@set_mask__C0 = ($([:-0x0000001] c) (d (a (b f))))
+  & @List/Cons ~ (a (e f))
+  & @set_mask ~ (b (c (d e)))
+
+@set_mask__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@set_mask__C2 = (* (c (d ({$([=0x0000000] ?((@set_mask__C0 @set_mask__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_mask__C3 = (?(((* (* @List/Nil)) @set_mask__C2) a) a)
+
+@zero_list = ({$([=0x0000000] ?((@zero_list__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@zero_list__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (0 (b c))
+  & @zero_list ~ (a b)
+
+

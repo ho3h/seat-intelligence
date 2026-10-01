@@ -1,0 +1,112 @@
+// Filter proposals in order, tracking earlier kept pairs in a seen-list.
+@prog = ((ledger proposals) out)
+  & @filter ~ (proposals (ledger ((0 *) out)))
+
+@filter = ((?((@f_nil @f_cons) (pl (ledger (seen out)))) pl) (ledger (seen out)))
+
+@f_nil = (* (ledger (seen out)))
+  & ledger ~ *
+  & seen ~ *
+  & out ~ (0 *)
+
+@f_cons = (* (((v t) rest) (ledger (seen out))))
+  & ledger ~ {ld_chk ldn}
+  & seen ~ {s_chk s_next}
+  & v ~ {vL vA}
+  & t ~ {tL tA}
+  & @hasL ~ (ld_chk (vL (tL block)))
+  & block ~ ?((@f_block_no @f_block_yes) (ldn (rest (s_chk (s_next (vA (tA out)))))))
+
+@f_block_yes = (* (ldn (rest (s_chk (s_next (vA (tA out)))))))
+  & s_chk ~ *
+  & vA ~ *
+  & tA ~ *
+  & @filter ~ (rest (ldn (s_next out)))
+
+@f_block_no = (ldn (rest (s_chk (s_next (vA (tA out))))))
+  & vA ~ {vK vR}
+  & tA ~ {tK tR}
+  & @hasK ~ (s_chk (vK (tK found)))
+  & found ~ ?((@f_seen_no @f_seen_yes) (rest (ldn (s_next (vR (tR out))))))
+
+@f_seen_yes = (* (rest (ldn (s_next (vR (tR out))))))
+  & vR ~ *
+  & tR ~ *
+  & @filter ~ (rest (ldn (s_next out)))
+
+@f_seen_no = (rest (ldn (s_next (vR (tR out)))))
+  & vR ~ {vS vO}
+  & tR ~ {tS tO}
+  & @filter ~ (rest (ldn ((1 ((vS tS) s_next)) result)))
+  & out ~ (1 ((vO tO) result))
+
+// Return 1 if the ledger contains (v, t) with status 0 or 1.
+@hasL = ((?((@hl_nil @hl_cons) (pl (v (t out)))) pl) (v (t out)))
+
+@hl_nil = (* (v (t out)))
+  & v ~ *
+  & t ~ *
+  & out ~ 0
+
+@hl_cons = (* (((ev (et status)) tail) (v (t out))))
+  & v ~ {vc vr}
+  & ev ~ $([=] $(vc eqv))
+  & eqv ~ ?((@hl_vno @hl_vyes) (et (status (tail (vr (t out))))))
+
+@hl_vno = (et (status (tail (v (t out)))))
+  & et ~ *
+  & status ~ *
+  & @hasL ~ (tail (v (t out)))
+
+@hl_vyes = (* (et (status (tail (v (t out))))))
+  & t ~ {tc tr}
+  & et ~ $([=] $(tc eqt))
+  & eqt ~ ?((@hl_tno @hl_tyes) (status (tail (v (tr out)))))
+
+@hl_tno = (status (tail (v (t out))))
+  & status ~ *
+  & @hasL ~ (tail (v (t out)))
+
+@hl_tyes = (* (status (tail (v (t out)))))
+  & status ~ $([<] $(2 active))
+  & active ~ ?((@hl_status_no @hl_status_yes) (tail (v (t out))))
+
+@hl_status_no = (tail (v (t out)))
+  & @hasL ~ (tail (v (t out)))
+
+@hl_status_yes = (* (tail (v (t out))))
+  & tail ~ *
+  & v ~ *
+  & t ~ *
+  & out ~ 1
+
+// Return 1 if the seen-list contains (v, t).
+@hasK = ((?((@hk_nil @hk_cons) (pl (v (t out)))) pl) (v (t out)))
+
+@hk_nil = (* (v (t out)))
+  & v ~ *
+  & t ~ *
+  & out ~ 0
+
+@hk_cons = (* (((ev et) tail) (v (t out))))
+  & v ~ {vc vr}
+  & ev ~ $([=] $(vc eqv))
+  & eqv ~ ?((@hk_vno @hk_vyes) (et (tail (vr (t out)))))
+
+@hk_vno = (et (tail (v (t out))))
+  & et ~ *
+  & @hasK ~ (tail (v (t out)))
+
+@hk_vyes = (* (et (tail (v (t out)))))
+  & t ~ {tc tr}
+  & et ~ $([=] $(tc eqt))
+  & eqt ~ ?((@hk_tno @hk_tyes) (tail (v (tr out))))
+
+@hk_tno = (tail (v (t out)))
+  & @hasK ~ (tail (v (t out)))
+
+@hk_tyes = (* (tail (v (t out))))
+  & tail ~ *
+  & v ~ *
+  & t ~ *
+  & out ~ 1

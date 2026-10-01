@@ -1,0 +1,51 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build = ((@build__C3 a) a)
+
+@build__C0 = (a ($([:-0x0000001] b) (* c)))
+  & @find_backward ~ (a (b (1 c)))
+
+@build__C1 = (* (* ($([+0x0000001] b) (a c))))
+  & @find_forward ~ (a (b (1 c)))
+
+@build__C2 = (* ({f $([=0x0000028] ?((@build__C0 @build__C1) (a (b (c d)))))} ({e c} ({g a} ({$([+0x0000001] i) b} k)))))
+  & @List/Cons ~ (d (j k))
+  & @build ~ (e (h (i j)))
+  & @List/Cons ~ (f (g h))
+
+@build__C3 = (?(((* (* @List/Nil)) @build__C2) a) a)
+
+@find_backward = ((@find_backward__C4 a) a)
+
+@find_backward__C0 = ($([:-0x0000001] b) ($([:-0x0000001] c) (a d)))
+  & @find_backward ~ (a (b (c d)))
+
+@find_backward__C1 = ($([:-0x0000001] b) ($([+0x0000001] c) (a d)))
+  & @find_backward ~ (a (b (c d)))
+
+@find_backward__C2 = (* (b ({$([=0x0000001] ?((@find_backward__C0 (* (a (* (* a))))) (b (c d)))) c} d)))
+
+@find_backward__C3 = (* ($([=0x0000028] ?((@find_backward__C1 @find_backward__C2) (a (b (c d))))) (c (a (b d)))))
+
+@find_backward__C4 = (?(((* (* 0)) @find_backward__C3) a) a)
+
+@find_forward = ((@find_forward__C4 a) a)
+
+@find_forward__C0 = ($([+0x0000001] b) ($([:-0x0000001] c) (a d)))
+  & @find_forward ~ (a (b (c d)))
+
+@find_forward__C1 = (b ({$([=0x0000001] ?((@find_forward__C0 (* (a (* (* a))))) (b (c d)))) c} d))
+
+@find_forward__C2 = (* ($([+0x0000001] b) ($([+0x0000001] c) (a d))))
+  & @find_forward ~ (a (b (c d)))
+
+@find_forward__C3 = (* ($([=0x0000028] ?((@find_forward__C1 @find_forward__C2) (a (b (c d))))) (c (a (b d)))))
+
+@find_forward__C4 = (?(((* (* 0)) @find_forward__C3) a) a)
+
+@prog = (a b)
+  & @build ~ (a (@List/Nil (0 b)))
+
+

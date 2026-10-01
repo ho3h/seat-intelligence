@@ -1,0 +1,10 @@
+@prog = (input output)
+  & @walk ~ (input ((0 *) output))
+
+@walk = ((?((@walk_leaf @walk_node) (pl (tail out))) pl) (tail out))
+
+@walk_leaf = (* (tail out))
+
+@walk_node = (* ((left (value right)) (tail out)))
+  & @walk ~ (left ((1 (value rlist)) out))
+  & @walk ~ (right (tail rlist))

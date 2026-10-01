@@ -1,0 +1,347 @@
+@C/CO__M_R/One__M_O/OLf = (a ((1 (a b)) b))
+
+@C/CT = (a (b (c (d ((0 (a (b (c (d e))))) e)))))
+
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp = ((2 a) a)
+
+@S/Leaf = (a (b (c (d ((1 (a (b (c (d e))))) e)))))
+
+@S/Node__M_R/Two__M_O/ONode = (a (b ((0 (a (b c))) c)))
+
+@cell = (a (b ((a (b c)) c)))
+
+@cj = (b ({a c} (d ({$([>] $(a ?((@cj__C0 @cj__C1) (b (c (d (e f))))))) e} f))))
+
+@cj2 = (d ({$([>] $(b c)) e} (f ({a g} h))))
+  & $(a b) ~ [*0x0000002]
+  & $(c ?((@cj2__C0 @cj2__C1) (d (e (f (g h)))))) ~ [=0x0000000]
+
+@cj2__C0 = (a (* b))
+  & @cjd ~ (a b)
+
+@cj2__C1 = (* (c (a (d (b e)))))
+  & @C/CT ~ (a (b (c (d e))))
+
+@cj__C0 = a
+  & @cj2 ~ a
+
+@cj__C1 = (* (c (d (a (b e)))))
+  & @cj2 ~ (a (b (c (d e))))
+
+@cjd = ((@cjd__C4 a) a)
+
+@cjd__C0 = (g ({b h} (a ({$([+] $(b c)) f} (d (e j))))))
+  & @C/CT ~ (a (c (d (i j))))
+  & @cj ~ (e (f (g (h i))))
+
+@cjd__C1 = (* (f ({a g} ({$([+] $(a b)) e} (c (d i))))))
+  & @C/CT ~ (b (c (h i)))
+  & @cj ~ (d (e (f (g h))))
+
+@cjd__C2 = ({$([>] $(a b)) e} ({a f} (g (h (c (d i))))))
+  & $(b ?((@cjd__C0 @cjd__C1) (c (d (e (f (g (h i)))))))) ~ [=0x0000000]
+
+@cjd__C3 = (?(((* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp))) (* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp)))) a) a)
+
+@cjd__C4 = (?((@cjd__C2 @cjd__C3) a) a)
+
+@conf = (c (d ({$([=] $(a ?(((* (* (* (b b)))) @conf__C0) (c (d (e f)))))) e} (a f))))
+
+@conf__C0 = (* (a (b (c d))))
+  & @List/Cons ~ ((a (b c)) d)
+
+@ew = (a (?((@ew__C1 @ew__C2) (a b)) b))
+
+@ew__C0 = ({h b} ({a c} ({g i} o)))
+  & @mgE ~ (f (n o))
+  & @path ~ (a (b (e f)))
+  & @S/Leaf ~ (c (d (1 (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp e))))
+  & @C/CO__M_R/One__M_O/OLf ~ ((k (j 0)) d)
+  & @path ~ (g (h (m n)))
+  & @S/Leaf ~ (i (l (1 (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp m))))
+  & @C/CO__M_R/One__M_O/OLf ~ ((j (k 0)) l)
+
+@ew__C1 = ((c (d $([<] $(a ?((@ew__C0 (* (* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp))))) (b (c (d e)))))))) (b (a e)))
+
+@ew__C2 = ({b g} ((a f) ({c h} ({d i} k))))
+  & @mgE ~ (e (j k))
+  &!@ew ~ (a (b (c (d e))))
+  &!@ew ~ (f (g (h (i j))))
+
+@fcomb = (b (?(((* (a (* a))) @fcomb__C1) (b c)) c))
+
+@fcomb__C0 = (* a)
+  & @orl ~ a
+
+@fcomb__C1 = (* (b (c (?(((a (* a)) @fcomb__C0) (b (c d))) d))))
+
+@feed = ((@feed__C3 a) a)
+
+@feed__C0 = (a a)
+
+@feed__C1 = (a (c ({b d} f)))
+  &!@feed ~ (a (b $([+] $(e f))))
+  &!@feed ~ (c (d e))
+
+@feed__C2 = (?((@feed__C0 (* (* 0))) a) a)
+
+@feed__C3 = (?((@feed__C1 @feed__C2) a) a)
+
+@go = (a (b ((@go_k ((a b) c)) c)))
+
+@go_k = (?((@go_k__C0 @go_k__C1) (a (b (c d)))) (a ((b c) d)))
+
+@go_k__C0 = (* (a (* (@List/Nil (* a)))))
+
+@go_k__C1 = (* (f ({g {j b}} (a (i (m n))))))
+  & @List/Cons ~ (g (h i))
+  & @go ~ (d (e (f (h (l n)))))
+  & @mx ~ (b (c {d $([!] $(j k))}))
+  & @pull ~ (a (c e))
+  & @cell ~ (k (l m))
+
+@ids = ({$([<] $(a ?(((* (* (* (b b)))) @ids__C2) (c (d (e f)))))) c} (d ({a e} f)))
+
+@ids__C0 = (a (* b))
+  & @List/Cons ~ (a b)
+
+@ids__C1 = ({b {d g}} ({a $([+] $(e f))} ({c h} (i k))))
+  &!@ids ~ (a (b (c (j k))))
+  &!@ids ~ (f (g (h (i j))))
+  & $(d e) ~ [<<0x0000001]
+
+@ids__C2 = (* (a (?((@ids__C0 @ids__C1) (a b)) b)))
+
+@mgE = ((@mgE__C11 a) a)
+
+@mgE__C0__M_mgF__C0__M_mgM__C0 = (* a)
+  & @S/Node__M_R/Two__M_O/ONode ~ a
+
+@mgE__C1 = (b (e (a (d g))))
+  & @S/Node__M_R/Two__M_O/ONode ~ (c (f g))
+  &!@mgE ~ (a (b c))
+  &!@mgE ~ (d (e f))
+
+@mgE__C10 = (?((@mgE__C8 (* (a a))) b) b)
+
+@mgE__C11 = (?((@mgE__C9 @mgE__C10) a) a)
+
+@mgE__C2__M_mgF__C2__M_mgM__C2 = (?(((* (* (* (* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp)))))) @mgE__C0__M_mgF__C0__M_mgM__C0) a) a)
+
+@mgE__C3 = (?((@mgE__C1 @mgE__C2__M_mgF__C2__M_mgM__C2) a) a)
+
+@mgE__C4 = (* (d ({e g} (* (a (b ({c $([+] $(g h))} (* i))))))))
+  & @S/Leaf ~ (a (f (h (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp i))))
+  & @cj ~ (b (c (d (e f))))
+
+@mgE__C5__M_mgF__C5__M_mgM__C5 = (* a)
+  & @S/Leaf ~ a
+
+@mgE__C6 = (?((@mgE__C4 @mgE__C5__M_mgF__C5__M_mgM__C5) a) a)
+
+@mgE__C7 = (?(((* (* (* (* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp)))))) @mgE__C6) a) a)
+
+@mgE__C8 = (a (b (c (d ((@mgE__C7 (a (b (c (d e))))) e)))))
+
+@mgE__C9 = (a (b ((@mgE__C3 (a (b c))) c)))
+
+@mgF = ((@mgF__C11 a) a)
+
+@mgF__C1 = (b (e (a (d g))))
+  & @S/Node__M_R/Two__M_O/ONode ~ (c (f g))
+  &!@mgF ~ (a (b c))
+  &!@mgF ~ (d (e f))
+
+@mgF__C10 = (?((@mgF__C8 (* (a a))) b) b)
+
+@mgF__C11 = (?((@mgF__C9 @mgF__C10) a) a)
+
+@mgF__C3 = (?((@mgF__C1 @mgE__C2__M_mgF__C2__M_mgM__C2) a) a)
+
+@mgF__C4 = (* (* (* (d (a (b (c (* e))))))))
+  & @S/Leaf ~ (a (b (c (d e))))
+
+@mgF__C6 = (?((@mgF__C4 @mgE__C5__M_mgF__C5__M_mgM__C5) a) a)
+
+@mgF__C7 = (?(((* (* (* (* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp)))))) @mgF__C6) a) a)
+
+@mgF__C8 = (a (b (c (d ((@mgF__C7 (a (b (c (d e))))) e)))))
+
+@mgF__C9 = (a (b ((@mgF__C3 (a (b c))) c)))
+
+@mgM = ((@mgM__C11 a) a)
+
+@mgM__C1 = (b (e (a (d g))))
+  & @S/Node__M_R/Two__M_O/ONode ~ (c (f g))
+  &!@mgM ~ (a (b c))
+  &!@mgM ~ (d (e f))
+
+@mgM__C10 = (?((@mgM__C8 (* (a a))) b) b)
+
+@mgM__C11 = (?((@mgM__C9 @mgM__C10) a) a)
+
+@mgM__C3 = (?((@mgM__C1 @mgE__C2__M_mgF__C2__M_mgM__C2) a) a)
+
+@mgM__C4 = (* (* (* (c (a (* (* (b e))))))))
+  & @S/Leaf ~ (a (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp (0 (d e))))
+  & @S/Node__M_R/Two__M_O/ONode ~ (b (c d))
+
+@mgM__C6 = (?((@mgM__C4 @mgE__C5__M_mgF__C5__M_mgM__C5) a) a)
+
+@mgM__C7 = (?(((* (* (* (* (* (* @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp)))))) @mgM__C6) a) a)
+
+@mgM__C8 = (a (b (c (d ((@mgM__C7 (a (b (c (d e))))) e)))))
+
+@mgM__C9 = (a (b ((@mgM__C3 (a (b c))) c)))
+
+@mw = (a (?((@mw__C2 @mw__C3) (a b)) b))
+
+@mw__C0 = (* (a (* (* (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp a)))))
+
+@mw__C1 = (* ({h b} (r ({n {a c}} ({o {g i}} (m s))))))
+  & @mgM ~ (f (l m))
+  & @path ~ (a (b (e f)))
+  & @S/Leaf ~ (c (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp (0 (d e))))
+  & @C/CO__M_R/One__M_O/OLf ~ ((p 0) d)
+  & @path ~ (g (h (k l)))
+  & @S/Leaf ~ (i (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp (0 (j k))))
+  & @C/CO__M_R/One__M_O/OLf ~ ((q 0) j)
+  & @conf ~ (n (o (p (q (r s)))))
+
+@mw__C2 = ((c (d ?((@mw__C0 @mw__C1) (a (b (c (d e))))))) (a (b e)))
+
+@mw__C3 = ({b f} ((e a) ({c g} (d (k l)))))
+  & @mgM ~ (i (j k))
+  &!@mw ~ (e (f (g (h (i l)))))
+  &!@mw ~ (a (b (c (d (j h)))))
+
+@mx = ({a d} ({$([>] $(a ?(((b (* b)) (* (* (c c)))) (d (e f))))) e} f))
+
+@orl = ((@orl_k a) a)
+
+@orl_k = (a (b ((@orl_k2 ((a b) c)) c)))
+
+@orl_k2 = (a (d (($([|] $(a b)) c) f)))
+  & @cell ~ (b (e f))
+  & @orl ~ (c (d e))
+
+@path = (b (?(((* (a a)) @path__C2) (b c)) c))
+
+@path__C0 = (a b)
+  & @S/Node__M_R/Two__M_O/ONode ~ (a (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp b))
+
+@path__C1 = (* a)
+  & @S/Node__M_R/Two__M_O/ONode ~ (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp a)
+
+@path__C2 = ({a c} ({$([>>] $(a $([&0x0000001] ?((@path__C0 @path__C1) (e f))))) b} (d f)))
+  & @path ~ (b (c (d e)))
+
+@prog = ((s ({c {l f}} (g (d (e (a b)))))) (t u))
+  & @tl ~ (k (l (r (s (@List/Nil t)))))
+  & @run ~ (j (m (n (* k))))
+  & @mw ~ (a (b (c (@List/Nil (i u)))))
+  & @mgF ~ (h (i j))
+  & @ew ~ (d (e (f (g h))))
+  & (m 0) ~ (q r)
+  & @cell ~ (1 (p q))
+  & @cell ~ (1 (o p))
+  & @cell ~ (1 (n o))
+
+@pull = ((@pull__C5 a) a)
+
+@pull__C0 = (* (a (b (a c))))
+  & @C/CO__M_R/One__M_O/OLf ~ (b c)
+
+@pull__C1 = (?(((0 @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp) @pull__C0) a) a)
+
+@pull__C2 = ((@pull__C1 a) a)
+
+@pull__C3 = (a (b (e h)))
+  & @mx ~ (c (d e))
+  &!@pull ~ (b (d g))
+  &!@pull ~ (a (c f))
+  & @S/Node__M_R/Two__M_O/ONode ~ (f (g h))
+
+@pull__C4 = (?((@pull__C2 (* (0 @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp))) a) a)
+
+@pull__C5 = (?((@pull__C3 @pull__C4) a) a)
+
+@run = ((@run__C3 a) a)
+
+@run__C0 = (a (b (* c)))
+  & @vtx ~ (a (b c))
+
+@run__C1 = (a (c ({b d} (i (k n)))))
+  & @fcomb ~ (e (f (g (h i))))
+  &!@run ~ (c (d (g ({h j} m))))
+  &!@run ~ (a (b (e ({f $([|] $(j k))} l))))
+  & @S/Node__M_R/Two__M_O/ONode ~ (l (m n))
+
+@run__C2 = (?((@run__C0 (* (* (* (0 @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp))))) a) a)
+
+@run__C3 = (?((@run__C1 @run__C2) a) a)
+
+@split = ((@split__C3 a) a)
+
+@split__C0 = ((a c) (b d))
+  & @C/CO__M_R/One__M_O/OLf ~ (a b)
+  & @C/CO__M_R/One__M_O/OLf ~ (c d)
+
+@split__C1 = (* (* (a (b (e h)))))
+  & @S/Node__M_R/Two__M_O/ONode ~ (c (d e))
+  &!@split ~ (b (d g))
+  &!@split ~ (a (c f))
+  & @S/Node__M_R/Two__M_O/ONode ~ (f (g h))
+
+@split__C2 = (?((@split__C0 (* (@S/Emp__M_C/CZ__M_R/Z__M_O/OEmp @S/Emp__M_C/CZ__M_R/Z__M_O/OEmp))) a) a)
+
+@split__C3 = (?((@split__C1 @split__C2) a) a)
+
+@tl = ((@tl__C4 a) a)
+
+@tl__C0 = (a (* (* (* b))))
+  & @List/Cons ~ (a b)
+
+@tl__C1 = (* (b (a c)))
+  & @ids ~ (a (b c))
+
+@tl__C2 = (a (e ($([:-0x0000001] {b {f g}}) ({c $([+] $(h i))} ({d j} (k m))))))
+  &!@tl ~ (a (b (c (d (l m)))))
+  &!@tl ~ (e (f (i (j (k l)))))
+  & $(g h) ~ [<<0x0000001]
+
+@tl__C3 = (?((@tl__C0 @tl__C1) a) a)
+
+@tl__C4 = (?((@tl__C2 @tl__C3) a) a)
+
+@vtx = (a ((@vtx__C4 (a b)) b))
+
+@vtx__C0 = (a (c (j (e (f (1 n))))))
+  & @go ~ (c (d (e (h (f {$([+] $(i $([+] $(l m)))) k})))))
+  & @split ~ (b (d g))
+  & @C/CO__M_R/One__M_O/OLf ~ (a b)
+  & @C/CO__M_R/One__M_O/OLf ~ (m n)
+  & @feed ~ (g (h i))
+  & @feed ~ (j (k l))
+
+@vtx__C1 = (* ({$([+] $(c d)) b} (a (* (* (0 e))))))
+  & @C/CO__M_R/One__M_O/OLf ~ (d e)
+  & @feed ~ (a (b c))
+
+@vtx__C2 = (a (b (c (d (f (m (h (i (1 q)))))))))
+  & @go ~ (f (g (h (k (i {$([+] $(l $([+] $(o p)))) n})))))
+  & @split ~ (e (g j))
+  & @C/CT ~ (a (b (c (d e))))
+  & @C/CO__M_R/One__M_O/OLf ~ (p q)
+  & @feed ~ (j (k l))
+  & @feed ~ (m (n o))
+
+@vtx__C3 = (?((@vtx__C0 @vtx__C1) a) a)
+
+@vtx__C4 = (?((@vtx__C2 @vtx__C3) a) a)
+
+

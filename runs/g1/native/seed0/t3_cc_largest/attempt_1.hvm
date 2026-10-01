@@ -1,0 +1,156 @@
+// Generate the initial vertex labels [0, 1, ..., n-1].
+@prog = ((n edges) out)
+  & n ~ {n1 nrest}
+  & nrest ~ {n2 n3}
+  & @gen ~ (n1 (0 labels))
+  & @rounds ~ (n2 (edges (labels labels2)))
+  & @best ~ (n3 (0 (0 (labels2 out))))
+
+@gen = (n (i out))
+  & n ~ ?((@gen_nil @gen_succ) (i out))
+
+@gen_nil = (* (i out))
+  & i ~ *
+  & out ~ (0 *)
+
+@gen_succ = (n (i out))
+  & i ~ {ih it}
+  & out ~ (1 (ih tail))
+  & it ~ $([+1] inext)
+  & @gen ~ (n (inext tail))
+
+// Run n complete edge sweeps.
+@rounds = (n (edges (labels out)))
+  & n ~ ?((@rounds_nil @rounds_succ) (edges (labels out)))
+
+@rounds_nil = (* (edges (labels out)))
+  & edges ~ *
+  & out ~ labels
+
+@rounds_succ = (n (edges (labels out)))
+  & @sweep ~ (edges (labels swept))
+  & swept ~ (edges2 labels2)
+  & @rounds ~ (n (edges2 (labels2 out)))
+
+// Sweep the edges, rebuilding the edge list for the next round.
+@sweep = (edges (labels out))
+  & edges ~ (?( (@sweep_nil @sweep_cons) (payload (labels out))) payload)
+
+@sweep_nil = (* (labels out))
+  & out ~ ((0 *) labels)
+
+@sweep_cons = (* (((u v) tail) (labels out)))
+  & u ~ {uu ue}
+  & v ~ {vv ve}
+  & @update ~ ((uu vv) (labels labels2))
+  & @sweep ~ (tail (labels2 swept))
+  & swept ~ (tail2 labels3)
+  & out ~ ((1 ((ue ve) tail2)) labels3)
+
+// Read both endpoint labels, choose their minimum, and replace both.
+@update = ((u v) (labels out))
+  & u ~ {us ur}
+  & v ~ {vs vr}
+  & @scan ~ (labels (us (vs scanned)))
+  & scanned ~ (lu (lv labels2))
+  & lu ~ {lue luse}
+  & lv ~ {lve lvse}
+  & lue ~ $([<] $(lve b))
+  & @choose ~ (b (luse (lvse m)))
+  & @replace ~ (labels2 (ur (vr (m out))))
+
+// Scan a list, returning the values at u and v and a rebuilt list.
+@scan = (list (u (v out)))
+  & list ~ (?( (@scan_nil @scan_cons) (payload (u (v out))) ) payload)
+
+@scan_nil = (* (u (v out)))
+  & u ~ *
+  & v ~ *
+  & out ~ (0 (0 (0 *)))
+
+@scan_cons = (* ((h t) (u (v out))))
+  & u ~ {ut ud}
+  & v ~ {vt vd}
+  & ut ~ $([=] $(0 bu))
+  & ud ~ $([-1] un)
+  & vt ~ $([=] $(0 bv))
+  & vd ~ $([-1] vn)
+  & @scan ~ (t (un (vn rr)))
+  & rr ~ (lu (lv tailout))
+  & h ~ {hlist hr}
+  & hr ~ {hu hv}
+  & @choose ~ (bu (hu (lu lu2)))
+  & @choose ~ (bv (hv (lv lv2)))
+  & out ~ (lu2 (lv2 (1 (hlist tailout))))
+
+// Replace the entries at u and v with m.
+@replace = (list (u (v (m out))))
+  & list ~ (?( (@replace_nil @replace_cons) (payload (u (v (m out))) ) ) payload)
+
+@replace_nil = (* (u (v (m out))))
+  & u ~ *
+  & v ~ *
+  & m ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* ((h t) (u (v (m out)))))
+  & u ~ {ut ud}
+  & v ~ {vt vd}
+  & ut ~ $([=] $(0 bu))
+  & ud ~ $([-1] un)
+  & vt ~ $([=] $(0 bv))
+  & vd ~ $([-1] vn)
+  & bu ~ $([|] $(bv both))
+  & m ~ {mh mt}
+  & @choose ~ (both (mh (h hnew)))
+  & @replace ~ (t (un (vn (mt tailout))))
+  & out ~ (1 (hnew tailout))
+
+// Select yes when the boolean is 1, otherwise select no.
+@choose = (b (yes (no out)))
+  & b ~ ?((@choose_no @choose_yes) (yes (no out)))
+
+@choose_no = (* (yes (no out)))
+  & yes ~ *
+  & out ~ no
+
+@choose_yes = (* (yes (no out)))
+  & no ~ *
+  & out ~ yes
+
+// Count occurrences of target while rebuilding the list.
+@freq = (list (target out))
+  & list ~ (?( (@freq_nil @freq_cons) (payload (target out)) ) payload)
+
+@freq_nil = (* (target out))
+  & target ~ *
+  & out ~ (0 (0 *))
+
+@freq_cons = (* ((h t) (target out)))
+  & h ~ {hh hc}
+  & target ~ {tt tr}
+  & @freq ~ (t (tr rr))
+  & rr ~ (ctail tail2)
+  & hh ~ $([=] $(tt eq))
+  & ctail ~ $([+] $(eq count))
+  & out ~ (count (1 (hc tail2)))
+
+// Count each possible representative and retain the largest count.
+@best = (rem (i (best (labels out))))
+  & rem ~ ?((@best_nil @best_succ) (i (best (labels out))))
+
+@best_nil = (* (i (best (labels out))))
+  & i ~ *
+  & labels ~ *
+  & out ~ best
+
+@best_succ = (rem (i (best (labels out))))
+  & i ~ {ifreq iinc}
+  & @freq ~ (labels (ifreq fr))
+  & fr ~ (count labels2)
+  & count ~ {ctest csel}
+  & best ~ {btest bsel}
+  & ctest ~ $([>] $(btest gt))
+  & @choose ~ (gt (csel (bsel best2)))
+  & iinc ~ $([+1] inext)
+  & @best ~ (rem (inext (best2 (labels2 out))))

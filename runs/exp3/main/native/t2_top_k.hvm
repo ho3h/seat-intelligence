@@ -1,0 +1,33 @@
+@prog = ((?((@take_zero (km_q102 ((?((@take_nil (* ((h_q103 t_q103) (?((@take_zero (km_q104 ((?((@take_nil (* ((h_q105 t_q105) (?((@take_zero (km_q106 ((?((@take_nil (* ((h_q107 t_q107) (?((@take_zero (km_q108 ((?((@take_nil (* ((h_q109 t_q109) (?((@take_zero (km_q110 ((?((@take_nil (* ((h_q111 t_q111) (?((@take_zero (km_q112 ((?((@take_nil (* ((h_q113 t_q113) (?((@take_zero (km_q114 ((?((@take_nil (* ((h_q115 t_q115) (?((@take_zero (km_q116 ((?((@take_nil (* ((h_q117 t_q117) (?((@take_zero (km_q118 ((?((@take_nil (* ((h_q119 t_q119) (?((@take_zero (km_q120 ((?((@take_nil (* ((h_q121 t_q121) (?((@take_zero (km_q122 ((?((@take_nil (* ((h_q123 t_q123) (?((@take_zero (km_q124 ((?((@take_nil (* ((h_q125 t_q125) (?((@take_zero (km_q126 ((?((@take_nil (* ((h_q127 t_q127) (?((@take_zero (km_q128 ((?((@take_nil (* ((h_q129 t_q129) (?((@take_zero (km_q130 ((?((@take_nil (* ((h_q131 t_q131) (?((@take_zero (km_q132 ((?((@take_nil (* ((h_q133 t_q133) (?((@take_zero @take_pos) (t_q133 rest_q133)) (1 (h_q133 rest_q133)))))) (pl_q132 (km_q132 out_q132))) pl_q132) out_q132))) (t_q131 rest_q131)) (1 (h_q131 rest_q131)))))) (pl_q130 (km_q130 out_q130))) pl_q130) out_q130))) (t_q129 rest_q129)) (1 (h_q129 rest_q129)))))) (pl_q128 (km_q128 out_q128))) pl_q128) out_q128))) (t_q127 rest_q127)) (1 (h_q127 rest_q127)))))) (pl_q126 (km_q126 out_q126))) pl_q126) out_q126))) (t_q125 rest_q125)) (1 (h_q125 rest_q125)))))) (pl_q124 (km_q124 out_q124))) pl_q124) out_q124))) (t_q123 rest_q123)) (1 (h_q123 rest_q123)))))) (pl_q122 (km_q122 out_q122))) pl_q122) out_q122))) (t_q121 rest_q121)) (1 (h_q121 rest_q121)))))) (pl_q120 (km_q120 out_q120))) pl_q120) out_q120))) (t_q119 rest_q119)) (1 (h_q119 rest_q119)))))) (pl_q118 (km_q118 out_q118))) pl_q118) out_q118))) (t_q117 rest_q117)) (1 (h_q117 rest_q117)))))) (pl_q116 (km_q116 out_q116))) pl_q116) out_q116))) (t_q115 rest_q115)) (1 (h_q115 rest_q115)))))) (pl_q114 (km_q114 out_q114))) pl_q114) out_q114))) (t_q113 rest_q113)) (1 (h_q113 rest_q113)))))) (pl_q112 (km_q112 out_q112))) pl_q112) out_q112))) (t_q111 rest_q111)) (1 (h_q111 rest_q111)))))) (pl_q110 (km_q110 out_q110))) pl_q110) out_q110))) (t_q109 rest_q109)) (1 (h_q109 rest_q109)))))) (pl_q108 (km_q108 out_q108))) pl_q108) out_q108))) (t_q107 rest_q107)) (1 (h_q107 rest_q107)))))) (pl_q106 (km_q106 out_q106))) pl_q106) out_q106))) (t_q105 rest_q105)) (1 (h_q105 rest_q105)))))) (pl_q104 (km_q104 out_q104))) pl_q104) out_q104))) (t_q103 rest_q103)) (1 (h_q103 rest_q103)))))) (pl_q102 (km_q102 out_q102))) pl_q102) out_q102))) (sorted out)) (?((@sort_nil (* ((h_q134 (?((@sort_nil @sort_cons) (pl_q98_q134 (?((@ins_nil @ins_cons) (h_q134 (pl_q99_q134 out_q134))) pl_q99_q134))) pl_q98_q134)) out_q134))) (pl_q96 sorted)) pl_q96)) out)
+
+@sort_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* ((h (?((@sort_nil (* ((h_q136 (?((@sort_nil @sort_cons) (pl_q98_q136 (?((@ins_nil @ins_cons) (h_q136 (pl_q99_q136 out_q136))) pl_q99_q136))) pl_q98_q136)) out_q136))) (pl_q98 (?((@ins_nil @ins_cons) (h (pl_q99 out))) pl_q99))) pl_q98)) out))
+
+@ins_nil = (x (pl out))
+  & pl ~ *
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {xc xk}
+  & h ~ {hc hk}
+  & xc ~ $([>] $(hc z))
+  & z ~ ?(((x_q139 (h_q139 ((?((@ins_nil @ins_cons) (x_q139 (pl_q100_q139 rest_q139))) pl_q100_q139) (1 (h_q139 rest_q139))))) @ins_yes) (xk (hk (t out))))
+
+@ins_yes = (* (x (h (t out))))
+  & out ~ (1 (x (1 (h t))))
+
+@take_zero = (xs out)
+  & xs ~ *
+  & out ~ (0 *)
+
+@take_pos = (km ((?((@take_nil (* ((h_q137 t_q137) (?((@take_zero (km_q135_q137 ((?((@take_nil (* ((h_q140 t_q140) (?((@take_zero (km_q135_q140 ((?((@take_nil @take_cons) (pl_q135_q140 (km_q135_q140 out_q135_q140))) pl_q135_q140) out_q135_q140))) (t_q140 rest_q140)) (1 (h_q140 rest_q140)))))) (pl_q135_q137 (km_q135_q137 out_q135_q137))) pl_q135_q137) out_q135_q137))) (t_q137 rest_q137)) (1 (h_q137 rest_q137)))))) (pl (km out))) pl) out))
+
+@take_nil = (pl (km out))
+  & pl ~ *
+  & km ~ *
+  & out ~ (0 *)
+
+@take_cons = (* ((h t) (?((@take_zero (km_q135 ((?((@take_nil (* ((h_q141 t_q141) (?((@take_zero (km_q135_q141 ((?((@take_nil @take_cons) (pl_q135_q141 (km_q135_q141 out_q135_q141))) pl_q135_q141) out_q135_q141))) (t_q141 rest_q141)) (1 (h_q141 rest_q141)))))) (pl_q135 (km_q135 out_q135))) pl_q135) out_q135))) (t rest)) (1 (h rest)))))

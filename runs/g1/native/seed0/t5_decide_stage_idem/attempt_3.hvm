@@ -1,0 +1,119 @@
+// Main entry: process proposals with a reversed kept-list, then restore their order.
+@prog = ((ledger proposals) out)
+  & @filter ~ (ledger (proposals ((0 *) out)))
+
+@filter = (ledger ((?((@f_nil @f_cons) (pl (ledger (kept out)))) pl) (kept out)))
+
+@f_nil = (* (ledger (kept out)))
+  & ledger ~ *
+  & @rev ~ (kept ((0 *) out))
+
+@f_cons = (* (((v t) rest) (ledger (kept out))))
+  & ledger ~ {ld_chk ldn}
+  & kept ~ {kc ks}
+  & v ~ {va vtmp}
+  & vtmp ~ {vb vk}
+  & t ~ {ta ttmp}
+  & ttmp ~ {tb tk}
+  & @hasL ~ (ld_chk (va (ta block)))
+  & block ~ ?((@f_block_no @f_block_yes) (ldn (rest (kc (ks (out (vb (tb (vk tk)))))))))
+
+@f_block_yes = (* (ldn (rest (kc (ks (out (vb (tb (vk tk)))))))))
+  & @filter ~ (ldn (rest (ks out)))
+  & kc ~ *
+  & vb ~ *
+  & tb ~ *
+  & vk ~ *
+  & tk ~ *
+
+@f_block_no = (ldn (rest (kc (ks (out (vb (tb (vk tk))))))))
+  & @hasK ~ (kc (vb (tb found)))
+  & found ~ ?((@f_seen_no @f_seen_yes) (ldn (rest (ks (out (vk tk))))))
+
+@f_seen_yes = (* (ldn (rest (ks (out (vk tk))))))
+  & @filter ~ (ldn (rest (ks out)))
+  & vk ~ *
+  & tk ~ *
+
+@f_seen_no = (* (ldn (rest (ks (out (vk tk))))))
+  & @filter ~ (ldn (rest ((1 ((vk tk) ks)) out)))
+
+// Does the ledger contain a matching verb and target with status 0 or 1?
+@hasL = ((?((@hl_nil @hl_cons) (pl (v (t out)))) pl) (v (t out)))
+
+@hl_nil = (* (v (t out)))
+  & v ~ *
+  & t ~ *
+  & out ~ 0
+
+@hl_cons = (* (((ev (et status)) tail) (v (t out))))
+  & v ~ {vc vr}
+  & ev ~ $([=] $(vc eqv))
+  & eqv ~ ?((@hl_vno @hl_vyes) (et (status (tail (vr (t out))))))
+
+@hl_vno = (et (status (tail (v (t out)))))
+  & et ~ *
+  & status ~ *
+  & @hasL ~ (tail (v (t out)))
+
+@hl_vyes = (* (et (status (tail (v (t out))))))
+  & t ~ {tc tr}
+  & et ~ $([=] $(tc eqt))
+  & eqt ~ ?((@hl_tno @hl_tyes) (status (tail (v (tr out)))))
+
+@hl_tno = (status (tail (v (t out))))
+  & status ~ *
+  & @hasL ~ (tail (v (t out)))
+
+@hl_tyes = (* (status (tail (v (t out)))))
+  & status ~ $([<] $(2 active))
+  & active ~ ?((@hl_status_no @hl_status_yes) (tail (v (t out))))
+
+@hl_status_no = (tail (v (t out)))
+  & @hasL ~ (tail (v (t out)))
+
+@hl_status_yes = (* (tail (v (t out))))
+  & tail ~ *
+  & v ~ *
+  & t ~ *
+  & out ~ 1
+
+// Does the kept-list contain this verb and target?
+@hasK = ((?((@hk_nil @hk_cons) (pl (v (t out)))) pl) (v (t out)))
+
+@hk_nil = (* (v (t out)))
+  & v ~ *
+  & t ~ *
+  & out ~ 0
+
+@hk_cons = (* (((ev et) tail) (v (t out))))
+  & v ~ {vc vr}
+  & ev ~ $([=] $(vc eqv))
+  & eqv ~ ?((@hk_vno @hk_vyes) (et (tail (vr (t out)))))
+
+@hk_vno = (et (tail (v (t out))))
+  & et ~ *
+  & @hasK ~ (tail (v (t out)))
+
+@hk_vyes = (* (et (tail (v (t out)))))
+  & t ~ {tc tr}
+  & et ~ $([=] $(tc eqt))
+  & eqt ~ ?((@hk_tno @hk_tyes) (tail (v (tr out))))
+
+@hk_tno = (tail (v (t out)))
+  & @hasK ~ (tail (v (t out)))
+
+@hk_tyes = (* (et (tail (v (t out)))))
+  & tail ~ *
+  & v ~ *
+  & t ~ *
+  & out ~ 1
+
+// Reverse a list.
+@rev = ((?((@rv_nil @rv_cons) (pl (acc out))) pl) (acc out))
+
+@rv_nil = (* (acc out))
+  & out ~ acc
+
+@rv_cons = (* ((head tail) (acc out)))
+  & @rev ~ (tail ((1 (head acc)) out))

@@ -1,0 +1,89 @@
+// Count the list while rebuilding it, so the scan retains the original pointers.
+@prog = (input out)
+  & @len ~ (input (n full))
+  & @scan ~ (full (0 (n out)))
+
+@len = ((?((@len_nil @len_cons) (pl (out listout))) pl) (out listout))
+
+@len_nil = (pl (out listout))
+  & pl ~ *
+  & out ~ 0
+  & listout ~ (0 *)
+
+@len_cons = (* ((h t) (out listout)))
+  & @len ~ (t (k tailout))
+  & k ~ $([+1] out)
+  & listout ~ (1 (h tailout))
+
+// Test each index against the list length.
+@scan = (full (i (n out)))
+  & i ~ $([<] $(n z))
+  & z ~ ?((@scan_end @scan_step) (full (i (n out))))
+
+@scan_end = (full (i (n out)))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 0
+
+@scan_step = (* (full (i (n out))))
+  & i ~ {iw ibase}
+  & n ~ {nw nr}
+  & ibase ~ $([+1] inext)
+  & @walk ~ (full (iw (nw (cyc fb))))
+  & cyc ~ ?((@scan_no @scan_yes) (fb (inext (nr out))))
+
+@scan_no = (full (i (n out)))
+  & @scan ~ (full (i (n out)))
+
+@scan_yes = (* (full (i (n out))))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 1
+
+// Follow pointers for at most n steps. Return the rebuilt list along with
+// the result, so it can be reused without duplicating it.
+@walk = (pl (x (rem (out listout))))
+  & rem ~ ?((@walk_zero @walk_succ) (pl (x (out listout))))
+
+@walk_zero = (pl (x (out listout)))
+  & x ~ *
+  & out ~ 0
+  & listout ~ pl
+
+@walk_succ = (rem (pl (x (out listout))))
+  & x ~ {xi xc}
+  & @at ~ (pl (xi (v pl2)))
+  & v ~ {vc vn}
+  & xc ~ $([=] $(vc z))
+  & z ~ ?((@walk_root @walk_more) (pl2 (vn (rem (out listout))))
+
+@walk_root = (pl (x (rem (out listout))))
+  & x ~ *
+  & out ~ 0
+  & listout ~ pl
+
+@walk_more = (* (pl (x (rem (out listout)))))
+  & @walk ~ (pl (x (rem (out listout))))
+
+// Look up an index and rebuild the list on the way back.
+@at = ((?((@at_nil @at_cons) (pl (idx (val listout)))) pl) (idx (val listout)))
+
+@at_nil = (pl (idx (val listout)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ 0
+  & listout ~ (0 *)
+
+@at_cons = (* ((h t) (idx (val listout))))
+  & idx ~ ?((@at_zero @at_more) (h (t (val listout))))
+
+@at_zero = (h (t (val listout)))
+  & h ~ {hv hr}
+  & hv ~ val
+  & listout ~ (1 (hr t))
+
+@at_more = (idx (h (t (val listout))))
+  & @at ~ (t (idx (val tailout)))
+  & listout ~ (1 (h tailout))

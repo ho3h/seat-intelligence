@@ -1,0 +1,219 @@
+@make_trie = (leaf d out)
+  & d ~ ?((@make_base @make_step) (leaf out))
+
+@make_base = (leaf out)
+  & out ~ leaf
+
+@make_step = (d' (leaf out))
+  & d' ~ {d1 d2}
+  & leaf ~ {l1 l2}
+  & @make_trie ~ (l1 (d1 left))
+  & @make_trie ~ (l2 (d2 right))
+  & out ~ (left right)
+
+@upd = (d key val trie out)
+  & d ~ ?((@upd_base @upd_step) (key val trie out))
+
+@upd_base = (key val trie out)
+  & key ~ *
+  & trie ~ *
+  & out ~ val
+
+@upd_step = (d' (key val trie out))
+  & trie ~ (l r)
+  & key ~ {kbit knext}
+  & kbit ~ $([&] $(1 bit))
+  & knext ~ $([>>] $(1 next))
+  & bit ~ ?((@upd_left @upd_right) (next (val (l (r (d' out))))))
+
+@upd_left = (next (val (l (r (d' out)))))
+  & @upd ~ (d' next val l newl)
+  & out ~ (newl r)
+
+@upd_right = (ign (next (val (l (r (d' out))))))
+  & ign ~ *
+  & @upd ~ (d' next val r newr)
+  & out ~ (l newr)
+
+@upd_cons = (d key nb trie out)
+  & d ~ ?((@conupd_base @conupd_step) (key nb trie out))
+
+@conupd_base = (key nb trie out)
+  & key ~ *
+  & out ~ (1 (nb trie))
+
+@conupd_step = (d' (key nb trie out))
+  & trie ~ (l r)
+  & key ~ {kbit knext}
+  & kbit ~ $([&] $(1 bit))
+  & knext ~ $([>>] $(1 next))
+  & bit ~ ?((@conupd_left @conupd_right) (next (nb (l (r (d' out))))))
+
+@conupd_left = (next (nb (l (r (d' out)))))
+  & @upd_cons ~ (d' next nb l newl)
+  & out ~ (newl r)
+
+@conupd_right = (ign (next (nb (l (r (d' out))))))
+  & ign ~ *
+  & @upd_cons ~ (d' next nb r newr)
+  & out ~ (l newr)
+
+@lookup = (d key trie out)
+  & d ~ ?((@lookup_base @lookup_step) (key trie out))
+
+@lookup_base = (key trie out)
+  & key ~ *
+  & out ~ trie
+
+@lookup_step = (d' (key trie out))
+  & trie ~ (l r)
+  & key ~ {kbit knext}
+  & kbit ~ $([&] $(1 bit))
+  & knext ~ $([>>] $(1 next))
+  & bit ~ ?((@lookup_left @lookup_right) (next (l (r (d' out)))))
+
+@lookup_left = (next (l (r (d' out))))
+  & r ~ *
+  & @lookup ~ (d' next l out)
+
+@lookup_right = (ign (next (l (r (d' out)))))
+  & ign ~ *
+  & l ~ *
+  & @lookup ~ (d' next r out)
+
+@visit_neighbor = (d key expected state out)
+  & d ~ ?((@vis_base @vis_step) (key expected state out))
+
+@vis_base = (key expected state out)
+  & key ~ *
+  & expected ~ {exp_cmp exp_out}
+  & state ~ {s1 s2}
+  & s1 ~ $([=] $(0 eq0))
+  & s2 ~ $([=] $(exp_cmp eqExp))
+  & eq0 ~ $([*2] doubled)
+  & 2 ~ $([-] $(doubled sub1))
+  & sub1 ~ $([-] $(eqExp status))
+  & out ~ (exp_out status)
+
+@vis_step = (d' (key expected state out))
+  & state ~ (l r)
+  & key ~ {kbit knext}
+  & kbit ~ $([&] $(1 bit))
+  & knext ~ $([>>] $(1 next))
+  & bit ~ ?((@vis_left @vis_right) (next (expected (l (r (d' out))))))
+
+@vis_left = (next (expected (l (r (d' out)))))
+  & @visit_neighbor ~ (d' next expected l res)
+  & res ~ (newl status)
+  & out ~ ((newl r) status)
+
+@vis_right = (ign (next (expected (l (r (d' out))))))
+  & ign ~ *
+  & @visit_neighbor ~ (d' next expected r res)
+  & res ~ (newr status)
+  & out ~ ((l newr) status)
+
+@build_adj = (edges adj out)
+  & edges ~ (tag payload)
+  & tag ~ ?((@build_base @build_con) (payload (adj out)))
+
+@build_base = (payload (adj out))
+  & payload ~ *
+  & out ~ adj
+
+@build_con = (* (payload (adj out)))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & @upd_cons ~ (8 u v adj adj1)
+  & @upd_cons ~ (8 v u adj1 adj2)
+  & @build_adj ~ (tail adj2 out)
+
+@iter = (i n state adj count out)
+  & i ~ {i_eq i_rest}
+  & i_eq ~ $([=] $(n eq))
+  & eq ~ ?((@iter_step @iter_done) (i_rest (n (state (adj (count out))))))
+
+@iter_done = (ign (i_rest (n (state (adj (count out))))))
+  & ign ~ *
+  & i_rest ~ *
+  & n ~ *
+  & state ~ *
+  & adj ~ *
+  & out ~ count
+
+@iter_step = (i_rest (n (state (adj (count out)))))
+  & i_rest ~ {i_tmp i_start}
+  & i_tmp ~ {i_lkp i_inc}
+  & state ~ {state_peek state_keep}
+  & @lookup ~ (8 i_lkp state_peek color)
+  & i_inc ~ $([+1] next_i)
+  & color ~ ?((@iter_unvisited @iter_visited) (i_start (next_i (n (state_keep (adj (count out)))))))
+
+@iter_unvisited = (i_start (next_i (n (state_keep (adj (count out))))))
+  & @component ~ (i_start state_keep adj comp_res)
+  & comp_res ~ (new_state bip)
+  & count ~ $([+] $(bip new_count))
+  & @iter ~ (next_i n new_state adj new_count out)
+
+@iter_visited = (ign (i_start (next_i (n (state_keep (adj (count out)))))))
+  & ign ~ *
+  & i_start ~ *
+  & @iter ~ (next_i n state_keep adj count out)
+
+@component = (start state adj out)
+  & @upd ~ (8 start 1 state state1)
+  & @bfs ~ ((1 ((start 1) (0 *))) state1 adj 1 out)
+
+@bfs = (queue state adj bip out)
+  & queue ~ (tag payload)
+  & tag ~ ?((@bfs_nil @bfs_cons) (payload (state (adj (bip out)))))
+
+@bfs_nil = (payload (state (adj (bip out))))
+  & payload ~ *
+  & adj ~ *
+  & out ~ (state bip)
+
+@bfs_cons = (* (payload (state (adj (bip out)))))
+  & payload ~ (head tail)
+  & head ~ (u cu)
+  & adj ~ {adj_lkp adj_keep}
+  & @lookup ~ (8 u adj_lkp neighbors)
+  & 3 ~ $([-] $(cu opposite))
+  & @process_neighbors ~ (neighbors opposite tail state adj_keep bip out)
+
+@process_neighbors = (neighbors opposite queue state adj bip out)
+  & neighbors ~ (tag payload)
+  & tag ~ ?((@proc_nil @proc_cons) (payload (opposite (queue (state (adj (bip out)))))))
+
+@proc_nil = (payload (opposite (queue (state (adj (bip out))))))
+  & payload ~ *
+  & opposite ~ *
+  & @bfs ~ (queue state adj bip out)
+
+@proc_cons = (* (payload (opposite (queue (state (adj (bip out)))))))
+  & payload ~ (v rest)
+  & @visit_neighbor ~ (8 v opposite state (new_state status))
+  & status ~ ?((@proc_status0 @proc_status_pos) (v (opposite (rest (queue (new_state (adj (bip out))))))))
+
+@proc_status0 = (v (opposite (rest (queue (new_state (adj (bip out)))))))
+  & opposite ~ {opp_enqueue opp_keep}
+  & @proc_neighbors ~ (rest opp_keep (1 ((v opp_enqueue) queue)) new_state adj bip out)
+
+@proc_status_pos = (s' (v (opposite (rest (queue (new_state (adj (bip out))))))))
+  & s' ~ ?((@proc_status1 @proc_status2) (v (opposite (rest (queue (new_state (adj (bip out))))))))
+
+@proc_status1 = (v (opposite (rest (queue (new_state (adj (bip out)))))))
+  & v ~ *
+  & @proc_neighbors ~ (rest opposite queue new_state adj bip out)
+
+@proc_status2 = (ign (v (opposite (rest (queue (new_state (adj (bip out))))))))
+  & ign ~ *
+  & v ~ *
+  & bip ~ *
+  & @proc_neighbors ~ (rest opposite queue new_state adj 0 out)
+
+@prog = ((n edges) out)
+  & @make_trie ~ ((0 *) (8 adj0))
+  & @make_trie ~ (0 (8 state0))
+  & @build_adj ~ (edges adj0 adj_built)
+  & @iter ~ (0 n state0 adj_built 0 out)

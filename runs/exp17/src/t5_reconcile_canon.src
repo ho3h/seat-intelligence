@@ -1,0 +1,50 @@
+# t5_reconcile_canon: a pair is accepted iff some occurrence has score >= tau (the max score is >= tau), so the
+# walk wires channels only for such occurrences; components by channel label propagation (lib/chan) with labels
+# 4095 - id (min over them = largest member id); the label tree is flattened to the first n leaves.
+#include base
+#include chan
+#include hooks_cc
+def prog(x):
+  (n, tau, es) = x
+  (l, m) = lvl(n, 0, 1)
+  T = walk_tau(es, tau, zio(l), l, m)
+  (F, z) = chan_run(T, 1, 3, l, n)
+  return seq(z, flatc(F, l, 0, n, []))
+
+# the accept test sits at the leaf of the keyed update, off the walk's critical chain
+def walk_tau(es, tau, T, l, m):
+  match es:
+    case List/Nil:
+      return T
+    case List/Cons:
+      (u, v, s) = es.head
+      ok = s >= tau
+      T1 = addio_if(T, u, l, m, $b, lambda $a: 0, ok)
+      return walk_tau(es.tail, tau, addio_if(T1, v, l, m, $a, lambda $b: 0, ok), l, m)
+
+def addio_if(t, k, l, m, i, o, ok):
+  switch l:
+    case 0:
+      (ins, outs) = t
+      if ok:
+        return (bins(ins, i), bins(outs, o))
+      else:
+        return (ins, outs)
+    case _:
+      (a, b) = t
+      if k & m:
+        return (a, addio_if(b, k, l-1, m >> 1, i, o, ok))
+      else:
+        return (addio_if(a, k, l-1, m >> 1, i, o, ok), b)
+
+def flatc(t, l, base, n, acc):
+  switch l:
+    case 0:
+      if base < n:
+        return List/Cons(4095 - t, acc)
+      else:
+        return acc
+    case _:
+      (a, b) = t
+      h = 1 << (l-1)
+      return flatc(a, l-1, base, n, flatc(b, l-1, base + h, n, acc))

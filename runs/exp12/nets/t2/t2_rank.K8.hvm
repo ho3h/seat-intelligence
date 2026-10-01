@@ -1,0 +1,23 @@
+@prog = ((x xs) out)
+  & @rank ~ (xs (x out))
+
+@rank = (lv1 (x out))
+  & @rank_cons_lw ~ (lv1 (x out))
+
+@rank_nil = (* (* 0))
+
+@rank_cons = (* (($([<] $(x_cmp z)) t) ({x_cmp x_rec} out)))
+  & @rank_cons_lw ~ (t (x_rec $([+] $(z out))))
+
+@rank_cons_lw = (ls50 (q10 q11))
+  & ls50 ~ (g41 (e33 (g42 (e34 (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 (g48 (e40 tk49))))))))))))))))
+  & g41 ~ ?((@rank_nil @rank_cons_la) ((e33 (q13 q14)) (q10 q11)))
+  & g42 ~ ?((@rank_nil @rank_cons_la) ((e34 (q16 q17)) (q13 q14)))
+  & g43 ~ ?((@rank_nil @rank_cons_la) ((e35 (q19 q20)) (q16 q17)))
+  & g44 ~ ?((@rank_nil @rank_cons_la) ((e36 (q22 q23)) (q19 q20)))
+  & g45 ~ ?((@rank_nil @rank_cons_la) ((e37 (q25 q26)) (q22 q23)))
+  & g46 ~ ?((@rank_nil @rank_cons_la) ((e38 (q28 q29)) (q25 q26)))
+  & g47 ~ ?((@rank_nil @rank_cons_la) ((e39 (q31 q32)) (q28 q29)))
+  & g48 ~ ?((@rank_nil @rank_cons) ((e40 tk49) (q31 q32)))
+
+@rank_cons_la = (* (($([<] $(x_cmp z)) (x_rec $([+] $(z out)))) ({x_cmp x_rec} out)))

@@ -1,0 +1,151 @@
+// Count the list while rebuilding it.
+@prog = (input out)
+  & @len ~ (input (n full))
+  & n ~ {n_build n_scan}
+  & @build ~ (full (n_build (tree rest)))
+  & rest ~ *
+  & @scan ~ (tree (0 (n_scan out)))
+
+@len = ((?((@len_nil @len_cons) (pl (out listout))) pl) (out listout))
+
+@len_nil = (pl (out listout))
+  & pl ~ *
+  & out ~ 0
+  & listout ~ (0 *)
+
+@len_cons = (* ((h t) (out listout)))
+  & @len ~ (t (k tailout))
+  & k ~ $([+1] out)
+  & listout ~ (1 (h tailout))
+
+// Build a balanced lookup tree from the list and its length.
+// Tree variants: leaf (0 value), internal node (1 (left (right left-size))),
+// and empty (2 *).
+@build = (pl (n (tree rem)))
+  & n ~ ?((@build_zero @build_pos) (pl (tree rem)))
+
+@build_zero = (pl (tree rem))
+  & tree ~ (2 *)
+  & rem ~ pl
+
+@build_pos = (nminus (pl (tree rem)))
+  & nminus ~ ?((@build_leaf @build_node) (pl (tree rem)))
+
+@build_leaf = ((?((@build_leaf_nil @build_leaf_cons) (payload (tree rem))) pl) (tree rem))
+
+@build_leaf_nil = (payload (tree rem))
+  & payload ~ *
+  & tree ~ (2 *)
+  & rem ~ (0 *)
+
+@build_leaf_cons = (* ((h t) (tree rem)))
+  & tree ~ (0 h)
+  & rem ~ t
+
+@build_node = (nminus (pl (tree rem)))
+  & nminus ~ $([+2] total)
+  & total ~ {total_left total_right}
+  & total_left ~ $([/] $(2 left0))
+  & left0 ~ {left_arg left_other}
+  & left_other ~ {left_field left_sub}
+  & @build ~ (pl (left_arg (ltree middle)))
+  & total_right ~ $([-] $(left_sub right))
+  & @build ~ (middle (right (rtree rem)))
+  & tree ~ (1 (ltree (rtree left_field)))
+
+// Scan each index. A walk returns the same tree, rebuilt along lookup paths.
+@scan = (full (i (n out)))
+  & i ~ {i_test i_ctx}
+  & n ~ {n_test n_ctx}
+  & i_test ~ $([<] $(n_test z))
+  & z ~ ?((@scan_end @scan_step) (full (i_ctx (n_ctx out))))
+
+@scan_end = (full (i (n out)))
+  & full ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 0
+
+@scan_step = (* (full (i (n out))))
+  & i ~ {i_walk i_recur}
+  & i_walk ~ {iwalk istart}
+  & n ~ {n_walk n_recur}
+  & i_recur ~ $([+1] inext)
+  & @walk ~ (full (iwalk (istart (n_walk (cyc treeafter)))))
+  & cyc ~ ?((@scan_no @scan_yes) (treeafter (inext (n_recur out))))
+
+@scan_no = (* (tree (i (n out))))
+  & @scan ~ (tree (i (n out)))
+
+@scan_yes = (* (tree (i (n out))))
+  & tree ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ 1
+
+// Walk at most n links. Reaching a smaller, already-checked index or a
+// self-pointer proves this walk reaches a root.
+@walk = (pl (x (start (?( (@walk_zero @walk_succ) (pl (x (start (cyc treeout)))) ) (cyc treeout))))
+
+@walk_zero = (pl (x (start (cyc treeout))))
+  & pl ~ treeout
+  & x ~ *
+  & start ~ *
+  & cyc ~ 1
+
+@walk_succ = (rem (pl (x (start (cyc treeout)))))
+  & x ~ {x_cmp x_at}
+  & start ~ {start_cmp start_ctx}
+  & x_cmp ~ $([<] $(start_cmp z))
+  & z ~ ?((@walk_do @walk_cut) (pl (x_at (start_ctx (rem (cyc treeout)))))
+
+@walk_cut = (* (pl (x (start (rem (cyc treeout))))))
+  & treeout ~ pl
+  & x ~ *
+  & start ~ *
+  & rem ~ *
+  & cyc ~ 0
+
+@walk_do = (pl (x (start (rem (cyc treeout)))))
+  & x ~ {x_cmp x_at}
+  & @at ~ (pl (x_at (p plnext)))
+  & p ~ {p_test p_next}
+  & x_cmp ~ $([=] $(p_test z))
+  & z ~ ?((@walk_more @walk_root) (plnext (p_next (start (rem (cyc treeout)))))
+
+@walk_more = (pl (x (start (rem (cyc treeout)))))
+  & @walk ~ (pl (x (start (rem (cyc treeout)))))
+
+@walk_root = (* (pl (x (start (rem (cyc treeout))))))
+  & treeout ~ pl
+  & x ~ *
+  & start ~ *
+  & rem ~ *
+  & cyc ~ 0
+
+// Lookup an index in the balanced tree, rebuilding the tree on return.
+@at = ((?((@at_leaf @at_node) (payload (idx (val treeout)))) tree) (idx (val treeout)))
+
+@at_leaf = (payload (idx (val treeout)))
+  & payload ~ {pv pt}
+  & pv ~ val
+  & pt ~ {p_tree p_leaf}
+  & p_tree ~ *
+  & idx ~ *
+  & treeout ~ (0 p_leaf)
+
+@at_node = (* ((left (right leftsize)) (idx (val treeout))))
+  & idx ~ {idx_test idx_ctx}
+  & leftsize ~ {ls_test ls_ctx}
+  & idx_test ~ $([<] $(ls_test z))
+  & z ~ ?((@at_right @at_left) (left (right (ls_ctx (idx_ctx (val treeout)))))
+
+@at_left = (* (left (right (leftsize (idx (val treeout))))))
+  & @at ~ (left (idx (val lefttree)))
+  & treeout ~ (1 (lefttree (right leftsize)))
+
+@at_right = (left (right (leftsize (idx (val treeout)))))
+  & leftsize ~ {ls_op ls_field}
+  & idx ~ $([-] $(ls_op idx2))
+  & @at ~ (right (idx2 (val righttree)))
+  & treeout ~ (1 (left (righttree ls_field)))

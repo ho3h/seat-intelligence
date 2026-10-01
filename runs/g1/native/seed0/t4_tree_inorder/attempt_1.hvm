@@ -1,0 +1,23 @@
+@prog = (input output)
+  & @in ~ (input output)
+
+@in = ((?((@in_leaf @in_node) (pl output)) pl) output)
+
+@in_leaf = (pl output)
+  & pl ~ *
+  & output ~ (0 *)
+
+@in_node = (* ((left (value right)) output))
+  & @in ~ (left left_list)
+  & @in ~ (right right_list)
+  & @cat ~ (left_list ((1 (value right_list)) output))
+
+@cat = ((?((@cat_nil @cat_cons) (pl (ys output))) pl) (ys output))
+
+@cat_nil = (pl (ys output))
+  & pl ~ *
+  & ys ~ output
+
+@cat_cons = (* ((head tail) (ys output)))
+  & @cat ~ (tail (ys rest))
+  & output ~ (1 (head rest))

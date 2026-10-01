@@ -1,0 +1,20 @@
+@prog = ((tau cands) out)
+  & @count ~ (cands (tau (0 out)))
+@count = ((?((@count_nil @count_cons) (cands_payload (tau (acc out)))) cands_payload) (tau (acc out)))
+@count_nil = (* (cands_payload (tau (acc out))))
+  & cands_payload ~ *
+  & tau ~ *
+  & out ~ acc
+@count_cons = (* ((u_v_score tail) (tau (acc out))))
+  & u_v_score ~ (u v_score)
+  & u ~ *
+  & v_score ~ (v score)
+  & v ~ *
+  & tau ~ {tau1 tau2}
+  & tau1 ~ $([>] $(score skip_flag))
+  & skip_flag ~ ?((@skip_elem @count_elem) (tail (tau2 (acc out))))
+@skip_elem = (tail (tau (acc out)))
+  & @count ~ (tail (tau (acc out)))
+@count_elem = (* (tail (tau (acc out))))
+  & acc ~ $([+] $(1 new_acc))
+  & @count ~ (tail (tau (new_acc out)))

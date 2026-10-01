@@ -1,0 +1,42 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (* (0 *))
+
+@sort_cons = (* ((h t) out))
+  & @insert ~ (h (s out))
+  & @sort_cons_lw ~ (t s)
+
+@insert = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* (1 (x (0 *)))))
+
+@ins_cons = (* (x ((h t) out)))
+  & {xc xr} ~ x
+  & {hc hr} ~ h
+  & xc ~ $([<] $(hc z))
+  & z ~ ?((@ins_ge @ins_lt) (xr ((hr t) out)))
+
+@ins_lt = (* (x ((h t) (1 (x (1 (h t)))))))
+
+@ins_ge = (x ((h t) out))
+  & {xc xd} ~ x
+  & {hc hd} ~ h
+  & xc ~ $([=] $(hc z))
+  & z ~ ?((@ins_gt @ins_eq) (xd ((hd t) out)))
+
+@ins_eq = (* (* ((h t) (1 (h t)))))
+
+@ins_gt = (x ((h t) (1 (h r))))
+  & @insert ~ (x (t r))
+
+@sort_cons_lw = (ls16 q8)
+  & ls16 ~ (g13 (e11 (g14 (e12 tk15))))
+  & g13 ~ ?((@sort_nil @sort_cons_la) ((e11 q10) q8))
+  & g14 ~ ?((@sort_nil @sort_cons) ((e12 tk15) q10))
+
+@sort_cons_la = (* ((h s) out))
+  & @insert ~ (h (s out))

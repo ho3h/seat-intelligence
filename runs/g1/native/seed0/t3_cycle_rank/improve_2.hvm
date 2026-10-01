@@ -1,0 +1,126 @@
+// Initialize a union-find table. Each entry is (parent, component-size).
+@prog = ((n edges) out)
+  & @mk ~ (n (0 parents))
+  & @go ~ (edges (parents (0 out)))
+
+@mk = (k (i out))
+  & k ~ ?((@mk_nil @mk_more) (i out))
+
+@mk_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@mk_more = (pred (i out))
+  & i ~ {i_rec i_inc}
+  & i_inc ~ $([+1] inext)
+  & @mk ~ (pred (inext rest))
+  & out ~ (1 ((i_rec 1) rest))
+
+// Get an entry while returning the list unchanged.
+@get_keep = (idx ((?((@gk_nil @gk_cons) (pl (idx out))) pl) out))
+
+@gk_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 (0 *))
+
+@gk_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@gk_here @gk_next) (head (tail out)))
+
+@gk_here = (head (tail out))
+  & head ~ {hval hkeep}
+  & out ~ (hval (1 (hkeep tail)))
+
+@gk_next = (pred (head (tail out)))
+  & @get_keep ~ (pred (tail got))
+  & got ~ (value tail_new)
+  & out ~ (value (1 (head tail_new)))
+
+// Replace the entry at idx with new.
+@set = (idx (new ((?((@set_nil @set_cons) (pl (idx (new out)))) pl) out))
+
+@set_nil = (* (idx (new out)))
+  & idx ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (new out))))
+  & idx ~ ?((@set_here @set_next) (head (tail (new out))))
+
+@set_here = (head (tail (new out)))
+  & head ~ *
+  & out ~ (1 (new tail))
+
+@set_next = (pred (head (tail (new out))))
+  & @set ~ (pred (new (tail rest)))
+  & out ~ (1 (head rest))
+
+// Find idx's root, returning (root (size rebuilt-table)).
+@find = (idx (parents out))
+  & idx ~ {idx_get {idx_test idx_root}}
+  & parents ~ {parents_get parents_keep}
+  & @get_keep ~ (idx_get (parents_get got))
+  & got ~ (record rebuilt)
+  & record ~ (parent size)
+  & parent ~ {parent_test parent_recur}
+  & idx_test ~ $([=] $(parent_test z))
+  & z ~ ?((@find_recur @find_root) (idx_root (parent_recur (parents_keep (size (rebuilt out)))))
+
+@find_recur = (pred (idx parent (parents (size out))))
+  & pred ~ *
+  & idx ~ *
+  & size ~ *
+  & @find ~ (parent (parents out))
+
+@find_root = (pred (idx parent (parents (size out))))
+  & pred ~ *
+  & parent ~ *
+  & out ~ (idx (size parents))
+
+// Process edges. An edge within one component increments the cycle rank;
+// otherwise union its components by size.
+@go = ((?((@go_nil @go_cons) (pl (parents (acc out)))) pl) (parents (acc out)))
+
+@go_nil = (* (parents (acc out)))
+  & parents ~ *
+  & out ~ acc
+
+@go_cons = (* (((u v) tail) (parents (acc out))))
+  & @find ~ (u (parents found_u))
+  & found_u ~ (ru (su parents1))
+  & @find ~ (v (parents1 found_v))
+  & found_v ~ (rv (sv parents2))
+  & ru ~ {ru_cmp ru_keep}
+  & rv ~ {rv_cmp rv_keep}
+  & ru_cmp ~ $([=] $(rv_cmp z))
+  & z ~ ?((@go_diff @go_same) (tail (parents2 (acc (ru_keep (su (rv_keep (sv out))))))))
+
+@go_same = (* (tail (parents (acc (ru (su (rv (sv out))))))))
+  & ru ~ *
+  & su ~ *
+  & rv ~ *
+  & sv ~ *
+  & acc ~ $([+] $(1 acc_next))
+  & @go ~ (tail (parents (acc_next out)))
+
+@go_diff = (tail (parents (acc (ru (su (rv (sv out)))))))
+  & su ~ {su_cmp su_keep}
+  & sv ~ {sv_cmp sv_keep}
+  & su_cmp ~ $([<] $(sv_cmp z))
+  & z ~ ?((@attach_v @attach_u) (tail (parents (acc (ru (su_keep (rv (sv_keep out))))))))
+
+// u is at least as large: attach v under u.
+@attach_v = (tail (parents (acc (ru (su (rv (sv out)))))))
+  & ru ~ {ru_child {ru_idx ru_self}}
+  & su ~ $([+] $(sv sum))
+  & @set ~ (rv ((ru_child 0) (parents updated1)))
+  & @set ~ (ru_idx ((ru_self sum) (updated1 updated2)))
+  & @go ~ (tail (updated2 (acc out)))
+
+// u is smaller: attach u under v.
+@attach_u = (pred (tail (parents (acc (ru (su (rv (sv out))))))))
+  & pred ~ *
+  & rv ~ {rv_child {rv_idx rv_self}}
+  & su ~ $([+] $(sv sum))
+  & @set ~ (ru ((rv_child 0) (parents updated1)))
+  & @set ~ (rv_idx ((rv_self sum) (updated1 updated2)))
+  & @go ~ (tail (updated2 (acc out)))

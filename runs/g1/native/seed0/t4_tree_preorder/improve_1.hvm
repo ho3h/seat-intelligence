@@ -1,0 +1,12 @@
+// Build preorder directly onto a tail, avoiding repeated list append.
+@prog = (tree out)
+  & @pre ~ (tree ((0 *) out))
+
+@pre = ((?((@pre_leaf @pre_node) ((payload tail) out)) payload) (tail out))
+
+@pre_leaf = ((payload x) x)
+
+@pre_node = (* (((l (v r)) tail) out))
+  & @pre ~ (r (tail rr))
+  & @pre ~ (l (rr result))
+  & out ~ (1 (v result))

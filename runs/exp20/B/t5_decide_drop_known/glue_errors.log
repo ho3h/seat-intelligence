@@ -1,0 +1,30 @@
+--- 05:00:26
+keys of lookup_many `lk` returned 2 key(s); the recipe was made with nkeys=1
+--- 05:01:30
+build.py:58: kind mismatch at recipe filter_in_order `fc` port `list`: expected list[((num num num) num)], got list[(num num num num)] `o` from output `o` of recipe lookup_many `lk` (made at build.py:53).
+--- 05:03:01
+wrong arity: branch zero case of step of stream `w_cands` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:num, passed[3]:list[(num num num)]), i.e. d plus 4 value(s); your function `drop_cand` takes 6 parameter(s) (b2, c, u, v, s, hole).
+--- 05:03:12
+build.py:68: kind mismatch at branch nonzero case of step of stream `w_cands` result `out0`: expected list[num], got list[(num num num)] `hole` from argument `passed[3]` of branch nonzero case of step of stream `w_cands` (made at build.py:68).
+--- 05:03:28
+build.py:61: fill_cons needs a hole[list[...]]; got list[(num num num)]
+--- 05:04:09
+build.py:113: <function prog.<locals>.step_filter_simple.<locals>.found at 0x10bd607d0> is not a glue value (a wire, an int, a Lit, or a tuple of these)
+--- 05:04:19
+build.py:115: kind mismatch at branch nonzero case of step of stream `w_cands` result `out0`: expected list[(num (num num))], got list[(num num num)] `result` from argument `passed[3]` of branch nonzero case of step of stream `w_cands` (made at build.py:115).
+--- 05:04:28
+build.py:116: wire `u` (num, argument `e0` of step of stream `w_cands`, made at build.py:124) is used a second time (branch passed[0]); it was already used at build.py:98 (left operand of `<<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(u, 2)  and use each once.
+--- 05:04:39
+build.py:127: wire `H` (trie[num], argument `H` of step of stream `w_cands`, made at build.py:127) is used a second time (returned as `H`); it was already used at build.py:104 (update `pk` (act peek) port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:09:07
+build.py:71: kind mismatch at stream `w_extract` port `init`: expected list[(num num num)], got (list[any]) ((0 *),).
+--- 05:34:29
+wrong arity: step of stream `w_cands` must return 3 value(s) (L, H, result); `step_filter` returned 2.
+--- 05:46:24
+build.py:26: wire `L` (depth, output `L` of lg, made at recipes.py:156) is used a second time (recipe lookup_many `lk` port `L`); it was already used at build.py:23 (recipe reduce_by_key `rk` (set1) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:46:38
+@prog (t5_decide_drop_known) (@prog): 1 value(s) never used:
+    `n` (num, output `n` of recipe list_length_and_copy `lc_known`, made at build.py:16)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:49:18
+wrong arity: step of stream `w_reverse` is called as f(d, out:list[(num num num)], e0:num, e1:num, e2:num), i.e. d plus 4 value(s); your function `step_reverse` takes 3 parameter(s) (b, out, triple).

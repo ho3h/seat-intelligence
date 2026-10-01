@@ -1,0 +1,19 @@
+// Identity canonical ids; edge and property lists are empty.
+@prog = ((n (tau (mnl (cands (edges attrs))))) out)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & edges ~ *
+  & attrs ~ *
+  & @range ~ (n ((0 *) c))
+  & out ~ (c ((0 *) (0 *)))
+
+@range = (n (acc out))
+  & n ~ ?((@range_zero @range_succ) (acc out))
+
+@range_zero = (a out)
+  & a ~ out
+
+@range_succ = (p (acc out))
+  & p ~ {a b}
+  & @range ~ (a ((1 (b acc)) out))

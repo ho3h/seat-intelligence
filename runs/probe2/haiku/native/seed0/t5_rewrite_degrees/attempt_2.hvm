@@ -1,0 +1,78 @@
+@prog = (input output)
+  & input ~ (c (e rest))
+  & rest ~ *
+  & @solve ~ (c (e output))
+
+@solve = (c (e output))
+  & @proc_edges ~ (c (e ((0 *) output)))
+
+@proc_edges = (c (e (rewrites output)))
+  & e ~ ?((@done @one_edge) ((c (rewrites output))))
+
+@done = (ctx)
+  & ctx ~ (c (rewrites output))
+  & c ~ *
+  & @output_degrees ~ ((rewrites output))
+
+@one_edge = (ctx_with_data)
+  & ctx_with_data ~ ((u v) (c (rewrites output)))
+  & {c1 c2} ~ c
+  & @lookup ~ (c1 (u cu_res))
+  & @lookup ~ (c2 (v cv_res))
+  & cu_res ~ ?((@same @diff) ((cv_res (rewrites output))))
+
+@same = (ctx)
+  & ctx ~ (cv_res (rewrites output))
+  & cv_res ~ *
+  & @proc_edges ~ (rewrites output)
+
+@diff = (ctx_cv)
+  & ctx_cv ~ (cv_res (cu_cmp (rewrites output)))
+  & cu_cmp ~ cu_res
+  & cu_res ~ ?((@cu_lt @cu_gt) ((cv_res (rewrites output))))
+
+@cu_lt = (ctx)
+  & ctx ~ (cv_res (rewrites output))
+  & new_edge ~ (1 ((cu_res (cv_res rest))))
+  & rest ~ rewrites
+  & cu_res ~ *
+  & cv_res ~ *
+  & @proc_edges ~ (rest output)
+
+@cu_gt = (ctx_cv2)
+  & ctx_cv2 ~ (cv_res (cu_later (rewrites output)))
+  & cu_later ~ cu_res
+  & cu_res ~ *
+  & new_edge ~ (1 ((cv_res cu_later rest)))
+  & rest ~ rewrites
+  & cv_res ~ *
+  & @proc_edges ~ (rest output)
+
+@lookup = (lst (idx result))
+  & idx ~ ?((@lz @ls) ((lst result)))
+
+@lz = (ctx)
+  & ctx ~ (lst result)
+  & lst ~ (h t)
+  & h ~ (val unused_t)
+  & unused_t ~ t
+  & t ~ *
+  & result ~ val
+
+@ls = (idx_pred)
+  & idx_pred ~ (p (lst result))
+  & p ~ (sub unused_p)
+  & unused_p ~ *
+  & lst ~ (h t)
+  & h ~ *
+  & @lookup ~ (t (sub result))
+
+@output_degrees = (rewrites (output))
+  & rewrites ~ ?((@od_nil @od_cons) (output))
+
+@od_nil = output ~ (0 *)
+
+@od_cons = (edge_rest)
+  & edge_rest ~ ((u v) (rest output))
+  & @output_degrees ~ (rest output_rest)
+  & output_rest ~ (1 (u (1 (v output_tail))))

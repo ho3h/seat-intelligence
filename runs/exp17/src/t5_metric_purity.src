@@ -1,0 +1,65 @@
+# t5_metric_purity: the two label lists are read in parallel into index-keyed tuple-trees (lib/growtree), zipped
+# leafwise. Then two all-pairs passes, O(n^2) work and O(levels) depth, using only label equality (no assumption on
+# the label values):
+#   c_i = #{j : pred_j == pred_i and truth_j == truth_i}  (the size of i's (pred, truth) class)
+#   i is its pred group's representative iff no j in the group has c_j > c_i, or c_j == c_i and j < i;
+# purity = sum of c_i over representatives.
+#include base
+#include growtree
+def prog(x):
+  (pr, tr) = x
+  (n, P, l) = gwalk(pr, 0, 0, 0, 1)
+  (n2, Q, l2) = gwalk(tr, 0, 0, 0, 1)
+  Z = zipq(P, Q, l, 0, n)
+  C = cnts(Z, Z, l, l, 0, n)
+  return reps(C, C, l, l, 0)
+
+# leaf: (valid, p, t)
+def zipq(P, Q, l, base, n):
+  switch l:
+    case 0:
+      return (base < n, P, Q)
+    case _:
+      (p1, p2) = P
+      (q1, q2) = Q
+      h = 1 << (l-1)
+      return (zipq(p1, q1, l-1, base, n), zipq(p2, q2, l-1, base + h, n))
+
+# leaf: (valid, i, p, c)
+def cnts(T, A, l, L, base, n):
+  switch l:
+    case 0:
+      (v, p, t) = T
+      return (v, base, p, v * same(A, L, p, t))
+    case _:
+      (a, b) = T
+      h = 1 << (l-1)
+      return (cnts(a, A, l-1, L, base, n), cnts(b, A, l-1, L, base + h, n))
+
+def same(A, l, p, t):
+  switch l:
+    case 0:
+      (v, q, u) = A
+      return v & (q == p) & (u == t)
+    case _:
+      (a, b) = A
+      return same(a, l-1, p, t) + same(b, l-1, p, t)
+
+def reps(C, A, l, L, acc):
+  switch l:
+    case 0:
+      (v, i, p, c) = C
+      return v * (beats(A, L, i, p, c) == 0) * c
+    case _:
+      (a, b) = C
+      return reps(a, A, l-1, L, 0) + reps(b, A, l-1, L, 0)
+
+# number of j in i's pred group that beat i: larger c, or equal c and smaller index
+def beats(A, l, i, p, c):
+  switch l:
+    case 0:
+      (v, j, q, d) = A
+      return v * (q == p) * ((d > c) + (d == c) * (j < i))
+    case _:
+      (a, b) = A
+      return beats(a, l-1, i, p, c) + beats(b, l-1, i, p, c)

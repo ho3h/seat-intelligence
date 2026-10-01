@@ -1,0 +1,115 @@
+@prog = ((n edges) out)
+  & @loop ~ (0 (n (edges (0 out))))
+
+@loop = (v (n (edges (count out))))
+  & is_done ~ $([=] $(v n))
+  & is_done ~ ?(done cont) (v (n (edges (count out))))
+
+@done = (v (n (edges (count out))))
+  & v ~ *
+  & n ~ *
+  & edges ~ *
+  & count ~ out
+
+@cont = ((skip (v (n (edges (count out))))))
+  & skip ~ *
+  & @check ~ (v (edges (res out)))
+  & res ~ ?(skip2 inc2) (v (n (edges (count out))))
+
+@skip2 = ((skip (v (n (edges (count out))))))
+  & skip ~ *
+  & v_inc ~ $([+] $(1 v1))
+  & @loop ~ (v1 (n (edges (count out))))
+
+@inc2 = ((skip (v (n (edges (count out))))))
+  & skip ~ *
+  & v_inc ~ $([+] $(1 v1))
+  & c_inc ~ $([+] $(1 c1))
+  & @loop ~ (v1 (n (edges (c1 out))))
+
+@check = (v (edges (res out)))
+  & @explore ~ (v (edges (v (res out))))
+
+@explore = (v (edges (target (res out))))
+  & {e1 e2} ~ edges
+  & e1 ~ ?(no yes) (v (target (res out)))
+
+@no = (v (target (res out)))
+  & v ~ *
+  & target ~ *
+  & res ~ 0
+
+@yes = ((tg ((u (rt rest)) (v (target (res out))))))
+  & tg ~ *
+  & eq ~ $([=] $(u v))
+  & eq ~ ?(skip_edge follow) (rt (rest (v (target (e2 (res out))))))
+
+@skip_edge = ((sk (rt (rest (v (target (e2 (res out))))))))
+  & sk ~ *
+  & rt ~ *
+  & @explore ~ (v (rest (target (res out))))
+
+@follow = ((sk2 (rt (rest (v (target (e2 (res out))))))))
+  & sk2 ~ *
+  & @visit ~ (rt (target (e2 (found out))))
+  & found ~ ?(again done_vis) (rest (v (target (res out))))
+
+@again = ((sk3 (rest (v (target (res out))))))
+  & sk3 ~ *
+  & @explore ~ (v (rest (target (res out))))
+
+@done_vis = ((sk4 (rest (v (target (res out))))))
+  & sk4 ~ *
+  & rest ~ *
+  & v ~ *
+  & target ~ *
+  & res ~ 1
+
+@visit = (curr (target (edges (found out))))
+  & eq2 ~ $([=] $(curr target))
+  & eq2 ~ ?(go end) (curr (target (edges (found out))))
+
+@end = (curr (target (edges (found out))))
+  & curr ~ *
+  & target ~ *
+  & edges ~ *
+  & found ~ 1
+
+@go = ((dummy (curr (target (edges (found out))))))
+  & dummy ~ *
+  & @next_edge ~ (curr (edges (target (found out))))
+
+@next_edge = (curr (edges (target (found out))))
+  & {e3 e4} ~ edges
+  & e3 ~ ?(none some) (curr (target (found out)))
+
+@none = (curr (target (found out)))
+  & curr ~ *
+  & target ~ *
+  & found ~ 0
+
+@some = ((tg2 ((u2 (rt2 rest2)) (curr (target (found out))))))
+  & tg2 ~ *
+  & eq3 ~ $([=] $(u2 curr))
+  & eq3 ~ ?(skip_next go_next) (rt2 (rest2 (curr (target (e4 (found out))))))
+
+@skip_next = ((sk5 (rt2 (rest2 (curr (target (e4 (found out))))))))
+  & sk5 ~ *
+  & rt2 ~ *
+  & @next_edge ~ (curr (rest2 (target (found out))))
+
+@go_next = ((sk6 (rt2 (rest2 (curr (target (e4 (found out))))))))
+  & sk6 ~ *
+  & @visit ~ (rt2 (target (e4 (res2 out))))
+  & res2 ~ ?(again2 done2) (rest2 (curr (target (found out))))
+
+@again2 = ((sk7 (rest2 (curr (target (found out))))))
+  & sk7 ~ *
+  & @next_edge ~ (curr (rest2 (target (found out))))
+
+@done2 = ((sk8 (rest2 (curr (target (found out))))))
+  & sk8 ~ *
+  & rest2 ~ *
+  & curr ~ *
+  & target ~ *
+  & found ~ 1

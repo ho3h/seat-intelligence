@@ -1,0 +1,56 @@
+@prog = a
+  & @tree_hash2 ~ a
+
+@tree_hash2 = ((@tree_hash2__C10 a) a)
+
+@tree_hash2__C0 = (a b)
+  & $(a $([+0x0000001] b)) ~ [*0x0000003]
+
+@tree_hash2__C1 = (* (b (d (f (a k)))))
+  & $(a $([+0x0000001] $([+] $(j k)))) ~ [*0x0000003]
+  & $(i j) ~ [*0x0000005]
+  & $(c $([+] $(e $([+] $(h $([+0x0000001] i)))))) ~ [*0x0000002]
+  &!@tree_hash2 ~ (b c)
+  & $(d e) ~ [*0x0000003]
+  & $(g h) ~ [*0x0000005]
+  &!@tree_hash2 ~ (f g)
+
+@tree_hash2__C10 = (?((0 @tree_hash2__C9) a) a)
+
+@tree_hash2__C2 = (?((@tree_hash2__C0 @tree_hash2__C1) a) a)
+
+@tree_hash2__C3 = (i (a (c (e k))))
+  & $(h $([+] $(j $([+0x0000001] k)))) ~ [*0x0000002]
+  & $(b $([+] $(d $([+] $(g $([+0x0000001] h)))))) ~ [*0x0000002]
+  &!@tree_hash2 ~ (a b)
+  & $(c d) ~ [*0x0000003]
+  & $(f g) ~ [*0x0000005]
+  &!@tree_hash2 ~ (e f)
+  & $(i j) ~ [*0x0000003]
+
+@tree_hash2__C4 = (* (k (m (o (i (a (c (e t))))))))
+  & $(h $([+] $(j $([+0x0000001] $([+] $(s t)))))) ~ [*0x0000002]
+  & $(b $([+] $(d $([+] $(g $([+0x0000001] h)))))) ~ [*0x0000002]
+  &!@tree_hash2 ~ (a b)
+  & $(c d) ~ [*0x0000003]
+  & $(f g) ~ [*0x0000005]
+  &!@tree_hash2 ~ (e f)
+  & $(i j) ~ [*0x0000003]
+  & $(r s) ~ [*0x0000005]
+  & $(l $([+] $(n $([+] $(q $([+0x0000001] r)))))) ~ [*0x0000002]
+  &!@tree_hash2 ~ (k l)
+  & $(m n) ~ [*0x0000003]
+  & $(p q) ~ [*0x0000005]
+  &!@tree_hash2 ~ (o p)
+
+@tree_hash2__C5 = (?((@tree_hash2__C3 @tree_hash2__C4) a) a)
+
+@tree_hash2__C6 = (a ((@tree_hash2__C2 (a b)) b))
+
+@tree_hash2__C7 = (* (b (c (d (a ((@tree_hash2__C5 (a (b (c (d e))))) e))))))
+
+@tree_hash2__C8 = (?((@tree_hash2__C6 @tree_hash2__C7) a) a)
+
+@tree_hash2__C9 = (* ((@tree_hash2__C8 a) a))
+
+

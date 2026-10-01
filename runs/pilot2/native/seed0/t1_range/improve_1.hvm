@@ -1,0 +1,20 @@
+// Process two numbers per recursive call where possible.
+@prog = (n out)
+  & @g2 ~ (n ((0 *) out))
+
+@g2 = (n (acc out))
+  & n ~ ?((@g2_zero @g2_pos) (acc out))
+
+@g2_zero = (a a)
+
+@g2_pos = (k (acc out))
+  & k ~ {kc kt}
+  & kt ~ ?((@g2_one @g2_two) (kc (acc out)))
+
+@g2_one = (k (acc out))
+  & k ~ *
+  & out ~ (1 (0 acc))
+
+@g2_two = (j (k (acc out)))
+  & j ~ {jh jr}
+  & @g2 ~ (jr ((1 (jh (1 (k acc)))) out))

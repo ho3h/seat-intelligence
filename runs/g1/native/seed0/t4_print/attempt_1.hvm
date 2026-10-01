@@ -1,0 +1,58 @@
+// Entry point
+@prog = (expr out)
+  & @print ~ (expr out)
+
+// Print an expression.
+@print = ((tag payload) out)
+  & tag ~ ?((@print_lit @print_nonlit) (payload out))
+
+@print_lit = (n out)
+  & @digits ~ (n out)
+
+@print_nonlit = (idx (payload out))
+  & idx ~ ?((@print_add @print_mul) (payload out))
+
+@print_add = ((left right) out)
+  & @binary ~ (left (right (43 out)))
+
+@print_mul = (* (payload out))
+  & @binary ~ (left (right (42 out)))
+  & payload ~ (left right)
+
+// Print "(" ++ print(left) ++ op ++ print(right) ++ ")".
+@binary = (left (right (op out)))
+  & @print ~ (left left_text)
+  & @print ~ (right right_text)
+  & @append ~ ((1 (40 (0 *))) (left_text after_left))
+  & @append ~ (after_left ((1 (op (0 *))) after_op))
+  & @append ~ (after_op (right_text after_right))
+  & @append ~ (after_right ((1 (41 (0 *))) out))
+
+// Convert an unsigned number to decimal digits.
+@digits = (n out)
+  & n ~ {n_test n_value}
+  & n_test ~ $([<] $(10 is_small))
+  & is_small ~ ?((@digit_small @digit_large) (n_value out))
+
+@digit_small = (n out)
+  & n ~ $([+48] char)
+  & out ~ (1 (char (0 *)))
+
+@digit_large = (* (n out))
+  & n ~ {quotient_source remainder_source}
+  & quotient_source ~ $([/] $(10 quotient))
+  & remainder_source ~ $([%] $(10 remainder))
+  & @digits ~ (quotient prefix)
+  & remainder ~ $([+48] char)
+  & @append ~ (prefix ((1 (char (0 *))) out))
+
+// Append ys to xs.
+@append = ((tag payload) (ys out))
+  & tag ~ ?((@append_nil @append_cons) (payload (ys out)))
+
+@append_nil = (* (ys out))
+  & out ~ ys
+
+@append_cons = (* ((head tail) (ys out)))
+  & @append ~ (tail (ys rest))
+  & out ~ (1 (head rest))

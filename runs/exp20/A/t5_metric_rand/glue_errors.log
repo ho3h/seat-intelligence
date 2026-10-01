@@ -1,0 +1,76 @@
+--- 05:31:11
+step of stream `walk` (@walk_step): 1 value(s) never used:
+    `L4` (depth, copy 4 of `L`, made at build.py:31)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:31:30
+fin of stream `walk` must return exactly one value (the result); returned 3
+--- 05:31:47
+fin of stream `walk` must return exactly one value (the result); returned 2
+--- 05:32:59
+wrong arity: step of stream `walk` must return 1 value(s) (state); `step` returned 4.
+--- 05:33:21
+fin of stream `walk` must return exactly one value (the result); returned 2
+--- 05:33:45
+build.py:43: kind mismatch at branch condition: expected num, got list[num] `pred` from argument `in0` of @prog (t5_metric_rand) (made at build.py:45).
+--- 05:34:03
+build.py:45: wire `L` (depth, argument `L` of step of stream `walk`, made at build.py:57) is used a second time (erased); it was already used at build.py:40 (fanout into 3). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:34:12
+step of stream `walk` (@walk_step): 2 value(s) never used:
+    `L1` (depth, copy 1 of `L`, made at build.py:40)
+    `L2` (depth, copy 2 of `L`, made at build.py:40)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:34:21
+fin of stream `walk` (@walk_fin): 1 value(s) never used:
+    `tt` (trie[num], argument `tt` of fin of stream `walk`, made at build.py:50)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:34:28
+build.py:56: kind mismatch at stream `walk` port `list`: expected list[(num num)], got list[num] `pred` from argument `in0` of @prog (t5_metric_rand) (made at build.py:63).
+--- 05:34:42
+step of stream `walk` (@walk_step): 1 value(s) never used:
+    `elem` (num, argument `elem` of step of stream `walk`, made at build.py:29)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:34:50
+fin of stream `walk` (@walk_fin): 1 value(s) never used:
+    `cnt` (num, argument `cnt` of fin of stream `walk`, made at build.py:31)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:38:16
+wrong arity: body of iterate `pc` is called as f(d, i:num, n:num, pt:trie[num], tt:trie[num], cnt:num), i.e. d plus 5 value(s); your function `iterate_body` takes 2 parameter(s) (d, state).
+--- 05:38:37
+build.py:48: wire `n_val` (num, argument `n` of body of iterate `pc`, made at build.py:64) is used a second time (lg port `x`); it was already used at build.py:44 (right operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(n_val, 2)  and use each once.
+--- 05:38:48
+build.py:47: wire `i_val` (num, argument `i` of body of iterate `pc`, made at build.py:52) is used a second time (left operand of `+`); it was already used at build.py:43 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i_val, 2)  and use each once.
+--- 05:39:03
+wrong arity: body of iterate `pc` must return 6 value(s) (i, n, pt, tt, cnt, go); `iterate_body` returned 2.
+--- 05:39:10
+build.py:69: kind mismatch at stream `bpt` port `list`: expected list[(num num)], got list[num] `pred` from argument `in0` of @prog (t5_metric_rand) (made at build.py:88).
+--- 05:41:40
+step of stream `cw` (@cw_step): 1 value(s) never used:
+    `elem` (num, argument `elem` of step of stream `cw`, made at build.py:26)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:41:46
+build.py:62: wire `out` (num, output `out` of stream `cw`, made at build.py:52) is used a second time (lg port `x`); it was already used at build.py:55 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(out, 2)  and use each once.
+--- 05:42:22
+build.py:51: the environment of reduce `cp` (+) is copied to every leaf by DUPs, so it must be numbers or a tuple of numbers; got (trie[num] depth)
+--- 05:42:33
+build.py:25: port `base` does not exist on reduce `co` (+) (@co); d.call returns o:
+    in  t: trie[num]  [exactly once]
+    in  L: depth  [exactly once]
+    out o: num  [exactly once]
+--- 05:45:54
+leaf of reduce `cr` (+) (@cr_leaf): 1 value(s) never used:
+    `x` (num, argument `x` of leaf of reduce `cr` (+), made at build.py:43)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:46:01
+build.py:60: kind mismatch at stream `walk` port `list`: expected list[(num num)], got list[num] `pred` from argument `in0` of @prog (t5_metric_rand) (made at build.py:74).
+--- 05:46:20
+build.py:49: wire `L` (depth, output `L` of lg, made at build.py:39) is used a second time (stream `walk` port `init`); it was already used at build.py:42 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:47:14
+build.py:71: wire `L1` (depth, copy 1 of `L`, made at build.py:50) is used a second time (reduce `cr` (+) port `L`); it was already used at build.py:53 (const_trie `z0` (leaf 0) port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L1, 2)  and use each once.
+--- 05:47:43
+step of stream `cne` (@cne_step): 1 value(s) never used:
+    `has_elem` (num, argument `has_elem` of step of stream `cne`, made at build.py:21)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:47:50
+build.py:32: wire `truth` (list[num], argument `in1` of @prog (t5_metric_rand), made at build.py:43) is used a second time (erased); it was already used at build.py:38 (erased). A wire has exactly two ends. A list[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:48:18
+build.py:33: unknown operator '>='; use one of ! % & * + - / < << = > >> ^ |

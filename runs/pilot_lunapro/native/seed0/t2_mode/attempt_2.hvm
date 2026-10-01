@@ -1,0 +1,57 @@
+// Scan each list value, count its occurrences, and keep the most frequent;
+// on equal counts, keep the smaller value.
+@prog = (l out)
+  & l ~ {scan base}
+  & @walk ~ (scan (base (0 (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (base (bv (bc out))))) pl) (base (bv (bc out))))
+
+@walk_nil = (* (base (bv (bc out))))
+  & base ~ *
+  & bc ~ *
+  & out ~ bv
+
+@walk_cons = (* ((h t) (base (bv (bc out)))))
+  & h ~ {hcand htarget}
+  & base ~ {bcount bnext}
+  & @cnt ~ (bcount (htarget (0 ((hcand (t (bnext (bv (bc out))))) res)))
+  & res ~ (n rest)
+  & rest ~ (hcand (t (bnext (bv (bc out)))))
+  & @choose ~ (hcand (n (t (bnext (bv (bc out))))))
+
+// Count occurrences of x in list, returning (count context).
+@cnt = ((?((@cnt_nil @cnt_cons) (pl (x (acc (ctx out))))) pl) (x (acc (ctx out))))
+
+@cnt_nil = (* (x (acc (ctx out))))
+  & x ~ *
+  & out ~ (acc ctx)
+
+@cnt_cons = (* ((h t) (x (acc (ctx out)))))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc eq))
+  & eq ~ $([+] $(acc acc2))
+  & @cnt ~ (t (xr (acc2 (ctx out))))
+
+// Update the best value if this candidate has a higher count,
+// or the same count and a smaller value.
+@choose = (h (n (t (base (bv (bc out)))))
+  & h ~ {hc hk}
+  & n ~ {ncalc nk}
+  & ncalc ~ {ng ne}
+  & bv ~ {bvc bvk}
+  & bc ~ {bccomp bck}
+  & bccomp ~ {bcg bce}
+  & ng ~ $([>] $(bcg gt))
+  & ne ~ $([=] $(bce eq))
+  & hc ~ $([<] $(bvc lt))
+  & eq ~ $([&] $(lt tie))
+  & gt ~ $([|] $(tie upd))
+  & upd ~ ?((@choose_keep @choose_take) (hk (nk (t (base (bvk (bck out)))))))
+
+@choose_keep = (* (h (n (t (base (bv (bc out)))))))
+  & h ~ *
+  & n ~ *
+  & @walk ~ (t (base (bv (bc out))))
+
+@choose_take = (* (h (n (t (base (bv (bc out)))))))
+  & @walk ~ (t (base (h (n out))))

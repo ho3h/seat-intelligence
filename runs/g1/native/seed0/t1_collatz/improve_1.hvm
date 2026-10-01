@@ -1,0 +1,28 @@
+// Count Collatz steps, combining each odd step with the following even step.
+
+@prog = (n out)
+  & @collatz ~ (n (0 out))
+
+@collatz = (n (acc out))
+  & n ~ {n_test n_next}
+  & n_test ~ $([=] $(1 is_one))
+  & is_one ~ ?((@step @done) (n_next (acc out)))
+
+@done = (* (n (acc out)))
+  & n ~ *
+  & acc ~ out
+
+@step = (n (acc out))
+  & n ~ {n_mod n_next}
+  & n_mod ~ $([%] $(2 parity))
+  & parity ~ ?((@even @odd) (n_next (acc out)))
+
+@even = (n (acc out))
+  & n ~ $([/2] half)
+  & acc ~ $([+1] next)
+  & @collatz ~ (half (next out))
+
+@odd = (* (n (acc out)))
+  & n ~ $([*3] $([+1] $([/2] next_n)))
+  & acc ~ $([+2] next)
+  & @collatz ~ (next_n (next out))

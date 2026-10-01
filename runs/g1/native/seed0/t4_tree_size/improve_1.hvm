@@ -1,0 +1,15 @@
+// Return the number of nodes plus one; leaves return one, so each node
+// only needs to add the results from its two children.
+@prog = (tree out)
+  & @ts ~ (tree count)
+  & count ~ $([-] $(1 out))
+
+@ts = ((?((@ts_leaf @ts_node) (pl out)) pl) out)
+
+@ts_leaf = (* 1)
+
+@ts_node = (* ((left (value right)) out))
+  & value ~ *
+  & @ts ~ (left lcount)
+  & @ts ~ (right rcount)
+  & lcount ~ $([+] $(rcount out))

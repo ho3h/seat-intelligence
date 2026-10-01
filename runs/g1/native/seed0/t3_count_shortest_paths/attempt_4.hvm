@@ -1,0 +1,290 @@
+@prog = ((n (s (t edges))) out)
+  & n ~ {n_s n_r}
+  & s ~ {s_cmp s_r}
+  & s_cmp ~ $([<] $(n_s b))
+  & b ~ ?((@invalid @check_t) (n_r (s_r (t (edges out)))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@check_t = (dummy (n (s (t (edges out)))))
+  & dummy ~ *
+  & n ~ {n_cmp n_keep}
+  & t ~ {t_cmp t_keep}
+  & t_cmp ~ $([<] $(n_cmp bt))
+  & bt ~ ?((@invalid_t @start) (n_keep (s (t_keep (edges out)))))
+
+@invalid_t = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@start = (n (s (t (edges out))))
+  & s ~ {s_cmp s_keep}
+  & t ~ {t_cmp t_keep}
+  & s_cmp ~ $([=] $(t_cmp beq))
+  & beq ~ ?((@different @same) (n (s_keep (t_keep (edges out)))))
+
+@same = (dummy (n (s (t (edges out)))))
+  & dummy ~ *
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 1
+
+@different = (n (s (t (edges out))))
+  & edges ~ {edges_dedup edges_rest}
+  & @dedup ~ (edges_dedup ((0 *) unique))
+  & n ~ {n_zrec n_rest}
+  & n_rest ~ {n_zbool n_rest2}
+  & n_rest2 ~ {budget n_keep}
+  & @zrec ~ (n_zrec front0)
+  & @zbool ~ (n_zbool seen0)
+  & s ~ {s_front s_seen}
+  & @set ~ (front0 (s_front ((1 1) front)))
+  & @set ~ (seen0 (s_seen (1 seen)))
+  & @bfs ~ (budget (n_keep (t (unique (front (seen out)))))
+
+@dedup = ((?((@dedup_nil @dedup_cons) (payload (acc out))) payload) (acc out))
+
+@dedup_nil = (* (acc out))
+  & acc ~ *
+  & out ~ (0 *)
+
+@dedup_cons = (* ((edge tail) (acc out)))
+  & acc ~ {acc_check acc_keep}
+  & edge ~ {edge_check edge_keep}
+  & @hasedge ~ (acc_check (edge_check found))
+  & found ~ ?((@dedup_new @dedup_old) (edge_keep (tail (acc_keep out))))
+
+@dedup_new = (edge (tail (acc out)))
+  & @dedup ~ (tail ((1 (edge acc)) out))
+
+@dedup_old = (dummy (edge (tail (acc out))))
+  & dummy ~ *
+  & edge ~ *
+  & @dedup ~ (tail (acc out))
+
+@hasedge = ((?((@has_nil @has_cons) (payload (query out))) payload) (query out))
+
+@has_nil = (* (query out))
+  & query ~ *
+  & out ~ 0
+
+@has_cons = (* ((candidate tail) (query out)))
+  & query ~ {query_check query_keep}
+  & @same_edge ~ (candidate (query_check equal))
+  & equal ~ ?((@has_no @has_yes) (tail (query_keep out)))
+
+@has_no = (tail (query out))
+  & @hasedge ~ (tail (query out))
+
+@has_yes = (dummy (tail (query out)))
+  & dummy ~ *
+  & tail ~ *
+  & query ~ *
+  & out ~ 1
+
+@same_edge = ((a b) (u (v out)))
+  & a ~ {af ar}
+  & b ~ {bf br}
+  & u ~ {uf ur}
+  & v ~ {vf vr}
+  & @pair_equal ~ (af (uf p))
+  & @pair_equal ~ (bf (vf q))
+  & @pair_equal ~ (ar (vr r))
+  & @pair_equal ~ (br (ur z))
+  & p ~ $([&] $(q forward))
+  & r ~ $([&] $(z reverse))
+  & forward ~ $([|] $(reverse out))
+
+@pair_equal = (x (y out))
+  & x ~ $([=] $(y out))
+
+@zrec = (n out)
+  & n ~ ?((@zrec_nil @zrec_cons) out)
+
+@zrec_nil = out
+  & out ~ (0 *)
+
+@zrec_cons = (k out)
+  & @zrec ~ (k tail)
+  & out ~ (1 ((0 0) tail))
+
+@zbool = (n out)
+  & n ~ ?((@zbool_nil @zbool_cons) out)
+
+@zbool_nil = out
+  & out ~ (0 *)
+
+@zbool_cons = (k out)
+  & @zbool ~ (k tail)
+  & out ~ (1 (0 tail))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_more = (i (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (i out))
+
+@set = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_zero @set_more) (head (tail (val out))))
+
+@set_zero = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_more = (i (head (tail (val out))))
+  & @set ~ (tail (i (val upd_tail)))
+  & out ~ (1 (head upd_tail))
+
+@add_count = (arr (idx (delta out)))
+  & arr ~ {arr_get arr_set}
+  & idx ~ {idx_get idx_set}
+  & @get ~ (arr_get (idx_get cell))
+  & cell ~ (active count)
+  & active ~ *
+  & count ~ $([+] $(delta sum))
+  & @set ~ (arr_set (idx_set ((1 sum) out)))
+
+@try = ((src dst) (front (seen (next out))))
+  & front ~ {front_get front_drop}
+  & front_drop ~ *
+  & @get ~ (front_get (src cell))
+  & cell ~ (active count)
+  & active ~ ?((@try_no @try_yes) (count (dst (seen (next out)))))
+
+@try_no = (count (dst (seen (next out))))
+  & count ~ *
+  & dst ~ *
+  & seen ~ *
+  & out ~ next
+
+@try_yes = (dummy (count (dst (seen (next out)))))
+  & dummy ~ *
+  & seen ~ {seen_get seen_drop}
+  & seen_drop ~ *
+  & dst ~ {dst_get dst_keep}
+  & @get ~ (seen_get (dst_get visited))
+  & visited ~ ?((@try_unseen @try_seen) (count (dst_keep (next out))))
+
+@try_unseen = (count (dst (next out)))
+  & @add_count ~ (next (dst (count out)))
+
+@try_seen = (dummy (count (dst (next out))))
+  & dummy ~ *
+  & count ~ *
+  & dst ~ *
+  & out ~ next
+
+@scan = ((?((@scan_nil @scan_cons) (payload (front (seen (next out))))) payload) (front (seen (next out))))
+
+@scan_nil = (* (front (seen (next out))))
+  & front ~ *
+  & seen ~ *
+  & out ~ next
+
+@scan_cons = (* ((edge tail) (front (seen (next out)))))
+  & edge ~ {edge_one edge_two}
+  & front ~ {front_one front_rest}
+  & front_rest ~ {front_two front_three}
+  & seen ~ {seen_one seen_rest}
+  & seen_rest ~ {seen_two seen_three}
+  & @try ~ (edge_one (front_one (seen_one (next middle))))
+  & @try ~ (edge_two (front_two (seen_two (middle last))))
+  & @scan ~ (tail (front_three (seen_three (last out)))
+
+@bfs = (budget (n (target (edges (front (seen out)))))
+  & budget ~ ?((@bfs_done @bfs_step) (n (target (edges (front (seen out)))))
+
+@bfs_done = (n (target (edges (front (seen out)))))
+  & n ~ *
+  & target ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ 0
+
+@bfs_step = (b (n (target (edges (front (seen out)))))
+  & n ~ {n_zero n_rest}
+  & n_rest ~ {n_mark n_recur}
+  & edges ~ {edges_scan edges_recur}
+  & front ~ {front_scan front_drop}
+  & front_drop ~ *
+  & seen ~ {seen_scan seen_mark}
+  & @zrec ~ (n_zero next0)
+  & @scan ~ (edges_scan (front_scan (seen_scan (next0 next))))
+  & next ~ {next_get next_keep}
+  & target ~ {target_get target_keep}
+  & @get ~ (next_get (target_get cell))
+  & cell ~ (active count)
+  & active ~ ?((@bfs_continue @bfs_answer) (b (count (n_mark (n_recur (target_keep (edges_recur (next_keep (seen_mark out))))))))
+
+@bfs_answer = (dummy (b (count (n_mark (n_recur (target (edges (front (seen out)))))))))
+  & dummy ~ *
+  & b ~ *
+  & n_mark ~ *
+  & n_recur ~ *
+  & target ~ *
+  & edges ~ *
+  & front ~ *
+  & seen ~ *
+  & out ~ count
+
+@bfs_continue = (b (count (n_mark (n_recur (target (edges (front (seen out))))))))
+  & count ~ *
+  & front ~ {front_mark front_recur}
+  & @mark ~ (n_mark (0 (front_mark (seen marked))))
+  & @bfs ~ (b (n_recur (target (edges (front_recur (marked out)))))
+
+@mark = (n (idx (front (seen out))))
+  & n ~ ?((@mark_done @mark_step) (idx (front (seen out))))
+
+@mark_done = (idx (front (seen out)))
+  & idx ~ *
+  & front ~ *
+  & out ~ seen
+
+@mark_step = (k (idx (front (seen out))))
+  & front ~ {front_get front_recur}
+  & idx ~ {idx_get idx_rest}
+  & idx_rest ~ {idx_set idx_inc}
+  & @get ~ (front_get (idx_get cell))
+  & idx_inc ~ $([+1] idx_next)
+  & cell ~ (active count)
+  & count ~ *
+  & active ~ ?((@mark_no @mark_yes) (k (idx_set (idx_next (front_recur (seen out))))))
+
+@mark_no = (k (idx_set (idx_next (front (seen out)))))
+  & idx_set ~ *
+  & @mark ~ (k (idx_next (front (seen out))))
+
+@mark_yes = (dummy (k (idx_set (idx_next (front (seen out))))))
+  & dummy ~ *
+  & @set ~ (seen (idx_set (1 seen_next)))
+  & @mark ~ (k (idx_next (front (seen_next out))))

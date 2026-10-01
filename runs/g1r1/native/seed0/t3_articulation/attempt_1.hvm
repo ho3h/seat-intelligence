@@ -1,0 +1,169 @@
+// Count articulation points by checking whether each vertex's neighbors remain
+// connected after that vertex is excluded.
+
+@prog = ((n edges) out)
+  & @count ~ (0 (n (edges (0 out))))
+
+@count = (i (n (edges (acc out))))
+  & i ~ {i1 i2}
+  & n ~ {n1 n2}
+  & i1 ~ $([<] $(n1 z))
+  & z ~ ?((@count_done @count_more) (i2 (n2 (edges (acc out))))
+
+@count_done = (* (i (n (edges (acc out)))))
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+  & out ~ acc
+
+@count_more = (* (i (n (edges (acc out)))))
+  & i ~ {iv inext}
+  & edges ~ {eart enext}
+  & @art ~ (iv (eart b))
+  & b ~ $([+] $(acc acc2))
+  & inext ~ $([+1] i_next)
+  & @count ~ (i_next (n (enext (acc2 out))))
+
+@art = (v (edges out))
+  & v ~ {v1 v2}
+  & edges ~ {e1 e2}
+  & @nb ~ (v1 (e1 ns))
+  & @has2 ~ (ns (v2 (e2 out)))
+
+// Build the list of neighbors of target by scanning the edge list.
+@nb = (target ((?((@nb_nil @nb_cons) (pl (target out))) pl) out))
+
+@nb_nil = (* (pl (target out)))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@nb_cons = (* (pl (target out)))
+  & pl ~ ((u v) tail)
+  & target ~ {target1 target2}
+  & target1 ~ {tu tv}
+  & u ~ $([=] $(tu zu))
+  & v ~ $([=] $(tv zv))
+  & @nb ~ (target2 (tail rest))
+  & zu ~ ?((@nb_checkv @nb_addv) (zv ((u v) (rest out))))
+
+@nb_checkv = (* (zv ((u v) (rest out))))
+  & zv ~ ?((@nb_noadd @nb_addu) ((u v) (rest out)))
+
+@nb_noadd = (* ((u v) (rest out)))
+  & u ~ *
+  & v ~ *
+  & out ~ rest
+
+@nb_addu = (* ((u v) (rest out)))
+  & v ~ *
+  & out ~ (1 (u rest))
+
+@nb_addv = (* (zv ((u v) (rest out))))
+  & out ~ (1 (v rest))
+
+// List membership; returns 0 or 1.
+@mem = (x ((?((@mem_nil @mem_cons) (pl (x out))) pl) out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* (pl (x out)))
+  & pl ~ (h t)
+  & x ~ {x1 x2}
+  & h ~ $([=] $(x1 z))
+  & z ~ ?((@mem_no @mem_yes) (x2 (t out)))
+
+@mem_no = (x (t out))
+  & @mem ~ (x (t out))
+
+@mem_yes = (x (t out))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+// Check whether a vertex has at least two neighbors, then test whether all
+// neighbors after the first are reachable from the first with the vertex removed.
+@has2 = ((?((@has_nil @has_cons) (pl (v (edges out)))) pl) (v (edges out)))
+
+@has_nil = (* (pl (v (edges out))))
+  & pl ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@has_cons = (* (pl (v (edges out))))
+  & pl ~ (first rest)
+  & @check_rest ~ (rest (first (v (edges out))))
+
+@check_rest = ((?((@check_nil @check_more) (pl (first (v (edges out))))) pl) (first (v (edges out))))
+
+@check_nil = (* (pl (first (v (edges out)))))
+  & pl ~ *
+  & first ~ *
+  & v ~ *
+  & edges ~ *
+  & out ~ 0
+
+@check_more = (* (pl (first (v (edges out)))))
+  & @dfs ~ ((1 (first (0 *))) ((1 (v (0 *))) (edges seen)))
+  & @allmem ~ ((1 pl) (seen out))
+
+// Depth-first search. The starting visited list includes the excluded vertex.
+@dfs = ((?((@dfs_nil @dfs_cons) (pl (vis (edges out)))) pl) (vis (edges out)))
+
+@dfs_nil = (* (pl (vis (edges out))))
+  & pl ~ *
+  & edges ~ *
+  & out ~ vis
+
+@dfs_cons = (* (pl (vis (edges out))))
+  & pl ~ (v stacktail)
+  & @mem ~ (v (vis seen))
+  & seen ~ ?((@dfs_seen @dfs_new) (v (stacktail (vis (edges out))))
+
+@dfs_seen = (* (v (stacktail (vis (edges out)))))
+  & v ~ *
+  & @dfs ~ (stacktail (vis (edges out)))
+
+@dfs_new = (* (v (stacktail (vis (edges out)))))
+  & v ~ {v1 v2}
+  & edges ~ {e1 e2}
+  & @nb ~ (v1 (e1 ns))
+  & @append ~ (ns (stacktail stk))
+  & @dfs ~ (stk ((1 (v2 vis)) (e2 out)))
+
+// Append two lists.
+@append = ((?((@append_nil @append_cons) (pl (ys out))) pl) (ys out))
+
+@append_nil = (* (pl (ys out)))
+  & pl ~ *
+  & out ~ ys
+
+@append_cons = (* (pl (ys out)))
+  & pl ~ (h t)
+  & @append ~ (t (ys rest))
+  & out ~ (1 (h rest))
+
+// Check that every item in a list belongs to a visited list.
+@allmem = ((?((@all_nil @all_cons) (pl (vis out))) pl) (vis out))
+
+@all_nil = (* (pl (vis out)))
+  & pl ~ *
+  & vis ~ *
+  & out ~ 1
+
+@all_cons = (* (pl (vis out)))
+  & pl ~ (h t)
+  & vis ~ {vis1 vis2}
+  & @mem ~ (h (vis1 z))
+  & z ~ ?((@all_no @all_yes) (t (vis2 out)))
+
+@all_no = (* (t (vis out)))
+  & t ~ *
+  & vis ~ *
+  & out ~ 0
+
+@all_yes = (* (t (vis out)))
+  & @allmem ~ (t (vis out))

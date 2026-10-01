@@ -1,0 +1,61 @@
+@count_children = ((@count_children__C6 a) a)
+
+@count_children__C0 = (?((0 (* (* (* (* 1))))) a) a)
+
+@count_children__C1 = (?((1 (* (* (* (* 2))))) a) a)
+
+@count_children__C2 = ((@count_children__C0 a) a)
+
+@count_children__C3 = (* (* (* (* ((@count_children__C1 a) a)))))
+
+@count_children__C4 = (?((@count_children__C2 @count_children__C3) a) a)
+
+@count_children__C5 = (* ((@count_children__C4 a) (* a)))
+
+@count_children__C6 = (?((0 @count_children__C5) a) a)
+
+@count_pair = (a ({$([=0x0000000] ?((@count_pair__C13 @count_pair__C14) (a (b c)))) b} c))
+
+@count_pair__C0 = (* (a (* (c ({$([:-0x0000002] d) $([:-0x0000002] b)} f)))))
+  &!@count_pair ~ (a (b $([+] $(e f))))
+  &!@count_pair ~ (c (d e))
+
+@count_pair__C1 = (?(((* 0) @count_pair__C0) a) a)
+
+@count_pair__C10 = ((@count_pair__C9 a) a)
+
+@count_pair__C11 = (* (a (* b)))
+  & @count_children ~ (a b)
+
+@count_pair__C12 = (?((0 (* (* (* (* 1))))) a) a)
+
+@count_pair__C13 = (a ({$([=0x0000001] ?((@count_pair__C10 @count_pair__C11) (a (b c)))) b} c))
+
+@count_pair__C14 = (* ((@count_pair__C12 a) (* a)))
+
+@count_pair__C2 = ({$([:-0x0000002] d) $([:-0x0000002] b)} (a (c f)))
+  &!@count_pair ~ (a (b $([+] $(e f))))
+  &!@count_pair ~ (c (d e))
+
+@count_pair__C3 = (* (f (* (h ({$([:-0x0000002] g) {$([:-0x0000002] i) {$([:-0x0000002] b) $([:-0x0000002] d)}}} (a (c l)))))))
+  &!@count_pair ~ (a (b $([+] $(e $([+] $(k l))))))
+  &!@count_pair ~ (c (d e))
+  &!@count_pair ~ (f (g $([+] $(j k))))
+  &!@count_pair ~ (h (i j))
+
+@count_pair__C4 = (?((@count_pair__C2 @count_pair__C3) a) a)
+
+@count_pair__C5 = (a ((@count_pair__C1 (a b)) b))
+
+@count_pair__C6 = (* (b (* (c (a ((@count_pair__C4 (a (b (c d)))) d))))))
+
+@count_pair__C7 = (?((@count_pair__C5 @count_pair__C6) a) a)
+
+@count_pair__C8 = (* ((@count_pair__C7 (a (b c))) (* (b (a c)))))
+
+@count_pair__C9 = (?(((* 0) @count_pair__C8) a) a)
+
+@prog = ((b a) c)
+  & @count_pair ~ (a (b c))
+
+

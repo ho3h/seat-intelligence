@@ -1,0 +1,86 @@
+diff -ru -x target -x .git hvm2/src/hvm.rs hvm2-depth/src/hvm.rs
+--- hvm2/src/hvm.rs	2026-09-28 21:59:05
++++ hvm2-depth/src/hvm.rs	2026-09-28 22:36:57
+@@ -906,6 +906,42 @@
+     }
+   }
+ 
++  // GENOME INSTRUMENT: same rewrite rules, different scheduler. Fires every currently ready redex once per
++  // round, each in isolation; redexes created by a firing wait for the next round. LINK redexes (free wire
++  // substitutions) are resolved immediately and do not consume a round. Returns (rounds, max_width, work):
++  // rounds is the parallel depth under unbounded processors (ASAP schedule).
++  pub fn evaluator_rounds(&mut self, net: &GNet, book: &Book) -> (u64, u64, u64) {
++    let mut rounds: u64 = 0;
++    let mut max_width: u64 = 0;
++    let mut work: u64 = 0;
++    let mut batch: Vec<Pair> = Vec::new();
++    batch.extend(self.rbag.hi.drain(..));
++    batch.extend(self.rbag.lo.drain(..));
++    while !batch.is_empty() {
++      let mut next: Vec<Pair> = Vec::new();
++      let mut real = 0u64;
++      for r in batch {
++        let mut stack: Vec<Pair> = vec![r];
++        while let Some(x) = stack.pop() {
++          let is_link = Port::get_rule(x.get_fst(), x.get_snd()) == LINK;
++          self.rbag.hi.clear(); self.rbag.lo.clear();
++          self.rbag.push_redex(x);
++          if !self.interact(net, book) { panic!("resource exhaustion in depth oracle"); }
++          if !is_link { real += 1; }
++          let made: Vec<Pair> = self.rbag.hi.drain(..).chain(self.rbag.lo.drain(..)).collect();
++          for y in made {
++            if Port::get_rule(y.get_fst(), y.get_snd()) == LINK { stack.push(y); } else { next.push(y); }
++          }
++        }
++      }
++      if real > 0 { rounds += 1; work += real; if real > max_width { max_width = real; } }
++      batch = next;
++    }
++    net.itrs.fetch_add(self.itrs as u64, Ordering::Relaxed);
++    self.itrs = 0;
++    (rounds, max_width, work)
++  }
++
+   pub fn evaluator(&mut self, net: &GNet, book: &Book) {
+     // Increments the tick
+     self.tick += 1;
+diff -ru -x target -x .git hvm2/src/main.rs hvm2-depth/src/main.rs
+--- hvm2/src/main.rs	2026-09-28 21:59:05
++++ hvm2-depth/src/main.rs	2026-09-28 22:36:46
+@@ -173,24 +173,30 @@
+   let start = std::time::Instant::now();
+ 
+   // Evaluates
+-  tm.evaluator(&net, &book);
++  let (rounds, width, work) = tm.evaluator_rounds(&net, &book);
+   
+   // Stops the timer
+   let duration = start.elapsed();
+ 
+   //println!("{}", net.show());
+ 
+-  // Prints the result
+-  if let Some(tree) = ast::Net::readback(&net, book) {
+-    println!("Result: {}", tree.show());
++  // Prints the result (GENOME: readback skipped unless GENOME_READBACK is set; it is recursive and overflows on deep outputs)
++  if std::env::var("GENOME_READBACK").is_ok() {
++    if let Some(tree) = ast::Net::readback(&net, book) {
++      println!("Result: {}", tree.show());
++    } else {
++      println!("Readback failed.");
++    }
+   } else {
+-    println!("Readback failed. Printing GNet memdump...\n");
+-    println!("{}", net.show());
++    println!("Result: <skipped>");
+   }
+ 
+   // Prints interactions and time
+   let itrs = net.itrs.load(std::sync::atomic::Ordering::Relaxed);
+   println!("- ITRS: {}", itrs);
++  println!("- DEPTH: {}", rounds);
++  println!("- WIDTH: {}", width);
++  println!("- WORK: {}", work);
+   println!("- TIME: {:.2}s", duration.as_secs_f64());
+   println!("- MIPS: {:.2}", itrs as f64 / duration.as_secs_f64() / 1_000_000.0);
+ }

@@ -1,0 +1,19 @@
+// Dot product over the shorter of two lists, accumulating modulo 2^24.
+@prog = ((xs ys) out)
+  & @dot ~ (xs (ys (0 out)))
+
+@dot = ((?((@dot_xnil @dot_xcons) (px (ys (acc out)))) px) (ys (acc out)))
+
+@dot_xnil = (* (* (a a)))
+
+@dot_xcons = (* ((x xt) (ys (acc out))))
+  & @dot_y ~ (ys (x (xt (acc out))))
+
+@dot_y = ((?((@dot_ynil @dot_ycons) (py (x (xt (acc out)))) py) (x (xt (acc out))))
+
+@dot_ynil = (* (* (* (a a))))
+
+@dot_ycons = (* ((y yt) (x (xt (acc out)))))
+  & x ~ $([*] $(y p))
+  & p ~ $([+] $(acc na))
+  & @dot ~ (xt (yt (na out)))

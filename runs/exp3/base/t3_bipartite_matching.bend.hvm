@@ -1,0 +1,118 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@augment = ({a c} ({e b} f))
+  & @try_neighbors ~ (a (d (e f)))
+  & @list_get ~ (b (c d))
+
+@build_adj = ({$([=] $(a ?((@build_adj__C0 (* (* (* (* @List/Nil))))) (b (c d))))) b} ({a c} d))
+
+@build_adj__C0 = ({$([+0x0000001] d) a} (e ({f b} h)))
+  & @List/Cons ~ (c (g h))
+  & @collect_neighbors ~ (a (b (@List/Nil c)))
+  & @build_adj ~ (d (e (f g)))
+
+@collect_neighbors = (a ((@collect_neighbors__C3 (a b)) b))
+
+@collect_neighbors__C0 = (a (c (b (* d))))
+  & @collect_neighbors ~ (a (b (c d)))
+
+@collect_neighbors__C1 = (* (a (d (b (c f)))))
+  & @collect_neighbors ~ (a (b (e f)))
+  & @List/Cons ~ (c (d e))
+
+@collect_neighbors__C2 = (* (($([=] $(a ?((@collect_neighbors__C0 @collect_neighbors__C1) (b (c (d (e f))))))) e) (d ({a b} (c f)))))
+
+@collect_neighbors__C3 = (?(((* (a a)) @collect_neighbors__C2) b) b)
+
+@contains = ((@contains__C2 a) a)
+
+@contains__C0 = (b (a c))
+  & @contains ~ (a (b c))
+
+@contains__C1 = (* ($([=] $(a ?((@contains__C0 (* (* (* 1)))) (b (c d))))) (c ({a b} d))))
+
+@contains__C2 = (?(((* 0) @contains__C1) a) a)
+
+@list_get = (a ({$([=0x0000000] ?((@list_get__C3 @list_get__C4) (a (b c)))) b} c))
+
+@list_get__C0 = (* (* (a ($([:-0x0000001] b) c))))
+  & @list_get ~ (a (b c))
+
+@list_get__C1 = (?(((* 0) @list_get__C0) a) a)
+
+@list_get__C2 = (?((0 (* (a (* a)))) b) b)
+
+@list_get__C3 = ((@list_get__C1 a) a)
+
+@list_get__C4 = (* ((@list_get__C2 a) (* a)))
+
+@list_set = (a ({$([=0x0000000] ?((@list_set__C4 @list_set__C5) (a (b c)))) b} c))
+
+@list_set__C0 = (* (a (b ($([:-0x0000001] c) (d f)))))
+  & @List/Cons ~ (a (e f))
+  & @list_set ~ (b (c (d e)))
+
+@list_set__C1 = (?(((* (* @List/Nil)) @list_set__C0) a) a)
+
+@list_set__C2 = (* (* (b (a c))))
+  & @List/Cons ~ (a (b c))
+
+@list_set__C3 = (?(((* @List/Nil) @list_set__C2) a) a)
+
+@list_set__C4 = ((@list_set__C1 a) a)
+
+@list_set__C5 = (* ((@list_set__C3 a) (* a)))
+
+@make_list = ({$([=0x0000000] ?((@make_list__C0 (* (* (* @List/Nil)))) (a b))) a} b)
+
+@make_list__C0 = ($([:-0x0000001] b) ({a c} e))
+  & @List/Cons ~ (a (d e))
+  & @make_list ~ (b (c d))
+
+@process_left = ({$([=] $(a ?((@process_left__C2 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@process_left__C0 = ($([+0x0000001] a) (b (c (e (d f)))))
+  & @process_left ~ (a (b (c (d (e f)))))
+
+@process_left__C1 = (* ($([+0x0000001] a) (b (c ($([+0x0000001] e) (d f))))))
+  & @process_left ~ (a (b (c (d (e f)))))
+
+@process_left__C2 = ({a e} ({d f} ({b g} (c (h j)))))
+  & @augment ~ (a (b (c (@List/Nil (d ($([=0x0000001] ?((@process_left__C0 @process_left__C1) (e (f (g (h (i j))))))) (i *)))))))
+
+@prog = (({a {f b}} (e c)) h)
+  & @process_left ~ (0 (a (d (g (0 h)))))
+  & @build_adj ~ (0 (b (c d)))
+  & @make_list ~ (e (f g))
+
+@try_neighbors = (a ((@try_neighbors__C8 (a b)) b))
+
+@try_neighbors__C0 = (a (c (f (b (* (d (e g)))))))
+  & @try_neighbors ~ (a (b (c (d (e (f g))))))
+
+@try_neighbors__C1 = (* (c (* (* (* (b (a (e (1 (d e))))))))))
+  & @list_set ~ (a (b (c d)))
+
+@try_neighbors__C2 = (f ({b g} (c ({e h} (i (j (d (a m))))))))
+  & @augment ~ (a (b (c (d (e ($([=0x0000001] ?((@try_neighbors__C0 @try_neighbors__C1) (f (g (h (i (j (k (l m))))))))) (k l)))))))
+
+@try_neighbors__C3 = (* (c (* (a (* (* (b (e (* (1 (d e)))))))))))
+  & @list_set ~ (a (b (c d)))
+
+@try_neighbors__C4 = (d (e ({f a} (k ({c g} (h ({i {b j}} n)))))))
+  & @list_get ~ (a (b {$([=] $(c ?((@try_neighbors__C2 @try_neighbors__C3) (d (e (f (g (h (i (l (m n))))))))))) m}))
+  & @List/Cons ~ (j (k l))
+
+@try_neighbors__C5 = (* (a (c (d (e (f (b (* g))))))))
+  & @try_neighbors ~ (a (b (c (d (e (f g))))))
+
+@try_neighbors__C6 = (* (* (a (b (* (0 (a b)))))))
+
+@try_neighbors__C7 = (* ({b i} (h (c (d (e ({a f} (g j))))))))
+  & @contains ~ (a (b $([=0x0000001] ?((@try_neighbors__C4 @try_neighbors__C5) (c (d (e (f (g (h (i j)))))))))))
+
+@try_neighbors__C8 = (?((@try_neighbors__C6 @try_neighbors__C7) a) a)
+
+

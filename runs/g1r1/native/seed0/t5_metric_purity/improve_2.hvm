@@ -1,0 +1,145 @@
+@prog = ((pred truth) out)
+  & @zip ~ (pred (truth rows))
+  & rows ~ {todo full}
+  & @annotate ~ (full (todo counted))
+  & @outer ~ (todo (counted ((0 *) (0 out))))
+
+@zip = ((?((@zip_nil @zip_cons) (pl (truth out))) pl) (truth out))
+
+@zip_nil = (* (truth out))
+  & truth ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((ph pt) (truth out)))
+  & @zipT ~ (truth (ph (pt out)))
+
+@zipT = ((?((@zipT_nil @zipT_cons) (pl (ph (pt out)))) pl) (ph (pt out)))
+
+@zipT_nil = (* (ph (pt out)))
+  & ph ~ *
+  & pt ~ *
+  & out ~ (0 *)
+
+@zipT_cons = (* ((th tt) (ph (pt out))))
+  & @zip ~ (pt (tt rest))
+  & out ~ (1 ((ph th) rest))
+
+@annotate = ((?((@an_nil @an_cons) (pl (all out))) pl) (all out))
+
+@an_nil = (* (all out))
+  & all ~ *
+  & out ~ (0 *)
+
+@an_cons = (* (((p t) tail) (all out)))
+  & all ~ {all_count all_next}
+  & p ~ {p_count p_out}
+  & t ~ {t_count t_out}
+  & @count ~ (all_count (p_count (t_count (0 cnt))))
+  & @annotate ~ (all_next (tail rest))
+  & out ~ (1 ((p_out (t_out cnt)) rest))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (* (q out))
+  & q ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (q out)))
+  & q ~ {q_cmp q_rec}
+  & h ~ $([=] $(q_cmp eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (q_rec out)))
+
+@mem_no = (t (q out))
+  & @mem ~ (t (q out))
+
+@mem_yes = (* (t (q out)))
+  & t ~ *
+  & q ~ *
+  & out ~ 1
+
+@outer = ((?((@outer_nil @outer_cons) (pl (full (seen (acc out))))) pl) (full (seen (acc out))))
+
+@outer_nil = (* (full (seen (acc out))))
+  & full ~ *
+  & seen ~ *
+  & acc ~ out
+
+@outer_cons = (* (((p (t c)) tail) (full (seen (acc out)))))
+  & full ~ {full_max full_next}
+  & seen ~ {seen_query seen_next}
+  & p ~ {p_query p_rest}
+  & p_rest ~ {p_target p_store}
+  & @mem ~ (seen_query (p_query has))
+  & has ~ ?((@outer_new @outer_old) (tail (full_max (full_next (seen_next (p_target (p_store (c (acc out)))))))))
+
+@outer_new = (tail (full_max (full_next (seen_next (p_target (p_store (c (acc out))))))))
+  & @max ~ (full_max (p_target m))
+  & acc ~ $([+] $(m acc2))
+  & c ~ *
+  & @outer ~ (tail (full_next ((1 (p_store seen_next)) (acc2 out))))
+
+@outer_old = (* (tail (full_max (full_next (seen_next (p_target (p_store (c (acc out)))))))))
+  & full_max ~ *
+  & p_target ~ *
+  & p_store ~ *
+  & c ~ *
+  & @outer ~ (tail (full_next (seen_next (acc out))))
+
+@max = ((?((@max_nil @max_cons) (pl (target (mx out)))) pl) (target (mx out)))
+
+@max_nil = (* (target (mx out)))
+  & target ~ *
+  & mx ~ out
+
+@max_cons = (* (((p (t c)) tail) (target (mx out))))
+  & target ~ {target_cmp target_next}
+  & p ~ $([=] $(target_cmp eq))
+  & t ~ *
+  & eq ~ ?((@max_no @max_yes) (tail (c (target_next (mx out)))))
+
+@max_no = (tail (c (target_next (mx out))))
+  & c ~ *
+  & @max ~ (tail (target_next (mx out)))
+
+@max_yes = (* (tail (c (target_next (mx out)))))
+  & c ~ {c_cmp c_keep}
+  & mx ~ {mx_cmp mx_rec}
+  & c_cmp ~ $([>] $(mx_cmp gt))
+  & gt ~ ?((@max_keep @max_update) (tail (target_next (mx_rec (c_keep out)))))
+
+@max_keep = (tail (target_next (mx_rec (c_keep out))))
+  & c_keep ~ *
+  & @max ~ (tail (target_next (mx_rec out)))
+
+@max_update = (* (tail (target_next (mx_rec (c_keep out)))))
+  & mx_rec ~ *
+  & @max ~ (tail (target_next (c_keep out)))
+
+@count = ((?((@count_nil @count_cons) (pl (targetp (targett (acc out))))) pl) (targetp (targett (acc out))))
+
+@count_nil = (* (targetp (targett (acc out))))
+  & targetp ~ *
+  & targett ~ *
+  & acc ~ out
+
+@count_cons = (* (((rp rt) tail) (targetp (targett (acc out)))))
+  & targetp ~ {pc pr}
+  & targett ~ {tc tr}
+  & rp ~ $([=] $(pc eq))
+  & eq ~ ?((@count_pno @count_pyes) (tail (rt (pr (tc (tr (acc out)))))))
+
+@count_pno = (tail (rt (pr (tc (tr (acc out))))))
+  & rt ~ *
+  & tc ~ *
+  & @count ~ (tail (pr (tr (acc out))))
+
+@count_pyes = (* (tail (rt (pr (tc (tr (acc out)))))))
+  & rt ~ $([=] $(tc et))
+  & et ~ ?((@count_tno @count_tyes) (tail (pr (tr (acc out)))))
+
+@count_tno = (tail (pr (tr (acc out))))
+  & @count ~ (tail (pr (tr (acc out))))
+
+@count_tyes = (* (tail (pr (tr (acc out)))))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (pr (tr (acc2 out))))

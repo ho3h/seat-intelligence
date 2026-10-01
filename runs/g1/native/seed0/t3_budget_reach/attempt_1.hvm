@@ -1,0 +1,242 @@
+// Budget-limited Bellman-Ford. Each distance entry is (reachable distance),
+// with (0 *) denoting unreachable and (1 distance) denoting reachable.
+
+@prog = (input out)
+  & input ~ (n (s (b edges)))
+  & n ~ {ni nr}
+  & b ~ {br bc}
+  & @init ~ (ni (0 (s dist)))
+  & @round ~ (nr (edges (dist (br dfinal))))
+  & @count ~ (dfinal (bc (0 out)))
+
+@init = (n (i (s out)))
+  & n ~ ?((@init_zero @init_succ) (i (s out)))
+
+@init_zero = (i (s out))
+  & i ~ *
+  & s ~ *
+  & out ~ (0 *)
+
+@init_succ = (n (i (s out)))
+  & i ~ {it icmp}
+  & s ~ {st scmp}
+  & icmp ~ $([=] $(scmp eq))
+  & eq ~ ?((@init_other @init_source) (n (it (st out))))
+
+@init_other = (n (i (s out)))
+  & i ~ $([+1] i2)
+  & @init ~ (n (i2 (s tail)))
+  & out ~ (1 ((0 *) tail))
+
+@init_source = (n (i (s out)))
+  & i ~ $([+1] i2)
+  & @init ~ (n (i2 (s tail)))
+  & out ~ (1 ((1 0) tail))
+
+@round = (k (edges (dist (b out))))
+  & k ~ ?((@round_zero @round_succ) (edges (dist (b out))))
+
+@round_zero = (* (dist (b out)))
+  & edges ~ *
+  & b ~ *
+  & out ~ dist
+
+@round_succ = (* (edges (dist (b out))))
+  & edges ~ {todo all}
+  & @scan ~ (todo (all (dist (b (k out))))
+
+@scan = (todo (all (dist (b (k out)))))
+  & todo ~ ?((@scan_nil @scan_cons) (all (dist (b (k out)))) p)
+
+@scan_nil = (* (all (dist (b (k out)))))
+  & @round ~ (k (all (dist (b out))))
+
+@scan_cons = (* (p (all (dist (b (k out))))))
+  & p ~ (edge tail)
+  & edge ~ (u (v w))
+  & @edge ~ (u (v (w (dist (b d1))))
+  & @scan ~ (tail (all (d1 (b (k out)))))
+
+@edge = (u (v (w (dist (b out)))))
+  & u ~ {ucol uupd}
+  & v ~ {vcol vupd}
+  & w ~ {w1 w2}
+  & b ~ {b1 b2}
+  & @collect ~ (dist (0 (ucol (vcol ((0 *) ((0 *) ret))))))
+  & ret ~ (du_item (dv_item base))
+  & du_item ~ {du1 du2}
+  & dv_item ~ {dv1 dv2}
+  & @try ~ (du1 (dv1 (w1 (b1 newv))))
+  & @try ~ (dv2 (du2 (w2 (b2 newu))))
+  & @update ~ (base (0 (uupd (vupd (newu (newv out))))))
+
+// Traverse and rebuild the distance list while collecting the entries at u and v.
+// The output is (entry_at_u (entry_at_v rebuilt_list)).
+@collect = (l (i (u (v (du_old (dv_old out))))))
+  & l ~ (?((@collect_nil @collect_cons) (i (u (v (du_old (dv_old out)))))) p)
+
+@collect_nil = (* (i (u (v (du_old (dv_old out))))))
+  & i ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ (du_old (dv_old (0 *)))
+
+@collect_cons = (* (p (i (u (v (du_old (dv_old out)))))))
+  & p ~ (item tail)
+  & item ~ {item_u item_rest}
+  & item_rest ~ {item_v item_list}
+  & i ~ {ic1 ir}
+  & ir ~ {ic2 inext}
+  & u ~ {ucmp unext}
+  & v ~ {vcmp vnext}
+  & ic1 ~ $([=] $(ucmp eq_u))
+  & ic2 ~ $([=] $(vcmp eq_v))
+  & @pick ~ (eq_u (item_u (du_old du_new)))
+  & @pick ~ (eq_v (item_v (dv_old dv_new)))
+  & @collect ~ (tail (inext (unext (vnext (du_new (dv_new ret))))))
+  & ret ~ (du_tail (dv_tail tailout))
+  & out ~ (du_tail (dv_tail (1 (item_list tailout))))
+
+// Select replacement when flag is 1, otherwise select current.
+@pick = (flag (replacement (current out)))
+  & flag ~ ?((@pick_no @pick_yes) (replacement (current out)))
+
+@pick_no = (replacement (current out))
+  & replacement ~ *
+  & out ~ current
+
+@pick_yes = (* (replacement (current out)))
+  & current ~ *
+  & out ~ replacement
+
+// Try to relax one target entry from one source entry, respecting the budget.
+@try = (si (ti (w (b out))))
+  & si ~ (rs ds)
+  & rs ~ ?((@try_src_no @try_src_yes) (ds (ti (w (b out)))))
+
+@try_src_no = (ds (ti (w (b out))))
+  & ds ~ *
+  & w ~ *
+  & b ~ *
+  & out ~ ti
+
+@try_src_yes = (* (ds (ti (w (b out)))))
+  & ds ~ {d1 d2}
+  & b ~ {b1 b2}
+  & d1 ~ $([>] $(b1 bad))
+  & bad ~ ?((@try_range @try_oob) (d2 (ti (w (b2 out)))))
+
+@try_range = (d (ti (w (b out))))
+  & d ~ *
+  & w ~ *
+  & b ~ *
+  & out ~ ti
+
+@try_oob = (* (d (ti (w (b out)))))
+  & d ~ *
+  & w ~ *
+  & b ~ *
+  & out ~ ti
+
+@try_range = (d (ti (w (b out))))
+  & d ~ *
+  & w ~ *
+  & b ~ *
+  & out ~ ti
+
+@try_src_yes = (* (ds (ti (w (b out)))))
+  & ds ~ {d1 d2}
+  & b ~ {b1 b2}
+  & d1 ~ $([>] $(b1 bad))
+  & bad ~ ?((@try_range @try_oob) (d2 (ti (w (b2 out)))))
+
+@try_inrange = (d (ti (w (b out))))
+  & d ~ *
+  & w ~ *
+  & b ~ *
+  & out ~ ti
+
+@try_within = (dadd (ti (w out)))
+  & dadd ~ $([+] $(w cand))
+  & @try_candidate ~ (cand (ti out))
+
+@try_candidate = (cand (ti out))
+  & ti ~ (rt dt)
+  & rt ~ ?((@try_new @try_old) (dt (cand out)))
+
+@try_new = (dt (cand out))
+  & dt ~ *
+  & out ~ (1 cand)
+
+@try_old = (* (dt (cand out)))
+  & dt ~ {dtcmp dtkeep}
+  & cand ~ {cc ck}
+  & dtcmp ~ $([>] $(cc improve))
+  & improve ~ ?((@try_keep @try_change) (dtkeep (ck out)))
+
+@try_keep = (dt (cand out))
+  & cand ~ *
+  & out ~ (1 dt)
+
+@try_change = (* (cand out))
+  & out ~ (1 cand)
+
+@try_too_far = (d (ti (w out)))
+  & d ~ *
+  & w ~ *
+  & out ~ ti
+
+// Rebuild the distance list, replacing its entries at u and v.
+@update = (l (i (u (v (nu (nv out))))))
+  & l ~ (?((@update_nil @update_cons) (i (u (v (nu (nv out)))))) p)
+
+@update_nil = (* (i (u (v (nu (nv out))))))
+  & i ~ *
+  & u ~ *
+  & v ~ *
+  & nu ~ *
+  & nv ~ *
+  & out ~ (0 *)
+
+@update_cons = (* (p (i (u (v (nu (nv out)))))))
+  & p ~ (item tail)
+  & i ~ {i1 ir}
+  & ir ~ {i2 inext}
+  & u ~ {ucmp unext}
+  & v ~ {vcmp vnext}
+  & i1 ~ $([=] $(ucmp eq_u))
+  & i2 ~ $([=] $(vcmp eq_v))
+  & nu ~ {nu_local nu_rest}
+  & nv ~ {nv_local nv_rest}
+  & @pick ~ (eq_u (nu_local (item chosen)))
+  & @pick ~ (eq_v (nv_local (chosen selected)))
+  & @update ~ (tail (inext (unext (vnext (nu_rest (nv_rest tailout))))))
+  & out ~ (1 (selected tailout))
+
+// Count reachable entries whose distance is within the budget.
+@count = (l (b (acc out)))
+  & l ~ (?((@count_nil @count_cons) (b (acc out))) p)
+
+@count_nil = (* (b (acc out)))
+  & b ~ *
+  & out ~ acc
+
+@count_cons = (* (p (b (acc out))))
+  & p ~ (item tail)
+  & item ~ (flag d)
+  & flag ~ ?((@count_unreachable @count_reachable) (d (tail (b (acc out)))))
+
+@count_unreachable = (d (tail (b (acc out))))
+  & d ~ *
+  & @count ~ (tail (b (acc out)))
+
+@count_reachable = (* (d (tail (b (acc out)))))
+  & d ~ $([>] $(b bad))
+  & bad ~ ?((@count_yes @count_no) (tail (b (acc out))))
+
+@count_yes = (tail (b (acc out)))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (b (acc2 out)))
+
+@count_no = (tail (b (acc out)))
+  & @count ~ (tail (b (acc out)))

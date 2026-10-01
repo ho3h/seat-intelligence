@@ -1,0 +1,117 @@
+// Build a parent array, union each edge once, then map every vertex to its
+// component's minimum id. Roots are always attached to smaller roots.
+@prog = ((n edges) out)
+  & n ~ {n_make n_map}
+  & @make ~ (n_make (0 parents))
+  & @union_scan ~ (edges (parents unioned))
+  & @map ~ (n_map (0 (unioned out)))
+
+// Build [0, 1, ..., n-1].
+@make = (n (i out))
+  & n ~ ?((@make_zero @make_succ) (i out))
+
+@make_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@make_succ = (rem (i out))
+  & @copy_num ~ (i (i_head i_rec))
+  & i_rec ~ $([+1] i_next)
+  & @make ~ (rem (i_next rest))
+  & out ~ (1 (i_head rest))
+
+@copy_num = (x (a b))
+  & x ~ {a b}
+
+// Process every edge once.
+@union_scan = ((?((@us_nil @us_cons) (pl (parents out))) pl) (parents out))
+
+@us_nil = (* (parents out))
+  & out ~ parents
+
+@us_cons = (* ((edge tail) (parents out)))
+  & @union_edge ~ (edge (parents (tail out)))
+
+// Find the roots of an edge's endpoints and attach the larger root to the
+// smaller one.
+@union_edge = ((u v) (parents (tail out)))
+  & u ~ {u_find u_rest}
+  & v ~ {v_find v_rest}
+  & parents ~ {parents_u {parents_v parents_set}}
+  & @find ~ (u_find (parents_u root_u))
+  & @find ~ (v_find (parents_v root_v))
+  & root_u ~ {ru_cmp ru_arg}
+  & root_v ~ {rv_cmp rv_arg}
+  & ru_cmp ~ $([<] $(rv_cmp z))
+  & z ~ ?((@union_ge @union_lt) (ru_arg (rv_arg (parents_set (tail out))))
+
+@union_ge = (ru (rv (parents (tail out))))
+  & @union_link ~ (ru (rv (parents (tail out))))
+
+@union_lt = (* (ru (rv (parents (tail out)))))
+  & @union_link ~ (rv (ru (parents (tail out))))
+
+@union_link = (idx (value (parents (tail out))))
+  & @set ~ (idx (value (parents newparents)))
+  & @union_scan ~ (tail (newparents out))
+
+// Find the root by following parent pointers.
+@find = (idx (parents out))
+  & idx ~ {idx_get {idx_cmp idx_ret}}
+  & parents ~ {parents_get parents_rec}
+  & @get ~ (idx_get (parents_get p))
+  & p ~ {p_cmp p_next}
+  & idx_cmp ~ $([=] $(p_cmp z))
+  & z ~ ?((@find_no @find_yes) (idx_ret (p_next (parents_rec out))))
+
+@find_no = (idx (p (parents out)))
+  & idx ~ *
+  & @find ~ (p (parents out))
+
+@find_yes = (* (idx (p (parents out))))
+  & p ~ *
+  & parents ~ *
+  & out ~ idx
+
+// Emit one root label for each vertex.
+@map = (rem (i (parents out)))
+  & rem ~ ?((@map_nil @map_cons) (i (parents out)))
+
+@map_nil = (i (parents out))
+  & i ~ *
+  & parents ~ *
+  & out ~ (0 *)
+
+@map_cons = (rem (i (parents out)))
+  & i ~ {idx_find i_rec}
+  & parents ~ {parents_find parents_rec}
+  & @find ~ (idx_find (parents_find root))
+  & i_rec ~ $([+1] i_next)
+  & @map ~ (rem (i_next (parents_rec rest)))
+  & out ~ (1 (root rest))
+
+// Get the label at index idx.
+@get = (idx (list out))
+  & idx ~ ?((@get_zero @get_succ) (list out))
+
+@get_zero = ((tag (head tail)) out)
+  & tag ~ *
+  & tail ~ *
+  & out ~ head
+
+@get_succ = (idx ((tag (head tail)) out))
+  & tag ~ *
+  & head ~ *
+  & @get ~ (idx (tail out))
+
+// Set the label at index idx to value.
+@set = (idx (value (list out)))
+  & idx ~ ?((@set_zero @set_succ) (value (list out)))
+
+@set_zero = (value ((tag (head tail)) out))
+  & head ~ *
+  & out ~ (tag (value tail))
+
+@set_succ = (idx (value ((tag (head tail)) out)))
+  & @set ~ (idx (value (tail rest)))
+  & out ~ (tag (head rest))

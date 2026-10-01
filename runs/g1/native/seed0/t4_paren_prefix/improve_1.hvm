@@ -1,0 +1,33 @@
+// Scan while tracking nesting depth, position, and the last balanced position.
+@prog = (l out)
+  & @scan ~ (l (0 (0 (0 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (dep (pos (best out))))) pl) (dep (pos (best out))))
+
+@scan_nil = (* (* (* (a a))))
+
+@scan_cons = (* ((h t) (dep (pos (best out)))))
+  & h ~ $([-40] z)
+  & z ~ ?((@scan_open @scan_close) (t (dep (pos (best out)))))
+
+@scan_open = (t (dep (pos (best out))))
+  & dep ~ $([+1] dep2)
+  & pos ~ $([+1] pos2)
+  & @scan ~ (t (dep2 (pos2 (best out))))
+
+@scan_close = (* (t (dep (pos (best out)))))
+  & dep ~ ?((@scan_stop @scan_down) (t (pos (best out))))
+
+@scan_stop = (* (* (a a)))
+
+@scan_down = (dep (t (pos (best out))))
+  & dep ~ {test keep}
+  & test ~ ?((@scan_zero @scan_more) (keep (t (pos (best out)))))
+
+@scan_zero = (dep (t (pos (best out))))
+  & pos ~ {p1 p2}
+  & best ~ *
+  & @scan ~ (t (dep (p1 (p2 out))))
+
+@scan_more = (* (dep (t (pos (best out)))))
+  & @scan ~ (t (dep (pos (best out))))

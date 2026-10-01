@@ -1,0 +1,87 @@
+@prog = (input out)
+  & input ~ (c mnl)
+  & @pairs ~ (mnl (c ((0 *) out)))
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@pairs_nil = (* (c (acc out)))
+  & c ~ *
+  & acc ~ out
+
+@pairs_cons = (* ((a (b tail)) (c (acc out))))
+  & c ~ {ca {cb cnext}}
+  & a ~ {a_idx a_keep}
+  & b ~ {b_idx b_keep}
+  & @get ~ (ca (a_idx va))
+  & @get ~ (cb (b_idx vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@pairs_no @pairs_yes) (tail (cnext (acc (a_keep (b_keep out))))))
+
+@pairs_no = (* (tail (c (acc (a (b out))))))
+  & a ~ *
+  & b ~ *
+  & @pairs ~ (tail (c (acc out)))
+
+@pairs_yes = (* (tail (c (acc (a (b out))))))
+  & @ins ~ ((a b) (acc sorted))
+  & @pairs ~ (tail (c (sorted out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_zero @get_succ) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_succ = (dec (h (t out)))
+  & h ~ *
+  & @get ~ (t (dec out))
+
+@ins = (new ((?((@ins_nil @ins_cons) (pl (new out))) pl) (new out)))
+
+@ins_nil = (* (new out))
+  & out ~ (1 (new (0 *)))
+
+@ins_cons = (* ((p q) (new out)))
+  & new ~ (a b)
+  & p ~ (u v)
+  & a ~ {al {ae ak}}
+  & u ~ {ul {ue uk}}
+  & b ~ {bc bk}
+  & v ~ {vc vk}
+  & al ~ $([<] $(ul less))
+  & less ~ ?((@ins_not_less @ins_before) (ae (ue (bc (vc (ak (bk (uk (vk (q out)))))))))
+
+@ins_before = (* (ae (ue (bc (vc (ak (bk (uk (vk (q out)))))))))
+  & ae ~ *
+  & ue ~ *
+  & bc ~ *
+  & vc ~ *
+  & out ~ (1 ((ak bk) (1 ((uk vk) q))))
+
+@ins_not_less = (* (ae (ue (bc (vc (ak (bk (uk (vk (q out)))))))))
+  & ae ~ $([=] $(ue equal))
+  & equal ~ ?((@ins_greater @ins_equal) (bc (vc (ak (bk (uk (vk (q out))))))))
+
+@ins_greater = (bc (vc (ak (bk (uk (vk (q out)))))))
+  & bc ~ *
+  & vc ~ *
+  & @ins ~ ((ak bk) (q mid))
+  & mid ~ (1 ((uk vk) out))
+
+@ins_equal = (bc (vc (ak (bk (uk (vk (q out)))))))
+  & bc ~ $([<] $(vc less2))
+  & less2 ~ ?((@ins_second_not_less @ins_second_before) (ak (bk (uk (vk (q out))))))
+
+@ins_second_before = (* (ak (bk (uk (vk (q out))))))
+  & out ~ (1 ((ak bk) (1 ((uk vk) q))))
+
+@ins_second_not_less = (ak (bk (uk (vk (q out)))))
+  & @ins ~ ((ak bk) (q mid))
+  & mid ~ (1 ((uk vk) out))

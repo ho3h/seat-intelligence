@@ -1,0 +1,114 @@
+@prog = ((n edges) out)
+  & @count_vertices ~ (n (0 (0 (edges out))))
+
+@count_vertices = (n (i (acc (edges out))))
+  & i ~ {i_cmp i_ctx}
+  & n ~ {n_cmp n_ctx}
+  & i_cmp ~ $([<] $(n_cmp z))
+  & z ~ ?((@count_done @count_step) (n_ctx (i_ctx (acc (edges out)))))
+
+@count_done = (n (i (acc (edges out))))
+  & n ~ *
+  & i ~ *
+  & edges ~ *
+  & out ~ acc
+
+@count_step = (* (n (i (acc (edges out)))))
+  & i ~ {i_test i_next}
+  & edges ~ {edges_test edges_next}
+  & @vertex_test ~ (i_test (edges_test cyc))
+  & cyc ~ ?((@count_no @count_yes) (n (i_next (acc (edges_next out))))
+
+@count_no = (n (i (acc (edges out))))
+  & i ~ $([+1] i2)
+  & @count_vertices ~ (n (i2 (acc (edges out))))
+
+@count_yes = (* (n (i (acc (edges out)))))
+  & i ~ $([+1] i2)
+  & acc ~ $([+1] acc2)
+  & @count_vertices ~ (n (i2 (acc2 (edges out))))
+
+@vertex_test = (start (edges out))
+  & start ~ {s_scan s_other}
+  & s_other ~ {s_dfs s_seen}
+  & edges ~ {edges_scan edges_dfs}
+  & @scan ~ (s_scan (edges_scan ((0 *) work)))
+  & @dfs ~ (s_dfs (work ((1 (s_seen (0 *))) (edges_dfs out))))
+
+@scan = (source ((?((@scan_nil @scan_cons) (payload (source (work out)))) payload) (work out)))
+
+@scan_nil = (payload (source (work out)))
+  & payload ~ *
+  & source ~ *
+  & out ~ work
+
+@scan_cons = (* (((u v) tail) (source (work out))))
+  & source ~ {source_eq source_keep}
+  & u ~ $([=] $(source_eq z))
+  & z ~ ?((@scan_no @scan_yes) (v (tail (source_keep (work out))))
+
+@scan_no = (v (tail (source (work out))))
+  & v ~ *
+  & @scan ~ (source (tail (work out)))
+
+@scan_yes = (* (v (tail (source (work out)))))
+  & @scan ~ (source (tail ((1 (v work)) out)))
+
+@dfs = (start ((?((@dfs_nil @dfs_cons) (payload (start (seen (edges out))))) payload) (seen (edges out))))
+
+@dfs_nil = (payload (start (seen (edges out))))
+  & payload ~ *
+  & start ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ 0
+
+@dfs_cons = (* ((candidate rest) (start (seen (edges out)))))
+  & start ~ {start_eq start_keep}
+  & candidate ~ {candidate_eq candidate_rest}
+  & candidate_eq ~ $([=] $(start_eq eq))
+  & eq ~ ?((@dfs_check @dfs_found) (candidate_rest (rest (start_keep (seen (edges out)))))
+
+@dfs_found = (* (candidate (rest (start (seen (edges out))))))
+  & candidate ~ *
+  & rest ~ *
+  & start ~ *
+  & seen ~ *
+  & edges ~ *
+  & out ~ 1
+
+@dfs_check = (candidate (rest (start (seen (edges out)))))
+  & candidate ~ {target candidate_keep}
+  & seen ~ {seen_test seen_keep}
+  & @contains ~ (target (seen_test z))
+  & z ~ ?((@dfs_expand @dfs_skip) (candidate_keep (rest (start (seen_keep (edges out)))))
+
+@dfs_skip = (* (candidate (rest (start (seen (edges out))))))
+  & candidate ~ *
+  & @dfs ~ (start (rest (seen (edges out))))
+
+@dfs_expand = (candidate (rest (start (seen (edges out)))))
+  & candidate ~ {source candidate_seen}
+  & edges ~ {edges_scan edges_dfs}
+  & @scan ~ (source (edges_scan (rest new_work)))
+  & @dfs ~ (start (new_work ((1 (candidate_seen seen)) (edges_dfs out))))
+
+@contains = (target ((?((@contains_nil @contains_cons) (payload (target out))) payload) out))
+
+@contains_nil = (payload (target out))
+  & payload ~ *
+  & target ~ *
+  & out ~ 0
+
+@contains_cons = (* ((head tail) (target out)))
+  & target ~ {target_eq target_keep}
+  & head ~ $([=] $(target_eq z))
+  & z ~ ?((@contains_no @contains_yes) (tail (target_keep out)))
+
+@contains_no = (tail (target out))
+  & @contains ~ (target (tail out))
+
+@contains_yes = (* (tail (target out)))
+  & tail ~ *
+  & target ~ *
+  & out ~ 1

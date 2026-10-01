@@ -1,0 +1,106 @@
+// Initialize every distance to infinity, then set the source to zero.
+@prog = ((n (s edges)) out)
+  & n ~ {n_fill n_round}
+  & @fill ~ (n_fill d0)
+  & @set ~ (d0 (s (0 d1)))
+  & @round ~ (n_round (edges (d1 out)))
+
+@fill = (?((@fill_zero @fill_more) out) out)
+
+@fill_zero = (0 *)
+
+@fill_more = (rem out)
+  & @fill ~ (rem tail)
+  & out ~ (1 (16777215 tail))
+
+// Run edge-relaxation passes until a pass makes no changes or the
+// vertex-count bound is reached.
+@round = (?((@round_zero @round_more) (edges (dist out))) (edges (dist out)))
+
+@round_zero = (* (dist dist))
+
+@round_more = (rem (edges (dist out)))
+  & @scan ~ (edges (dist (0 result)))
+  & result ~ (dist2 changed)
+  & changed ~ ?((@round_done @round_continue) (dist2 (rem (edges out))))
+
+@round_done = (dist (* (* dist)))
+
+@round_continue = (* (dist (rem (edges out))))
+  & @round ~ (rem (edges (dist out)))
+
+// Scan the edge list, carrying the distance list and a changed flag.
+@scan = ((?((@scan_nil @scan_cons) (pl (dist (changed out)))) pl) (dist (changed out)))
+
+@scan_nil = (* (dist (changed out)))
+  & out ~ (dist changed)
+
+@scan_cons = (* ((h t) (dist (changed out))))
+  & @relax ~ (h (dist (changed result)))
+  & result ~ (dist2 changed2)
+  & @scan ~ (t (dist2 (changed2 out)))
+
+// Relax one directed edge (u,v).
+@relax = ((u v) (dist (changed out)))
+  & dist ~ {d_u d_keep}
+  & @get ~ (d_u (u du))
+  & d_keep ~ {d_v d_set}
+  & @get ~ (d_v (v dv))
+  & du ~ {du_test du_keep}
+  & du_test ~ $([=] $(16777215 z))
+  & z ~ ?((@relax_inf @relax_finite) (du_keep (dv (v (d_set (changed out)))))
+
+@relax_inf = (* (* (* (d (changed out)))))
+  & out ~ (d changed)
+
+@relax_finite = (* (du (dv (v (d (changed out))))))
+  & du ~ $([+1] cand)
+  & cand ~ {cand_cmp cand_keep}
+  & cand_cmp ~ $([<] $(dv z))
+  & z ~ ?((@relax_no @relax_yes) (cand_keep (v (d (changed out)))))
+
+@relax_no = (* (* (d (changed out))))
+  & out ~ (d changed)
+
+@relax_yes = (* (cand (v (d (changed out)))))
+  & changed ~ *
+  & @set ~ (d (v (cand d2)))
+  & out ~ (d2 1)
+
+// Read a distance by index.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@get_next = (* (h (t out)))
+  & h ~ *
+  & @get ~ (t (idx out))
+
+// Replace the value at an index.
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (* (h (t (val out))))
+  & h ~ *
+  & @set ~ (t (idx (val tail2)))
+  & out ~ (1 (h tail2))

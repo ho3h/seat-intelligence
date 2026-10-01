@@ -1,0 +1,80 @@
+@prog = (input out)
+  & input ~ (c mnl)
+  & @pairs ~ (mnl (c ((0 *) out)))
+
+@pairs = ((?((@pairs_nil @pairs_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@pairs_nil = (* (c (acc out)))
+  & c ~ *
+  & acc ~ out
+
+@pairs_cons = (d (((a b) tail) (c (acc out))))
+  & d ~ *
+  & c ~ {cnext {ca cb}}
+  & a ~ {a_idx a_keep}
+  & b ~ {b_idx b_keep}
+  & @get ~ (ca (a_idx va))
+  & @get ~ (cb (b_idx vb))
+  & va ~ $([=] $(vb eq))
+  & eq ~ ?((@pairs_no @pairs_yes) (tail (cnext (acc (a_keep (b_keep out))))))
+
+@pairs_no = (tail (c (acc (a (b out)))))
+  & a ~ *
+  & b ~ *
+  & @pairs ~ (tail (c (acc out)))
+
+@pairs_yes = (d (tail (c (acc (a (b out))))))
+  & d ~ *
+  & @ins ~ ((a b) (acc sorted))
+  & @pairs ~ (tail (c (sorted out)))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (dec ((h t) (ix out)))
+  & h ~ *
+  & ix ~ *
+  & @get ~ (t (dec out))
+
+@ins = ((?((@ins_nil @ins_cons) (pl (new out))) pl) (new out))
+
+@ins_nil = (* (new out))
+  & out ~ (1 (new (0 *)))
+
+@ins_cons = (d (((x y) tail) (new out)))
+  & d ~ *
+  & new ~ (a b)
+  & a ~ {a_lt {a_eq a_keep}}
+  & x ~ {x_lt {x_eq x_keep}}
+  & b ~ {b_cmp b_keep}
+  & y ~ {y_cmp y_keep}
+  & a_lt ~ $([<] $(x_lt less))
+  & a_eq ~ $([=] $(x_eq equal))
+  & less ~ ?((@ins_check_equal @ins_before) (tail (a_keep (b_keep (x_keep (y_keep (equal (b_cmp (y_cmp out))))))))
+
+@ins_before = (z (tail (a (b (x (y (eq (bc (yc out))))))))
+  & z ~ *
+  & eq ~ *
+  & bc ~ *
+  & yc ~ *
+  & out ~ (1 ((a b) (1 ((x y) tail))))
+
+@ins_check_equal = (tail (a (b (x (y (equal (bc (yc out))))))))
+  & equal ~ ?((@ins_recurse @ins_check_second) (tail (a (b (x (y (bc (yc out)))))))
+
+@ins_check_second = (tail (a (b (x (y (bc (yc out)))))))
+  & bc ~ $([<] $(yc less2))
+  & less2 ~ ?((@ins_recurse @ins_before_second) (tail (a (b (x (y out))))))
+
+@ins_before_second = (z (tail (a (b (x (y out))))))
+  & z ~ *
+  & out ~ (1 ((a b) (1 ((x y) tail))))
+
+@ins_recurse = (tail (a (b (x (y (bc (yc out)))))))
+  & bc ~ *
+  & yc ~ *
+  & @ins ~ ((a b) (tail mid))
+  & mid ~ (1 ((x y) out))

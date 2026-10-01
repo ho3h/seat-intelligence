@@ -1,0 +1,99 @@
+@prog = ((n (s edges)) out)
+  & n ~ {n_init n_round}
+  & @init ~ (n_init (s (0 dist0)))
+  & @round ~ (n_round (edges (dist0 out)))
+
+@init = (?( (@init_zero @init_succ) ctx) ctx)
+
+@init_zero = (s (i out))
+  & s ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (s (i out)))
+  & s ~ {s_eq s_rec}
+  & i ~ {i_eq i_rec}
+  & s_eq ~ $([=] $(i_eq eq))
+  & i_rec ~ $([+1] i_next)
+  & @init ~ (k (s_rec (i_next tail)))
+  & eq ~ ?((@init_other @init_same) (tail out))
+
+@init_other = (tail out)
+  & out ~ (1 (16777215 tail))
+
+@init_same = (* (tail out))
+  & out ~ (1 (0 tail))
+
+@round = (?( (@round_zero @round_succ) ctx) ctx)
+
+@round_zero = (edges (dist out))
+  & edges ~ *
+  & out ~ dist
+
+@round_succ = (k (edges (dist out)))
+  & edges ~ {edges_scan edges_next}
+  & @scan ~ (edges_scan (dist dist2))
+  & @round ~ (k (edges_next (dist2 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (dist out))) pl) (dist out))
+
+@scan_nil = (* (dist out))
+  & out ~ dist
+
+@scan_cons = (* (((u v) tail) (dist out)))
+  & @relax ~ (u (v (dist dist2)))
+  & @scan ~ (tail (dist2 out))
+
+@relax = (u (v (dist out)))
+  & @find ~ (dist (u (du dist2)))
+  & @update ~ (dist2 (v (du out)))
+
+@find = ((?((@find_nil @find_cons) (pl (idx (du out)))) pl) (idx (du out)))
+
+@find_nil = (* (idx (du out)))
+  & idx ~ *
+  & du ~ 16777215
+  & out ~ (0 *)
+
+@find_cons = (* ((head tail) (idx (du out))))
+  & idx ~ ?((@find_here @find_later) (head (tail (du out))))
+
+@find_here = (head (tail (du out)))
+  & head ~ {du hcopy}
+  & out ~ (1 (hcopy tail))
+
+@find_later = (k (head (tail (du out))))
+  & @find ~ (tail (k (du out2)))
+  & out ~ (1 (head out2))
+
+@update = ((?((@update_nil @update_cons) (pl (idx (du out)))) pl) (idx (du out)))
+
+@update_nil = (* (idx (du out)))
+  & idx ~ *
+  & du ~ *
+  & out ~ (0 *)
+
+@update_cons = (* ((head tail) (idx (du out))))
+  & idx ~ ?((@update_here @update_later) (head (tail (du out))))
+
+@update_here = (head (tail (du out)))
+  & du ~ {du_f du_inc}
+  & du_f ~ $([<] $(16777215 finite))
+  & du_inc ~ $([+1] cand)
+  & cand ~ {cand_cmp cand_out}
+  & head ~ {head_cmp head_keep}
+  & cand_cmp ~ $([<] $(head_cmp less))
+  & less ~ $([&] $(finite change))
+  & change ~ ?((@update_no @update_yes) (tail (head_keep (cand_out out))))
+
+@update_no = (tail (head (cand out)))
+  & cand ~ *
+  & out ~ (1 (head tail))
+
+@update_yes = (* (tail (head (cand out))))
+  & head ~ *
+  & out ~ (1 (cand tail))
+
+@update_later = (k (head (tail (du out))))
+  & @update ~ (tail (k (du out2)))
+  & out ~ (1 (head out2))

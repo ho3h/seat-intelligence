@@ -1,0 +1,53 @@
+{
+ "pid": "t5_cluster_merge_count",
+ "arm": "b1",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1339,
+    "itrs_median_big": 773981,
+    "itrs_max": 3381213,
+    "depth_median_big": 98502,
+    "depth_max": 462147
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 1246,
+    "itrs_median_big": 590784,
+    "itrs_max": 1863467,
+    "depth_median_big": 76490,
+    "depth_max": 284644
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 73506,
+ "best": {
+  "itrs_median_small": 1246,
+  "itrs_median_big": 590784,
+  "itrs_max": 1863467,
+  "depth_median_big": 76490,
+  "depth_max": 284644
+ },
+ "usd": 0.014908359999999999,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

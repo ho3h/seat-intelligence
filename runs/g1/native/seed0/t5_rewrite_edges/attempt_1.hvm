@@ -1,0 +1,125 @@
+// Entry point
+@prog = ((c edges) out)
+  & @walk ~ (edges (c (0 out)))
+
+// Traverse edges, carrying the clustering and the sorted result.
+@walk = ((?((@walk_nil @walk_cons) (pl (c (acc out)))) pl) (c (acc out)))
+
+@walk_nil = (* (c (acc out)))
+  & c ~ *
+  & acc ~ out
+
+@walk_cons = (* ((u v) (tail (c (acc out)))))
+  & c ~ {cu crem}
+  & crem ~ {cv cn}
+  & @get ~ (cu (u (@got_u (v (tail (cv (cn (acc out)))))))
+
+// Look up an index in a list, then call the continuation with (value data).
+@get = ((?((@get_nil @get_cons) (pl (i (k data)))) pl) (i (k data)))
+
+@get_nil = (* (i (k data)))
+  & i ~ *
+  & k ~ *
+  & data ~ *
+
+@get_cons = (* ((h t) (i (k data))))
+  & i ~ ?((@get_zero @get_succ) (h (t (k data))))
+
+@get_zero = (h (t (k data)))
+  & t ~ *
+  & k ~ (h data)
+
+@get_succ = (j (h (t (k data))))
+  & h ~ *
+  & @get ~ (t (j (k data)))
+
+// Look up both endpoints, discard internal edges, and normalize the rest.
+@got_u = (u (v (tail (cv (cn (acc out))))))
+  & @get ~ (cv (v (@got_v (u (tail (cn (acc out)))))))
+
+@got_v = (mv (mu (tail (cn (acc out)))))
+  & mu ~ {mu_test mu_keep}
+  & mv ~ {mv_test mv_keep}
+  & mu_test ~ $([=] $(mv_test z))
+  & z ~ ?((@same @diff) (mu_keep (mv_keep (tail (cn (acc out))))))
+
+@same = (mu (mv (tail (cn (acc out)))))
+  & mu ~ *
+  & mv ~ *
+  & @walk ~ (tail (cn (acc out)))
+
+@diff = (* (mu (mv (tail (cn (acc out))))))
+  & mu ~ {mu_cmp mu_saved}
+  & mv ~ {mv_cmp mv_saved}
+  & mu_cmp ~ $([<] $(mv_cmp z))
+  & z ~ ?((@norm_ge @norm_lt) (mu_saved (mv_saved (tail (cn (acc out))))))
+
+@norm_ge = (* (mu_saved (mv_saved (tail (cn (acc out))))))
+  & @ins ~ ((mv_saved mu_saved) (acc (@after_insert (tail (cn out))))
+
+@norm_lt = (* (mu_saved (mv_saved (tail (cn (acc out))))))
+  & @ins ~ ((mu_saved mv_saved) (acc (@after_insert (tail (cn out))))
+
+@after_insert = (newacc (tail (cn out)))
+  & @walk ~ (tail (cn (newacc out)))
+
+// Insert a pair into a sorted, duplicate-free list.
+// The continuation receives (new_list data).
+@ins = (p ((?((@ins_nil @ins_cons) (pl (p (k data)))) pl) (k data)))
+
+@ins_nil = (* (p (k data)))
+  & k ~ ((1 (p (0 *))) data)
+
+@ins_cons = (* ((item tail) (p (k data))))
+  & p ~ {pc ps}
+  & item ~ {ic is}
+  & @paircmp ~ (pc (ic (@ins_comp (ps (is (tail (k data)))))))
+
+// Compare target pair (a,b) with current pair (x,y).
+// The continuation receives comparison code 0 (equal), 1 (less), or 2 (greater).
+@paircmp = ((a b) ((x y) (k data)))
+  & a ~ {al ar}
+  & x ~ {xl xr}
+  & al ~ $([<] $(xl z))
+  & z ~ ?((@pc_ge @pc_lt) (ar (xr (b (y (k data))))))
+
+@pc_lt = (* (ar (xr (b (y (k data))))))
+  & ar ~ *
+  & xr ~ *
+  & b ~ *
+  & y ~ *
+  & k ~ (1 data)
+
+@pc_ge = (ar (xr (b (y (k data)))))
+  & ar ~ $([>] $(xr z))
+  & z ~ ?((@pc_eq @pc_gt) (b (y (k data))))
+
+@pc_eq = (b (y (k data)))
+  & b ~ *
+  & y ~ *
+  & k ~ (0 data)
+
+@pc_gt = (b (y (k data)))
+  & b ~ *
+  & y ~ *
+  & k ~ (2 data)
+
+// Handle the pair comparison and maintain the sorted list.
+@ins_comp = (cmp (ps (is (tail (k data)))))
+  & cmp ~ ?((@ins_equal @ins_nonzero) (ps (is (tail (k data)))))
+
+@ins_equal = (ps (is (tail (k data))))
+  & ps ~ *
+  & k ~ ((1 (is tail)) data)
+
+@ins_nonzero = (r (ps (is (tail (k data)))))
+  & r ~ ?((@ins_before @ins_after) (ps (is (tail (k data)))))
+
+@ins_before = (* (ps (is (tail (k data)))))
+  & k ~ ((1 (ps (1 (is tail)))) data)
+
+@ins_after = (* (ps (is (tail (k data)))))
+  & @ins ~ (ps (tail (@ins_rebuild (is (k data))))
+
+@ins_rebuild = (rest (is (k data)))
+  & k ~ ((1 (is rest)) data)

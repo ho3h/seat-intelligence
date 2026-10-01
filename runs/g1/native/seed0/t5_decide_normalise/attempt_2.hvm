@@ -1,0 +1,63 @@
+// Process candidates into a sorted, deduplicated accumulator.
+@prog = (input out)
+  & @walk ~ (input (0 out))
+
+@walk = ((?((@walk_nil @walk_cons) (payload (acc out))) payload) (acc out))
+
+@walk_nil = (* (a a))
+
+@walk_cons = (* ((triple tail) (acc out)))
+  & @normal ~ (triple (tail (acc out)))
+
+@normal = (({uc u} (v s)) (tail (acc out)))
+  & uc ~ $([<] $(v z))
+  & z ~ ?((@norm_rev @norm_fwd) (u (v (s (tail (acc out))))))
+
+@norm_rev = (u (v (s (tail (acc out)))))
+  & @insert ~ (acc ((v (u s)) mid))
+  & @walk ~ (tail (mid out))
+
+@norm_fwd = (* (u (v (s (tail (acc out))))))
+  & @insert ~ (acc ((u (v s)) mid))
+  & @walk ~ (tail (mid out))
+
+@insert = ((?((@ins_nil @ins_cons) (payload (item out))) payload) (item out))
+
+@ins_nil = (* (item out))
+  & out ~ (1 (item (0 *)))
+
+@ins_cons = (* ((head tail) (item out)))
+  & @cmp ~ (item (head (tail out)))
+
+@cmp = (({u_cmp u} (v s)) (({hu_cmp hu} (hv hs)) (tail out)))
+  & u_cmp ~ $([<] $(hu_cmp z))
+  & z ~ ?((@cmp_u_ge @before) (u (v (s (hu (hv (hs (tail out)))))))
+
+@cmp_u_ge = ({u_eq u} (v (s ({hu_eq hu} (hv (hs (tail out))))))
+  & u_eq ~ $([=] $(hu_eq z))
+  & z ~ ?((@after @cmp_v) (u (v (s (hu (hv (hs (tail out)))))))
+
+@cmp_v = (* (u ({v_cmp v} (s (hu ({hv_cmp hv} (hs (tail out)))))))
+  & v_cmp ~ $([<] $(hv_cmp z))
+  & z ~ ?((@cmp_v_ge @before) (u (v (s (hu (hv (hs (tail out)))))))
+
+@cmp_v_ge = (u ({v_eq v} (s (hu ({hv_eq hv} (hs (tail out))))))
+  & v_eq ~ $([=] $(hv_eq z))
+  & z ~ ?((@after @cmp_s) (u (v (s (hu (hv (hs (tail out)))))))
+
+@cmp_s = (* (u (v ({s_cmp s} (hu (hv ({hs_cmp hs} (tail out)))))))
+  & s_cmp ~ $([>] $(hs_cmp z))
+  & z ~ ?((@old_score @new_score) (u (v (s (hu (hv (hs (tail out)))))))
+
+@before = (* (u (v (s (hu (hv (hs (tail out)))))))
+  & out ~ (1 ((u (v s)) (1 ((hu (hv hs)) tail))))
+
+@after = (u (v (s (hu (hv (hs (tail out))))))
+  & @insert ~ (tail ((u (v s)) mid))
+  & out ~ (1 ((hu (hv hs)) mid))
+
+@old_score = (* (* (* (hu (hv (hs (tail out)))))))
+  & out ~ (1 ((hu (hv hs)) tail))
+
+@new_score = (* (u (v (s (* (* (* (tail out))))))))
+  & out ~ (1 ((u (v s)) tail))

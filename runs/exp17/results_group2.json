@@ -1,0 +1,354 @@
+{
+ "t3_apsp_matrix": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1731,
+  "itrs": 11122916,
+  "depth_max": 3110,
+  "depth_seed1": 1828,
+  "itrs_seed1": 12569314,
+  "notes": "All-sources Bellman-Ford as ONE vector label propagation over pre-wired channels (lib/chan_gen): for arc u->v, u listens to v's row stream with meta w; rows are tuple-trees over targets, updated leafwise (min(D_u, D_v + w)); global no-change test hidden behind 3 speculative rounds (lagged decision stream fed back through an unscoped lambda). Work ~11M itrs (O(rounds * m * 2^L)).",
+  "previous_bend_depth_or_null": 60057,
+  "previous_bend_itrs": 29165074,
+  "native_depth_itrs_g1_recount": [
+   3140,
+   12661547
+  ]
+ },
+ "t3_bridges": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1328,
+  "itrs": 441434,
+  "depth_max": 1897,
+  "depth_seed1": 2505,
+  "itrs_seed1": 1169733,
+  "notes": "Exact: channel LP with labels root*1024+dist gives a BFS forest; after the last round each vertex picks a parent (largest-id neighbour one hop closer, from slot metadata) and appends (parent, S_v) to its stream; S_v = XOR of incident-edge bits (exact bitsets as word trees) XOR children's S, gated only on the parent field (acyclic dataflow). Tree edge is a bridge iff S_v == {parent edge}.",
+  "previous_bend_depth_or_null": 180508,
+  "previous_bend_itrs": 1256605,
+  "native_depth_itrs_g1_recount": [
+   84420,
+   1283757
+  ]
+ },
+ "t3_cc_largest": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 2581,
+  "itrs": 690091,
+  "depth_max": 4340,
+  "depth_seed1": 3887,
+  "itrs_seed1": 921334,
+  "notes": "Channel label propagation (min label) + chain of keyed increments on the label tree (scatter-count) + balanced max. Walk (~9.4 rounds/edge) dominates.",
+  "previous_bend_depth_or_null": 70099,
+  "previous_bend_itrs": 1493869,
+  "native_depth_itrs_g1_recount": [
+   3265,
+   299078
+  ]
+ },
+ "t3_count_shortest_paths": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1895,
+  "itrs": 407209,
+  "depth_max": 3483,
+  "depth_seed1": 3396,
+  "itrs_seed1": 996821,
+  "notes": "BFS by channel LP (hop-distance labels) + gated dataflow path count appended to each vertex's stream after the last round (sums counts of strictly-closer neighbours; the switch waits only on distances).",
+  "previous_bend_depth_or_null": 408094,
+  "previous_bend_itrs": 1413385,
+  "native_depth_itrs_g1_recount": [
+   3123,
+   431536
+  ]
+ },
+ "t3_degrees": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1285,
+  "itrs": 66713,
+  "depth_max": 1844,
+  "depth_seed1": 700,
+  "itrs_seed1": 36795,
+  "notes": "Keyed increments on a vertex tuple-tree + tail-threaded flatten. At the Bend list-walk floor (~9 rounds/cell); remaining gap to native is the walk (native ~2.3 rounds/cell), which Bend cannot express.",
+  "previous_bend_depth_or_null": 2473,
+  "previous_bend_itrs": 72267,
+  "native_depth_itrs_g1_recount": [
+   468,
+   70205
+  ]
+ },
+ "t3_euler_start": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 2489,
+  "itrs": 901725,
+  "depth_max": 2807,
+  "depth_seed1": 2706,
+  "itrs_seed1": 902456,
+  "notes": "One walk builds channel slots + degree tree; channel LP components; one balanced reduction (roots among non-isolated, odd count, min ids).",
+  "previous_bend_depth_or_null": 2004563,
+  "previous_bend_itrs": 6330606,
+  "native_depth_itrs_g1_recount": [
+   2805,
+   815455
+  ]
+ },
+ "t3_forest_mis": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1184,
+  "itrs": 69636,
+  "depth_max": 1825,
+  "depth_seed1": 1136,
+  "itrs_seed1": 76507,
+  "notes": "Rootless tree DP as an acyclic dataflow of edge messages (unscoped-lambda wires, two per edge): m(u->v) = (1 + sum out, sum max(in,out)) over u's other neighbours via an exclusive-sum up/down pass on u's Braun tree of slots; answer = sum over vertices of MIS(component) - sum over edges of MIS(component). No rounds, no rooting.",
+  "previous_bend_depth_or_null": 166010,
+  "previous_bend_itrs": 998373,
+  "native_depth_itrs_g1_recount": [
+   2657,
+   317509
+  ]
+ },
+ "t3_line_graph_edges": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1778,
+  "itrs": 88156,
+  "depth_max": 3320,
+  "depth_seed1": 1400,
+  "itrs_seed1": 59436,
+  "notes": "exp7 strong-author Bend reused unchanged (keyed increments + balanced sum of d(d-1)/2); at the Bend list-walk floor; no variant improved it (walk unrolling/fold give the same ~9 rounds/cell).",
+  "previous_bend_depth_or_null": 6218,
+  "previous_bend_itrs": 1092212,
+  "native_depth_itrs_g1_recount": [
+   546,
+   69068
+  ]
+ },
+ "t3_sp_count": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 3125,
+  "itrs": 726329,
+  "depth_max": 6453,
+  "depth_seed1": 4344,
+  "itrs_seed1": 914789,
+  "notes": "Directed version of count_shortest_paths: one channel per arc, BFS by channel LP, gated dataflow path counts.",
+  "previous_bend_depth_or_null": 152487,
+  "previous_bend_itrs": 1293281,
+  "native_depth_itrs_g1_recount": [
+   44853,
+   11587237
+  ]
+ },
+ "t3_walk_count": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1355,
+  "itrs": 782505,
+  "depth_max": 1687,
+  "depth_seed1": 1714,
+  "itrs_seed1": 964977,
+  "notes": "Meet in the middle: forward (from s, ceil(k/2) rounds) and backward (from t, floor(k/2) rounds) walk-count propagation over two channel networks wired by one walk, fixed rounds with no global test (whole k-round structure unfolds up front), then a balanced dot product. Halving the rounds cut depth 1683 -> 1355.",
+  "previous_bend_depth_or_null": 4164,
+  "previous_bend_itrs": 17673644,
+  "native_depth_itrs_g1_recount": [
+   986,
+   1481655
+  ]
+ },
+ "t3_wiener_index": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 2658,
+  "itrs": 4835864,
+  "depth_max": 3009,
+  "depth_seed1": 2371,
+  "itrs_seed1": 4935533,
+  "notes": "All-sources BFS as one bitset label propagation over channels: R_{r+1}(v) = R_r(v) | OR of neighbours' R_r; dist(u,v) = #{r : u not in R_r(v)}, so each vertex accumulates n - |R_r(v)| (SWAR popcount) per round; answer/2. Work 4.8M itrs (bitsets of n bits per vertex per round).",
+  "previous_bend_depth_or_null": 61111,
+  "previous_bend_itrs": 168185512,
+  "native_depth_itrs_g1_recount": [
+   2713,
+   3187164
+  ]
+ },
+ "t3_wsp_all_from": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 891,
+  "itrs": 63262,
+  "depth_max": 4550,
+  "depth_seed1": 2872,
+  "itrs_seed1": 197471,
+  "notes": "exp7 strong-author Bend kept (frontier Bellman-Ford over tuple-trees, Braun adjacency). A channel-stream Bellman-Ford variant (src/alt_t3_wsp_all_from_chan.src) had depth 1018/2278 (seed0/seed1 medians) vs 891/2872 and 2.6x the interactions, so it was not adopted.",
+  "previous_bend_depth_or_null": 1483,
+  "previous_bend_itrs": 184806,
+  "native_depth_itrs_g1_recount": [
+   947,
+   106002
+  ]
+ },
+ "t5_cluster_closure_pairs": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1587,
+  "itrs": 394852,
+  "depth_max": 2514,
+  "depth_seed1": 1469,
+  "itrs_seed1": 367329,
+  "notes": "Channel LP components + scatter-count sizes + balanced sum of s(s-1)/2.",
+  "previous_bend_depth_or_null": 19789,
+  "previous_bend_itrs": 991872,
+  "native_depth_itrs_g1_recount": [
+   949,
+   285786
+  ]
+ },
+ "t5_cluster_count": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1252,
+  "itrs": 348772,
+  "depth_max": 3217,
+  "depth_seed1": 770,
+  "itrs_seed1": 214500,
+  "notes": "Components by label propagation over pre-wired channels (lib/chan): per edge two unscoped-lambda wires; every vertex is a persistent process streaming its label, one round = balanced min over its Braun tree of input streams (~50 depth); change flags OR-zipped up the vertex tree and fed back as a decision stream lagged by K=3 rounds (hides the global test). Count vertices keeping their own id.",
+  "previous_bend_depth_or_null": 30817,
+  "previous_bend_itrs": 945230,
+  "native_depth_itrs_g1_recount": [
+   1112,
+   262452
+  ]
+ },
+ "t5_cluster_emit": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1846,
+  "itrs": 480078,
+  "depth_max": 3197,
+  "depth_seed1": 1173,
+  "itrs_seed1": 249687,
+  "notes": "Channel LP with labels 4095-id (min = largest member) + filtered tail-threaded flatten of (d, canon).",
+  "previous_bend_depth_or_null": 183961,
+  "previous_bend_itrs": 1149040,
+  "native_depth_itrs_g1_recount": [
+   1363,
+   363502
+  ]
+ },
+ "t5_cluster_largest": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1960,
+  "itrs": 528261,
+  "depth_max": 2308,
+  "depth_seed1": 1208,
+  "itrs_seed1": 346051,
+  "notes": "Channel LP components + scatter-count sizes (chain of keyed increments; an O(n^2) counting variant had the same depth and 2.5x the work) + balanced max.",
+  "previous_bend_depth_or_null": 253327,
+  "previous_bend_itrs": 760987,
+  "native_depth_itrs_g1_recount": [
+   854,
+   210042
+  ]
+ },
+ "t5_cluster_list": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1630,
+  "itrs": 455405,
+  "depth_max": 2562,
+  "depth_seed1": 1371,
+  "itrs_seed1": 321032,
+  "notes": "Channel LP (min label) + keyed push-front into label buckets threaded from the largest vertex down (ascending members) + flatten of non-empty buckets.",
+  "previous_bend_depth_or_null": 185045,
+  "previous_bend_itrs": 1738779,
+  "native_depth_itrs_g1_recount": [
+   1234,
+   339690
+  ]
+ },
+ "t5_conflict_flags": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1647,
+  "itrs": 134415,
+  "depth_max": 1678,
+  "depth_seed1": 1661,
+  "itrs_seed1": 154599,
+  "notes": "Clustering list read into an index-keyed tuple-tree that GROWS during the walk (MSB-first keys; (tree, zeros) when i reaches 2^l, so no length needed up front); mnl list read in parallel, keyed reads c[a], c[b] and a keyed OR into a flag tree; output zips index tree and flag tree. Beats frozen on both depth and interactions.",
+  "previous_bend_depth_or_null": 2845,
+  "previous_bend_itrs": 184774,
+  "native_depth_itrs_g1_recount": [
+   2773,
+   171063
+  ]
+ },
+ "t5_decide_filter": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1898,
+  "itrs": 7799,
+  "depth_max": 3123,
+  "depth_seed1": 657,
+  "itrs_seed1": 3051,
+  "notes": "Plain filter with the recursive call before the accept test. At the Bend list-walk floor (~9 rounds/cell); the frozen author's 2-unrolled filter is equivalent. No improvement possible beyond noise.",
+  "previous_bend_depth_or_null": 1905,
+  "previous_bend_itrs": 8876,
+  "native_depth_itrs_g1_recount": [
+   1478,
+   6156
+  ]
+ },
+ "t5_decide_order": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1664,
+  "itrs": 125713,
+  "depth_max": 4046,
+  "depth_seed1": 1866,
+  "itrs_seed1": 136633,
+  "notes": "Bucket sort on score (contract bounds score to 0..1000): keyed pushes into a 1024-leaf tree during the walk (accept test at the leaf), lazy insertion sort by (u, v) per bucket, flatten in key order. Higher constant work (1024-leaf tree) than the frozen merge sort.",
+  "previous_bend_depth_or_null": 3598,
+  "previous_bend_itrs": 43274,
+  "native_depth_itrs_g1_recount": [
+   3149,
+   65564
+  ]
+ },
+ "t5_metric_purity": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 1562,
+  "itrs": 7718821,
+  "depth_max": 1562,
+  "depth_seed1": 1562,
+  "itrs_seed1": 7718821,
+  "notes": "Two label lists read in parallel into growing index trees, zipped; two all-pairs passes (class sizes c_i, then group representatives) with O(n^2) work and O(levels) depth, using only label equality. Depth 10294 -> 1562 but 7.7M interactions (58x the frozen merge sort; a Braun-tree variant gave 1844 depth / 4.5M). Bend has no cheap hashing into small buckets for arbitrary 24-bit labels.",
+  "previous_bend_depth_or_null": 10294,
+  "previous_bend_itrs": 132730,
+  "native_depth_itrs_g1_recount": [
+   61099,
+   5895595
+  ]
+ },
+ "t5_reconcile_canon": {
+  "status_seed0": "pass",
+  "status_seed1": "pass",
+  "depth": 2311,
+  "itrs": 588319,
+  "depth_max": 5082,
+  "depth_seed1": 4213,
+  "itrs_seed1": 1197719,
+  "notes": "Accepted iff some occurrence has score >= tau; the walk wires channels only for accepted occurrences (test at the leaf of the keyed update, off the walk chain: 23 -> 10 rounds/cell), channel LP with labels 4095-id, flatten.",
+  "previous_bend_depth_or_null": 167825,
+  "previous_bend_itrs": 1083329,
+  "native_depth_itrs_g1_recount": [
+   1085,
+   225182
+  ]
+ }
+}

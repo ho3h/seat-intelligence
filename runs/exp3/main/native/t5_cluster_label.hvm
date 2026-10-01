@@ -1,0 +1,33 @@
+@prog = (({?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil (?((@build_nil @build_cons) (next_q361 tail_q361)) ({iv_q361 $([+1] next_q361)} (1 (iv_q361 tail_q361))))) (next_q355 tail_q355)) ({iv_q355 $([+1] next_q355)} (1 (iv_q355 tail_q355))))) (next_q350 tail_q350)) ({iv_q350 $([+1] next_q350)} (1 (iv_q350 tail_q350))))) (next_q346 tail_q346)) ({iv_q346 $([+1] next_q346)} (1 (iv_q346 tail_q346))))) (next_q343 tail_q343)) ({iv_q343 $([+1] next_q343)} (1 (iv_q343 tail_q343))))) (0 labels)) ?((@round_done @round_more) (labels (edges out)))} edges) out)
+
+@build_nil = (* (0 *))
+
+@build_cons = (?((@build_nil @build_cons) (next tail)) ({iv $([+1] next)} (1 (iv tail))))
+
+@round_done = (labels (* labels))
+
+@round_more = (?((@round_done @round_more) (newlabels (newedges out))) (labels ((?((@sweep_nil @sweep_cons) (payload_q331 (labels (newlabels newedges)))) payload_q331) out)))
+
+@sweep_nil = (* (labels (labels (0 *))))
+
+@sweep_cons = (* ((({{ug_i27 us_i27} u2} {{vg_i27 vs_i27} v2}) (?((@sweep_nil @sweep_cons) (payload_q335 (updated (newlabels tailcopy)))) payload_q335)) ((?((@gc_nil @gc_cons) (payload_q333 (ug_i27 ({$([<] $(vcmp_i27 ?((@edge_ge @edge_lt) (lctx_i27 (vctx_i27 (base_i27 (us_i27 (vs_i27 updated)))))))) lctx_i27} (?((@gc_nil @gc_cons) (payload_q334 (vg_i27 ({vcmp_i27 vctx_i27} base_i27)))) payload_q334))))) payload_q333) (newlabels (1 ((u2 v2) tailcopy))))))
+
+@edge_ge = (* ({m1 m2} ((?((@set_nil @set_cons) (payload_q336 (u (m1 (?((@set_nil @set_cons) (payload_q337 (v (m2 out)))) payload_q337))))) payload_q336) (u (v out)))))
+
+@edge_lt = (* ({m1 m2} (* ((?((@set_nil @set_cons) (payload_q338 (u (m1 (?((@set_nil @set_cons) (payload_q339 (v (m2 out)))) payload_q339))))) payload_q338) (u (v out))))))
+
+@gc_nil = (* (* (0 (0 *))))
+
+@gc_cons = (* ((head tail) (?((@gc_here @gc_next) (head (tail out))) out)))
+
+@gc_here = ({hval hcopy} (tail (hval (1 (hcopy tail)))))
+
+@gc_next = (idx (head ((?((@gc_nil @gc_cons) (payload_q340 (idx (value tailcopy)))) payload_q340) (value (1 (head tailcopy))))))
+
+@set_nil = (* (* (* (0 *))))
+
+@set_cons = (* ((head tail) (?((@set_here @set_next) (head (tail (val out)))) (val out))))
+
+@set_here = (* (tail (val (1 (val tail)))))
+
+@set_next = (idx (head ((?((@set_nil @set_cons) (payload_q341 (idx (val rest)))) payload_q341) (val (1 (head rest))))))

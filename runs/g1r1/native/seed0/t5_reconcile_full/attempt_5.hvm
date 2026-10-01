@@ -1,0 +1,52 @@
+// Build the singleton canonical-id list and remove self-loops from the edges.
+// Candidate reconciliation and non-self edge rewriting are not implemented.
+@prog = ((n (tau (mnl (cands edges)))) out)
+  & @down ~ (n down)
+  & @rev ~ (down ((0 *) ids))
+  & @filter ~ (edges filtered)
+  & out ~ (ids filtered)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+// Produce n-1, ..., 0.
+@down = (?((@down_nil @down_succ) (0 out)) out)
+
+@down_nil = (p out)
+  & p ~ *
+  & out ~ (0 *)
+
+@down_succ = (k (p out))
+  & p ~ *
+  & k ~ {head rec}
+  & @down ~ (rec tail)
+  & out ~ (1 (head tail))
+
+// Reverse a list.
+@rev = ((?((@rev_nil @rev_cons) (payload (acc out))) payload) (acc out))
+
+@rev_nil = (* (acc out))
+  & acc ~ out
+
+@rev_cons = (* ((h t) (acc out)))
+  & @rev ~ (t ((1 (h acc)) out))
+
+// Filter edges whose endpoints are equal.
+@filter = ((?((@filter_nil @filter_cons) (payload out)) payload) out)
+
+@filter_nil = (* out)
+  & out ~ (0 *)
+
+@filter_cons = (* ((h t) out))
+  & h ~ {test kept}
+  & test ~ (u v)
+  & u ~ $([=] $(v eq))
+  & eq ~ ?((@filter_drop @filter_keep) (kept (t out)))
+
+@filter_drop = (kept (t out))
+  & kept ~ *
+  & @filter ~ (t out)
+
+@filter_keep = (* (kept (t out)))
+  & @filter ~ (t tail)
+  & out ~ (1 (kept tail))

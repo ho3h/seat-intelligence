@@ -1,0 +1,65 @@
+
+@guard = λ{ 0: λp. &{}; _: λc. λp. p }
+
+@eqL = λ{
+  []: λ{ []: 1; <>: λh. λt. 0 };
+  <>: λa. λas. λ{ []: 0; <>: λb. λbs. @eqK((a == b), as, bs) }
+}
+@eqK = λ{ 0: λas. λbs. 0; _: λc. λas. λbs. @eqL(as, bs) }
+
+@exec = λ{ []: λxs. xs; <>: λs. λss. λxs. @exec(ss, @run(s, xs)) }
+
+@run = λ{
+  #Rev: λxs. @rev(xs, [])
+  #Sort: λxs. @isort(xs)
+  #Ddup: λxs. @ddup(xs)
+  #Scan: λxs. @scan(xs, 0)
+  #Take: λk. λxs. @take(xs, k)
+  #Drop: λk. λxs. @drop(xs, k)
+  #Map: λf. λxs. @map(f, xs)
+  #Filt: λp. λxs. @filt(p, xs)
+}
+
+@rev = λ{ []: λacc. acc; <>: λh. λt. λacc. @rev(t, (h <> acc)) }
+
+@isort = λ{ []: []; <>: λh. λt. @ins(@isort(t), h) }
+@ins = λ{ []: λx. [x]; <>: λ&h. λt. λ&x. @insK((x <= h), x, h, t) }
+@insK = λ{ 0: λx. λh. λt. (h <> @ins(t, x)); _: λc. λx. λh. λt. (x <> (h <> t)) }
+
+@ddup = λ{ []: []; <>: λ&h. λt. (h <> @ddupG(h, t)) }
+@ddupG = λp. λ{ []: []; <>: λ&h. λt. @ddupK((p == h), h, t) }
+@ddupK = λ{ 0: λ&h. λt. (h <> @ddupG(h, t)); _: λc. λ&h. λt. @ddupG(h, t) }
+
+@scan = λ{ []: λacc. []; <>: λh. λt. λacc. !&s = ((acc + h) % 16777216); (s <> @scan(t, s)) }
+
+@take = λ{ []: λk. []; <>: λh. λt. λk. @takeG(k, h, t) }
+@takeG = λ{ 0: λh. λt. []; _: λk. λh. λt. (h <> @take(t, (k - 1))) }
+@drop = λ{ []: λk. []; <>: λh. λt. λk. @dropG(k, h, t) }
+@dropG = λ{ 0: λh. λt. (h <> t); _: λk. λh. λt. @drop(t, (k - 1)) }
+
+@ap = λ{
+  #Aff: λa. λb. λx. (((x * a) + b) % 16777216)
+  #Xor: λm. λx. (x ^ m)
+  #And: λm. λx. (x && m)
+  #Sq: λ&x. ((x * x) % 16777216)
+  #Mod: λm. λx. (x % m)
+  #Div: λa. λx. (x / a)
+}
+@map = λ&f. λ{ []: []; <>: λh. λt. (@ap(f, h) <> @map(f, t)) }
+
+@test = λ{
+  #Gt: λk. λx. (x > k)
+  #Lt: λk. λx. (x < k)
+  #Ge: λk. λx. (x >= k)
+  #Meq: λm. λr. λx. ((x % m) == r)
+}
+@filt = λ&p. λ{ []: []; <>: λ&h. λt. @keep(@test(p, h), h, @filt(p, t)) }
+@keep = λ{ 0: λh. λr. r; _: λc. λh. λr. (h <> r) }
+
+@C0 = &S0{#Rev{}, &S0{#Sort{}, &S0{#Ddup{}, &S0{#Scan{}, &S0{#Take{2}, &S0{#Take{3}, &S0{#Drop{1}, &S0{#Drop{2}, &S0{#Filt{#Gt{5}}, &S0{#Filt{#Lt{10}}, &S0{#Filt{#Meq{2,0}}, &S0{#Filt{#Meq{2,1}}, &S0{#Map{#Aff{2,1}}, &S0{#Map{#Aff{1,1}}, &S0{#Map{#Xor{3}}, #Map{#Div{2}}}}}}}}}}}}}}}}}
+@C1 = &S1{#Rev{}, &S1{#Sort{}, &S1{#Ddup{}, &S1{#Scan{}, &S1{#Take{2}, &S1{#Take{3}, &S1{#Drop{1}, &S1{#Drop{2}, &S1{#Filt{#Gt{5}}, &S1{#Filt{#Lt{10}}, &S1{#Filt{#Meq{2,0}}, &S1{#Filt{#Meq{2,1}}, &S1{#Map{#Aff{2,1}}, &S1{#Map{#Aff{1,1}}, &S1{#Map{#Xor{3}}, #Map{#Div{2}}}}}}}}}}}}}}}}}
+@C2 = &S2{#Rev{}, &S2{#Sort{}, &S2{#Ddup{}, &S2{#Scan{}, &S2{#Take{2}, &S2{#Take{3}, &S2{#Drop{1}, &S2{#Drop{2}, &S2{#Filt{#Gt{5}}, &S2{#Filt{#Lt{10}}, &S2{#Filt{#Meq{2,0}}, &S2{#Filt{#Meq{2,1}}, &S2{#Map{#Aff{2,1}}, &S2{#Map{#Aff{1,1}}, &S2{#Map{#Xor{3}}, #Map{#Div{2}}}}}}}}}}}}}}}}}
+@C3 = &S3{#Rev{}, &S3{#Sort{}, &S3{#Ddup{}, &S3{#Scan{}, &S3{#Take{2}, &S3{#Take{3}, &S3{#Drop{1}, &S3{#Drop{2}, &S3{#Filt{#Gt{5}}, &S3{#Filt{#Lt{10}}, &S3{#Filt{#Meq{2,0}}, &S3{#Filt{#Meq{2,1}}, &S3{#Map{#Aff{2,1}}, &S3{#Map{#Aff{1,1}}, &S3{#Map{#Xor{3}}, #Map{#Div{2}}}}}}}}}}}}}}}}}
+@C4 = &S4{#Rev{}, &S4{#Sort{}, &S4{#Ddup{}, &S4{#Scan{}, &S4{#Take{2}, &S4{#Take{3}, &S4{#Drop{1}, &S4{#Drop{2}, &S4{#Filt{#Gt{5}}, &S4{#Filt{#Lt{10}}, &S4{#Filt{#Meq{2,0}}, &S4{#Filt{#Meq{2,1}}, &S4{#Map{#Aff{2,1}}, &S4{#Map{#Aff{1,1}}, &S4{#Map{#Xor{3}}, #Map{#Div{2}}}}}}}}}}}}}}}}}
+@P = (@C0 <> &E1{[], (@C1 <> &E2{[], (@C2 <> &E3{[], (@C3 <> &E4{[], (@C4 <> [])})})})})
+@main = !&p = @P; @guard(@eqL(@exec(p, [4,18,27,25,24,2,8,3]), [9,7,5]), @guard(@eqL(@exec(p, [15,24,14,15,20,12,25,6]), [29,25,13]), @guard(@eqL(@exec(p, [3,15,0,28,26,12,13,19]), [25,7,1]), p)))

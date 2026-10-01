@@ -1,0 +1,52 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((pair tail) out))
+  & @ins ~ (pair (sorted out))
+  & @sort_cons_lw ~ (tail sorted)
+
+@ins = (({kc kk} val) ((?((@ins_nil @ins_cons) (pl (kc ((kk val) out)))) pl) out))
+
+@ins_nil = (pl (kc ((kk val) out)))
+  & pl ~ *
+  & kc ~ *
+  & out ~ (1 ((kk val) (0 *)))
+
+@ins_cons = (* ((({hc hk} hv) tail) (kc ((kk val) out))))
+  & kc ~ $([>] $(hc cmp))
+  & cmp ~ ?((@ins_before @ins_after) (((hk hv) tail) ((kk val) out)))
+
+@ins_before = (((hk hv) tail) ((k v) out))
+  & out ~ (1 ((k v) (1 ((hk hv) tail))))
+
+@ins_after = (* (((hk hv) tail) ((k v) out)))
+  & @ins ~ ((k v) (tail rec))
+  & out ~ (1 ((hk hv) rec))
+
+@sort_cons_lw = (ls72 q8)
+  & ls72 ~ (g55 (e39 (g56 (e40 (g57 (e41 (g58 (e42 (g59 (e43 (g60 (e44 (g61 (e45 (g62 (e46 (g63 (e47 (g64 (e48 (g65 (e49 (g66 (e50 (g67 (e51 (g68 (e52 (g69 (e53 (g70 (e54 tk71))))))))))))))))))))))))))))))))
+  & g55 ~ ?((@sort_nil @sort_cons_la) ((e39 q10) q8))
+  & g56 ~ ?((@sort_nil @sort_cons_la) ((e40 q12) q10))
+  & g57 ~ ?((@sort_nil @sort_cons_la) ((e41 q14) q12))
+  & g58 ~ ?((@sort_nil @sort_cons_la) ((e42 q16) q14))
+  & g59 ~ ?((@sort_nil @sort_cons_la) ((e43 q18) q16))
+  & g60 ~ ?((@sort_nil @sort_cons_la) ((e44 q20) q18))
+  & g61 ~ ?((@sort_nil @sort_cons_la) ((e45 q22) q20))
+  & g62 ~ ?((@sort_nil @sort_cons_la) ((e46 q24) q22))
+  & g63 ~ ?((@sort_nil @sort_cons_la) ((e47 q26) q24))
+  & g64 ~ ?((@sort_nil @sort_cons_la) ((e48 q28) q26))
+  & g65 ~ ?((@sort_nil @sort_cons_la) ((e49 q30) q28))
+  & g66 ~ ?((@sort_nil @sort_cons_la) ((e50 q32) q30))
+  & g67 ~ ?((@sort_nil @sort_cons_la) ((e51 q34) q32))
+  & g68 ~ ?((@sort_nil @sort_cons_la) ((e52 q36) q34))
+  & g69 ~ ?((@sort_nil @sort_cons_la) ((e53 q38) q36))
+  & g70 ~ ?((@sort_nil @sort_cons) ((e54 tk71) q38))
+
+@sort_cons_la = (* ((pair sorted) out))
+  & @ins ~ (pair (sorted out))

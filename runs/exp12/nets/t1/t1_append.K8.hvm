@@ -1,0 +1,41 @@
+@prog = ((xs ys) out)
+  & @ap2 ~ (xs (ys out))
+
+@ap2 = (lv1 (ys out))
+  & @ap2_first_lw ~ (lv1 (ys out))
+
+@ap2_nil = (* (a a))
+
+@ap2_first = (* ((head lv2) (ys (1 (head rest)))))
+  & @ap2_two_lw ~ (lv2 (ys rest))
+
+@ap2_one = (* (a a))
+
+@ap2_two = (* ((head2 tail2) (ys (1 (head2 result)))))
+  & @ap2_first_lw ~ (tail2 (ys result))
+
+@ap2_first_lw = (ls55 (q15 q16))
+  & ls55 ~ (g46 (e38 (g47 (e39 (g48 (e40 (g49 (e41 (g50 (e42 (g51 (e43 (g52 (e44 (g53 (e45 tk54))))))))))))))))
+  & g46 ~ ?((@ap2_nil @ap2_first_la) ((e38 (q18 q19)) (q15 q16)))
+  & g47 ~ ?((@ap2_one @ap2_two_la) ((e39 (q21 q22)) (q18 q19)))
+  & g48 ~ ?((@ap2_nil @ap2_first_la) ((e40 (q24 q25)) (q21 q22)))
+  & g49 ~ ?((@ap2_one @ap2_two_la) ((e41 (q27 q28)) (q24 q25)))
+  & g50 ~ ?((@ap2_nil @ap2_first_la) ((e42 (q30 q31)) (q27 q28)))
+  & g51 ~ ?((@ap2_one @ap2_two_la) ((e43 (q33 q34)) (q30 q31)))
+  & g52 ~ ?((@ap2_nil @ap2_first_la) ((e44 (q36 q37)) (q33 q34)))
+  & g53 ~ ?((@ap2_one @ap2_two) ((e45 tk54) (q36 q37)))
+
+@ap2_two_lw = (ls97 (q57 q58))
+  & ls97 ~ (g88 (e80 (g89 (e81 (g90 (e82 (g91 (e83 (g92 (e84 (g93 (e85 (g94 (e86 (g95 (e87 tk96))))))))))))))))
+  & g88 ~ ?((@ap2_one @ap2_two_la) ((e80 (q60 q61)) (q57 q58)))
+  & g89 ~ ?((@ap2_nil @ap2_first_la) ((e81 (q63 q64)) (q60 q61)))
+  & g90 ~ ?((@ap2_one @ap2_two_la) ((e82 (q66 q67)) (q63 q64)))
+  & g91 ~ ?((@ap2_nil @ap2_first_la) ((e83 (q69 q70)) (q66 q67)))
+  & g92 ~ ?((@ap2_one @ap2_two_la) ((e84 (q72 q73)) (q69 q70)))
+  & g93 ~ ?((@ap2_nil @ap2_first_la) ((e85 (q75 q76)) (q72 q73)))
+  & g94 ~ ?((@ap2_one @ap2_two_la) ((e86 (q78 q79)) (q75 q76)))
+  & g95 ~ ?((@ap2_nil @ap2_first) ((e87 tk96) (q78 q79)))
+
+@ap2_first_la = (* ((head (ys rest)) (ys (1 (head rest)))))
+
+@ap2_two_la = (* ((head2 (ys result)) (ys (1 (head2 result)))))

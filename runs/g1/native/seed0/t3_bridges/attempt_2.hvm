@@ -1,0 +1,138 @@
+// Count edges whose removal disconnects their endpoints.
+@prog = ((n edges) out)
+  & edges ~ {el eg}
+  & n ~ {nc nb}
+  & @count ~ (el (eg (nc (0 out))))
+
+@count = ((?((@count_nil @count_cons) (p (g (n (acc out))))) p) (g (n (acc out))))
+
+@count_nil = (* (p (g (n (acc out)))))
+  & p ~ *
+  & g ~ *
+  & n ~ *
+  & acc ~ out
+
+@count_cons = (* (((u v) t) (g (n (acc out)))))
+  & g ~ {gb gr}
+  & n ~ {nr nc}
+  & u ~ {ut ui}
+  & @reach ~ (nr ((gb (ut (v (1 (ui (0 *))))) connected))
+  & connected ~ ?((@edge_bridge @edge_not) (t (gr (nc (acc out)))))
+
+@edge_bridge = (t (g (n (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count ~ (t (g (n (acc2 out))))
+
+@edge_not = (* (t (g (n (acc out)))))
+  & @count ~ (t (g (n (acc out))))
+
+// Reachability after n full scans of the graph, with one edge excluded.
+@reach = (?((@reach_done @reach_step) (c out)) (c out))
+
+@reach_done = ((g (u (v vis))) out)
+  & g ~ *
+  & u ~ *
+  & @mem ~ (vis (v out))
+
+@reach_step = (r ((g (u (v vis))) out))
+  & g ~ {gr gc}
+  & u ~ {ur uc}
+  & v ~ {vr vc}
+  & @round ~ (gr (ur (vr (vis vis2))))
+  & @reach ~ (r ((gc (uc (vc vis2))) out))
+
+@round = (g (u (v (vis out))))
+  & @scan ~ (g (u (v (vis out))))
+
+// Scan each edge once, extending the visited set without duplicates.
+@scan = ((?((@scan_nil @scan_cons) (p (u (v (vis out))))) p) (u (v (vis out))))
+
+@scan_nil = (* (p (u (v (vis out)))))
+  & p ~ *
+  & u ~ *
+  & v ~ *
+  & vis ~ out
+
+@scan_cons = (* (((a b) t) (u (v (vis out)))))
+  & a ~ {as ar}
+  & b ~ {bs br}
+  & u ~ {us ur}
+  & v ~ {vs vr}
+  & @sameedge ~ (as (bs (us (vs eq)))
+  & eq ~ ?((@scan_use @scan_skip) (t (ur (vr (vis (ar (br out)))))))
+
+@scan_skip = (* (t (u (v (vis (a (b out)))))))
+  & a ~ *
+  & b ~ *
+  & @scan ~ (t (u (v (vis out))))
+
+@scan_use = (t (u (v (vis (a (b out))))))
+  & vis ~ {vm vk}
+  & a ~ {am ak}
+  & @mem ~ (vm (am z))
+  & z ~ ?((@scan_a_no @scan_a_yes) (t (u (v (vk (ak (b out))))))
+
+@scan_a_no = (t (u (v (vis (a (b out))))))
+  & vis ~ {vm vk}
+  & b ~ {bm bk}
+  & @mem ~ (vm (bm z))
+  & z ~ ?((@scan_neither @scan_add_a) (t (u (v (vk (a (bk out))))))
+
+@scan_a_yes = (* (t (u (v (vis (a (b out)))))))
+  & vis ~ {vm vk}
+  & b ~ {bm bk}
+  & @mem ~ (vm (bm z))
+  & z ~ ?((@scan_add_b @scan_both) (t (u (v (vk (a (bk out))))))
+
+@scan_neither = (t (u (v (vis (a (b out))))))
+  & a ~ *
+  & b ~ *
+  & @scan ~ (t (u (v (vis out))))
+
+@scan_add_a = (* (t (u (v (vis (a (b out)))))))
+  & b ~ *
+  & @scan ~ (t (u (v ((1 (a vis)) out))))
+
+@scan_add_b = (t (u (v (vis (a (b out))))))
+  & a ~ *
+  & @scan ~ (t (u (v ((1 (b vis)) out))))
+
+@scan_both = (* (t (u (v (vis (a (b out)))))))
+  & a ~ *
+  & b ~ *
+  & @scan ~ (t (u (v (vis out))))
+
+// Test whether an undirected edge matches the excluded edge.
+@sameedge = (a (b (u (v out))))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & a1 ~ $([=] $(u1 e1))
+  & b1 ~ $([=] $(v1 e2))
+  & a2 ~ $([=] $(v2 e3))
+  & b2 ~ $([=] $(u2 e4))
+  & e1 ~ $([&] $(e2 p))
+  & e3 ~ $([&] $(e4 q))
+  & p ~ $([|] $(q out))
+
+// Membership test for a number in a list of numbers.
+@mem = ((?((@mem_nil @mem_cons) (p (x out))) p) (x out))
+
+@mem_nil = (* (p (x out)))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xt xr}
+  & h ~ $([=] $(xt z))
+  & z ~ ?((@mem_no @mem_yes) (t (xr out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1

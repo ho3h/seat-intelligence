@@ -1,0 +1,138 @@
+@prog = ((c edges) out)
+  & c ~ {ci cf}
+  & @make ~ (ci (0 (cf (edges out))))
+
+@make = ((?((@make_nil @make_cons) (pl (idx (full (edges out))))) pl) (idx (full (edges out))))
+
+@make_nil = (pl (idx (full (edges out))))
+  & pl ~ *
+  & idx ~ *
+  & full ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@make_cons = (* ((h tail) (idx (full (edges out)))))
+  & h ~ {hc hk}
+  & idx ~ {ic ik}
+  & hc ~ $([=] $(ic eq))
+  & eq ~ ?((@make_skip @make_keep) (hk (tail (ik (full (edges out))))))
+
+@make_skip = (h (tail (idx (full (edges out)))))
+  & h ~ *
+  & idx ~ $([+1] idx2)
+  & @make ~ (tail (idx2 (full (edges out))))
+
+@make_keep = (* (h (tail (idx (full (edges out))))))
+  & idx ~ $([+1] idx2)
+  & full ~ {fd fr}
+  & edges ~ {ed er}
+  & @degree ~ (ed (fd (h ((0 *) (0 degree)))))
+  & @make ~ (tail (idx2 (fr (er rest))))
+  & out ~ (1 (degree rest))
+
+@degree = ((?((@d_nil @d_cons) (pl (full (target (seen (acc out))))) pl) (full (target (seen (acc out)))))
+
+@d_nil = (pl (full (target (seen (acc out)))))
+  & pl ~ *
+  & full ~ *
+  & target ~ *
+  & seen ~ *
+  & acc ~ out
+
+@d_cons = (* ((u v) (tail (full (target (seen (acc out)))))))
+  & full ~ {ff fn}
+  & ff ~ {fu fv}
+  & @lookup ~ (fu (u a))
+  & @lookup ~ (fv (v b))
+  & @edgecase ~ (a (b (tail (fn (target (seen (acc out)))))))
+
+@edgecase = (a (b (tail (full (target (seen (acc out)))))))
+  & a ~ {ac ak}
+  & b ~ {bc bk}
+  & ac ~ $([=] $(bc eq))
+  & eq ~ ?((@edge_same @edge_diff) (ak (bk (tail (full (target (seen (acc out))))))))
+
+@edge_same = (a (b (tail (full (target (seen (acc out)))))))
+  & a ~ *
+  & b ~ *
+  & @degree ~ (tail (full (target (seen (acc out)))))
+
+@edge_diff = (* (a (b (tail (full (target (seen (acc out))))))))
+  & a ~ {ac at}
+  & target ~ {tc tk}
+  & ac ~ $([=] $(tc eq2))
+  & eq2 ~ ?((@edge_not_a @edge_is_a) (at (b (tail (full (tk (seen (acc out))))))))
+
+@edge_is_a = (* (a (b (tail (full (target (seen (acc out))))))))
+  & a ~ *
+  & target ~ *
+  & @hit ~ (b (tail (full (seen (acc out)))))
+
+@edge_not_a = (a (b (tail (full (target (seen (acc out)))))))
+  & b ~ {bc bk}
+  & target ~ {tc tk}
+  & bc ~ $([=] $(tc eq3))
+  & eq3 ~ ?((@edge_none @edge_is_b) (a (bk (tail (full (tk (seen (acc out))))))))
+
+@edge_none = (* (a (b (tail (full (target (seen (acc out))))))))
+  & a ~ *
+  & b ~ *
+  & target ~ *
+  & @degree ~ (tail (full (seen (acc out))))
+
+@edge_is_b = (* (a (b (tail (full (target (seen (acc out))))))))
+  & b ~ *
+  & target ~ *
+  & @hit ~ (a (tail (full (seen (acc out)))))
+
+@hit = (n (tail (full (target (seen (acc out))))))
+  & n ~ {nk ns}
+  & seen ~ {sm sr}
+  & @mem ~ (sm (nk found))
+  & found ~ ?((@hit_new @hit_old) (ns (tail (full (target (sr (acc out)))))))
+
+@hit_old = (* (ns (tail (full (target (seen (acc out)))))))
+  & ns ~ *
+  & @degree ~ (tail (full (target (seen (acc out)))))
+
+@hit_new = (* (ns (tail (full (target (seen (acc out)))))))
+  & acc ~ $([+1] acc2)
+  & @degree ~ (tail (full (target ((1 (ns seen)) (acc2 out)))))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (key out))) pl) (key out))
+
+@mem_nil = (pl (key out))
+  & pl ~ *
+  & key ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (key out)))
+  & key ~ {kc kr}
+  & h ~ $([=] $(kc eq))
+  & eq ~ ?((@mem_no @mem_yes) (t (kr out)))
+
+@mem_no = (t (k out))
+  & @mem ~ (t (k out))
+
+@mem_yes = (* (t (k out)))
+  & t ~ *
+  & k ~ *
+  & out ~ 1
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_zero @lookup_pos) (h (t out)))
+
+@lookup_zero = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@lookup_pos = (idx (h (t out)))
+  & h ~ *
+  & @lookup ~ (t (idx out))

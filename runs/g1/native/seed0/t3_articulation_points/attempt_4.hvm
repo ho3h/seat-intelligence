@@ -1,0 +1,163 @@
+@prog = ((n edges) out)
+  & n ~ {ncomp {nremoved nscan}}
+  & edges ~ {ecomp escan}
+  & @components ~ (ncomp (nremoved (ecomp base)))
+  & @ap_scan ~ (0 (nscan (base (escan out))))
+
+@components = (n (removed (edges out)))
+  & @vertex_scan ~ (0 (n (removed (edges ((0 *) (0 out))))))
+
+@member = ((?((@mem_nil @mem_cons) (payload (x out))) payload) (x out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_no @mem_yes) (xr (t out)))
+
+@mem_no = (x (t out))
+  & @member ~ (t (x out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@vertex_scan = (i (n (removed (edges (visited (count out)))))
+  & i ~ {icmp irest}
+  & n ~ {ncmp nrest}
+  & icmp ~ $([<] $(ncmp z))
+  & z ~ ?((@vs_done @vs_more) (irest (nrest (removed (edges (visited (count out)))))))
+
+@vs_done = (i (n (removed (edges (visited (count out))))))
+  & i ~ *
+  & n ~ *
+  & removed ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ count
+
+@vs_more = (* (i (n (removed (edges (visited (count out))))))
+  & i ~ {ix {istart istep}}
+  & removed ~ {rc rr}
+  & ix ~ $([=] $(rc z))
+  & z ~ ?((@vs_active @vs_removed) (istart (istep (n (rr (edges (visited (count out)))))))
+
+@vs_removed = (* (istart (istep (n (removed (edges (visited (count out)))))))
+  & istart ~ *
+  & istep ~ $([+1] inext)
+  & @vertex_scan ~ (inext (n (removed (edges (visited (count out))))))
+
+@vs_active = (istart (istep (n (removed (edges (visited (count out)))))))
+  & istart ~ {im {idfs iinc}}
+  & visited ~ {vcheck vrec}
+  & @member ~ (vcheck (im m))
+  & m ~ ?((@vs_fresh @vs_seen) (idfs (iinc (n (removed (edges (vrec (count out)))))))
+
+@vs_seen = (* (idfs (iinc (n (removed (edges (visited (count out)))))))
+  & idfs ~ *
+  & iinc ~ $([+1] inext)
+  & @vertex_scan ~ (inext (n (removed (edges (visited (count out))))))
+
+@vs_fresh = (idfs (iinc (n (removed (edges (visited (count out)))))))
+  & @dfs ~ ((1 (idfs (0 *))) (visited (removed (edges v2))))
+  & count ~ $([+1] count2)
+  & iinc ~ $([+1] inext)
+  & @vertex_scan ~ (inext (n (removed (edges (v2 (count2 out))))))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (payload (visited (removed (edges out))))) payload) (visited (removed (edges out))))
+
+@dfs_nil = (* (visited (removed (edges out))))
+  & removed ~ *
+  & edges ~ *
+  & out ~ visited
+
+@dfs_cons = (* ((v rest) (visited (removed (edges out)))))
+  & v ~ {vrem {vmem vcur}}
+  & removed ~ {rc rr}
+  & vrem ~ $([=] $(rc z))
+  & z ~ ?((@dfs_active @dfs_removed) (vmem (vcur (rest (visited (rr (edges out)))))))
+
+@dfs_removed = (* (vmem (vcur (rest (visited (removed (edges out)))))))
+  & vmem ~ *
+  & vcur ~ *
+  & @dfs ~ (rest (visited (removed (edges out))))
+
+@dfs_active = (vmem (vcur (rest (visited (removed (edges out))))))
+  & visited ~ {vcheck vkeep}
+  & @member ~ (vcheck (vmem m))
+  & m ~ ?((@dfs_fresh @dfs_seen) (vcur (rest (vkeep (removed (edges out))))))
+
+@dfs_seen = (* (vcur (rest (visited (removed (edges out))))))
+  & vcur ~ *
+  & @dfs ~ (rest (visited (removed (edges out))))
+
+@dfs_fresh = (vcur (rest (visited (removed (edges out)))))
+  & vcur ~ {cur vnew}
+  & edges ~ {elist erec}
+  & @scan_edges ~ (elist (cur (rest ((1 (vnew vkeep)) (removed (erec out))))))
+
+@scan_edges = ((?((@scan_nil @scan_cons) (payload (cur (stack (visited (removed (edges out))))))) payload) (cur (stack (visited (removed (edges out)))))
+
+@scan_nil = (* (cur (stack (visited (removed (edges out))))))
+  & cur ~ *
+  & @dfs ~ (stack (visited (removed (edges out))))
+
+@scan_cons = (* (((u v) tail) (cur (stack (visited (removed (edges out)))))))
+  & cur ~ {cu {cv cr}}
+  & u ~ {ua ub}
+  & v ~ {va vb}
+  & ua ~ $([=] $(cu z))
+  & z ~ ?((@scan_u_no @scan_u_yes) (vb (va (cv (ub (tail (cr (stack (visited (removed (edges out))))))))))
+
+@scan_u_yes = (* (vb (va (cv (ub (tail (cur (stack (visited (removed (edges out))))))))))
+  & va ~ *
+  & cv ~ *
+  & ub ~ *
+  & @scan_edges ~ (tail (cur ((1 (vb stack)) (visited (removed (edges out))))))
+
+@scan_u_no = (vb (va (cv (ub (tail (cur (stack (visited (removed (edges out)))))))))
+  & va ~ $([=] $(cv z2))
+  & z2 ~ ?((@scan_no_match @scan_v_yes) (vb (ub (tail (cur (stack (visited (removed (edges out))))))))
+
+@scan_no_match = (vb (ub (tail (cur (stack (visited (removed (edges out))))))))
+  & vb ~ *
+  & ub ~ *
+  & @scan_edges ~ (tail (cur (stack (visited (removed (edges out))))))
+
+@scan_v_yes = (* (vb (ub (tail (cur (stack (visited (removed (edges out))))))))
+  & vb ~ *
+  & @scan_edges ~ (tail (cur ((1 (ub stack)) (visited (removed (edges out))))))
+
+@ap_scan = (i (n (base (edges out))))
+  & i ~ {icmp irest}
+  & n ~ {ncmp nrest}
+  & icmp ~ $([<] $(ncmp z))
+  & z ~ ?((@aps_done @aps_more) (irest (nrest (base (edges out)))))
+
+@aps_done = (i (n (base (edges out))))
+  & i ~ *
+  & n ~ *
+  & base ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@aps_more = (* (i (n (base (edges out))))))
+  & i ~ {irem {iout istep}}
+  & n ~ {ncomp nnext}
+  & base ~ {bcomp brec}
+  & edges ~ {ecomp erec}
+  & @components ~ (ncomp (irem (ecomp cc)))
+  & cc ~ $([>] $(bcomp z2))
+  & z2 ~ ?((@aps_no @aps_yes) (iout (istep (nnext (brec (erec out))))))
+
+@aps_no = (iout (istep (n (base (edges out)))))
+  & iout ~ *
+  & @ap_scan ~ (istep (n (base (edges out))))
+
+@aps_yes = (* (iout (istep (n (base (edges out))))))
+  & @ap_scan ~ (istep (n (base (edges tail))))
+  & out ~ (1 (iout tail))

@@ -1,0 +1,23 @@
+@prog = ((?((@lis_nil (* ((h_q95 (?((@lis_nil (* ((h_q98 (?((@lis_nil (* ((h_q102 (?((@lis_nil (* ((h_q107 (?((@lis_nil (* ((h_q113 (?((@lis_nil (* ((h_q120 (?((@lis_nil @lis_cons) (pl_q91_q120 (newtails_q120 out_q120))) pl_q91_q120)) ((?((@ins_nil @ins_cons) (h_q120 (pl_q90_q120 newtails_q120))) pl_q90_q120) out_q120)))) (pl_q91_q113 (newtails_q113 out_q113))) pl_q91_q113)) ((?((@ins_nil @ins_cons) (h_q113 (pl_q90_q113 newtails_q113))) pl_q90_q113) out_q113)))) (pl_q91_q107 (newtails_q107 out_q107))) pl_q91_q107)) ((?((@ins_nil @ins_cons) (h_q107 (pl_q90_q107 newtails_q107))) pl_q90_q107) out_q107)))) (pl_q91_q102 (newtails_q102 out_q102))) pl_q91_q102)) ((?((@ins_nil @ins_cons) (h_q102 (pl_q90_q102 newtails_q102))) pl_q90_q102) out_q102)))) (pl_q91_q98 (newtails_q98 out_q98))) pl_q91_q98)) ((?((@ins_nil @ins_cons) (h_q98 (pl_q90_q98 newtails_q98))) pl_q90_q98) out_q98)))) (pl_q91_q95 (newtails_q95 out_q95))) pl_q91_q95)) ((?((@ins_nil @ins_cons) (h_q95 (pl_q90_q95 newtails_q95))) pl_q90_q95) out_q95)))) (pl_q88 ((0 *) out))) pl_q88) out)
+
+@lis_nil = (* ((?((@len_nil (* ((* (?((@len_nil @len_cons) (pl_q93_q129 (acc2_q129 out_q129))) pl_q93_q129)) ($([+1] acc2_q129) out_q129)))) (pl_q89 (0 out))) pl_q89) out))
+
+@lis_cons = (* ((h (?((@lis_nil @lis_cons) (pl_q91 (newtails out))) pl_q91)) ((?((@ins_nil @ins_cons) (h (pl_q90 newtails))) pl_q90) out)))
+
+@ins_nil = (x (* out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(x1 z))
+  & z ~ ?((@ins_replace @ins_more) (h2 (t (x2 out))))
+
+@ins_replace = (* (t (x out)))
+  & out ~ (1 (x t))
+
+@ins_more = (* (h ((?((@ins_nil @ins_cons) (x (pl_q92 res))) pl_q92) (x (1 (h res))))))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* (?((@len_nil @len_cons) (pl_q93 (acc2 out))) pl_q93)) ($([+1] acc2) out)))

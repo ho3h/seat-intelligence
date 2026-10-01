@@ -1,0 +1,44 @@
+@prog = (l out)
+  & @ce ~ (l out)
+
+@ce = (lv1 out)
+  & @ce_cons_lw ~ (lv1 out)
+
+@ce_nil = (* out)
+  & out ~ 0
+
+@ce_cons = (* ((h1 lv2) out))
+  & @ce_more_lw ~ (lv2 (h1 out))
+
+@ce_last = (* (h1 out))
+  & h1 ~ $([&] $(1 p))
+  & p ~ $([^] $(1 out))
+
+@ce_more = (* (($([&] $(1 $([^] $(1 i2)))) t2) ($([&] $(1 $([^] $(1 $([+] $(i2 pairinc)))))) out)))
+  & @ce_cons_lw ~ (t2 $([+] $(pairinc out)))
+
+@ce_cons_lw = (ls49 q13)
+  & ls49 ~ (g40 (e32 (g41 (e33 (g42 (e34 (g43 (e35 (g44 (e36 (g45 (e37 (g46 (e38 (g47 (e39 tk48))))))))))))))))
+  & g40 ~ ?((@ce_nil @ce_cons_la) ((e32 (q15 q16)) q13))
+  & g41 ~ ?((@ce_last @ce_more_la) ((e33 q18) (q15 q16)))
+  & g42 ~ ?((@ce_nil @ce_cons_la) ((e34 (q20 q21)) q18))
+  & g43 ~ ?((@ce_last @ce_more_la) ((e35 q23) (q20 q21)))
+  & g44 ~ ?((@ce_nil @ce_cons_la) ((e36 (q25 q26)) q23))
+  & g45 ~ ?((@ce_last @ce_more_la) ((e37 q28) (q25 q26)))
+  & g46 ~ ?((@ce_nil @ce_cons_la) ((e38 (q30 q31)) q28))
+  & g47 ~ ?((@ce_last @ce_more) ((e39 tk48) (q30 q31)))
+
+@ce_more_lw = (ls87 (q51 q52))
+  & ls87 ~ (g78 (e70 (g79 (e71 (g80 (e72 (g81 (e73 (g82 (e74 (g83 (e75 (g84 (e76 (g85 (e77 tk86))))))))))))))))
+  & g78 ~ ?((@ce_last @ce_more_la) ((e70 q54) (q51 q52)))
+  & g79 ~ ?((@ce_nil @ce_cons_la) ((e71 (q56 q57)) q54))
+  & g80 ~ ?((@ce_last @ce_more_la) ((e72 q59) (q56 q57)))
+  & g81 ~ ?((@ce_nil @ce_cons_la) ((e73 (q61 q62)) q59))
+  & g82 ~ ?((@ce_last @ce_more_la) ((e74 q64) (q61 q62)))
+  & g83 ~ ?((@ce_nil @ce_cons_la) ((e75 (q66 q67)) q64))
+  & g84 ~ ?((@ce_last @ce_more_la) ((e76 q69) (q66 q67)))
+  & g85 ~ ?((@ce_nil @ce_cons) ((e77 tk86) q69))
+
+@ce_cons_la = (* ((h1 (h1 out)) out))
+
+@ce_more_la = (* (($([&] $(1 $([^] $(1 i2)))) $([+] $(pairinc out))) ($([&] $(1 $([^] $(1 $([+] $(i2 pairinc)))))) out)))

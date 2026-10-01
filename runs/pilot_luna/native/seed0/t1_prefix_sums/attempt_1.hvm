@@ -1,0 +1,15 @@
+// Running prefix sums, carrying the current total.
+@prog = (l out)
+  & @ps ~ (l (0 out))
+
+@ps = ((?((@ps_nil @ps_cons) (pl (acc out))) pl) (acc out))
+
+@ps_nil = (* (acc out))
+  & acc ~ *
+  & out ~ (0 *)
+
+@ps_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h sum))
+  & sum ~ {s1 s2}
+  & out ~ (1 (s1 tout))
+  & @ps ~ (t (s2 tout))

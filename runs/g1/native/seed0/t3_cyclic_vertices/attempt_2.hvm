@@ -1,0 +1,86 @@
+// Count vertices that lie on a directed cycle by searching from each vertex.
+
+@prog = ((n edges) out)
+  & @loop ~ (n (edges (0 (0 out))))
+
+@loop = (n (edges (i (count out))))
+  & n ~ {n_cmp n_keep}
+  & i ~ {i_cmp i_keep}
+  & i_cmp ~ $([<] $(n_cmp cond))
+  & cond ~ ?((@loop_end @sources_go) (n_keep (edges (i_keep (count out)))))
+
+@loop_end = (* (* (* (c c))))
+
+@sources_go = (* (n (edges (i (count out)))))
+  & edges ~ {edges_rest edges_work}
+  & edges_work ~ {edges_nb edges_dfs}
+  & i ~ {i_nb i_work}
+  & i_work ~ {i_dfs i_inc}
+  & @neighbors ~ (edges_nb (i_nb ((0 *) stack0)))
+  & @dfs ~ (stack0 (i_dfs (edges_dfs ((0 *) cyc))))
+  & cyc ~ ?((@source_no @source_yes) (n (edges_rest (i_inc (count out)))))
+
+@source_no = (n (edges (i (count out))))
+  & i ~ $([+1] i_next)
+  & @loop ~ (n (edges (i_next (count out))))
+
+@source_yes = (* (n (edges (i (count out)))))
+  & i ~ $([+1] i_next)
+  & count ~ $([+1] count_next)
+  & @loop ~ (n (edges (i_next (count_next out))))
+
+@neighbors = ((?((@nb_nil @nb_cons) (payload (x (stack out)))) payload) (x (stack out)))
+
+@nb_nil = (* (* (s s)))
+
+@nb_cons = (* (((u v) tail) (x (stack out))))
+  & x ~ {x_cmp x_rec}
+  & x_cmp ~ $([=] $(u eq))
+  & eq ~ ?((@nb_no @nb_yes) (v (tail (x_rec (stack out))))
+
+@nb_no = (* (tail (x (stack out))))
+  & @neighbors ~ (tail (x (stack out)))
+
+@nb_yes = (* (v (tail (x (stack out)))))
+  & @neighbors ~ (tail (x ((1 (v stack)) out)))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (payload (src (edges (seen out))))) payload) (src (edges (seen out))))
+
+@dfs_nil = (* (* (* (* 0))))
+
+@dfs_cons = (* ((x tail) (src (edges (seen out)))))
+  & src ~ {src_cmp src_rec}
+  & x ~ {x_cmp x_rec}
+  & x_cmp ~ $([=] $(src_cmp is_src))
+  & is_src ~ ?((@dfs_other @dfs_found) (tail (x_rec (src_rec (edges (seen out)))))
+
+@dfs_found = (* (* (* (* (* (* 1))))))
+
+@dfs_other = (tail (x (src (edges (seen out)))))
+  & x ~ {xm xp}
+  & seen ~ {sm sp}
+  & @member ~ (xm (sm is_seen))
+  & is_seen ~ ?((@dfs_unseen @dfs_seen) (tail (xp (src (edges (sp out)))))
+
+@dfs_seen = (* (tail (* (* (* (seen out))))))
+  & @dfs ~ (tail (seen out))
+
+@dfs_unseen = (tail (x (src (edges (seen out)))))
+  & x ~ {x_nb x_seen}
+  & edges ~ {edges_nb edges_dfs}
+  & @neighbors ~ (edges_nb (x_nb (tail stack0)))
+  & @dfs ~ (stack0 (src (edges_dfs ((1 (x_seen seen)) out))))
+
+@member = ((?((@mem_nil @mem_cons) (payload (target out))) payload) (target out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((head tail) (target out)))
+  & target ~ {target_cmp target_rec}
+  & head ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@mem_miss @mem_hit) (tail (target_rec out)))
+
+@mem_hit = (* (* (* 1)))
+
+@mem_miss = (tail (target out))
+  & @member ~ (target (tail out))

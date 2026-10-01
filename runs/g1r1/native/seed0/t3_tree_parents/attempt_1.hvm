@@ -1,0 +1,119 @@
+@prog = (input output)
+  & input ~ (n (r edges))
+  & @tp_build ~ (n (r (edges output)))
+
+@tp_build = (n (r (edges out)))
+  & @tp_dfs ~ (r (16777215 (edges records)))
+  & @tp_emit ~ (n (0 (records out)))
+
+@tp_dfs = (v (p (edges out)))
+  & v ~ {vscan vmore}
+  & vmore ~ {vparent vrec}
+  & p ~ {pchild prec}
+  & edges ~ {escan ekids}
+  & @tp_scan ~ (escan (vscan kids))
+  & @tp_kids ~ (kids (vparent (ekids sub)))
+  & out ~ (1 ((vrec prec) sub))
+
+@tp_scan = ((?((@tp_scan_nil @tp_scan_cons) (payload (v out))) payload) (v out))
+
+@tp_scan_nil = (* (v out))
+  & v ~ *
+  & out ~ (0 *)
+
+@tp_scan_cons = (* ((edge tail) (v out)))
+  & edge ~ (u w)
+  & v ~ {vrec vcmp}
+  & vcmp ~ {vu vw}
+  & u ~ {ucheck ukeep}
+  & @tp_scan ~ (tail (vrec rest))
+  & ucheck ~ $([=] $(vu eq))
+  & eq ~ ?((@tp_scan_u_no @tp_scan_u_yes) (w (ukeep (vw (rest out))))
+
+@tp_scan_u_no = (w (ukeep (vw (rest out))))
+  & w ~ $([=] $(vw eq2))
+  & eq2 ~ ?((@tp_scan_w_no @tp_scan_w_yes) (ukeep (rest out)))
+
+@tp_scan_u_yes = (* (w (ukeep (vw (rest out)))))
+  & ukeep ~ *
+  & vw ~ *
+  & out ~ (1 (w rest))
+
+@tp_scan_w_no = (ukeep (rest out))
+  & ukeep ~ *
+  & out ~ rest
+
+@tp_scan_w_yes = (* (ukeep (rest out)))
+  & out ~ (1 (ukeep rest))
+
+@tp_kids = ((?((@tp_kids_nil @tp_kids_cons) (payload (parent (edges out)))) payload) (parent (edges out)))
+
+@tp_kids_nil = (* (parent (edges out)))
+  & parent ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@tp_kids_cons = (* ((child rest) (parent (edges out))))
+  & parent ~ {pcmp pmore}
+  & pmore ~ {prest pchild}
+  & edges ~ {erest echild}
+  & child ~ {ccheck cchild}
+  & @tp_kids ~ (rest (prest (erest tailout)))
+  & ccheck ~ $([=] $(pcmp eq))
+  & eq ~ ?((@tp_kids_notparent @tp_kids_parent) (cchild (pchild (echild (tailout out))))
+
+@tp_kids_notparent = (cchild (pchild (echild (tailout out))))
+  & @tp_dfs ~ (cchild (pchild (echild childout)))
+  & @tp_append ~ (childout (tailout out))
+
+@tp_kids_parent = (* (cchild (pchild (echild (tailout out)))))
+  & cchild ~ *
+  & pchild ~ *
+  & echild ~ *
+  & out ~ tailout
+
+@tp_append = ((?((@tp_append_nil @tp_append_cons) (payload (right out))) payload) (right out))
+
+@tp_append_nil = (* (right out))
+  & out ~ right
+
+@tp_append_cons = (* ((head tail) (right out)))
+  & @tp_append ~ (tail (right suffix))
+  & out ~ (1 (head suffix))
+
+@tp_emit = (?((@tp_emit_nil @tp_emit_cons) (idx (records out))) (idx (records out)))
+
+@tp_emit_nil = (idx (records out))
+  & idx ~ *
+  & records ~ *
+  & out ~ (0 *)
+
+@tp_emit_cons = (remain (idx (records out)))
+  & idx ~ {findidx nextidx}
+  & records ~ {findrecords nextrecords}
+  & @tp_find ~ (findrecords (findidx parent))
+  & nextidx ~ $([+1] idx2)
+  & @tp_emit ~ (remain (idx2 (nextrecords tailout)))
+  & out ~ (1 (parent tailout))
+
+@tp_find = ((?((@tp_find_nil @tp_find_cons) (payload (idx out))) payload) (idx out))
+
+@tp_find_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@tp_find_cons = (* ((entry tail) (idx out)))
+  & entry ~ (v p)
+  & idx ~ {checkidx recidx}
+  & v ~ $([=] $(checkidx eq))
+  & eq ~ ?((@tp_find_no @tp_find_yes) (p (tail (recidx out))))
+
+@tp_find_no = (p (tail (recidx out)))
+  & p ~ *
+  & @tp_find ~ (tail (recidx found))
+  & out ~ found
+
+@tp_find_yes = (* (p (tail (recidx out))))
+  & tail ~ *
+  & recidx ~ *
+  & out ~ p

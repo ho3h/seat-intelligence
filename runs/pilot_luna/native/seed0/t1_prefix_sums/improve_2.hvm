@@ -1,0 +1,26 @@
+// The first prefix is the first element itself; no addition is needed.
+@prog = (l out)
+  & @pfirst ~ (l out)
+
+@pfirst = ((?((@first_nil @first_cons) (pl out)) pl) out)
+
+@first_nil = (* out)
+  & out ~ (0 *)
+
+@first_cons = (* ((h t) out))
+  & out ~ (1 (head tout))
+  & h ~ (head acc)
+  & @ps ~ (t (acc tout))
+
+// Continue with the running total.
+@ps = ((?((@ps_nil @ps_cons) (pl (acc out))) pl) (acc out))
+
+@ps_nil = (* (acc out))
+  & acc ~ *
+  & out ~ (0 *)
+
+@ps_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h sum))
+  & sum ~ {s1 s2}
+  & out ~ (1 (s1 tout))
+  & @ps ~ (t (s2 tout))

@@ -1,0 +1,73 @@
+@prog = ((n (queries edges)) out)
+  & n ~ *
+  & @q ~ (queries (edges out))
+
+@mem = ((?((@mem_nil @mem_cons) (p (needle out))) p) (needle out))
+
+@mem_nil = (* (needle out))
+  & needle ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (needle out)))
+  & needle ~ {n1 n2}
+  & h ~ $([=] $(n1 z))
+  & z ~ ?((@mem_ne @mem_yes) (t (n2 out)))
+
+@mem_ne = @mem
+
+@mem_yes = (* (t (n2 out)))
+  & t ~ *
+  & n2 ~ *
+  & out ~ 1
+
+@dfs = ((?((@dfs_nil @dfs_cons) (p (target (edges (visited (found out))))) p) (target (edges (visited (found out)))))
+
+@dfs_nil = (* (target (edges (visited (x x)))))
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+
+@dfs_cons = (* ((v tail) (target (edges (visited (found out))))))
+  & v ~ {v_mem v_keep}
+  & visited ~ {vis_mem vis_keep}
+  & @mem ~ (vis_mem (v_mem z))
+  & z ~ ?((@dfs_new @dfs_seen) (tail (target (edges (v_keep (vis_keep (found out))))))
+
+@dfs_seen = (* @dfs)
+
+@dfs_new = (* (rest (target (edges (v (visited (found out))))))
+  & target ~ {t_cmp t_next}
+  & edges ~ {e_scan e_next}
+  & v ~ {v_a v_b}
+  & v_a ~ {v_visit v_src}
+  & v_b ~ $([=] $(t_cmp eq))
+  & eq ~ $([|] $(found fnext))
+  & @scan ~ (e_scan (v_src (rest (t_next (e_next ((1 (v_visit visited)) (fnext out))))))
+
+@scan = ((?((@scan_nil @scan_cons) (p (source (stack (target (enext (visited (found out))))))) p) (source (stack (target (enext (visited (found out)))))))
+
+@scan_nil = (* (source (stack (target (enext (visited (found out)))))))
+  & source ~ *
+  & @dfs ~ (stack (target (enext (visited (found out)))))
+
+@scan_cons = (* (((u v) tail) (source (stack (target (enext (visited (found out)))))))
+  & source ~ {s_cmp s_keep}
+  & u ~ $([=] $(s_cmp z))
+  & z ~ ?((@scan_no @scan_yes) (v (tail (s_keep (stack (target (enext (visited (found out))))))))
+
+@scan_no = (* (* @scan)
+
+@scan_yes = (* (v (tail (source (stack (target (enext (visited (found out)))))))))
+  & @scan ~ (tail (source ((1 (v stack)) (target (enext (visited (found out))))))
+
+@q = ((?((@q_nil @q_cons) (p (edges out))) p) (edges out))
+
+@q_nil = (* (edges out))
+  & edges ~ *
+  & out ~ (0 *)
+
+@q_cons = (* (((a b) tail) (edges out)))
+  & edges ~ {e_dfs e_q}
+  & @dfs ~ ((1 (a (0 *))) (b (e_dfs ((0 *) (0 ans)))))
+  & @q ~ (tail (e_q qtail))
+  & out ~ (1 (ans qtail))

@@ -1,0 +1,16 @@
+// Dot product over the common prefix of two lists.
+@prog = ((xs ys) out)
+  & @dot ~ (xs (ys (0 out)))
+
+@dot = ((?((@dot_xnil @dot_xcons) (px (ys (acc out)))) px) (ys (acc out)))
+
+@dot_xnil = (* (* (a a)))
+
+@dot_xcons = (* ((xh xt) ((?((@dot_ynil @dot_ycons) (py (xh (xt (acc out))))) py) (acc out)))))
+
+@dot_ynil = (* (* (* (a a))))
+
+@dot_ycons = (* ((yh yt) (xh (xt (acc out))))
+  & xh ~ $([*] $(yh prod))
+  & acc ~ $([+] $(prod acc2))
+  & @dot ~ (xt (yt (acc2 out)))

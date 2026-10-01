@@ -1,0 +1,269 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & @solve ~ (n (s (t (edges out))))
+
+@solve = (n (s (t (edges out))))
+  & n ~ {n_check n_ctx}
+  & s ~ {s_check s_ctx}
+  & t ~ {t_check t_ctx}
+  & @is_invalid ~ (n_check (s_check (t_check invalid)))
+  & invalid ~ ?((@solve_valid @solve_invalid) (n_ctx (s_ctx (t_ctx (edges out)))))
+
+@is_invalid = (n (s (t out)))
+  & s ~ {s1 s2}
+  & t ~ {t1 t2}
+  & n ~ {n1 n2}
+  & s1 ~ $([=] $(t1 eq))
+  & s2 ~ $([<] $(n1 s_lt))
+  & t2 ~ $([<] $(n2 t_lt))
+  & 1 ~ $([-] $(s_lt inv1))
+  & 1 ~ $([-] $(t_lt inv2))
+  & eq ~ $([|] $(inv1 or1))
+  & or1 ~ $([|] $(inv2 out))
+
+@solve_invalid = (* (n (s (t (edges out)))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 0
+
+@solve_valid = (n (s (t (edges out))))
+  & @maxflow ~ (edges (s (t (0 out))))
+
+@maxflow = (edges (s (t (flow out))))
+  & @find_path ~ (s (t (edges path_opt)))
+  & path_opt ~ (tag payload)
+  & tag ~ ?((@ff_done @ff_aug) (payload (flow (edges (s (t out))))))
+
+@ff_done = (payload (flow (edges (s (t out)))))
+  & payload ~ *
+  & edges ~ *
+  & s ~ *
+  & t ~ *
+  & flow ~ out
+
+@ff_aug = (* (payload (flow (edges (s (t out))))))
+  & payload ~ (bottleneck path)
+  & flow ~ $([+] $(bottleneck newflow))
+  & @update_edges ~ (edges (path (bottleneck new_edges)))
+  & @maxflow ~ (new_edges (s (t (newflow out))))
+
+@find_path = (s (t (edges out)))
+  & s ~ {s_cur s_visit}
+  & @dfs ~ (s_cur (t (edges ((1 (s_visit (0 *))) out))))
+
+@dfs = (cur (tgt (edges (visited out))))
+  & cur ~ $([=] $(tgt eq))
+  & eq ~ ?((@dfs_not_target @dfs_target) (cur (tgt (edges (visited out)))))
+
+@dfs_target = (* (cur (tgt (edges (visited out)))))
+  & cur ~ *
+  & tgt ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ (1 (16777215 (0 *)))
+
+@dfs_not_target = (cur (tgt (edges (visited out))))
+  & @dfs_loop ~ (cur (tgt (edges (visited (edges out)))))
+
+@dfs_loop = (cur (tgt (edges_all (visited (list out)))))
+  & list ~ (tag payload)
+  & tag ~ ?((@loop_nil @loop_cons) (payload (cur (tgt (edges_all (visited out))))))
+
+@loop_nil = (payload (cur (tgt (edges_all (visited out)))))
+  & payload ~ *
+  & cur ~ *
+  & tgt ~ *
+  & edges_all ~ *
+  & visited ~ *
+  & out ~ (0 *)
+
+@loop_cons = (* (payload (cur (tgt (edges_all (visited out))))))
+  & payload ~ (edge tail)
+  & edge ~ (u (v cap))
+  & u ~ $([=] $(cur eq_u))
+  & eq_u ~ ?((@edge_not_from @edge_from) (u (v (cap (tail (cur (tgt (edges_all (visited out)))))))))
+
+@edge_not_from = (u (v (cap (tail (cur (tgt (edges_all (visited out))))))))
+  & u ~ *
+  & v ~ *
+  & cap ~ *
+  & @dfs_loop ~ (cur (tgt (edges_all (visited (tail out)))))
+
+@edge_from = (u (v (cap (tail (cur (tgt (edges_all (visited out))))))))
+  & cap ~ {cap_test cap_keep}
+  & cap_test ~ ?((@cap_zero @cap_pos) (u (v (cap_keep (tail (cur (tgt (edges_all (visited out)))))))))
+
+@cap_zero = (u (v (cap_keep (tail (cur (tgt (edges_all (visited out))))))))
+  & u ~ *
+  & v ~ *
+  & cap_keep ~ *
+  & @dfs_loop ~ (cur (tgt (edges_all (visited (tail out)))))
+
+@cap_pos = (* (u (v (cap_keep (tail (cur (tgt (edges_all (visited out)))))))))
+  & visited ~ {vis_mem vis_ctx}
+  & @member ~ (v (vis_mem mem))
+  & mem ~ ?((@v_not_visited @v_visited) (u (v (cap_keep (tail (cur (tgt (edges_all (vis_ctx out)))))))))
+
+@v_visited = (u (v (cap_keep (tail (cur (tgt (edges_all (visited out))))))))
+  & u ~ *
+  & v ~ *
+  & cap_keep ~ *
+  & @dfs_loop ~ (cur (tgt (edges_all (visited (tail out)))))
+
+@v_not_visited = (u (v (cap_keep (tail (cur (tgt (edges_all (visited out))))))))
+  & v ~ {v12 v_path}
+  & v12 ~ {v_rec v_visit}
+  & edges_all ~ {edges_dfs edges_ctx}
+  & visited ~ {vis_rec vis_cont}
+  & @dfs ~ (v_rec (tgt (edges_dfs ((1 (v_visit vis_rec)) dfs_out))))
+  & dfs_out ~ ?((@dfs_fail @dfs_success) (u (v_path (cap_keep (tail (cur (tgt (edges_ctx (vis_cont out)))))))))
+
+@dfs_fail = (payload (u (v_path (cap_keep (tail (cur (tgt (edges_ctx (vis_cont out)))))))))
+  & payload ~ *
+  & u ~ *
+  & v_path ~ *
+  & cap_keep ~ *
+  & @dfs_loop ~ (cur (tgt (edges_ctx (vis_cont (tail out)))))
+
+@dfs_success = (* (payload (u (v_path (cap_keep (tail (cur (tgt (edges_ctx (vis_cont out))))))))))
+  & payload ~ (bottleneck_sub subpath)
+  & @min ~ (cap_keep (bottleneck_sub newb))
+  & @dfs_success_cont ~ (u (v_path (subpath (newb (cur (tgt (edges_ctx (vis_cont out))))))))
+
+@dfs_success_cont = (u (v_path (subpath (newb (cur (tgt (edges_ctx (vis_cont out))))))))
+  & cur ~ *
+  & tgt ~ *
+  & edges_ctx ~ *
+  & vis_cont ~ *
+  & out ~ (1 (newb (1 ((u v_path) subpath))))
+
+@min = (a (b out))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@min_b @min_a) (a2 (b2 out)))
+
+@min_a = (a (b out))
+  & b ~ *
+  & a ~ out
+
+@min_b = (* (a (b out)))
+  & a ~ *
+  & b ~ out
+
+@update_edges = (edges (path (amount out)))
+  & path ~ (tag payload)
+  & tag ~ ?((@update_nil @update_cons) (payload (edges (amount out))))
+
+@update_nil = (payload (edges (amount out)))
+  & payload ~ *
+  & amount ~ *
+  & edges ~ out
+
+@update_cons = (* (payload (edges (amount out))))
+  & payload ~ (step rest)
+  & step ~ (u v)
+  & @apply_step ~ (edges (u (v (amount new_edges))))
+  & @update_edges ~ (new_edges (rest (amount out)))
+
+@apply_step = (edges (u (v (amount out))))
+  & @subtract_forward ~ (edges (u (v (amount sub_edges))))
+  & @insert_or_add ~ (sub_edges (v (u (amount out))))
+
+@subtract_forward = (list (u (v (amount out))))
+  & list ~ (tag payload)
+  & tag ~ ?((@sub_nil @sub_cons) (payload (u (v (amount out)))))
+
+@sub_nil = (payload (u (v (amount out))))
+  & payload ~ *
+  & u ~ *
+  & v ~ *
+  & amount ~ *
+  & out ~ (0 *)
+
+@sub_cons = (* (payload (u (v (amount out)))))
+  & payload ~ (edge tail)
+  & edge ~ (a (b cap))
+  & a ~ {a12 a_keep}
+  & a12 ~ {a_eq a_rec}
+  & b ~ {b12 b_keep}
+  & b12 ~ {b_eq b_rec}
+  & u ~ {u12 u_cont}
+  & u12 ~ {u_eq u_rec}
+  & v ~ {v12 v_cont}
+  & v12 ~ {v_eq v_rec}
+  & amount ~ {amount_op amount_cont}
+  & a_eq ~ $([=] $(u_eq eq_a))
+  & b_eq ~ $([=] $(v_eq eq_b))
+  & eq_a ~ $([&] $(eq_b match))
+  & match ~ ?((@sub_not_match @sub_match) (cap (tail (a_keep (b_keep (u_cont (v_cont (amount_cont out))))))))
+
+@sub_not_match = (cap (tail (a (b (u (v (amount out)))))))
+  & @subtract_forward ~ (tail (u (v (amount new_tail))))
+  & out ~ (1 ((a (b cap)) new_tail))
+
+@sub_match = (* (cap (tail (a (b (u (v (amount out))))))))
+  & amount ~ {amount_sub amount_rec}
+  & cap ~ $([-] $(amount_sub newcap))
+  & @subtract_forward ~ (tail (u (v (amount_rec new_tail))))
+  & out ~ (1 ((a (b newcap)) new_tail))
+
+@insert_or_add = (list (u (v (add out))))
+  & list ~ (tag payload)
+  & tag ~ ?((@ins_nil @ins_cons) (payload (u (v (add out)))))
+
+@ins_nil = (payload (u (v (add out))))
+  & payload ~ *
+  & out ~ (1 ((u (v add)) (0 *)))
+
+@ins_cons = (* (payload (u (v (add out)))))
+  & payload ~ (edge tail)
+  & edge ~ (a (b cap))
+  & a ~ {a12 a_keep}
+  & a12 ~ {a_eq a_rec}
+  & b ~ {b12 b_keep}
+  & b12 ~ {b_eq b_rec}
+  & u ~ {u12 u_cont}
+  & u12 ~ {u_eq u_rec}
+  & v ~ {v12 v_cont}
+  & v12 ~ {v_eq v_rec}
+  & add ~ {add_use add_cont}
+  & a_eq ~ $([=] $(u_eq eq_a))
+  & b_eq ~ $([=] $(v_eq eq_b))
+  & eq_a ~ $([&] $(eq_b match))
+  & match ~ ?((@ins_not_match @ins_match) (cap (tail (a_keep (b_keep (u_cont (v_cont (add_cont out))))))))
+
+@ins_not_match = (cap (tail (a (b (u (v (add out)))))))
+  & @insert_or_add ~ (tail (u (v (add new_tail))))
+  & out ~ (1 ((a (b cap)) new_tail))
+
+@ins_match = (* (cap (tail (a (b (u (v (add out))))))))
+  & add ~ {add_add add_rec}
+  & cap ~ $([+] $(add_add newcap))
+  & @insert_or_add ~ (tail (u (v (add_rec new_tail))))
+  & out ~ (1 ((a (b newcap)) new_tail))
+
+@member = (x (list out))
+  & list ~ (tag payload)
+  & tag ~ ?((@mem_nil @mem_cons) (payload (x out)))
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* (payload (x out)))
+  & payload ~ (y tail)
+  & x ~ {x_eq x_next}
+  & x_eq ~ $([=] $(y eq))
+  & eq ~ ?((@mem_not_eq @mem_eq) (x_next (tail out)))
+
+@mem_not_eq = (x (tail out))
+  & @member ~ (x (tail out))
+
+@mem_eq = (* (x (tail out)))
+  & x ~ *
+  & tail ~ *
+  & out ~ 1

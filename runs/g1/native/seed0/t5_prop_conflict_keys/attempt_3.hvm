@@ -1,0 +1,147 @@
+@prog = ((c attrs) out)
+  & c ~ {walk full}
+  & @map ~ (attrs (full mapped))
+  & @outer ~ (walk (0 (mapped out)))
+
+@map = ((?((@map_nil @map_cons) (pl (cfull out))) pl) (cfull out))
+
+@map_nil = (* (cfull out))
+  & cfull ~ *
+  & out ~ (0 *)
+
+@map_cons = (* (((node (key value)) tail) (cfull out)))
+  & cfull ~ {cget crecur}
+  & @get ~ (cget (node cluster))
+  & @map ~ (tail (crecur rest))
+  & out ~ (1 ((cluster (key value)) rest))
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (head (tail out)))
+
+@get_zero = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@get_more = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (idx out))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (idx (attrs out)))) pl) (idx (attrs out)))
+
+@outer_nil = (* (idx (attrs out)))
+  & idx ~ *
+  & attrs ~ *
+  & out ~ (0 *)
+
+@outer_cons = (* ((cval tail) (idx (attrs out))))
+  & attrs ~ {curattrs nextattrs}
+  & cval ~ {vtest vkeep}
+  & idx ~ {itest irec}
+  & vtest ~ $([=] $(itest eq))
+  & irec ~ $([+1] inext)
+  & @outer ~ (tail (inext (nextattrs rest)))
+  & eq ~ ?((@outer_skip @outer_hit) (vkeep (curattrs (rest out))))
+
+@outer_skip = (vkeep (curattrs (rest out)))
+  & vkeep ~ *
+  & curattrs ~ *
+  & out ~ rest
+
+@outer_hit = (vkeep (curattrs (rest out)))
+  & @keys ~ (vkeep (0 (curattrs (rest out))))
+
+@keys = (rep (key (attrs (suffix out))))
+  & key ~ {keq kval}
+  & keq ~ $([=] $(4 eq))
+  & eq ~ ?((@keys_process @keys_done) (rep (kval (attrs (suffix out)))))
+
+@keys_done = (* (rep (kval (attrs (suffix out)))))
+  & rep ~ *
+  & kval ~ *
+  & attrs ~ *
+  & out ~ suffix
+
+@keys_process = (* (rep (kval (attrs (suffix out)))))
+  & rep ~ {rscan rmore}
+  & rmore ~ {rrec rhead}
+  & attrs ~ {scanattrs nextattrs}
+  & kval ~ {scan_key khead}
+  & scan_key ~ {k_scan khead}
+  & nextkey ~ $([+1] afterkey)
+  & @scan ~ (scanattrs (rscan (k_scan ((0 (0 0)) stateout))))
+  & @keys ~ (nextkey (rrec (afterkey (nextattrs (suffix rest)))))
+  & stateout ~ (seen (first conflict))
+  & seen ~ *
+  & conflict ~ ?((@keys_no @keys_yes) (rhead (khead (first (rest out)))))
+
+@keys_no = (rhead (khead (first (rest out))))
+  & rhead ~ *
+  & khead ~ *
+  & first ~ *
+  & out ~ rest
+
+@keys_yes = (* (rhead (khead (first (rest out)))))
+  & first ~ *
+  & out ~ (1 ((rhead khead) rest))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (rep (key (state out))))) pl) (rep (key (state out))))
+
+@scan_nil = (* (rep (key (state out))))
+  & rep ~ *
+  & key ~ *
+  & out ~ state
+
+@scan_cons = (* (((cattr (akey value)) tail) (rep (key (state out)))))
+  & rep ~ {rtest rnext}
+  & key ~ {ktest knext}
+  & akey ~ $([=] $(ktest eq))
+  & eq ~ ?((@scan_nonkey @scan_key) (cattr (value (rtest (rnext (knext (state (tail out))))))))
+
+@scan_nonkey = (cattr (value (rtest (rnext (knext (state (tail out)))))))
+  & cattr ~ *
+  & value ~ *
+  & rtest ~ *
+  & @scan ~ (tail (rnext (knext (state out))))
+
+@scan_key = (* (cattr (value (rtest (rnext (knext (state (tail out))))))))
+  & cattr ~ $([=] $(rtest eq2))
+  & eq2 ~ ?((@scan_notcluster @scan_member) (value (rnext (knext (state (tail out))))))
+
+@scan_notcluster = (value (rnext (knext (state (tail out)))))
+  & value ~ *
+  & @scan ~ (tail (rnext (knext (state out))))
+
+@scan_member = (* (value (rnext (knext (state (tail out))))))
+  & @upd ~ (value (state newstate))
+  & @scan ~ (tail (rnext (knext (newstate out))))
+
+@upd = (val ((seen (first conflict)) out))
+  & seen ~ ?((@upd_none @upd_some) (val (first (conflict out))))
+
+@upd_none = (val (first (conflict out)))
+  & first ~ *
+  & conflict ~ *
+  & out ~ (1 (val 0))
+
+@upd_some = (* (val (first (conflict out))))
+  & conflict ~ ?((@upd_compare @upd_already) (val (first out)))
+
+@upd_already = (* (val (first out)))
+  & val ~ *
+  & out ~ (1 (first 1))
+
+@upd_compare = (val (first out))
+  & val ~ $([=] $(first eq))
+  & eq ~ ?((@upd_different @upd_equal) (first out))
+
+@upd_different = (first out)
+  & out ~ (1 (first 1))
+
+@upd_equal = (first out)
+  & out ~ (1 (first 0))

@@ -1,0 +1,48 @@
+{
+ "pid": "t3_topo_order",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 3154,
+    "itrs_median_big": 39148799,
+    "itrs_max": 240611256,
+    "depth_median_big": 7612236,
+    "depth_max": 16840224
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 349758,
+ "best": {
+  "itrs_median_small": 3154,
+  "itrs_median_big": 39148799,
+  "itrs_max": 240611256,
+  "depth_median_big": 7612236,
+  "depth_max": 16840224
+ },
+ "usd": 0.09300597,
+ "free_rejects": 1,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

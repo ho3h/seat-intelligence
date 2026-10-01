@@ -1,0 +1,39 @@
+// For each vertex, scan the edge list and accumulate degree*(degree-1)/2.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ *
+  & @vertices ~ (n (edges (0 out)))
+
+@vertices = (?((@vertices_nil @vertices_step) ctx) ctx)
+
+@vertices_nil = (edges (total out))
+  & edges ~ *
+  & total ~ out
+
+@vertices_step = (k (edges (total out)))
+  & k ~ {vertex kkeep}
+  & edges ~ {scan_edges edgeskeep}
+  & @scan ~ (scan_edges (vertex (0 (0 (kkeep (edgeskeep (total out)))))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (vertex (degree (wedge (k (edges (total out))))))) payload) (vertex (degree (wedge (k (edges (total out)))))))
+
+@scan_nil = (* (vertex (degree (wedge (k (edges (total out))))))
+  & vertex ~ *
+  & degree ~ *
+  & wedge ~ $([+] $(total total2))
+  & @vertices ~ (k (edges (total2 out)))
+
+@scan_cons = (* (((a b) t) (vertex (degree (wedge (k (edges (total out)))))))
+  & vertex ~ {v1 {v2 vkeep}}
+  & a ~ $([=] $(v1 x))
+  & b ~ $([=] $(v2 y))
+  & x ~ $([|] $(y hit))
+  & hit ~ ?((@scan_no @scan_yes) (t (vkeep (degree (wedge (k (edges (total out))))))))
+
+@scan_no = (t (vertex (degree (wedge (k (edges (total out)))))))
+  & @scan ~ (t (vertex (degree (wedge (k (edges (total out)))))))
+
+@scan_yes = (* (t (vertex (degree (wedge (k (edges (total out)))))))
+  & degree ~ $([+1] degree2)
+  & wedge ~ $([+] $(degree wedge2))
+  & @scan ~ (t (vertex (degree2 (wedge2 (k (edges (total out)))))))

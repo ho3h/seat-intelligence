@@ -1,0 +1,118 @@
+@prog = (input out)
+  & @scan ~ (input ((0 *) (0 out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (stack (i out)))) payload) (stack (i out)))
+
+@scan_nil = (payload (stack (i out)))
+  & payload ~ *
+  & @end ~ (stack (i out))
+
+@scan_cons = (* ((h t) (stack (i out))))
+  & @dispatch ~ (h (t (stack (i out))))
+
+@end = ((?((@end_empty @end_nonempty) (payload (i out))) payload) (i out))
+
+@end_empty = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & out ~ 0
+
+@end_nonempty = (* (payload (i out)))
+  & payload ~ *
+  & i ~ $([+1] out)
+
+@dispatch = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(40 z))
+  & z ~ ?((@d40_no @d40_yes) (h2 (t (stack (i out)))))
+
+@d40_no = (h (t (stack (i out))))
+  & @d91 ~ (h (t (stack (i out))))
+
+@d40_yes = (* (h (t (stack (i out)))))
+  & h ~ *
+  & @scan ~ (t ((1 (41 stack)) (i1 out)))
+  & i ~ $([+1] i1)
+
+@d91 = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(91 z))
+  & z ~ ?((@d91_no @d91_yes) (h2 (t (stack (i out)))))
+
+@d91_no = (h (t (stack (i out))))
+  & @d123 ~ (h (t (stack (i out))))
+
+@d91_yes = (* (h (t (stack (i out)))))
+  & h ~ *
+  & @scan ~ (t ((1 (93 stack)) (i1 out)))
+  & i ~ $([+1] i1)
+
+@d123 = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(123 z))
+  & z ~ ?((@d123_no @d123_yes) (h2 (t (stack (i out)))))
+
+@d123_no = (h (t (stack (i out))))
+  & @d41 ~ (h (t (stack (i out))))
+
+@d123_yes = (* (h (t (stack (i out)))))
+  & h ~ *
+  & @scan ~ (t ((1 (125 stack)) (i1 out)))
+  & i ~ $([+1] i1)
+
+@d41 = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(41 z))
+  & z ~ ?((@d41_no @d41_yes) (h2 (t (stack (i out)))))
+
+@d41_no = (h (t (stack (i out))))
+  & @d93 ~ (h (t (stack (i out))))
+
+@d41_yes = (* (h (t (stack (i out)))))
+  & @close ~ (stack (h (t (i out))))
+
+@d93 = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(93 z))
+  & z ~ ?((@d93_no @d93_yes) (h2 (t (stack (i out)))))
+
+@d93_no = (h (t (stack (i out))))
+  & @d125 ~ (h (t (stack (i out))))
+
+@d93_yes = (* (h (t (stack (i out)))))
+  & @close ~ (stack (h (t (i out))))
+
+@d125 = (h (t (stack (i out))))
+  & h ~ {h1 h2}
+  & h1 ~ $([=] $(125 z))
+  & z ~ ?((@d125_no @d125_yes) (h2 (t (stack (i out)))))
+
+@d125_no = (h (t (stack (i out))))
+  & h ~ *
+  & t ~ *
+  & stack ~ *
+  & i ~ $([+1] out)
+
+@d125_yes = (* (h (t (stack (i out)))))
+  & @close ~ (stack (h (t (i out))))
+
+@close = ((?((@close_empty @close_nonempty) (payload (h (t (i out))))) payload) (h (t (i out))))
+
+@close_empty = (payload (h (t (i out))))
+  & payload ~ *
+  & h ~ *
+  & t ~ *
+  & i ~ $([+1] out)
+
+@close_nonempty = (* ((expected rest) (h (t (i out)))))
+  & h ~ $([=] $(expected z))
+  & z ~ ?((@mismatch @matched) (rest (t (i out))))
+
+@mismatch = (rest (t (i out)))
+  & rest ~ *
+  & t ~ *
+  & i ~ $([+1] out)
+
+@matched = (* (rest (t (i out))))
+  & @scan ~ (t (rest (i1 out)))
+  & i ~ $([+1] i1)

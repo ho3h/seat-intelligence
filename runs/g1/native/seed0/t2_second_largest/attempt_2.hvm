@@ -1,0 +1,50 @@
+@prog = (l out)
+  & @scan ~ ((l (0 (0 0))) out)
+
+@scan = (((?((@scan_nil @scan_cons) (pl (c (hi (lo out))))) pl) (c (hi lo))) out)
+
+@scan_nil = (* (c (* (lo out))))
+  & c ~ $([=] $(2 eq))
+  & eq ~ $([*] $(lo out))
+
+@scan_cons = (* ((h t) (c (hi (lo out)))))
+  & @step ~ ((h (c (hi lo))) (cn (hn ln)))
+  & @scan ~ ((t (cn (hn ln))) out)
+
+@step = ((x (c (hi lo))) (cn (hn ln)))
+  & x ~ {xmax xmin}
+  & hi ~ {himax himin}
+  & @max ~ ((xmax himax) hn)
+  & @min ~ ((xmin himin) m)
+  & m ~ {m1 mmax}
+  & @max ~ ((lo mmax) lm)
+  & c ~ {c1in crest}
+  & crest ~ {c2in crest2}
+  & crest2 ~ {cltin cplus}
+  & c1in ~ $([=] $(1 f1))
+  & c2in ~ $([>] $(1 f2))
+  & cltin ~ $([<] $(2 inc))
+  & cplus ~ $([+] $(inc cn))
+  & m1 ~ $([*] $(f1 p1))
+  & lm ~ $([*] $(f2 p2))
+  & p1 ~ $([+] $(p2 ln))
+
+@max = ((a b) out)
+  & a ~ {ac av}
+  & b ~ {bc bv}
+  & ac ~ $([>] $(bc gt))
+  & gt ~ {g1 g2}
+  & 1 ~ $([-] $(g2 ng))
+  & av ~ $([*] $(g1 p1))
+  & bv ~ $([*] $(ng p2))
+  & p1 ~ $([+] $(p2 out))
+
+@min = ((a b) out)
+  & a ~ {ac av}
+  & b ~ {bc bv}
+  & ac ~ $([>] $(bc gt))
+  & gt ~ {g1 g2}
+  & 1 ~ $([-] $(g2 ng))
+  & av ~ $([*] $(ng p1))
+  & bv ~ $([*] $(g1 p2))
+  & p1 ~ $([+] $(p2 out))

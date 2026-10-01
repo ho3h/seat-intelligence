@@ -1,0 +1,88 @@
+// Count vertices that can reach themselves by a nonempty directed path.
+
+@prog = ((n edges) out)
+  & @sources ~ (n (edges (0 (0 out))))
+
+@sources = (n (edges (i (count out))))
+  & n ~ {n_cmp n_keep}
+  & i ~ {i_cmp i_keep}
+  & i_cmp ~ $([<] $(n_cmp cond))
+  & cond ~ ?((@sources_end @sources_go) (n_keep (edges (i_keep (count out)))))
+
+@sources_end = (* (* (* (count count))))
+
+@sources_go = (* (n (edges (i (count out)))))
+  & edges ~ {e_search e_keep}
+  & i ~ {i_search i_inc}
+  & i_inc ~ $([+1] next_i)
+  & @reachable ~ (i_search (e_search cyc))
+  & count ~ $([+] $(cyc new_count))
+  & @sources ~ (n (e_keep (next_i (new_count out))))
+
+@reachable = (src (edges out))
+  & src ~ {s_a s_b}
+  & s_a ~ {s1 s2}
+  & @dfs ~ ((1 (s1 (0 *))) ((1 (s2 (0 *))) (s_b (edges out))))
+
+@dfs = ((?((@dfs_nil @dfs_cons) (payload (seen (src (edges out))))) payload) (seen (src (edges out))))
+
+@dfs_nil = (* (* (* (* 0))))
+
+@dfs_cons = (* ((x tail) (seen (src (edges out)))))
+  & edges ~ {e_scan e_keep}
+  & @scan ~ (e_scan (x (src (tail (seen (0 scanout)))))
+  & scanout ~ (found (stack2 seen2))
+  & found ~ ?((@dfs_continue @dfs_yes) (stack2 (seen2 (src (e_keep out))))
+
+@dfs_continue = (stack (seen (src (edges out))))
+  & @dfs ~ (stack (seen (src (edges out))))
+
+@dfs_yes = (* (* (* (* (* 1)))))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (x (src (stack (seen (flag out))))))) payload) (x (src (stack (seen (flag out)))))
+
+@scan_nil = (* (* (* (stack (seen (flag (flag (stack seen)))))))
+
+@scan_cons = (* (((u v) tail) (x (src (stack (seen (flag out)))))))
+  & x ~ {x_cmp x_keep}
+  & u ~ $([=] $(x_cmp eq))
+  & eq ~ ?((@scan_u_no @scan_u_yes) (v (tail (x_keep (src (stack (seen (flag out)))))))
+
+@scan_u_no = (* (tail (x (src (stack (seen (flag out)))))))
+  & @scan ~ (tail (x (src (stack (seen (flag out))))))
+
+@scan_u_yes = (v (tail (x (src (stack (seen (flag out)))))))
+  & src ~ {src_cmp src_keep}
+  & v ~ {v_cmp v_keep}
+  & v_cmp ~ $([=] $(src_cmp eq))
+  & eq ~ ?((@scan_v_no @scan_v_yes) (v_keep (tail (x (src_keep (stack (seen (flag out)))))))
+
+@scan_v_yes = (* (tail (x (src (stack (seen (* out)))))))
+  & @scan ~ (tail (x (src (stack (seen (1 out))))))
+
+@scan_v_no = (v (tail (x (src (stack (seen (flag out)))))))
+  & seen ~ {seen_mem seen_keep}
+  & v ~ {v_mem v_keep}
+  & @member ~ (v_mem (seen_mem mem))
+  & mem ~ ?((@scan_unseen @scan_seen) (v_keep (tail (x (src (stack (seen_keep (flag out)))))))
+
+@scan_seen = (* (* (tail (x (src (stack (seen (flag out)))))))
+  & @scan ~ (tail (x (src (stack (seen (flag out))))))
+
+@scan_unseen = (v (tail (x (src (stack (seen (flag out)))))))
+  & v ~ {v_stack v_seen}
+  & @scan ~ (tail (x (src ((1 (v_stack stack)) ((1 (v_seen seen)) (flag out))))))
+
+@member = ((?((@member_nil @member_cons) (payload (target out))) payload) (target out))
+
+@member_nil = (* (* 0))
+
+@member_cons = (* ((head tail) (target out)))
+  & target ~ {target_cmp target_keep}
+  & head ~ $([=] $(target_cmp eq))
+  & eq ~ ?((@member_miss @member_hit) (tail (target_keep out)))
+
+@member_hit = (* (* (* 1)))
+
+@member_miss = (tail (target out))
+  & @member ~ (tail (target out))

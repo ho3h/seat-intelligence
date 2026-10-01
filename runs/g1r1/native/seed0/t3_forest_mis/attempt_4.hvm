@@ -1,0 +1,162 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & @mkverts ~ (n (0 verts))
+  & @peel ~ (verts (edges (0 output)))
+
+@mkverts = (?((@mkv_nil @mkv_succ) (i out)) (i out))
+
+@mkv_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@mkv_succ = (n (i out))
+  & i ~ {i_out i_inc}
+  & out ~ (1 (i_out tail))
+  & i_inc ~ $([+1] i_next)
+  & @mkverts ~ (n (i_next tail))
+
+@peel = (verts (edges (acc out)))
+  & verts ~ {v_scan v_keep}
+  & edges ~ {e_scan e_keep}
+  & @find ~ (v_scan (e_scan found))
+  & found ~ (?((@peel_done @peel_found) (payload (v_keep (e_keep (acc out))))) payload)
+
+@peel_done = (payload (verts (edges (acc out))))
+  & payload ~ *
+  & verts ~ *
+  & edges ~ *
+  & out ~ acc
+
+@peel_found = (payload (verts (edges (acc out))))
+  & payload ~ (v (d nb))
+  & d ~ ?((@peel_iso @peel_pair) (v (nb (verts (edges (acc out))))))
+
+@peel_iso = (v (nb (verts (edges (acc out)))))
+  & nb ~ *
+  & v ~ {v_vf v_ef}
+  & @fverts ~ (verts (v_vf verts2))
+  & @fedges ~ (edges (v_ef edges2))
+  & acc ~ $([+1] acc2)
+  & @peel ~ (verts2 (edges2 (acc2 out)))
+
+@peel_pair = (* (v (nb (verts (edges (acc out))))))
+  & v ~ {v_v1 v_v2}
+  & nb ~ {nb_v1 nb_v2}
+  & @fverts ~ (verts (v_v1 verts1))
+  & @fverts ~ (verts1 (nb_v1 verts2))
+  & @fedges ~ (edges (v_v2 edges1))
+  & @fedges ~ (edges1 (nb_v2 edges2))
+  & acc ~ $([+1] acc2)
+  & @peel ~ (verts2 (edges2 (acc2 out)))
+
+@find = ((?((@find_nil @find_cons) (pl (edges out))) pl) (edges out))
+
+@find_nil = (pl (edges out))
+  & pl ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@find_cons = (* ((v vs) (edges out)))
+  & v ~ {v_degree v_keep}
+  & edges ~ {e_degree e_rec}
+  & @degree ~ (e_degree (v_degree (0 (0 degree))))
+  & degree ~ (d nb)
+  & d ~ {d_test d_keep}
+  & d_test ~ $([<] $(2 z))
+  & z ~ ?((@find_next @find_yes) (v_keep (d_keep (nb (vs (e_rec out))))))
+
+@find_next = (v (d (nb (vs (edges out)))))
+  & v ~ *
+  & d ~ *
+  & nb ~ *
+  & @find ~ (vs (edges out))
+
+@find_yes = (* (v (d (nb (vs (edges out))))))
+  & vs ~ *
+  & edges ~ *
+  & out ~ (1 (v (d nb)))
+
+@degree = ((?((@dl_nil @dl_cons) (pl (target (count (neighbor out))))) pl) (target (count (neighbor out))))
+
+@dl_nil = (pl (target (count (neighbor out))))
+  & pl ~ *
+  & target ~ *
+  & out ~ (count neighbor)
+
+@dl_cons = (* (((u w) tail) (target (count (neighbor out)))))
+  & target ~ {t_u t_rest}
+  & t_rest ~ {t_w t_rec}
+  & u ~ {u_cmp u_keep}
+  & w ~ {w_cmp w_keep}
+  & u_cmp ~ $([=] $(t_u z_u))
+  & w_cmp ~ $([=] $(t_w z_w))
+  & z_u ~ ?((@du_no @du_yes) (tail (t_rec (count (neighbor (u_keep (w_keep (z_w out)))))))
+
+@du_no = (tail (target (count (neighbor (u (w z out))))))
+  & w ~ *
+  & z ~ ?((@dw_no @dw_yes) (tail (target (count (neighbor (u out))))))
+
+@du_yes = (* (tail (target (count (neighbor (u (w z out)))))))
+  & u ~ *
+  & z ~ *
+  & neighbor ~ *
+  & count ~ $([+1] count2)
+  & @degloop ~ (tail (target (count2 (w out))))
+
+@dw_no = (tail (target (count (neighbor (u out)))))
+  & u ~ *
+  & @degloop ~ (tail (target (count (neighbor out))))
+
+@dw_yes = (* (tail (target (count (neighbor (u out))))))
+  & neighbor ~ *
+  & count ~ $([+1] count2)
+  & @degloop ~ (tail (target (count2 (u out))))
+
+@degloop = ((?((@dl_nil @dl_cons) (pl (target (count (neighbor out))))) pl) (target (count (neighbor out))))
+
+@fverts = ((?((@fv_nil @fv_cons) (pl (target out))) pl) (target out))
+
+@fv_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@fv_cons = (* ((x xs) (target out)))
+  & x ~ {x_cmp x_keep}
+  & target ~ {target_cmp target_rec}
+  & x_cmp ~ $([=] $(target_cmp z))
+  & z ~ ?((@fv_keep @fv_drop) (x_keep (xs (target_rec out))))
+
+@fv_keep = (x (xs (target out)))
+  & out ~ (1 (x tail))
+  & @fverts ~ (xs (target tail))
+
+@fv_drop = (* (x (xs (target out))))
+  & x ~ *
+  & @fverts ~ (xs (target out))
+
+@fedges = ((?((@fe_nil @fe_cons) (pl (target out))) pl) (target out))
+
+@fe_nil = (pl (target out))
+  & pl ~ *
+  & target ~ *
+  & out ~ (0 *)
+
+@fe_cons = (* (((u v) xs) (target out)))
+  & target ~ {t_u t_rest}
+  & t_rest ~ {t_v t_next}
+  & u ~ {u_cmp u_keep}
+  & v ~ {v_cmp v_keep}
+  & u_cmp ~ $([=] $(t_u zu))
+  & v_cmp ~ $([=] $(t_v zv))
+  & zu ~ $([|] $(zv rm))
+  & rm ~ ?((@fe_keep @fe_drop) (u_keep (v_keep (xs (t_next out))))
+
+@fe_keep = (u (v (xs (target out))))
+  & out ~ (1 ((u v) tail))
+  & @fedges ~ (xs (target tail))
+
+@fe_drop = (* (u (v (xs (target out)))))
+  & u ~ *
+  & v ~ *
+  & @fedges ~ (xs (target out))

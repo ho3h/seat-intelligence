@@ -1,0 +1,17 @@
+@prog = (l out)
+  & @mi ~ (l out)
+
+@mi = (lv1 out)
+  & @mi_cons_lw ~ (lv1 out)
+
+@mi_nil = (* (0 *))
+
+@mi_cons = (* (($([+1] hp) lv2) (1 (hp outt))))
+  & @mi_cons_lw ~ (lv2 outt)
+
+@mi_cons_lw = (ls15 q7)
+  & ls15 ~ (g12 (e10 (g13 (e11 tk14))))
+  & g12 ~ ?((@mi_nil @mi_cons_la) ((e10 q9) q7))
+  & g13 ~ ?((@mi_nil @mi_cons) ((e11 tk14) q9))
+
+@mi_cons_la = (* (($([+1] hp) outt) (1 (hp outt))))

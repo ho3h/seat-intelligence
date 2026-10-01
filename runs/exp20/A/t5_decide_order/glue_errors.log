@@ -1,0 +1,44 @@
+--- 05:38:26
+wrong arity: step of stream `w` is called as f(d, S:None, e0:num, e1:(num num)), i.e. d plus 3 value(s); your function `step` takes 3 parameter(s) (d, hole_state, item).
+--- 05:39:48
+wrong arity: step of stream `w` is called as f(d, S:None, e0:num, e1:(num num)), i.e. d plus 3 value(s); your function `step` takes 3 parameter(s) (d, hole, item).
+--- 05:40:06
+build.py:25: wire `tau` (num, argument `in0` of @prog (t5_decide_order), made at build.py:52) belongs to @prog (t5_decide_order) (@prog), but is used in step of stream `w` (@w_step) (left operand of `-`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:40:33
+wrong arity: branch nonzero case of step of stream `w` is called as f(d, cm1:num, passed[0]:list[(num (num num))], passed[1]:num), i.e. d plus 3 value(s); your function `include` takes 3 parameter(s) (b, hole_branch, tau_branch).
+--- 05:40:46
+build.py:31: fill_cons needs a hole[list[...]]; got list[(num (num num))]
+--- 05:41:04
+build.py:40: wire `v_score_1` (num, field 1 of `v_score`, made at build.py:28) belongs to step of stream `w` (@w_step), but is used in branch nonzero case of step of stream `w` (@w_step_b1s) (right operand of `-`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:41:19
+wrong arity: branch zero case of step of stream `w` is called as f(d, passed[0]:depth, passed[1]:trie[list[(num (num num))]], passed[2]:num, passed[3]:num, passed[4]:num, passed[5]:num), i.e. d plus 6 value(s); your function `skip` takes 4 parameter(s) (b, L, trie, tau_val).
+--- 05:41:34
+build.py:47: kind mismatch at update `push_u` (act push) port `t`: expected trie[list[num]], got trie[list[(num (num num))]] `trie` from argument `passed[1]` of branch nonzero case of step of stream `w` (made at build.py:50).
+--- 05:41:51
+build.py:47: kind mismatch at update `push_triple` (act push) port `t`: expected trie[list[num]], got trie[list[(num (num num))]] `trie` from argument `passed[1]` of branch nonzero case of step of stream `w` (made at build.py:50).
+--- 05:42:15
+build.py:18: split needs a tuple wire or an explicit n; `item_1` is num
+--- 05:42:29
+build.py:22: wire `tau` (num, argument `in0` of @prog (t5_decide_order), made at build.py:52) belongs to @prog (t5_decide_order) (@prog), but is used in step of stream `w` (@w_step) (left operand of `-`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:42:47
+build.py:25: fill_cons needs a hole[list[...]]; got list[(num (num num))]
+--- 05:43:01
+wrong arity: step of stream `w` is called as f(d, out_list:any, e0:num, e1:(num num)), i.e. d plus 3 value(s); your function `step` takes 5 parameter(s) (d, out_list, tau_val, u, vs).
+--- 05:43:13
+wrong arity: branch nonzero case of step of stream `w` must return 1 value(s) (out0); `insert` returned 2.
+--- 05:43:25
+build.py:32: wire `tau_val` (num, argument `tau_val` of step of stream `w`, made at build.py:39) is used a second time (branch passed[1]); it was already used at build.py:17 (left operand of `-`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(tau_val, 2)  and use each once.
+--- 05:43:37
+build.py:35: wire `vs_1` (num, field 1 of `vs`, made at build.py:14) is used a second time (branch passed[4]); it was already used at build.py:20 (left operand of `>`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(vs_1, 2)  and use each once.
+--- 05:43:49
+build.py:47: kind mismatch at stream `w` port `list`: expected list[(num (num num))], got list[(num num num)] `cands` from argument `in1` of @prog (t5_decide_order) (made at build.py:51).
+--- 05:46:00
+build.py:36: wire `score` (num, argument `e2` of step of stream `w`, made at build.py:43) is used a second time (branch passed[4]); it was already used at build.py:20 (left operand of `<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(score, 2)  and use each once.
+--- 05:46:30
+build.py:38: split needs a tuple wire or an explicit n; `out_list` is any
+--- 05:52:40
+build.py:34: split needs a tuple wire or an explicit n; `out_list` is any
+--- 05:53:00
+build.py:36: split needs a tuple wire or an explicit n; `out_list` is list[(num (num num))]
+--- 05:53:25
+build.py:47: kind mismatch at update `push_item` (act push) port `t`: expected trie[list[num]], got trie[list[(num (num num))]] `trie` from argument `passed[1]` of branch nonzero case of step of stream `w` (made at build.py:50).

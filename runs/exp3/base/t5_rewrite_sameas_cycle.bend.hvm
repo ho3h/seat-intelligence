@@ -1,0 +1,40 @@
+@check_nodes = (b ({a c} ({$([=] $(a ?((@check_nodes__C1 (* (* (* (* 0))))) (b (c (d e)))))) d} e)))
+
+@check_nodes__C0 = (a (b ($([+0x0000001] c) d)))
+  & @check_nodes ~ (a (b (c d)))
+
+@check_nodes__C1 = ({e a} ({f d} ({g {b c}} h)))
+  & @walk ~ (a (b (c (d $([=0x0000001] ?((@check_nodes__C0 (* (* (* (* 1))))) (e (f (g h)))))))))
+
+@get_at = ((@get_at__C2 a) a)
+
+@get_at__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_at ~ (a (b c))
+
+@get_at__C1 = (* (c (d ({$([=0x0000000] ?((@get_at__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_at__C2 = (?(((* 0) @get_at__C1) a) a)
+
+@list_size = ((@list_size__C1 a) a)
+
+@list_size__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @list_size ~ (a b)
+
+@list_size__C1 = (?((0 @list_size__C0) a) a)
+
+@prog = ({a b} d)
+  & @check_nodes ~ (a (c (0 d)))
+  & @list_size ~ (b c)
+
+@walk = (a (b (c ({$([=0x0000000] ?((@walk__C2 (* (* (* (* (* 0)))))) (a (b (c (d e)))))) d} e))))
+
+@walk__C0 = (a (b ($([:-0x0000001] d) (c e))))
+  & @walk ~ (a (b (c (d e))))
+
+@walk__C1 = (b ({a c} (d ({$([=] $(a ?((@walk__C0 (* (* (* (* (* 1)))))) (b (c (d (e f))))))) e} f))))
+
+@walk__C2 = ({d a} (e ({c b} (f h))))
+  & @get_at ~ (a (b {$([=] $(c ?((@walk__C1 (* (* (* (* (* 0)))))) (d (e (f (g h))))))) g}))
+
+

@@ -1,0 +1,38 @@
+@prog = (input out)
+  & input ~ (b (e m))
+  & m ~ {m_b m_rest}
+  & m_rest ~ {m_a m_loop}
+  & b ~ $([%] $(m_b b0))
+  & 1 ~ $([%] $(m_a acc0))
+  & @pow ~ (b0 (e (m_loop (acc0 out))))
+
+@pow = (b (e (m (acc out))))
+  & e ~ ?((@pow_zero @pow_nonzero) (b (m (acc out))))
+
+@pow_zero = (b (m (acc out)))
+  & b ~ *
+  & m ~ *
+  & acc ~ out
+
+@pow_nonzero = (prev (b (m (acc out))))
+  & prev ~ $([+1] e)
+  & e ~ {e_q e_r}
+  & e_q ~ $([>>1] q)
+  & e_r ~ $([&1] r)
+  & b ~ {b_square b_rest}
+  & b_rest ~ {b_square2 b_odd}
+  & b_square ~ $([*] $(b_square2 sqprod))
+  & sqprod ~ $([%] $(m_sq bnext))
+  & m ~ {m_sq m_rest}
+  & m_rest ~ {m_acc m_rec}
+  & r ~ ?((@step_even @step_odd) (acc (b_odd (m_acc (bnext (q (m_rec out)))))))
+
+@step_even = (acc (b (m (bn (q (mr out))))))
+  & b ~ *
+  & m ~ *
+  & @pow ~ (bn (q (mr (acc out))))
+
+@step_odd = (* (acc (b (m (bn (q (mr out)))))))
+  & acc ~ $([*] $(b prod))
+  & prod ~ $([%] $(m accnext))
+  & @pow ~ (bn (q (mr (accnext out))))

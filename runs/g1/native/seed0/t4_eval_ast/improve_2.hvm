@@ -1,0 +1,16 @@
+// Dispatch directly at the program root to avoid an extra evaluator call.
+@prog = ((tag payload) out)
+  & tag ~ ?(((n n) (?((@add @mul) c) c)) (payload out))
+
+// Recursive evaluator with the literal and first dispatch branches inline.
+@ev = ((tag payload) out)
+  & tag ~ ?(((n n) (?((@add @mul) c) c)) (payload out))
+
+@add = ((left right) out)
+  & @ev ~ (left $([+] $(y out)))
+  & @ev ~ (right y)
+
+@mul = (z ((left right) out))
+  & z ~ *
+  & @ev ~ (left $([*] $(y out)))
+  & @ev ~ (right y)

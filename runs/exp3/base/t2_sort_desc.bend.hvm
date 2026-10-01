@@ -1,0 +1,66 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@merge_desc = ((@merge_desc__C6 a) a)
+
+@merge_desc__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_desc ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_desc__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_desc ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_desc__C2 = a
+  & @List/Cons ~ a
+
+@merge_desc__C3 = (* ({a e} (f ({$([<] $(a b)) c} (d g)))))
+  & $(b ?((@merge_desc__C0 @merge_desc__C1) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@merge_desc__C4 = (?((@merge_desc__C2 @merge_desc__C3) a) a)
+
+@merge_desc__C5 = (* (a (b ((@merge_desc__C4 (a (b c))) c))))
+
+@merge_desc__C6 = (?(((a a) @merge_desc__C5) b) b)
+
+@prog = a
+  & @sort_desc ~ a
+
+@sort_desc = ((@sort_desc__C4 a) a)
+
+@sort_desc__C0 = a
+  & @List/Cons ~ a
+
+@sort_desc__C1 = (* (* (* (a (b h)))))
+  & @merge_desc ~ (e (g h))
+  & @split_pairs ~ (c (d f))
+  & @List/Cons ~ (a (b c))
+  &!@sort_desc ~ (d e)
+  &!@sort_desc ~ (f g)
+
+@sort_desc__C2 = (?((@sort_desc__C0 @sort_desc__C1) a) a)
+
+@sort_desc__C3 = (* (a ({b (@sort_desc__C2 (a (b c)))} c)))
+
+@sort_desc__C4 = (?((@List/Nil @sort_desc__C3) a) a)
+
+@split_pairs = ((@split_pairs__C4 a) a)
+
+@split_pairs__C0 = (a (b @List/Nil))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@split_pairs__C1 = (* (e (a (b (d g)))))
+  & @List/Cons ~ (b (c d))
+  & @split_pairs ~ (a (c f))
+  & @List/Cons ~ (e (f g))
+
+@split_pairs__C2 = (?((@split_pairs__C0 @split_pairs__C1) a) a)
+
+@split_pairs__C3 = (* (a ((@split_pairs__C2 (a b)) b)))
+
+@split_pairs__C4 = (?(((@List/Nil @List/Nil) @split_pairs__C3) a) a)
+
+

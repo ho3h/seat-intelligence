@@ -1,0 +1,91 @@
+// Singleton-cluster reconciliation with normalized, sorted, duplicate-free edges.
+@prog = (inp out)
+  & inp ~ (n (tau (mnl (cands (edges attrs)))))
+  & out ~ (c (e p))
+  & @range ~ (n ((0 *) c))
+  & @sort ~ (edges e)
+  & p ~ attrs
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@range = (?((@rzero @rsucc) ctx) ctx)
+
+@rzero = (acc out)
+  & acc ~ out
+
+@rsucc = (k (acc out))
+  & k ~ {x y}
+  & @range ~ (y ((1 (x acc)) out))
+
+// Recursively sort and deduplicate the normalized edge pairs.
+@sort = ((?((@sortnil @sortcons) (pl out)) pl) out)
+
+@sortnil = (* out)
+  & out ~ (0 *)
+
+@sortcons = (* ((edge rest) out))
+  & @sort ~ (rest sorted)
+  & @process_edge ~ (edge (sorted out))
+
+@process_edge = ((u v) (sorted out))
+  & u ~ $([=] $(v eq))
+  & eq ~ ?((@pe_nonself @pe_self) (u (v (sorted out))))
+
+@pe_self = (* (u (v (sorted out))))
+  & u ~ *
+  & v ~ *
+  & out ~ sorted
+
+@pe_nonself = (* (u (v (sorted out))))
+  & @numlt ~ (u (v z))
+  & z ~ ?((@pe_swap @pe_keep) (u (v (sorted out))))
+
+@pe_swap = (* (u (v (sorted out))))
+  & @insert ~ (v (u (sorted out)))
+
+@pe_keep = (* (u (v (sorted out))))
+  & @insert ~ (u (v (sorted out)))
+
+// Insert an edge into an already sorted list, keeping only one copy.
+@insert = (item ((?((@inil @icons) (pl (item out))) pl) out))
+
+@inil = (* (pl (item out)))
+  & pl ~ *
+  & out ~ (1 (item (0 *)))
+
+@icons = (* ((head rest) (item out)))
+  & @edge_lt ~ (item (head z1))
+  & z1 ~ ?((@ibefore @iafter) (head (rest (item out))))
+
+@ibefore = (* (head (rest (item out))))
+  & out ~ (1 (item (1 (head rest))))
+
+@iafter = (* (head (rest (item out))))
+  & @edge_lt ~ (head (item z2))
+  & z2 ~ ?((@iequal @irecurse) (head (rest (item out))))
+
+@iequal = (* (head (rest (item out))))
+  & item ~ *
+  & out ~ (1 (head rest))
+
+@irecurse = (* (head (rest (item out))))
+  & @insert ~ (item (rest tail))
+  & out ~ (1 (head tail))
+
+// Compare two numbers, returning 1 iff a < b.
+@numlt = (a (b out))
+  & a ~ $([<] $(b out))
+
+// Compare edge pairs lexicographically, returning 1 iff the first is smaller.
+@edge_lt = ((u v) ((x y) out))
+  & @numlt ~ (u (x z))
+  & z ~ ?((@elt_firstno @elt_yes) (v (y out)))
+
+@elt_firstno = (* (v (y out)))
+  & @numlt ~ (v (y out))
+
+@elt_yes = (* (v (y out)))
+  & v ~ *
+  & y ~ *
+  & out ~ 1

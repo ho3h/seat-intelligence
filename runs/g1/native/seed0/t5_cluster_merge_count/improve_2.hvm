@@ -1,0 +1,221 @@
+@prog = ((n (tau cands)) out)
+  & @filter ~ (tau (cands filtered))
+  & @msort ~ (filtered sorted)
+  & @init ~ (n (0 labels))
+  & @run ~ (sorted (labels (0 out)))
+
+@filter = (tau ((?((@filter_nil @filter_cons) (tau (pl out))) pl) out))
+
+@filter_nil = (tau (pl out))
+  & tau ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (z (tau (pl out)))
+  & z ~ *
+  & pl ~ (edge tail)
+  & edge ~ (u (v score))
+  & tau ~ {tau_rec tau_cmp}
+  & score ~ {score_keep score_cmp}
+  & score_cmp ~ $([<] $(tau_cmp lt))
+  & lt ~ ?((@filter_keep @filter_drop) (tau_rec (u (v (score_keep (tail out))))))
+
+@filter_keep = (tau (u (v (score (tail out)))))
+  & @filter ~ (tau (tail rest))
+  & out ~ (1 ((u (v score)) rest))
+
+@filter_drop = (z (tau (u (v (score (tail out))))))
+  & z ~ *
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & @filter ~ (tau (tail out))
+
+@msort = ((?((@ms_nil @ms_cons) (pl out)) pl) out)
+
+@ms_nil = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@ms_cons = (z (pl out))
+  & z ~ *
+  & pl ~ (edge tail)
+  & @tailcase ~ (tail (edge out))
+
+@tailcase = (((?((@tail_nil @tail_cons) (edge (payload out))) payload) (edge out))
+
+@tail_nil = (edge (payload out))
+  & payload ~ *
+  & out ~ (1 (edge (0 *)))
+
+@tail_cons = (z (edge (payload out)))
+  & z ~ *
+  & payload ~ (edge2 tail2)
+  & @split ~ ((1 (edge (1 (edge2 tail2)))) halves)
+  & halves ~ (left right)
+  & @msort ~ (left sorted_left)
+  & @msort ~ (right sorted_right)
+  & @merge ~ (sorted_left (sorted_right out))
+
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (pl out)
+  & pl ~ *
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (z (pl out))
+  & z ~ *
+  & pl ~ (edge tail)
+  & @split ~ (tail halves)
+  & halves ~ (left right)
+  & out ~ ((1 (edge right)) left)
+
+@merge = (((?((@merge_nil_a @merge_cons_a) (pa (b out))) pa) (b out))
+
+@merge_nil_a = (pa (b out))
+  & pa ~ *
+  & out ~ b
+
+@merge_cons_a = (z (pa (b out)))
+  & z ~ *
+  & pa ~ (ea ta)
+  & b ~ ((?((@merge_nil_b @merge_cons_b) (ea (ta (pb out)))) pb)
+
+@merge_nil_b = (ea (ta (pb out)))
+  & pb ~ *
+  & out ~ (1 (ea ta))
+
+@merge_cons_b = (z (ea (ta (pb out))))
+  & z ~ *
+  & pb ~ (eb tb)
+  & ea ~ {ea_cmp ea_keep}
+  & eb ~ {eb_cmp eb_keep}
+  & @before ~ (ea_cmp (eb_cmp cmp))
+  & cmp ~ ?((@merge_take_b @merge_take_a) (ea_keep (ta (eb_keep (tb out))))
+
+@merge_take_a = (z (ea (ta (eb (tb out)))))
+  & z ~ *
+  & @merge ~ (ta ((1 (eb tb)) rest))
+  & out ~ (1 (ea rest))
+
+@merge_take_b = (z (ea (ta (eb (tb out)))))
+  & z ~ *
+  & @merge ~ ((1 (ea ta)) (tb rest))
+  & out ~ (1 (eb rest))
+
+@before = ((ua (va sa)) ((ub (vb sb)) out))
+  & sa ~ {sa_gt {sa_eq sa_drop}}
+  & sb ~ {sb_gt {sb_eq sb_drop}}
+  & sa_drop ~ *
+  & sb_drop ~ *
+  & ua ~ {ua_lt ua_eq}
+  & ub ~ {ub_lt ub_eq}
+  & va ~ {va_lt va_drop}
+  & vb ~ {vb_lt vb_drop}
+  & va_drop ~ *
+  & vb_drop ~ *
+  & sa_gt ~ $([>] $(sb_gt gt))
+  & sa_eq ~ $([=] $(sb_eq se))
+  & ua_lt ~ $([<] $(ub_lt ul))
+  & ua_eq ~ $([=] $(ub_eq ue))
+  & va_lt ~ $([<] $(vb_lt vl))
+  & ue ~ $([&] $(vl v_tie))
+  & ul ~ $([|] $(v_tie uv_rank))
+  & se ~ $([&] $(uv_rank score_tie))
+  & gt ~ $([|] $(score_tie result))
+  & out ~ result
+
+@init = (rem (id out))
+  & rem ~ ?((@init_nil @init_cons) (id out))
+
+@init_nil = (id out)
+  & id ~ *
+  & out ~ (0 *)
+
+@init_cons = (z (id out))
+  & z ~ *
+  & id ~ {head nextin}
+  & nextin ~ $([+1] id2)
+  & @init ~ (rem (id2 tail))
+  & out ~ (1 (head tail))
+
+@nk = (idx ((?((@nk_nil @nk_cons) (idx (pl out))) pl) out))
+
+@nk_nil = (idx (pl out))
+  & idx ~ *
+  & pl ~ *
+  & out ~ (0 (0 *))
+
+@nk_cons = (z (idx (pl out)))
+  & z ~ *
+  & pl ~ (h t)
+  & idx ~ ?((@nk_hit @nk_more) (h (t out)))
+
+@nk_hit = (h (t out))
+  & h ~ {value h_keep}
+  & out ~ (value (1 (h_keep t)))
+
+@nk_more = (idx (h (t out)))
+  & @nk ~ (idx (t r))
+  & r ~ (value tail_new)
+  & out ~ (value (1 (h tail_new)))
+
+@replace = (old (new ((?((@replace_nil @replace_cons) (old (new (pl out)))) pl) out)))
+
+@replace_nil = (old (new (pl out)))
+  & old ~ *
+  & new ~ *
+  & pl ~ *
+  & out ~ (0 *)
+
+@replace_cons = (z (old (new (pl out))))
+  & z ~ *
+  & pl ~ (h tail)
+  & old ~ {old_cmp old_rec}
+  & new ~ {new_head new_rec}
+  & h ~ {h_cmp h_keep}
+  & h_cmp ~ $([=] $(old_cmp eq))
+  & eq ~ ?((@replace_no @replace_yes) (old_rec (new_rec (h_keep (new_head (tail out))))))
+
+@replace_no = (old (new (h_keep (new_head (tail out)))))
+  & new_head ~ *
+  & @replace ~ (old (new (tail r)))
+  & out ~ (1 (h_keep r))
+
+@replace_yes = (z (old (new (h_keep (new_head (tail out))))))
+  & z ~ *
+  & h_keep ~ *
+  & @replace ~ (old (new (tail r)))
+  & out ~ (1 (new_head r))
+
+@run = ((?((@run_nil @run_cons) (pl (labels (count out)))) pl) (labels (count out)))
+
+@run_nil = (pl (labels (count out)))
+  & pl ~ *
+  & labels ~ *
+  & out ~ count
+
+@run_cons = (z (pl (labels (count out))))
+  & z ~ *
+  & pl ~ (edge tail)
+  & edge ~ (u (v score))
+  & score ~ *
+  & @nk ~ (u (labels r1))
+  & r1 ~ (lu labels1)
+  & @nk ~ (v (labels1 r2))
+  & r2 ~ (lv labels2)
+  & lu ~ {lu_cmp lu_old}
+  & lv ~ {lv_cmp lv_new}
+  & lu_cmp ~ $([!] $(lv_cmp neq))
+  & neq ~ ?((@run_same @run_diff) (lu_old (lv_new (labels2 (tail (count out))))))
+
+@run_same = (old (new (labels (tail (count out)))))
+  & old ~ *
+  & new ~ *
+  & @run ~ (tail (labels (count out)))
+
+@run_diff = (z (old (new (labels (tail (count out))))))
+  & z ~ *
+  & count ~ $([+1] count2)
+  & @replace ~ (old (new (labels updated)))
+  & @run ~ (tail (updated (count2 out)))

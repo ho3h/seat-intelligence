@@ -1,0 +1,122 @@
+// Each query runs a graph search. Newly discovered neighbors are pushed
+// onto the search list and recorded in the visited list.
+@prog = (input out)
+  & input ~ (n (pairs queries))
+  & n ~ *
+  & @qloop ~ (queries (pairs out))
+
+@qloop = (queries (edges out))
+  & queries ~ ?((@qnil @qcons) (edges out))
+
+@qnil = (edges out)
+  & edges ~ *
+  & out ~ (0 *)
+
+@qcons = (* ((a b) (tail (edges out))))
+  & edges ~ {ec er}
+  & @connected ~ (a (b (ec c)))
+  & @qloop ~ (tail (er rest))
+  & out ~ (1 (c rest))
+
+@connected = (a (b (edges out)))
+  & a ~ {aq av}
+  & @bfs ~ ((1 (aq (0 *))) (b (edges (1 (av (0 *))) out)))
+
+@bfs = (queue (target (edges (visited out))))
+  & queue ~ ?((@bfs_nil @bfs_cons) (target (edges (visited out))))
+
+@bfs_nil = (target (edges (visited out)))
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 0
+
+@bfs_cons = (* ((x q) (target (edges (visited out)))))
+  & x ~ {xe xs}
+  & target ~ {te tk}
+  & xe ~ $([=] $(te z))
+  & z ~ ?((@bfs_continue @bfs_hit) (xs (q (tk (edges (visited out))))))
+
+@bfs_continue = (* (x (q (target (edges (visited out))))))
+  & edges ~ {escan ekeep}
+  & @scan ~ (escan (x (q (target (ekeep (visited out))))))
+
+@bfs_hit = (* (x (q (target (edges (visited out))))))
+  & x ~ *
+  & q ~ *
+  & target ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ 1
+
+@scan = (all (x (q (target (edges (visited out)))))
+  & all ~ ?((@scan_nil @scan_cons) (x (q (target (edges (visited out))))))
+
+@scan_nil = (x (q (target (edges (visited out)))))
+  & @bfs ~ (q (target (edges (visited out))))
+
+@scan_cons = (* (((u v) tail) (x (q (target (edges (visited out)))))))
+  & @edge ~ (x (u (v (tail (q (target (edges (visited out)))))))
+
+@edge = (x (u (v (tail (q (target (edges (visited out))))))))
+  & x ~ {x1 x2}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & x1 ~ $([=] $(u1 z))
+  & z ~ ?((@edge_no_u @edge_yes_u) (x2 (u2 (v1 (v2 (tail (q (target (edges (visited out)))))))))
+
+@edge_no_u = (x (u (v (vkeep (tail (q (target (edges (visited out))))))))
+  & @edge_check_v ~ (x (v (u (vkeep (tail (q (target (edges (visited out))))))))
+
+@edge_yes_u = (* (x (u (v (vkeep (tail (q (target (edges (visited out)))))))))
+  & u ~ *
+  & v ~ *
+  & @admit ~ (vkeep (x (tail (q (target (edges (visited out)))))))
+
+@edge_check_v = (x (v (u (vkeep (tail (q (target (edges (visited out))))))))
+  & x ~ {x1 x2}
+  & x1 ~ $([=] $(v z))
+  & z ~ ?((@edge_no_v @edge_yes_v) (x2 (u (vkeep (tail (q (target (edges (visited out))))))))
+
+@edge_no_v = (x (u (vkeep (tail (q (target (edges (visited out))))))))
+  & u ~ *
+  & vkeep ~ *
+  & @scan ~ (tail (x (q (target (edges (visited out))))))
+
+@edge_yes_v = (* (x (u (vkeep (tail (q (target (edges (visited out)))))))))
+  & vkeep ~ *
+  & @admit ~ (u (x (tail (q (target (edges (visited out)))))))
+
+@admit = (neighbor (x (tail (q (target (edges (visited out)))))))
+  & visited ~ {vtest vkeep}
+  & neighbor ~ {nmem nkeep}
+  & @mem ~ (vtest (nmem m))
+  & m ~ ?((@admit_new @admit_seen) (x (nkeep (vkeep (tail (q (target (edges out))))))))
+
+@admit_new = (* (x (neighbor (visited (tail (q (target (edges out))))))))
+  & neighbor ~ {nq nv}
+  & @scan ~ (tail (x ((1 (nq q)) (target (edges (1 (nv visited)) out))))
+
+@admit_seen = (* (x (neighbor (visited (tail (q (target (edges out))))))))
+  & neighbor ~ *
+  & @scan ~ (tail (x (q (target (edges (visited out))))))
+
+@mem = (list (item out))
+  & list ~ ?((@mem_nil @mem_cons) (item out))
+
+@mem_nil = (item out)
+  & item ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (item out)))
+  & item ~ {i1 i2}
+  & i1 ~ $([=] $(h z))
+  & z ~ ?((@mem_no @mem_yes) (i2 (t out)))
+
+@mem_no = (item (tail out))
+  & @mem ~ (tail (item out))
+
+@mem_yes = (* (item (tail out)))
+  & item ~ *
+  & tail ~ *
+  & out ~ 1

@@ -1,0 +1,36 @@
+// Count tail elements smaller than each head, then recurse on the tail.
+@prog = (xs out)
+  & @inv ~ (xs out)
+
+@inv = (l out)
+  & @inv_go ~ (l (0 out))
+
+@inv_go = ((?((@inv_nil @inv_cons) (pl (acc out))) pl) (acc out))
+
+@inv_nil = (* (a a))
+
+@inv_cons = (* ((h t) (acc out)))
+  & t ~ {tc tr}
+  & @count ~ (tc (h c))
+  & acc ~ $([+] $(c acc2))
+  & @inv_go ~ (tr (acc2 out))
+
+// Count values in a list that are less than the threshold.
+@count = (l (thr out))
+  & @count_go ~ (l (thr (0 out)))
+
+@count_go = ((?((@cg_nil @cg_cons) (pl (thr (acc out)))) pl) (thr (acc out)))
+
+@cg_nil = (* (* (a a)))
+
+@cg_cons = (* ((h t) (thr (acc out))))
+  & thr ~ {th_cmp th_rec}
+  & h ~ $([<] $(th_cmp z))
+  & z ~ ?((@cg_no @cg_yes) (t (th_rec (acc out))))
+
+@cg_no = (t (thr (acc out)))
+  & @count_go ~ (t (thr (acc out)))
+
+@cg_yes = (* (t (thr (acc out))))
+  & acc ~ $([+] $(1 acc2))
+  & @count_go ~ (t (thr (acc2 out)))

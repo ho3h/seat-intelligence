@@ -1,0 +1,76 @@
+@prog = (input out)
+  & @eval ~ (input ((0 *) out))
+
+@eval = (lv1 (stk out))
+  & @eval_cons_lw ~ (lv1 (stk out))
+
+@eval_nil = (* ((1 (value (0 *))) value))
+
+@eval_cons = (* (((z5 val) tail) (stk out)))
+  & z5 ~ ?((@push_hz @operator_hz) (val (xw66 (stk out))))
+  & @eval_cons_lw ~ (tail xw66)
+
+@push = (val (tail (stk out)))
+  & @eval ~ (tail ((1 (val stk)) out))
+
+@operator = (* (op (tail ((1 (b (1 (a rest)))) out))))
+  & op ~ {test keep}
+  & test ~ $([=] $(43 eq))
+  & eq ~ ?((@check_sub @do_add) (keep (a (b (rest (tail out))))))
+
+@check_sub = (keep (a (b (rest (tail out)))))
+  & keep ~ $([=] $(45 check))
+  & check ~ ?((@do_mul @do_sub) (a (b (rest (tail out)))))
+
+@do_add = (* (* (a (b (rest (tail out))))))
+  & a ~ $([+] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@do_sub = (* (a (b (rest (tail out)))))
+  & a ~ $([-] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@do_mul = (a (b (rest (tail out))))
+  & a ~ $([*] $(b result))
+  & @eval ~ (tail ((1 (result rest)) out))
+
+@eval_cons_lw = (ls149 (q69 q70))
+  & ls149 ~ (g132 (e116 (g133 (e117 (g134 (e118 (g135 (e119 (g136 (e120 (g137 (e121 (g138 (e122 (g139 (e123 (g140 (e124 (g141 (e125 (g142 (e126 (g143 (e127 (g144 (e128 (g145 (e129 (g146 (e130 (g147 (e131 tk148))))))))))))))))))))))))))))))))
+  & g132 ~ ?((@eval_nil @eval_cons_la) ((e116 (q72 q73)) (q69 q70)))
+  & g133 ~ ?((@eval_nil @eval_cons_la) ((e117 (q75 q76)) (q72 q73)))
+  & g134 ~ ?((@eval_nil @eval_cons_la) ((e118 (q78 q79)) (q75 q76)))
+  & g135 ~ ?((@eval_nil @eval_cons_la) ((e119 (q81 q82)) (q78 q79)))
+  & g136 ~ ?((@eval_nil @eval_cons_la) ((e120 (q84 q85)) (q81 q82)))
+  & g137 ~ ?((@eval_nil @eval_cons_la) ((e121 (q87 q88)) (q84 q85)))
+  & g138 ~ ?((@eval_nil @eval_cons_la) ((e122 (q90 q91)) (q87 q88)))
+  & g139 ~ ?((@eval_nil @eval_cons_la) ((e123 (q93 q94)) (q90 q91)))
+  & g140 ~ ?((@eval_nil @eval_cons_la) ((e124 (q96 q97)) (q93 q94)))
+  & g141 ~ ?((@eval_nil @eval_cons_la) ((e125 (q99 q100)) (q96 q97)))
+  & g142 ~ ?((@eval_nil @eval_cons_la) ((e126 (q102 q103)) (q99 q100)))
+  & g143 ~ ?((@eval_nil @eval_cons_la) ((e127 (q105 q106)) (q102 q103)))
+  & g144 ~ ?((@eval_nil @eval_cons_la) ((e128 (q108 q109)) (q105 q106)))
+  & g145 ~ ?((@eval_nil @eval_cons_la) ((e129 (q111 q112)) (q108 q109)))
+  & g146 ~ ?((@eval_nil @eval_cons_la) ((e130 (q114 q115)) (q111 q112)))
+  & g147 ~ ?((@eval_nil @eval_cons) ((e131 tk148) (q114 q115)))
+
+@push_hz = (q6 (hw13 (q8 q9)))
+  & hw13 ~ ((1 (q6 q8)) q9)
+
+@do_mul_hz = ($([*] $(q33 q37)) (q33 (q34 (hw41 q36))))
+  & hw41 ~ ((1 (q37 q34)) q36)
+
+@do_sub_hz = (* ($([-] $(q43 q47)) (q43 (q44 (hw51 q46)))))
+  & hw51 ~ ((1 (q47 q44)) q46)
+
+@check_sub_hz = ($([=] $(45 z31)) (q25 (q26 (q27 (hw53 q29)))))
+  & z31 ~ ?((@do_mul_hz @do_sub_hz) (q25 (q26 (q27 (xw52 q29)))))
+  & hw53 ~ xw52
+
+@do_add_hz = (* (* ($([+] $(q55 q59)) (q55 (q56 (hw63 q58))))))
+  & hw63 ~ ((1 (q59 q56)) q58)
+
+@operator_hz = (* ({$([=] $(43 z23)) q21} (hw65 ((1 (q16 (1 (q17 q18)))) q19))))
+  & z23 ~ ?((@check_sub_hz @do_add_hz) (q21 (q17 (q16 (q18 (xw64 q19))))))
+  & hw65 ~ xw64
+
+@eval_cons_la = (* (((?((@push_hz @operator_hz) (val (xw66 (stk out)))) val) xw66) (stk out)))

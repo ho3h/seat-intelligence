@@ -1,0 +1,124 @@
+// Map each edge to its endpoint cluster ids, drop loops, then scan canonical
+// ids in order and retain those adjacent to k.
+@prog = ((k (c e)) out)
+  & c ~ {cm cc}
+  & @mapedges ~ (e (cm mapped))
+  & @cand ~ (cc (mapped (k (0 out))))
+
+@mapedges = ((?((@m_nil @m_cons) (pl (c out))) pl) (c out))
+
+@m_nil = (* (c out))
+  & c ~ *
+  & out ~ (0 *)
+
+@m_cons = (* (((u v) t) (c out)))
+  & c ~ {ce cr}
+  & @edge_map ~ ((u v) (ce pair))
+  & pair ~ (a b)
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([=] $(b1 eq))
+  & eq ~ ?((@m_keep @m_drop) (a2 (b2 (t (cr out)))))
+
+@m_drop = (* (a (b (t (c out)))))
+  & a ~ *
+  & b ~ *
+  & @mapedges ~ (t (c out))
+
+@m_keep = (* (a (b (t (c out)))))
+  & @mapedges ~ (t (c rest))
+  & out ~ (1 ((a b) rest))
+
+@edge_map = ((u v) (c out))
+  & c ~ {ca cb}
+  & @get ~ (ca (u cu))
+  & @get ~ (cb (v cv))
+  & out ~ (cu cv)
+
+// Scan candidate ids in increasing node-index order.
+@cand = ((?((@c_nil @c_cons) (pl (m (k (i out))))) pl) (m (k (i out))))
+
+@c_nil = (* (m (k (i out))))
+  & m ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@c_cons = (* ((h t) (m (k (i out)))))
+  & h ~ {hc hx}
+  & i ~ {ic ir}
+  & hc ~ $([=] $(ic eq))
+  & ir ~ $([+1] next)
+  & eq ~ ?((@c_skip @c_test) (t (m (k (next (hx out))))))
+
+@c_skip = (* (t (m (k (next (hx out))))))
+  & hx ~ *
+  & @cand ~ (t (m (k (next out))))
+
+@c_test = (* (t (m (k (next (hx out))))))
+  & m ~ {mc mr}
+  & k ~ {kc kr}
+  & hx ~ {hx1 hx2}
+  & @exists ~ (mc (kc (hx1 hit)))
+  & hit ~ ?((@c_no @c_yes) (t (mr (kr (next (hx2 out)))))
+
+@c_no = (* (t (mr (kr (next (hx out))))))
+  & hx ~ *
+  & @cand ~ (t (mr (kr (next out))))
+
+@c_yes = (* (t (mr (kr (next (hx out))))))
+  & @cand ~ (t (mr (kr (next rest))))
+  & out ~ (1 (hx rest))
+
+// Test whether a mapped edge has endpoints k and x, in either order.
+@exists = ((?((@ex_nil @ex_cons) (pl (k (x out)))) pl) (k (x out)))
+
+@ex_nil = (* (k (x out)))
+  & k ~ *
+  & x ~ *
+  & out ~ 0
+
+@ex_cons = (* (((a b) t) (k (x out))))
+  & @pairmatch ~ ((a b) (k (x hit)))
+  & hit ~ ?((@ex_no @ex_yes) (t (k (x out))))
+
+@ex_no = (* (t (k (x out))))
+  & @exists ~ (t (k (x out)))
+
+@ex_yes = (* (t (k (x out))))
+  & t ~ *
+  & k ~ *
+  & x ~ *
+  & out ~ 1
+
+@pairmatch = ((a b) (k (x out)))
+  & a ~ {ak ax}
+  & b ~ {bx bk}
+  & k ~ {ka kb}
+  & x ~ {xb xa}
+  & ak ~ $([=] $(ka p))
+  & bx ~ $([=] $(xb q))
+  & ax ~ $([=] $(xa r))
+  & bk ~ $([=] $(kb s))
+  & p ~ $([*] $(q pq))
+  & r ~ $([*] $(s rs))
+  & pq ~ $([+] $(rs sum))
+  & sum ~ $([>] $(0 out))
+
+// Return the value at an index in a list.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_zero @get_more) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_more = (prev (h (t out)))
+  & h ~ *
+  & @get ~ (t (prev out))

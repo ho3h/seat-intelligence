@@ -1,0 +1,219 @@
+// Make a zero-filled color list, then traverse vertices in order.
+@prog = ((n edges) out)
+  & n ~ {n_init n_outer}
+  & @init ~ (n_init colors)
+  & @outer ~ (n_outer (0 (edges (colors (0 out))))
+
+@init = (n out)
+  & n ~ ?((@initNil @initSucc) (out *))
+
+@initNil = (out dummy)
+  & dummy ~ *
+  & out ~ (0 *)
+
+@initSucc = (n (out dummy))
+  & dummy ~ *
+  & @init ~ (n tail)
+  & out ~ (1 (0 tail))
+
+// Return the indexed list element, or zero if the index is out of range.
+@get = (idx (lst out))
+  & idx ~ ?((@getZero @getSucc) (lst out))
+
+@getZero = (lst out)
+  & lst ~ (?( (@getNil @getCons) (payload out)) payload)
+
+@getNil = (payload out)
+  & payload ~ *
+  & out ~ 0
+
+@getCons = (* (payload out))
+  & payload ~ (h t)
+  & h ~ out
+  & t ~ *
+
+@getSucc = (i (lst out))
+  & lst ~ (?( (@getTailNil @getTailCons) (i (payload out))) payload)
+
+@getTailNil = (i (payload out))
+  & i ~ *
+  & payload ~ *
+  & out ~ 0
+
+@getTailCons = (* (i (payload out)))
+  & payload ~ (h t)
+  & h ~ *
+  & @get ~ (i (t out))
+
+// Set the indexed list element, rebuilding the list.
+@set = (idx (lst (val out)))
+  & idx ~ ?((@setZero @setSucc) (lst (val out)))
+
+@setZero = (lst (val out))
+  & lst ~ (?( (@setNil @setCons) (payload (val out))) payload)
+
+@setNil = (payload (val out))
+  & payload ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@setCons = (* (payload (val out)))
+  & payload ~ (h t)
+  & h ~ *
+  & out ~ (1 (val t))
+
+@setSucc = (i (lst (val out)))
+  & lst ~ (?( (@setTailNil @setTailCons) (i (payload (val out)))) payload)
+
+@setTailNil = (i (payload (val out)))
+  & i ~ *
+  & payload ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@setTailCons = (* (i (payload (val out))))
+  & payload ~ (h t)
+  & @set ~ (i (t (val rest)))
+  & out ~ (1 (h rest))
+
+// Iterate through vertices, starting a BFS for each uncolored vertex.
+@outer = (rem (idx (edges (colors (count out)))))
+  & rem ~ ?((@outerDone @outerStep) (idx (edges (colors (count out)))))
+
+@outerDone = (idx (edges (colors (count out))))
+  & idx ~ *
+  & edges ~ *
+  & colors ~ *
+  & out ~ count
+
+@outerStep = (r (idx (edges (colors (count out)))))
+  & idx ~ {ig ik}
+  & colors ~ {cg ck}
+  & @get ~ (ig (cg color))
+  & color ~ ?((@outerStart @outerSkip) (r (ik (edges (ck (count out))))))
+
+@outerStart = (r (idx (edges (colors (count out)))))
+  & idx ~ {iset iv}
+  & edges ~ {eb eo}
+  & @set ~ (iset (colors (1 seeded)))
+  & @bfs ~ ((1 ((iv 1) (0 *))) (eb (seeded (0 state))))
+  & state ~ (newcolors bad)
+  & bad ~ ?((@outerGood @outerBad) (r (idx (eo (newcolors (count out))))))
+
+@outerSkip = (z (r (idx (edges (colors (count out))))))
+  & z ~ *
+  & idx ~ $([+1] idx2)
+  & @outer ~ (r (idx2 (edges (colors (count out)))))
+
+@outerGood = (r (idx (edges (colors (count out)))))
+  & count ~ $([+1] count2)
+  & idx ~ $([+1] idx2)
+  & @outer ~ (r (idx2 (edges (colors (count2 out)))))
+
+@outerBad = (z (r (idx (edges (colors (count out))))))
+  & z ~ *
+  & idx ~ $([+1] idx2)
+  & @outer ~ (r (idx2 (edges (colors (count out)))))
+
+// BFS stack items are (vertex, color); colors 1 and 2 alternate.
+@bfs = (queue (edges (colors (bad out))))
+  & queue ~ (?( (@bfsNil @bfsCons) (p (edges (colors (bad out))))) p)
+
+@bfsNil = (p (edges (colors (bad out))))
+  & p ~ *
+  & edges ~ *
+  & out ~ (colors bad)
+
+@bfsCons = (* (p (edges (colors (bad out)))))
+  & p ~ (item tail)
+  & item ~ (v cv)
+  & edges ~ {escan eagain}
+  & @scan ~ (v (cv (escan (colors (bad ((0 *) scanout)))))
+  & scanout ~ (newcolors (newbad front))
+  & @append ~ (front (tail next))
+  & @bfs ~ (next (eagain (newcolors (newbad out))))
+
+// Scan every edge for neighbors of the current vertex.
+@scan = (v (cv (elist (colors (bad (front out)))))
+  & elist ~ (?( (@scanNil @scanCons) (p (v (cv (colors (bad (front out))))))) p)
+
+@scanNil = (p (v (cv (colors (bad (front out))))))
+  & p ~ *
+  & v ~ *
+  & cv ~ *
+  & out ~ (colors (bad front))
+
+@scanCons = (* (p (v (cv (colors (bad (front out)))))))
+  & p ~ (edge rest)
+  & @edge ~ (edge (v (cv (rest (colors (bad (front out))))))
+
+// Check which endpoint, if any, is the current vertex.
+@edge = (edge (v (cv (rest (colors (bad (front out))))))
+  & edge ~ (u w)
+  & u ~ {ut uk}
+  & v ~ {vt vk}
+  & ut ~ $([=] $(vt eq))
+  & eq ~ ?((@edgeNoU @edgeHitU) (uk (w (vk (cv (rest (colors (bad (front out))))))))
+
+@edgeHitU = (* (uk (w (vk (cv (rest (colors (bad (front out))))))))
+  & w ~ *
+  & @consider ~ (uk (vk (cv (rest (colors (bad (front out))))))
+
+@edgeNoU = (uk (w (vk (cv (rest (colors (bad (front out))))))))
+  & uk ~ *
+  & w ~ {wt wk}
+  & vk ~ {vt2 vk2}
+  & wt ~ $([=] $(vt2 eq2))
+  & eq2 ~ ?((@edgeNoW @edgeHitW) (wk (vk2 (cv (rest (colors (bad (front out))))))))
+
+@edgeHitW = (* (wk (vk2 (cv (rest (colors (bad (front out))))))))
+  & @consider ~ (wk (vk2 (cv (rest (colors (bad (front out))))))
+
+@edgeNoW = (wk (vk2 (cv (rest (colors (bad (front out)))))))
+  & wk ~ *
+  & @scan ~ (vk2 (cv (rest (colors (bad (front out))))))
+
+// Color a new neighbor, or mark a coloring conflict.
+@consider = (neighbor (v (cv (rest (colors (bad (front out))))))
+  & neighbor ~ {ng nk}
+  & cv ~ {ct cc}
+  & 3 ~ $([-] $(ct expected))
+  & colors ~ {cg ck}
+  & @get ~ (ng (cg old))
+  & old ~ {ot ok}
+  & ot ~ $([=] $(0 iszero))
+  & iszero ~ ?((@considerNew @considerKnown) (ok (expected (nk (v (cc (rest (ck (bad (front out)))))))))
+
+@considerNew = (ok (expected (nk (v (cc (rest (colors (bad (front out))))))))
+  & ok ~ *
+  & expected ~ {es eq}
+  & nk ~ {is iq}
+  & @set ~ (is (colors (es newcolors)))
+  & @scan ~ (v (cc (rest (newcolors (bad (1 ((iq eq) front) out))))))
+
+@considerKnown = (z (ok (expected (nk (v (cc (rest (colors (bad (front out)))))))))
+  & z ~ *
+  & ok ~ $([=] $(expected eq))
+  & eq ~ ?((@knownConflict @knownMatch) (nk (v (cc (rest (colors (bad (front out))))))))
+
+@knownConflict = (nk (v (cc (rest (colors (bad (front out)))))))
+  & nk ~ *
+  & bad ~ *
+  & @scan ~ (v (cc (rest (colors (1 (front out))))))
+
+@knownMatch = (* (nk (v (cc (rest (colors (bad (front out))))))))
+  & nk ~ *
+  & @scan ~ (v (cc (rest (colors (bad (front out))))))
+
+// Append two lists.
+@append = (a (b out))
+  & a ~ (?( (@appendNil @appendCons) (p (b out))) p)
+
+@appendNil = (p (b out))
+  & p ~ *
+  & out ~ b
+
+@appendCons = (* (p (b out)))
+  & p ~ (h t)
+  & @append ~ (t (b rest))
+  & out ~ (1 (h rest))

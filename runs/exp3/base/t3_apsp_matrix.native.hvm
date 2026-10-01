@@ -1,0 +1,180 @@
+@prog = ((n edges) out)
+  & n ~ {ni nt}
+  & nt ~ {nl nf}
+  & @initmat ~ (ni mat0)
+  & @load ~ (edges (nl (mat0 mat1)))
+  & @floyd ~ (nf (mat1 out))
+
+@initmat = (n out)
+  & n ~ {nr nt}
+  & @rows ~ (nr (nt (0 out)))
+
+@rows = (?( (@rows_nil @rows_cons) (total (i out)) ) (total (i out)))
+
+@rows_nil = (total (i out))
+  & total ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@rows_cons = (rem (total (i out)))
+  & total ~ {tc tr}
+  & i ~ {ic ir}
+  & @cols ~ (tc (ic (0 row)))
+  & ir ~ $([+1] inext)
+  & @rows ~ (rem (tr (inext tail)))
+  & out ~ (1 (row tail))
+
+@cols = (?( (@cols_nil @cols_cons) (i (j out)) ) (i (j out)))
+
+@cols_nil = (i (j out))
+  & i ~ *
+  & j ~ *
+  & out ~ (0 *)
+
+@cols_cons = (rem (i (j out)))
+  & i ~ {ic ir}
+  & j ~ {jc jr}
+  & jc ~ $([=] $(ic z))
+  & z ~ ?((@col_inf @col_zero) cell)
+  & jr ~ $([+1] jnext)
+  & @cols ~ (rem (ir (jnext tail)))
+  & out ~ (1 (cell tail))
+
+@col_inf = 16777215
+
+@col_zero = (* 0)
+
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (pl (idx out))
+  & pl ~ *
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_next = (idx (h (t out)))
+  & h ~ *
+  & @get ~ (t (idx out))
+
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (pl (idx (val out)))
+  & pl ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (idx (h (t (val out))))
+  & @set ~ (t (idx (val tail)))
+  & out ~ (1 (h tail))
+
+@load = ((?((@load_nil @load_cons) (pl (n (matrix out)))) pl) (n (matrix out)))
+
+@load_nil = (pl (n (matrix out)))
+  & pl ~ *
+  & n ~ *
+  & out ~ matrix
+
+@load_cons = (* (((u (v w)) tail) (n (matrix out))))
+  & matrix ~ {mr mw}
+  & u ~ {ug us}
+  & v ~ {vg vs}
+  & @get ~ (mr (ug row))
+  & row ~ {rr rw}
+  & @get ~ (rr (vg old))
+  & @min ~ (old (w val))
+  & @set ~ (rw (vs (val row2)))
+  & @set ~ (mw (us (row2 matrix2)))
+  & @load ~ (tail (n (matrix2 out)))
+
+@floyd = (n (matrix out))
+  & @fw_outer ~ (n (0 (matrix out)))
+
+@fw_outer = (?( (@fwo_nil @fwo_more) (k (matrix out)) ) (k (matrix out)))
+
+@fwo_nil = (k (matrix out))
+  & k ~ *
+  & out ~ matrix
+
+@fwo_more = (rem (k (matrix out)))
+  & k ~ {kg kt}
+  & kt ~ {kr kn}
+  & matrix ~ {mr mw}
+  & @get ~ (mr (kg rowK))
+  & @fw_matrix ~ (mw (kr (rowK matrix2)))
+  & kn ~ $([+1] knew)
+  & @fw_outer ~ (rem (knew (matrix2 out)))
+
+@fw_matrix = ((?((@fwm_nil @fwm_cons) (pl (k (rowK out)))) pl) (k (rowK out)))
+
+@fwm_nil = (pl (k (rowK out)))
+  & pl ~ *
+  & k ~ *
+  & rowK ~ *
+  & out ~ (0 *)
+
+@fwm_cons = (* ((row tail) (k (rowK out))))
+  & row ~ {rread rorig}
+  & k ~ {kg kr}
+  & rowK ~ {rkzip rkrec}
+  & @get ~ (rread (kg dik))
+  & @fw_zip ~ (rkzip (dik (rorig rownew)))
+  & @fw_matrix ~ (tail (kr (rkrec tailout)))
+  & out ~ (1 (rownew tailout))
+
+@fw_zip = ((?((@zip_nil @zip_cons) (pl (dik (row out)))) pl) (dik (row out)))
+
+@zip_nil = (pl (dik (row out)))
+  & pl ~ *
+  & dik ~ *
+  & row ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((dkj tailK) (dik ((tag (old tail)) out))))
+  & tag ~ *
+  & dik ~ {da dr}
+  & @satadd ~ (da (dkj cand))
+  & @min ~ (old (cand val))
+  & @fw_zip ~ (tailK (dr (tail tailout)))
+  & out ~ (1 (val tailout))
+
+@satadd = (a (b out))
+  & a ~ {ac ar}
+  & ac ~ $([+] $(b sum))
+  & sum ~ {sc sr}
+  & sc ~ $([<] $(ar z))
+  & z ~ ?((@sat_ok @sat_over) (sr out))
+
+@sat_ok = (sum out)
+  & out ~ sum
+
+@sat_over = (* (sum out))
+  & sum ~ *
+  & out ~ 16777215
+
+@min = (a (b out))
+  & a ~ {ac ar}
+  & b ~ {bc br}
+  & ac ~ $([<] $(bc z))
+  & z ~ ?((@min_no @min_yes) (ar (br out)))
+
+@min_no = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_yes = (* (a (b out)))
+  & b ~ *
+  & out ~ a

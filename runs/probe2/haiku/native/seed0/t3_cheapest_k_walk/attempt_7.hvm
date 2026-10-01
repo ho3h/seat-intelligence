@@ -1,0 +1,37 @@
+@prog = (input output)
+  & input ~ ((n (s (t (k edges)))))
+  & @solve ~ (n (s (t (k (edges output)))))
+
+@solve = (n (s (t (k (edges out)))))
+  & @val_s ~ (n (s (t (k (edges out)))))
+
+@val_s = (n (s (t (k (edges out)))))
+  & s ~ $([<] $(n r_s))
+  & r_s ~ ?((@bad @val_t) (n (s (t (k (edges out))))))
+
+@bad = out & out ~ 16777215
+
+@val_t = (n (s (t (k (edges out)))))
+  & t ~ $([<] $(n r_t))
+  & r_t ~ ?((@bad @chk) (n (s (t (k (edges out))))))
+
+@chk = (n (s (t (k (edges out)))))
+  & k ~ ?((@kz @kp) (n (s (t (edges out)))) (n (s (t (k (edges out))))))
+
+@kz = (n (s (t (edges out))))
+  & s ~ $([=] $(t eq))
+  & eq ~ ?((@bad @ret0) out)
+
+@ret0 = out & out ~ 0
+
+@kp = ((km (n (s (t (edges out))))))
+  & k ~ $([+] $(0xFFFFFF km))
+  & @dp ~ (0 (km (n (s (t (edges out))))))
+
+@dp = (i (km (n (s (t (edges out))))))
+  & i ~ $([=] $(km end))
+  & end ~ ?((@bad @nxt) (n (s (t (edges out)))))
+
+@nxt = ((ip (km (n (s (t (edges out)))))))
+  & i ~ $([+] $(1 ip))
+  & @dp ~ (ip (km (n (s (t (edges out))))))

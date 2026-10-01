@@ -1,0 +1,23 @@
+// Drop the first k elements of xs.
+@prog = ((k xs) out)
+  & @drop ~ (k (xs out))
+
+@drop = (k (xs out))
+  & k ~ ?((@drop_zero @drop_succ) (xs out))
+
+// If k is zero, return xs unchanged.
+@drop_zero = (x x)
+
+// Otherwise inspect the list, carrying the remaining count and output.
+@drop_succ = (km ((?((@drop_nil @drop_cons) (pl (km out))) pl) out))
+
+// A nonempty drop count on Nil still returns Nil.
+@drop_nil = (pl (km out))
+  & pl ~ *
+  & km ~ *
+  & out ~ (0 *)
+
+// On Cons, discard its head and continue with the tail.
+@drop_cons = (* ((head tail) (km out)))
+  & head ~ *
+  & @drop ~ (km (tail out))

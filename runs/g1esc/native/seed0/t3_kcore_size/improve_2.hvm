@@ -1,0 +1,182 @@
+@prog = ((n (k edges)) out)
+  & k ~ ?((@k_zero @k_pos) (n (k edges out)))
+
+@k_zero = (n (k edges out))
+  & k ~ *
+  & edges ~ *
+  & out ~ n
+
+@k_pos = (kp (n (k edges out)))
+  & kp ~ *
+  & n ~ ?((@n_zero @n_pos) (k edges out))
+
+@n_zero = (k edges out)
+  & k ~ *
+  & edges ~ *
+  & out ~ 0
+
+@n_pos = (np (k edges out))
+  & np ~ {n_init n_loop}
+  & @replicate ~ (n_init (1 status))
+  & @loop ~ (n_loop (k (edges (status (0 out)))))
+
+@replicate = (n (x out))
+  & n ~ ?((@rep_nil @rep_cons) (x out))
+
+@rep_nil = (x out)
+  & x ~ *
+  & out ~ (0 *)
+
+@rep_cons = (np (x out))
+  & x ~ {x_head x_tail}
+  & out ~ (1 (x_head tail))
+  & @replicate ~ (np (x_tail tail))
+
+@list_head_tail = ((?((@lht_nil @lht_cons) (payload out)) payload) out)
+
+@lht_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 (* *))
+
+@lht_cons = (z (payload out))
+  & z ~ *
+  & payload ~ (h t)
+  & out ~ (1 (h t))
+
+@get_status = (idx (list out))
+  & idx ~ ?((@get_zero @get_more) (list out))
+
+@get_zero = (list out)
+  & @list_head_tail ~ (list ret)
+  & ret ~ (tag (h t))
+  & tag ~ *
+  & h ~ {h_val h_head}
+  & out ~ (h_val (1 (h_head t)))
+
+@get_more = (np (list out))
+  & @list_head_tail ~ (list ret)
+  & ret ~ (tag (h t))
+  & tag ~ ?((@get_invalid @get_more_cons) (h (np (t out))))
+
+@get_invalid = (h (np (t out)))
+  & h ~ *
+  & np ~ *
+  & t ~ *
+  & out ~ (0 (0 *))
+
+@get_more_cons = (z (h (np (t out))))
+  & z ~ *
+  & @get_status ~ (np (t ret2))
+  & ret2 ~ (value newt)
+  & out ~ (value (1 (h newt)))
+
+@inc_degree_at = (idx (list out))
+  & idx ~ ?((@inc_zero @inc_more) (list out))
+
+@inc_zero = (list out)
+  & @list_head_tail ~ (list ret)
+  & ret ~ (tag (h t))
+  & tag ~ *
+  & h ~ $([+1] h2)
+  & out ~ (1 (h2 t))
+
+@inc_more = (np (list out))
+  & @list_head_tail ~ (list ret)
+  & ret ~ (tag (h t))
+  & tag ~ ?((@inc_invalid @inc_more_cons) (h (np (t out))))
+
+@inc_invalid = (h (np (t out)))
+  & h ~ *
+  & np ~ *
+  & t ~ *
+  & out ~ (0 *)
+
+@inc_more_cons = (z (h (np (t out))))
+  & z ~ *
+  & @inc_degree_at ~ (np (t newt))
+  & out ~ (1 (h newt))
+
+@process_edges = ((?((@pe_nil @pe_cons) (payload (status (degrees out)))) payload) (status (degrees out)))
+
+@pe_nil = (payload (status (degrees out)))
+  & payload ~ *
+  & status ~ *
+  & out ~ degrees
+
+@pe_cons = (z ((edge tail) (status (degrees out))))
+  & z ~ *
+  & @process_edge ~ (edge (tail (status (degrees out))))
+
+@process_edge = ((u v) (tail (status (degrees out))))
+  & u ~ {u_get u_later}
+  & v ~ {v_get v_later}
+  & @get_status ~ (u_get (status ret_u))
+  & ret_u ~ (su status1)
+  & @get_status ~ (v_get (status1 ret_v))
+  & ret_v ~ (sv status2)
+  & su ~ $([&] $(sv alive))
+  & alive ~ ?((@no_inc @do_inc) (u_later (v_later (tail (status2 (degrees out))))))
+
+@no_inc = (u (v (tail (status2 (degrees out)))))
+  & u ~ *
+  & v ~ *
+  & @process_edges ~ (tail (status2 (degrees out)))
+
+@do_inc = (z (u (v (tail (status2 (degrees out))))))
+  & z ~ *
+  & @inc_degree_at ~ (u (degrees deg_u))
+  & @inc_degree_at ~ (v (deg_u deg_v))
+  & @process_edges ~ (tail (status2 (deg_v out)))
+
+@build_status = (stat (degs (k out)))
+  & @list_head_tail ~ (stat ret_stat)
+  & ret_stat ~ (tag_stat (s tail_stat))
+  & @list_head_tail ~ (degs ret_deg)
+  & ret_deg ~ (tag_deg (d tail_deg))
+  & tag_stat ~ ?((@bs_nil @bs_cons) (tag_deg (s (d (tail_stat (tail_deg (k out)))))))
+
+@bs_nil = (tag_deg (s (d (tail_stat (tail_deg (k out))))))
+  & tag_deg ~ *
+  & s ~ *
+  & d ~ *
+  & tail_stat ~ *
+  & tail_deg ~ *
+  & k ~ *
+  & out ~ (0 (0 *))
+
+@bs_cons = (z (tag_deg (s (d (tail_stat (tail_deg (k out)))))))
+  & z ~ *
+  & tag_deg ~ *
+  & k ~ {k_less k_rec}
+  & d ~ $([<] $(k_less less))
+  & less ~ {less_eq less_flag}
+  & less_eq ~ $([=] $(0 new_bit))
+  & s ~ $([&] $(less_flag removed))
+  & @build_status ~ (tail_stat (tail_deg (k_rec ret_tail)))
+  & ret_tail ~ (rem_tail new_tail)
+  & removed ~ $([+] $(rem_tail total_rem))
+  & out ~ (total_rem (1 (new_bit new_tail)))
+
+@loop = (n (k (edges (status (acc out)))))
+  & n ~ {n0 n_next}
+  & k ~ {k0 k_next}
+  & edges ~ {edges0 edges_next}
+  & status ~ {status_edges status_old}
+  & @replicate ~ (n0 (0 degrees0))
+  & @process_edges ~ (edges0 (status_edges (degrees0 degrees)))
+  & @build_status ~ (status_old (degrees (k0 ret_status)))
+  & ret_status ~ (removed new_status)
+  & removed ~ {rem_zero rem_add}
+  & rem_zero ~ ?((@stable @again) (new_status (n_next (k_next (edges_next (acc (rem_add out)))))))
+
+@stable = (new_status (n (k (edges (acc (rem_add out))))))
+  & new_status ~ *
+  & k ~ *
+  & edges ~ *
+  & rem_add ~ *
+  & n ~ $([-] $(acc result))
+  & out ~ result
+
+@again = (rem_add (new_status (n (k (edges (acc out))))))
+  & @loop ~ (n (k (edges (new_status (acc2 out)))))
+  & acc ~ $([+] $(rem_add acc2))

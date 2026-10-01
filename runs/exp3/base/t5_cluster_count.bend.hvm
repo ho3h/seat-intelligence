@@ -1,0 +1,94 @@
+@capacity = ({a d} ({$([<] $(a b)) e} f))
+  & $(b ?((@capacity__C0 (* (* (c c)))) (d (e f)))) ~ [=0x0000000]
+
+@capacity__C0 = (a ($([*0x0000002] b) c))
+  & @capacity ~ (a (b c))
+
+@find_root = ({a f} ({b {d g}} ({c h} j)))
+  & @tree_get ~ (a (b (0 (c ({$([=] $(d ?((@find_root__C0 (* (* (e (* (* e)))))) (f (g (h (i j))))))) i} *)))))
+
+@find_root__C0 = (a (* (c (b d))))
+  & @find_root ~ (a (b (c d)))
+
+@make_tree = (a ({$([=0x0000001] ?((@make_tree__C0 @make_tree__C1) (a (b c)))) b} c))
+
+@make_tree__C0 = ({$([+] $(d e)) a} ($([:/0x0000002] {d {f b}}) (c g)))
+  &!@make_tree ~ (a (b c))
+  &!@make_tree ~ (e (f g))
+
+@make_tree__C1 = (* (a (* (a 1))))
+
+@merge_edges = ((@merge_edges__C5 a) a)
+
+@merge_edges__C0 = (b ({l j} ($([:-0x0000001] m) (a (c ({d {f g}} ({e $([+] $(h i))} (h n))))))))
+  & @merge_edges ~ (a (k (l (m n))))
+  & @tree_put_two ~ (b (c ((d e) (f ((g i) (0 (j k)))))))
+
+@merge_edges__C1 = (* (b ({l j} ($([:-0x0000001] m) (a ({c {d h}} (g ($([+] $(e f)) ({e i} n)))))))))
+  & @merge_edges ~ (a (k (l (m n))))
+  & @tree_put_two ~ (b (c ((d f) (g ((h i) (0 (j k)))))))
+
+@merge_edges__C2 = ({a {d i}} ({c {f j}} (k (l ({b m} ({e n} q))))))
+  & @tree_get ~ (d (e (0 (f (* {g p})))))
+  & @tree_get ~ (a (b (0 (c (* {$([<] $(g h)) o})))))
+  & $(h ?((@merge_edges__C0 @merge_edges__C1) (i (j (k (l (m (n (o (p q)))))))))) ~ [=0x0000000]
+
+@merge_edges__C3 = (* (b (c (d (a (* (* e)))))))
+  & @merge_edges ~ (a (b (c (d e))))
+
+@merge_edges__C4 = (* ((b e) (k ({h {d a}} ({i {f c}} (j n))))))
+  & @find_root ~ (d (e (f {g m})))
+  & @find_root ~ (a (b (c {$([=] $(g ?((@merge_edges__C2 @merge_edges__C3) (h (i (j (k (l (m n))))))))) l})))
+
+@merge_edges__C5 = (?(((* (* (a a))) @merge_edges__C4) b) b)
+
+@prog = (({$([=0x0000000] ?((@prog__C0 (* (* (* 0)))) (a (b c)))) a} b) c)
+
+@prog__C0 = ({f a} (b g))
+  & @merge_edges ~ (b (d (e (f g))))
+  & @capacity ~ (a (1 {e c}))
+  & @make_tree ~ (0 (c d))
+
+@tree_get = (b (c (d ({$([=0x0000001] ?((@tree_get__C2 (* (a (* (* (* a)))))) (b (c (d (e f)))))) e} f))))
+
+@tree_get__C0 = (b (* (* (a (d (c e))))))
+  & @tree_get ~ (a (b (c (d e))))
+
+@tree_get__C1 = (* (b (c (a (* (d (* e)))))))
+  & @tree_get ~ (a (b (c (d e))))
+
+@tree_get__C2 = ((e f) ({$([<] $(b ?((@tree_get__C0 @tree_get__C1) (c (d (e (f (g (h i))))))))) c} ({d $([+] $(a {b h}))} ($([:/0x0000002] {g a}) i))))
+
+@tree_put = (b (c (d (e ({$([=0x0000001] ?((@tree_put__C2 (* (* (* (a (* (* a))))))) (b (c (d (e (f g))))))) f} g)))))
+
+@tree_put__C0 = (c (d (* (a (b (f (e (a g))))))))
+  & @tree_put ~ (b (c (d (e (f g)))))
+
+@tree_put__C1 = (* (b (c (d (a (g (e (* (f g)))))))))
+  & @tree_put ~ (a (b (c (d (e f)))))
+
+@tree_put__C2 = ((f g) ({$([<] $(b ?((@tree_put__C0 @tree_put__C1) (c (d (e (f (g (h (i j)))))))))) c} (d ({e $([+] $(a {b i}))} ($([:/0x0000002] {h a}) j)))))
+
+@tree_put_two = (b (c (d (e (f (g ({$([=0x0000001] ?((@tree_put_two__C6 (* (* (* (a (* (* (* (* a))))))))) (b (c (d (e (f (g (h i))))))))) h} i)))))))
+
+@tree_put_two__C0 = (c (d (e (f (* (a (b (h (g (a i))))))))))
+  & @tree_put_two ~ (b (c (d (e (f (g (h i)))))))
+
+@tree_put_two__C1 = (* (h (i (b (c (d (a (g ({k e} (j (f l)))))))))))
+  & @tree_put ~ (a (b (c (d (e f)))))
+  & @tree_put ~ (g (h (i (j (k l)))))
+
+@tree_put_two__C2 = (b (c (h (i (d (a (g ({k e} (j (f l))))))))))
+  & @tree_put ~ (a (b (c (d (e f)))))
+  & @tree_put ~ (g (h (i (j (k l)))))
+
+@tree_put_two__C3 = (* (b (c (d (e (f (a (i (g (* (h i)))))))))))
+  & @tree_put_two ~ (a (b (c (d (e (f (g h)))))))
+
+@tree_put_two__C4 = (b (c ({$([<] $(a ?((@tree_put_two__C0 @tree_put_two__C1) (b (c (d (e (f (g (h (i (j k)))))))))))) d} (e (f (g (h (i ({a j} k)))))))))
+
+@tree_put_two__C5 = (* (b (c ({$([<] $(a ?((@tree_put_two__C2 @tree_put_two__C3) (b (c (d (e (f (g (h (i (j k)))))))))))) d} (e (f (g (h (i ({a j} k))))))))))
+
+@tree_put_two__C6 = ((h i) ({$([<] $(b ?((@tree_put_two__C4 @tree_put_two__C5) (c (d (e (f (g (h (i (j (k l)))))))))))) c} (d (e (f ({g $([+] $(a {b k}))} ($([:/0x0000002] {j a}) l)))))))
+
+

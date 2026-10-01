@@ -1,0 +1,3181 @@
+{
+ "note": "Game rules chosen by the host for a demonstration; they make no claim about any guest. Guests are described only by printed company and coarse category (data/hero/luncheon.json).",
+ "model": {
+  "base": "mlx-community/Qwen3-1.7B-4bit",
+  "adapter": "adapters/hero1_1p7b",
+  "decoding": "greedy"
+ },
+ "showcase": [
+  {
+   "id": "show1",
+   "policy": "Keep colleagues together, sections of at most four, and never put two government officials in the same section.",
+   "gold_program": "size 4\ntogether company\nlimit government 1",
+   "emitted_program": "size 4\ntogether company\nlimit government 1",
+   "model_program_equals_gold": true,
+   "emitted_program_canonical": "size 4\ntogether company\nlimit government 1",
+   "net_ok": true,
+   "net_interactions": 5887,
+   "deterministic_rerun_identical": true,
+   "sections": [
+    {
+     "section": 0,
+     "size": 4,
+     "guests": [
+      {
+       "position": 0,
+       "new_seat": {
+        "side": "left",
+        "row": 0
+       },
+       "name": "Will Scharf",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 0
+       }
+      },
+      {
+       "position": 1,
+       "new_seat": {
+        "side": "left",
+        "row": 1
+       },
+       "name": "Shyam Sankar",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 1
+       }
+      },
+      {
+       "position": 2,
+       "new_seat": {
+        "side": "left",
+        "row": 2
+       },
+       "name": "Alex Karp",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 13
+       }
+      },
+      {
+       "position": 3,
+       "new_seat": {
+        "side": "left",
+        "row": 3
+       },
+       "name": "Chamath Palihapitiya",
+       "org": "Social Capital",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 2
+       }
+      }
+     ]
+    },
+    {
+     "section": 1,
+     "size": 4,
+     "guests": [
+      {
+       "position": 4,
+       "new_seat": {
+        "side": "left",
+        "row": 4
+       },
+       "name": "Susie Wiles",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 3
+       }
+      },
+      {
+       "position": 5,
+       "new_seat": {
+        "side": "left",
+        "row": 5
+       },
+       "name": "Greg Brockman",
+       "org": "OpenAI",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 4
+       }
+      },
+      {
+       "position": 6,
+       "new_seat": {
+        "side": "left",
+        "row": 6
+       },
+       "name": "Secretary Lutnick",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 5
+       }
+      },
+      {
+       "position": 7,
+       "new_seat": {
+        "side": "left",
+        "row": 7
+       },
+       "name": "Satya Nadella",
+       "org": "Microsoft",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 6
+       }
+      }
+     ]
+    },
+    {
+     "section": 2,
+     "size": 2,
+     "guests": [
+      {
+       "position": 8,
+       "new_seat": {
+        "side": "left",
+        "row": 8
+       },
+       "name": "Jeff Bezos",
+       "org": "Amazon",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 7
+       }
+      },
+      {
+       "position": 9,
+       "new_seat": {
+        "side": "left",
+        "row": 9
+       },
+       "name": "VPOTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 3,
+     "size": 3,
+     "guests": [
+      {
+       "position": 10,
+       "new_seat": {
+        "side": "left",
+        "row": 10
+       },
+       "name": "Speaker Johnson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 9
+       }
+      },
+      {
+       "position": 11,
+       "new_seat": {
+        "side": "left",
+        "row": 11
+       },
+       "name": "David Sacks",
+       "org": "Craft Ventures",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 10
+       }
+      },
+      {
+       "position": 12,
+       "new_seat": {
+        "side": "left",
+        "row": 12
+       },
+       "name": "Lisa Su",
+       "org": "AMD",
+       "category": "chips",
+       "posted_seat": {
+        "side": "left",
+        "row": 11
+       }
+      }
+     ]
+    },
+    {
+     "section": 4,
+     "size": 1,
+     "guests": [
+      {
+       "position": 13,
+       "new_seat": {
+        "side": "left",
+        "row": 13
+       },
+       "name": "Secretary Scott Bessent",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 12
+       }
+      }
+     ]
+    },
+    {
+     "section": 5,
+     "size": 4,
+     "guests": [
+      {
+       "position": 14,
+       "new_seat": {
+        "side": "left",
+        "row": 14
+       },
+       "name": "Chairman Andrew Ferguson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 14
+       }
+      },
+      {
+       "position": 15,
+       "new_seat": {
+        "side": "left",
+        "row": 15
+       },
+       "name": "Michael Kratsios",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 15
+       }
+      },
+      {
+       "position": 16,
+       "new_seat": {
+        "side": "left",
+        "row": 16
+       },
+       "name": "Tom Brown",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 16
+       }
+      },
+      {
+       "position": 17,
+       "new_seat": {
+        "side": "right",
+        "row": 16
+       },
+       "name": "Dario Amodei",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "right",
+        "row": 2
+       }
+      }
+     ]
+    },
+    {
+     "section": 6,
+     "size": 4,
+     "guests": [
+      {
+       "position": 18,
+       "new_seat": {
+        "side": "right",
+        "row": 15
+       },
+       "name": "Scott Kupor",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 0
+       }
+      },
+      {
+       "position": 19,
+       "new_seat": {
+        "side": "right",
+        "row": 14
+       },
+       "name": "Brandon Rahbar Daniels",
+       "org": "Exiger",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 1
+       }
+      },
+      {
+       "position": 20,
+       "new_seat": {
+        "side": "right",
+        "row": 13
+       },
+       "name": "Hock Tan",
+       "org": "Broadcom",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 3
+       }
+      },
+      {
+       "position": 21,
+       "new_seat": {
+        "side": "right",
+        "row": 12
+       },
+       "name": "Richard Walters",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 4
+       }
+      }
+     ]
+    },
+    {
+     "section": 7,
+     "size": 4,
+     "guests": [
+      {
+       "position": 22,
+       "new_seat": {
+        "side": "right",
+        "row": 11
+       },
+       "name": "Brad Gerstner",
+       "org": "Altimeter",
+       "category": "investor",
+       "posted_seat": {
+        "side": "right",
+        "row": 5
+       }
+      },
+      {
+       "position": 23,
+       "new_seat": {
+        "side": "right",
+        "row": 10
+       },
+       "name": "Mark Zuckerberg",
+       "org": "Meta",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 6
+       }
+      },
+      {
+       "position": 24,
+       "new_seat": {
+        "side": "right",
+        "row": 9
+       },
+       "name": "Jensen Huang",
+       "org": "Nvidia",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 7
+       }
+      },
+      {
+       "position": 25,
+       "new_seat": {
+        "side": "right",
+        "row": 8
+       },
+       "name": "POTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 8,
+     "size": 4,
+     "guests": [
+      {
+       "position": 26,
+       "new_seat": {
+        "side": "right",
+        "row": 7
+       },
+       "name": "Elon Musk",
+       "org": "X, Tesla, Space X",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 9
+       }
+      },
+      {
+       "position": 27,
+       "new_seat": {
+        "side": "right",
+        "row": 6
+       },
+       "name": "Sundar Pichai",
+       "org": "Google",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 10
+       }
+      },
+      {
+       "position": 28,
+       "new_seat": {
+        "side": "right",
+        "row": 5
+       },
+       "name": "Director Clayton",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 11
+       }
+      },
+      {
+       "position": 29,
+       "new_seat": {
+        "side": "right",
+        "row": 4
+       },
+       "name": "Sanjay Mehrotra",
+       "org": "Micron",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 12
+       }
+      }
+     ]
+    },
+    {
+     "section": 9,
+     "size": 4,
+     "guests": [
+      {
+       "position": 30,
+       "new_seat": {
+        "side": "right",
+        "row": 3
+       },
+       "name": "Jared Isaacman",
+       "org": "NASA",
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 13
+       }
+      },
+      {
+       "position": 31,
+       "new_seat": {
+        "side": "right",
+        "row": 2
+       },
+       "name": "Bill McDermott",
+       "org": "Service Now",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 14
+       }
+      },
+      {
+       "position": 32,
+       "new_seat": {
+        "side": "right",
+        "row": 1
+       },
+       "name": "Nikesh Arora",
+       "org": "Palo Alto Networks",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 15
+       }
+      },
+      {
+       "position": 33,
+       "new_seat": {
+        "side": "right",
+        "row": 0
+       },
+       "name": "Sean Cairncross",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 16
+       }
+      }
+     ]
+    }
+   ],
+   "assignment_by_guest": {
+    "Will Scharf": 0,
+    "Shyam Sankar": 0,
+    "Chamath Palihapitiya": 0,
+    "Susie Wiles": 1,
+    "Greg Brockman": 1,
+    "Secretary Lutnick": 1,
+    "Satya Nadella": 1,
+    "Jeff Bezos": 2,
+    "VPOTUS": 2,
+    "Speaker Johnson": 3,
+    "David Sacks": 3,
+    "Lisa Su": 3,
+    "Secretary Scott Bessent": 4,
+    "Alex Karp": 0,
+    "Chairman Andrew Ferguson": 5,
+    "Michael Kratsios": 5,
+    "Tom Brown": 5,
+    "Scott Kupor": 6,
+    "Brandon Rahbar Daniels": 6,
+    "Dario Amodei": 5,
+    "Hock Tan": 6,
+    "Richard Walters": 6,
+    "Brad Gerstner": 7,
+    "Mark Zuckerberg": 7,
+    "Jensen Huang": 7,
+    "POTUS": 7,
+    "Elon Musk": 8,
+    "Sundar Pichai": 8,
+    "Director Clayton": 8,
+    "Sanjay Mehrotra": 8,
+    "Jared Isaacman": 9,
+    "Bill McDermott": 9,
+    "Nikesh Arora": 9,
+    "Sean Cairncross": 9
+   },
+   "violations_of_emitted_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "violations_of_stated_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "posted_arrangement_sections": "posted chart walked around the table (left row 0..16, then right row 16..0), cut into consecutive blocks of 4 seats",
+   "posted_arrangement_violations": {
+    "cap": 0,
+    "limit": 3,
+    "apart": 0,
+    "together": 2,
+    "order": 0,
+    "total": 5
+   },
+   "posted_arrangement_violation_count": 5,
+   "authoring": {
+    "program": "size 4\ntogether company\nlimit government 1",
+    "tokens_in": 71,
+    "tokens_out": 13,
+    "secs": 1.818,
+    "prompt_tps": 141.6,
+    "gen_tps": 12.2
+   }
+  },
+  {
+   "id": "show2",
+   "policy": "AI labs and big tech go in separate sections, chip makers get seated first, and no section bigger than five.",
+   "gold_program": "size 5\napart ai_lab big_tech\norder chips",
+   "emitted_program": "size 5\napart ai_lab big_tech\norder chips",
+   "model_program_equals_gold": true,
+   "emitted_program_canonical": "size 5\napart ai_lab big_tech\norder chips",
+   "net_ok": true,
+   "net_interactions": 5872,
+   "deterministic_rerun_identical": true,
+   "sections": [
+    {
+     "section": 0,
+     "size": 5,
+     "guests": [
+      {
+       "position": 0,
+       "new_seat": {
+        "side": "left",
+        "row": 0
+       },
+       "name": "Lisa Su",
+       "org": "AMD",
+       "category": "chips",
+       "posted_seat": {
+        "side": "left",
+        "row": 11
+       }
+      },
+      {
+       "position": 1,
+       "new_seat": {
+        "side": "left",
+        "row": 1
+       },
+       "name": "Hock Tan",
+       "org": "Broadcom",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 3
+       }
+      },
+      {
+       "position": 2,
+       "new_seat": {
+        "side": "left",
+        "row": 2
+       },
+       "name": "Jensen Huang",
+       "org": "Nvidia",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 7
+       }
+      },
+      {
+       "position": 3,
+       "new_seat": {
+        "side": "left",
+        "row": 3
+       },
+       "name": "Sanjay Mehrotra",
+       "org": "Micron",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 12
+       }
+      },
+      {
+       "position": 4,
+       "new_seat": {
+        "side": "left",
+        "row": 4
+       },
+       "name": "Will Scharf",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 0
+       }
+      }
+     ]
+    },
+    {
+     "section": 1,
+     "size": 5,
+     "guests": [
+      {
+       "position": 5,
+       "new_seat": {
+        "side": "left",
+        "row": 5
+       },
+       "name": "Shyam Sankar",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 1
+       }
+      },
+      {
+       "position": 6,
+       "new_seat": {
+        "side": "left",
+        "row": 6
+       },
+       "name": "Chamath Palihapitiya",
+       "org": "Social Capital",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 2
+       }
+      },
+      {
+       "position": 7,
+       "new_seat": {
+        "side": "left",
+        "row": 7
+       },
+       "name": "Susie Wiles",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 3
+       }
+      },
+      {
+       "position": 8,
+       "new_seat": {
+        "side": "left",
+        "row": 8
+       },
+       "name": "Greg Brockman",
+       "org": "OpenAI",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 4
+       }
+      },
+      {
+       "position": 9,
+       "new_seat": {
+        "side": "left",
+        "row": 9
+       },
+       "name": "Secretary Lutnick",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 5
+       }
+      }
+     ]
+    },
+    {
+     "section": 2,
+     "size": 5,
+     "guests": [
+      {
+       "position": 10,
+       "new_seat": {
+        "side": "left",
+        "row": 10
+       },
+       "name": "Satya Nadella",
+       "org": "Microsoft",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 6
+       }
+      },
+      {
+       "position": 11,
+       "new_seat": {
+        "side": "left",
+        "row": 11
+       },
+       "name": "Jeff Bezos",
+       "org": "Amazon",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 7
+       }
+      },
+      {
+       "position": 12,
+       "new_seat": {
+        "side": "left",
+        "row": 12
+       },
+       "name": "VPOTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 8
+       }
+      },
+      {
+       "position": 13,
+       "new_seat": {
+        "side": "left",
+        "row": 13
+       },
+       "name": "Speaker Johnson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 9
+       }
+      },
+      {
+       "position": 14,
+       "new_seat": {
+        "side": "left",
+        "row": 14
+       },
+       "name": "David Sacks",
+       "org": "Craft Ventures",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 10
+       }
+      }
+     ]
+    },
+    {
+     "section": 3,
+     "size": 5,
+     "guests": [
+      {
+       "position": 15,
+       "new_seat": {
+        "side": "left",
+        "row": 15
+       },
+       "name": "Secretary Scott Bessent",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 12
+       }
+      },
+      {
+       "position": 16,
+       "new_seat": {
+        "side": "left",
+        "row": 16
+       },
+       "name": "Alex Karp",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 13
+       }
+      },
+      {
+       "position": 17,
+       "new_seat": {
+        "side": "right",
+        "row": 16
+       },
+       "name": "Chairman Andrew Ferguson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 14
+       }
+      },
+      {
+       "position": 18,
+       "new_seat": {
+        "side": "right",
+        "row": 15
+       },
+       "name": "Michael Kratsios",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 15
+       }
+      },
+      {
+       "position": 19,
+       "new_seat": {
+        "side": "right",
+        "row": 14
+       },
+       "name": "Tom Brown",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 16
+       }
+      }
+     ]
+    },
+    {
+     "section": 4,
+     "size": 5,
+     "guests": [
+      {
+       "position": 20,
+       "new_seat": {
+        "side": "right",
+        "row": 13
+       },
+       "name": "Scott Kupor",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 0
+       }
+      },
+      {
+       "position": 21,
+       "new_seat": {
+        "side": "right",
+        "row": 12
+       },
+       "name": "Brandon Rahbar Daniels",
+       "org": "Exiger",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 1
+       }
+      },
+      {
+       "position": 22,
+       "new_seat": {
+        "side": "right",
+        "row": 11
+       },
+       "name": "Dario Amodei",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "right",
+        "row": 2
+       }
+      },
+      {
+       "position": 23,
+       "new_seat": {
+        "side": "right",
+        "row": 10
+       },
+       "name": "Richard Walters",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 4
+       }
+      },
+      {
+       "position": 24,
+       "new_seat": {
+        "side": "right",
+        "row": 9
+       },
+       "name": "Brad Gerstner",
+       "org": "Altimeter",
+       "category": "investor",
+       "posted_seat": {
+        "side": "right",
+        "row": 5
+       }
+      }
+     ]
+    },
+    {
+     "section": 5,
+     "size": 5,
+     "guests": [
+      {
+       "position": 25,
+       "new_seat": {
+        "side": "right",
+        "row": 8
+       },
+       "name": "Mark Zuckerberg",
+       "org": "Meta",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 6
+       }
+      },
+      {
+       "position": 26,
+       "new_seat": {
+        "side": "right",
+        "row": 7
+       },
+       "name": "POTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 8
+       }
+      },
+      {
+       "position": 27,
+       "new_seat": {
+        "side": "right",
+        "row": 6
+       },
+       "name": "Elon Musk",
+       "org": "X, Tesla, Space X",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 9
+       }
+      },
+      {
+       "position": 28,
+       "new_seat": {
+        "side": "right",
+        "row": 5
+       },
+       "name": "Sundar Pichai",
+       "org": "Google",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 10
+       }
+      },
+      {
+       "position": 29,
+       "new_seat": {
+        "side": "right",
+        "row": 4
+       },
+       "name": "Director Clayton",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 11
+       }
+      }
+     ]
+    },
+    {
+     "section": 6,
+     "size": 4,
+     "guests": [
+      {
+       "position": 30,
+       "new_seat": {
+        "side": "right",
+        "row": 3
+       },
+       "name": "Jared Isaacman",
+       "org": "NASA",
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 13
+       }
+      },
+      {
+       "position": 31,
+       "new_seat": {
+        "side": "right",
+        "row": 2
+       },
+       "name": "Bill McDermott",
+       "org": "Service Now",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 14
+       }
+      },
+      {
+       "position": 32,
+       "new_seat": {
+        "side": "right",
+        "row": 1
+       },
+       "name": "Nikesh Arora",
+       "org": "Palo Alto Networks",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 15
+       }
+      },
+      {
+       "position": 33,
+       "new_seat": {
+        "side": "right",
+        "row": 0
+       },
+       "name": "Sean Cairncross",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 16
+       }
+      }
+     ]
+    }
+   ],
+   "assignment_by_guest": {
+    "Will Scharf": 0,
+    "Shyam Sankar": 1,
+    "Chamath Palihapitiya": 1,
+    "Susie Wiles": 1,
+    "Greg Brockman": 1,
+    "Secretary Lutnick": 1,
+    "Satya Nadella": 2,
+    "Jeff Bezos": 2,
+    "VPOTUS": 2,
+    "Speaker Johnson": 2,
+    "David Sacks": 2,
+    "Lisa Su": 0,
+    "Secretary Scott Bessent": 3,
+    "Alex Karp": 3,
+    "Chairman Andrew Ferguson": 3,
+    "Michael Kratsios": 3,
+    "Tom Brown": 3,
+    "Scott Kupor": 4,
+    "Brandon Rahbar Daniels": 4,
+    "Dario Amodei": 4,
+    "Hock Tan": 0,
+    "Richard Walters": 4,
+    "Brad Gerstner": 4,
+    "Mark Zuckerberg": 5,
+    "Jensen Huang": 0,
+    "POTUS": 5,
+    "Elon Musk": 5,
+    "Sundar Pichai": 5,
+    "Director Clayton": 5,
+    "Sanjay Mehrotra": 0,
+    "Jared Isaacman": 6,
+    "Bill McDermott": 6,
+    "Nikesh Arora": 6,
+    "Sean Cairncross": 6
+   },
+   "violations_of_emitted_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "violations_of_stated_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "posted_arrangement_sections": "posted chart walked around the table (left row 0..16, then right row 16..0), cut into consecutive blocks of 5 seats",
+   "posted_arrangement_violations": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 79,
+    "total": 79
+   },
+   "posted_arrangement_violation_count": 79,
+   "authoring": {
+    "program": "size 5\napart ai_lab big_tech\norder chips",
+    "tokens_in": 73,
+    "tokens_out": 15,
+    "secs": 0.957,
+    "prompt_tps": 445.8,
+    "gen_tps": 29.4
+   }
+  },
+  {
+   "id": "show3",
+   "policy": "Seat all the investors together, keep sections to three guests, and keep the AI labs away from the chip makers.",
+   "gold_program": "size 3\ntogether investor\napart ai_lab chips",
+   "emitted_program": "size 3\ntogether investor\napart ai_lab chips",
+   "model_program_equals_gold": true,
+   "emitted_program_canonical": "size 3\ntogether investor\napart ai_lab chips",
+   "net_ok": true,
+   "net_interactions": 5902,
+   "deterministic_rerun_identical": true,
+   "sections": [
+    {
+     "section": 0,
+     "size": 2,
+     "guests": [
+      {
+       "position": 0,
+       "new_seat": {
+        "side": "left",
+        "row": 0
+       },
+       "name": "Will Scharf",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 0
+       }
+      },
+      {
+       "position": 1,
+       "new_seat": {
+        "side": "left",
+        "row": 1
+       },
+       "name": "Shyam Sankar",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 1
+       }
+      }
+     ]
+    },
+    {
+     "section": 1,
+     "size": 3,
+     "guests": [
+      {
+       "position": 2,
+       "new_seat": {
+        "side": "left",
+        "row": 2
+       },
+       "name": "Chamath Palihapitiya",
+       "org": "Social Capital",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 2
+       }
+      },
+      {
+       "position": 3,
+       "new_seat": {
+        "side": "left",
+        "row": 3
+       },
+       "name": "David Sacks",
+       "org": "Craft Ventures",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 10
+       }
+      },
+      {
+       "position": 4,
+       "new_seat": {
+        "side": "left",
+        "row": 4
+       },
+       "name": "Brad Gerstner",
+       "org": "Altimeter",
+       "category": "investor",
+       "posted_seat": {
+        "side": "right",
+        "row": 5
+       }
+      }
+     ]
+    },
+    {
+     "section": 2,
+     "size": 3,
+     "guests": [
+      {
+       "position": 5,
+       "new_seat": {
+        "side": "left",
+        "row": 5
+       },
+       "name": "Susie Wiles",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 3
+       }
+      },
+      {
+       "position": 6,
+       "new_seat": {
+        "side": "left",
+        "row": 6
+       },
+       "name": "Greg Brockman",
+       "org": "OpenAI",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 4
+       }
+      },
+      {
+       "position": 7,
+       "new_seat": {
+        "side": "left",
+        "row": 7
+       },
+       "name": "Secretary Lutnick",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 5
+       }
+      }
+     ]
+    },
+    {
+     "section": 3,
+     "size": 3,
+     "guests": [
+      {
+       "position": 8,
+       "new_seat": {
+        "side": "left",
+        "row": 8
+       },
+       "name": "Satya Nadella",
+       "org": "Microsoft",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 6
+       }
+      },
+      {
+       "position": 9,
+       "new_seat": {
+        "side": "left",
+        "row": 9
+       },
+       "name": "Jeff Bezos",
+       "org": "Amazon",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 7
+       }
+      },
+      {
+       "position": 10,
+       "new_seat": {
+        "side": "left",
+        "row": 10
+       },
+       "name": "VPOTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 4,
+     "size": 3,
+     "guests": [
+      {
+       "position": 11,
+       "new_seat": {
+        "side": "left",
+        "row": 11
+       },
+       "name": "Speaker Johnson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 9
+       }
+      },
+      {
+       "position": 12,
+       "new_seat": {
+        "side": "left",
+        "row": 12
+       },
+       "name": "Lisa Su",
+       "org": "AMD",
+       "category": "chips",
+       "posted_seat": {
+        "side": "left",
+        "row": 11
+       }
+      },
+      {
+       "position": 13,
+       "new_seat": {
+        "side": "left",
+        "row": 13
+       },
+       "name": "Secretary Scott Bessent",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 12
+       }
+      }
+     ]
+    },
+    {
+     "section": 5,
+     "size": 3,
+     "guests": [
+      {
+       "position": 14,
+       "new_seat": {
+        "side": "left",
+        "row": 14
+       },
+       "name": "Alex Karp",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 13
+       }
+      },
+      {
+       "position": 15,
+       "new_seat": {
+        "side": "left",
+        "row": 15
+       },
+       "name": "Chairman Andrew Ferguson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 14
+       }
+      },
+      {
+       "position": 16,
+       "new_seat": {
+        "side": "left",
+        "row": 16
+       },
+       "name": "Michael Kratsios",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 15
+       }
+      }
+     ]
+    },
+    {
+     "section": 6,
+     "size": 3,
+     "guests": [
+      {
+       "position": 17,
+       "new_seat": {
+        "side": "right",
+        "row": 16
+       },
+       "name": "Tom Brown",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 16
+       }
+      },
+      {
+       "position": 18,
+       "new_seat": {
+        "side": "right",
+        "row": 15
+       },
+       "name": "Scott Kupor",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 0
+       }
+      },
+      {
+       "position": 19,
+       "new_seat": {
+        "side": "right",
+        "row": 14
+       },
+       "name": "Brandon Rahbar Daniels",
+       "org": "Exiger",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 1
+       }
+      }
+     ]
+    },
+    {
+     "section": 7,
+     "size": 1,
+     "guests": [
+      {
+       "position": 20,
+       "new_seat": {
+        "side": "right",
+        "row": 13
+       },
+       "name": "Dario Amodei",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "right",
+        "row": 2
+       }
+      }
+     ]
+    },
+    {
+     "section": 8,
+     "size": 3,
+     "guests": [
+      {
+       "position": 21,
+       "new_seat": {
+        "side": "right",
+        "row": 12
+       },
+       "name": "Hock Tan",
+       "org": "Broadcom",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 3
+       }
+      },
+      {
+       "position": 22,
+       "new_seat": {
+        "side": "right",
+        "row": 11
+       },
+       "name": "Richard Walters",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 4
+       }
+      },
+      {
+       "position": 23,
+       "new_seat": {
+        "side": "right",
+        "row": 10
+       },
+       "name": "Mark Zuckerberg",
+       "org": "Meta",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 6
+       }
+      }
+     ]
+    },
+    {
+     "section": 9,
+     "size": 3,
+     "guests": [
+      {
+       "position": 24,
+       "new_seat": {
+        "side": "right",
+        "row": 9
+       },
+       "name": "Jensen Huang",
+       "org": "Nvidia",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 7
+       }
+      },
+      {
+       "position": 25,
+       "new_seat": {
+        "side": "right",
+        "row": 8
+       },
+       "name": "POTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 8
+       }
+      },
+      {
+       "position": 26,
+       "new_seat": {
+        "side": "right",
+        "row": 7
+       },
+       "name": "Elon Musk",
+       "org": "X, Tesla, Space X",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 9
+       }
+      }
+     ]
+    },
+    {
+     "section": 10,
+     "size": 3,
+     "guests": [
+      {
+       "position": 27,
+       "new_seat": {
+        "side": "right",
+        "row": 6
+       },
+       "name": "Sundar Pichai",
+       "org": "Google",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 10
+       }
+      },
+      {
+       "position": 28,
+       "new_seat": {
+        "side": "right",
+        "row": 5
+       },
+       "name": "Director Clayton",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 11
+       }
+      },
+      {
+       "position": 29,
+       "new_seat": {
+        "side": "right",
+        "row": 4
+       },
+       "name": "Sanjay Mehrotra",
+       "org": "Micron",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 12
+       }
+      }
+     ]
+    },
+    {
+     "section": 11,
+     "size": 3,
+     "guests": [
+      {
+       "position": 30,
+       "new_seat": {
+        "side": "right",
+        "row": 3
+       },
+       "name": "Jared Isaacman",
+       "org": "NASA",
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 13
+       }
+      },
+      {
+       "position": 31,
+       "new_seat": {
+        "side": "right",
+        "row": 2
+       },
+       "name": "Bill McDermott",
+       "org": "Service Now",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 14
+       }
+      },
+      {
+       "position": 32,
+       "new_seat": {
+        "side": "right",
+        "row": 1
+       },
+       "name": "Nikesh Arora",
+       "org": "Palo Alto Networks",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 15
+       }
+      }
+     ]
+    },
+    {
+     "section": 12,
+     "size": 1,
+     "guests": [
+      {
+       "position": 33,
+       "new_seat": {
+        "side": "right",
+        "row": 0
+       },
+       "name": "Sean Cairncross",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 16
+       }
+      }
+     ]
+    }
+   ],
+   "assignment_by_guest": {
+    "Will Scharf": 0,
+    "Shyam Sankar": 0,
+    "Chamath Palihapitiya": 1,
+    "Susie Wiles": 2,
+    "Greg Brockman": 2,
+    "Secretary Lutnick": 2,
+    "Satya Nadella": 3,
+    "Jeff Bezos": 3,
+    "VPOTUS": 3,
+    "Speaker Johnson": 4,
+    "David Sacks": 1,
+    "Lisa Su": 4,
+    "Secretary Scott Bessent": 4,
+    "Alex Karp": 5,
+    "Chairman Andrew Ferguson": 5,
+    "Michael Kratsios": 5,
+    "Tom Brown": 6,
+    "Scott Kupor": 6,
+    "Brandon Rahbar Daniels": 6,
+    "Dario Amodei": 7,
+    "Hock Tan": 8,
+    "Richard Walters": 8,
+    "Brad Gerstner": 1,
+    "Mark Zuckerberg": 8,
+    "Jensen Huang": 9,
+    "POTUS": 9,
+    "Elon Musk": 9,
+    "Sundar Pichai": 10,
+    "Director Clayton": 10,
+    "Sanjay Mehrotra": 10,
+    "Jared Isaacman": 11,
+    "Bill McDermott": 11,
+    "Nikesh Arora": 11,
+    "Sean Cairncross": 12
+   },
+   "violations_of_emitted_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "violations_of_stated_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "posted_arrangement_sections": "posted chart walked around the table (left row 0..16, then right row 16..0), cut into consecutive blocks of 3 seats",
+   "posted_arrangement_violations": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 1,
+    "together": 2,
+    "order": 0,
+    "total": 3
+   },
+   "posted_arrangement_violation_count": 3,
+   "authoring": {
+    "program": "size 3\ntogether investor\napart ai_lab chips",
+    "tokens_in": 73,
+    "tokens_out": 14,
+    "secs": 2.71,
+    "prompt_tps": 95.1,
+    "gen_tps": 8.4
+   }
+  },
+  {
+   "id": "show4",
+   "policy": "At most two government officials per section, software and security firms together, colleagues together, and investors first.",
+   "gold_program": "together company\ntogether software_security\nlimit government 2\norder investor",
+   "emitted_program": "limit government software_security investor 2",
+   "model_program_equals_gold": false,
+   "emitted_program_canonical": "limit software_security investor government 2",
+   "net_ok": true,
+   "net_interactions": 5877,
+   "deterministic_rerun_identical": true,
+   "sections": [
+    {
+     "section": 0,
+     "size": 5,
+     "guests": [
+      {
+       "position": 0,
+       "new_seat": {
+        "side": "left",
+        "row": 0
+       },
+       "name": "Will Scharf",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 0
+       }
+      },
+      {
+       "position": 1,
+       "new_seat": {
+        "side": "left",
+        "row": 1
+       },
+       "name": "Shyam Sankar",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 1
+       }
+      },
+      {
+       "position": 2,
+       "new_seat": {
+        "side": "left",
+        "row": 2
+       },
+       "name": "Chamath Palihapitiya",
+       "org": "Social Capital",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 2
+       }
+      },
+      {
+       "position": 3,
+       "new_seat": {
+        "side": "left",
+        "row": 3
+       },
+       "name": "Susie Wiles",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 3
+       }
+      },
+      {
+       "position": 4,
+       "new_seat": {
+        "side": "left",
+        "row": 4
+       },
+       "name": "Greg Brockman",
+       "org": "OpenAI",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 4
+       }
+      }
+     ]
+    },
+    {
+     "section": 1,
+     "size": 4,
+     "guests": [
+      {
+       "position": 5,
+       "new_seat": {
+        "side": "left",
+        "row": 5
+       },
+       "name": "Secretary Lutnick",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 5
+       }
+      },
+      {
+       "position": 6,
+       "new_seat": {
+        "side": "left",
+        "row": 6
+       },
+       "name": "Satya Nadella",
+       "org": "Microsoft",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 6
+       }
+      },
+      {
+       "position": 7,
+       "new_seat": {
+        "side": "left",
+        "row": 7
+       },
+       "name": "Jeff Bezos",
+       "org": "Amazon",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 7
+       }
+      },
+      {
+       "position": 8,
+       "new_seat": {
+        "side": "left",
+        "row": 8
+       },
+       "name": "VPOTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 2,
+     "size": 3,
+     "guests": [
+      {
+       "position": 9,
+       "new_seat": {
+        "side": "left",
+        "row": 9
+       },
+       "name": "Speaker Johnson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 9
+       }
+      },
+      {
+       "position": 10,
+       "new_seat": {
+        "side": "left",
+        "row": 10
+       },
+       "name": "David Sacks",
+       "org": "Craft Ventures",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 10
+       }
+      },
+      {
+       "position": 11,
+       "new_seat": {
+        "side": "left",
+        "row": 11
+       },
+       "name": "Lisa Su",
+       "org": "AMD",
+       "category": "chips",
+       "posted_seat": {
+        "side": "left",
+        "row": 11
+       }
+      }
+     ]
+    },
+    {
+     "section": 3,
+     "size": 2,
+     "guests": [
+      {
+       "position": 12,
+       "new_seat": {
+        "side": "left",
+        "row": 12
+       },
+       "name": "Secretary Scott Bessent",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 12
+       }
+      },
+      {
+       "position": 13,
+       "new_seat": {
+        "side": "left",
+        "row": 13
+       },
+       "name": "Alex Karp",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 13
+       }
+      }
+     ]
+    },
+    {
+     "section": 4,
+     "size": 6,
+     "guests": [
+      {
+       "position": 14,
+       "new_seat": {
+        "side": "left",
+        "row": 14
+       },
+       "name": "Chairman Andrew Ferguson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 14
+       }
+      },
+      {
+       "position": 15,
+       "new_seat": {
+        "side": "left",
+        "row": 15
+       },
+       "name": "Michael Kratsios",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 15
+       }
+      },
+      {
+       "position": 16,
+       "new_seat": {
+        "side": "left",
+        "row": 16
+       },
+       "name": "Tom Brown",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 16
+       }
+      },
+      {
+       "position": 17,
+       "new_seat": {
+        "side": "right",
+        "row": 16
+       },
+       "name": "Scott Kupor",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 0
+       }
+      },
+      {
+       "position": 18,
+       "new_seat": {
+        "side": "right",
+        "row": 15
+       },
+       "name": "Brandon Rahbar Daniels",
+       "org": "Exiger",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 1
+       }
+      },
+      {
+       "position": 19,
+       "new_seat": {
+        "side": "right",
+        "row": 14
+       },
+       "name": "Dario Amodei",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "right",
+        "row": 2
+       }
+      }
+     ]
+    },
+    {
+     "section": 5,
+     "size": 6,
+     "guests": [
+      {
+       "position": 20,
+       "new_seat": {
+        "side": "right",
+        "row": 13
+       },
+       "name": "Hock Tan",
+       "org": "Broadcom",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 3
+       }
+      },
+      {
+       "position": 21,
+       "new_seat": {
+        "side": "right",
+        "row": 12
+       },
+       "name": "Richard Walters",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 4
+       }
+      },
+      {
+       "position": 22,
+       "new_seat": {
+        "side": "right",
+        "row": 11
+       },
+       "name": "Brad Gerstner",
+       "org": "Altimeter",
+       "category": "investor",
+       "posted_seat": {
+        "side": "right",
+        "row": 5
+       }
+      },
+      {
+       "position": 23,
+       "new_seat": {
+        "side": "right",
+        "row": 10
+       },
+       "name": "Mark Zuckerberg",
+       "org": "Meta",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 6
+       }
+      },
+      {
+       "position": 24,
+       "new_seat": {
+        "side": "right",
+        "row": 9
+       },
+       "name": "Jensen Huang",
+       "org": "Nvidia",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 7
+       }
+      },
+      {
+       "position": 25,
+       "new_seat": {
+        "side": "right",
+        "row": 8
+       },
+       "name": "POTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 6,
+     "size": 5,
+     "guests": [
+      {
+       "position": 26,
+       "new_seat": {
+        "side": "right",
+        "row": 7
+       },
+       "name": "Elon Musk",
+       "org": "X, Tesla, Space X",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 9
+       }
+      },
+      {
+       "position": 27,
+       "new_seat": {
+        "side": "right",
+        "row": 6
+       },
+       "name": "Sundar Pichai",
+       "org": "Google",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 10
+       }
+      },
+      {
+       "position": 28,
+       "new_seat": {
+        "side": "right",
+        "row": 5
+       },
+       "name": "Director Clayton",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 11
+       }
+      },
+      {
+       "position": 29,
+       "new_seat": {
+        "side": "right",
+        "row": 4
+       },
+       "name": "Sanjay Mehrotra",
+       "org": "Micron",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 12
+       }
+      },
+      {
+       "position": 30,
+       "new_seat": {
+        "side": "right",
+        "row": 3
+       },
+       "name": "Jared Isaacman",
+       "org": "NASA",
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 13
+       }
+      }
+     ]
+    },
+    {
+     "section": 7,
+     "size": 3,
+     "guests": [
+      {
+       "position": 31,
+       "new_seat": {
+        "side": "right",
+        "row": 2
+       },
+       "name": "Bill McDermott",
+       "org": "Service Now",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 14
+       }
+      },
+      {
+       "position": 32,
+       "new_seat": {
+        "side": "right",
+        "row": 1
+       },
+       "name": "Nikesh Arora",
+       "org": "Palo Alto Networks",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 15
+       }
+      },
+      {
+       "position": 33,
+       "new_seat": {
+        "side": "right",
+        "row": 0
+       },
+       "name": "Sean Cairncross",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 16
+       }
+      }
+     ]
+    }
+   ],
+   "assignment_by_guest": {
+    "Will Scharf": 0,
+    "Shyam Sankar": 0,
+    "Chamath Palihapitiya": 0,
+    "Susie Wiles": 0,
+    "Greg Brockman": 0,
+    "Secretary Lutnick": 1,
+    "Satya Nadella": 1,
+    "Jeff Bezos": 1,
+    "VPOTUS": 1,
+    "Speaker Johnson": 2,
+    "David Sacks": 2,
+    "Lisa Su": 2,
+    "Secretary Scott Bessent": 3,
+    "Alex Karp": 3,
+    "Chairman Andrew Ferguson": 4,
+    "Michael Kratsios": 4,
+    "Tom Brown": 4,
+    "Scott Kupor": 4,
+    "Brandon Rahbar Daniels": 4,
+    "Dario Amodei": 4,
+    "Hock Tan": 5,
+    "Richard Walters": 5,
+    "Brad Gerstner": 5,
+    "Mark Zuckerberg": 5,
+    "Jensen Huang": 5,
+    "POTUS": 5,
+    "Elon Musk": 6,
+    "Sundar Pichai": 6,
+    "Director Clayton": 6,
+    "Sanjay Mehrotra": 6,
+    "Jared Isaacman": 6,
+    "Bill McDermott": 7,
+    "Nikesh Arora": 7,
+    "Sean Cairncross": 7
+   },
+   "violations_of_emitted_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "violations_of_stated_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 3,
+    "order": 26,
+    "total": 29
+   },
+   "posted_arrangement_sections": "posted chart walked around the table (left row 0..16, then right row 16..0), cut into consecutive blocks of 6 seats",
+   "posted_arrangement_violations": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 4,
+    "order": 27,
+    "total": 31
+   },
+   "posted_arrangement_violation_count": 31,
+   "note": "the model misread this policy; the arrangement below is what the emitted program produced. For reference the arrangement of the gold program:",
+   "assignment_by_guest_if_gold_program": {
+    "Will Scharf": 0,
+    "Shyam Sankar": 1,
+    "Chamath Palihapitiya": 0,
+    "Susie Wiles": 1,
+    "Greg Brockman": 2,
+    "Secretary Lutnick": 2,
+    "Satya Nadella": 2,
+    "Jeff Bezos": 2,
+    "VPOTUS": 2,
+    "Speaker Johnson": 3,
+    "David Sacks": 0,
+    "Lisa Su": 3,
+    "Secretary Scott Bessent": 3,
+    "Alex Karp": 1,
+    "Chairman Andrew Ferguson": 4,
+    "Michael Kratsios": 4,
+    "Tom Brown": 4,
+    "Scott Kupor": 4,
+    "Brandon Rahbar Daniels": 1,
+    "Dario Amodei": 4,
+    "Hock Tan": 4,
+    "Richard Walters": 5,
+    "Brad Gerstner": 0,
+    "Mark Zuckerberg": 5,
+    "Jensen Huang": 5,
+    "POTUS": 5,
+    "Elon Musk": 5,
+    "Sundar Pichai": 5,
+    "Director Clayton": 6,
+    "Sanjay Mehrotra": 6,
+    "Jared Isaacman": 6,
+    "Bill McDermott": 1,
+    "Nikesh Arora": 1,
+    "Sean Cairncross": 6
+   },
+   "violations_of_stated_rules_if_gold_program": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "authoring": {
+    "program": "limit government software_security investor 2",
+    "tokens_in": 71,
+    "tokens_out": 8,
+    "secs": 0.63,
+    "prompt_tps": 405.7,
+    "gen_tps": 35.8
+   }
+  },
+  {
+   "id": "show5",
+   "policy": "Pairs only, please. Big tech before AI labs, and never two investors in one section.",
+   "gold_program": "size 2\nlimit investor 1\norder big_tech ai_lab",
+   "emitted_program": "size 2\nlimit investor 1\norder big_tech ai_lab",
+   "model_program_equals_gold": true,
+   "emitted_program_canonical": "size 2\nlimit investor 1\norder big_tech ai_lab",
+   "net_ok": true,
+   "net_interactions": 5922,
+   "deterministic_rerun_identical": true,
+   "sections": [
+    {
+     "section": 0,
+     "size": 2,
+     "guests": [
+      {
+       "position": 0,
+       "new_seat": {
+        "side": "left",
+        "row": 0
+       },
+       "name": "Satya Nadella",
+       "org": "Microsoft",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 6
+       }
+      },
+      {
+       "position": 1,
+       "new_seat": {
+        "side": "left",
+        "row": 1
+       },
+       "name": "Jeff Bezos",
+       "org": "Amazon",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "left",
+        "row": 7
+       }
+      }
+     ]
+    },
+    {
+     "section": 1,
+     "size": 2,
+     "guests": [
+      {
+       "position": 2,
+       "new_seat": {
+        "side": "left",
+        "row": 2
+       },
+       "name": "Mark Zuckerberg",
+       "org": "Meta",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 6
+       }
+      },
+      {
+       "position": 3,
+       "new_seat": {
+        "side": "left",
+        "row": 3
+       },
+       "name": "Elon Musk",
+       "org": "X, Tesla, Space X",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 9
+       }
+      }
+     ]
+    },
+    {
+     "section": 2,
+     "size": 2,
+     "guests": [
+      {
+       "position": 4,
+       "new_seat": {
+        "side": "left",
+        "row": 4
+       },
+       "name": "Sundar Pichai",
+       "org": "Google",
+       "category": "big_tech",
+       "posted_seat": {
+        "side": "right",
+        "row": 10
+       }
+      },
+      {
+       "position": 5,
+       "new_seat": {
+        "side": "left",
+        "row": 5
+       },
+       "name": "Greg Brockman",
+       "org": "OpenAI",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 4
+       }
+      }
+     ]
+    },
+    {
+     "section": 3,
+     "size": 2,
+     "guests": [
+      {
+       "position": 6,
+       "new_seat": {
+        "side": "left",
+        "row": 6
+       },
+       "name": "Tom Brown",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "left",
+        "row": 16
+       }
+      },
+      {
+       "position": 7,
+       "new_seat": {
+        "side": "left",
+        "row": 7
+       },
+       "name": "Dario Amodei",
+       "org": "Anthropic",
+       "category": "ai_lab",
+       "posted_seat": {
+        "side": "right",
+        "row": 2
+       }
+      }
+     ]
+    },
+    {
+     "section": 4,
+     "size": 2,
+     "guests": [
+      {
+       "position": 8,
+       "new_seat": {
+        "side": "left",
+        "row": 8
+       },
+       "name": "Will Scharf",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 0
+       }
+      },
+      {
+       "position": 9,
+       "new_seat": {
+        "side": "left",
+        "row": 9
+       },
+       "name": "Shyam Sankar",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 1
+       }
+      }
+     ]
+    },
+    {
+     "section": 5,
+     "size": 2,
+     "guests": [
+      {
+       "position": 10,
+       "new_seat": {
+        "side": "left",
+        "row": 10
+       },
+       "name": "Chamath Palihapitiya",
+       "org": "Social Capital",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 2
+       }
+      },
+      {
+       "position": 11,
+       "new_seat": {
+        "side": "left",
+        "row": 11
+       },
+       "name": "Susie Wiles",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 3
+       }
+      }
+     ]
+    },
+    {
+     "section": 6,
+     "size": 2,
+     "guests": [
+      {
+       "position": 12,
+       "new_seat": {
+        "side": "left",
+        "row": 12
+       },
+       "name": "Secretary Lutnick",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 5
+       }
+      },
+      {
+       "position": 13,
+       "new_seat": {
+        "side": "left",
+        "row": 13
+       },
+       "name": "VPOTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 7,
+     "size": 2,
+     "guests": [
+      {
+       "position": 14,
+       "new_seat": {
+        "side": "left",
+        "row": 14
+       },
+       "name": "Speaker Johnson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 9
+       }
+      },
+      {
+       "position": 15,
+       "new_seat": {
+        "side": "left",
+        "row": 15
+       },
+       "name": "David Sacks",
+       "org": "Craft Ventures",
+       "category": "investor",
+       "posted_seat": {
+        "side": "left",
+        "row": 10
+       }
+      }
+     ]
+    },
+    {
+     "section": 8,
+     "size": 2,
+     "guests": [
+      {
+       "position": 16,
+       "new_seat": {
+        "side": "left",
+        "row": 16
+       },
+       "name": "Lisa Su",
+       "org": "AMD",
+       "category": "chips",
+       "posted_seat": {
+        "side": "left",
+        "row": 11
+       }
+      },
+      {
+       "position": 17,
+       "new_seat": {
+        "side": "right",
+        "row": 16
+       },
+       "name": "Secretary Scott Bessent",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 12
+       }
+      }
+     ]
+    },
+    {
+     "section": 9,
+     "size": 2,
+     "guests": [
+      {
+       "position": 18,
+       "new_seat": {
+        "side": "right",
+        "row": 15
+       },
+       "name": "Alex Karp",
+       "org": "Palantir",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "left",
+        "row": 13
+       }
+      },
+      {
+       "position": 19,
+       "new_seat": {
+        "side": "right",
+        "row": 14
+       },
+       "name": "Chairman Andrew Ferguson",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "left",
+        "row": 14
+       }
+      }
+     ]
+    },
+    {
+     "section": 10,
+     "size": 2,
+     "guests": [
+      {
+       "position": 20,
+       "new_seat": {
+        "side": "right",
+        "row": 13
+       },
+       "name": "Michael Kratsios",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "left",
+        "row": 15
+       }
+      },
+      {
+       "position": 21,
+       "new_seat": {
+        "side": "right",
+        "row": 12
+       },
+       "name": "Scott Kupor",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 0
+       }
+      }
+     ]
+    },
+    {
+     "section": 11,
+     "size": 2,
+     "guests": [
+      {
+       "position": 22,
+       "new_seat": {
+        "side": "right",
+        "row": 11
+       },
+       "name": "Brandon Rahbar Daniels",
+       "org": "Exiger",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 1
+       }
+      },
+      {
+       "position": 23,
+       "new_seat": {
+        "side": "right",
+        "row": 10
+       },
+       "name": "Hock Tan",
+       "org": "Broadcom",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 3
+       }
+      }
+     ]
+    },
+    {
+     "section": 12,
+     "size": 2,
+     "guests": [
+      {
+       "position": 24,
+       "new_seat": {
+        "side": "right",
+        "row": 9
+       },
+       "name": "Richard Walters",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 4
+       }
+      },
+      {
+       "position": 25,
+       "new_seat": {
+        "side": "right",
+        "row": 8
+       },
+       "name": "Brad Gerstner",
+       "org": "Altimeter",
+       "category": "investor",
+       "posted_seat": {
+        "side": "right",
+        "row": 5
+       }
+      }
+     ]
+    },
+    {
+     "section": 13,
+     "size": 2,
+     "guests": [
+      {
+       "position": 26,
+       "new_seat": {
+        "side": "right",
+        "row": 7
+       },
+       "name": "Jensen Huang",
+       "org": "Nvidia",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 7
+       }
+      },
+      {
+       "position": 27,
+       "new_seat": {
+        "side": "right",
+        "row": 6
+       },
+       "name": "POTUS",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 8
+       }
+      }
+     ]
+    },
+    {
+     "section": 14,
+     "size": 2,
+     "guests": [
+      {
+       "position": 28,
+       "new_seat": {
+        "side": "right",
+        "row": 5
+       },
+       "name": "Director Clayton",
+       "org": null,
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 11
+       }
+      },
+      {
+       "position": 29,
+       "new_seat": {
+        "side": "right",
+        "row": 4
+       },
+       "name": "Sanjay Mehrotra",
+       "org": "Micron",
+       "category": "chips",
+       "posted_seat": {
+        "side": "right",
+        "row": 12
+       }
+      }
+     ]
+    },
+    {
+     "section": 15,
+     "size": 2,
+     "guests": [
+      {
+       "position": 30,
+       "new_seat": {
+        "side": "right",
+        "row": 3
+       },
+       "name": "Jared Isaacman",
+       "org": "NASA",
+       "category": "government",
+       "posted_seat": {
+        "side": "right",
+        "row": 13
+       }
+      },
+      {
+       "position": 31,
+       "new_seat": {
+        "side": "right",
+        "row": 2
+       },
+       "name": "Bill McDermott",
+       "org": "Service Now",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 14
+       }
+      }
+     ]
+    },
+    {
+     "section": 16,
+     "size": 2,
+     "guests": [
+      {
+       "position": 32,
+       "new_seat": {
+        "side": "right",
+        "row": 1
+       },
+       "name": "Nikesh Arora",
+       "org": "Palo Alto Networks",
+       "category": "software_security",
+       "posted_seat": {
+        "side": "right",
+        "row": 15
+       }
+      },
+      {
+       "position": 33,
+       "new_seat": {
+        "side": "right",
+        "row": 0
+       },
+       "name": "Sean Cairncross",
+       "org": null,
+       "category": "unlabelled",
+       "posted_seat": {
+        "side": "right",
+        "row": 16
+       }
+      }
+     ]
+    }
+   ],
+   "assignment_by_guest": {
+    "Will Scharf": 4,
+    "Shyam Sankar": 4,
+    "Chamath Palihapitiya": 5,
+    "Susie Wiles": 5,
+    "Greg Brockman": 2,
+    "Secretary Lutnick": 6,
+    "Satya Nadella": 0,
+    "Jeff Bezos": 0,
+    "VPOTUS": 6,
+    "Speaker Johnson": 7,
+    "David Sacks": 7,
+    "Lisa Su": 8,
+    "Secretary Scott Bessent": 8,
+    "Alex Karp": 9,
+    "Chairman Andrew Ferguson": 9,
+    "Michael Kratsios": 10,
+    "Tom Brown": 3,
+    "Scott Kupor": 10,
+    "Brandon Rahbar Daniels": 11,
+    "Dario Amodei": 3,
+    "Hock Tan": 11,
+    "Richard Walters": 12,
+    "Brad Gerstner": 12,
+    "Mark Zuckerberg": 1,
+    "Jensen Huang": 13,
+    "POTUS": 13,
+    "Elon Musk": 1,
+    "Sundar Pichai": 2,
+    "Director Clayton": 14,
+    "Sanjay Mehrotra": 14,
+    "Jared Isaacman": 15,
+    "Bill McDermott": 15,
+    "Nikesh Arora": 16,
+    "Sean Cairncross": 16
+   },
+   "violations_of_emitted_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "violations_of_stated_rules": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 0,
+    "total": 0
+   },
+   "posted_arrangement_sections": "posted chart walked around the table (left row 0..16, then right row 16..0), cut into consecutive blocks of 2 seats",
+   "posted_arrangement_violations": {
+    "cap": 0,
+    "limit": 0,
+    "apart": 0,
+    "together": 0,
+    "order": 115,
+    "total": 115
+   },
+   "posted_arrangement_violation_count": 115,
+   "authoring": {
+    "program": "size 2\nlimit investor 1\norder big_tech ai_lab",
+    "tokens_in": 69,
+    "tokens_out": 16,
+    "secs": 1.912,
+    "prompt_tps": 340.5,
+    "gen_tps": 11.4
+   }
+  }
+ ],
+ "seat_layout": "new_seat = the position-th seat of a walk around the table: left row 0..16, then right row 16..0; a section is a contiguous run of that walk"
+}

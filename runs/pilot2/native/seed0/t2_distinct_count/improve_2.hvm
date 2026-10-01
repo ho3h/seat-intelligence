@@ -1,0 +1,59 @@
+// A 24-level binary trie stores the values already encountered.
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (trie (acc out)))) pl) (trie (acc out)))
+
+@dc_nil = (* (trie (acc out)))
+  & trie ~ *
+  & acc ~ out
+
+@dc_cons = (* ((h t) (trie (acc out))))
+  & @ins ~ (24 (h (trie insres)))
+  & insres ~ (trie2 fresh)
+  & acc ~ $([+] $(fresh acc2))
+  & @dc ~ (t (trie2 (acc2 out)))
+
+// @ins takes a level, a value, a trie, and returns (updated_trie, is_new).
+@ins = (?((@ins_leaf @ins_more) (n (tree out))) (n (tree out)))
+
+@ins_leaf = (n (tree out))
+  & tree ~ (?((@leaf_empty @leaf_full) (payload (n out))) payload)
+
+@leaf_empty = (* (* out))
+  & out ~ ((1 *) 1)
+
+@leaf_full = (* (* (* out)))
+  & out ~ ((1 *) 0)
+
+@ins_more = (lvl (n (tree out)))
+  & n ~ {n1 n2}
+  & n1 ~ $([%] $(2 bit))
+  & n2 ~ $([>>] $(1 ns))
+  & tree ~ (?((@ins_empty @ins_node) (payload (bit (lvl (ns out))))) payload)
+
+@ins_empty = (* (bit (lvl (ns out))))
+  & bit ~ ?((@empty_left @empty_right) (lvl (ns out)))
+
+@ins_node = (* ((left right) (bit (lvl (ns out)))))
+  & bit ~ ?((@node_left @node_right) (left (right (lvl (ns out)))))
+
+@empty_left = (lvl (ns out))
+  & @ins ~ (lvl (ns ((0 *) res)))
+  & res ~ (newchild fresh)
+  & out ~ ((1 (newchild (0 *))) fresh)
+
+@empty_right = (* (lvl (ns out)))
+  & @ins ~ (lvl (ns ((0 *) res)))
+  & res ~ (newchild fresh)
+  & out ~ ((1 ((0 *) newchild)) fresh)
+
+@node_left = (left (right (lvl (ns out))))
+  & @ins ~ (lvl (ns (left res)))
+  & res ~ (newleft fresh)
+  & out ~ ((1 (newleft right)) fresh)
+
+@node_right = (* (left (right (lvl (ns out)))))
+  & @ins ~ (lvl (ns (right res)))
+  & res ~ (newright fresh)
+  & out ~ ((1 (left newright)) fresh)

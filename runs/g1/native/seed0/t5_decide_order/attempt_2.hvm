@@ -1,0 +1,63 @@
+@prog = ((tau cands) out)
+  & @filter ~ (cands (tau out))
+
+@filter = ((?((@f_nil @f_cons) (payload (tau out))) payload) (tau out))
+
+@f_nil = (payload (tau out))
+  & payload ~ *
+  & tau ~ *
+  & out ~ (0 *)
+
+@f_cons = (* (((u (v score)) tail) (tau out)))
+  & tau ~ {tau_rec tau_cmp}
+  & tau_cmp ~ {tau_a tau_b}
+  & score ~ {score_keep score_cmp}
+  & score_cmp ~ {score_a score_b}
+  & @filter ~ (tail (tau_rec rest))
+  & tau_a ~ $([<] $(score_a lt))
+  & tau_b ~ $([=] $(score_b eq))
+  & lt ~ $([|] $(eq ge))
+  & ge ~ ?((@f_reject @f_accept) ((u (v score_keep)) (rest out)))
+
+@f_reject = (candidate (rest out))
+  & candidate ~ *
+  & out ~ rest
+
+@f_accept = (* (candidate (rest out)))
+  & @insert ~ ((candidate rest) out)
+
+@insert = ((cand (?((@ins_nil @ins_cons) (payload (cand out))) payload)) out)
+
+@ins_nil = (payload (cand out))
+  & payload ~ *
+  & out ~ (1 (cand (0 *)))
+
+@ins_cons = (* ((head tail) (cand out)))
+  & @before ~ (cand (head b))
+  & b ~ ?((@ins_after @ins_before) (cand (head (tail out))))
+
+@ins_after = (cand (head (tail out)))
+  & @insert ~ ((cand tail) rest)
+  & out ~ (1 (head rest))
+
+@ins_before = (* (cand (head (tail out))))
+  & out ~ (1 (cand (1 (head tail))))
+
+@before = ((cu (cv cs)) ((hu (hv hs)) out))
+  & cs ~ {cs_g cs_e}
+  & hs ~ {hs_g hs_e}
+  & cs_g ~ $([>] $(hs_g sg))
+  & cs_e ~ $([=] $(hs_e se))
+  & cu ~ {cu_l cu_e}
+  & hu ~ {hu_l hu_e}
+  & cu_l ~ $([<] $(hu_l ul))
+  & cu_e ~ $([=] $(hu_e ue))
+  & cv ~ {cv_l cv_e}
+  & hv ~ {hv_l hv_e}
+  & cv_l ~ $([<] $(hv_l vl))
+  & cv_e ~ $([=] $(hv_e ve))
+  & vl ~ $([|] $(ve vle))
+  & ue ~ $([&] $(vle utie))
+  & ul ~ $([|] $(utie ub))
+  & se ~ $([&] $(ub stie))
+  & sg ~ $([|] $(stie out))

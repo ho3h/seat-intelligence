@@ -1,0 +1,287 @@
+// Index the edges, run Prim once, then exclude each edge in that tree.
+// The cheapest successful rerun is the second spanning-tree weight.
+
+@prog = ((n edges) out)
+  & n ~ {n_keep n_test}
+  & n_test ~ $([<] $(2 small))
+  & small ~ ?((@prog_small @prog_big) (n_keep (edges out)))
+
+@prog_small = (n (edges out))
+  & n ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@prog_big = (* (n (edges out)))
+  & @index ~ ((edges 0) indexed)
+  & indexed ~ {edges_p edges_a}
+  & n ~ {n_p n_a}
+  & @prim ~ ((n_p (edges_p 16777215)) base)
+  & base ~ (ok (cost ids))
+  & ok ~ *
+  & cost ~ *
+  & @alts ~ ((n_a (edges_a (ids 16777215))) out)
+
+@index = (((?((@index_nil @index_cons) (payload (idx out))) payload) idx) out)
+
+@index_nil = (* (idx out))
+  & idx ~ *
+  & out ~ (0 *)
+
+@index_cons = (* ((h t) (idx out)))
+  & idx ~ {idx_op idx_out}
+  & idx_op ~ $([+1] idx2)
+  & @index ~ ((t idx2) rest)
+  & out ~ (1 ((idx_out h) rest))
+
+@prim = ((n (es ex)) out)
+  & n ~ $([-] $(1 target))
+  & @prim_loop ~ ((target (es (ex ((1 (0 (0 *))) (0 (0 (0 *))))))) out)
+
+@prim_loop = ((n (es (ex (vis (count (cost chosen)))))) out)
+  & n ~ {n_keep n_cmp}
+  & count ~ {count_keep count_cmp}
+  & n_cmp ~ $([=] $(count_cmp done))
+  & done ~ ?((@prim_more @prim_done) (n_keep (es (ex (vis (count_keep (cost (chosen out))))))))
+
+@prim_done = (* (n (es (ex (vis (count (cost (chosen out))))))))
+  & n ~ *
+  & es ~ *
+  & ex ~ *
+  & vis ~ *
+  & count ~ *
+  & out ~ (1 (cost chosen))
+
+@prim_more = (n (es (ex (vis (count (cost chosen))))))
+  & es ~ {es_scan es_next}
+  & ex ~ {ex_scan ex_next}
+  & vis ~ {vis_scan vis_next}
+  & @scan ~ ((es_scan (vis_scan (ex_scan (0 (0 (0 0)))))) best)
+  & best ~ (found (weight (id vertex)))
+  & found ~ ?((@prim_fail @prim_add)
+      (n
+        (es_next
+          (ex_next
+            (vis_next
+              (count
+                (cost
+                  (chosen
+                    (weight
+                      (id
+                        (vertex out)
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+
+@prim_fail = (n
+  (es
+    (ex
+      (vis
+        (count
+          (cost
+            (chosen
+              (weight
+                (id
+                  (vertex out)
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+  & n ~ *
+  & es ~ *
+  & ex ~ *
+  & vis ~ *
+  & count ~ *
+  & cost ~ *
+  & chosen ~ *
+  & weight ~ *
+  & id ~ *
+  & vertex ~ *
+  & out ~ (0 (16777215 (0 *)))
+
+@prim_add = (*
+  (n
+    (es
+      (ex
+        (vis
+          (count
+            (cost
+              (chosen
+                (weight
+                  (id
+                    (vertex out)
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+  )
+)
+  & count ~ $([+1] count2)
+  & cost ~ $([+] $(weight cost2))
+  & @prim_loop ~ ((n (es (ex ((1 (vertex vis)) (count2 (cost2 (1 (id chosen)))))))) out)
+
+@scan = (((?((@scan_nil @scan_cons) (payload (vis (ex (best out))))) payload) (vis (ex best))) out)
+
+@scan_nil = (* (vis (ex (best out))))
+  & vis ~ *
+  & ex ~ *
+  & out ~ best
+
+@scan_cons = (* (((id (u (v w))) tail) (vis (ex (best out)))))
+  & vis ~ {vis_u vis_rest}
+  & vis_rest ~ {vis_v vis_keep}
+  & u ~ {u_has u_scan}
+  & v ~ {v_member v_keep}
+  & @has ~ ((u_has vis_u) hu)
+  & @has ~ ((v_member vis_v) hv)
+  & @scan_decide ~ ((id (u (v_keep (w (tail (vis_keep (ex (best (hu hv))))))))) out)
+
+@scan_decide = ((id (u (v (w (tail (vis (ex (best (hu hv))))))))) out)
+  & id ~ {id_cmp id_keep}
+  & ex ~ {ex_cmp ex_keep}
+  & hu ~ {hu_xor hu_choose}
+  & hu_xor ~ $([^] $(hv cross))
+  & id_cmp ~ $([!] $(ex_cmp notid))
+  & cross ~ $([&] $(notid eligible))
+  & eligible ~ ?((@scan_skip @scan_take)
+      (tail (vis (ex_keep (best (id_keep (u (v (w hu_choose out)))))))))
+
+@scan_skip = (* (tail (vis (ex (best (id (u (v (w hu)))))))))
+  & id ~ *
+  & u ~ *
+  & v ~ *
+  & w ~ *
+  & hu ~ *
+  & @scan ~ ((tail (vis (ex best))) out)
+
+@scan_take = (* (tail (vis (ex (best (id (u (v (w out)))))))))
+  & u ~ *
+  & best ~ (found (bw (bid bv)))
+  & found ~ ?((@take_empty @take_filled)
+      (tail
+        (vis
+          (ex
+            (id
+              (v
+                (w
+                  (bw
+                    (bid
+                      (bv out)
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+
+@take_empty = (tail (vis (ex (id (v (w (bw (bid (bv out)))))))))
+  & bw ~ *
+  & bid ~ *
+  & bv ~ *
+  & @scan ~ ((tail (vis (ex (1 (w (id v)))))) out)
+
+@take_filled = (* (tail (vis (ex (id (v (w (bw (bid (bv out))))))))))
+  & w ~ {w_keep w_cmp}
+  & bw ~ {bw_keep bw_cmp}
+  & w_cmp ~ $([<] $(bw_cmp less))
+  & less ~ ?((@take_keep @take_replace)
+      (tail
+        (vis
+          (ex
+            (id
+              (v
+                (w_keep
+                  (bw_keep
+                    (bid
+                      (bv out)
+                    )
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    )
+
+@take_keep = (tail (vis (ex (id (v (w (bw (bid (bv out)))))))))
+  & id ~ *
+  & v ~ *
+  & w ~ *
+  & @scan ~ ((tail (vis (ex (1 (bw (bid bv)))))) out)
+
+@take_replace = (* (tail (vis (ex (id (v (w (bw (bid (bv out))))))))))
+  & bw ~ *
+  & bid ~ *
+  & bv ~ *
+  & @scan ~ ((tail (vis (ex (1 (w (id v)))))) out)
+
+@has = ((x (?((@has_nil @has_cons) (payload (x out))) payload)) out)
+
+@has_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@has_cons = (* ((head tail) (x out)))
+  & x ~ {x_cmp x_next}
+  & head ~ $([=] $(x_cmp equal))
+  & equal ~ ?((@has_more @has_yes) (x_next (tail out)))
+
+@has_more = (x (tail out))
+  & @has ~ ((x tail) out)
+
+@has_yes = (* (x (tail out)))
+  & x ~ *
+  & tail ~ *
+  & out ~ 1
+
+@alts = ((n (es ((?((@alts_nil @alts_cons) (payload (n (es (best out))))) payload) best))) out)
+
+@alts_nil = (* (n (es (best out))))
+  & n ~ *
+  & es ~ *
+  & out ~ best
+
+@alts_cons = (* ((id tail) (n (es (best out)))))
+  & n ~ {n_prim n_recur}
+  & es ~ {es_run es_next}
+  & @prim ~ ((n_prim (es_run id)) result)
+  & result ~ (ok (cost chosen))
+  & ok ~ ?((@alt_no @alt_yes) (tail (n_recur (es_next (best (cost out))))))
+  & chosen ~ *
+
+@alt_no = (tail (n (es (best (cost out)))))
+  & cost ~ *
+  & @alts ~ ((n (es (tail best))) out)
+
+@alt_yes = (* (tail (n (es (best (cost out))))))
+  & best ~ {best_keep best_cmp}
+  & cost ~ {cost_keep cost_cmp}
+  & cost_cmp ~ $([<] $(best_cmp less))
+  & less ~ ?((@alt_keep @alt_use) (tail (n (es (best_keep (cost_keep out))))))
+
+@alt_keep = (tail (n (es (best (cost out)))))
+  & cost ~ *
+  & @alts ~ ((n (es (tail best))) out)
+
+@alt_use = (* (tail (n (es (best (cost out))))))
+  & best ~ *
+  & @alts ~ ((n (es (tail cost))) out)

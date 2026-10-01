@@ -1,0 +1,44 @@
+// @prog counts distinct values by scanning a reconstructed list of
+// previously seen values for each input element.
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (count out)))) pl) (seen (count out)))
+
+@dc_nil = (* (seen (count count)))
+  & seen ~ *
+
+@dc_cons = (* ((h t) (seen (count out))))
+  & h ~ {hm hk}
+  & @mem ~ (hm (seen (found seen2)))
+  & found ~ ?((@dc_add @dc_skip) (t (hk (seen2 (count out)))))
+
+@dc_add = (t (h (seen (count out))))
+  & count ~ $([+1] count2)
+  & @dc ~ (t ((1 (h seen)) (count2 out)))
+
+@dc_skip = (* (t (h (seen (count out)))))
+  & h ~ *
+  & @dc ~ (t (seen (count out)))
+
+// Returns (found, reconstructed_seen).
+@mem = ((?((@mem_nil @mem_cons) (pl (h out))) pl) (h out))
+
+@mem_nil = (* (h out))
+  & h ~ *
+  & out ~ (0 (0 *))
+
+@mem_cons = (* ((x xs) (h out)))
+  & h ~ {hc hr}
+  & x ~ {xc xk}
+  & hc ~ $([=] $(xc eq))
+  & eq ~ ?((@mem_diff @mem_same) (xk (xs (hr out))))
+
+@mem_diff = (x (xs (h out)))
+  & @mem ~ (h (xs r))
+  & r ~ (b tail)
+  & out ~ (b (1 (x tail)))
+
+@mem_same = (* (x (xs (h out))))
+  & h ~ *
+  & out ~ (1 (1 (x xs)))

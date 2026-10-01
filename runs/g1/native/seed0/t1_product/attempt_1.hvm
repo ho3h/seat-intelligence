@@ -1,0 +1,11 @@
+// @prog takes the input list and starts the accumulator at 1.
+@prog = (l out)
+  & @prod ~ (l (1 out))
+
+@prod = ((?((@prod_nil @prod_cons) (pl (acc out))) pl) (acc out))
+
+@prod_nil = (* (a a))
+
+@prod_cons = (* ((h t) (acc out)))
+  & h ~ $([*] $(acc acc2))
+  & @prod ~ (t (acc2 out))

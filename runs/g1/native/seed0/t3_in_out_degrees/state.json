@@ -1,0 +1,70 @@
+{
+ "pid": "t3_in_out_degrees",
+ "arm": "native",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 34,
+    "itrs_median_big": null,
+    "itrs_max": 88,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": null,
+    "itrs_median_big": 183985,
+    "itrs_max": 546920,
+    "depth_median_big": 1658,
+    "depth_max": 3322
+   }
+  },
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 288,
+    "itrs_median_big": 202420,
+    "itrs_max": 601106,
+    "depth_median_big": 1663,
+    "depth_max": 3327
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 266,
+    "itrs_median_big": 184017,
+    "itrs_max": 549473,
+    "depth_median_big": 2077,
+    "depth_max": 3833
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 277960,
+ "best": {
+  "itrs_median_small": 266,
+  "itrs_median_big": 184017,
+  "itrs_max": 549473,
+  "depth_median_big": 2077,
+  "depth_max": 3833
+ },
+ "usd": 0.07052174,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

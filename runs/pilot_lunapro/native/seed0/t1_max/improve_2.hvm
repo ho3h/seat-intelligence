@@ -1,0 +1,23 @@
+// Recursively compute the tail maximum, then compare it with the head.
+@prog = (l out)
+  & @max ~ (l out)
+
+@max = ((?((@max_nil @max_cons) (pl out)) pl) out)
+
+@max_nil = (* out)
+  & out ~ 0
+
+@max_cons = (* ((h t) out))
+  & @max ~ (t m)
+  & h ~ {hv hc}
+  & m ~ {mv mc}
+  & hc ~ $([>] $(mc z))
+  & z ~ ?((@max_keep @max_take) (hv mv out))
+
+@max_keep = (hv (mv out))
+  & hv ~ *
+  & out ~ mv
+
+@max_take = (* (hv (mv out)))
+  & mv ~ *
+  & out ~ hv

@@ -1,0 +1,36 @@
+// Count distinct values by testing each head against the remainder.
+@prog = (input output)
+  & @dc ~ (input (0 output))
+
+@dc = ((?((@dc_nil @dc_cons) (p (acc out))) p) (acc out))
+
+@dc_nil = (* (a a))
+
+@dc_cons = (* ((h t) (acc out)))
+  & @mem ~ (h (t m))
+  & m ~ ?((@dc_absent @dc_present) (acc (t out)))
+
+@dc_absent = (acc (t out))
+  & acc ~ $([+] $(1 acc2))
+  & @dc ~ (t (acc2 out))
+
+@dc_present = (* (acc (t out)))
+  & @dc ~ (t (acc out))
+
+// @mem takes a target and a list, returning 1 if the target occurs.
+@mem = (h ((?((@mem_nil @mem_cons) (p (h out))) p) out))
+
+@mem_nil = (* (h 0))
+  & h ~ *
+
+@mem_cons = (* ((x xs) (h out)))
+  & h ~ {hc hr}
+  & x ~ $([=] $(hc z))
+  & z ~ ?((@mem_no @mem_yes) (hr (xs out)))
+
+@mem_no = (hr (xs out))
+  & @mem ~ (hr (xs out))
+
+@mem_yes = (* (hr (xs 1)))
+  & hr ~ *
+  & xs ~ *

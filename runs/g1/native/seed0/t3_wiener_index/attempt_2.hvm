@@ -1,0 +1,109 @@
+// Sum shortest-path distances from every source, then divide by two.
+
+@prog = ((n edges) out)
+  & @outer ~ (0 (n (edges (0 directed))))
+  & directed ~ $([/] $(2 out))
+
+@outer = (i (n (edges (total out))))
+  & i ~ {ic ix}
+  & n ~ {nc nx}
+  & ic ~ $([<] $(nc z))
+  & z ~ ?((@outer_end @outer_step) (ix (nx (edges (total out)))))
+
+@outer_end = (i (n (edges (total out))))
+  & i ~ *
+  & n ~ *
+  & edges ~ *
+  & out ~ total
+
+@outer_step = (* (i (n (edges (total out)))))
+  & edges ~ {eb er}
+  & i ~ {isource iinc}
+  & isource ~ {s1 s2}
+  & iinc ~ $([+1] nexti)
+  & @bfs ~ ((1 (s1 (0 *))) ((1 (s2 (0 *))) (0 (0 (eb dists)))))
+  & total ~ $([+] $(dists total2))
+  & @outer ~ (nexti (n (er (total2 out))))
+
+@bfs = ((?((@bfs_end @bfs_more) (p (seen (d (sum (edges out)))))) p) (seen (d (sum (edges out)))))
+
+@bfs_end = (p (seen (d (sum (edges out)))))
+  & p ~ *
+  & seen ~ *
+  & d ~ *
+  & edges ~ *
+  & out ~ sum
+
+@bfs_more = (* (p (seen (d (sum (edges out))))))
+  & edges ~ {escan enext}
+  & d ~ $([+1] d1)
+  & @scan ~ (escan ((1 p) (seen ((0 *) (d1 (sum scanres)))))
+  & scanres ~ (nf seen1 sum1)
+  & @bfs ~ (nf (seen1 (d1 (sum1 (enext out)))))
+
+@scan = ((?((@scan_end @scan_more) (p (front (seen (nf (d (sum out)))))) p) (front (seen (nf (d (sum out))))))
+
+@scan_end = (p (front (seen (nf (d (sum out))))))
+  & p ~ *
+  & front ~ *
+  & seen ~ *
+  & d ~ *
+  & out ~ (nf (seen sum))
+
+@scan_more = (* (((u v) tail) (front (seen (nf (d (sum out)))))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & front ~ {f1 frest}
+  & f1 ~ {fa fb}
+  & d ~ {dfirst drest}
+  & dfirst ~ {da db}
+  & @try ~ (v1 (u1 (fa (seen (nf (da (sum r1))))))
+  & r1 ~ (nf1 (seen1 sum1))
+  & @try ~ (u2 (v2 (fb (seen1 (nf1 (db (sum1 r2))))))
+  & r2 ~ (nf2 (seen2 sum2))
+  & @scan ~ (tail (frest (seen2 (nf2 (drest (sum2 out))))))
+
+@try = (c (t (front (seen (nf (d (sum out))))))
+  & @mem ~ (front (t hit))
+  & hit ~ ?((@try_skip @try_check) (c (seen (nf (d (sum out))))))
+
+@try_skip = (c (seen (nf (d (sum out)))))
+  & c ~ *
+  & d ~ *
+  & out ~ (nf (seen sum))
+
+@try_check = (* (c (seen (nf (d (sum out))))))
+  & c ~ {cm cc}
+  & seen ~ {sm sc}
+  & @mem ~ (sm (cm hit2))
+  & hit2 ~ ?((@try_add @try_already) (cc (sc (nf (d (sum out))))))
+
+@try_add = (* (c (seen (nf (d (sum out))))))
+  & c ~ {c1 c2}
+  & d ~ $([+] $(sum sum2))
+  & out ~ ((1 (c1 nf)) ((1 (c2 seen)) sum2))
+
+@try_already = (* (c (seen (nf (d (sum out))))))
+  & c ~ *
+  & d ~ *
+  & out ~ (nf (seen sum))
+
+@mem = ((?((@mem_end @mem_more) (p (x out))) p) (x out))
+
+@mem_end = (p (x out))
+  & p ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_more = (* ((h t) (x out)))
+  & x ~ {xc xx}
+  & h ~ $([=] $(xc z))
+  & z ~ ?((@mem_recur @mem_yes) (t (xx out)))
+
+@mem_recur = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (t (x out)))
+  & t ~ *
+  & x ~ *
+  & out ~ 1

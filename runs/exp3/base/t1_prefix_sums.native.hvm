@@ -1,0 +1,22 @@
+// Emit the first element directly, then scan the remaining list with an accumulator.
+@prog = (l out)
+  & @ps0 ~ (l out)
+
+@ps0 = ((?((@ps0_nil @ps0_cons) (pl out)) pl) out)
+
+@ps0_nil = (* (0 *))
+
+@ps0_cons = (* ((h t) out))
+  & h ~ {first carry}
+  & out ~ (1 (first rest))
+  & @ps ~ (t (carry rest))
+
+@ps = ((?((@ps_nil @ps_cons) (pl (acc out))) pl) (acc out))
+
+@ps_nil = (* (* (0 *)))
+
+@ps_cons = (* ((h t) (acc out)))
+  & acc ~ $([+] $(h sum))
+  & sum ~ {headacc nextacc}
+  & out ~ (1 (headacc rest))
+  & @ps ~ (t (nextacc rest))

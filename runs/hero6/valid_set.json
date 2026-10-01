@@ -1,0 +1,1502 @@
+[
+{
+"text": "1. Set the maximum section size to one.\n2. Dario Amodei nowhere near ServiceNow.",
+"gold": "size 1\navoid Dario_Amodei Service_Now",
+"kind": "named"
+},
+{
+"text": "Don't let Elif Abernathy near Fionnuala Halvorsen or Kupor.",
+"gold": "avoid Elif_Abernathy Fionnuala_Halvorsen\navoid Elif_Abernathy Scott_Kupor",
+"kind": "named"
+},
+{
+"text": "So government officials and the cybersecurity and software vendors, they can't share a section, okay; the President should be kept away from Altimeter and Thandiwe Tanaka.\nNo more than one from software firms in any one section. Lorenzo Sorensen should be kept apart from Soren Castellanos.",
+"gold": "limit software_security 1\napart software_security government\navoid POTUS Altimeter\navoid POTUS Thandiwe_Tanaka\navoid Lorenzo_Sorensen Soren_Castellanos",
+"kind": "named"
+},
+{
+"text": "Please note the following: Put the officials from government in sections that have no the foundation-model companies in them. And then, Guests of one company are to be seated together.",
+"gold": "together company\napart ai_lab government",
+"kind": "old"
+},
+{
+"text": "Please note that each section may hold a maximum of two attendees. Now, a small request: please keep the big tech companies and the semiconductor firms in different sections, never together. Plus, Reminder that teams from one company must remain together within one section.",
+"gold": "size 2\ntogether company\napart big_tech chips",
+"kind": "old"
+},
+{
+"text": "Per policy, section headcount must not exceed 3. Then, No two of software and cyber companies may share a section. Basically, if they're from the same company, keep 'em together.",
+"gold": "size 3\ntogether company\nlimit software_security 1",
+"kind": "old"
+},
+{
+"text": "The order of precedence at the table is the ministry and agency officials, then chip makers, followed by every other guest.\nThe seating shall not separate members of a single company into different sections.\nIt is required that no section exceed a capacity of 4 guests.",
+"gold": "size 4\ntogether company\norder government chips",
+"kind": "old"
+},
+{
+"text": "We are keeping our sections small: one guests at most in each. Lovely if each company's team stays together within a single section. I'd love a good mix, so at most 2 of the semiconductor makers, the investors or the public servants in each section, all added up.",
+"gold": "size 1\ntogether company\nlimit chips investor government 2",
+"kind": "old"
+},
+{
+"text": "Once upon a table,\n1. Do not mix the government officials and the folks from the AI labs in a single section.\n2. No section may have more than 2 guests.\n3. A section with both the software and security companies and the fund managers is not allowed.",
+"gold": "size 2\napart ai_lab government\napart software_security investor",
+"kind": "old"
+},
+{
+"text": "- Oh, and we do want each section to feel cosy, so no more than three guests in any of them.\n- Meta and Kalani Ekwueme in different sections.\n- Do keep people from the same company together in a section, it makes for such a lovely atmosphere.\n- I'd like the first sections reserved for the capital providers, then the processor and chip manufacturers, then companies that build AI models, in that order, with all remaining guests seated afterwards.",
+"gold": "size 3\ntogether company\norder investor chips ai_lab\navoid Meta Kalani_Ekwueme",
+"kind": "named"
+},
+{
+"text": "I'd like Dr. Su seated with Northwind Systems. That will be all.",
+"gold": "pair Lisa_Su Northwind_Systems",
+"kind": "named"
+},
+{
+"text": "- Group Emeka Sorensen with SpaceX.",
+"gold": "pair Emeka_Sorensen Elon_Musk",
+"kind": "named"
+},
+{
+"text": "Greta Rourke should be kept away from Scott Bessent and Ludmila Juarez. Moreover, No two of Amodei, Caspian Dubois or Florin Takahashi in the same section.",
+"gold": "avoid Greta_Rourke Secretary_Scott_Bessent\navoid Greta_Rourke Ludmila_Juarez\navoid Dario_Amodei Caspian_Dubois\navoid Dario_Amodei Florin_Takahashi\navoid Caspian_Dubois Florin_Takahashi",
+"kind": "named"
+},
+{
+"text": "Right, here is what I want: Policy: combined attendance of the giant technology companies is capped at one per section. Action item: cap every section at 4 guests. Best,",
+"gold": "size 4\nlimit big_tech 1",
+"kind": "old"
+},
+{
+"text": "1. Each section may include no more than 1 of funds and investors, combined.\n2. Note that government representatives and funds and investors cannot be placed in the same section.",
+"gold": "limit investor 1\napart investor government",
+"kind": "old"
+},
+{
+"text": "The seating plan must ensure that the big tech companies and software firms never share a section. The lowest-numbered sections shall be assigned to chip makers; every other guest shall be seated after. No section shall contain more than one of the capital providers, taken together. Under no circumstances shall government folks and the big-tech people occupy a common section.\nSections are limited to a maximum of two guests apiece. Each company's guests are to be kept together in one section.\nNo section shall contain more than two of Big Tech.",
+"gold": "size 2\ntogether company\nlimit big_tech 2\nlimit investor 1\napart big_tech software_security\napart big_tech government\norder chips",
+"kind": "old"
+},
+{
+"text": "Rules for the luncheon - Whatever you do, don't seat Altimeter next to Michael Kratsios, and also can you make sure no section has more than 2 of the cybersecurity and software houses and venture investors in total?\nWould you put the frontier AI companies and the government guests, in that order at the head of the table in that order, with everyone else after?",
+"gold": "limit software_security investor 2\norder ai_lab government\navoid Altimeter Michael_Kratsios",
+"kind": "named"
+},
+{
+"text": "Notes for the seating plan: I don't want Leilani Dasgupta and Speaker Johnson in one section.",
+"gold": "avoid Leilani_Dasgupta Speaker_Johnson",
+"kind": "named"
+},
+{
+"text": "No funds and investors in a section with software and cyber companies.",
+"gold": "apart software_security investor",
+"kind": "old"
+},
+{
+"text": "A section with more than 4 guests is not allowed. In addition, Nobody else goes before investors; seat them first, in that order, then everyone else. Don't separate guests who share a company.",
+"gold": "size 4\ntogether company\norder investor",
+"kind": "old"
+},
+{
+"text": "Exiger nowhere near Service Now, Susie Wiles and Anthropic.",
+"gold": "avoid Exiger Service_Now\navoid Exiger Susie_Wiles\navoid Exiger Anthropic",
+"kind": "named"
+},
+{
+"text": "Keep the Amazon people apart from Bogdan Bergstrom. Constraint: the software firms and security firms together, maximum two per section; Directive: colleagues from a single company are to share a section. Craft Ventures and Ingrid Gutierrez must all be kept away from Gulnara Radcliffe. Rule: the semiconductor firms and the frontier model developers may not share a section. Just keep it to two of the AI labs in any one section, thanks.",
+"gold": "together company\nlimit ai_lab 2\nlimit software_security 2\napart ai_lab chips\navoid Amazon Bogdan_Bergstrom\navoid Gulnara_Radcliffe Craft_Ventures\navoid Gulnara_Radcliffe Ingrid_Gutierrez",
+"kind": "named"
+},
+{
+"text": "Could we keep every section to 4 guests or fewer? Spread out the AI labs, big tech and the cybersecurity and software houses, singly. Can you keep the people from each firm together in a single section?",
+"gold": "size 4\ntogether company\nlimit ai_lab big_tech software_security 1",
+"kind": "old"
+},
+{
+"text": "Lovely if the LLM developers, the fund managers or the officials from government are never seated two to a section, just one apiece at most. Do spread makers of semiconductors and venture investors out a little, so that no section has more than 1 of them in total. Much obliged.",
+"gold": "limit ai_lab investor government 1\nlimit chips investor 1",
+"kind": "old"
+},
+{
+"text": "- Head of table = the government officials, in order; remaining guests after; Lars Zhou must not share a section with Bogdan Juarez, Sanjay Mehrotra or Wilhelmina Pereira.",
+"gold": "order government\navoid Lars_Zhou Bogdan_Juarez\navoid Lars_Zhou Sanjay_Mehrotra\navoid Lars_Zhou Wilhelmina_Pereira",
+"kind": "named"
+},
+{
+"text": "All attendees in the category the software and cybersecurity firms are to be seated in one section; Effective immediately, sections are limited to one guests each.\nThe head of the table is to be filled by officials, followed by the large platform companies, in order, before any other guests. Along with that, Kalani Winterbottom can't sit with Dario or Walters.",
+"gold": "size 1\ntogether software_security\norder government big_tech\navoid Kalani_Winterbottom Dario_Amodei\navoid Kalani_Winterbottom Richard_Walters",
+"kind": "named"
+},
+{
+"text": "- Section size cap: 2.\n- No section shall contain more than one of chip makers or the public servants, taken together.\n- no section containing both chip companies and the biggest tech platforms\n- Do not split companies across sections\n7. Head of table: the big tech companies (in that order), rest after\n- the frontier AI developers and Big Tech: separate sections",
+"gold": "size 2\ntogether company\nlimit chips government 1\napart ai_lab big_tech\napart big_tech chips\norder big_tech",
+"kind": "old"
+},
+{
+"text": "Requirements: Don't let Ulrich Lombardi near Winifred Bianchi.",
+"gold": "avoid Ulrich_Lombardi Winifred_Bianchi",
+"kind": "named"
+},
+{
+"text": "Okay, listen up: A company's guests may not be divided between sections. Do not mix the government officials and the security software companies in a single section. Equally, Do not place more than one of the capital providers together in one section, totalling across them. A section with more than 1 guests is not allowed.",
+"gold": "size 1\ntogether company\nlimit investor 1\napart software_security government",
+"kind": "old"
+},
+{
+"text": "1. Keep Gulnara Ugwu apart from Yevgenia Gr\u00fcnewald and Florin Yoshida.\n2. Two of the officials representing the government shall never share a stretch of table.\n3. Craft Ventures should sit with AMD.\n4. Two streams, AI companies and the chip companies, flow in separate sections and never mix.",
+"gold": "limit government 1\napart ai_lab chips\navoid Gulnara_Ugwu Yevgenia_Gr\u00fcnewald\navoid Gulnara_Ugwu Florin_Yoshida\npair Craft_Ventures AMD",
+"kind": "named"
+},
+{
+"text": "No more than two to a section, ever.\nThree of companies that make software or security products in one section is not allowed. Never split up a company. While we are at it, Do not allow more than two of the frontier AI companies in any section.",
+"gold": "size 2\ntogether company\nlimit ai_lab 2\nlimit software_security 2",
+"kind": "old"
+},
+{
+"text": "* Put Jeff Bezos alongside Ivory Systems and Amazon.",
+"gold": "pair Jeff_Bezos Ivory_Systems\npair Jeff_Bezos Amazon",
+"kind": "named"
+},
+{
+"text": "Ahead of tonight's dinner:\n- Make sure each section holds 1 or fewer of the big-tech people, the processor and chip manufacturers or the capital providers in total.\n- Place colleagues from each company in the same section.",
+"gold": "together company\nlimit big_tech chips investor 1",
+"kind": "old"
+},
+{
+"text": "1. Is it okay if we limit each section to two guests at most?\n1. Keep each company's guests together in a section",
+"gold": "size 2\ntogether company",
+"kind": "old"
+},
+{
+"text": "priority order: the cybersecurity and software vendors, followed by ai research labs.\n  (g) software and security firms and the large technology corporations must not share a section;",
+"gold": "apart big_tech software_security\norder software_security ai_lab",
+"kind": "old"
+},
+{
+"text": "For tonight: Max 5 per section. Palo Alto Networks should sit with Director Clayton.",
+"gold": "size 5\npair Palo_Alto_Networks Director_Clayton",
+"kind": "named"
+},
+{
+"text": "Seat Chiara Winterbottom with Jensen, and Small circles only: five guests at the most to each stretch of table.",
+"gold": "size 5\npair Chiara_Winterbottom Jensen_Huang",
+"kind": "named"
+},
+{
+"text": "Instructions for the seating assistant: Oh, and we do want each section to feel cosy, so no more than four guests in any of them.",
+"gold": "size 4",
+"kind": "old"
+},
+{
+"text": "Keep Saffron Research away from OpenAI. Palo Alto Networks should be kept apart from Halcyon Media, and Section size cap: 5, and (b) guests from the same company share a section; and Make sure Zuck is seated alongside Cairncross and never mix software firms and people from big tech. Thanks!",
+"gold": "size 5\ntogether company\napart big_tech software_security\navoid Saffron_Research OpenAI\navoid Palo_Alto_Networks Halcyon_Media\npair Mark_Zuckerberg Sean_Cairncross",
+"kind": "named"
+},
+{
+"text": "Keep Nnamdi Ivanova away from Arjun Cienfuegos, Jean-Luc Okonkwo and Juniper Networks.",
+"gold": "avoid Nnamdi_Ivanova Arjun_Cienfuegos\navoid Nnamdi_Ivanova Jean-Luc_Okonkwo\navoid Nnamdi_Ivanova Juniper_Networks",
+"kind": "named"
+},
+{
+"text": "1. Can Mireille Dasgupta sit with Marlow Logistics?\n2. Can you make sure no section has more than 2 of AI labs, the capital providers or people from government in total?",
+"gold": "limit ai_lab investor government 2\npair Mireille_Dasgupta Marlow_Logistics",
+"kind": "named"
+},
+{
+"text": "Okay, listen up: Honestly, don't cram more than 1 into any one section.\nColleagues should sit with each other, so don't split up a company across sections, okay?",
+"gold": "size 1\ntogether company",
+"kind": "old"
+},
+{
+"text": "Is it possible to have at most one of the big-tech people per section? That will be all.",
+"gold": "limit big_tech 1",
+"kind": "old"
+},
+{
+"text": "Dear planner, No section may have more than 3 guests.\nPlease give each section no more than one of the major technology platform companies, it keeps things nicely balanced. For a balanced table, each section may have up to 1 of software makers and cybersecurity providers or investors in total. Any of the companies that train frontier models are not to be seated in a section that also has any of large technology platform companies. - investors / government folks: never the same section",
+"gold": "size 3\nlimit big_tech 1\nlimit software_security investor 1\napart ai_lab big_tech\napart investor government",
+"kind": "old"
+},
+{
+"text": "1. Don't seat Sankar near Nikesh Arora.",
+"gold": "avoid Shyam_Sankar Nikesh_Arora",
+"kind": "named"
+},
+{
+"text": "Please seat no more than 3 guests in each section.\n* Max 1 of the big-tech people per section;\n- company members in one section",
+"gold": "size 3\ntogether company\nlimit big_tech 1",
+"kind": "old"
+},
+{
+"text": "Dear planner, Keep Satya away from Cairncross, Beatriz Takahashi and Hock Tan. Honestly, don't cram more than 6 into any one section, and Um, two max of the foundation-model companies in a section, adding them all up.",
+"gold": "limit ai_lab 2\navoid Satya_Nadella Sean_Cairncross\navoid Satya_Nadella Beatriz_Takahashi\navoid Satya_Nadella Hock_Tan",
+"kind": "named"
+},
+{
+"text": "- Let no company be torn asunder: its people belong in a single section.\n- Give the giant technology companies the first sections, with everybody else afterwards.\n- Should the government officials gather in a section, let their combined number never pass 1.\n- Keep Gerstner away from Vesna Moreau and Will Scharf.",
+"gold": "together company\nlimit government 1\norder big_tech\navoid Brad_Gerstner Vesna_Moreau\navoid Brad_Gerstner Will_Scharf",
+"kind": "named"
+},
+{
+"text": "Keep Isaacman with Palihapitiya. And then, Cap: five a section. While we are at it, Put Ursula Zapata and Ludmila Zhou together and don't let Arjun Bergstrom near them.",
+"gold": "size 5\npair Jared_Isaacman Chamath_Palihapitiya\npair Ursula_Zapata Ludmila_Zhou\navoid Arjun_Bergstrom Ursula_Zapata\navoid Arjun_Bergstrom Ludmila_Zhou",
+"kind": "named"
+},
+{
+"text": "Don't put Corvid Foundry and Altimeter in the same section. Besides, No two of Micron, Marisol Adeyemi or Xavier Novak in the same section.",
+"gold": "avoid Corvid_Foundry Altimeter\navoid Micron Marisol_Adeyemi\navoid Micron Xavier_Novak\navoid Marisol_Adeyemi Xavier_Novak",
+"kind": "named"
+},
+{
+"text": "* First sections: the venture capitalists, then the rest;, Greta Yilmaz nowhere near Micron; group anyone from Aster Partners, Hyun-woo Jankowski and Jiro Zaragoza. Moreover, - the giant technology companies / the fund managers: never the same section",
+"gold": "apart big_tech investor\norder investor\navoid Greta_Yilmaz Micron\npair Aster_Partners Hyun-woo_Jankowski\npair Aster_Partners Jiro_Zaragoza",
+"kind": "named"
+},
+{
+"text": "seating instructions: please arrange it so that the silicon people and people from big tech never share a section.",
+"gold": "apart big_tech chips",
+"kind": "old"
+},
+{
+"text": "Limit software and cybersecurity companies to one per section. Keep section sizes at four guests or fewer. Ensure no section contains more than 2 of chipmakers or the unlabelled guests combined. And Give the giant technology companies, then people from software and security companies the first sections, in that order, with everybody else afterwards. Equally, It is required that no company's delegation be divided across sections.",
+"gold": "size 4\ntogether company\nlimit chips unlabelled 2\nlimit software_security 1\norder big_tech software_security",
+"kind": "old"
+},
+{
+"text": "Please seat the investment firms, followed by makers of semiconductors first, at the head of the table, in that order, and then everyone else. Separate the Foxglove Partners people and Microsoft.",
+"gold": "order investor chips\navoid Foxglove_Partners Microsoft",
+"kind": "named"
+},
+{
+"text": "Put the civil servants in the first sections, in the order given, and everyone else after.",
+"gold": "order government",
+"kind": "old"
+},
+{
+"text": "Host's requirements: Precedence is to be observed such that the large tech platforms, then the semiconductor firms occupy the foremost sections, in that order, followed by all remaining guests. The number of guests assigned to any one section must not exceed 3. Over to you.",
+"gold": "size 3\norder big_tech chips",
+"kind": "old"
+},
+{
+"text": "Team, quick note on seating: Seat Scharf with Mateus Dunleavy.",
+"gold": "pair Will_Scharf Mateus_Dunleavy",
+"kind": "named"
+},
+{
+"text": "Seating rules for the gala: Keep Benedikt Whitfield together with Priya Szabo and Chiara Zhou.",
+"gold": "pair Benedikt_Whitfield Priya_Szabo\npair Benedikt_Whitfield Chiara_Zhou",
+"kind": "named"
+},
+{
+"text": "Please limit investors to 2 per section in total. Please ensure that no section includes both the capital providers and the cybersecurity and software houses.",
+"gold": "limit investor 2\napart software_security investor",
+"kind": "old"
+},
+{
+"text": "- No section shall contain more than three guests.\n- Same company: same section\n- (e) never two of the security software companies and public officials together;",
+"gold": "size 3\ntogether company\nlimit software_security government 1",
+"kind": "old"
+},
+{
+"text": "Yosef Uzoma, Stellan Zhou and Bartholomew Gallagher should all sit together.",
+"gold": "pair Yosef_Uzoma Stellan_Zhou\npair Yosef_Uzoma Bartholomew_Gallagher",
+"kind": "named"
+},
+{
+"text": "Would you mind capping sections at 4 guests? Can you make sure software and security companies and semiconductor companies never share a section?",
+"gold": "size 4\napart chips software_security",
+"kind": "old"
+},
+{
+"text": "Get the foundation-model companies first, then the cybersecurity and software houses and then the investors in first, in that order, and put everybody else after them; keep Social Capital away from Chairman Andrew Ferguson and from Vikram Eriksen.\nEvery section containing any of the capital providers must contain none of software makers and cybersecurity providers.",
+"gold": "apart software_security investor\norder ai_lab software_security investor\navoid Social_Capital Chairman_Andrew_Ferguson\navoid Social_Capital Vikram_Eriksen",
+"kind": "named"
+},
+{
+"text": "Let the seating begin: Give the government officials and the processor and chip manufacturers sections apart, never mingled. A mere 2 of the processor and chip manufacturers or the investment guests, together, may share a section, and no more.\nKeep each cluster of chairs to 2 guests or fewer, like a well-behaved constellation.",
+"gold": "size 2\nlimit chips investor 2\napart chips government",
+"kind": "old"
+},
+{
+"text": "1. (g) people from AI labs and the venture capital and fund guests must not share a section;\n2. (a) each section holds 3 guests at the most;",
+"gold": "size 3\napart ai_lab investor",
+"kind": "old"
+},
+{
+"text": "For the banquet: Don't break up the teams: same company means same section. So makers of semiconductors and the officials from government, they can't share a section, okay?\nWould it be possible to limit big tech to one per section combined?\nNot more than 1 persons belonging to semiconductor companies, considered as one group, may occupy any one section.",
+"gold": "together company\nlimit big_tech 1\nlimit chips 1\napart chips government",
+"kind": "old"
+},
+{
+"text": "Jared Isaacman should be kept away from Greta Abernathy. Also, the Craft Ventures guests, Nikesh Arora and Declan Yilmaz all in the same section.",
+"gold": "avoid Jared_Isaacman Greta_Abernathy\npair Craft_Ventures Nikesh_Arora\npair Craft_Ventures Declan_Yilmaz",
+"kind": "named"
+},
+{
+"text": "Here is what I want. Do not allow more than one of large technology platform companies in a section, counted as one group. On top of that, Do not mix venture capital firms and AI research labs in a single section. A section with more than 4 guests is not allowed. A section with both the big tech companies and the investors is not allowed. Go ahead.",
+"gold": "size 4\nlimit big_tech 1\napart ai_lab investor\napart big_tech investor",
+"kind": "old"
+},
+{
+"text": "Let the seating begin: Rania Umarov not with Vireo Dynamics. Dario + Ezra Esposito together. Done.",
+"gold": "avoid Rania_Umarov Vireo_Dynamics\npair Dario_Amodei Ezra_Esposito",
+"kind": "named"
+},
+{
+"text": "Host's rules: Never put companies that make software or security products and AI companies in the same section. No company may be spread over more than one section. Also, Don't seat two of the investing folks together.\nNever put the AI labs and the biggest tech platforms in one section.",
+"gold": "together company\nlimit investor 1\napart ai_lab big_tech\napart ai_lab software_security",
+"kind": "old"
+},
+{
+"text": "1. Each section holds up to two guests.\n2. Priority in seating is to be accorded to people from big tech, the remainder of the guests being placed after them.",
+"gold": "size 2\norder big_tech",
+"kind": "old"
+},
+{
+"text": "Separate Wren Lemaire and Declan Ishikawa.\nNo two of Wilhelmina Kuznetsov, everyone from Helix Dynamics or Scharf in the same section.",
+"gold": "avoid Wren_Lemaire Declan_Ishikawa\navoid Wilhelmina_Kuznetsov Helix_Dynamics\navoid Wilhelmina_Kuznetsov Will_Scharf\navoid Helix_Dynamics Will_Scharf",
+"kind": "named"
+},
+{
+"text": "No section may have more than 4 guests. Do not let the biggest tech platforms and venture capital firms share a section.\nNo section may hold more than two guests from the processor and chip manufacturers or funds and investors.",
+"gold": "size 4\nlimit chips investor 2\napart big_tech investor",
+"kind": "old"
+},
+{
+"text": "Guidelines for placement: Can Anthropic sit with Wilhelmina Kowalczyk?",
+"gold": "pair Anthropic Wilhelmina_Kowalczyk",
+"kind": "named"
+},
+{
+"text": "You know, people from one firm should stick together in a section. So the giant technology companies and the officials from government, they can't share a section, okay?\nHelix Group shouldn't sit with Greg Brockman.",
+"gold": "together company\napart big_tech government\navoid Helix_Group Greg_Brockman",
+"kind": "named"
+},
+{
+"text": "Seat Craft Ventures, the VP, Odette Ferreira and Dr. Su together.",
+"gold": "pair Craft_Ventures VPOTUS\npair Craft_Ventures Odette_Ferreira\npair Craft_Ventures Lisa_Su",
+"kind": "named"
+},
+{
+"text": "- Keep each company together.\n- Richard Walters, Altimeter's people and everyone from ServiceNow should all sit together.\n- Do put the semiconductor makers, then government representatives, then the venture capitalists first, at the head of the table and in that order, dear, and seat all the others after.",
+"gold": "together company\norder chips government investor\npair Richard_Walters Altimeter\npair Richard_Walters Service_Now",
+"kind": "named"
+},
+{
+"text": "- (a) each section holds 4 guests at the most;\n* Group: the mega-cap tech firms share a section;",
+"gold": "size 4\ntogether big_tech",
+"kind": "old"
+},
+{
+"text": "Hi there, All guests affiliated with a given company are to be placed in the same section. As well, The order of precedence at the table is major tech platforms, followed by every other guest.",
+"gold": "together company\norder big_tech",
+"kind": "old"
+},
+{
+"text": "Ezra Carvalho is not to be seated in the same section as Bessent. the cybersecurity and software houses and guests who have no printed company apart.\nColleagues sit together. Cap: four a section. No two of the mega-cap tech firms and government representatives in one section.\nDifferent sections: the software and security firms and companies that make chips.",
+"gold": "size 4\ntogether company\nlimit big_tech government 1\napart chips software_security\napart software_security unlabelled\navoid Ezra_Carvalho Secretary_Scott_Bessent",
+"kind": "named"
+},
+{
+"text": "Keep guests without an organisation away from the labs training large language models.\nKeep sections to two people or fewer. That will be all.",
+"gold": "size 2\napart ai_lab unlabelled",
+"kind": "old"
+},
+{
+"text": "Seat at most one of the frontier AI companies and the officials representing the government in each section. Set the maximum section size to three. Keep all guests of any company together in one section.\nLimit the cybersecurity and software vendors to two per section, treated as one group.\nPlease seat the software and cybersecurity firms and AI labs in different sections.",
+"gold": "size 3\ntogether company\nlimit ai_lab government 1\nlimit software_security 2\napart ai_lab software_security",
+"kind": "old"
+},
+{
+"text": "Guidelines for placement: Keep Ulrich Coltrane clear of Ferguson. - section cap = 4, - the government guests and the semiconductor makers: separate sections",
+"gold": "size 4\napart chips government\navoid Ulrich_Coltrane Chairman_Andrew_Ferguson",
+"kind": "named"
+},
+{
+"text": "The rules of the table:\n\u2022 Count the chip makers as a single tribe; each section may hold 1 of that tribe at most.\n\u2022 Please seat guests from the same company in the same section.\n\u2022 No other guests before the large tech platforms, and keep them in that order.",
+"gold": "together company\nlimit chips 1\norder big_tech",
+"kind": "old"
+},
+{
+"text": "Do not place the civil servants and semiconductor manufacturers in the same section. Do not place two of guests with no company printed in one section.",
+"gold": "limit unlabelled 1\napart chips government",
+"kind": "old"
+},
+{
+"text": "1) Please keep Northwind Analytics far from Meta.",
+"gold": "avoid Northwind_Analytics Meta",
+"kind": "named"
+},
+{
+"text": "Could we make sure no two of the AI model builders sit in the same section, and group by company: everyone from a company goes into one section; Oluwaseun Xiong sits with Cobalt Semiconductor. End of rules.",
+"gold": "together company\nlimit ai_lab 1\npair Oluwaseun_Xiong Cobalt_Semiconductor",
+"kind": "named"
+},
+{
+"text": "Do not place other guests in front of the software and cyber-security guests > AI labs > the biggest tech platforms; those come first, in the order given.\nGroup Winifred Underhill, Bartholomew Hartmann and Will Scharf.",
+"gold": "order software_security ai_lab big_tech\npair Winifred_Underhill Bartholomew_Hartmann\npair Winifred_Underhill Will_Scharf",
+"kind": "named"
+},
+{
+"text": "- combined cap on investors: one per section\n2. (h) chip makers first, in the order listed, then the remaining guests;",
+"gold": "limit investor 1\norder chips",
+"kind": "old"
+},
+{
+"text": "Don't let Arjun Whitlock near Orla O'Sullivan, Kalani Vukovic or Wiles. Each section holds up to five guests, and Seating priority shall be as follows: investors, in the sequence listed, with all other guests to follow; whoever is from Silverline Semiconductor + Scott Bessent together.",
+"gold": "size 5\norder investor\navoid Arjun_Whitlock Orla_O'Sullivan\navoid Arjun_Whitlock Kalani_Vukovic\navoid Arjun_Whitlock Susie_Wiles\npair Silverline_Semiconductor Secretary_Scott_Bessent",
+"kind": "named"
+},
+{
+"text": "Here's the brief:\n\u2022 Never put the processor and chip manufacturers and the companies that train frontier models in the same section.\n\u2022 Tamar Kuznetsov should be kept away from Gerstner and Altimeter.",
+"gold": "apart ai_lab chips\navoid Tamar_Kuznetsov Brad_Gerstner\navoid Tamar_Kuznetsov Altimeter",
+"kind": "named"
+},
+{
+"text": "- Please seat the investment firms at the head of the table in the order specified, with remaining attendees afterwards.\n- Section capacity is capped at 4 guests.\n- Note that the big tech companies and the AI lab people cannot be placed in the same section.\n- Reminder that teams from one company must remain together within one section.",
+"gold": "size 4\ntogether company\napart ai_lab big_tech\norder investor",
+"kind": "old"
+},
+{
+"text": "Separate Craft Ventures from Cairncross.",
+"gold": "avoid Craft_Ventures Sean_Cairncross",
+"kind": "named"
+},
+{
+"text": "Brandon Rahbar Daniels should sit with Orla Beaumont. While we are at it, Avoid seating Amazon with David Sacks.",
+"gold": "pair Brandon_Rahbar_Daniels Orla_Beaumont\navoid Amazon David_Sacks",
+"kind": "named"
+},
+{
+"text": "Don't let Tom Brown near Hock Tan, Xavier Juarez or Anouk Oduya.\nLet's cap every section at 5.\nGet the AI labs first, then venture capital firms in first, in that order, and put everybody else after them.",
+"gold": "size 5\norder ai_lab investor\navoid Tom_Brown Hock_Tan\navoid Tom_Brown Xavier_Juarez\navoid Tom_Brown Anouk_Oduya",
+"kind": "named"
+},
+{
+"text": "- Place colleagues from each company in the same section.\n- Cap the combined number of the mega-cap tech firms at two per section.\n- Ensure that no section contains more than 2 guests.\n- Put Jensen, Amodei and Nikesh Arora in the same section.\n- Order the table so that investors come first, followed by all other guests.\n- Copperleaf Group should be kept away from Bramble Security and Greg Brockman.",
+"gold": "size 2\ntogether company\nlimit big_tech 2\norder investor\npair Jensen_Huang Dario_Amodei\npair Jensen_Huang Nikesh_Arora\navoid Copperleaf_Group Bramble_Security\navoid Copperleaf_Group Greg_Brockman",
+"kind": "named"
+},
+{
+"text": "Just don't put more than three of large tech corporations and the software and security companies in the same section, okay? You know, people from one firm should stick together in a section.",
+"gold": "together company\nlimit big_tech software_security 3",
+"kind": "old"
+},
+{
+"text": "Keep sections to one people or fewer. And, Put the big technology platforms in sections that have no the guests with nothing printed under their name in them. Chamath, Social Capital and Nadia Bergstrom should all sit together.",
+"gold": "size 1\napart big_tech unlabelled\npair Chamath_Palihapitiya Social_Capital\npair Chamath_Palihapitiya Nadia_Bergstrom",
+"kind": "named"
+},
+{
+"text": "* the Nimbusscale people and Lorenzo Yilmaz in different sections.\n* Limit: three of the people from investment funds per section.\n* Keep Scharf, Karp and whoever is from Kindling Dynamics in one section.\n* It is required that government representatives and the silicon people not be seated in the same section.\n* Max one of public officials per section.",
+"gold": "limit investor 3\nlimit government 1\napart chips government\navoid Nimbusscale Lorenzo_Yilmaz\npair Will_Scharf Alex_Karp\npair Will_Scharf Kindling_Dynamics",
+"kind": "named"
+},
+{
+"text": "Make sure Beatriz Hartmann isn't seated with everyone from Quillon Labs.",
+"gold": "avoid Beatriz_Hartmann Quillon_Labs",
+"kind": "named"
+},
+{
+"text": "So, about the seating: Ensure no section contains more than 1 of the people from investment funds combined. Then, Kwame Gallagher, VPOTUS and Sacks together. In addition, Place colleagues from each company in the same section.\nPlease seat no more than 5 guests in each section.",
+"gold": "size 5\ntogether company\nlimit investor 1\npair Kwame_Gallagher VPOTUS\npair Kwame_Gallagher David_Sacks",
+"kind": "named"
+},
+{
+"text": "Craft Ventures goes nowhere near the Lattice Partners guests. Split up Director Clayton and Tom Brown, and please keep Dilnoza Xiong far from Jasper Quarshie.",
+"gold": "avoid Craft_Ventures Lattice_Partners\navoid Director_Clayton Tom_Brown\navoid Dilnoza_Xiong Jasper_Quarshie",
+"kind": "named"
+},
+{
+"text": "Good morning, Seat people with no listed organisation shoulder to shoulder in the same section.",
+"gold": "together unlabelled",
+"kind": "old"
+},
+{
+"text": "Just keep the labs training large language models away from the software and security companies, different sections please. So the investor guests and the government reps, they can't share a section, okay?",
+"gold": "apart ai_lab software_security\napart investor government",
+"kind": "old"
+},
+{
+"text": "NASA shouldn't sit with Director Clayton or whoever is from Google.",
+"gold": "avoid NASA Director_Clayton\navoid NASA Google",
+"kind": "named"
+},
+{
+"text": "Put Kwame Stavros and Grigori Fontaine together and don't let Micron near them. Off you go.",
+"gold": "pair Kwame_Stavros Grigori_Fontaine\navoid Micron Kwame_Stavros\navoid Micron Grigori_Fontaine",
+"kind": "named"
+},
+{
+"text": "Like a sonnet with a strict line count, no section runs past 4 guests. A mere 3 of companies that build AI models and the major technology platform companies, together, may share a section, and no more. At the head of the long table: the big-tech people, in sequence; then all who remain.",
+"gold": "size 4\nlimit ai_lab big_tech 3\norder big_tech",
+"kind": "old"
+},
+{
+"text": "\u2022 Please cap public officials at one per section.\n\u2022 Reminder that teams from one company must remain together within one section.\n\u2022 Rule: the semiconductor industry guests and the investors may not share a section.\n\u2022 Headcount per section: five maximum.",
+"gold": "size 5\ntogether company\nlimit government 1\napart chips investor",
+"kind": "old"
+},
+{
+"text": "Make sure Bessent is seated alongside Benedikt Gutierrez. Never two of people from big tech or the semiconductor firms in a section; Hollis Gallagher nowhere near Yellowfin Networks and Redwood Energy.\nSplit cybersecurity companies from the LLM developers. - section cap = 5 Sincerely,",
+"gold": "size 5\nlimit big_tech chips 1\napart ai_lab software_security\npair Secretary_Scott_Bessent Benedikt_Gutierrez\navoid Hollis_Gallagher Yellowfin_Networks\navoid Hollis_Gallagher Redwood_Energy",
+"kind": "named"
+},
+{
+"text": "Just keep every section to 3 people or fewer, yeah? I don't want more than one of software and cyber companies in any one section, all counted together.",
+"gold": "size 3\nlimit software_security 1",
+"kind": "old"
+},
+{
+"text": "Seating instructions: Nnamdi Pastore and Micron shouldn't sit together.",
+"gold": "avoid Nnamdi_Pastore Micron",
+"kind": "named"
+},
+{
+"text": "Please seat Hamid Halvorsen and Bartholomew Dimitriou together.",
+"gold": "pair Hamid_Halvorsen Bartholomew_Dimitriou",
+"kind": "named"
+},
+{
+"text": "Kalani Dubois shouldn't sit with Dario Amodei or Sankar. Is it okay if we limit each section to three guests at most?",
+"gold": "size 3\navoid Kalani_Dubois Dario_Amodei\navoid Kalani_Dubois Shyam_Sankar",
+"kind": "named"
+},
+{
+"text": "So, about the seating: A section with both AI lab guests and the software and cybersecurity firms is not allowed. Plus, No section may have more than 4 guests. Director Clayton can't sit with Ingrid Novak or Palantir. No section with both Aiko Carvalho and Arjun Vasquez.",
+"gold": "size 4\napart ai_lab software_security\navoid Director_Clayton Ingrid_Novak\navoid Director_Clayton Palantir\navoid Aiko_Carvalho Arjun_Vasquez",
+"kind": "named"
+},
+{
+"text": "Oluwaseun Mwangi should be kept apart from NASA.",
+"gold": "avoid Oluwaseun_Mwangi NASA",
+"kind": "named"
+},
+{
+"text": "keep the fund managers and the chip makers in separate sections.",
+"gold": "apart chips investor",
+"kind": "old"
+},
+{
+"text": "- (a) each section holds 4 guests at the most;\n- No one else may take the head of the table before AI research labs.\n- Colleagues must not be put in different sections.\n- Can you keep Imogen Eklund away from Fionnuala Blackwood?\n- Separate Marlow Foundry from Kestrel Dynamics.\n- Don't seat the investment firms with the large platform companies in any section.",
+"gold": "size 4\ntogether company\napart big_tech investor\norder ai_lab\navoid Imogen_Eklund Fionnuala_Blackwood\navoid Marlow_Foundry Kestrel_Dynamics",
+"kind": "named"
+},
+{
+"text": "Each section holds up to four guests.",
+"gold": "size 4",
+"kind": "old"
+},
+{
+"text": "More than 1 of people from big tech or the government guests in a section is not allowed, counting them together.\nNo section may hold a third one of the large technology corporations.",
+"gold": "limit big_tech 2\nlimit big_tech government 1",
+"kind": "old"
+},
+{
+"text": "Dear planner, Avoid seating Palo Alto Networks with Jiro Szabo.",
+"gold": "avoid Palo_Alto_Networks Jiro_Szabo",
+"kind": "named"
+},
+{
+"text": "Right then: Never seat Sankar with Bill McDermott.",
+"gold": "avoid Shyam_Sankar Bill_McDermott",
+"kind": "named"
+},
+{
+"text": "Keep Altimeter's people away from Lodestar Energy and from NASA.",
+"gold": "avoid Altimeter Lodestar_Energy\navoid Altimeter NASA",
+"kind": "named"
+},
+{
+"text": "Seating policy:\n1. Max four guests per section\n* Keep the cybersecurity and software vendors apart from the investors;",
+"gold": "size 4\napart software_security investor",
+"kind": "old"
+},
+{
+"text": "Meta, Foxglove Logistics and Clayton should all be in different sections; make sure Zuck isn't seated with Kratsios.",
+"gold": "avoid Meta Foxglove_Logistics\navoid Meta Director_Clayton\navoid Foxglove_Logistics Director_Clayton\navoid Mark_Zuckerberg Michael_Kratsios",
+"kind": "named"
+},
+{
+"text": "Keep the investors and the officials representing the government in separate sections, and keep the Opaline Labs guests away from Altimeter and Rosalind Lombardi.",
+"gold": "apart investor government\navoid Opaline_Labs Altimeter\navoid Opaline_Labs Rosalind_Lombardi",
+"kind": "named"
+},
+{
+"text": "Now, a small request: please keep the chip folks and the large tech platforms in different sections, never together. The top sections should go to the mega-cap tech firms, then the software and security companies, then venture investors, in the order I've listed, and then we welcome everybody else. Please confirm.",
+"gold": "apart big_tech chips\norder big_tech software_security investor",
+"kind": "old"
+},
+{
+"text": "Keep Grigori Eriksen and Lorenzo Juarez together, and no Dr. Su near Rosalind Abernathy.",
+"gold": "pair Grigori_Eriksen Lorenzo_Juarez\navoid Lisa_Su Rosalind_Abernathy",
+"kind": "named"
+},
+{
+"text": "don't put more than 3 of the investing folks into any section in total. no one else may take the head of the table before the government guests.",
+"gold": "limit investor 3\norder government",
+"kind": "old"
+},
+{
+"text": "Host's requirements: Could we keep chipmakers and the venture capitalists in separate sections; keep Brad Gerstner, Chiara Mbeki and Nadella apart from each other; no VPOTUS near Kratsios, and also can you make sure government officials and software and cyber companies never share a section? Don't let the Polaris Semiconductor people near Anouk Pham, Silverline Dynamics or Leilani Rinaldi. Never put two of the mega-cap tech firms or the officials from government in the same section.",
+"gold": "limit big_tech government 1\napart chips investor\napart software_security government\navoid Brad_Gerstner Chiara_Mbeki\navoid Brad_Gerstner Satya_Nadella\navoid Chiara_Mbeki Satya_Nadella\navoid VPOTUS Michael_Kratsios\navoid Polaris_Semiconductor Anouk_Pham\navoid Polaris_Semiconductor Silverline_Dynamics\navoid Polaris_Semiconductor Leilani_Rinaldi",
+"kind": "named"
+},
+{
+"text": "Bezos away from Rashida Holloway.",
+"gold": "avoid Jeff_Bezos Rashida_Holloway",
+"kind": "named"
+},
+{
+"text": "Put Elif Kirkpatrick, Glasswing Logistics and the President in the same section, and never put the people from investment funds and the officials representing the government in one section. Two or more of the semiconductor makers in one section is not allowed.",
+"gold": "limit chips 1\napart investor government\npair Elif_Kirkpatrick Glasswing_Logistics\npair Elif_Kirkpatrick POTUS",
+"kind": "named"
+},
+{
+"text": "Keep Hock Tan and Siddharth Beaumont apart.",
+"gold": "avoid Hock_Tan Siddharth_Beaumont",
+"kind": "named"
+},
+{
+"text": "1. Keep each company's guests together in a section\n  (d) no section has more than 1 of the labs training large language models and the silicon people altogether;",
+"gold": "together company\nlimit ai_lab chips 1",
+"kind": "old"
+},
+{
+"text": "Requirements: Max 3 of tech giants and the fund managers per section.\nCap: three a section.",
+"gold": "size 3\nlimit big_tech investor 3",
+"kind": "old"
+},
+{
+"text": "Notes for the seating plan: Keep section sizes at four guests or fewer. Ensure every section contains one of big tech at most.",
+"gold": "size 4\nlimit big_tech 1",
+"kind": "old"
+},
+{
+"text": "Keep the Pioneer Media people away from the VP and from Altimeter.\nMcDermott with Declan Halvorsen, but Xavier Dunleavy away from them.",
+"gold": "avoid Pioneer_Media VPOTUS\navoid Pioneer_Media Altimeter\npair Bill_McDermott Declan_Halvorsen\navoid Xavier_Dunleavy Bill_McDermott\navoid Xavier_Dunleavy Declan_Halvorsen",
+"kind": "named"
+},
+{
+"text": "Seat Pradeep Yoshida in the same section as Arora.",
+"gold": "pair Pradeep_Yoshida Nikesh_Arora",
+"kind": "named"
+},
+{
+"text": "One of the AI labs or semiconductor companies in each section at most, I mean it. Just don't put more than two of AI lab guests in the same section, okay? Meanwhile, Honestly I want every one of the civil servants within the same section. Per policy, section headcount must not exceed 2. Put the software firms and security firms in different sections from the people from investment funds, I want them separate.\nSo the government officials and the people from the chip companies, they can't share a section, okay?",
+"gold": "size 2\ntogether government\nlimit ai_lab 2\nlimit ai_lab chips 1\napart chips government\napart software_security investor",
+"kind": "old"
+},
+{
+"text": "Avoid seating Karp with Greg Brockman, and Darling, sections shouldn't go above 3 guests, it keeps the conversation flowing.",
+"gold": "size 3\navoid Alex_Karp Greg_Brockman",
+"kind": "named"
+},
+{
+"text": "Make sure no section contains both the officials from government and the big technology platforms. Appreciate it.",
+"gold": "apart big_tech government",
+"kind": "old"
+},
+{
+"text": "Group Zanele Jaramillo, Altimeter's people and Arora.\nPlease seat Kratsios and Google together; Broadcom nowhere near Zofia Coltrane, Mehrotra and Altimeter.",
+"gold": "pair Zanele_Jaramillo Altimeter\npair Zanele_Jaramillo Nikesh_Arora\npair Michael_Kratsios Google\navoid Broadcom Zofia_Coltrane\navoid Broadcom Sanjay_Mehrotra\navoid Broadcom Altimeter",
+"kind": "named"
+},
+{
+"text": "Please ensure company groups are not split across sections, and Each section may include a maximum of one of the big tech companies.\nPlease keep Sanjay Mehrotra far from Delphine Moreau. As well, I don't want Brigid Dunleavy and Amazon in one section.",
+"gold": "together company\nlimit big_tech 1\navoid Sanjay_Mehrotra Delphine_Moreau\navoid Brigid_Dunleavy Amazon",
+"kind": "named"
+},
+{
+"text": "The rules of the table: At most three of the processor and chip manufacturers to a section; Max 2 per section; i'd like Umberto Whitlock seated with Emeka Jovanovic. At the same time, Seat Emeka Fairbanks, Director Clayton and Tamar Fairbanks together.\nColleagues together.",
+"gold": "size 2\ntogether company\nlimit chips 3\npair Umberto_Whitlock Emeka_Jovanovic\npair Emeka_Fairbanks Director_Clayton\npair Emeka_Fairbanks Tamar_Fairbanks",
+"kind": "named"
+},
+{
+"text": "Please seat the guests according to these rules: 3. At most three of the silicon makers or the cybersecurity and software vendors in each section, counted together; 6. Never place the people from the chip companies in a section with the frontier AI companies; (g) the security software companies and the investors must not share a section;. - Seat the large platform companies first, then everyone else; - do not split up the software firms and security firms and whoever is from Vantage Health, Amazon and Zephyr Labs together.",
+"gold": "together software_security\nlimit chips software_security 3\napart ai_lab chips\napart software_security investor\norder big_tech\npair Vantage_Health Amazon\npair Vantage_Health Zephyr_Labs",
+"kind": "named"
+},
+{
+"text": "We are keeping our sections small: three guests at most in each. Cheers.",
+"gold": "size 3",
+"kind": "old"
+},
+{
+"text": "Keep the Zenith Security people away from Ferguson. And Note that the frontier AI companies count toward one shared limit of 1 per section. Order of placement: government folks first, then the artificial intelligence labs and then the capital providers, then everyone else.\nGroup by company: everyone from a company goes into one section.",
+"gold": "together company\nlimit ai_lab 1\norder government ai_lab investor\navoid Zenith_Security Chairman_Andrew_Ferguson",
+"kind": "named"
+},
+{
+"text": "Limit cybersecurity companies to two per section. Limit AI labs or the officials from government to three per section, treated as one group.\nKeep all guests of any company together in one section. Sincerely,",
+"gold": "together company\nlimit ai_lab government 3\nlimit software_security 2",
+"kind": "old"
+},
+{
+"text": "Could we keep guests from the same company in the same section? Can we say 3 of people from software and security companies max in any section, added together?",
+"gold": "together company\nlimit software_security 3",
+"kind": "old"
+},
+{
+"text": "Ilse Rasmussen, Hollis Bergstrom and everyone from Vantage Systems should all be in different sections.",
+"gold": "avoid Ilse_Rasmussen Hollis_Bergstrom\navoid Ilse_Rasmussen Vantage_Systems\navoid Hollis_Bergstrom Vantage_Systems",
+"kind": "named"
+},
+{
+"text": "1) No section may include both the investment firms and large tech corporations.\n2) Scott Bessent and Dagny Ivanova in different sections.\n3) No section may hold over 5 people.",
+"gold": "size 5\napart big_tech investor\navoid Secretary_Scott_Bessent Dagny_Ivanova",
+"kind": "named"
+},
+{
+"text": "Keep the Jetstream Networks folks apart from NASA and Wilhelmina Novak. No Bezos, Yellowfin Inc or Ignatius Vasquez anywhere near Ezra Eklund.",
+"gold": "avoid Jetstream_Networks NASA\navoid Jetstream_Networks Wilhelmina_Novak\navoid Ezra_Eklund Jeff_Bezos\navoid Ezra_Eklund Yellowfin_Inc\navoid Ezra_Eklund Ignatius_Vasquez",
+"kind": "named"
+},
+{
+"text": "No Hollis Lachance near Cosima Fitzgerald-Ruiz.",
+"gold": "avoid Hollis_Lachance Cosima_Fitzgerald-Ruiz",
+"kind": "named"
+},
+{
+"text": "\u2022 Like a sonnet with a strict line count, no section runs past 2 guests.\n\u2022 No Jensen Huang anywhere near Microsoft's people.",
+"gold": "size 2\navoid Microsoft Jensen_Huang",
+"kind": "named"
+},
+{
+"text": "Halcyon Robotics away from Broadcom.",
+"gold": "avoid Halcyon_Robotics Broadcom",
+"kind": "named"
+},
+{
+"text": "Please seat the guests according to these rules: One of big tech firms and investors per section at the most, dear, so everyone gets a good mix of neighbours.",
+"gold": "limit big_tech investor 1",
+"kind": "old"
+},
+{
+"text": "Lorenzo Beaumont goes nowhere near Rashida Zhou, and People from the same company go in the same section. Group Jetstream Security with Priya Chowdhury. Many thanks in advance.",
+"gold": "together company\navoid Lorenzo_Beaumont Rashida_Zhou\npair Jetstream_Security Priya_Chowdhury",
+"kind": "named"
+},
+{
+"text": "Make sure Nikolai Okonkwo isn't seated with Isaacman. First come AI research companies first, then the chip makers, in that order, at the top of the table; the rest may trail after.",
+"gold": "order ai_lab chips\navoid Nikolai_Okonkwo Jared_Isaacman",
+"kind": "named"
+},
+{
+"text": "Meta and anyone from Anthropic must never share a section; can colleagues from one company all sit together in a section, and First come the processor and chip manufacturers > the foundation-model companies > the officials representing the government, in that order, at the top of the table; the rest may trail after.",
+"gold": "together company\norder chips ai_lab government\navoid Meta Anthropic",
+"kind": "named"
+},
+{
+"text": "Here goes: Put government folks in different sections from the companies that manufacture semiconductors, I want them separate.\nI want the investing folks, followed by the public servants up at the top of the table first, in that order, and then everybody else after.\nTom Brown nowhere near Rania Jovanovic and whoever is from Zenith Group. Jeff Bezos, Cascadeio and Alex Karp all in the same section.",
+"gold": "apart chips government\norder investor government\navoid Tom_Brown Rania_Jovanovic\navoid Tom_Brown Zenith_Group\npair Jeff_Bezos Cascadeio\npair Jeff_Bezos Alex_Karp",
+"kind": "named"
+},
+{
+"text": "Seating brief - Put Sean Cairncross and Hamid Petrov together and don't let Michael Kratsios near them.",
+"gold": "pair Sean_Cairncross Hamid_Petrov\navoid Michael_Kratsios Sean_Cairncross\navoid Michael_Kratsios Hamid_Petrov",
+"kind": "named"
+},
+{
+"text": "Members of the seating committee, Between the large technology corporations and AI labs let there always be a section boundary. Clayton should be kept apart from Halcyon. End of rules.",
+"gold": "apart ai_lab big_tech\navoid Director_Clayton Halcyon",
+"kind": "named"
+},
+{
+"text": "Each section may include a maximum of one of makers of semiconductors and the investors. Per policy, section headcount must not exceed 5. Give investors and the labs training large language models sections apart, never mingled.",
+"gold": "size 5\nlimit chips investor 1\napart ai_lab investor",
+"kind": "old"
+},
+{
+"text": "Some house rules: A section with both the investing folks and the officials from government is not allowed. Never put frontier AI labs and the software and security firms in one section. No more than five to a section, ever.",
+"gold": "size 5\napart ai_lab software_security\napart investor government",
+"kind": "old"
+},
+{
+"text": "* (c) every one of software makers and cybersecurity providers seated in one section;\n* (d) no section has more than 3 of government officials altogether;\n* Colleagues stay together;",
+"gold": "together company\ntogether software_security\nlimit government 3",
+"kind": "old"
+},
+{
+"text": "Quick one: Basically, if they're from the same company, keep 'em together.\nLet's say 4 max per section, I don't want it too crowded.",
+"gold": "size 4\ntogether company",
+"kind": "old"
+},
+{
+"text": "anyone from Altimeter must all be kept away from Verdant Analytics.",
+"gold": "avoid Verdant_Analytics Altimeter",
+"kind": "named"
+},
+{
+"text": "Where a company goes, its guests gather in one section. Like a sonnet with a strict line count, no section runs past 4 guests. No pairs, no crowds: never a second one of big tech guests or software and security firms in any section.",
+"gold": "size 4\ntogether company\nlimit big_tech software_security 1",
+"kind": "old"
+},
+{
+"text": "Guidelines for placement: No more than 2 of the frontier AI companies or funds and investors in a section, total, and Tom Brown nowhere near Scharf.",
+"gold": "limit ai_lab investor 2\navoid Tom_Brown Will_Scharf",
+"kind": "named"
+},
+{
+"text": "Cap big tech or the processor and chip manufacturers at two per section.\nSeparate the people from investment funds from officials. Make sure no section contains both software and cyber companies and the government officials. And Group by company: everyone from a company goes into one section.",
+"gold": "together company\nlimit big_tech chips 2\napart software_security government\napart investor government",
+"kind": "old"
+},
+{
+"text": "Hello lovely, Could we seat the security software companies first, at the head of the table, and then everyone else? Is it okay if we limit each section to five guests at most?\nCan we say 2 of AI labs max in any section, added together? Over to you.",
+"gold": "size 5\nlimit ai_lab 2\norder software_security",
+"kind": "old"
+},
+{
+"text": "- Harbor Media, Oluwaseun Dimitriou and Palo Alto Networks together.",
+"gold": "pair Harbor_Media Oluwaseun_Dimitriou\npair Harbor_Media Palo_Alto_Networks",
+"kind": "named"
+},
+{
+"text": "- combined cap on the giant technology companies: two per section\n* Keep tech giants apart from the software and security vendors;\n- Same company: same section\n- at most a single one of public officials in each section",
+"gold": "together company\nlimit big_tech 2\nlimit government 1\napart big_tech software_security",
+"kind": "old"
+},
+{
+"text": "- Please seat no more than 4 guests in each section.\n- Put Arora and Cairncross together and don't let Brightwave Health near them.\n- Please seat at most 2 of the frontier AI developers in any section, counting them together.\n- Ensure every section contains one of the fund managers at most.\n- Palo Alto Networks goes nowhere near POTUS. Enjoy the evening!",
+"gold": "size 4\nlimit ai_lab 2\nlimit investor 1\npair Nikesh_Arora Sean_Cairncross\navoid Brightwave_Health Nikesh_Arora\navoid Brightwave_Health Sean_Cairncross\navoid Palo_Alto_Networks POTUS",
+"kind": "named"
+},
+{
+"text": "Please ensure that no section includes both the LLM developers and the government officials. I'd like Nadia Eriksen seated with Zanele Pereira; Headcount per section: four maximum.",
+"gold": "size 4\napart ai_lab government\npair Nadia_Eriksen Zanele_Pereira",
+"kind": "named"
+},
+{
+"text": "For each section, the total number of the LLM developers must be two or fewer.\nGroup Orla Ekwueme, Vikram Nordin, Zenith Logistics and Musk. Over to you.",
+"gold": "limit ai_lab 2\npair Orla_Ekwueme Vikram_Nordin\npair Orla_Ekwueme Zenith_Logistics\npair Orla_Ekwueme Elon_Musk",
+"kind": "named"
+},
+{
+"text": "Just keep investors away from the giant technology companies, different sections please.",
+"gold": "apart big_tech investor",
+"kind": "old"
+},
+{
+"text": "Wren Oyelaran should be kept apart from Amazon.",
+"gold": "avoid Wren_Oyelaran Amazon",
+"kind": "named"
+},
+{
+"text": "Split up Speaker Johnson and Cascade. 8. Head of table: semiconductor companies; all others after. Same company, same section and make sure Hollis Dimitriou, NASA and Lars Wexler share a section; Vesna Dunleavy, Google and Lodestar Inc together.",
+"gold": "together company\norder chips\navoid Speaker_Johnson Cascade\npair Hollis_Dimitriou NASA\npair Hollis_Dimitriou Lars_Wexler\npair Vesna_Dunleavy Google\npair Vesna_Dunleavy Lodestar_Inc",
+"kind": "named"
+},
+{
+"text": "A gentle but firm rule: funds and investors and big tech guests must be kept in different sections. Could you place the large tech platforms first, in sequence, and the remaining guests after them, and Do keep people from the same company together in a section, it makes for such a lovely atmosphere; keep Grigori Gallagher, Granite Robotics and Elif MacAllister in one section, and One of the foundation-model companies per section at the most, dear, so everyone gets a good mix of neighbours; Just keep the cybersecurity and software vendors away from public officials, different sections please. Don't split up VPOTUS and everyone from Quillon Labs.",
+"gold": "together company\nlimit ai_lab 1\napart big_tech investor\napart software_security government\norder big_tech\npair Grigori_Gallagher Granite_Robotics\npair Grigori_Gallagher Elif_MacAllister\npair VPOTUS Quillon_Labs",
+"kind": "named"
+},
+{
+"text": "\u2022 Keep each company together.\n\u2022 Sections: 2 guests max.\n\u2022 Head of table, in order: semiconductor companies, then the tech giants. Then everyone else.\n\u2022 Keep Fatima Ekwueme and Zubair Wexler together, and keep Exiger away from both.\n\u2022 Limit: two of software and security firms or public officials per section.",
+"gold": "size 2\ntogether company\nlimit software_security government 2\norder chips big_tech\npair Fatima_Ekwueme Zubair_Wexler\navoid Exiger Fatima_Ekwueme\navoid Exiger Zubair_Wexler",
+"kind": "named"
+},
+{
+"text": "Separate Cobalt Inc's people from Elif Chowdhury, Sacks and Jean-Luc Coltrane.",
+"gold": "avoid Cobalt_Inc Elif_Chowdhury\navoid Cobalt_Inc David_Sacks\navoid Cobalt_Inc Jean-Luc_Coltrane",
+"kind": "named"
+},
+{
+"text": "Please ensure that no section includes both the government guests and model labs; The head of the table is to be filled by the silicon makers, then the software and security vendors, in order, before any other guests, and separate Tom Brown from Granite Energy; can you keep Verdant Robotics away from Zuckerberg? And No section may hold over 5 people.",
+"gold": "size 5\napart ai_lab government\norder chips software_security\navoid Tom_Brown Granite_Energy\navoid Verdant_Robotics Mark_Zuckerberg",
+"kind": "named"
+},
+{
+"text": "Put Gerstner and Meridian Dynamics together and don't let OpenAI near them.",
+"gold": "pair Brad_Gerstner Meridian_Dynamics\navoid OpenAI Brad_Gerstner\navoid OpenAI Meridian_Dynamics",
+"kind": "named"
+},
+{
+"text": "Never put the no-affiliation guests and software and infosec companies in one section, and keep Arjun Oyelaran together with Karp and Meta. Cap the combined number of AI lab guests or the giant technology companies at one per section.",
+"gold": "limit ai_lab big_tech 1\napart software_security unlabelled\npair Arjun_Oyelaran Alex_Karp\npair Arjun_Oyelaran Meta",
+"kind": "named"
+},
+{
+"text": "Rules for the luncheon - Group the software and cybersecurity firms into one section. Then, Make sure there are never three or more of large tech corporations in one section. No section shall contain more than one of the frontier model developers. Keep all guests of any company together in one section.",
+"gold": "together company\ntogether software_security\nlimit ai_lab 1\nlimit big_tech 2",
+"kind": "old"
+},
+{
+"text": "* I don't want tech giants and software and cyber companies in the same section at all.\n* Keep big tech away from people from government.\n* Max one of the people from the chip companies per section.\n* Keep sections to two people or fewer.\n* Just put everyone from the same company in one section, yeah? That's it.",
+"gold": "size 2\ntogether company\nlimit chips 1\napart big_tech software_security\napart big_tech government",
+"kind": "old"
+},
+{
+"text": "Stellan Sorensen and Greta Pereira share a section. Could you avoid splitting up colleagues across sections? Also, Could we seat software and cybersecurity companies first, at the head of the table, in that order, and then everyone else? At the same time, Could we keep every section to 5 guests or fewer?",
+"gold": "size 5\ntogether company\norder software_security\npair Stellan_Sorensen Greta_Pereira",
+"kind": "named"
+},
+{
+"text": "To whom it may concern, A company's guests may not be divided between sections. Whatever you do, don't seat Leilani Yilmaz next to the Wildcard Ventures people. A duet of the people from the chip companies or VCs is welcome in a section; a chorus of three is not.",
+"gold": "together company\nlimit chips investor 2\navoid Leilani_Yilmaz Wildcard_Ventures",
+"kind": "named"
+},
+{
+"text": "Here is how I want the table arranged: So I'd like sections of three people at most, no bigger.\nJust don't put more than one of the big tech companies or software and cybersecurity companies in the same section, okay? Just put everyone from the same company in one section, yeah?",
+"gold": "size 3\ntogether company\nlimit big_tech software_security 1",
+"kind": "old"
+},
+{
+"text": "- company members in one section\n\u2022 (d) no section has more than 3 of the investor guests altogether;\n- no section containing both large technology platform companies and the software and security vendors",
+"gold": "together company\nlimit investor 3\napart big_tech software_security",
+"kind": "old"
+},
+{
+"text": "\u2022 Keep the processor and chip manufacturers away from the big technology platforms.\n\u2022 Put cybersecurity companies in sections that have no the public servants in them.",
+"gold": "apart big_tech chips\napart software_security government",
+"kind": "old"
+},
+{
+"text": "Cap: two a section. Split software firms from the people from the chip companies. Oh, and Keep NVIDIA, Chamath Palihapitiya and Musk in one section.",
+"gold": "size 2\napart chips software_security\npair Nvidia Chamath_Palihapitiya\npair Nvidia Elon_Musk",
+"kind": "named"
+},
+{
+"text": "Ferguson nowhere near Broadcom and Brad Gerstner. And also I want people who work at the same company sitting together, in the same section, and Quillon Partners nowhere near Petra Blackwood and Cormac Beaumont. Start with the big tech companies at the head of the table, okay? Everyone else can come after. For a balanced table, each section may have up to 2 of the artificial intelligence labs and the venture capital and fund guests in total.",
+"gold": "together company\nlimit ai_lab investor 2\norder big_tech\navoid Chairman_Andrew_Ferguson Broadcom\navoid Chairman_Andrew_Ferguson Brad_Gerstner\navoid Quillon_Partners Petra_Blackwood\navoid Quillon_Partners Cormac_Beaumont",
+"kind": "named"
+},
+{
+"text": "Put Hyun-woo Radcliffe next to Yusuf Kirkpatrick. Don't let Microsoft near Mehrotra.",
+"gold": "pair Hyun-woo_Radcliffe Yusuf_Kirkpatrick\navoid Microsoft Sanjay_Mehrotra",
+"kind": "named"
+},
+{
+"text": "Separate Ulrich Ferreira from Bill McDermott and Petra Dasgupta, and also seat Scharf with Ahmad Dunleavy, Hock Tan and Rahbar Daniels. Don't split up POTUS and Meta.",
+"gold": "avoid Ulrich_Ferreira Bill_McDermott\navoid Ulrich_Ferreira Petra_Dasgupta\npair Will_Scharf Ahmad_Dunleavy\npair Will_Scharf Hock_Tan\npair Will_Scharf Brandon_Rahbar_Daniels\npair POTUS Meta",
+"kind": "named"
+},
+{
+"text": "Don't seat two of VCs or government officials together. Plus, the Polaris Group guests away from Lumen Logistics and Yellowfin Bio and no company may be spread over more than one section.",
+"gold": "together company\nlimit investor government 1\navoid Polaris_Group Lumen_Logistics\navoid Polaris_Group Yellowfin_Bio",
+"kind": "named"
+},
+{
+"text": "* Chairman Ferguson should sit with Satya.",
+"gold": "pair Chairman_Andrew_Ferguson Satya_Nadella",
+"kind": "named"
+},
+{
+"text": "Keep anyone from Silverline Systems with Cosima Vukovic, and also never shall public officials and VCs share a stretch of table.",
+"gold": "apart investor government\npair Silverline_Systems Cosima_Vukovic",
+"kind": "named"
+},
+{
+"text": "Team, quick note on seating: Note that chip makers and the security software companies cannot be placed in the same section. Guests of one company are to be seated together. the tech giants and the software and security vendors must be assigned to different sections.\nPlease cap the biggest tech platforms at one per section.",
+"gold": "together company\nlimit big_tech 1\napart big_tech software_security\napart chips software_security",
+"kind": "old"
+},
+{
+"text": "1) Gideon Nordin and Jared Isaacman shouldn't sit together.\n2) Each section holds up to three guests.\n3) Can you keep Zofia Nordin away from Dario Amodei?\n4) the tech giants shall not share a section with the cybersecurity and software vendors.",
+"gold": "size 3\napart big_tech software_security\navoid Gideon_Nordin Jared_Isaacman\navoid Zofia_Nordin Dario_Amodei",
+"kind": "named"
+},
+{
+"text": "Quick one: It is required that no section exceed a capacity of 4 guests. Also, Section cap on the people from the chip companies, combined: 2. Make sure Arora isn't seated with Lorenzo Zhou or Scott Kupor. Coworkers grouped.",
+"gold": "size 4\ntogether company\nlimit chips 2\navoid Nikesh_Arora Lorenzo_Zhou\navoid Nikesh_Arora Scott_Kupor",
+"kind": "named"
+},
+{
+"text": "We are keeping our sections small: three guests at most in each.\nLet the head of the table belong first to AI lab guests, in that order, and let everyone else follow. While we are at it, It's important that co-workers share a section, so no company should be split up.",
+"gold": "size 3\ntogether company\norder ai_lab",
+"kind": "old"
+},
+{
+"text": "1. Keep each company's guests together in a section\n- order: the government reps -> everybody else\n- the venture capital and fund guests: one per section, at most",
+"gold": "together company\nlimit investor 1\norder government",
+"kind": "old"
+},
+{
+"text": "Never seat more than 1 of the big technology platforms or venture investors in one section, counting them all together; A section with both the silicon makers and the big tech companies is not allowed. Seat Camille Bianchi next to Sanjay Mehrotra; anyone from Zephyr Labs should sit with neither.",
+"gold": "limit big_tech investor 1\napart big_tech chips\npair Camille_Bianchi Sanjay_Mehrotra\navoid Zephyr_Labs Camille_Bianchi\navoid Zephyr_Labs Sanjay_Mehrotra",
+"kind": "named"
+},
+{
+"text": "Amazon must not sit with Microsoft.",
+"gold": "avoid Amazon Microsoft",
+"kind": "named"
+},
+{
+"text": "Separate Sacks from Gerstner and Tom Brown. So I'd like sections of five people at most, no bigger.\n- company members in one section. Let's keep it to 2 of funds and investors or public officials combined in each section, no more.\nPriority order: big tech > the chipmakers. Everyone else after. Make it so.",
+"gold": "size 5\ntogether company\nlimit investor government 2\norder big_tech chips\navoid David_Sacks Brad_Gerstner\navoid David_Sacks Tom_Brown",
+"kind": "named"
+},
+{
+"text": "Could you group the companies that manufacture semiconductors into a single section, please? Can you make sure no section has more than 5 people? Plus, Can colleagues from one company all sit together in a section? Can you keep the software and cybersecurity firms in different sections, never two together? Thanks!",
+"gold": "size 5\ntogether company\ntogether chips\nlimit software_security 1",
+"kind": "old"
+},
+{
+"text": "Instructions for the seating assistant: Orchard Health must not sit with Arclight Foundry.",
+"gold": "avoid Orchard_Health Arclight_Foundry",
+"kind": "named"
+},
+{
+"text": "Should cybersecurity companies gather in a section, let their combined number never pass 2. On top of that, Never shall the chip companies and the security software companies share a stretch of table. Let the semiconductor firms and the investors sit in separate sections, like two rivers that never meet.\nwhoever is from Ivory Networks and Priya Pham must never share a section. Likewise, Workmates stay within earshot of each other, in the same section.",
+"gold": "together company\nlimit software_security 2\napart chips software_security\napart chips investor\navoid Ivory_Networks Priya_Pham",
+"kind": "named"
+},
+{
+"text": "Okay, so: Max 4 per section.",
+"gold": "size 4",
+"kind": "old"
+},
+{
+"text": "Kupor must all be kept away from Gerstner.\nIt would be best if the semiconductor industry guests and the security software companies were seated in separate sections, dear. Next, For a lovely, intimate feel, please keep each section to 6 guests at the very most. It would be best if software and infosec companies and people from AI labs were seated in separate sections, dear.",
+"gold": "apart ai_lab software_security\napart chips software_security\navoid Brad_Gerstner Scott_Kupor",
+"kind": "named"
+},
+{
+"text": "Please allow a maximum of two of software makers and cybersecurity providers in each section, dear. No exceptions.",
+"gold": "limit software_security 2",
+"kind": "old"
+},
+{
+"text": "Good morning, A mere 3 of the major technology platform companies, together, may share a section, and no more. AMD away from Yevgenia Pastore. First come the people from the chip companies, in that order, at the top of the table; the rest may trail after; Jared Isaacman goes with Hock Tan.",
+"gold": "limit big_tech 3\norder chips\navoid AMD Yevgenia_Pastore\npair Jared_Isaacman Hock_Tan",
+"kind": "named"
+},
+{
+"text": "Banquet rules - Seat the chipmakers first.",
+"gold": "order chips",
+"kind": "old"
+},
+{
+"text": "\u2022 No section shall contain more than two of the investors and the state officials.",
+"gold": "limit investor government 2",
+"kind": "old"
+},
+{
+"text": "At the head of the long table: the silicon makers, in sequence; then all who remain. For each section, the total number of the cybersecurity and software vendors must be one or fewer, and Social Capital can't sit with Bartholomew Zielinski, Will Scharf or Mark Zuckerberg. Should the tech giants gather in a section, let their combined number never pass 1. The maximum permissible occupancy of any single section is 3 guests.",
+"gold": "size 3\nlimit big_tech 1\nlimit software_security 1\norder chips\navoid Social_Capital Bartholomew_Zielinski\navoid Social_Capital Will_Scharf\navoid Social_Capital Mark_Zuckerberg",
+"kind": "named"
+},
+{
+"text": "Avoid seating Tom Brown with Gaspard Quintero.",
+"gold": "avoid Tom_Brown Gaspard_Quintero",
+"kind": "named"
+},
+{
+"text": "Would you put chip companies and the software and security companies, in that order at the head of the table in that order, with everyone else after? VPOTUS should be kept apart from Yosef Ibarra, and never two of the government officials in a section.",
+"gold": "limit government 1\norder chips software_security\navoid VPOTUS Yosef_Ibarra",
+"kind": "named"
+},
+{
+"text": "Right, here is what I want: It is required that no section exceed a capacity of 4 guests.",
+"gold": "size 4",
+"kind": "old"
+},
+{
+"text": "Exiger and Rahbar Daniels in the same section.",
+"gold": "pair Exiger Brandon_Rahbar_Daniels",
+"kind": "named"
+},
+{
+"text": "Right then:\n- order: the venture capitalists -> everybody else\n- the processor and chip manufacturers kept in separate sections from each other Ta!",
+"gold": "limit chips 1\norder investor",
+"kind": "old"
+},
+{
+"text": "Rules for the luncheon - the Vice President and Satya in different sections.",
+"gold": "avoid VPOTUS Satya_Nadella",
+"kind": "named"
+},
+{
+"text": "Brigid Halvorsen should be kept away from Elon. * Guests per section <= 4",
+"gold": "size 4\navoid Brigid_Halvorsen Elon_Musk",
+"kind": "named"
+},
+{
+"text": "* Yellowfintech, Rahbar Daniels, Rosalind Dubois and Cormac Dunleavy all in the same section.",
+"gold": "pair Yellowfintech Brandon_Rahbar_Daniels\npair Yellowfintech Rosalind_Dubois\npair Yellowfintech Cormac_Dunleavy",
+"kind": "named"
+},
+{
+"text": "No section may have more than 3 guests.\nI don't want Marlow Labs and Speaker Johnson in one section. David Sacks needs to be in the same section as Zanele Yoshida.",
+"gold": "size 3\navoid Marlow_Labs Speaker_Johnson\npair David_Sacks Zanele_Yoshida",
+"kind": "named"
+},
+{
+"text": "Seating instructions: The seating shall not separate members of a single company into different sections.\nA section may accommodate no more than one of the ministry and agency officials. Ta!",
+"gold": "together company\nlimit government 1",
+"kind": "old"
+},
+{
+"text": "Quick one: Director Clayton can't be in the same section as Umberto Rasmussen.",
+"gold": "avoid Director_Clayton Umberto_Rasmussen",
+"kind": "named"
+},
+{
+"text": "Seat Amara Petrov, Marisol Mbeki and Silverlinetech's people together.",
+"gold": "pair Amara_Petrov Marisol_Mbeki\npair Amara_Petrov Silverlinetech",
+"kind": "named"
+},
+{
+"text": "Keep each company's people together, one flock, one section. Altimeter must not share a section with Secretary Scott Bessent.\nKeep each cluster of chairs to 3 guests or fewer, like a well-behaved constellation. What is more, Let the software and security companies and the big-tech people sit in separate sections, like two rivers that never meet. A mere 1 of people from government, together, may share a section, and no more.",
+"gold": "size 3\ntogether company\nlimit government 1\napart big_tech software_security\navoid Altimeter Secretary_Scott_Bessent",
+"kind": "named"
+},
+{
+"text": "Lovely if officials are never seated two to a section, just one apiece at most.\nDarling, sections shouldn't go above 3 guests, it keeps the conversation flowing.\nNow, a small request: please keep the AI labs and the semiconductor industry guests in different sections, never together.\nEvery company's guests should all be grouped together in one section.",
+"gold": "size 3\ntogether company\nlimit government 1\napart ai_lab chips",
+"kind": "old"
+},
+{
+"text": "Don't seat anyone ahead of the investors; they go first at the head of the table. No more than two to a section, ever.",
+"gold": "size 2\norder investor",
+"kind": "old"
+},
+{
+"text": "Please seat at most 3 of AI lab guests in any section, counting them together. Put the big tech companies in sections that have no the software firms and security firms in them. Also, Please seat software and cyber companies and the companies that train frontier models in different sections.",
+"gold": "limit ai_lab 3\napart ai_lab software_security\napart big_tech software_security",
+"kind": "old"
+},
+{
+"text": "Guidelines for placement:\n- (b) guests from the same company share a section; Sincerely,",
+"gold": "together company",
+"kind": "old"
+},
+{
+"text": "The rules of the table: Split up the Silverline Logistics team, Isaacman and Umberto Pham.\nGroup Andrew Ferguson, Micron and Dagny Kowalczyk.",
+"gold": "avoid Silverline_Logistics Jared_Isaacman\navoid Silverline_Logistics Umberto_Pham\navoid Jared_Isaacman Umberto_Pham\npair Chairman_Andrew_Ferguson Micron\npair Chairman_Andrew_Ferguson Dagny_Kowalczyk",
+"kind": "named"
+},
+{
+"text": "Rules for the luncheon - Policy: combined attendance of the people from investment funds is capped at two per section; Note that the silicon people and the venture capital and fund guests cannot be placed in the same section. Effective immediately, sections are limited to five guests each.\nSeat Secretary Bessent with Gerstner.",
+"gold": "size 5\nlimit investor 2\napart chips investor\npair Secretary_Scott_Bessent Brad_Gerstner",
+"kind": "named"
+},
+{
+"text": "- the fund managers: max 2 per section (combined). Make sure every section has at most two guests.\nEnsure that software and security companies never share a section with makers of semiconductors. Besides, Separate companies that build AI models from large tech corporations.",
+"gold": "size 2\nlimit investor 2\napart ai_lab big_tech\napart chips software_security",
+"kind": "old"
+},
+{
+"text": "Could we make sure no two of people from big tech and software and cyber companies sit in the same section; People from the same company go in the same section; Aiko Petrov should be kept apart from Norden Foundry.\nCould we keep every section to 5 guests or fewer?\nHoward Lutnick not with the Craft Ventures team. Could you avoid putting the government reps and cybersecurity companies together in any section?",
+"gold": "size 5\ntogether company\nlimit big_tech software_security 1\napart software_security government\navoid Aiko_Petrov Norden_Foundry\navoid Secretary_Lutnick Craft_Ventures",
+"kind": "named"
+},
+{
+"text": "Honestly, don't cram more than 4 into any one section. Start with the investment guests. People from the same company go in the same section.",
+"gold": "size 4\ntogether company\norder investor",
+"kind": "old"
+},
+{
+"text": "Ground rules: everyone from Lattice Inc not with Kratsios.",
+"gold": "avoid Lattice_Inc Michael_Kratsios",
+"kind": "named"
+},
+{
+"text": "1. Max four guests per section\n* (g) big tech guests and the frontier AI developers must not share a section;",
+"gold": "size 4\napart ai_lab big_tech",
+"kind": "old"
+},
+{
+"text": "Hi there, Never start the seating with anyone but public officials; everyone else comes after.\nA section with more than 4 guests is not allowed.",
+"gold": "size 4\norder government",
+"kind": "old"
+},
+{
+"text": "whoever is from Lumen Capital should be kept apart from Greg Brockman.",
+"gold": "avoid Lumen_Capital Greg_Brockman",
+"kind": "named"
+},
+{
+"text": "Make sure the frontier model developers and software and cyber companies never end up together in a section, yeah? No more than two from VCs or people from government in any one section.",
+"gold": "limit investor government 2\napart ai_lab software_security",
+"kind": "old"
+},
+{
+"text": "Here is how I want the table arranged: whoever is from Emberlyscale and Will Scharf together. That's it.",
+"gold": "pair Emberlyscale Will_Scharf",
+"kind": "named"
+},
+{
+"text": "Once upon a table, Sprinkle the frontier AI companies or the giant technology companies lightly: never more than three of them, all told, in one section. Never shall the government delegates and the companies that manufacture semiconductors share a stretch of table. Let no more than three of the investor guests share any single stretch of table.",
+"gold": "limit ai_lab big_tech 3\nlimit investor 3\napart chips government",
+"kind": "old"
+},
+{
+"text": "Requirements: Put anyone from OpenAI next to Exiger.\nDo not let the cybersecurity and software vendors and the government guests share a section. Also: Split up the Broadcom guests and Karp.",
+"gold": "apart software_security government\npair OpenAI Exiger\navoid Broadcom Alex_Karp",
+"kind": "named"
+},
+{
+"text": "A gentle but firm rule: semiconductor companies and VCs must be kept in different sections. It's important that co-workers share a section, so no company should be split up.\nTo keep things elegant, a section may seat 4 guests at the maximum. Oh, and I'd love a good mix, so at most 1 of the LLM developers in each section, all added up.",
+"gold": "size 4\ntogether company\nlimit ai_lab 1\napart chips investor",
+"kind": "old"
+},
+{
+"text": "Right then: Don't let Rania Yoshida near Greta Ishikawa, Zubair Mwangi or the Microsoft guests. Equally, Zofia Bergstrom must not share a section with Umberto Xiong or Uma Umarov; Assignment: government folks must go in separate sections, no two in the same one. You know, people from one firm should stick together in a section. Second, So I'd like sections of three people at most, no bigger.",
+"gold": "size 3\ntogether company\nlimit government 1\navoid Rania_Yoshida Greta_Ishikawa\navoid Rania_Yoshida Zubair_Mwangi\navoid Rania_Yoshida Microsoft\navoid Zofia_Bergstrom Umberto_Xiong\navoid Zofia_Bergstrom Uma_Umarov",
+"kind": "named"
+},
+{
+"text": "A gentle rule: no more than two of big tech guests per section, all together. At the same time, Put public officials first, rest after.\nSeat Anouk Castellanos, Rashida Delacroix and Aster together, and We are keeping our sections small: four guests at most in each.",
+"gold": "size 4\nlimit big_tech 2\norder government\npair Anouk_Castellanos Rashida_Delacroix\npair Anouk_Castellanos Aster",
+"kind": "named"
+},
+{
+"text": "1. Don't put Fatima Lombardi and Arora in the same section.\n2. Keep the processor and chip manufacturers in separate sections, never two together.\n3. Spread out the giant technology companies and the cybersecurity and software houses, singly.",
+"gold": "limit big_tech software_security 1\nlimit chips 1\navoid Fatima_Lombardi Nikesh_Arora",
+"kind": "named"
+},
+{
+"text": "Put Sable Media and Yara Eklund in one section.",
+"gold": "pair Sable_Media Yara_Eklund",
+"kind": "named"
+},
+{
+"text": "Seating policy: Sections are limited to a maximum of one guests apiece. A maximum of one of the semiconductor makers or the capital providers, counted collectively, is permitted per section and seat the OpenAI team in the same section as Osvaldo Ishikawa. Isaacman away from Helix.",
+"gold": "size 1\nlimit chips investor 1\npair OpenAI Osvaldo_Ishikawa\navoid Jared_Isaacman Helix",
+"kind": "named"
+},
+{
+"text": "1. Chiara Ivanova nowhere near Palantir.\n2. Seat Chiara Ibarra with Amazon and Meta.",
+"gold": "avoid Chiara_Ivanova Palantir\npair Chiara_Ibarra Amazon\npair Chiara_Ibarra Meta",
+"kind": "named"
+},
+{
+"text": "It is required that no section exceed a capacity of 3 guests; don't seat Beatriz Kaminski near Craft Ventures, Helix Networks or Lisa Su. A maximum of three of semiconductor companies, people from software and security companies and the venture capital and fund guests, counted collectively, is permitted per section.\nAll guests affiliated with a given company are to be placed in the same section.",
+"gold": "size 3\ntogether company\nlimit chips software_security investor 3\navoid Beatriz_Kaminski Craft_Ventures\navoid Beatriz_Kaminski Helix_Networks\navoid Beatriz_Kaminski Lisa_Su",
+"kind": "named"
+},
+{
+"text": "Seating policy: the OpenAI guests, Brandon Rahbar Daniels and Sankar together.",
+"gold": "pair OpenAI Brandon_Rahbar_Daniels\npair OpenAI Shyam_Sankar",
+"kind": "named"
+},
+{
+"text": "1) Keep Kupor away from Hiroshi Ibarra.\n2) Can colleagues from one company all sit together in a section?",
+"gold": "together company\navoid Scott_Kupor Hiroshi_Ibarra",
+"kind": "named"
+},
+{
+"text": "Do not place software and cyber companies and the LLM developers in the same section. Besides, Keep Huang together with Saoirse Pastore and the VP.",
+"gold": "apart ai_lab software_security\npair Jensen_Huang Saoirse_Pastore\npair Jensen_Huang VPOTUS",
+"kind": "named"
+},
+{
+"text": "Small circles only: four guests at the most to each stretch of table.",
+"gold": "size 4",
+"kind": "old"
+},
+{
+"text": "1) Keep Michael Kratsios, Lisa Su and everyone from Granite AI in one section.",
+"gold": "pair Michael_Kratsios Lisa_Su\npair Michael_Kratsios Granite_AI",
+"kind": "named"
+},
+{
+"text": "Let no section swell past five souls. Should the foundation-model companies gather in a section, let their combined number never pass 1. Never shall the AI model builders and funds and investors share a stretch of table.",
+"gold": "size 5\nlimit ai_lab 1\napart ai_lab investor",
+"kind": "old"
+},
+{
+"text": "Seat the Social Capital people next to Arjun Yamamoto; Ignatius Whitfield should sit with neither.",
+"gold": "pair Social_Capital Arjun_Yamamoto\navoid Ignatius_Whitfield Social_Capital\navoid Ignatius_Whitfield Arjun_Yamamoto",
+"kind": "named"
+},
+{
+"text": "Keep Mehrotra together with Quentin Zhou and AMD. Colleagues together.",
+"gold": "together company\npair Sanjay_Mehrotra Quentin_Zhou\npair Sanjay_Mehrotra AMD",
+"kind": "named"
+},
+{
+"text": "Guests from the same company must be assigned to the same section. Keep Mark Zuckerberg clear of Meera Trevisan. No NASA's people near Thornfield Media. Headcount per section: three maximum.",
+"gold": "size 3\ntogether company\navoid Mark_Zuckerberg Meera_Trevisan\navoid NASA Thornfield_Media",
+"kind": "named"
+},
+{
+"text": "Oluwaseun Dimitriou not with Clayton.",
+"gold": "avoid Oluwaseun_Dimitriou Director_Clayton",
+"kind": "named"
+},
+{
+"text": "Do not place people from AI labs and chip companies in the same section.\n  Give big tech guests the first sections, with everybody else afterwards.",
+"gold": "apart ai_lab chips\norder big_tech",
+"kind": "old"
+},
+{
+"text": "Small circles only: two guests at the most to each stretch of table and can you keep the Vice President away from Uma Dubois; Let the head of the table belong first to the software security vendors and the people from investment funds, in that order, in that order, and let everyone else follow.",
+"gold": "size 2\norder software_security investor\navoid VPOTUS Uma_Dubois",
+"kind": "named"
+},
+{
+"text": "Before you start placing people: Karp shouldn't sit with Xavier Castellanos, Mireille Uzoma or Will Scharf. Let no section swell past three souls.",
+"gold": "size 3\navoid Alex_Karp Xavier_Castellanos\navoid Alex_Karp Mireille_Uzoma\navoid Alex_Karp Will_Scharf",
+"kind": "named"
+},
+{
+"text": "Memo: seating arrangements. It's important that co-workers share a section, so no company should be split up. To keep things elegant, a section may seat 4 guests at the maximum.",
+"gold": "size 4\ntogether company",
+"kind": "old"
+},
+{
+"text": "Guests from the same company must be assigned to the same section.\nPer policy, section headcount must not exceed 4.\nPlease cap the VCs and funds at two per section.\nDo not allow more than one of the frontier model developers in any section.",
+"gold": "size 4\ntogether company\nlimit ai_lab 1\nlimit investor 2",
+"kind": "old"
+},
+{
+"text": "Do not divide attendees of the same company between sections.\nDagny Haddad nowhere near Greg Brockman; Action: assign the first sections to the chip companies; place the remaining guests after.",
+"gold": "together company\norder chips\navoid Dagny_Haddad Greg_Brockman",
+"kind": "named"
+},
+{
+"text": "Split up Joaquin Nieminen and Eun-ji Oyelaran. Do keep it to two of AI research labs or software and cybersecurity companies at most per section, so the table stays balanced. Please begin the seating with the software and security vendors at the top of the table, dear, with everyone else following, and We'd love colleagues to be seated side by side, so please keep each company's guests together in one section. Keep Palihapitiya with Hiroshi Fontaine. Let's not let any section be dominated: three of the AI lab people or the large platform companies combined, and no more.",
+"gold": "together company\nlimit ai_lab big_tech 3\nlimit ai_lab software_security 2\norder software_security\navoid Joaquin_Nieminen Eun-ji_Oyelaran\npair Chamath_Palihapitiya Hiroshi_Fontaine",
+"kind": "named"
+},
+{
+"text": "Each section should have a maximum of two guests so everyone can chat comfortably. Please arrange it so that the people from investment funds and the officials representing the government never share a section. Then, We'd love colleagues to be seated side by side, so please keep each company's guests together in one section. I'd like the first sections reserved for the mega-cap tech firms, then the semiconductor industry guests, then the software and security vendors, in that order, with all remaining guests seated afterwards. Appreciate it.",
+"gold": "size 2\ntogether company\napart investor government\norder big_tech chips software_security",
+"kind": "old"
+},
+{
+"text": "Rule: government officials and the investors may not share a section; Seating sequence: the government officials first, then software and security firms and then AI lab guests first, in the order listed, followed by all other attendees. Guests from the same company must be assigned to the same section. No Jiro Fairbanks, Ursula Villanueva or Meta anywhere near the Lodestar Energy guests. Action item: cap every section at 4 guests. Separation requirement: the investors and cybersecurity companies in distinct sections.",
+"gold": "size 4\ntogether company\napart software_security investor\napart investor government\norder government software_security ai_lab\navoid Lodestar_Energy Jiro_Fairbanks\navoid Lodestar_Energy Ursula_Villanueva\navoid Lodestar_Energy Meta",
+"kind": "named"
+},
+{
+"text": "Any of the VCs and funds are not to be seated in a section that also has any of the software and cybersecurity firms. Priority: the lowest-numbered sections go to the software and security firms, in that order, then all others.",
+"gold": "apart software_security investor\norder software_security",
+"kind": "old"
+},
+{
+"text": "Requirements: Keep Yosef Whitlock apart from the Palo Alto Networks folks, and Frida Oyelaran shouldn't sit with Ludmila Okonkwo; Is it okay if we limit each section to four guests at most?",
+"gold": "size 4\navoid Yosef_Whitlock Palo_Alto_Networks\navoid Frida_Oyelaran Ludmila_Okonkwo",
+"kind": "named"
+},
+{
+"text": "Limit each section to 4 guests. Wildcard Media and Rafaela Jaramillo must never share a section. Mark Zuckerberg goes with Winifred Szabo and keep the chip companies in separate sections, never two together.",
+"gold": "size 4\nlimit chips 1\navoid Wildcard_Media Rafaela_Jaramillo\npair Mark_Zuckerberg Winifred_Szabo",
+"kind": "named"
+},
+{
+"text": "Make sure Dr. Su isn't seated with Emeka Achebe. Teodor Radcliffe, Priya Bianchi and Service Now must each sit in a different section.",
+"gold": "avoid Lisa_Su Emeka_Achebe\navoid Teodor_Radcliffe Priya_Bianchi\navoid Teodor_Radcliffe Service_Now\navoid Priya_Bianchi Service_Now",
+"kind": "named"
+},
+{
+"text": "So, about the seating: Two streams, the large platform companies and semiconductor manufacturers, flow in separate sections and never mix. Give the AI labs and people with no listed organisation sections apart, never mingled.",
+"gold": "apart ai_lab unlabelled\napart big_tech chips",
+"kind": "old"
+},
+{
+"text": "Put Tesla and Quentin Brennan together and don't let the President near them; Director Clayton needs to be in the same section as Quentin Kowalczyk.",
+"gold": "pair Elon_Musk Quentin_Brennan\navoid POTUS Elon_Musk\navoid POTUS Quentin_Brennan\npair Director_Clayton Quentin_Kowalczyk",
+"kind": "named"
+},
+{
+"text": "Memo: seating arrangements.\n  Make sure the biggest tech platforms and software and infosec companies never end up together in a section, yeah?\n  Honestly, don't cram more than 3 into any one section.\n  Basically, if they're from the same company, keep 'em together.\n  Basically the AI model builders, then the government delegates come first at the head of the table, in the order I said, and everyone else fills in after.",
+"gold": "size 3\ntogether company\napart big_tech software_security\norder ai_lab government",
+"kind": "old"
+},
+{
+"text": "Right then: Those who share a company banner share a stretch of table.",
+"gold": "together company",
+"kind": "old"
+},
+{
+"text": "A few requests for the dinner: Let's have the AI labs spread out, one per section, no doubling up.",
+"gold": "limit ai_lab 1",
+"kind": "old"
+},
+{
+"text": "Some house rules: Coworkers grouped. No more than 2 of chipmakers or the fund managers in a section, total. Sections: 3 guests max. Never mix software and security firms and chipmakers.",
+"gold": "size 3\ntogether company\nlimit chips investor 2\napart chips software_security",
+"kind": "old"
+},
+{
+"text": "Aiko Pereira can't be in the same section as Bezos. Much obliged.",
+"gold": "avoid Aiko_Pereira Jeff_Bezos",
+"kind": "named"
+},
+{
+"text": "* Put Walters next to Bezos.",
+"gold": "pair Richard_Walters Jeff_Bezos",
+"kind": "named"
+},
+{
+"text": "Table plan requirements: Do keep people from the same company together in a section, it makes for such a lovely atmosphere.",
+"gold": "together company",
+"kind": "old"
+},
+{
+"text": "Make sure Secretary Scott Bessent, Altimeter and Florin Yilmaz share a section.",
+"gold": "pair Secretary_Scott_Bessent Altimeter\npair Secretary_Scott_Bessent Florin_Yilmaz",
+"kind": "named"
+},
+{
+"text": "Whatever you do, don't seat Ingrid Wexler next to Gideon Whitlock.",
+"gold": "avoid Ingrid_Wexler Gideon_Whitlock",
+"kind": "named"
+},
+{
+"text": "Hi there, - the frontier AI companies / the capital providers: never the same section, I don't want Emberly Capital and Rashida Yilmaz in one section. Next, Rafaela Umarov and OpenAI must all be kept away from Kupor; - Order of seating -> the people from the chip companies, then the investor guests, then the software security vendors -> everybody else",
+"gold": "apart ai_lab investor\norder chips investor software_security\navoid Emberly_Capital Rashida_Yilmaz\navoid Scott_Kupor Rafaela_Umarov\navoid Scott_Kupor OpenAI",
+"kind": "named"
+},
+{
+"text": "1. Greta Kuznetsov, Ludmila Thorsen and Karp should all sit together.\n2. Keep Kofi Mbeki away from ServiceNow.\n3. A company's guests may not be divided between sections.",
+"gold": "together company\npair Greta_Kuznetsov Ludmila_Thorsen\npair Greta_Kuznetsov Alex_Karp\navoid Kofi_Mbeki Service_Now",
+"kind": "named"
+},
+{
+"text": "Dilnoza Fontaine and everyone from Juniper Research share a section. Don't let the VP near the Copperleaf Labs people. Moreover, Do make sure no section has both the investors and the foundation-model companies, that is very important to me, and Let's begin at the head of the table with companies that make software or security products, then the chip makers, in that order, followed by everyone else.",
+"gold": "apart ai_lab investor\norder software_security chips\npair Dilnoza_Fontaine Juniper_Research\navoid VPOTUS Copperleaf_Labs",
+"kind": "named"
+},
+{
+"text": "Never seat more than 3 of the people from investment funds in one section, counting them all together. Never put more than 2 guests in one section. Then, A company's guests may not be divided between sections.",
+"gold": "size 2\ntogether company\nlimit investor 3",
+"kind": "old"
+},
+{
+"text": "Seating policy: Never seat the Vice President with Huang. Likewise, Amazon not with Pichai, and put Nnamdi Pereira, Joaquin Ishikawa and Secretary Scott Bessent in the same section. Sections are limited to a maximum of four guests apiece.",
+"gold": "size 4\navoid VPOTUS Jensen_Huang\navoid Amazon Sundar_Pichai\npair Nnamdi_Pereira Joaquin_Ishikawa\npair Nnamdi_Pereira Secretary_Scott_Bessent",
+"kind": "named"
+},
+{
+"text": "At the head of the long table: the artificial intelligence labs > public officials, in sequence; then all who remain, and also seat Vikram Rourke in the same section as Lucia Ivanova. Thandiwe Nordin, Vikram Achebe and Halcyon Systems must each sit in a different section, and So the VC firms and the frontier AI companies, they can't share a section, okay?",
+"gold": "apart ai_lab investor\norder ai_lab government\npair Vikram_Rourke Lucia_Ivanova\navoid Thandiwe_Nordin Vikram_Achebe\navoid Thandiwe_Nordin Halcyon_Systems\navoid Vikram_Achebe Halcyon_Systems",
+"kind": "named"
+},
+{
+"text": "Put the Broadcom folks, Delphine Vukovic and Gerstner in the same section.",
+"gold": "pair Broadcom Delphine_Vukovic\npair Broadcom Brad_Gerstner",
+"kind": "named"
+},
+{
+"text": "make sure each section holds 3 or fewer of the software and cybersecurity firms or venture capital firms in total.",
+"gold": "limit software_security investor 3",
+"kind": "old"
+},
+{
+"text": "\u2022 Social Capital must not share a section with Altimeter, Brockman or Pradeep Ugwu.",
+"gold": "avoid Social_Capital Altimeter\navoid Social_Capital Greg_Brockman\navoid Social_Capital Pradeep_Ugwu",
+"kind": "named"
+},
+{
+"text": "1. No two of Anthropic, Elif Delacroix or Valentina Adeyemi in the same section.\n2. Seat big tech guests, then the investing folks, then the software and security companies first.\n3. Just put everyone from the same company in one section, yeah?\n4. Halcyon Foundry away from Bezos.",
+"gold": "together company\norder big_tech investor software_security\navoid Anthropic Elif_Delacroix\navoid Anthropic Valentina_Adeyemi\navoid Elif_Delacroix Valentina_Adeyemi\navoid Halcyon_Foundry Jeff_Bezos",
+"kind": "named"
+},
+{
+"text": "Some house rules: Let's cap every section at 6. Meanwhile, I don't want government folks and the tech giants in the same section at all.",
+"gold": "apart big_tech government",
+"kind": "old"
+},
+{
+"text": "Team, quick note on seating: Isaacman should sit with Vikram Jaramillo.",
+"gold": "pair Jared_Isaacman Vikram_Jaramillo",
+"kind": "named"
+}
+]

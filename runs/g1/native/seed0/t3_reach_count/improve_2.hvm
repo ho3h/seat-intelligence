@@ -1,0 +1,96 @@
+// Initialize an n-element vector filled with seed.
+@init = (?((@init_nil @init_cons) (seed p)) p)
+
+@init_nil = (seed out)
+  & seed ~ *
+  & out ~ (0 *)
+
+@init_cons = (pred (seed out))
+  & seed ~ {seed_rec seed_here}
+  & @init ~ (pred (seed_rec rest))
+  & out ~ (1 (seed_here rest))
+
+// Build adjacency lists in a vector indexed by source vertex.
+@prog = (input out)
+  & input ~ (n (s edges))
+  & n ~ {na nv}
+  & @init ~ (na ((0 *) adj0))
+  & @init ~ (nv (0 vis0))
+  & @build ~ (edges (adj0 map))
+  & @walk ~ ((1 (s (0 *))) (map (vis0 (0 out))))
+
+@build = ((?((@build_nil @build_cons) (pl (map out))) pl) (map out))
+
+@build_nil = (* (pl (map out)))
+  & pl ~ *
+  & out ~ map
+
+@build_cons = (* (((u v) rest) (map out)))
+  & @put ~ (u (map (v map2)))
+  & @build ~ (rest (map2 out))
+
+// Set vector[index] to value and return the updated vector.
+@put = (?((@put_zero @put_more) (map p)) p)
+
+@put_zero = (map (val out))
+  & map ~ (tag (head tail))
+  & tag ~ *
+  & out ~ (1 ((1 (val head)) tail))
+
+@put_more = (idx (map (val out)))
+  & map ~ (tag (head tail))
+  & tag ~ *
+  & @put ~ (tail (idx (val child)))
+  & out ~ (1 (head child))
+
+// Look up vector[index], discarding the vector.
+@lookup = (vec ((?((@lookup_zero @lookup_more) (vec p))) p))
+
+@lookup_zero = (vec out)
+  & vec ~ (tag (head tail))
+  & tag ~ *
+  & tail ~ *
+  & out ~ head
+
+@lookup_more = (idx (vec out))
+  & vec ~ (tag (head tail))
+  & tag ~ *
+  & head ~ *
+  & @lookup ~ (tail (idx out))
+
+// Traverse the worklist, using vectors for visited flags and adjacency lists.
+@walk = ((?((@walk_nil @walk_cons) (pl (map (vis (count out))))) pl) (map (vis (count out))))
+
+@walk_nil = (* (pl (map (vis (count out)))))
+  & pl ~ *
+  & map ~ *
+  & vis ~ *
+  & out ~ count
+
+@walk_cons = (* ((v tail) (map (vis (count out)))))
+  & v ~ {v_lookup v_use}
+  & vis ~ {vis_lookup vis_keep}
+  & @lookup ~ (vis_lookup (v_lookup flag))
+  & flag ~ ?((@walk_fresh @walk_seen) (tail (v_use (map (vis_keep (count out))))))
+
+@walk_seen = (* (tail (v (map (vis (count out))))))
+  & v ~ *
+  & @walk ~ (tail (map (vis (count out))))
+
+@walk_fresh = (tail (v (map (vis (count out)))))
+  & map ~ {map_read map_keep}
+  & @lookup ~ (map_read (v adj))
+  & @put ~ (v (vis (1 vis_new)))
+  & count ~ $([+] $(1 count2))
+  & @pushall ~ (adj (tail (newstack out)))
+  & @walk ~ (newstack (map_keep (vis_new (count2 out))))
+
+// Prepend all elements of one list to another.
+@pushall = ((?((@push_nil @push_cons) (pl (stack out))) pl) (stack out))
+
+@push_nil = (pl (stack out))
+  & pl ~ *
+  & out ~ stack
+
+@push_cons = (* ((h rest) (stack out)))
+  & @pushall ~ (rest ((1 (h stack)) out))

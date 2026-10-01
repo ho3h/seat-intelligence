@@ -1,0 +1,142 @@
+@prog = ((n (s (t edges))) out)
+  & @check ~ (n (s (t (edges out))))
+
+@check = (n (s (t (edges out))))
+  & {n_cmp n_keep} ~ n
+  & {s_cmp s_keep} ~ s
+  & s_cmp ~ $([<] $(n_cmp b))
+  & b ~ ?((@invalid @check_t) (n_keep (s_keep (t (edges out)))))
+
+@check_t = (* (n (s (t (edges out)))))
+  & {n_cmp n_keep} ~ n
+  & {t_cmp t_keep} ~ t
+  & t_cmp ~ $([<] $(n_cmp b))
+  & b ~ ?((@invalid @valid) (n_keep (s (t_keep (edges out)))))
+
+@invalid = (n (s (t (edges out))))
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & out ~ 16777215
+
+@valid = (* (n (s (t (edges out)))))
+  & {s_cmp s_keep} ~ s
+  & s_cmp ~ $([=] $(t b))
+  & b ~ ?((@different @same) (n (s_keep (edges out))))
+
+@same = (* (n (s (edges out))))
+  & n ~ *
+  & s ~ *
+  & edges ~ *
+  & out ~ 0
+
+@different = (* (n (s (edges out))))
+  & {n_fill n_round} ~ n
+  & @fill ~ (n_fill arr)
+  & @set ~ (arr (s (0 d)))
+  & @round ~ (n_round (edges (d out)))
+
+@fill = (?(((0 *) @fill_more) out) out)
+
+@fill_more = (k out)
+  & @fill ~ (k tail)
+  & out ~ (1 (16777215 tail))
+
+@round = (?((@round_end @round_more) (edges (dist out))) (edges (dist out)))
+
+@round_end = (* (dist out))
+  & out ~ dist
+
+@round_more = (k (edges (dist out)))
+  & {e_scan e_next} ~ edges
+  & @scan ~ (e_scan (dist dnew))
+  & @round ~ (k (e_next (dnew out)))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (dist out))) payload) (dist out))
+
+@scan_nil = (* (dist out))
+  & out ~ dist
+
+@scan_cons = (* ((edge tail) (dist out)))
+  & @relax ~ (edge (dist dnew))
+  & @scan ~ (tail (dnew out))
+
+@relax = ((u (v w)) (dist out))
+  & {d_a d_tmp} ~ dist
+  & {d_b d_c} ~ d_tmp
+  & {u_get u_set} ~ u
+  & {v_get v_set} ~ v
+  & {w_a w_b} ~ w
+  & @at ~ (d_a (u_get du))
+  & @at ~ (d_b (v_get dv))
+  & {du_keep du_add} ~ du
+  & {dv_keep dv_add} ~ dv
+  & @safeadd ~ (du_add (w_a cand_v))
+  & @safeadd ~ (dv_add (w_b cand_u))
+  & @min ~ (dv_keep (cand_v new_v))
+  & @min ~ (du_keep (cand_u new_u))
+  & @set ~ (d_c (u_set (new_u d1)))
+  & @set ~ (d1 (v_set (new_v out)))
+
+@at = ((?((@at_nil @at_cons) (payload (idx out))) payload) (idx out))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@at_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@at_here @at_later) (head (tail out)))
+
+@at_here = (head (tail out))
+  & out ~ head
+  & tail ~ *
+
+@at_later = (idx (head (tail out)))
+  & head ~ *
+  & @at ~ (tail (idx out))
+
+@set = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((head tail) (idx (val out))))
+  & idx ~ ?((@set_here @set_later) (head (tail (val out))))
+
+@set_here = (head (tail (val out)))
+  & head ~ *
+  & out ~ (1 (val tail))
+
+@set_later = (idx (head (tail (val out))))
+  & @set ~ (tail (idx (val newtail)))
+  & out ~ (1 (head newtail))
+
+@safeadd = (a (w out))
+  & {a_cmp a_keep} ~ a
+  & a_cmp ~ $([=] $(16777215 flag))
+  & flag ~ ?((@safeadd_do @safeadd_inf) (a_keep (w out)))
+
+@safeadd_do = (a (w out))
+  & a ~ $([+] $(w out))
+
+@safeadd_inf = (* (a (w out)))
+  & a ~ *
+  & w ~ *
+  & out ~ 16777215
+
+@min = (a (b out))
+  & {a_cmp a_keep} ~ a
+  & {b_cmp b_keep} ~ b
+  & a_cmp ~ $([<] $(b_cmp flag))
+  & flag ~ ?((@min_choose_b @min_choose_a) (a_keep (b_keep out)))
+
+@min_choose_b = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@min_choose_a = (* (a (b out)))
+  & b ~ *
+  & out ~ a

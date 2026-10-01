@@ -1,0 +1,193 @@
+// Enumerate canonical nodes in increasing order, querying keys 0..3.
+@prog = (c (attrs out))
+  & c ~ {walk all}
+  & @gen ~ (walk (0 (all (attrs out))))
+
+@gen = ((?((@gen_nil @gen_cons) (pl (idx (all (attrs out))))) pl) (idx (all (attrs out))))
+
+@gen_nil = (* (idx (all (attrs out))))
+  & idx ~ *
+  & all ~ *
+  & attrs ~ *
+  & out ~ (0 *)
+
+@gen_cons = (* ((h t) (idx (all (attrs out)))))
+  & h ~ {h_eq h_ctx}
+  & idx ~ {idx_eq idx_plus}
+  & h_eq ~ $([=] $(idx_eq isroot))
+  & idx_plus ~ $([+1] idx_next)
+  & isroot ~ ?((@gen_no @gen_yes) (h_ctx (t (idx_next (all (attrs out))))))
+
+@gen_no = (* (h (t (idx (all (attrs out))))))
+  & h ~ *
+  & @gen ~ (t (idx (all (attrs out))))
+
+@gen_yes = (* (h (t (idx (all (attrs out))))))
+  & all ~ {all_keys all_rest}
+  & attrs ~ {attrs_keys attrs_rest}
+  & @keys ~ (h (0 (all_keys (attrs_keys this))))
+  & @gen ~ (t (idx (all_rest (attrs_rest rest))))
+  & @append ~ (this (rest out))
+
+// For each canonical node, query keys in ascending order.
+@keys = (canon (key (all (attrs out))))
+  & key ~ {key_test key_ctx}
+  & key_test ~ $([<] $(4 inrange))
+  & inrange ~ ?((@keys_end @keys_do) (canon (key_ctx (all (attrs out)))))
+
+@keys_end = (canon (key (all (attrs out))))
+  & canon ~ *
+  & key ~ *
+  & all ~ *
+  & attrs ~ *
+  & out ~ (0 *)
+
+@keys_do = (* (canon (key (all (attrs out)))))
+  & canon ~ {canon_a canon_b}
+  & canon_b ~ *
+  & canon_a ~ {canon_query canon_rest}
+  & canon_rest ~ {canon_rec canon_out}
+  & key ~ {key_a key_b}
+  & key_b ~ *
+  & key_a ~ {key_query key_rest}
+  & key_rest ~ {key_next key_out}
+  & all ~ {all_query all_rest}
+  & attrs ~ {attrs_query attrs_rest}
+  & @best ~ (attrs_query (all_query (canon_query (key_query best))))
+  & key_next ~ $([+1] key_plus)
+  & @keys ~ (canon_rec (key_plus (all_rest (attrs_rest rest))))
+  & best ~ (found value)
+  & found ~ ?((@keys_absent @keys_present) (canon_out (key_out (value (rest out)))))
+
+@keys_absent = (canon (key (value (rest out))))
+  & canon ~ *
+  & key ~ *
+  & value ~ *
+  & out ~ rest
+
+@keys_present = (* (canon (key (value (rest out)))))
+  & out ~ (1 ((canon (key value)) rest))
+
+// Find the winning value for one canonical-node/key pair.
+@best = (attrs (all (canon (key out))))
+  & @cand ~ (attrs (all (canon (key (0 (0 result))))))
+  & out ~ result
+
+@cand = ((?((@cand_nil @cand_cons) (pl (all (canon (key (bc (bv out))))))) pl) (all (canon (key (bc (bv out))))))
+
+@cand_nil = (* (all (canon (key (bc (bv out))))))
+  & all ~ *
+  & canon ~ *
+  & key ~ *
+  & bc ~ $([>] $(0 found))
+  & out ~ (found bv)
+
+@cand_cons = (* (((node (kk vv)) t) (all (canon (key (bc (bv out)))))))
+  & all ~ {all_lookup all_more}
+  & all_more ~ {all_rec all_count}
+  & t ~ {t_rec t_count}
+  & canon ~ {canon_eq canon_more}
+  & canon_more ~ {canon_rec canon_count}
+  & key ~ {key_eq key_more}
+  & key_more ~ {key_rec key_count}
+  & @at ~ (all_lookup (node rowcanon))
+  & rowcanon ~ $([=] $(canon_eq eqc))
+  & kk ~ $([=] $(key_eq eqk))
+  & eqc ~ $([&] $(eqk match))
+  & match ~ ?((@cand_skip @cand_hit) (vv (t_count (all_count (canon_count (key_count (t_rec (all_rec (canon_rec (key_rec (bc (bv out))))))))))))
+
+@cand_skip = (* (vv (t_count (t_rec (all (canon (key (bc (bv out)))))))))
+  & vv ~ *
+  & t_count ~ *
+  & @cand ~ (t_rec (all (canon (key (bc (bv out))))))
+
+@cand_hit = (* (vv (t_count (t_rec (all (canon (key (bc (bv out)))))))))
+  & vv ~ {vv_count vv_choose}
+  & all ~ {all_count all_rec}
+  & canon ~ {canon_count canon_rec}
+  & key ~ {key_count key_rec}
+  & @count ~ (t_count (all_count (canon_count (key_count (vv_count cnt)))))
+  & cnt ~ $([+] $(1 total))
+  & @choose ~ (t_rec (all_rec (canon_rec (key_rec (bc (bv (total (vv_choose out))))))))
+
+// Count matching rows in a tail.
+@count = ((?((@count_nil @count_cons) (pl (all (canon (key (val out))))) pl) (all (canon (key (val out))))))
+
+@count_nil = (* (all (canon (key (val out)))))
+  & all ~ *
+  & canon ~ *
+  & key ~ *
+  & val ~ *
+  & out ~ 0
+
+@count_cons = (* (((node (kk vv)) t) (all (canon (key (val out))))))
+  & all ~ {all_lookup all_rec}
+  & canon ~ {canon_eq canon_rec}
+  & key ~ {key_eq key_rec}
+  & val ~ {val_eq val_rec}
+  & @at ~ (all_lookup (node rowcanon))
+  & rowcanon ~ $([=] $(canon_eq eqc))
+  & kk ~ $([=] $(key_eq eqk))
+  & vv ~ $([=] $(val_eq eqv))
+  & eqc ~ $([&] $(eqk both))
+  & both ~ $([&] $(eqv matched))
+  & @count ~ (t (all_rec (canon_rec (key_rec (val_rec rest)))))
+  & rest ~ $([+] $(matched out))
+
+// Replace the current best iff this candidate is more frequent,
+// or equally frequent and smaller.
+@choose = (t (all (canon (key (bc (bv (total (vv out)))))))
+  & total ~ {total_a total_b}
+  & total_b ~ {total_eq total_ctx}
+  & bc ~ {bc_a bc_b}
+  & bc_b ~ {bc_eq bc_ctx}
+  & total_a ~ $([>] $(bc_a gt))
+  & total_eq ~ $([=] $(bc_eq eq))
+  & vv ~ {vv_less vv_ctx}
+  & bv ~ {bv_less bv_ctx}
+  & vv_less ~ $([<] $(bv_less less))
+  & eq ~ $([&] $(less tie))
+  & gt ~ $([|] $(tie update))
+  & update ~ ?((@choose_old @choose_new) (t (all (canon (key (bc_ctx (bv_ctx (total_ctx (vv_ctx out)))))))))
+
+@choose_old = (* (t (all (canon (key (bc (bv (total (vv out)))))))))
+  & total ~ *
+  & vv ~ *
+  & @cand ~ (t (all (canon (key (bc (bv out))))))
+
+@choose_new = (* (t (all (canon (key (bc (bv (total (vv out)))))))))
+  & bc ~ *
+  & bv ~ *
+  & @cand ~ (t (all (canon (key (total (vv out))))))
+
+// Look up c[index].
+@at = ((?((@at_nil @at_cons) (pl (idx out))) pl) (idx out))
+
+@at_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@at_cons = (* ((h t) (idx out)))
+  & idx ~ {idx_eq idx_sub}
+  & idx_eq ~ $([=] $(0 iszero))
+  & idx_sub ~ $([-] $(1 idx_next))
+  & iszero ~ ?((@at_here @at_more) (h (t (idx_next out))))
+
+@at_here = (h (t (idx out)))
+  & t ~ *
+  & idx ~ *
+  & out ~ h
+
+@at_more = (* (h (t (idx out))))
+  & h ~ *
+  & @at ~ (t (idx out))
+
+// Append two lists.
+@append = ((?((@append_nil @append_cons) (pl (ys out))) pl) (ys out))
+
+@append_nil = (* (ys out))
+  & out ~ ys
+
+@append_cons = (* ((h t) (ys out)))
+  & @append ~ (t (ys rest))
+  & out ~ (1 (h rest))

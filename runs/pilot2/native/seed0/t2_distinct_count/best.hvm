@@ -1,0 +1,35 @@
+// @prog input: list[u24]; output: number of distinct values
+@prog = (input out)
+  & @dc ~ (input ((0 *) (0 out)))
+
+@dc = ((?((@dc_nil @dc_cons) (pl (seen (acc out)))) pl) (seen (acc out)))
+
+@dc_nil = (* (* (a a)))
+
+@dc_cons = (* ((h t) (s (acc out))))
+  & h ~ {hm hk}
+  & @mem ~ (s (hm (s2 found)))
+  & found ~ ?((@dc_new @dc_found) (hk (t (s2 (acc out)))))
+
+@dc_new = (h (t (s (acc out))))
+  & acc ~ $([+1] acc2)
+  & @dc ~ (t ((1 (h s)) (acc2 out)))
+
+@dc_found = (* (* (t (s (acc out)))))
+  & @dc ~ (t (s (acc out)))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x (sout bout)))) pl) (x (sout bout)))
+
+@mem_nil = (* (* ((0 *) 0)))
+
+@mem_cons = (* ((h t) (x (sout bout))))
+  & h ~ {hk hc}
+  & x ~ {xc xr}
+  & hc ~ $([=] $(xc eq))
+  & @mem ~ (t (xr (tout tbool)))
+  & sout ~ (1 (hk tout))
+  & eq ~ ?((@mem_eqzero @mem_eqyes) (tbool bout))
+
+@mem_eqzero = (a a)
+
+@mem_eqyes = (* (* 1))

@@ -1,0 +1,116 @@
+// Top-level: sort all candidates, then keep the first k.
+@prog = ((k cands) out)
+  & @sort ~ (cands sorted)
+  & @take ~ (k (sorted out))
+
+// Insertion sort on candidate lists.
+@sort = ((?((@sort_nil @sort_cons) (pl out)) pl) out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((h t) out))
+  & @sort ~ (t sorted)
+  & @insert ~ (sorted (h out))
+
+// Insert candidate cand into an already sorted list.
+@insert = ((?((@ins_nil @ins_cons) (pl (cand out))) pl) (cand out))
+
+@ins_nil = (* (cand out))
+  & out ~ (1 (cand (0 *)))
+
+@ins_cons = (* (((ou (ov os)) tail) ((cu (cv cs)) out)))
+  & cs ~ {csk cscmp}
+  & os ~ {osk oscmp}
+  & cscmp ~ {csgt cseq}
+  & oscmp ~ {osgt oseq}
+  & cu ~ {cuk cut}
+  & ou ~ {ouk outest}
+  & cv ~ {cvk cvt}
+  & ov ~ {ovk ovt}
+  & @score ~ (csgt (osgt (cseq (oseq ctx))))
+  & ctx ~ (candK (oldK (tail (out (cut (outest (cvt ovt))))))
+  & candK ~ (cuk (cvk csk))
+  & oldK ~ (ouk (ovk osk))
+
+// Compare scores first: larger scores come first.
+@score = (a (b (ae (be ctx))))
+  & a ~ $([>] $(b gt))
+  & ae ~ $([=] $(be eq))
+  & @score_choose ~ (gt (eq ctx))
+
+@score_choose = (gt (eq ctx))
+  & gt ~ ?((@score_no @score_yes) (eq ctx))
+
+@score_no = (eq (cand (old (tail (out (cut (outest (cvt ovt))))))))
+  & eq ~ ?((@score_less @score_equal) (cand (old (tail (out (cut (outest (cvt ovt))))))))
+
+@score_less = (cand (old (tail (out (* (* (* *)))))))
+  & @put_after ~ (cand (old (tail out)))
+
+@score_equal = (* (cand (old (tail (out (cut (outest (cvt ovt))))))))
+  & @cmp_u ~ (cut (outest (cand (old (tail (out (cvt ovt)))))))
+
+@score_yes = (* (eq (cand (old (tail (out (* (* (* *))))))))
+  & eq ~ *
+  & @put_before ~ (cand (old (tail out)))
+
+// Compare u values when scores tie; compare v values if u also ties.
+@cmp_u = (a (b ctx))
+  & a ~ {al ae}
+  & b ~ {bl be}
+  & al ~ $([<] $(bl lt))
+  & ae ~ $([=] $(be eq))
+  & @u_choose ~ (lt (eq ctx))
+
+@u_choose = (lt (eq ctx))
+  & lt ~ ?((@u_no @u_yes) (eq ctx))
+
+@u_no = (eq (cand (old (tail (out (cvt ovt))))))
+  & eq ~ ?((@u_less @u_equal) (cand (old (tail (out (cvt ovt))))))
+
+@u_less = (cand (old (tail (out (* *)))))
+  & @put_after ~ (cand (old (tail out)))
+
+@u_equal = (* (cand (old (tail (out (cvt ovt))))))
+  & @cmp_v ~ (cvt (ovt (cand (old (tail out)))))
+
+@u_yes = (* (eq (cand (old (tail (out (* *)))))))
+  & eq ~ *
+  & @put_before ~ (cand (old (tail out)))
+
+// With score and u tied, smaller v comes first.
+@cmp_v = (a (b ctx))
+  & a ~ $([<] $(b lt))
+  & lt ~ ?((@put_after @v_yes) ctx)
+
+@v_yes = (* ctx)
+  & @put_before ~ ctx
+
+// Emit cand before old, or recurse into the tail and then emit old.
+@put_before = (cand (old (tail out)))
+  & out ~ (1 (cand (1 (old tail))))
+
+@put_after = (cand (old (tail out)))
+  & @insert ~ (tail (cand rest))
+  & out ~ (1 (old rest))
+
+// Truncate a list to its first k elements.
+@take = (?((@take_zero @take_pos) (list out)) (list out))
+
+@take_zero = (list out)
+  & list ~ *
+  & out ~ (0 *)
+
+@take_pos = (n (list out))
+  & @take_list ~ (list (n out))
+
+@take_list = ((?((@take_nil @take_cons) (pl (n out))) pl) (n out))
+
+@take_nil = (* (n out))
+  & n ~ *
+  & out ~ (0 *)
+
+@take_cons = (* ((head tail) (n out)))
+  & @take ~ (n (tail rest))
+  & out ~ (1 (head rest))

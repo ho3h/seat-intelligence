@@ -1,0 +1,270 @@
+@prog = ((n edges) out)
+  & n ~ {n1 n2}
+  & @all_rows ~ (n1 (edges rows))
+  & @output ~ (n2 (rows out))
+
+@range = (n out)
+  & @range_go ~ (n (0 out))
+
+@range_go = (n (i out))
+  & n ~ ?((@range_nil @range_cons) (i out))
+
+@range_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@range_cons = (nprev (i out))
+  & i ~ {i_head i_inc}
+  & i_inc ~ $([+1] i_next)
+  & @range_go ~ (nprev (i_next rest))
+  & out ~ (1 (i_head rest))
+
+@make_row = (n (s out))
+  & @make_row_go ~ (n (s (0 out)))
+
+@make_row_go = (n (s (i out)))
+  & n ~ ?((@make_row_nil @make_row_cons) (s (i out)))
+
+@make_row_nil = (s (i out))
+  & s ~ *
+  & i ~ *
+  & out ~ (0 *)
+
+@make_row_cons = (nprev (s (i out)))
+  & s ~ {s_cmp s_rec}
+  & i ~ {i_head i_inc}
+  & i_head ~ $([=] $(s_cmp val))
+  & i_inc ~ $([+1] i_next)
+  & @make_row_go ~ (nprev (s_rec (i_next rest)))
+  & out ~ (1 (val rest))
+
+@row_get = (row (idx out))
+  & @row_get_go ~ (row (idx out))
+
+@row_get_go = ((tag payload) (idx out))
+  & tag ~ ?((@row_get_nil @row_get_cons) (payload (idx out)))
+
+@row_get_nil = (payload (idx out))
+  & payload ~ *
+  & idx ~ *
+  & out ~ 0
+
+@row_get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@row_get_zero @row_get_pos) (h (t out)))
+
+@row_get_zero = (h (t out))
+  & t ~ *
+  & h ~ out
+
+@row_get_pos = (nprev (h (t out)))
+  & h ~ *
+  & @row_get_go ~ (t (nprev out))
+
+@row_set = (row (idx (val out)))
+  & @row_set_go ~ (row (idx (val out)))
+
+@row_set_go = ((tag payload) (idx (val out)))
+  & tag ~ ?((@row_set_nil @row_set_cons) (payload (idx (val out))))
+
+@row_set_nil = (payload (idx (val out)))
+  & payload ~ *
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@row_set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@row_set_zero @row_set_pos) (h (t (val out))))
+
+@row_set_zero = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@row_set_pos = (nprev (h (t (val out))))
+  & @row_set_go ~ (t (nprev (val rest)))
+  & out ~ (1 (h rest))
+
+@process_edges = (edges (row out))
+  & @pe_go ~ (edges (row out))
+
+@pe_go = ((tag payload) (row out))
+  & tag ~ ?((@pe_nil @pe_cons) (payload (row out)))
+
+@pe_nil = (payload (row out))
+  & payload ~ *
+  & out ~ row
+
+@pe_cons = (* (((u v) tail) (row out)))
+  & row ~ {row_get row_ctx}
+  & @row_get ~ (row_get (u b))
+  & b ~ ?((@pe_zero @pe_one) (v (row_ctx (tail out))))
+
+@pe_zero = (v (row (tail out)))
+  & v ~ *
+  & @pe_go ~ (tail (row out))
+
+@pe_one = (* (v (row (tail out))))
+  & @row_set ~ (row (v (1 row2)))
+  & @pe_go ~ (tail (row2 out))
+
+@close_go = (n (edges (row out)))
+  & n ~ ?((@close_nil @close_cons) (edges (row out)))
+
+@close_nil = (edges (row out))
+  & edges ~ *
+  & out ~ row
+
+@close_cons = (nprev (edges (row out)))
+  & edges ~ {edges1 edges2}
+  & row ~ {row_proc row_eq}
+  & @process_edges ~ (edges1 (row_proc row2))
+  & row2 ~ {row2_eq row2_res}
+  & @eq_rows ~ (row_eq (row2_eq same))
+  & same ~ ?((@close_neq @close_eq) (nprev (edges2 (row2_res out))))
+
+@close_eq = (nprev (edges2 (row2_res out)))
+  & nprev ~ *
+  & edges2 ~ *
+  & out ~ row2_res
+
+@close_neq = (nprev (edges2 (row2_res out)))
+  & @close_go ~ (nprev (edges2 (row2_res out)))
+
+@eq_rows = (r1 (r2 out))
+  & @eq_rows_go ~ (r1 (r2 out))
+
+@eq_rows_go = (r1 (r2 out))
+  & r1 ~ (t1 p1)
+  & r2 ~ (t2 p2)
+  & t1 ~ ?((@eq_nil @eq_cons) (p1 (t2 (p2 out))))
+
+@eq_nil = (p1 (t2 (p2 out)))
+  & p1 ~ *
+  & t2 ~ ?((@eq_both_nil @eq_mismatch) (p2 out))
+
+@eq_both_nil = (p2 out)
+  & p2 ~ *
+  & out ~ 1
+
+@eq_mismatch = (p2 out)
+  & p2 ~ *
+  & out ~ 0
+
+@eq_cons = (p1 (t2 (p2 out)))
+  & t2 ~ ?((@eq_mismatch2 @eq_heads) (p1 (p2 out)))
+
+@eq_mismatch2 = (p1 (p2 out))
+  & p1 ~ *
+  & p2 ~ *
+  & out ~ 0
+
+@eq_heads = (p1 (p2 out))
+  & p1 ~ (h1 t1)
+  & p2 ~ (h2 t2)
+  & h1 ~ $([=] $(h2 same_head))
+  & same_head ~ ?((@eq_head_no @eq_head_yes) (t1 (t2 out)))
+
+@eq_head_no = (t1 (t2 out))
+  & t1 ~ *
+  & t2 ~ *
+  & out ~ 0
+
+@eq_head_yes = (t1 (t2 out))
+  & @eq_rows_go ~ (t1 (t2 out))
+
+@compute_row = (n (edges (s out)))
+  & n ~ {n1 n2}
+  & @make_row ~ (n1 (s row0))
+  & @close_go ~ (n2 (edges (row0 out)))
+
+@all_rows = (n (edges out))
+  & n ~ {n_range n_map}
+  & @range ~ (n_range indices)
+  & @map_rows ~ (indices (n_map (edges out)))
+
+@map_rows = (indices (n (edges out)))
+  & @map_rows_go ~ (indices (n (edges out)))
+
+@map_rows_go = ((tag payload) (n (edges out)))
+  & tag ~ ?((@map_rows_nil @map_rows_cons) (payload (n (edges out))))
+
+@map_rows_nil = (payload (n (edges out)))
+  & payload ~ *
+  & n ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@map_rows_cons = (* ((s tail) (n (edges out))))
+  & n ~ {n1 n2}
+  & edges ~ {edges1 edges2}
+  & @compute_row ~ (n1 (edges1 (s row_s)))
+  & @map_rows_go ~ (tail (n2 (edges2 rest)))
+  & out ~ (1 (row_s rest))
+
+@output = (n (rows out))
+  & n ~ {n_range n_map}
+  & @range ~ (n_range indices)
+  & @map_reps ~ (indices (rows (n_map out)))
+
+@map_reps = (indices (rows (n out)))
+  & @map_reps_go ~ (indices (rows (n out)))
+
+@map_reps_go = ((tag payload) (rows (n out)))
+  & tag ~ ?((@map_reps_nil @map_reps_cons) (payload (rows (n out))))
+
+@map_reps_nil = (payload (rows (n out)))
+  & payload ~ *
+  & rows ~ *
+  & n ~ *
+  & out ~ (0 *)
+
+@map_reps_cons = (* ((v tail) (rows (n out))))
+  & rows ~ {rows1 rows2}
+  & n ~ {n1 n2}
+  & @rep_for ~ (v (rows1 (n1 rep)))
+  & @map_reps_go ~ (tail (rows2 (n2 rest)))
+  & out ~ (1 (rep rest))
+
+@rep_for = (v (rows (n out)))
+  & v ~ {v1 v2}
+  & rows ~ {rows1 rows2}
+  & @row_get ~ (rows1 (v1 row_v))
+  & @scan_u ~ (0 (n (v2 (row_v (rows2 out)))))
+
+@scan_u = (u (n (v (row_v (rows out)))))
+  & u ~ {u_eq u_ctx}
+  & n ~ {n_eq n_ctx}
+  & u_eq ~ $([=] $(n_eq eq))
+  & eq ~ ?((@scan_step @scan_done) (u_ctx (n_ctx (v (row_v (rows out))))))
+
+@scan_step = (u (n (v (row_v (rows out)))))
+  & u ~ {u1 u2}
+  & u1 ~ {u_rv u_rows}
+  & u2 ~ {u_out u_inc}
+  & v ~ {v_get v_ctx}
+  & row_v ~ {rv_get rv_ctx}
+  & rows ~ {rows_get rows_ctx}
+  & @row_get ~ (rv_get (u_rv a))
+  & @row_get ~ (rows_get (u_rows row_u))
+  & @row_get ~ (row_u (v_get b))
+  & a ~ $([&] $(b cond))
+  & cond ~ ?((@scan_notfound @scan_found) (u_out (u_inc (n (v_ctx (rv_ctx (rows_ctx out)))))))
+
+@scan_notfound = (u_out (u_inc (n (v_ctx (rv_ctx (rows_ctx out))))))
+  & u_out ~ *
+  & u_inc ~ $([+1] u_next)
+  & @scan_u ~ (u_next (n (v_ctx (rv_ctx (rows_ctx out)))))
+
+@scan_found = (* (u_out (u_inc (n (v_ctx (rv_ctx (rows_ctx out)))))))
+  & u_inc ~ *
+  & n ~ *
+  & v_ctx ~ *
+  & rv_ctx ~ *
+  & rows_ctx ~ *
+  & out ~ u_out
+
+@scan_done = (* (u_ctx (n_ctx (v (row_v (rows out))))))
+  & n_ctx ~ *
+  & v ~ *
+  & row_v ~ *
+  & rows ~ *
+  & out ~ u_ctx

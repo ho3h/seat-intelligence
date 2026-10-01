@@ -1,0 +1,46 @@
+// Scan in-order, returning variant 0 for not found and variant 1 with the value.
+@scan = ((?((@scan_leaf @scan_node) (pl (k out))) pl) (k out))
+
+@scan_leaf = (* (k out))
+  & k ~ *
+  & out ~ (0 *)
+
+@scan_node = (* ((l (v r)) (k out)))
+  & @scan ~ (l (k left_result))
+  & left_result ~ (flag val)
+  & flag ~ ?((@left_none @left_some) (val (k (v (r out)))))
+
+@left_some = (* (val (k (v (r out)))))
+  & k ~ *
+  & v ~ *
+  & r ~ *
+  & out ~ (1 val)
+
+@left_none = (val (k (v (r out))))
+  & val ~ *
+  & k ~ {k_test k_sub}
+  & k_test ~ $([=] $(0 eq))
+  & k_sub ~ $([-] $(1 k2))
+  & eq ~ ?((@at_node @go_right) (k2 (v (r out))))
+
+@at_node = (k2 (v (r out)))
+  & k2 ~ *
+  & r ~ *
+  & out ~ (1 v)
+
+@go_right = (* (k2 (v (r out))))
+  & @scan ~ (r (k2 out))
+
+@finish = ((flag val) out)
+  & flag ~ ?((@finish_none @finish_some) (val out))
+
+@finish_none = (val out)
+  & val ~ *
+  & out ~ 16777215
+
+@finish_some = (* (val out))
+  & out ~ val
+
+@prog = ((k t) out)
+  & @scan ~ (t (k result))
+  & @finish ~ (result out)

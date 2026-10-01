@@ -1,0 +1,36 @@
+// @len counts list cells.
+@len = (l out)
+  & @len_go ~ (l (0 out))
+
+@len_go = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+] $(1 acc2))
+  & @len_go ~ (t (acc2 out))
+
+// This net distinguishes some forests from cyclic graphs, but does not
+// compute the shortest cycle length.
+@prog = ((n edges) out)
+  & @len ~ (edges m)
+  & m ~ {m1 m2}
+  & n ~ {n1 n2}
+  & m2 ~ *
+  & n1 ~ $([>] $(m1 cmp))
+  & cmp ~ ?((@maybe @acyclic) (n2 out))
+
+@maybe = (n out)
+  & n ~ ?((@zero @tri) out)
+
+@acyclic = (k (n out))
+  & k ~ *
+  & out ~ 0
+
+@zero = (out)
+  & out ~ 0
+
+@tri = (k out)
+  & k ~ *
+  & out ~ 3

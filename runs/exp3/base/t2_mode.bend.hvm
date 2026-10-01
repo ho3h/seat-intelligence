@@ -1,0 +1,94 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@find_mode = ((@find_mode__C8 a) a)
+
+@find_mode__C0 = (* (a a))
+
+@find_mode__C1 = (* (a (* a)))
+
+@find_mode__C2 = (* (* (c (d (b (a e))))))
+  & @find_mode ~ (a (b (1 (c (d e)))))
+
+@find_mode__C3 = (* (c (d (* (* (b (a e)))))))
+  & @find_mode ~ (a (b (1 (c (d e)))))
+
+@find_mode__C4 = (b ({$([>] $(a ?((@find_mode__C2 @find_mode__C3) (b (c (d (e f))))))) c} (d ({a e} f))))
+
+@find_mode__C5 = (* (b ($([+0x0000001] c) (d (e (* (a f)))))))
+  & @find_mode ~ (a (b (c (d (e f)))))
+
+@find_mode__C6 = (b ($([>] $(a ?((@find_mode__C0 @find_mode__C1) (b (c d))))) (c (a d))))
+
+@find_mode__C7 = (* ({$([=] $(a ?((@find_mode__C4 @find_mode__C5) (b (c (d (e (f (g h))))))))) f} (g ({a b} (c (d (e h)))))))
+
+@find_mode__C8 = (?((@find_mode__C6 @find_mode__C7) a) a)
+
+@merge = ((@merge__C6 a) a)
+
+@merge__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge__C2 = a
+  & @List/Cons ~ a
+
+@merge__C3 = (* ({a e} (f ({$([>] $(a b)) c} (d g)))))
+  & $(b ?((@merge__C0 @merge__C1) (c (d (e (f g)))))) ~ [=0x0000000]
+
+@merge__C4 = (?((@merge__C2 @merge__C3) a) a)
+
+@merge__C5 = (* (a (b ((@merge__C4 (a (b c))) c))))
+
+@merge__C6 = (?(((a a) @merge__C5) b) b)
+
+@prog = (a b)
+  & @sort ~ (a (@prog__C1 b))
+
+@prog__C0 = (* ({b c} (a d)))
+  & @find_mode ~ (a (b (1 (c (0 d)))))
+
+@prog__C1 = (?((0 @prog__C0) a) a)
+
+@sort = ((@sort__C4 a) a)
+
+@sort__C0 = a
+  & @List/Cons ~ a
+
+@sort__C1 = (* (* (* (a (b h)))))
+  & @merge ~ (e (g h))
+  & @split ~ (c (@List/Nil (@List/Nil (0 (d f)))))
+  & @List/Cons ~ (a (b c))
+  &!@sort ~ (d e)
+  &!@sort ~ (f g)
+
+@sort__C2 = (?((@sort__C0 @sort__C1) a) a)
+
+@sort__C3 = (* (a ({(@sort__C2 (a (b c))) b} c)))
+
+@sort__C4 = (?((@List/Nil @sort__C3) a) a)
+
+@split = ((@split__C4 a) a)
+
+@split__C0 = (b (d (c (a f))))
+  & @split ~ (a (b (e (0 f))))
+  & @List/Cons ~ (c (d e))
+
+@split__C1 = (* (c (e (b (a f)))))
+  & @split ~ (a (d (e (1 f))))
+  & @List/Cons ~ (b (c d))
+
+@split__C2 = (a (b (* (a b))))
+
+@split__C3 = (* (c (d (a (b ($([=0x0000000] ?((@split__C0 @split__C1) (a (b (c (d e)))))) e))))))
+
+@split__C4 = (?((@split__C2 @split__C3) a) a)
+
+

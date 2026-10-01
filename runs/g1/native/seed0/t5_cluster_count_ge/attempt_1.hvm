@@ -1,0 +1,137 @@
+@prog = ((n (k pairs)) out)
+  & @nodes ~ (n (0 (k (pairs (0 out)))))
+
+@nodes = (?((@nodes_done @nodes_step) ctx) (i (k (edges (acc out))))
+  & ctx ~ (i (k (edges (acc out))))
+
+@nodes_done = (i (k (edges (acc out))))
+  & i ~ *
+  & k ~ *
+  & edges ~ *
+  & out ~ acc
+
+@nodes_step = (left (i (k (edges (acc out)))))
+  & @process ~ (left (i (k (edges (acc out)))))
+
+@process = (left (i (k (edges (acc out)))))
+  & edges ~ {ec en}
+  & k ~ {kc kn}
+  & i ~ {ic ir}
+  & ir ~ {im ii}
+  & ii ~ $([+1] inext)
+  & @closure ~ (ec ((1 (ic (0 *))) reach))
+  & @stats ~ (reach (0 (16777215 stats)))
+  & stats ~ (size min)
+  & min ~ $([=] $(im eq))
+  & size ~ $([<] $(kc lt))
+  & eq ~ ?((@process_not_min @process_min) (left (inext (kn (en (lt (acc out))))))
+
+@process_not_min = (left (ii (k (e (lt (a out)))))
+  & lt ~ *
+  & @nodes ~ (left (ii (k (e (a out)))))
+
+@process_min = (* (left (ii (k (e (lt (a out))))))
+  & lt ~ ?((@process_accept @process_reject) (left (ii (k (e (a out))))))
+
+@process_accept = (left (ii (k (e (a out)))))
+  & a ~ $([+] $(1 anew))
+  & @nodes ~ (left (ii (k (e (anew out)))))
+
+@process_reject = (* (left (ii (k (e (a out))))))
+  & @nodes ~ (left (ii (k (e (a out)))))
+
+@closure = (edges (seen out))
+  & edges ~ {e1 e2}
+  & @scan ~ (e1 (seen (0 pair)))
+  & pair ~ (s z)
+  & z ~ ?((@cl_done @cl_more) (s (e2 out)))
+
+@cl_done = (s (e out))
+  & e ~ *
+  & out ~ s
+
+@cl_more = (* (s (e out)))
+  & @closure ~ (e (s out))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (seen (flag out)))) pl) (seen (flag out)))
+
+@scan_nil = (* (s (f out)))
+  & out ~ (s f)
+
+@scan_cons = (* (((u v) t) (s (flag out))))
+  & @scan_u ~ (u (v (t (s (flag out)))))
+
+@scan_u = (u (v (tail (seen (flag out)))))
+  & u ~ {um uk}
+  & seen ~ {sm ss}
+  & @mem ~ (sm (um z))
+  & z ~ ?((@scan_u_no @scan_u_yes) (uk (v (tail (ss (flag out))))))
+
+@scan_u_no = (u (v (tail (s (flag out)))))
+  & @link_step ~ (s (v (u (tail (flag out)))))
+
+@scan_u_yes = (* (u (v (tail (s (flag out))))))
+  & u ~ *
+  & @maybe_add ~ (s (v (tail (flag out))))
+
+@maybe_add = (seen (x (tail (flag out))))
+  & seen ~ {sm ss}
+  & x ~ {xm xk}
+  & @mem ~ (sm (xm z))
+  & z ~ ?((@maybe_add_no @maybe_add_yes) (xk (tail (ss (flag out)))))
+
+@maybe_add_no = (x (tail (s (flag out))))
+  & flag ~ *
+  & @scan ~ (tail ((1 (x s)) (1 out)))
+
+@maybe_add_yes = (* (x (tail (s (flag out)))))
+  & x ~ *
+  & @scan ~ (tail (s (flag out)))
+
+@link_step = (seen (test (add (tail (flag out)))))
+  & seen ~ {sm ss}
+  & test ~ {tm tk}
+  & @mem ~ (sm (tm z))
+  & z ~ ?((@link_no @link_yes) (tk (add (tail (ss (flag out))))))
+
+@link_no = (* (* (tail (s (flag out)))))
+  & @scan ~ (tail (s (flag out)))
+
+@link_yes = (* (test (add (tail (s (flag out))))))
+  & test ~ *
+  & flag ~ *
+  & @scan ~ (tail ((1 (add s)) (1 out)))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (x out))) pl) (x out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xm xk}
+  & h ~ $([=] $(xm z))
+  & z ~ ?((@mem_no @mem_yes) (t (xk out)))
+
+@mem_no = (t (x out))
+  & @mem ~ (t (x out))
+
+@mem_yes = (* (* 1))
+
+@stats = ((?((@stats_nil @stats_cons) (pl (size (min out)))) pl) (size (min out)))
+
+@stats_nil = (* (size (min out)))
+  & out ~ (size min)
+
+@stats_cons = (* ((h t) (size (min out))))
+  & h ~ {hc hk}
+  & min ~ {mc mk}
+  & size ~ $([+1] sz)
+  & hc ~ $([<] $(mc z))
+  & z ~ ?((@stats_keep @stats_new) (t (sz (hk (mk out)))))
+
+@stats_keep = (t (sz (h (m out))))
+  & h ~ *
+  & @stats ~ (t (sz (m out)))
+
+@stats_new = (* (t (sz (h (m out)))))
+  & m ~ *
+  & @stats ~ (t (sz (h out)))

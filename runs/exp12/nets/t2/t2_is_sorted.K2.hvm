@@ -1,0 +1,28 @@
+@prog = (lv1 out)
+  & @begin_lw ~ (lv1 out)
+
+@empty = (* 1)
+
+@begin = (* ((h t) out))
+  & @check_cons_lw ~ (t (h out))
+
+@check = (lv2 (prev out))
+  & @check_cons_lw ~ (lv2 (prev out))
+
+@check_nil = (* (* 1))
+
+@check_cons = (* ((h t) (prev out)))
+  & h ~ {h1 h2}
+  & prev ~ $([>] $(h1 z))
+  & z ~ ?((@check @bad) (t (h2 out)))
+
+@bad = (* (* (* 0)))
+
+@begin_lw = (ls27 q18)
+  & ls27 ~ (g24 (e22 (g25 (e23 tk26))))
+  & g24 ~ ?((@empty @begin_la) ((e22 (q20 q21)) q18))
+  & g25 ~ ?((@check_nil @check_cons) ((e23 tk26) (q20 q21)))
+
+@check_cons_lw = ((?((@check_nil @check_cons) (q5 (q6 q7))) q5) (q6 q7))
+
+@begin_la = (* ((h (h out)) out))

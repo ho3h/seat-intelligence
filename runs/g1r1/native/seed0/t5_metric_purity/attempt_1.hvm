@@ -1,0 +1,78 @@
+@prog = ((pred truth) out)
+  & pred ~ {walk fp}
+  & @outer ~ (walk (fp (truth (0 out))))
+
+@mem = ((?((@mem_nil @mem_cons) (pl (q out))) pl) (q out))
+
+@mem_nil = (* (* 0))
+
+@mem_cons = (* ((h t) (q out)))
+  & q ~ {q_cmp q_rec}
+  & h ~ $([=] $(q_cmp z))
+  & z ~ ?((@mem_no @mem_yes) (t (q_rec out)))
+
+@mem_no = (t (q out))
+  & @mem ~ (t (q out))
+
+@mem_yes = (* (t (* 1)))
+
+@cp = ((?((@cp_nil @cp_cons) (pl (tl (tp (tt (acc out))))) ) pl) (tl (tp (tt (acc out)))))
+
+@cp_nil = (* (* (* (* (a a)))))
+
+@cp_cons = (* ((hp pnext) (tl (tp (tt (acc out))))))
+  & @cpt ~ (tl (hp (pnext (tp (tt (acc out))))))
+
+@cpt = ((?((@cpt_nil @cpt_cons) (pl (hp (pnext (tp (tt (acc out)))))) ) pl) (hp (pnext (tp (tt (acc out)))))
+
+@cpt_nil = (* (* (* (* (* (a a))))))
+
+@cpt_cons = (* ((ht tnext) (hp (pnext (tp (tt (acc out)))))))
+  & tp ~ {tp_cmp tp_rec}
+  & tt ~ {tt_cmp tt_rec}
+  & hp ~ $([=] $(tp_cmp e1))
+  & ht ~ $([=] $(tt_cmp e2))
+  & e1 ~ $([*] $(e2 both))
+  & acc ~ $([+] $(both acc2))
+  & @cp ~ (pnext (tnext (tp_rec (tt_rec (acc2 out)))))
+
+@maxscan = ((?((@max_nil @max_cons) (pl (target (fp (ft (mx out)))))) pl) (target (fp (ft (mx out))))
+
+@max_nil = (* (* (* (* (a a)))))
+
+@max_cons = (* ((cand tail) (target (fp (ft (mx out))))))
+  & fp ~ {fp_cp fp_rec}
+  & ft ~ {ft_cp ft_rec}
+  & target ~ {target_cp target_rec}
+  & @cp ~ (fp_cp (ft_cp (target_cp (cand (0 cnt))))
+  & cnt ~ {cnt_cmp cnt_keep}
+  & mx ~ {mx_cmp mx_keep}
+  & cnt_cmp ~ $([>] $(mx_cmp z))
+  & z ~ ?((@max_keep @max_update) (tail (target_rec (fp_rec (ft_rec (mx_keep (cnt_keep out))))))
+
+@max_keep = (tail (target (fp (ft (mx (* out))))))
+  & @maxscan ~ (tail (target (fp (ft (mx out))))
+
+@max_update = (* (tail (target (fp (ft (* (new out)))))))
+  & @maxscan ~ (tail (target (fp (ft (new out))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (fp (ft (acc out))))) pl) (fp (ft (acc out))))
+
+@outer_nil = (* (* (* (a a))))
+
+@outer_cons = (* ((h t) (fp (ft (acc out)))))
+  & t ~ {t_mem t_next}
+  & h ~ {h_mem h_group}
+  & @mem ~ (t_mem (h_mem z))
+  & z ~ ?((@outer_group @outer_skip) (t_next (fp (ft (h_group (acc out))))))
+
+@outer_group = (t (fp (ft (h (acc out)))))
+  & fp ~ {fp_scan fp_next}
+  & ft ~ {ft_a ft_next}
+  & ft_a ~ {ft_candidates ft_count}
+  & @maxscan ~ (ft_candidates (h (fp_scan (ft_count (0 m))))
+  & acc ~ $([+] $(m acc2))
+  & @outer ~ (t (fp_next (ft_next (acc2 out))))
+
+@outer_skip = (* (t (fp (ft (h (acc out))))))
+  & @outer ~ (t (fp (ft (acc out))))

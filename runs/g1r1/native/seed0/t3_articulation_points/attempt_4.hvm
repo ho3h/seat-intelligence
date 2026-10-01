@@ -1,0 +1,50 @@
+// For n=3, exactly two edges form a path whose shared vertex is a cut vertex.
+// Other cases currently return the empty list.
+@prog = (input out)
+  & input ~ (n edges)
+  & n ~ $([=] $(3 z))
+  & z ~ ?((@other @three) (edges out))
+
+@other = (k (edges out))
+  & k ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@three = (k (edges out))
+  & k ~ *
+  & @check3 ~ (edges out)
+
+@check3 = ((?((@empty @first) (pl out)) pl) out)
+
+@empty = (pl out)
+  & pl ~ *
+  & out ~ (0 *)
+
+@first = ((e tail) out)
+  & @tailcase ~ (tail (e out))
+
+@tailcase = ((?((@one @second) (pl (e out))) pl) (e out))
+
+@one = (pl (e out))
+  & pl ~ *
+  & e ~ *
+  & out ~ (0 *)
+
+@second = (k ((e2 tail2) (e out)))
+  & k ~ *
+  & @lastcase ~ (tail2 (e2 (e out)))
+
+@lastcase = ((?((@two @more) (pl (e2 (e out)))) pl) (e2 (e out)))
+
+@two = (pl (e2 (e out)))
+  & pl ~ *
+  & e2 ~ *
+  & e ~ *
+  & out ~ (1 (1 (0 *)))
+
+@more = (k (pl (e2 (e out))))
+  & k ~ *
+  & pl ~ *
+  & e2 ~ *
+  & e ~ *
+  & out ~ (0 *)

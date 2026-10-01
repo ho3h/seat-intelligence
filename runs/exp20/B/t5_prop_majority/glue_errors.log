@@ -1,0 +1,14 @@
+--- 05:40:47
+build.py:27: wire `r` (num, result of `&`, made at build.py:23) is used a second time (select condition); it was already used at build.py:26 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:41:05
+recipes.py:678: wire `x` (num, argument `x` of leaf of mapreduce `am_mx` (max), made at recipes.py:681) is used a second time (left operand of `+`); it was already used at recipes.py:116 (left operand of `!`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(x, 2)  and use each once.
+--- 05:41:52
+build.py:63: wire `L` (depth, output `L` of lg, made at recipes.py:156) is used a second time (recipe lookup_many `lk` port `L`); it was already used at build.py:60 (recipe list_to_trie `ct` port `L`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.
+--- 05:42:03
+build.py:81: wire `idx` (num, output `idx` of recipe argmax_first_trie `am`, made at build.py:76) is used a second time (select if_true); it was already used at build.py:80 (left operand of `!`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(idx, 2)  and use each once.
+--- 05:46:36
+build.py:21: wire `r` (num, result of `=`, made at build.py:18) is used a second time (select condition); it was already used at build.py:20 (select condition). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:46:44
+step of stream `rk_w` (@rk_w_step): 1 value(s) never used:
+    `E12` (num, copy 2 of `E1`, made at build.py:17)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).

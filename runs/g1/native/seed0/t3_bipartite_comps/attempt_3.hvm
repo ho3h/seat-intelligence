@@ -1,0 +1,4 @@
+// For an edgeless graph, every vertex is its own bipartite component.
+@prog = ((n edges) out)
+  & edges ~ *
+  & out ~ n

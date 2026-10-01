@@ -1,0 +1,25 @@
+@product = ((@product__C8 a) a)
+
+@product__C0 = (b (a c))
+  & @product ~ (a (b c))
+
+@product__C1 = (* (a (c ($([*] $(a {$([=0x0000000] ?((@product__C0 (* (* (* 0)))) (b (c d)))) b})) d))))
+
+@product__C2 = (?(((a a) @product__C1) b) b)
+
+@product__C3 = (* (a ((@product__C2 (b c)) ($([*] $(a b)) c))))
+
+@product__C4 = (?(((a a) @product__C3) b) b)
+
+@product__C5 = (* (a ((@product__C4 (b c)) ($([*] $(a b)) c))))
+
+@product__C6 = (?(((a a) @product__C5) b) b)
+
+@product__C7 = (* (a ((@product__C6 (b c)) ($([*] $(a b)) c))))
+
+@product__C8 = (?(((a a) @product__C7) b) b)
+
+@prog = (a b)
+  & @product ~ (a (1 b))
+
+

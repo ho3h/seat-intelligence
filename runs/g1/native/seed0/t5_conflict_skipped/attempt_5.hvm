@@ -1,0 +1,122 @@
+// Sort candidates by descending score, then ascending u and v. For cap < 2,
+// no pair can merge, so every candidate is skipped. Otherwise, retain pairs
+// that are directly listed as must-not-link.
+@prog = ((n (cap (mnl cands))) out)
+  & n ~ *
+  & @sort ~ (cands sorted)
+  & cap ~ $([<] $(2 low))
+  & low ~ ?((@filter_zero @all_succ) (sorted (mnl out)))
+
+@filter_zero = (sorted (mnl out))
+  & @filter ~ (sorted (mnl out))
+
+@all_succ = (* (sorted (mnl out)))
+  & mnl ~ *
+  & @map ~ (sorted out)
+
+@sort = ((?((@sort_nil @sort_cons) (payload out)) payload) out)
+
+@sort_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@sort_cons = (* ((cand tail) out))
+  & @sort ~ (tail sorted)
+  & @insert ~ (cand (sorted out))
+
+@insert = (cand ((?((@ins_nil @ins_cons) (payload (cand out))) payload) out))
+
+@ins_nil = (payload (cand out))
+  & payload ~ *
+  & out ~ (1 (cand (0 *)))
+
+@ins_cons = (* ((head tail) (cand out)))
+  & cand ~ {ct ck}
+  & head ~ {ht hk}
+  & @before ~ (ct (ht flag))
+  & flag ~ ?((@ins_after @ins_before) (ck (hk (tail out))))
+
+@ins_after = (cand (head (tail out)))
+  & @insert ~ (cand (tail rest))
+  & out ~ (1 (head rest))
+
+@ins_before = (* (cand (head (tail out))))
+  & out ~ (1 (cand (1 (head tail))))
+
+@before = ((cu (cv cs)) ((hu (hv hs)) out))
+  & cs ~ {cs_gt cs_eq}
+  & hs ~ {hs_gt hs_eq}
+  & cs_gt ~ $([>] $(hs_gt gt))
+  & cs_eq ~ $([=] $(hs_eq eqs))
+  & cu ~ {cu_lt cu_eq}
+  & hu ~ {hu_lt hu_eq}
+  & cu_lt ~ $([<] $(hu_lt u_lt))
+  & cu_eq ~ $([=] $(hu_eq u_eq))
+  & cv ~ $([<] $(hv v_lt))
+  & u_eq ~ $([&] $(v_lt u_tie))
+  & u_lt ~ $([|] $(u_tie tie))
+  & eqs ~ $([&] $(tie tie_score))
+  & gt ~ $([|] $(tie_score out))
+
+@map = ((?((@map_nil @map_cons) (payload out)) payload) out)
+
+@map_nil = (payload out)
+  & payload ~ *
+  & out ~ (0 *)
+
+@map_cons = (* ((u (v score)) tail) out)
+  & score ~ *
+  & @map ~ (tail rest)
+  & out ~ (1 ((u v) rest))
+
+@filter = ((?((@filter_nil @filter_cons) (payload (mnl out))) payload) (mnl out))
+
+@filter_nil = (payload (mnl out))
+  & payload ~ *
+  & mnl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (((u (v score)) tail) (mnl out)))
+  & u ~ {uh uo}
+  & v ~ {vh vo}
+  & mnl ~ {mh mn}
+  & @has ~ (mh (uh (vh found)))
+  & found ~ ?((@filter_no @filter_yes) (uo (vo (score (tail (mn out))))))
+
+@filter_no = (u (v (score (tail (mnl out)))))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & @filter ~ (tail (mnl rest))
+  & out ~ rest
+
+@filter_yes = (* (u (v (score (tail (mnl out))))))
+  & score ~ *
+  & @filter ~ (tail (mnl rest))
+  & out ~ (1 ((u v) rest))
+
+@has = ((?((@has_nil @has_cons) (payload (u (v out)))) payload) (u (v out)))
+
+@has_nil = (payload (u (v out)))
+  & payload ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 0
+
+@has_cons = (* (((a b) tail) (u (v out))))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & a ~ $([=] $(u1 ea))
+  & b ~ $([=] $(v1 eb))
+  & ea ~ $([&] $(eb both))
+  & both ~ ?((@has_recurse @has_true) (tail (u2 (v2 out))))
+
+@has_recurse = (tail (u (v out)))
+  & @has ~ (tail (u (v found)))
+  & out ~ found
+
+@has_true = (* (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1

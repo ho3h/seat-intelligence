@@ -1,0 +1,40 @@
+@prog = ((cl ml) out)
+  & @count ~ (ml (cl out))
+
+@count = ((?((@count_nil @count_cons) (pl (cl out))) pl) (cl out))
+
+@count_nil = (* (cl out))
+  & cl ~ *
+  & out ~ 0
+
+@count_cons = (* (((a b) rest) (cl out)))
+  & cl ~ {cl_tail cl_pair}
+  & @count ~ (rest (cl_tail tailcount))
+  & @walk_a ~ (a (b (cl_pair (tailcount out))))
+
+@walk_a = (a (b (lst (tailcount out))))
+  & a ~ ?((@at_a @step_a) (b (lst (tailcount out))))
+
+@at_a = (b ((tag (head tail)) (tailcount out)))
+  & tag ~ *
+  & @walk_b ~ (b (head (tail (tailcount out))))
+
+@step_a = (a (b ((tag (head tail)) (tailcount out))))
+  & tag ~ *
+  & head ~ *
+  & b ~ $([-1] b2)
+  & @walk_a ~ (a (b2 (tail (tailcount out))))
+
+@walk_b = (d (saved (lst (tailcount out))))
+  & d ~ ?((@at_b @step_b) (saved (lst (tailcount out))))
+
+@at_b = (saved ((tag (head tail)) (tailcount out)))
+  & tag ~ *
+  & tail ~ *
+  & saved ~ $([=] $(head eq))
+  & tailcount ~ $([+] $(eq out))
+
+@step_b = (d (saved ((tag (head tail)) (tailcount out))))
+  & tag ~ *
+  & head ~ *
+  & @walk_b ~ (d (saved (tail (tailcount out))))

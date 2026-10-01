@@ -1,0 +1,16 @@
+@prog = (lv1 out)
+  & @map_cons_lw ~ (lv1 out)
+
+@map_nil = (* (0 *))
+
+@map_cons = (* (($([*2] d) lv2) (1 (d tail_out))))
+  & @map_cons_lw ~ (lv2 tail_out)
+
+@map_cons_lw = (ls23 q7)
+  & ls23 ~ (g18 (e14 (g19 (e15 (g20 (e16 (g21 (e17 tk22))))))))
+  & g18 ~ ?((@map_nil @map_cons_la) ((e14 q9) q7))
+  & g19 ~ ?((@map_nil @map_cons_la) ((e15 q11) q9))
+  & g20 ~ ?((@map_nil @map_cons_la) ((e16 q13) q11))
+  & g21 ~ ?((@map_nil @map_cons) ((e17 tk22) q13))
+
+@map_cons_la = (* (($([*2] d) tail_out) (1 (d tail_out))))

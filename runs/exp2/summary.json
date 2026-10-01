@@ -1,0 +1,281 @@
+{
+ "A_baseline_batchgen": {
+  "file": "/Users/tedsandtads/Genome/runs/exp/A_native_v1_iid.scored.json",
+  "tasks": 120,
+  "n": 8,
+  "samples": 960,
+  "outcomes": {
+   "pass": 138,
+   "fail": 223,
+   "static": 597,
+   "noblock": 2
+  },
+  "static_classes": {
+   "wire_once": 490,
+   "wire_many": 78,
+   "undef_ref": 14,
+   "brackets": 6,
+   "other_static": 9
+  },
+  "pass@1": 0.1437,
+  "pass@1_task_boot95": [
+   0.099,
+   0.191
+  ],
+  "pass@1_wilson95_samples(naive)": [
+   0.123,
+   0.167
+  ],
+  "pass@2": 0.2083,
+  "pass@4": 0.2827,
+  "pass@8": 0.375,
+  "static_filter_best_of_8": 0.2583,
+  "static_filter_best_of_n_wilson95": [
+   0.188,
+   0.343
+  ],
+  "pass_given_static_clean": 0.3823,
+  "static_clean_rate": 0.376,
+  "per_family_pass@1": {
+   "pipeline": 0.131,
+   "reduce": 0.156
+  },
+  "pass_rate": 0.1437,
+  "fail_rate": 0.2323,
+  "static_rate": 0.6219,
+  "noblock_rate": 0.0021,
+  "fail_rate_boot95": [
+   0.196,
+   0.271
+  ],
+  "static_rate_boot95": [
+   0.572,
+   0.673
+  ],
+  "fail_why_top": [
+   [
+    "wrong answer",
+    166
+   ],
+   [
+    "result is not the canonical encoding: expecte",
+    38
+   ],
+   [
+    "net did not run to a result",
+    13
+   ],
+   [
+    "result is not the canonical encoding: malform",
+    5
+   ],
+   [
+    "result is not the canonical encoding: trailin",
+    1
+   ]
+  ],
+  "decode": {
+   "seconds_total": 1718
+  }
+ },
+ "U_sameloop_unconstrained": {
+  "file": "/Users/tedsandtads/Genome/runs/exp2/U_native_v1_iid.scored.json",
+  "tasks": 120,
+  "n": 4,
+  "samples": 480,
+  "outcomes": {
+   "static": 291,
+   "pass": 67,
+   "fail": 117,
+   "noblock": 5
+  },
+  "static_classes": {
+   "wire_once": 230,
+   "undef_ref": 10,
+   "other_static": 2,
+   "wire_many": 48,
+   "brackets": 1
+  },
+  "pass@1": 0.1396,
+  "pass@1_task_boot95": [
+   0.096,
+   0.188
+  ],
+  "pass@1_wilson95_samples(naive)": [
+   0.111,
+   0.173
+  ],
+  "pass@2": 0.2083,
+  "pass@4": 0.275,
+  "static_filter_best_of_4": 0.2417,
+  "static_filter_best_of_n_wilson95": [
+   0.174,
+   0.326
+  ],
+  "pass_given_static_clean": 0.3641,
+  "static_clean_rate": 0.3833,
+  "per_family_pass@1": {
+   "pipeline": 0.121,
+   "reduce": 0.158
+  },
+  "pass_rate": 0.1396,
+  "fail_rate": 0.2437,
+  "static_rate": 0.6062,
+  "noblock_rate": 0.0104,
+  "fail_rate_boot95": [
+   0.202,
+   0.287
+  ],
+  "static_rate_boot95": [
+   0.554,
+   0.658
+  ],
+  "fail_why_top": [
+   [
+    "wrong answer",
+    89
+   ],
+   [
+    "result is not the canonical encoding: expecte",
+    22
+   ],
+   [
+    "result is not the canonical encoding: malform",
+    3
+   ],
+   [
+    "net did not run to a result",
+    2
+   ],
+   [
+    "wrong answer (large case, compared by digest ",
+    1
+   ]
+  ],
+  "decode": {
+   "tok_per_s": 167.1,
+   "gen_seconds": 786,
+   "mean_tokens": 272.8,
+   "hit_max_rate": 0.0146,
+   "ended_clean_rate": 0.425,
+   "samples_with_any_masking": 0.0,
+   "mean_masked_steps": 0.0,
+   "slow_path_steps": 0,
+   "dead_ends": 0
+  }
+ },
+ "C_constrained": {
+  "file": "/Users/tedsandtads/Genome/runs/exp2/C_native_v1_iid.scored.json",
+  "tasks": 120,
+  "n": 8,
+  "samples": 960,
+  "outcomes": {
+   "pass": 141,
+   "fail": 262,
+   "static": 551,
+   "noblock": 6
+  },
+  "static_classes": {
+   "wire_once": 512,
+   "brackets": 9,
+   "undef_ref": 19,
+   "other_static": 11
+  },
+  "pass@1": 0.1469,
+  "pass@1_task_boot95": [
+   0.102,
+   0.195
+  ],
+  "pass@1_wilson95_samples(naive)": [
+   0.126,
+   0.171
+  ],
+  "pass@2": 0.2116,
+  "pass@4": 0.2723,
+  "pass@8": 0.3333,
+  "static_filter_best_of_8": 0.2,
+  "static_filter_best_of_n_wilson95": [
+   0.138,
+   0.28
+  ],
+  "pass_given_static_clean": 0.3499,
+  "static_clean_rate": 0.4198,
+  "per_family_pass@1": {
+   "pipeline": 0.127,
+   "reduce": 0.167
+  },
+  "pass_rate": 0.1469,
+  "fail_rate": 0.2729,
+  "static_rate": 0.574,
+  "noblock_rate": 0.0063,
+  "fail_rate_boot95": [
+   0.235,
+   0.309
+  ],
+  "static_rate_boot95": [
+   0.525,
+   0.624
+  ],
+  "fail_why_top": [
+   [
+    "wrong answer",
+    188
+   ],
+   [
+    "result is not the canonical encoding: expecte",
+    48
+   ],
+   [
+    "net did not run to a result",
+    18
+   ],
+   [
+    "result is not the canonical encoding: malform",
+    4
+   ],
+   [
+    "result is not the canonical encoding: trailin",
+    2
+   ],
+   [
+    "wrong answer (large case, compared by digest ",
+    1
+   ]
+  ],
+  "decode": {
+   "tok_per_s": 254.1,
+   "gen_seconds": 2869,
+   "mean_tokens": 758.8,
+   "hit_max_rate": 0.5594,
+   "ended_clean_rate": 0.4344,
+   "samples_with_any_masking": 0.5927,
+   "mean_masked_steps": 22.87,
+   "slow_path_steps": 9,
+   "dead_ends": 0
+  }
+ },
+ "delta_C_minus_A": {
+  "tasks": 120,
+  "delta_pass@1": 0.0031,
+  "boot95": [
+   -0.015,
+   0.021
+  ]
+ },
+ "delta_C_minus_U": {
+  "tasks": 120,
+  "delta_pass@1": 0.0073,
+  "boot95": [
+   -0.018,
+   0.035
+  ]
+ },
+ "delta_U_minus_A": {
+  "tasks": 120,
+  "delta_pass@1": -0.0042,
+  "boot95": [
+   -0.026,
+   0.017
+  ]
+ }
+}

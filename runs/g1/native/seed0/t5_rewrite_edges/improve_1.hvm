@@ -1,0 +1,138 @@
+// Initialize one empty adjacency row per node, then rewrite the edges.
+@prog = ((c edges) out)
+  & c ~ {c_walk c_init}
+  & @init ~ (c_init rows)
+  & @walk ~ (edges (c_walk (rows out)))
+
+@init = ((?((@init_nil @init_cons) (pl out)) pl) out)
+
+@init_nil = (* out)
+  & out ~ (0 *)
+
+@init_cons = (* ((h t) out))
+  & h ~ *
+  & @init ~ (t rest)
+  & out ~ (1 ((0 *) rest))
+
+// Traverse edges, carrying the clustering and adjacency rows.
+@walk = ((?((@walk_nil @walk_cons) (pl (c (rows out)))) pl) (c (rows out)))
+
+@walk_nil = (* (c (rows out)))
+  & c ~ *
+  & @flatten ~ (rows out)
+
+@walk_cons = (* (((u v) tail) (c (rows out))))
+  & c ~ {cu c1}
+  & c1 ~ {cv cn}
+  & @get ~ (cu (u mu))
+  & @get ~ (cv (v mv))
+  & mu ~ {mu_eq mu_order}
+  & mv ~ {mv_eq mv_order}
+  & mu_eq ~ $([=] $(mv_eq z))
+  & z ~ ?((@walk_diff @walk_same) (mu_order (mv_order (tail (cn (rows out))))))
+
+@walk_same = (* (mu_order (mv_order (tail (cn (rows out))))))
+  & mu_order ~ *
+  & mv_order ~ *
+  & @walk ~ (tail (cn (rows out)))
+
+@walk_diff = (mu_order (mv_order (tail (cn (rows out)))))
+  & mu_order ~ {mu_cmp mu_keep}
+  & mv_order ~ {mv_cmp mv_keep}
+  & mu_cmp ~ $([<] $(mv_cmp z))
+  & z ~ ?((@norm_ge @norm_lt) (mu_keep (mv_keep (tail (cn (rows out))))))
+
+// mu >= mv, so insert (mv, mu).
+@norm_ge = (mu_keep (mv_keep (tail (cn (rows out)))))
+  & @update ~ (rows (mv_keep (mu_keep newrows)))
+  & @walk ~ (tail (cn (newrows out)))
+
+// mu < mv, so insert (mu, mv).
+@norm_lt = (* (mu_keep (mv_keep (tail (cn (rows out))))))
+  & @update ~ (rows (mu_keep (mv_keep newrows)))
+  & @walk ~ (tail (cn (newrows out)))
+
+// Look up an index in a list.
+@get = ((?((@get_nil @get_cons) (pl (i out))) pl) (i out))
+
+@get_nil = (* (i out))
+  & i ~ *
+  & out ~ *
+
+@get_cons = (* ((h t) (i out)))
+  & i ~ ?((@get_zero @get_succ) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_succ = (j (h (t out)))
+  & h ~ *
+  & @get ~ (t (j out))
+
+// Update the row at index i by inserting val into that row.
+@update = ((?((@upd_nil @upd_cons) (pl (i (val out)))) pl) (i (val out)))
+
+@upd_nil = (* (i (val out)))
+  & i ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@upd_cons = (* ((head tail) (i (val out))))
+  & i ~ ?((@upd_zero @upd_succ) (head (tail (val out))))
+
+@upd_zero = (head (tail (val out)))
+  & @insnum ~ (head (val newhead))
+  & out ~ (1 (newhead tail))
+
+@upd_succ = (j (head (tail (val out))))
+  & @update ~ (tail (j (val newtail)))
+  & out ~ (1 (head newtail))
+
+// Insert val into a sorted list of numbers, avoiding duplicates.
+@insnum = ((?((@in_nil @in_cons) (pl (val out))) pl) (val out))
+
+@in_nil = (* (val out))
+  & out ~ (1 (val (0 *)))
+
+@in_cons = (* ((head tail) (val out)))
+  & val ~ {vlt vrest}
+  & head ~ {hcmp hsave}
+  & vlt ~ $([<] $(hcmp z))
+  & z ~ ?((@in_notbefore @in_before) (vrest (hsave (tail out))))
+
+@in_before = (* (vrest (hsave (tail out))))
+  & out ~ (1 (vrest (1 (hsave tail))))
+
+@in_notbefore = (vrest (hsave (tail out)))
+  & vrest ~ {veq vgo}
+  & hsave ~ {heq hkeep}
+  & veq ~ $([=] $(heq z))
+  & z ~ ?((@in_equal @in_more) (vgo (hkeep (tail out))))
+
+@in_equal = (vgo (hkeep (tail out)))
+  & vgo ~ *
+  & out ~ (1 (hkeep tail))
+
+@in_more = (* (vgo (hkeep (tail out))))
+  & @insnum ~ (tail (vgo rest))
+  & out ~ (1 (hkeep rest))
+
+// Flatten rows in order; each row is already sorted.
+@flatten = ((?((@flat_nil @flat_cons) (pl out)) pl) out)
+
+@flat_nil = (* out)
+  & out ~ (0 *)
+
+@flat_cons = (* ((row tail) out))
+  & @flatten ~ (tail rest)
+  & @merge ~ (row (rest out))
+
+// Prepend a sorted row to the already-flattened later rows.
+@merge = ((?((@merge_nil @merge_cons) (pl (rest out))) pl) (rest out))
+
+@merge_nil = (* (rest out))
+  & rest ~ out
+
+@merge_cons = (* ((h t) (rest out)))
+  & @merge ~ (t ((1 (h rest)) out))

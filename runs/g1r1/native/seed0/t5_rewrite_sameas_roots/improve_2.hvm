@@ -1,0 +1,52 @@
+// Pointer doubling: replace each pointer p[i] with p[p[i]] per pass.
+@prog = (input out)
+  & @iterate ~ (input out)
+
+@iterate = (list out)
+  & list ~ {src full}
+  & @map ~ (src (full (new changed)))
+  & changed ~ ?((@iter_done @iter_more) (new out))
+
+@iter_done = (new out)
+  & out ~ new
+
+@iter_more = (* (new out))
+  & @iterate ~ (new out)
+
+@map = ((?((@map_nil @map_cons) (full (out changed))) src) (full (out changed)))
+
+@map_nil = (pl (full (out changed)))
+  & pl ~ *
+  & full ~ *
+  & out ~ (0 *)
+  & changed ~ 0
+
+@map_cons = (* (pl (full (out changed))))
+  & pl ~ (p tail)
+  & full ~ {full_get full_next}
+  & p ~ {p_idx p_cmp}
+  & @nth ~ (full_get (p_idx q))
+  & q ~ {q_out q_cmp}
+  & p_cmp ~ $([!] $(q_cmp local))
+  & @map ~ (tail (full_next (rest tail_changed)))
+  & tail_changed ~ $([|] $(local changed))
+  & out ~ (1 (q_out rest))
+
+// Return the value at index idx in a list.
+@nth = ((?((@nth_nil @nth_cons) (pl (idx out))) pl) (idx out))
+
+@nth_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@nth_cons = (* (pl (idx out)))
+  & pl ~ (head tail)
+  & idx ~ ?((@nth_hit @nth_more) (head (tail out)))
+
+@nth_hit = (head (tail out))
+  & head ~ out
+  & tail ~ *
+
+@nth_more = (idx (head (tail out)))
+  & head ~ *
+  & @nth ~ (tail (idx out))

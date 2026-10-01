@@ -1,0 +1,276 @@
+@prog = (input out)
+  & @validate ~ (input out)
+
+@validate = ((n (s (t edges))) out)
+  & {n1 {n2 n3}} ~ n
+  & {s1 {s2 s3}} ~ s
+  & {t1 {t2 t3}} ~ t
+  & s1 ~ $([<] $(n1 s_lt))
+  & t1 ~ $([<] $(n2 t_lt))
+  & s_lt ~ $([&] $(t_lt both))
+  & s2 ~ $([=] $(t2 eq))
+  & both ~ ?((@invalid @valid_both) (eq (n3 (s3 (t3 (edges out))))))
+
+@invalid = (eq (n (s (t (edges out)))))
+  & eq ~ *
+  & n ~ *
+  & s ~ *
+  & t ~ *
+  & edges ~ *
+  & (0 *) ~ out
+
+@valid_both = (dec (eq (n (s (t (edges out))))))
+  & dec ~ *
+  & eq ~ ?((@run_bf @singleton) (n (s (t (edges out)))))
+
+@singleton = (dec (n (s (t (edges out)))))
+  & dec ~ *
+  & n ~ *
+  & t ~ *
+  & edges ~ *
+  & (1 (s (0 *))) ~ out
+
+@run_bf = (n (s (t (edges out))))
+  & {n_init n_sub} ~ n
+  & n_sub ~ $([-] $(1 passes))
+  & @init_entries ~ (n_init (s best))
+  & @bf_loop ~ (passes (edges (best best_final)))
+  & @extract ~ (best_final (t out))
+
+@init_entries = (n (s out))
+  & n ~ $([-] $(1 last))
+  & @init_loop ~ (last (s ((0 *) out)))
+
+@init_loop = (i (s (acc out)))
+  & {i_switch i_ctx} ~ i
+  & i_switch ~ ?((@init_zero @init_pos) (i_ctx (s (acc out))))
+
+@init_zero = (i (s (acc out)))
+  & @make_entry ~ (i (s entry))
+  & (1 (entry acc)) ~ out
+
+@init_pos = (i_dec (i (s (acc out))))
+  & {s_make s_next} ~ s
+  & @make_entry ~ (i (s_make entry))
+  & @init_loop ~ (i_dec (s_next ((1 (entry acc)) out)))
+
+@make_entry = (idx (s out))
+  & {s_cmp s_ctx} ~ s
+  & idx ~ $([=] $(s_cmp eq))
+  & eq ~ ?((@entry_unreach @entry_reach) (s_ctx out))
+
+@entry_unreach = (s out)
+  & s ~ *
+  & ((16777215 0) (0 (0 *))) ~ out
+
+@entry_reach = (dec (s out))
+  & dec ~ *
+  & ((0 0) (0 (1 (s (0 *))))) ~ out
+
+@bf_loop = (passes (edges (best out)))
+  & passes ~ ?((@bf_done @bf_step) (edges (best out)))
+
+@bf_done = (edges (best out))
+  & edges ~ *
+  & best ~ out
+
+@bf_step = (p_dec (edges (best out)))
+  & @relax_edges ~ (edges (best (best1 edges2)))
+  & @bf_loop ~ (p_dec (edges2 (best1 out)))
+
+@relax_edges = ((tag payload) (best out))
+  & tag ~ ?((@relax_nil @relax_cons) (payload (best out)))
+
+@relax_nil = (payload (best out))
+  & payload ~ *
+  & (best (0 *)) ~ out
+
+@relax_cons = ((h t) (best out))
+  & {h_relax h_out} ~ h
+  & @relax_edge ~ (h_relax (best best1))
+  & @relax_edges ~ (t (best1 (best_final tail_out)))
+  & (best_final (1 (h_out tail_out))) ~ out
+
+@relax_edge = ((u (v w)) (best out))
+  & {u1 u2} ~ u
+  & {v1 v2} ~ v
+  & {w1 w2} ~ w
+  & @relax_dir ~ (u1 (v1 (w1 (best best1))))
+  & @relax_dir ~ (v2 (u2 (w2 (best1 out))))
+
+@relax_dir = (src (dst (w (best out))))
+  & {b_set b_rest} ~ best
+  & {b_src b_dst} ~ b_rest
+  & {dst1 dst23} ~ dst
+  & {dst2 dst3} ~ dst23
+  & @get_entry ~ (b_src (src src_entry))
+  & @get_entry ~ (b_dst (dst1 dst_entry_whole))
+  & {dst_entry_bf dst_entry_ch} ~ dst_entry_whole
+  & @make_candidate ~ (src_entry (dst2 (w cand_whole)))
+  & {cand_bf cand_ch} ~ cand_whole
+  & @better ~ (cand_bf (dst_entry_bf better))
+  & @choose ~ (better (cand_ch (dst_entry_ch new_entry)))
+  & @set_entry ~ (b_set (dst3 (new_entry out)))
+
+@get_entry = ((tag payload) (i out))
+  & tag ~ ?((@get_nil @get_cons) (payload (i out)))
+
+@get_nil = (payload (i out))
+  & payload ~ *
+  & i ~ *
+  & ((16777215 0) (0 (0 *))) ~ out
+
+@get_cons = ((h t) (i out))
+  & i ~ ?((@get_zero @get_pos) (h (t out)))
+
+@get_zero = (h (t out))
+  & t ~ *
+  & h ~ out
+
+@get_pos = (i_dec (h (t out)))
+  & h ~ *
+  & @get_entry ~ (t (i_dec out))
+
+@set_entry = ((tag payload) (i (new out)))
+  & tag ~ ?((@set_nil @set_cons) (payload (i (new out))))
+
+@set_nil = (payload (i (new out)))
+  & payload ~ *
+  & i ~ *
+  & new ~ *
+  & (0 *) ~ out
+
+@set_cons = ((h t) (i (new out)))
+  & i ~ ?((@set_zero @set_pos) (h (t (new out))))
+
+@set_zero = (h (t (new out)))
+  & h ~ *
+  & (1 (new t)) ~ out
+
+@set_pos = (i_dec (h (t (new out))))
+  & @set_entry ~ (t (i_dec (new tail_out)))
+  & (1 (h tail_out)) ~ out
+
+@make_candidate = (((shi slo) (slen spath)) (dst (w out)))
+  & @add_w ~ ((shi slo) (w dist))
+  & @append ~ (spath (dst path))
+  & slen ~ $([+1] len1)
+  & (dist (len1 path)) ~ out
+
+@add_w = ((hi lo) (w out))
+  & {w1 w2} ~ w
+  & lo ~ $([+] $(w1 sum))
+  & {sum_cmp sum_out} ~ sum
+  & sum_cmp ~ $([<] $(w2 carry))
+  & hi ~ $([+] $(carry new_hi))
+  & (new_hi sum_out) ~ out
+
+@append = ((tag payload) (x out))
+  & tag ~ ?((@append_nil @append_cons) (payload (x out)))
+
+@append_nil = (payload (x out))
+  & payload ~ *
+  & (1 (x (0 *))) ~ out
+
+@append_cons = ((h t) (x out))
+  & @append ~ (t (x tail_out))
+  & (1 (h tail_out)) ~ out
+
+@better = (((ch cl) (clen cpath)) (((dh dl) (dlen dpath)) out))
+  & {ch1 ch2} ~ ch
+  & {cl1 cl2} ~ cl
+  & {dh1 dh2} ~ dh
+  & {dl1 dl2} ~ dl
+  & @dist_lt ~ ((ch1 cl1) ((dh1 dl1) dist_lt))
+  & @dist_eq ~ ((ch2 cl2) ((dh2 dl2) dist_eq))
+  & {clen1 clen2} ~ clen
+  & {dlen1 dlen2} ~ dlen
+  & clen1 ~ $([<] $(dlen1 len_lt))
+  & clen2 ~ $([=] $(dlen2 len_eq))
+  & @lex_less ~ (cpath (dpath lex))
+  & len_eq ~ $([&] $(lex and_lexlen))
+  & len_lt ~ $([|] $(and_lexlen or_len))
+  & dist_eq ~ $([&] $(or_len and_dist))
+  & dist_lt ~ $([|] $(and_dist out))
+
+@dist_lt = ((ch cl) ((dh dl) out))
+  & {ch1 ch2} ~ ch
+  & {dh1 dh2} ~ dh
+  & ch1 ~ $([<] $(dh1 lt_hi))
+  & ch2 ~ $([=] $(dh2 eq_hi))
+  & cl ~ $([<] $(dl lt_lo))
+  & eq_hi ~ $([&] $(lt_lo and2))
+  & lt_hi ~ $([|] $(and2 out))
+
+@dist_eq = ((ch cl) ((dh dl) out))
+  & ch ~ $([=] $(dh eq_hi))
+  & cl ~ $([=] $(dl eq_lo))
+  & eq_hi ~ $([&] $(eq_lo out))
+
+@lex_less = ((a_tag a_payload) ((b_tag b_payload) out))
+  & a_tag ~ ?((@lex_a_nil @lex_a_cons) (a_payload (b_tag (b_payload out))))
+
+@lex_a_nil = (a_payload (b_tag (b_payload out)))
+  & a_payload ~ *
+  & b_tag ~ ?((@lex_b_nil @lex_b_cons) (b_payload out))
+
+@lex_b_nil = (b_payload out)
+  & b_payload ~ *
+  & 0 ~ out
+
+@lex_b_cons = (dec (b_payload out))
+  & dec ~ *
+  & b_payload ~ *
+  & 1 ~ out
+
+@lex_a_cons = (dec ((ha ta) (b_tag (b_payload out))))
+  & dec ~ *
+  & b_tag ~ ?((@lex_cons_nil @lex_cons_cons) (b_payload (ha (ta out))))
+
+@lex_cons_nil = (b_payload (ha (ta out)))
+  & b_payload ~ *
+  & ha ~ *
+  & ta ~ *
+  & 0 ~ out
+
+@lex_cons_cons = (dec (((hb tb) (ha (ta out)))))
+  & dec ~ *
+  & {ha1 ha2} ~ ha
+  & {hb1 hb2} ~ hb
+  & ha1 ~ $([<] $(hb1 lt))
+  & ha2 ~ $([=] $(hb2 eq))
+  & @lex_less ~ (ta (tb rec))
+  & eq ~ $([&] $(rec and2))
+  & lt ~ $([|] $(and2 out))
+
+@choose = (better (candidate (current out)))
+  & better ~ ?((@choose_no @choose_yes) (candidate (current out)))
+
+@choose_no = (candidate (current out))
+  & candidate ~ *
+  & current ~ out
+
+@choose_yes = (dec (candidate (current out)))
+  & dec ~ *
+  & candidate ~ out
+  & current ~ *
+
+@extract = (best (t out))
+  & @get_entry ~ (best (t entry))
+  & @entry_path_if_reach ~ (entry out)
+
+@entry_path_if_reach = (((hi lo) (len path)) out)
+  & hi ~ $([<] $(16777215 reach))
+  & reach ~ ?((@unreach @path_out) (lo (len (path out))))
+
+@unreach = (lo (len (path out)))
+  & lo ~ *
+  & len ~ *
+  & path ~ *
+  & (0 *) ~ out
+
+@path_out = (dec (lo (len (path out))))
+  & dec ~ *
+  & lo ~ *
+  & len ~ *
+  & path ~ out

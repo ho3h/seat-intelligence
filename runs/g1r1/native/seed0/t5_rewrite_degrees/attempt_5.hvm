@@ -1,0 +1,125 @@
+@prog = ((c edges) out)
+  & c ~ {cwalk cfull}
+  & @outer ~ (cwalk (cfull (edges (0 out))))
+
+@outer = ((?((@outer_nil @outer_cons) (pl (cf (edges (idx out))))) pl) (cf (edges (idx out))))
+
+@outer_nil = (* (cf (edges (idx out))))
+  & cf ~ *
+  & edges ~ *
+  & idx ~ *
+  & out ~ (0 *)
+
+@outer_cons = (* ((h t) ({cf1 cf2} ({e1 e2} ({ic {target inc}} out)))))
+  & h ~ $([=] $(ic z))
+  & inc ~ $([+1] next)
+  & z ~ ?((@outer_skip @outer_emit) (t ({cf1 cf2} ({e1 e2} (target (next out))))))
+
+@outer_skip = (t ({cf1 cf2} ({e1 e2} (target (next out))))
+  & cf1 ~ *
+  & e1 ~ *
+  & target ~ *
+  & @outer ~ (t (cf2 (e2 (next out))))
+
+@outer_emit = (* (t ({cf1 cf2} ({e1 e2} (target (next out))))))
+  & @degree ~ (e1 (cf1 (target d)))
+  & @outer ~ (t (cf2 (e2 (next rest))))
+  & out ~ (1 (d rest))
+
+@degree = (edges (cf (target out)))
+  & @scan ~ (edges (cf (target ((0 *) (0 out))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (cf (target (seen (count out))))) pl) (cf (target (seen (count out)))))
+
+@scan_nil = (* (* (* (* (a a)))))
+
+@scan_cons = (* ((edge tail) ({cfnext cfmap} (target (seen (count out))))))
+  & @mapedge ~ (edge (cfmap mapped))
+  & @edge_action ~ (mapped (target (seen (count (cfnext (tail out))))))
+
+@mapedge = ((u v) (cf out))
+  & cf ~ {c1 c2}
+  & @lookup ~ (c1 (u x))
+  & @lookup ~ (c2 (v y))
+  & out ~ (x y)
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ {ic ir}
+  & ic ~ $([=] $(0 z))
+  & z ~ ?((@lookup_more @lookup_hit) (h (t (ir out))))
+
+@lookup_more = (h (t (ir out)))
+  & h ~ *
+  & ir ~ $([-] $(1 ir2))
+  & @lookup ~ (t (ir2 out))
+
+@lookup_hit = (* (h (t (ir out))))
+  & t ~ *
+  & ir ~ *
+  & out ~ h
+
+@edge_action = (({xa xb} y) ({tc tr} (seen (count (cf (tail out))))))
+  & xa ~ $([=] $(tc z))
+  & z ~ ?((@edge_test_y @edge_take_y) (y (xb (tr (seen (count (cf (tail out))))))))
+
+@edge_take_y = (* (y (x (target (seen (count (cf (tail out))))))))
+  & x ~ *
+  & @candidate ~ (y (target (seen (count (cf (tail out))))))
+
+@edge_test_y = (y (x (target (seen (count (cf (tail out)))))))
+  & target ~ {tc tk}
+  & y ~ $([=] $(tc z))
+  & z ~ ?((@edge_ignore @edge_take_x) (x (tk (seen (count (cf (tail out)))))))
+
+@edge_take_x = (* (x (target (seen (count (cf (tail out)))))))
+  & @candidate ~ (x (target (seen (count (cf (tail out))))))
+
+@edge_ignore = (x (target (seen (count (cf (tail out))))))
+  & x ~ *
+  & @scan ~ (tail (cf (target (seen (count out))))
+
+@candidate = ({nc nn} ({tc tk} (seen (count (cf (tail out))))))
+  & nc ~ $([=] $(tc z))
+  & z ~ ?((@candidate_member @candidate_self) (nn (tk (seen (count (cf (tail out)))))))
+
+@candidate_self = (* (n (target (seen (count (cf (tail out)))))))
+  & n ~ *
+  & @scan ~ (tail (cf (target (seen (count out))))
+
+@candidate_member = (n (target (seen (count (cf (tail out))))))
+  & seen ~ {s1 s2}
+  & n ~ {n1 n2}
+  & @member ~ (s1 (n1 found))
+  & found ~ ?((@candidate_absent @candidate_present) (n2 (target (s2 (count (cf (tail out)))))))
+
+@candidate_absent = (n (target (seen (count (cf (tail out))))))
+  & count ~ $([+1] count2)
+  & @scan ~ (tail (cf (target ((1 (n seen)) (count2 out))))
+
+@candidate_present = (* (n (target (seen (count (cf (tail out)))))))
+  & n ~ *
+  & @scan ~ (tail (cf (target (seen (count out))))
+
+@member = ((?((@member_nil @member_cons) (pl (target out))) pl) (target out))
+
+@member_nil = (* (target out))
+  & target ~ *
+  & out ~ 0
+
+@member_cons = (* ((h t) ({tc tr} out)))
+  & h ~ $([=] $(tc z))
+  & z ~ ?((@member_no @member_yes) (t (tr out)))
+
+@member_no = (t (target out))
+  & @member ~ (t (target out))
+
+@member_yes = (* (t (target out)))
+  & t ~ *
+  & target ~ *
+  & out ~ 1

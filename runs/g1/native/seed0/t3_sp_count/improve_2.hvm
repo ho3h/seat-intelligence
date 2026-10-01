@@ -1,0 +1,169 @@
+@prog = (input out)
+  & input ~ (n (s (t edges)))
+  & @start ~ (n (s (t (edges out))))
+
+@start = (n (s (t (edges out))))
+  & n ~ {na nb}
+  & @nil_lists ~ (na adj0)
+  & nb ~ {nc nd}
+  & @zeros_pair ~ (nc state0)
+  & @set_at ~ (state0 (s ((1 1) curr)))
+  & nd ~ {nf nn}
+  & nf ~ $([-] $(1 fuel))
+  & @build_adj ~ (edges (adj0 adj))
+  & @bfs ~ (fuel (nn (t (adj (curr out))))
+
+@nil_lists = (n out)
+  & n ~ ?((@nl_nil @nl_cons) out)
+
+@nl_nil = out
+  & out ~ (0 *)
+
+@nl_cons = (n out)
+  & @nil_lists ~ (n tail)
+  & out ~ (1 ((0 *) tail))
+
+@zeros_pair = (n out)
+  & n ~ ?((@zp_nil @zp_cons) out)
+
+@zp_nil = out
+  & out ~ (0 *)
+
+@zp_cons = (n out)
+  & @zeros_pair ~ (n tail)
+  & out ~ (1 ((0 0) tail))
+
+@get = ((?((@get_nil @get_cons) (payload (idx out))) payload) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_here @get_next) (h (t out)))
+
+@get_here = (h (t out))
+  & t ~ *
+  & out ~ h
+
+@get_next = (idx (h (t out)))
+  & h ~ *
+  & @get ~ (t (idx out))
+
+@set_at = ((?((@set_nil @set_cons) (payload (idx (val out)))) payload) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ (0 *)
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_here @set_next) (h (t (val out))))
+
+@set_here = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_next = (idx (h (t (val out))))
+  & @set_at ~ (t (idx (val newtail)))
+  & out ~ (1 (h newtail))
+
+@build_adj = ((?((@ba_nil @ba_cons) (payload (adj out))) payload) (adj out))
+
+@ba_nil = (* (adj out))
+  & out ~ adj
+
+@ba_cons = (* (((u v) tail) (adj out)))
+  & adj ~ {ag as}
+  & u ~ {ug us}
+  & @get ~ (ag (ug old))
+  & @set_at ~ (as (us ((1 (v old)) adj2)))
+  & @build_adj ~ (tail (adj2 out))
+
+@modify_at = ((?((@modify_nil @modify_cons) (payload (idx (amount out)))) payload) (idx (amount out)))
+
+@modify_nil = (* (idx (amount out)))
+  & idx ~ *
+  & amount ~ *
+  & out ~ (0 *)
+
+@modify_cons = (* ((old tail) (idx (amount out))))
+  & idx ~ ?((@modify_here @modify_next) (old (tail (amount out))))
+
+@modify_here = (old (tail (amount out)))
+  & old ~ (active count)
+  & active ~ *
+  & count ~ $([+] $(amount newcount))
+  & out ~ (1 ((1 newcount) tail))
+
+@modify_next = (idx (old (tail (amount out))))
+  & @modify_at ~ (tail (idx (amount newtail)))
+  & out ~ (1 (old newtail))
+
+@scan = ((?((@scan_nil @scan_cons) (payload (curr (next out)))) payload) (curr (next out)))
+
+@scan_nil = (* (curr (next out)))
+  & curr ~ *
+  & out ~ next
+
+@scan_cons = (* ((neighbors adjtail) (curr (next out))))
+  & curr ~ (ctag cpay)
+  & ctag ~ 1
+  & cpay ~ (state currtail)
+  & state ~ (active amount)
+  & active ~ ?((@scan_inactive @scan_active) (neighbors (amount (adjtail (currtail (next out))))))
+
+@scan_inactive = (neighbors (amount (adjtail (currtail (next out)))))
+  & neighbors ~ *
+  & amount ~ *
+  & @scan ~ (adjtail (currtail (next out)))
+
+@scan_active = (* (neighbors (amount (adjtail (currtail (next out))))))
+  & next ~ {ns nr}
+  & @send_neighbors ~ (neighbors (amount (ns updated)))
+  & @scan ~ (adjtail (currtail (updated out)))
+
+@send_neighbors = ((?((@sn_nil @sn_cons) (payload (amount (next out)))) payload) (amount (next out)))
+
+@sn_nil = (* (amount (next out)))
+  & amount ~ *
+  & out ~ next
+
+@sn_cons = (* ((v tail) (amount (next out))))
+  & amount ~ {a1 a2}
+  & next ~ {n1 n2}
+  & @modify_at ~ (n1 (v (a1 updated)))
+  & @send_neighbors ~ (tail (a2 (updated out)))
+
+@bfs = (fuel (n (t (adj (curr out)))))
+  & curr ~ {cg ck}
+  & t ~ {tg tk}
+  & @get ~ (cg (tg got))
+  & got ~ (active count)
+  & active ~ ?((@bfs_no @bfs_yes) (fuel (n (tk (adj (ck (count out))))))
+
+@bfs_yes = (* (fuel (n (t (adj (curr (count out)))))))
+  & fuel ~ *
+  & n ~ *
+  & t ~ *
+  & adj ~ *
+  & curr ~ *
+  & out ~ count
+
+@bfs_no = (fuel (n (t (adj (curr (count out))))))
+  & count ~ *
+  & fuel ~ ?((@bfs_end @bfs_more) (n (t (adj (curr out)))))
+
+@bfs_end = (n (t (adj (curr out))))
+  & n ~ *
+  & t ~ *
+  & adj ~ *
+  & curr ~ *
+  & out ~ 0
+
+@bfs_more = (fuel (n (t (adj (curr out)))))
+  & n ~ {nz nr}
+  & adj ~ {as ar}
+  & @zeros_pair ~ (nz next0)
+  & @scan ~ (as (curr (next0 next)))
+  & @bfs ~ (fuel (nr (t (ar (next out)))))

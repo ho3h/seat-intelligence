@@ -1,0 +1,380 @@
+// t3_scc_count / t3_scc_label (GRAPH-SWING-3, runs/exp19). Two all-sources bitset searches (exp9 msbfs) run in
+// parallel: one on the out-lists (R_v = {u : u reaches v}), one on the in-lists (R_v = {u : v reaches u}); both
+// include v itself (round 0 seeds {v}). SCC(v) = the AND of the two rows, label = its lowest set bit.
+@prog = ((n es) out)
+  & n ~ ?((@sc_zero @sc_pos) (es out))
+@sc_zero = (* (0 *))
+@sc_pos = (nm1 (es out))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & b ~ {b1 b2}
+  & @lg ~ (b1 L)
+  & b2 ~ $([>>] $(4 bw))
+  & @lg ~ (bw W)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 {L7 L8}}}}}}}
+  & W ~ {W1 {W2 {W3 {W4 W5}}}}
+  & @zl ~ (L1 G0)
+  & @zl ~ (L2 H0)
+  & @w_blk ~ (es ((L3 (G0 H0)) (Gf Gb)))
+  & @zs0 ~ (L4 (W1 (0 (S0 T0))))
+  & @zs0 ~ (L5 (W2 (0 (U0 V0))))
+  & @ml ~ ((Gf (S0 (T0 (L6 (W3 0))))) (Sf *))
+  & @ml ~ ((Gb (U0 (V0 (L7 (W4 0))))) (Sb *))
+  & @sccl ~ (Sf (Sb (L8 (0 ((n W5) ((0 *) out))))))
+@sc_step = ((L (gf gb)) ((u v) (L3 (gf2 gb2))))
+  & L ~ {L1 {L2 L3}}
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & @pn ~ (gf (u1 (L1 (v1 gf2))))
+  & @pn ~ (gb (v2 (L2 (u2 gb2))))
+@sc_fin = ((* g) g)
+@xl = (* (* (* (* (* (X (X 16777215)))))))
+@w_blk = (t (S0 o0))
+  & t ~ (T1 (E1 (T2 (E2 (T3 (E3 (T4 (E4 (T5 (E5 (T6 (E6 (T7 (E7 (T8 (E8 (T9 (E9 (T10 (E10 (T11 (E11 (T12 (E12 (T13 (E13 (T14 (E14 (T15 (E15 (T16 (E16 t16))))))))))))))))))))))))))))))))
+  & T1 ~ ?((@w_nil @w_cons) (S0 (o0 (E1 (S1 o1)))))
+  & T2 ~ ?((@w_nil @w_cons) (S1 (o1 (E2 (S2 o2)))))
+  & T3 ~ ?((@w_nil @w_cons) (S2 (o2 (E3 (S3 o3)))))
+  & T4 ~ ?((@w_nil @w_cons) (S3 (o3 (E4 (S4 o4)))))
+  & T5 ~ ?((@w_nil @w_cons) (S4 (o4 (E5 (S5 o5)))))
+  & T6 ~ ?((@w_nil @w_cons) (S5 (o5 (E6 (S6 o6)))))
+  & T7 ~ ?((@w_nil @w_cons) (S6 (o6 (E7 (S7 o7)))))
+  & T8 ~ ?((@w_nil @w_cons) (S7 (o7 (E8 (S8 o8)))))
+  & T9 ~ ?((@w_nil @w_cons) (S8 (o8 (E9 (S9 o9)))))
+  & T10 ~ ?((@w_nil @w_cons) (S9 (o9 (E10 (S10 o10)))))
+  & T11 ~ ?((@w_nil @w_cons) (S10 (o10 (E11 (S11 o11)))))
+  & T12 ~ ?((@w_nil @w_cons) (S11 (o11 (E12 (S12 o12)))))
+  & T13 ~ ?((@w_nil @w_cons) (S12 (o12 (E13 (S13 o13)))))
+  & T14 ~ ?((@w_nil @w_cons) (S13 (o13 (E14 (S14 o14)))))
+  & T15 ~ ?((@w_nil @w_cons) (S14 (o14 (E15 (S15 o15)))))
+  & T16 ~ ?((@w_nil @w_last) (S15 (o15 (E16 t16))))
+@w_nil = (S (o *))
+  & @sc_fin ~ (S o)
+@w_cons = (* (S (o (E (S2 o)))))
+  & @sc_step ~ (S (E S2))
+@w_last = (* (S (o (E t))))
+  & @sc_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+@wz_leaf = (r (f (o (t (R2 (N (an (od (ev pp)))))))))
+  & r ~ {r1 r2}
+  & r1 ~ $([^] $(65535 nr))
+  & o ~ {o1 o2}
+  & o1 ~ $([&] $(nr n0))
+  & r2 ~ $([|] $(o2 R2))
+  & n0 ~ {N an}
+  & f ~ *
+  & t ~ *
+  & od ~ 0
+  & ev ~ 0
+  & pp ~ 0
+@wz = (W (R (F (O (T o)))))
+  & W ~ ?((@wz_leaf @wz_node) (R (F (O (T o)))))
+@wz_node = (wm ((ra rb) ((fa fb) ((oa ob) ((ta tb) ((Ra Rb) ((Na Nb) (an (od (ev pp))))))))))
+  & wm ~ {w1 w2}
+  & @wz ~ (w1 (ra (fa (oa (ta (Ra (Na (a1 (d1 (e1 p1))))))))))
+  & @wz ~ (w2 (rb (fb (ob (tb (Rb (Nb (a2 (d2 (e2 p2))))))))))
+  & a1 ~ $([|] $(a2 an))
+  & d1 ~ $([|] $(d2 od))
+  & e1 ~ $([|] $(e2 ev))
+  & p1 ~ $([+] $(p2 pp))
+@wa_leaf = (o (t (x (O2 t))))
+  & o ~ $([|] $(x O2))
+@wa = (W (O (T (x o))))
+  & W ~ ?((@wa_leaf @wa_node) (O (T (x o))))
+@wa_node = (wm ((oa ob) ((ta tb) ((xa xb) ((Oa Ob) (Ta Tb))))))
+  & wm ~ {w1 w2}
+  & @wa ~ (w1 (oa (ta (xa (Oa Ta)))))
+  & @wa ~ (w2 (ob (tb (xb (Ob Tb)))))
+@ga_act = ((O T) ((W x) (O2 T2)))
+  & @wa ~ (W (O (T (x (O2 T2)))))
+// un(W, j, b): word trie with only bit b of word j set
+@un = (W (j (b o)))
+  & W ~ ?((@un_leaf @un_node) (j (b o)))
+@un_leaf = (* (b o))
+  & 1 ~ $([<<] $(b o))
+@un_node = (wm (j (b o)))
+  & j ~ {j1 j2}
+  & wm ~ {w1 {w2 w3}}
+  & j1 ~ $([>>] $(w1 sh))
+  & sh ~ $([&] $(1 bit))
+  & bit ~ ?((@un_L @un_R) (j2 (b (w2 (w3 o)))))
+@un_L = (j (b (w (wz (x y)))))
+  & @un ~ (w (j (b x)))
+  & @zt ~ (wz y)
+@un_R = (* (j (b (w (wz (x y))))))
+  & @zt ~ (wz x)
+  & @un ~ (w (j (b y)))
+// zs0(L, W, base) -> (state trie of (0 (0 0)), gather trie of ({v} 0))
+@zs0 = (L (W (base (s g))))
+  & L ~ ?((@zs0_leaf @zs0_node) (W (base (s g))))
+@zs0_leaf = (W (v ((z1 (z2 0)) (u z3))))
+  & W ~ {w1 {w2 {w3 w4}}}
+  & @zt ~ (w1 z1)
+  & @zt ~ (w2 z2)
+  & @zt ~ (w3 z3)
+  & v ~ {v1 v2}
+  & v1 ~ $([>>] $(4 j))
+  & v2 ~ $([&] $(15 b))
+  & @un ~ (w4 (j (b u)))
+@zs0_node = (lm (W (base ((sa sb) (ga gb)))))
+  & lm ~ {l1 {l2 l3}}
+  & W ~ {w1 w2}
+  & base ~ {b1 b2}
+  & 1 ~ $([<<] $(l3 half))
+  & b2 ~ $([+] $(half bR))
+  & @zs0 ~ (l1 (w1 (b1 (sa ga))))
+  & @zs0 ~ (l2 (w2 (bR (sb gb))))
+// zg(L, W): gather trie of (0 0) word-trie pairs
+@zg = (L (W o))
+  & L ~ ?((@zg_leaf @zg_node) (W o))
+@zg_leaf = (W (a b))
+  & W ~ {w1 w2}
+  & @zt ~ (w1 a)
+  & @zt ~ (w2 b)
+@zg_node = (lm (W (a b)))
+  & lm ~ {l1 l2}
+  & W ~ {w1 w2}
+  & @zg ~ (l1 (w1 a))
+  & @zg ~ (l2 (w2 b))
+// ml: the round loop. E = (L (W k))
+@ml = ((g (st (gt E))) o)
+  & E ~ {E1 {E2 E3}}
+  & E1 ~ (L1 (W1 *))
+  & @zg ~ (L1 (W1 gn))
+  & E2 ~ {Ea Eb}
+  & Ea ~ (Lr *)
+  & @mr ~ (Lr (Eb (g (st (gt (gn (g2 (st2 (gn2 (any cand))))))))))
+  & cand ~ {c1 c2}
+  & c1 ~ $([=] $(16777215 ci))
+  & any ~ $([&] $(ci go))
+  & go ~ ?((@ml_done @ml_again) (g2 (st2 (gn2 (E3 (c2 o))))))
+@ml_done = (* (st (* (* (c (st c))))))
+@ml_again = (* (g (st (gn ((L (W k)) (* o))))))
+  & k ~ $([+1] k1)
+  & @ml ~ ((g (st (gn (L (W k1))))) o)
+@mr = (L (E (g (st (gt (gn (g2 (st2 (go (any cand))))))))))
+  & L ~ ?((@mr_leaf @mr_node) (E (g (st (gt (gn (g2 (st2 (go (any cand))))))))))
+@mr_node = (lm (E ((g1 gr) ((s1 sr) ((t1 tr) (gn ((h1 hr) ((e1 er) (go (any cand))))))))))
+  & lm ~ {l1 l2}
+  & E ~ {Ea Eb}
+  & @mr ~ (l1 (Ea (g1 (s1 (t1 (gn (h1 (e1 (gm (a1 c1))))))))))
+  & @mr ~ (l2 (Eb (gr (sr (tr (gm (hr (er (go (a2 c2))))))))))
+  & a1 ~ $([|] $(a2 any))
+  & @min ~ (c1 (c2 cand))
+@mr_leaf = (E (g ((R (F X)) ((O T) (gn (g2 ((R2 (Ns X2)) (go (any cand)))))))))
+  & E ~ {Ex {Ey Ez}}
+  & Ey ~ (* (W1 *))
+  & Ez ~ (* (* k))
+  & @wz ~ (W1 (R (F (O (T (R2 (N (an (od (ev pp))))))))))
+  & N ~ {Ns Ne}
+  & an ~ $([!] $(0 anb))
+  & anb ~ {a1 {any a3}}
+  & @xl ~ (k (a1 (od (ev (pp (X (X2 cand)))))))
+  & a3 ~ ?((@mq @mm) (g (Ne (gn (g2 (go Ex))))))
+@mq = (g (* (gn (g (gn *)))))
+@mm = (* (g (N (gn (g2 (go E))))))
+  & E ~ (L (W *))
+  & @me ~ (g (N (gn (g2 (go (L W))))))
+@me = ((?((@me_nil @me_cons) (p (N (gn (g2 (go LW)))))) p) (N (gn (g2 (go LW)))))
+@me_nil = (* (* (gn ((0 *) (gn *)))))
+@me_cons = (* ((v rest) (N (gn ((1 (v2 rest2)) (go LW))))))
+  & v ~ {v1 v2}
+  & N ~ {N1 N2}
+  & LW ~ {LW1 LW2}
+  & LW1 ~ (L W)
+  & @ga ~ (gn (v1 (L ((W N1) gm))))
+  & @me ~ (rest (N2 (gm (rest2 (go LW2)))))
+// sx(st, L): trie of the X accumulators
+@sx = (t (L o))
+  & L ~ ?((@sx_leaf @sx_node) (t o))
+@sx_leaf = ((* (* x)) x)
+@sx_node = (lm ((a b) (x y)))
+  & lm ~ {l1 l2}
+  & @sx ~ (a (l1 x))
+  & @sx ~ (b (l2 y))
+@ga = (t (k (L (P o))))
+  & L ~ ?((@ga_leaf @ga_node) (t (k (P o))))
+@ga_leaf = (t (* (P o)))
+  & @ga_act ~ (t (P o))
+@ga_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ga_L @ga_R) (t (k2 (l2 (P o)))))
+@ga_L = ((l r) (k (L (P (l2 r)))))
+  & @ga ~ (l (k (L (P l2))))
+@ga_R = (* ((l r) (k (L (P (l r2))))))
+  & @ga ~ (r (k (L (P r2))))
+
+@min = (a (b o))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@sel2 @sel1s) (a2 (b2 o)))
+@max = (a (b o))
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & a1 ~ $([<] $(b1 lt))
+  & lt ~ ?((@sel1 @sel2s) (a2 (b2 o)))
+@sel1 = (x (* x))
+@sel2 = (* (y y))
+@sel1s = (* (x (* x)))
+@sel2s = (* (* (y y)))
+
+@mex = (a o)
+  & a ~ {a1 a2}
+  & a1 ~ $([^] $(16777215 na))
+  & a2 ~ $([+1] a3)
+  & na ~ $([&] $(a3 p))
+  & p ~ $([-] $(1 q))
+  & @pop ~ (q o)
+@pop = (x o)
+  & x ~ {x1 x2}
+  & x1 ~ $([>>] $(1 y))
+  & y ~ $([&] $(5592405 y2))
+  & x2 ~ $([-] $(y2 z))
+  & z ~ {z1 z2}
+  & z1 ~ $([&] $(3355443 za))
+  & z2 ~ $([>>] $(2 zb))
+  & zb ~ $([&] $(3355443 zc))
+  & za ~ $([+] $(zc w))
+  & w ~ {w1 w2}
+  & w1 ~ $([>>] $(4 wa))
+  & w2 ~ $([+] $(wa wb))
+  & wb ~ $([&] $(986895 wc))
+  & wc ~ $([*] $(65793 wd))
+  & wd ~ $([>>] $(16 o))
+
+@wlow = (a (b (W (base o))))
+  & W ~ ?((@wlow_leaf @wlow_node) (a (b (base o))))
+@wlow_leaf = (a (b (base o)))
+  & a ~ $([&] $(b w))
+  & w ~ {w1 {w2 w3}}
+  & w1 ~ $([=] $(0 z))
+  & z ~ ?((@wlow_some @wlow_none) (w2 (w3 (base o))))
+@wlow_none = (* (* (* (* 16777215))))
+@wlow_some = (w (w2 (base o)))
+  & 0 ~ $([-] $(w2 nw))
+  & w ~ $([&] $(nw p))
+  & p ~ $([-] $(1 q))
+  & @pop ~ (q c)
+  & base ~ $([+] $(c o))
+@wlow_node = (wm ((a1 a2) ((b1 b2) (base o))))
+  & wm ~ {w1 {w2 w3}}
+  & base ~ {x1 x2}
+  & 16 ~ $([<<] $(w3 half))
+  & x2 ~ $([+] $(half xR))
+  & @wlow ~ (a1 (b1 (w1 (x1 lo))))
+  & @wlow ~ (a2 (b2 (w2 (xR hi))))
+  & @min ~ (lo (hi o))
+
+@sccl = (a (b (L (base (E (acc o))))))
+  & L ~ ?((@sccl_leaf @sccl_node) (a (b (base (E (acc o))))))
+@sccl_leaf = ((ra *) ((rb *) (i ((n W) (acc o)))))
+  & i ~ $([<] $(n keep))
+  & @wlow ~ (ra (rb (W (0 lab))))
+  & keep ~ ?((@sccl_drop @sccl_keep) (lab (acc o)))
+@sccl_drop = (* (t t))
+@sccl_keep = (* (x (t (1 (x t)))))
+@sccl_node = (lm ((a1 a2) ((b1 b2) (base (E (acc o))))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {x1 x2}
+  & 1 ~ $([<<] $(l3 half))
+  & x2 ~ $([+] $(half xR))
+  & E ~ {E1 E2}
+  & @sccl ~ (a1 (b1 (l1 (x1 (E1 (mid o))))))
+  & @sccl ~ (a2 (b2 (l2 (xR (E2 (acc mid))))))
+@sccc = (a (b (L (base (E o)))))
+  & L ~ ?((@sccc_leaf @sccc_node) (a (b (base (E o)))))
+@sccc_leaf = ((ra *) ((rb *) (i ((n W) o))))
+  & i ~ {i1 i2}
+  & i1 ~ $([<] $(n inr))
+  & @wlow ~ (ra (rb (W (0 lab))))
+  & lab ~ $([=] $(i2 eq))
+  & inr ~ $([&] $(eq o))
+@sccc_node = (lm ((a1 a2) ((b1 b2) (base (E o)))))
+  & lm ~ {l1 {l2 l3}}
+  & base ~ {x1 x2}
+  & 1 ~ $([<<] $(l3 half))
+  & x2 ~ $([+] $(half xR))
+  & E ~ {E1 E2}
+  & @sccc ~ (a1 (b1 (l1 (x1 (E1 p)))))
+  & @sccc ~ (a2 (b2 (l2 (xR (E2 q)))))
+  & p ~ $([+] $(q o))
+@ad_act = (old (c o))
+  & old ~ $([+] $(c o))
+@pn_act = (lst (x (1 (x lst))))
+@pn = (t (k (L (P o))))
+  & L ~ ?((@pn_leaf @pn_node) (t (k (P o))))
+@pn_leaf = (t (* (P o)))
+  & @pn_act ~ (t (P o))
+@pn_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@pn_L @pn_R) (t (k2 (l2 (P o)))))
+@pn_L = ((l r) (k (L (P (l2 r)))))
+  & @pn ~ (l (k (L (P l2))))
+@pn_R = (* ((l r) (k (L (P (l r2))))))
+  & @pn ~ (r (k (L (P r2))))
+@ad = (t (k (L (P o))))
+  & L ~ ?((@ad_leaf @ad_node) (t (k (P o))))
+@ad_leaf = (t (* (P o)))
+  & @ad_act ~ (t (P o))
+@ad_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ad_L @ad_R) (t (k2 (l2 (P o)))))
+@ad_L = ((l r) (k (L (P (l2 r)))))
+  & @ad ~ (l (k (L (P l2))))
+@ad_R = (* ((l r) (k (L (P (l r2))))))
+  & @ad ~ (r (k (L (P r2))))
+@zl = (?(((0 *) @zl_node) o) o)
+@zl_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zl ~ (l1 a)
+  & @zl ~ (l2 b)
+
+// ---- shared trie primitives (depth-L complete binary trie, leaves are numbers, keyed by bits of the key, high bit first)
+// lg(x) = number of bits of x (0 for 0): trie depth for keys 0..x
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+// zt(L): trie of depth L with all leaves 0
+@zt = (?((0 @zt_node) o) o)
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+// cnt(t, L): sum of the leaves
+@cnt = (t (L o))
+  & L ~ ?((@cnt_leaf @cnt_node) (t o))
+@cnt_leaf = (x x)
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+// ins(t, k, L): set leaf k to 1. Control flow depends on k and L only, so it expands before t exists.
+@ins = (t (k (L o)))
+  & L ~ ?((@ins_leaf @ins_node) (t (k o)))
+@ins_leaf = (* (* 1))
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))

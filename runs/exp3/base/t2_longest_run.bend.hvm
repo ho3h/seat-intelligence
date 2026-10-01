@@ -1,0 +1,48 @@
+@max2 = ({$([>] $(a ?(((* (b b)) (* (c (* c)))) (d (e f))))) d} ({a e} f))
+
+@pairs = ((@pairs__C13 a) a)
+
+@pairs__C0 = (* (c (b (a d))))
+  & @pairs ~ (a (b (1 (c d))))
+
+@pairs__C1 = (* (b (c (* (a d)))))
+  & @pairs ~ (a (b (2 (c d))))
+
+@pairs__C10 = (* ($([+0x0000001] c) (a (b ((@pairs__C8 (a (b (c d)))) d)))))
+
+@pairs__C11 = (* a)
+  & @max2 ~ a
+
+@pairs__C12 = (* ({$([=] $(a ?((@pairs__C9 @pairs__C10) (b (c (d (e f))))))) d} (e (a (b (c f))))))
+
+@pairs__C13 = (?((@pairs__C11 @pairs__C12) a) a)
+
+@pairs__C2 = (* ({$([=] $(a ?((@pairs__C0 @pairs__C1) (b (c (d (e f))))))) d} (e ({a b} (c f)))))
+
+@pairs__C3 = (?(((* (a a)) @pairs__C2) b) b)
+
+@pairs__C4 = (a (d (* (c (b f)))))
+  & @pairs ~ (a (b (1 (e f))))
+  & @max2 ~ (c (d e))
+
+@pairs__C5 = (* (a (d (b ($([+0x0000001] c) (* e))))))
+  & @pairs ~ (a (b (c (d e))))
+
+@pairs__C6 = (b (* (a c)))
+  & @max2 ~ (a (b c))
+
+@pairs__C7 = (* ({$([=] $(a ?((@pairs__C4 @pairs__C5) (b (c (d (e (f g)))))))) f} (b (c ({a d} (e g))))))
+
+@pairs__C8 = (?((@pairs__C6 @pairs__C7) a) a)
+
+@pairs__C9 = (b (c (a ((@pairs__C3 (a (d e))) e))))
+  & @max2 ~ (b (c d))
+
+@prog = ((@prog__C1 a) a)
+
+@prog__C0 = (* (b (a c)))
+  & @pairs ~ (a (b (1 (0 c))))
+
+@prog__C1 = (?((0 @prog__C0) a) a)
+
+

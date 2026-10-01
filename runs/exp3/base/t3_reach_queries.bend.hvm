@@ -1,0 +1,143 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@bit_add = ({g c} ({$([:%0x0000018] d) $([:/0x0000018] {a b})} h))
+  & @set_chunk ~ (a (f (g h)))
+  & @get_chunk ~ (b (c $([|] $(e f))))
+  & $(d e) ~ [<<0x0000001]
+
+@bit_has = (b ({$([:%0x0000018] c) $([:/0x0000018] a)} e))
+  & @get_chunk ~ (a (b $([&] $(d $([!0x0000000] ?((0 (* 1)) e))))))
+  & $(c d) ~ [<<0x0000001]
+
+@build_adj = ((@build_adj__C1 a) a)
+
+@build_adj__C0 = (* (({b d} c) (a ({h e} j))))
+  & @build_adj ~ (a (i j))
+  & @set_adj ~ (b (g (h i)))
+  & @List/Cons ~ (c (f g))
+  & @get_adj ~ (d (e f))
+
+@build_adj__C1 = (?(((a a) @build_adj__C0) b) b)
+
+@get_adj = (a ((@get_adj__C2 (a b)) b))
+
+@get_adj__C0 = ($([:-0x0000001] a) (* b))
+  & @get_adj ~ (a b)
+
+@get_adj__C1 = (* (c (d ({$([=0x0000000] ?((@get_adj__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_adj__C2 = (?(((* @List/Nil) @get_adj__C1) a) a)
+
+@get_chunk = (a ((@get_chunk__C2 (a b)) b))
+
+@get_chunk__C0 = ($([:-0x0000001] a) (* b))
+  & @get_chunk ~ (a b)
+
+@get_chunk__C1 = (* (c (d ({$([=0x0000000] ?((@get_chunk__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_chunk__C2 = (?(((* 0) @get_chunk__C1) a) a)
+
+@make_adj_lists = ({$([=0x0000000] ?((@make_adj_lists__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@make_adj_lists__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (@List/Nil (b c))
+  & @make_adj_lists ~ (a b)
+
+@make_zero_chunks = ({$([=0x0000000] ?((@make_zero_chunks__C0 (* (* @List/Nil))) (a b))) a} b)
+
+@make_zero_chunks__C0 = ($([:-0x0000001] a) c)
+  & @List/Cons ~ (0 (b c))
+  & @make_zero_chunks ~ (a b)
+
+@num_chunks = ({$([:%0x0000018] $([=0x0000000] ?((@num_chunks__C0 (* (a a))) (b c)))) $([:/0x0000018] b)} c)
+
+@num_chunks__C0 = ($([+0x0000001] a) a)
+
+@prepend_all = ((@prepend_all__C1 a) a)
+
+@prepend_all__C0 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @prepend_all ~ (b (c d))
+
+@prepend_all__C1 = (?(((a a) @prepend_all__C0) b) b)
+
+@prog = (({f c} (a b)) i)
+  & @solve_queries ~ (a (e (h (@List/Nil i))))
+  & @build_adj ~ (b (d e))
+  & @make_adj_lists ~ (c d)
+  & @make_zero_chunks ~ (g h)
+  & @num_chunks ~ (f g)
+
+@reachable = ({$([=] $(a ?((@reachable__C0 (* (* (* (* (* 1)))))) (b (c d))))) b} ({a c} d))
+
+@reachable__C0 = (d (a (b (c f))))
+  & @search_reach ~ (a (b (c (e f))))
+  & @List/Cons ~ (d (@List/Nil e))
+
+@reverse_acc = ((@reverse_acc__C1 a) a)
+
+@reverse_acc__C0 = (* (b (a (c e))))
+  & @reverse_acc ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@reverse_acc__C1 = (?(((a a) @reverse_acc__C0) b) b)
+
+@reverse_list = (a b)
+  & @reverse_acc ~ (a (@List/Nil b))
+
+@search_reach = (a (b (c ((@search_reach__C4 (a (b (c d)))) d))))
+
+@search_reach__C0 = (a ({b g} (c ({f d} (i k)))))
+  & @search_reach ~ (a (b (e (j k))))
+  & @bit_add ~ (c (d e))
+  & @prepend_all ~ (h (i j))
+  & @get_adj ~ (f (g h))
+
+@search_reach__C1 = (* (a (b (c (* d)))))
+  & @search_reach ~ (a (b (c d)))
+
+@search_reach__C2 = (c (d ({e a} ({f b} g))))
+  & @bit_has ~ (a (b $([=0x0000001] ?((@search_reach__C0 @search_reach__C1) (c (d (e (f g))))))))
+
+@search_reach__C3 = (* ({$([=] $(a ?((@search_reach__C2 (* (* (* (* (* (* 1))))))) (b (c (d (e (f g)))))))) e} (f ({a b} (c (d g))))))
+
+@search_reach__C4 = (?(((* (* (* 0))) @search_reach__C3) a) a)
+
+@set_adj = (a (b ((@set_adj__C3 (a (b c))) c)))
+
+@set_adj__C0 = ($([:-0x0000001] b) (c (a (d f))))
+  & @List/Cons ~ (a (e f))
+  & @set_adj ~ (b (c (d e)))
+
+@set_adj__C1__M_set_chunk__C1 = (* (* (a (* b))))
+  & @List/Cons ~ (a b)
+
+@set_adj__C2 = (* (c (d ({$([=0x0000000] ?((@set_adj__C0 @set_adj__C1__M_set_chunk__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_adj__C3 = (?(((* (* @List/Nil)) @set_adj__C2) a) a)
+
+@set_chunk = (a (b ((@set_chunk__C3 (a (b c))) c)))
+
+@set_chunk__C0 = ($([:-0x0000001] b) (c (a (d f))))
+  & @List/Cons ~ (a (e f))
+  & @set_chunk ~ (b (c (d e)))
+
+@set_chunk__C2 = (* (c (d ({$([=0x0000000] ?((@set_chunk__C0 @set_adj__C1__M_set_chunk__C1) (a (b (c (d e)))))) a} (b e)))))
+
+@set_chunk__C3 = (?(((* (* @List/Nil)) @set_chunk__C2) a) a)
+
+@solve_queries = ((@solve_queries__C2 a) a)
+
+@solve_queries__C0 = (* (* a))
+  & @reverse_list ~ a
+
+@solve_queries__C1 = (* ((d e) (a ({b f} ({c g} (i k))))))
+  & @solve_queries ~ (a (b (c (j k))))
+  & @List/Cons ~ (h (i j))
+  & @reachable ~ (d (e (f (g h))))
+
+@solve_queries__C2 = (?((@solve_queries__C0 @solve_queries__C1) a) a)
+
+

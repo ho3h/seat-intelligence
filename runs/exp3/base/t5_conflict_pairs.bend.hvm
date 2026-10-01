@@ -1,0 +1,127 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@build_tree = (a ({$([=0x0000000] ?((@build_tree__C4 @build_tree__C5) (a (b c)))) b} c))
+
+@build_tree__C0 = (* (a (b ((1 (a 0)) b))))
+
+@build_tree__C1 = (?((((1 (0 0)) @List/Nil) @build_tree__C0) a) a)
+
+@build_tree__C2 = (a ({$([-] $(d e)) $([:/0x0000002] {b d})} ((0 (f g)) h)))
+  &!@build_tree ~ (c (e (g h)))
+  &!@build_tree ~ (a (b (f c)))
+
+@build_tree__C3 = (* ((@build_tree__C1 a) (* a)))
+
+@build_tree__C4 = (a ({$([=0x0000001] ?((@build_tree__C2 @build_tree__C3) (a (b c)))) b} c))
+
+@build_tree__C5 = (* (a (* (0 a))))
+
+@collect_violations = (a (b ((@collect_violations__C3 (a (b c))) c)))
+
+@collect_violations__C0 = (a (b (* c)))
+  & @collect_violations ~ (a (b c))
+
+@collect_violations__C1 = (* (b (c (a (d f)))))
+  & @List/Cons ~ (a (e f))
+  & @collect_violations ~ (b (c (d e)))
+
+@collect_violations__C2 = (* ({(c f) j} (k ({a {d h}} ({b {e i}} l)))))
+  & @tree_get ~ (a (b (c $([=] $(g ?((@collect_violations__C0 @collect_violations__C1) (h (i (j (k l))))))))))
+  & @tree_get ~ (d (e (f g)))
+
+@collect_violations__C3 = (?(((* (* @List/Nil)) @collect_violations__C2) a) a)
+
+@list_length = ((@list_length__C1 a) a)
+
+@list_length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @list_length ~ (a b)
+
+@list_length__C1 = (?((0 @list_length__C0) a) a)
+
+@merge_pairs = ((@merge_pairs__C6 a) a)
+
+@merge_pairs__C0 = (b (c (a (e g))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (d (e f))
+  & @List/Cons ~ (b (c d))
+
+@merge_pairs__C1 = (* (a (b (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  & @merge_pairs ~ (b (e f))
+  & @List/Cons ~ (c (d e))
+
+@merge_pairs__C2 = a
+  & @List/Cons ~ a
+
+@merge_pairs__C3 = (* ({b e} (f ({a c} (d g)))))
+  & @pair_leq ~ (a (b $([=0x0000001] ?((@merge_pairs__C0 @merge_pairs__C1) (c (d (e (f g))))))))
+
+@merge_pairs__C4 = (?((@merge_pairs__C2 @merge_pairs__C3) a) a)
+
+@merge_pairs__C5 = (* (a (b ((@merge_pairs__C4 (a (b c))) c))))
+
+@merge_pairs__C6 = (?(((a a) @merge_pairs__C5) b) b)
+
+@merge_sort = ((@merge_sort__C4 a) a)
+
+@merge_sort__C0 = a
+  & @List/Cons ~ a
+
+@merge_sort__C1 = (* (* (* (a (b h)))))
+  & @merge_pairs ~ (e (g h))
+  & @split_pairs ~ (c (0 (@List/Nil (@List/Nil (d f)))))
+  & @List/Cons ~ (a (b c))
+  &!@merge_sort ~ (d e)
+  &!@merge_sort ~ (f g)
+
+@merge_sort__C2 = (?((@merge_sort__C0 @merge_sort__C1) a) a)
+
+@merge_sort__C3 = (* (a ({(@merge_sort__C2 (a (b c))) b} c)))
+
+@merge_sort__C4 = (?((@List/Nil @merge_sort__C3) a) a)
+
+@pair_leq = (({$([<] $(a ?((@pair_leq__C1 (* (* (* (* (* 1)))))) (b (c (d (e f))))))) b} c) (({a d} e) f))
+
+@pair_leq__C0 = (* ($([>] $(a b)) (a c)))
+  & $(b ?((0 (* 1)) c)) ~ [=0x0000000]
+
+@pair_leq__C1 = ($([=] $(a ?(((* (* 0)) @pair_leq__C0) (b c)))) (b (a c)))
+
+@prog = (({b a} f) h)
+  & @merge_sort ~ (g h)
+  & @build_tree ~ (b (c (d *)))
+  & @list_length ~ (a {c e})
+  & @collect_violations ~ (d (e (f g)))
+
+@split_pairs = ((@split_pairs__C4 a) a)
+
+@split_pairs__C0 = (b (d (c (a f))))
+  & @split_pairs ~ (a (0 (b (e f))))
+  & @List/Cons ~ (c (d e))
+
+@split_pairs__C1 = (* (c (e (b (a f)))))
+  & @split_pairs ~ (a (1 (d (e f))))
+  & @List/Cons ~ (b (c d))
+
+@split_pairs__C2 = (* (a (b (a b))))
+
+@split_pairs__C3 = (* (c (d ($([=0x0000000] ?((@split_pairs__C0 @split_pairs__C1) (a (b (c (d e)))))) (a (b e))))))
+
+@split_pairs__C4 = (?((@split_pairs__C2 @split_pairs__C3) a) a)
+
+@tree_get = (a ({$([=0x0000001] ?((@tree_get__C2 @tree_get__C3) (a (b c)))) b} c))
+
+@tree_get__C0 = ($([-] $(b c)) ($([-] $(d e)) (* (a ({b d} f)))))
+  & @tree_get ~ (a (c (e f)))
+
+@tree_get__C1 = (* (* (c (a (* (b d))))))
+  & @tree_get ~ (a (b (c d)))
+
+@tree_get__C2 = ((* (d e)) ({b $([:/0x0000002] {a f})} ({$([<] $(a ?((@tree_get__C0 @tree_get__C1) (b (c (d (e (f g)))))))) c} g)))
+
+@tree_get__C3 = (* ((* (a *)) (* (* a))))
+
+

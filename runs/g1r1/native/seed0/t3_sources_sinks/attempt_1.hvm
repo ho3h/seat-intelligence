@@ -1,0 +1,91 @@
+// t3_sources_sinks: scan all edges for each vertex and count missing directions.
+@prog = (input output)
+  & input ~ (n edges)
+  & @vloop ~ (n (0 (edges (0 (0 output)))))
+
+@vloop = (rem (idx (edges (src (sink out)))))
+  & rem ~ ?((@v_done @v_iter) (idx (edges (src (sink out)))))
+
+@v_done =
+  (
+    *
+    (
+      *
+      (src (sink (src sink)))
+    )
+  )
+
+@v_iter = (rem (idx (edges (src (sink out)))))
+  & idx ~ {target idx_keep}
+  & edges ~ {scan_edges edges_keep}
+  & @scan ~ (scan_edges (target (0 (0 (rem (idx_keep (edges_keep (src (sink out))))))))
+
+@scan =
+  (
+    (
+      ?(
+        (@scan_nil @scan_cons)
+        (payload
+          (target
+            (inflag
+              (outflag
+                (rem
+                  (idx
+                    (edges
+                      (src (sink out)))))))))
+      )
+      payload
+    )
+    (target
+      (inflag
+        (outflag
+          (rem
+            (idx
+              (edges
+                (src (sink out))))))))
+  )
+
+@scan_nil =
+  (
+    *
+    (
+      *
+      (inflag
+        (outflag
+          (rem
+            (idx
+              (edges
+                (src (sink out))))))))
+  )
+  & @vfinish ~ (inflag (outflag (rem (idx (edges (src (sink out)))))))
+
+@scan_cons =
+  (
+    *
+    (
+      (head tail)
+      (target
+        (inflag
+          (outflag
+            (rem
+              (idx
+                (edges
+                  (src (sink out))))))))
+    )
+  )
+  & head ~ (u v)
+  & target ~ {t_out rest}
+  & rest ~ {t_in t_rec}
+  & u ~ $([=] $(t_out eq_out))
+  & v ~ $([=] $(t_in eq_in))
+  & eq_out ~ $([|] $(outflag new_out))
+  & eq_in ~ $([|] $(inflag new_in))
+  & @scan ~ (tail (t_rec (new_in (new_out (rem (idx (edges (src (sink out))))))))
+
+@vfinish = (inflag (outflag (rem (idx (edges (src (sink out))))))
+  & inflag ~ $([=] $(0 no_in))
+  & outflag ~ $([=] $(0 no_out))
+  & src ~ $([+] $(no_in src_next))
+  & sink ~ $([+] $(no_out sink_next))
+  & idx ~ $([+1] idx_next)
+  & @vloop ~ (rem (idx_next (edges (src_next (sink_next out))))

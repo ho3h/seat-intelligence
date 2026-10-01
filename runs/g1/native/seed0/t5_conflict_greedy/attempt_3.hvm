@@ -1,0 +1,18 @@
+@prog = ((n (mnl cands)) out)
+  & @ids ~ (n (0 ids))
+  & out ~ ids
+  & mnl ~ *
+  & cands ~ *
+
+@ids = (n (i out))
+  & n ~ ?((@idNil @idCons) (i out))
+
+@idNil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@idCons = (k (i out))
+  & i ~ {i0 i1}
+  & i1 ~ $([+1] inext)
+  & @ids ~ (k (inext tail))
+  & out ~ (1 (i0 tail))

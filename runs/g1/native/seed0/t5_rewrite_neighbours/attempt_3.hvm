@@ -1,0 +1,96 @@
+// Scan cluster IDs in ascending order and emit each adjacent canonical ID once.
+@prog = (input out)
+  & input ~ (k (c edges))
+  & c ~ {c_scan ctab}
+  & @scan ~ (c_scan (0 (k (edges (ctab out)))))
+
+@scan = ((?((@scan_nil @scan_cons) (pl (i (k (edges (ctab out))))) pl) (i (k (edges (ctab out)))))
+
+@scan_nil = (* (i (k (edges (ctab out)))))
+  & i ~ *
+  & k ~ *
+  & edges ~ *
+  & ctab ~ *
+  & out ~ *
+
+@scan_cons = (* ((h t) (i (k (edges (ctab out))))))
+  & h ~ {h_cmp h_keep}
+  & i ~ {i_cmp i_step}
+  & i_step ~ $([+1] i_next)
+  & h_cmp ~ $([=] $(i_cmp z))
+  & z ~ ?((@scan_noncanon @scan_canon) (t (i_next (h_keep (k (edges (ctab out)))))))
+
+@scan_noncanon = (t (i (h (k (edges (ctab out))))))
+  & h ~ *
+  & @scan ~ (t (i (k (edges (ctab out)))))
+
+@scan_canon = (* (t (i (h (k (edges (ctab out)))))))
+  & h ~ {h_test h_emit}
+  & k ~ {k_test k_rec}
+  & edges ~ {e_test e_rec}
+  & ctab ~ {c_test c_rec}
+  & @has_neighbor ~ (e_test (c_test (k_test (h_test found))))
+  & found ~ ?((@scan_miss @scan_hit) (t (i (h_emit (k_rec (e_rec (c_rec out))))))
+
+@scan_miss = (t (i (h (k (edges (ctab out))))))
+  & h ~ *
+  & @scan ~ (t (i (k (edges (ctab out)))))
+
+@scan_hit = (* (t (i (h (k (edges (ctab out)))))))
+  & @scan ~ (t (i (k (edges (ctab rest)))))
+  & out ~ (1 (h rest))
+
+@has_neighbor = ((?((@has_nil @has_cons) (pl (ctab (k (i out))))) pl) (ctab (k (i out))))
+
+@has_nil = (* (ctab (k (i out))))
+  & ctab ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ 0
+
+@has_cons = (* ((u v) (ctab (k (i out)))))
+  & ctab ~ {ctab_work ctab_rec}
+  & ctab_work ~ {ctab_u ctab_v}
+  & k ~ {k_work k_rec}
+  & i ~ {i_work i_rec}
+  & k_work ~ {k_a k_b}
+  & i_work ~ {i_a i_b}
+  & @lookup ~ (ctab_u (u cu))
+  & @lookup ~ (ctab_v (v cv))
+  & cu ~ {cu_k cu_i}
+  & cv ~ {cv_i cv_k}
+  & cu_k ~ $([=] $(k_a eq1))
+  & cv_i ~ $([=] $(i_a eq2))
+  & cu_i ~ $([=] $(i_b eq3))
+  & cv_k ~ $([=] $(k_b eq4))
+  & eq1 ~ $([&] $(eq2 both1))
+  & eq3 ~ $([&] $(eq4 both2))
+  & both1 ~ $([|] $(both2 z))
+  & z ~ ?((@has_no @has_yes) (t (ctab_rec (k_rec (i_rec out)))))
+
+@has_no = (t (ctab (k (i out))))
+  & @has_neighbor ~ (t (ctab (k (i out))))
+
+@has_yes = (* (t (ctab (k (i out)))))
+  & t ~ *
+  & ctab ~ *
+  & k ~ *
+  & i ~ *
+  & out ~ 1
+
+@lookup = ((?((@lookup_nil @lookup_cons) (pl (idx out))) pl) (idx out))
+
+@lookup_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@lookup_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@lookup_here @lookup_next) (h (t out)))
+
+@lookup_here = (h (t out))
+  & h ~ out
+  & t ~ *
+
+@lookup_next = (idx (h (t out)))
+  & h ~ *
+  & @lookup ~ (t (idx out))

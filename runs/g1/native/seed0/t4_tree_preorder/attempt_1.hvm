@@ -1,0 +1,23 @@
+// Preorder traversal: append the left traversal before the right traversal.
+@prog = (tree out)
+  & @pre ~ (tree out)
+
+@pre = ((?((@pre_leaf @pre_node) (payload out)) payload) out)
+
+@pre_leaf = (* out)
+  & out ~ (0 *)
+
+@pre_node = (* ((l (v r)) out))
+  & @pre ~ (l lo)
+  & @pre ~ (r ro)
+  & @append ~ (lo (ro tail))
+  & out ~ (1 (v tail))
+
+// Append a list to a suffix list.
+@append = ((?((@app_nil @app_cons) (payload (tail out))) payload) (tail out))
+
+@app_nil = (* (a a))
+
+@app_cons = (* ((h rest) (tail out)))
+  & @append ~ (rest (tail rec))
+  & out ~ (1 (h rec))

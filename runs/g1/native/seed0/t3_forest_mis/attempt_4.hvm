@@ -1,0 +1,98 @@
+// In a forest, maximum independent set size is n minus maximum matching.
+// Greedily match a leaf to its neighbor, removing both endpoints' edges.
+
+@prog = ((n edges) out)
+  & @loop ~ (edges (0 m))
+  & n ~ $([-] $(m out))
+
+@loop = ((?((@l_nil @l_cons) (pl (acc out))) pl) (acc out))
+
+@l_nil = (* (acc out))
+  & out ~ acc
+
+@l_cons = (* ((edge tail) (acc out)))
+  & full ~ (1 (edge tail))
+  & full ~ {scan graph}
+  & @search ~ (scan (graph (acc out)))
+
+@search = ((?((@f_nil @f_cons) (pl (full (acc out)))) pl) (full (acc out)))
+
+@f_nil = (* (full (acc out)))
+  & full ~ *
+  & out ~ acc
+
+@f_cons = (* ((edge tail) (full (acc out))))
+  & edge ~ (u v)
+  & u ~ {udeg ukeep}
+  & v ~ {vdeg vkeep}
+  & full ~ {fkeep ftemp}
+  & ftemp ~ {fu fv}
+  & @deg ~ (fu (udeg du))
+  & @deg ~ (fv (vdeg dv))
+  & du ~ $([=] $(1 au))
+  & dv ~ $([=] $(1 av))
+  & au ~ $([+] $(av sum))
+  & sum ~ $([>] $(0 leaf))
+  & leaf ~ ?((@f_next @f_found) (ukeep (vkeep (tail (fkeep (acc out))))))
+
+@f_next = (* (u (v (tail (full (acc out))))))
+  & @search ~ (tail (full (acc out)))
+
+@f_found = (* (u (v (tail (full (acc out))))))
+  & tail ~ *
+  & @remove ~ (full (u (v cleaned)))
+  & acc ~ $([+1] acc2)
+  & @loop ~ (cleaned (acc2 out))
+
+// Count how many edges touch x.
+@deg = (edges (x out))
+  & @dloop ~ (edges (x (0 out)))
+
+@dloop = ((?((@dl_nil @dl_cons) (pl (x (acc out)))) pl) (x (acc out)))
+
+@dl_nil = (* (x (acc out)))
+  & x ~ *
+  & out ~ acc
+
+@dl_cons = (* ((edge tail) (x (acc out))))
+  & edge ~ (a b)
+  & x ~ {xa xr}
+  & xr ~ {xb xrec}
+  & a ~ $([=] $(xa ea))
+  & b ~ $([=] $(xb eb))
+  & ea ~ $([+] $(eb sum))
+  & sum ~ $([+] $(acc next))
+  & @dloop ~ (tail (xrec (next out)))
+
+// Remove every edge incident to either selected endpoint.
+@remove = ((?((@r_nil @r_cons) (pl (u (v out)))) pl) (u (v out)))
+
+@r_nil = (* (* (* out)))
+  & out ~ (0 *)
+
+@r_cons = (* ((edge tail) (u (v out))))
+  & edge ~ (a b)
+  & a ~ {atop akeep}
+  & atop ~ {au av}
+  & b ~ {btop bkeep}
+  & btop ~ {bu bv}
+  & u ~ {utop ur}
+  & utop ~ {ua ub}
+  & v ~ {vtop vr}
+  & vtop ~ {va vb}
+  & au ~ $([=] $(ua e1))
+  & av ~ $([=] $(va e2))
+  & bu ~ $([=] $(ub e3))
+  & bv ~ $([=] $(vb e4))
+  & e1 ~ $([+] $(e2 s1))
+  & s1 ~ $([+] $(e3 s2))
+  & s2 ~ $([+] $(e4 hits))
+  & hits ~ $([>] $(0 z))
+  & z ~ ?((@r_keep @r_drop) (akeep (bkeep (tail (ur (vr out))))))
+
+@r_keep = (a (b (tail (u (v out)))))
+  & @remove ~ (tail (u (v rt)))
+  & out ~ (1 ((a b) rt))
+
+@r_drop = (* (* (tail (u (v out)))))
+  & @remove ~ (tail (u (v out)))

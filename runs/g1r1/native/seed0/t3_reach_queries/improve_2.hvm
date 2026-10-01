@@ -1,0 +1,147 @@
+@prog = ((n (queries edges)) out)
+  & n ~ {n_build n_drop}
+  & n_drop ~ *
+  & @build ~ (0 (n_build (edges rows)))
+  & @q ~ (queries (rows out))
+
+@build = (i (total (edges out)))
+  & i ~ {i_cmp i_ctx}
+  & total ~ {total_cmp total_ctx}
+  & i_cmp ~ $([<] $(total_cmp z))
+  & z ~ ?((@build_done @build_more) (i_ctx (total_ctx (edges out))))
+
+@build_done = (i (total (edges out)))
+  & i ~ *
+  & total ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@build_more = (* (i (total (edges out))))
+  & i ~ {i_row i_inc}
+  & i_inc ~ $([+1] next_i)
+  & edges ~ {e_row e_next}
+  & @row ~ (e_row (i_row row))
+  & @build ~ (next_i (total (e_next rest)))
+  & out ~ (1 (row rest))
+
+@row = ((?((@row_nil @row_cons) (p (source out))) p) (source out))
+
+@row_nil = (* (source out))
+  & source ~ *
+  & out ~ (0 *)
+
+@row_cons = (* (((u v) tail) (source out)))
+  & source ~ {s_cmp s_keep}
+  & u ~ $([=] $(s_cmp z))
+  & z ~ ?((@row_no @row_yes) (v (tail (s_keep out))))
+
+@row_no = (v (tail (source out)))
+  & v ~ *
+  & @row ~ (tail (source out))
+
+@row_yes = (* (v (tail (source out))))
+  & @row ~ (tail (source rest))
+  & out ~ (1 (v rest))
+
+@get = ((?((@get_nil @get_cons) (p (idx out))) p) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_head @get_next) (head (tail out)))
+
+@get_head = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_next = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (tail (idx out))
+
+@mem = ((?((@mem_nil @mem_cons) (p (needle out))) p) (needle out))
+
+@mem_nil = (* (needle out))
+  & needle ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (needle out)))
+  & needle ~ {n_cmp n_keep}
+  & h ~ $([=] $(n_cmp z))
+  & z ~ ?((@mem @mem_yes) (t (n_keep out)))
+
+@mem_yes = (* (t (needle out)))
+  & t ~ *
+  & needle ~ *
+  & out ~ 1
+
+@dfs = ((?((@dfs_nil @dfs_cons) (p (target (rows (visited out))))) p) (target (rows (visited out))))
+
+@dfs_nil = (* (target (rows (visited out))))
+  & target ~ *
+  & rows ~ *
+  & visited ~ *
+  & out ~ 0
+
+@dfs_cons = (* ((v tail) (target (rows (visited out)))))
+  & v ~ {v_mem v_keep}
+  & visited ~ {vis_mem vis_keep}
+  & @mem ~ (vis_mem (v_mem z))
+  & z ~ ?((@dfs_new @dfs_seen) (v_keep (tail (target (rows (vis_keep out))))))
+
+@dfs_seen = (* (v (tail (target (rows (visited out))))))
+  & v ~ *
+  & @dfs ~ (tail (target (rows (visited out))))
+
+@dfs_new = (v (tail (target (rows (visited out)))))
+  & v ~ {v_cmp v_keep}
+  & target ~ {t_cmp t_keep}
+  & v_cmp ~ $([=] $(t_cmp z))
+  & z ~ ?((@dfs_expand @dfs_hit) (v_keep (tail (t_keep (rows (visited out))))))
+
+@dfs_expand = (v (tail (target (rows (visited out)))))
+  & v ~ {v_get v_visit}
+  & rows ~ {rows_get rows_dfs}
+  & @get ~ (rows_get (v_get adj))
+  & @push ~ (adj (tail stack_next))
+  & @dfs ~ (stack_next (target (rows_dfs ((1 (v_visit visited)) out))))
+
+@dfs_hit = (* (v (tail (target (rows (visited out))))))
+  & v ~ *
+  & tail ~ *
+  & target ~ *
+  & rows ~ *
+  & visited ~ *
+  & out ~ 1
+
+@push = ((?((@push_nil @push_cons) (p (stack out))) p) (stack out))
+
+@push_nil = (* (stack out))
+  & out ~ stack
+
+@push_cons = (* ((v tail) (stack out)))
+  & @push ~ (tail (1 (v stack)))
+
+@q = ((?((@q_nil @q_cons) (p (rows out))) p) (rows out))
+
+@q_nil = (* (rows out))
+  & rows ~ *
+  & out ~ (0 *)
+
+@q_cons = (* (((a b) tail) (rows out)))
+  & a ~ {a_cmp a_keep}
+  & a_cmp ~ $([=] $(b z))
+  & z ~ ?((@q_notself @q_self) (a_keep (b (tail (rows out)))))
+
+@q_self = (* (a (b (tail (rows out)))))
+  & a ~ *
+  & b ~ *
+  & @q ~ (tail (rows qtail))
+  & out ~ (1 (1 qtail))
+
+@q_notself = (a (b (tail (rows out))))
+  & rows ~ {rows_dfs rows_q}
+  & @dfs ~ ((1 (a (0 *))) (b (rows_dfs ((0 *) ans))))
+  & @q ~ (tail (rows_q qtail))
+  & out ~ (1 (ans qtail))

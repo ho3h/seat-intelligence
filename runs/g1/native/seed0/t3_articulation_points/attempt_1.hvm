@@ -1,0 +1,160 @@
+@prog = ((n edges) out)
+  & n ~ {nb ns}
+  & edges ~ {eb es}
+  & nb ~ {narg remarg}
+  & @components ~ (narg (remarg (eb base)))
+  & @ap_scan ~ (0 (ns (base (es out))))
+
+@components = (n (rem (edges out)))
+  & @cc_scan ~ (0 (n (rem (edges ((0 *) (0 out))))))
+
+@member = (x (((?((@mem_nil @mem_cons) (payload (x out))) payload) out))
+
+@mem_nil = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* ((h t) (x out)))
+  & x ~ {xt xr}
+  & h ~ $([=] $(xt z))
+  & z ~ ?((@mem_no @mem_yes) (xr (t out)))
+
+@mem_no = (x (t out))
+  & @member ~ (x (t out))
+
+@mem_yes = (* (x (t out)))
+  & x ~ *
+  & t ~ *
+  & out ~ 1
+
+@discover = (x (stack (visited out)))
+  & x ~ {xm xd}
+  & @member ~ (xm (visited m))
+  & m ~ ?((@discover_no @discover_yes) (xd (stack (visited out))))
+
+@discover_no = (x (stack (visited out)))
+  & x ~ {xa xb}
+  & out ~ ((1 (xa stack)) (1 (xb visited)))
+
+@discover_yes = (* (x (stack (visited out))))
+  & x ~ *
+  & out ~ (stack visited)
+
+@edge_step = (cur (u (v (stack (visited out)))))
+  & cur ~ {cu cv}
+  & cu ~ $([=] $(u z))
+  & z ~ ?((@edge_u_no @edge_u_yes) (cv (v (stack (visited out)))))
+
+@edge_u_no = (cur (v (stack (visited out))))
+  & v ~ {vc vkeep}
+  & cur ~ $([=] $(vc z))
+  & z ~ ?((@edge_v_no @edge_v_yes) (vkeep (stack (visited out))))
+
+@edge_u_yes = (* (cur (v (stack (visited out)))))
+  & cur ~ *
+  & @discover ~ (v (stack (visited out)))
+
+@edge_v_no = (v (stack (visited out)))
+  & out ~ (stack visited)
+
+@edge_v_yes = (* (v (stack (visited out))))
+  & @discover ~ (v (stack (visited out)))
+
+@walk_edges = (cur (((?((@we_nil @we_cons) (payload (cur (stack (visited out))))) payload) (stack (visited out))))
+
+@we_nil = (* (cur (stack (visited out))))
+  & cur ~ *
+  & out ~ (stack visited)
+
+@we_cons = (* ((edge tail) (cur (stack (visited out)))))
+  & cur ~ {cstep clater}
+  & edge ~ (u v)
+  & @edge_step ~ (cstep (u (v (stack (visited pair)))))
+  & pair ~ (stack2 visited2)
+  & @walk_edges ~ (clater (tail (stack2 (visited2 out))))
+
+@dfs = (((?((@dfs_nil @dfs_cons) (payload (visited (edges out)))) payload) (visited (edges out)))
+
+@dfs_nil = (* (visited (edges out)))
+  & edges ~ *
+  & out ~ visited
+
+@dfs_cons = (* ((v rest) (visited (edges out))))
+  & edges ~ {edgecopy later}
+  & @walk_edges ~ (v (edgecopy (rest (visited pair))))
+  & pair ~ (stack2 visited2)
+  & @dfs ~ (stack2 (visited2 (later out)))
+
+@cc_scan = (i (n (rem (edges (visited (count out)))))
+  & i ~ {icmp ikeep}
+  & n ~ {ncmp nkeep}
+  & icmp ~ $([<] $(ncmp z))
+  & z ~ ?((@cc_stop @cc_more) (ikeep (nkeep (rem (edges (visited (count out)))))))
+
+@cc_stop = (i (n (rem (edges (visited (count out)))))
+  & i ~ *
+  & n ~ *
+  & rem ~ *
+  & edges ~ *
+  & visited ~ *
+  & out ~ count
+
+@cc_more = (* (i (n (rem (edges (visited (count out))))))
+  & i ~ {ic r_i}
+  & rem ~ {rc r_rem}
+  & ic ~ $([=] $(rc z))
+  & z ~ ?((@cc_not_removed @cc_skip) (r_i (n (r_rem (edges (visited (count out)))))))
+
+@cc_skip = (* (i (n (rem (edges (visited (count out))))))
+  & i ~ $([+1] i2)
+  & @cc_scan ~ (i2 (n (rem (edges (visited (count out))))))
+
+@cc_not_removed = (i (n (rem (edges (visited (count out)))))
+  & i ~ {im ik}
+  & visited ~ {v_mem v_keep}
+  & @member ~ (im (v_mem m))
+  & m ~ ?((@cc_new @cc_seen) (ik (n (rem (edges (v_keep (count out)))))))
+
+@cc_seen = (* (i (n (rem (edges (visited (count out))))))
+  & i ~ $([+1] i2)
+  & @cc_scan ~ (i2 (n (rem (edges (visited (count out))))))
+
+@cc_new = (i (n (rem (edges (visited (count out)))))
+  & i ~ {ia {iv inext}}
+  & edges ~ {edfs enext}
+  & count ~ $([+1] count2)
+  & @dfs ~ ((1 (ia (0 *))) ((1 (iv visited)) (edfs visited2)))
+  & @cc_scan ~ (inext (n (rem (enext (visited2 (count2 out))))))
+
+@ap_scan = (i (n (base (edges out))))
+  & i ~ {icmp ikeep}
+  & n ~ {ncmp nkeep}
+  & icmp ~ $([<] $(ncmp z))
+  & z ~ ?((@aps_done @aps_more) (ikeep (nkeep (base (edges out)))))
+
+@aps_done = (i (n (base (edges out))))
+  & i ~ *
+  & n ~ *
+  & base ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@aps_more = (* (i (n (base (edges out)))))
+  & @ap_valid ~ (i (n (base (edges out))))
+
+@ap_valid = (i (n (base (edges out))))
+  & i ~ {irem {iout inext}}
+  & n ~ {ncomp nnext}
+  & base ~ {bcomp bnext}
+  & edges ~ {ecomp enext}
+  & @components ~ (ncomp (irem (ecomp cc)))
+  & cc ~ $([>] $(bcomp z))
+  & z ~ ?((@aps_no @aps_yes) (iout (inext (nnext (bnext (enext out))))))
+
+@aps_no = (i (inext (n (base (edges out)))))
+  & @ap_scan ~ (inext (n (base (edges tail))))
+  & out ~ tail
+
+@aps_yes = (* (i (inext (n (base (edges out))))))
+  & @ap_scan ~ (inext (n (base (edges tail))))
+  & out ~ (1 (i tail))

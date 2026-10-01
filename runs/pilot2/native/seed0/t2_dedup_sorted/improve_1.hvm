@@ -1,0 +1,30 @@
+@prog = (input out)
+  & @dd_init ~ (input out)
+
+@dd_init = ((?((@di_nil @di_cons) (pl out)) pl) out)
+
+@di_nil = (* out)
+  & out ~ (0 *)
+
+@di_cons = (* ((h t) out))
+  & h ~ {ph oh}
+  & @dd_loop ~ (t (ph tailout))
+  & out ~ (1 (oh tailout))
+
+@dd_loop = ((?((@dl_nil @dl_cons) (pl (prev out))) pl) (prev out))
+
+@dl_nil = (* (* out))
+  & out ~ (0 *)
+
+@dl_cons = (* ((h t) (prev out)))
+  & h ~ {hc hn}
+  & hc ~ $([=] $(prev eq))
+  & eq ~ ?((@dl_keep @dl_drop) (t (hn out)))
+
+@dl_keep = (t (hn out))
+  & hn ~ {phead ohead}
+  & @dd_loop ~ (t (phead tailout))
+  & out ~ (1 (ohead tailout))
+
+@dl_drop = (* (t (hn out)))
+  & @dd_loop ~ (t (hn out))

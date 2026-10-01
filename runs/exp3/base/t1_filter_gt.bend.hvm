@@ -1,0 +1,42 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@filt2 = (a ((@filt2__C12 (a b)) b))
+
+@filt2__C0 = (* @List/Nil)
+
+@filt2__C1 = (* (a b))
+  & @List/Cons ~ (a (@List/Nil b))
+
+@filt2__C10 = (?((@filt2__C8 @filt2__C9) a) a)
+
+@filt2__C11 = (* (b ((@filt2__C10 (a (b c))) (a c))))
+
+@filt2__C12 = (?(((* @List/Nil) @filt2__C11) a) a)
+
+@filt2__C2 = (* (a a))
+
+@filt2__C3 = (* a)
+  & @List/Cons ~ a
+
+@filt2__C4 = (a (* b))
+  & @List/Cons ~ (a b)
+
+@filt2__C5 = (* (a (b (c e))))
+  & @List/Cons ~ (a (d e))
+  & @List/Cons ~ (b (c d))
+
+@filt2__C6 = (a (* ({$([>] $(a ?((@filt2__C2 @filt2__C3) (b c)))) b} c)))
+
+@filt2__C7 = (* (a (b ({$([>] $(a ?((@filt2__C4 @filt2__C5) (b (c d))))) c} d))))
+
+@filt2__C8 = (a ({$([>] $(a ?((@filt2__C0 @filt2__C1) (b c)))) b} c))
+
+@filt2__C9 = (* (d (f ({a {b e}} ({$([>] $(a ?((@filt2__C6 @filt2__C7) (b (c (d (g h))))))) c} h)))))
+  & @filt2 ~ (e (f g))
+
+@prog = ((a b) c)
+  & @filt2 ~ (a (b c))
+
+

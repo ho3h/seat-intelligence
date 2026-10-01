@@ -1,0 +1,42 @@
+// Difference-list traversal. Child tags are inspected directly, so empty Leaf
+// children need not make recursive calls or propagate leaf flags.
+@prog = (tree out)
+  & @walk ~ (tree (0 (out (0 *))))
+
+@walk = ((?((@walk_leaf @walk_node) (payload ctx)) payload) ctx)
+
+@walk_leaf = (* (acc (head tail)))
+  & acc ~ *
+  & head ~ tail
+
+@walk_node = (* ((left (value right)) (acc (head tail))))
+  & value ~ $([+] $(acc total))
+  & @left_case ~ (left (total (right (head tail))))
+
+@left_case = ((?((@left_leaf @left_node) (payload ctx)) payload) ctx)
+
+@left_leaf = (* (sum (right (head tail))))
+  & @right_empty ~ (right (sum (head tail)))
+
+@left_node = (* ((left (value right)) (sum (other (head tail)))))
+  & sum ~ {sum_left sum_right}
+  & @walk_node ~ (* ((left (value right)) (sum_left (left_head left_tail))))
+  & @right_nonempty ~ (other (sum_right (left_head (left_tail (head tail))))
+
+@right_empty = ((?((@right_empty_leaf @walk_node) (payload ctx)) payload) ctx)
+
+@right_empty_leaf = (* (sum (head tail)))
+  & head ~ (1 (sum tail))
+
+@right_nonempty = ((?((@right_nonempty_leaf @right_nonempty_node) (payload ctx)) payload) ctx)
+
+@right_nonempty_leaf = (* (sum (left_head (left_tail (head tail)))))
+  & sum ~ *
+  & head ~ left_head
+  & tail ~ left_tail
+
+@right_nonempty_node = (* ((left (value right)) (sum (left_head (left_tail (head tail))))))
+  & @walk_node ~ (* ((left (value right)) (sum (right_head right_tail))))
+  & left_tail ~ right_head
+  & head ~ left_head
+  & tail ~ right_tail

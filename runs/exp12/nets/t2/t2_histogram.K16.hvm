@@ -1,0 +1,168 @@
+@prog = (l out)
+  & @hist ~ (l (((((0 0) (0 0)) ((0 0) (0 0))) (((0 0) (0 0)) ((0 0) (0 0)))) out))
+
+@hist = (lv1 (acc out))
+  & @hist_cons_lw ~ (lv1 (acc out))
+
+@hist_nil = (* (acc out))
+  & @finish ~ (acc out)
+
+@hist_cons = (* ((h t) (acc out)))
+  & @bump8 ~ (h (acc acc2))
+  & @hist_cons_lw ~ (t (acc2 out))
+
+@bump8 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(8 b))
+  & b ~ ?((@bump8R @bump8L) (vkeep (tree out)))
+
+@bump8L = (* (v ((l r) out)))
+  & @bump4_4 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump8R = (v ((l r) out))
+  & @bump4_12 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump4_4 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(4 b))
+  & b ~ ?((@bump4_4R @bump4_4L) (vkeep (tree out)))
+
+@bump4_4L = (* (v ((l r) out)))
+  & @bump2_2 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump4_4R = (v ((l r) out))
+  & @bump2_6 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump4_12 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(12 b))
+  & b ~ ?((@bump4_12R @bump4_12L) (vkeep (tree out)))
+
+@bump4_12L = (* (v ((l r) out)))
+  & @bump2_10 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump4_12R = (v ((l r) out))
+  & @bump2_14 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump2_2 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(2 b))
+  & b ~ ?((@bump2_2R @bump2_2L) (vkeep (tree out)))
+
+@bump2_2L = (* (v ((l r) out)))
+  & @bump1_1 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump2_2R = (v ((l r) out))
+  & @bump1_3 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump2_6 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(6 b))
+  & b ~ ?((@bump2_6R @bump2_6L) (vkeep (tree out)))
+
+@bump2_6L = (* (v ((l r) out)))
+  & @bump1_5 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump2_6R = (v ((l r) out))
+  & @bump1_7 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump2_10 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(10 b))
+  & b ~ ?((@bump2_10R @bump2_10L) (vkeep (tree out)))
+
+@bump2_10L = (* (v ((l r) out)))
+  & @bump1_9 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump2_10R = (v ((l r) out))
+  & @bump1_11 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump2_14 = (v (tree out))
+  & v ~ {vtest vkeep}
+  & vtest ~ $([<] $(14 b))
+  & b ~ ?((@bump2_14R @bump2_14L) (vkeep (tree out)))
+
+@bump2_14L = (* (v ((l r) out)))
+  & @bump1_13 ~ (v (l l2))
+  & out ~ (l2 r)
+
+@bump2_14R = (v ((l r) out))
+  & @bump1_15 ~ (v (r r2))
+  & out ~ (l r2)
+
+@bump1_1 = (v (tree out))
+  & v ~ $([<] $(1 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_3 = (v (tree out))
+  & v ~ $([<] $(3 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_5 = (v (tree out))
+  & v ~ $([<] $(5 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_7 = (v (tree out))
+  & v ~ $([<] $(7 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_9 = (v (tree out))
+  & v ~ $([<] $(9 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_11 = (v (tree out))
+  & v ~ $([<] $(11 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_13 = (v (tree out))
+  & v ~ $([<] $(13 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1_15 = (v (tree out))
+  & v ~ $([<] $(15 b))
+  & b ~ ?((@bump1R @bump1L) (tree out))
+
+@bump1L = (* ((a b) out))
+  & a ~ $([+] $(1 a2))
+  & out ~ (a2 b)
+
+@bump1R = ((a b) out)
+  & b ~ $([+] $(1 b2))
+  & out ~ (a b2)
+
+@finish = (((((a0 a1) (a2 a3)) ((a4 a5) (a6 a7))) (((a8 a9) (a10 a11)) ((a12 a13) (a14 a15)))) out)
+  & out ~ (1 (a0 (1 (a1 (1 (a2 (1 (a3 (1 (a4 (1 (a5 (1 (a6 (1 (a7 (1 (a8 (1 (a9 (1 (a10 (1 (a11 (1 (a12 (1 (a13 (1 (a14 (1 (a15 (0 *)))))))))))))))))))))))))))))))))
+
+@hist_cons_lw = (ls90 (q10 q11))
+  & ls90 ~ (g73 (e57 (g74 (e58 (g75 (e59 (g76 (e60 (g77 (e61 (g78 (e62 (g79 (e63 (g80 (e64 (g81 (e65 (g82 (e66 (g83 (e67 (g84 (e68 (g85 (e69 (g86 (e70 (g87 (e71 (g88 (e72 tk89))))))))))))))))))))))))))))))))
+  & g73 ~ ?((@hist_nil @hist_cons_la) ((e57 (q13 q14)) (q10 q11)))
+  & g74 ~ ?((@hist_nil @hist_cons_la) ((e58 (q16 q17)) (q13 q14)))
+  & g75 ~ ?((@hist_nil @hist_cons_la) ((e59 (q19 q20)) (q16 q17)))
+  & g76 ~ ?((@hist_nil @hist_cons_la) ((e60 (q22 q23)) (q19 q20)))
+  & g77 ~ ?((@hist_nil @hist_cons_la) ((e61 (q25 q26)) (q22 q23)))
+  & g78 ~ ?((@hist_nil @hist_cons_la) ((e62 (q28 q29)) (q25 q26)))
+  & g79 ~ ?((@hist_nil @hist_cons_la) ((e63 (q31 q32)) (q28 q29)))
+  & g80 ~ ?((@hist_nil @hist_cons_la) ((e64 (q34 q35)) (q31 q32)))
+  & g81 ~ ?((@hist_nil @hist_cons_la) ((e65 (q37 q38)) (q34 q35)))
+  & g82 ~ ?((@hist_nil @hist_cons_la) ((e66 (q40 q41)) (q37 q38)))
+  & g83 ~ ?((@hist_nil @hist_cons_la) ((e67 (q43 q44)) (q40 q41)))
+  & g84 ~ ?((@hist_nil @hist_cons_la) ((e68 (q46 q47)) (q43 q44)))
+  & g85 ~ ?((@hist_nil @hist_cons_la) ((e69 (q49 q50)) (q46 q47)))
+  & g86 ~ ?((@hist_nil @hist_cons_la) ((e70 (q52 q53)) (q49 q50)))
+  & g87 ~ ?((@hist_nil @hist_cons_la) ((e71 (q55 q56)) (q52 q53)))
+  & g88 ~ ?((@hist_nil @hist_cons) ((e72 tk89) (q55 q56)))
+
+@hist_cons_la = (* ((h (acc2 out)) (acc out)))
+  & @bump8 ~ (h (acc acc2))

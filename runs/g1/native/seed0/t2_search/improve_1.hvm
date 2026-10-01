@@ -1,0 +1,38 @@
+// Because xs is sorted, stop at the first element greater than or equal to targ.
+// The carried index counts elements strictly less than targ.
+@prog = ((xs targ) out)
+  & @bs ~ (xs (targ (0 out)))
+
+@bs = ((?((@bs_nil @bs_cons) (pl (targ (i out)))) pl) (targ (i out)))
+
+@bs_nil = (* (targ (i out)))
+  & targ ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@bs_cons = (* ((h tail) (targ (i out))))
+  & h ~ {hc hr}
+  & targ ~ {tc tr}
+  & hc ~ $([<] $(tc lt))
+  & lt ~ ?((@bs_ge @bs_lt) (hr (tail (tr (i out)))))
+
+@bs_lt = (* (hr (tail (tr (i out)))))
+  & hr ~ *
+  & i ~ $([+1] idx)
+  & @bs ~ (tail (tr (idx out)))
+
+@bs_ge = (hr (tail (tr (i out))))
+  & tr ~ {te tn}
+  & hr ~ $([=] $(te eq))
+  & eq ~ ?((@bs_greater @bs_equal) (tail (tn (i out))))
+
+@bs_greater = (tail (tn (i out)))
+  & tail ~ *
+  & tn ~ *
+  & i ~ *
+  & out ~ 16777215
+
+@bs_equal = (* (tail (tn (i out))))
+  & tail ~ *
+  & tn ~ *
+  & i ~ out

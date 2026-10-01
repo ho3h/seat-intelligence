@@ -1,0 +1,55 @@
+@prog = (xs out)
+  & {lcount lbuild} ~ xs
+  & @len ~ (lcount (0 n))
+  & @build ~ (n (lbuild result))
+  & result ~ (out *)
+
+@len = (lv1 (acc out))
+  & @len_cons_lw ~ (lv1 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) (acc out)))
+  & @len2_cons_lw ~ (t (acc out))
+
+@len2 = (lv2 (acc out))
+  & @len2_cons_lw ~ (lv2 (acc out))
+
+@len2_nil = (* (acc out))
+  & acc ~ $([+1] out)
+
+@len2_cons = (* ((* t) ($([+2] acc2) out)))
+  & @len_cons_lw ~ (t (acc2 out))
+
+@build = (?((@build_zero @build_pos) (l out)) (l out))
+
+@build_zero = (l out)
+  & out ~ ((0 *) l)
+
+@build_pos = (k (l out))
+  & {ka kb} ~ k
+  & ka ~ $([/] $(2 mm))
+  & {mleft msub} ~ mm
+  & kb ~ $([-] $(msub rcount))
+  & @build ~ (mleft (l left_result))
+  & left_result ~ (lefttree remaining)
+  & remaining ~ (tag payload)
+  & tag ~ *
+  & payload ~ (val tail)
+  & @build ~ (rcount (tail right_result))
+  & right_result ~ (righttree finalrest)
+  & out ~ ((1 (lefttree (val righttree))) finalrest)
+
+@len_cons_lw = (ls28 (q18 q19))
+  & ls28 ~ (g25 (e23 (g26 (e24 tk27))))
+  & g25 ~ ?((@len_nil @len_cons_la) ((e23 (q21 q22)) (q18 q19)))
+  & g26 ~ ?((@len2_nil @len2_cons) ((e24 tk27) (q21 q22)))
+
+@len2_cons_lw = (ls40 (q30 q31))
+  & ls40 ~ (g37 (e35 (g38 (e36 tk39))))
+  & g37 ~ ?((@len2_nil @len2_cons_la) ((e35 (q33 q34)) (q30 q31)))
+  & g38 ~ ?((@len_nil @len_cons) ((e36 tk39) (q33 q34)))
+
+@len_cons_la = (* ((* (acc out)) (acc out)))
+
+@len2_cons_la = (* ((* (acc2 out)) ($([+2] acc2) out)))

@@ -1,0 +1,211 @@
+@prog = (p out)
+  & p ~ (n edges)
+  & n ~ {n_zero n_rest}
+  & n_rest ~ {n_nil n_rest2}
+  & n_rest2 ~ {n_stack n_kahn}
+  & edges ~ {edges_indeg edges_adj}
+  & @zeros ~ (0 (n_zero indeg0))
+  & @nils ~ (0 (n_nil adj0))
+  & @build_indeg ~ (edges_indeg (indeg0 indeg_all))
+  & @build_adj ~ (edges_adj (adj0 adj))
+  & indeg_all ~ {indeg_stack indeg_kahn}
+  & @make_stack ~ (0 (n_stack (indeg_stack ((0 *) stack))))
+  & @kahn ~ (n_kahn (stack (indeg_kahn (adj (0 out)))))
+
+@zeros = (i (n out))
+  & i ~ $([=] $(n eq))
+  & eq ~ ?((@zeros_more @zeros_done) (i (n out)))
+
+@zeros_more = (i (n out))
+  & i ~ $([+1] i2)
+  & @zeros ~ (i2 (n tail))
+  & out ~ (1 (0 tail))
+
+@zeros_done = (p (i (n out)))
+  & p ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ (0 *)
+
+@nils = (i (n out))
+  & i ~ $([=] $(n eq))
+  & eq ~ ?((@nils_more @nils_done) (i (n out)))
+
+@nils_more = (i (n out))
+  & i ~ $([+1] i2)
+  & @nils ~ (i2 (n tail))
+  & out ~ (1 ((0 *) tail))
+
+@nils_done = (p (i (n out)))
+  & p ~ *
+  & i ~ *
+  & n ~ *
+  & out ~ (0 *)
+
+@inc_indeg = (idx (list out))
+  & idx ~ ?((@inc_zero @inc_next) (list out))
+
+@inc_zero = (list out)
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ $([+1] head2)
+  & out ~ (1 (head2 tail))
+
+@inc_next = (idx2 (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @inc_indeg ~ (idx2 (tail out_tail))
+  & out ~ (1 (head out_tail))
+
+@dec_indeg = (idx (list out))
+  & idx ~ ?((@dec_zero @dec_next) (list out))
+
+@dec_zero = (list out)
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ $([-1] new_val)
+  & new_val ~ {new_val_ret new_val_head}
+  & out ~ (new_val_ret (1 (new_val_head tail)))
+
+@dec_next = (idx2 (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @dec_indeg ~ (idx2 (tail out_tail))
+  & out_tail ~ (new_val new_tail)
+  & out ~ (new_val (1 (head new_tail)))
+
+@add_out = (idx (v (list out)))
+  & idx ~ ?((@add_zero @add_next) (v (list out)))
+
+@add_zero = (v (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (out_list tail)
+  & out ~ (1 ((1 (v out_list)) tail))
+
+@add_next = (idx2 (v (list out)))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @add_out ~ (idx2 (v (tail out_tail)))
+  & out ~ (1 (head out_tail))
+
+@get_at = (idx (list out))
+  & idx ~ ?((@get_zero @get_next) (list out))
+
+@get_zero = (list out)
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (val tail)
+  & tail ~ *
+  & out ~ val
+
+@get_next = (idx2 (list out))
+  & list ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & @get_at ~ (idx2 (tail out))
+
+@build_indeg = (edges (indeg out))
+  & edges ~ (tag payload)
+  & tag ~ ?((@bi_nil @bi_cons) (payload (indeg out)))
+
+@bi_nil = (payload (indeg out))
+  & payload ~ *
+  & out ~ indeg
+
+@bi_cons = (p (payload (indeg out)))
+  & p ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & u ~ *
+  & @inc_indeg ~ (v (indeg new_indeg))
+  & @build_indeg ~ (tail (new_indeg out))
+
+@build_adj = (edges (adj out))
+  & edges ~ (tag payload)
+  & tag ~ ?((@ba_nil @ba_cons) (payload (adj out)))
+
+@ba_nil = (payload (adj out))
+  & payload ~ *
+  & out ~ adj
+
+@ba_cons = (p (payload (adj out)))
+  & p ~ *
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & @add_out ~ (u (v (adj new_adj)))
+  & @build_adj ~ (tail (new_adj out))
+
+@make_stack = (i (n (indeg (stack out))))
+  & i ~ $([=] $(n eq))
+  & eq ~ ?((@ms_more @ms_done) (i (n (indeg (stack out)))))
+
+@ms_done = (p (i (n (indeg (stack out)))))
+  & p ~ *
+  & i ~ *
+  & n ~ *
+  & indeg ~ *
+  & out ~ stack
+
+@ms_more = (i (n (indeg (stack out))))
+  & i ~ {i_get i_ctx}
+  & indeg ~ {indeg_get indeg_ctx}
+  & @get_at ~ (i_get (indeg_get val))
+  & val ~ ?((@push_i @skip_i) (i_ctx (n (indeg_ctx (stack out)))))
+
+@push_i = (i (n (indeg (stack out))))
+  & i ~ $([+1] i2)
+  & @make_stack ~ (i2 (n (indeg ((1 (i stack)) out))))
+
+@skip_i = (p (i (n (indeg (stack out)))))
+  & p ~ *
+  & i ~ $([+1] i2)
+  & @make_stack ~ (i2 (n (indeg (stack out))))
+
+@kahn = (n (stack (indeg (adj (removed out)))))
+  & stack ~ (tag payload)
+  & tag ~ ?((@kahn_empty @kahn_pop) (payload (n (indeg (adj (removed out))))))
+
+@kahn_empty = (payload (n (indeg (adj (removed out)))))
+  & payload ~ *
+  & indeg ~ *
+  & adj ~ *
+  & n ~ $([-] $(removed ans))
+  & out ~ ans
+
+@kahn_pop = (p (payload (n (indeg (adj (removed out))))))
+  & p ~ *
+  & payload ~ (v tail_stack)
+  & removed ~ $([+1] removed2)
+  & adj ~ {adj_get adj_ctx}
+  & @get_at ~ (v (adj_get out_list))
+  & @process_out ~ (n (out_list (tail_stack (indeg (adj_ctx (removed2 out))))))
+
+@process_out = (n (targets (stack (indeg (adj (removed out))))))
+  & targets ~ (tag payload)
+  & tag ~ ?((@po_done @po_cons) (payload (n (stack (indeg (adj (removed out)))))))
+
+@po_done = (payload (n (stack (indeg (adj (removed out))))))
+  & payload ~ *
+  & @kahn ~ (n (stack (indeg (adj (removed out)))))
+
+@po_cons = (p (payload (n (stack (indeg (adj (removed out)))))))
+  & p ~ *
+  & payload ~ (t rest)
+  & t ~ {t_dec t_maybe}
+  & @dec_indeg ~ (t_dec (indeg dec_result))
+  & dec_result ~ (new_val new_indeg)
+  & new_val ~ ?((@po_zero @po_nonzero) (n (t_maybe (rest (stack (adj (removed (new_indeg out)))))))
+
+@po_zero = (n (t (rest (stack (adj (removed (indeg out)))))))
+  & @process_out ~ (n (rest ((1 (t stack)) (indeg (adj (removed out))))))
+
+@po_nonzero = (p (n (t (rest (stack (adj (removed (indeg out))))))))
+  & p ~ *
+  & t ~ *
+  & @process_out ~ (n (rest (stack (indeg (adj (removed out))))))

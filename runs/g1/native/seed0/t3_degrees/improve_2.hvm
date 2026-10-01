@@ -1,0 +1,40 @@
+@prog = ((n edges) out)
+  & @degrees ~ (n (edges (0 out)))
+
+@degrees = (?((@d_nil @d_cons) (edges (idx out))) (edges (idx out)))
+
+@d_nil = (* (* (a a)))
+
+@d_cons = (rem (edges (idx out)))
+  & edges ~ {scan rest}
+  & idx ~ {scanidx nextidx}
+  & @count ~ (scan (scanidx (0 degree)))
+  & nextidx ~ $([+1] idx2)
+  & @degrees ~ (rem (rest (idx2 tail)))
+  & out ~ (1 (degree tail))
+
+@count = ((?((@c_nil @c_cons) (pl (idx (acc out)))) pl) (idx (acc out)))
+
+@c_nil = (* (* (acc acc)))
+
+@c_cons = (* (((u v) tail) (idx (acc out))))
+  & idx ~ {testidx recidx}
+  & u ~ $([=] $(testidx eq))
+  & eq ~ ?((@u_no @u_yes) (v (tail (recidx (acc out)))))
+
+@u_yes = (v (tail (idx (acc out))))
+  & v ~ *
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (idx (acc2 out)))
+
+@u_no = (v (tail (idx (acc out))))
+  & idx ~ {testidx recidx}
+  & v ~ $([=] $(testidx eq))
+  & eq ~ ?((@v_no @v_yes) (tail (recidx (acc out))))
+
+@v_no = (tail (idx (acc out)))
+  & @count ~ (tail (idx (acc out)))
+
+@v_yes = (tail (idx (acc out)))
+  & acc ~ $([+1] acc2)
+  & @count ~ (tail (idx (acc2 out)))

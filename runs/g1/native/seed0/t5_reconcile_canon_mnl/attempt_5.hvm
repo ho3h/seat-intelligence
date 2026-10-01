@@ -1,0 +1,85 @@
+// Build singleton ids when there are no candidates, and handle the first
+// candidate when present.
+@prog = (input out)
+  & input ~ (n (tau (mnl cands)))
+  & mnl ~ *
+  & @decision ~ (cands (n (tau out)))
+
+@decision = ((?((@dec_nil @dec_cons) (pl (n (tau out)))) pl) (n (tau out)))
+
+@dec_nil = (pl (n (tau out)))
+  & pl ~ *
+  & tau ~ *
+  & @gen ~ (n (0 out))
+
+@dec_cons = (prev (pl (n (tau out))))
+  & prev ~ *
+  & pl ~ ((u (v score)) tail)
+  & tail ~ *
+  & score ~ $([<] $(tau flag))
+  & flag ~ ?((@reject @accept) (n (u (v out))))
+
+@reject = (n (u (v out)))
+  & u ~ *
+  & v ~ *
+  & @gen ~ (n (0 out))
+
+@accept = (prev (n (u (v out))))
+  & prev ~ *
+  & @map ~ (n (0 (u (v out))))
+
+@gen = (n (i out))
+  & n ~ ?((@gen_nil @gen_succ) (i out))
+
+@gen_nil = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@gen_succ = (prev (i out))
+  & i ~ {inc val}
+  & inc ~ $([+1] next)
+  & @gen ~ (prev (next rest))
+  & out ~ (1 (val rest))
+
+@map = (n (i (u (v out))))
+  & n ~ ?((@map_nil @map_succ) (i (u (v out))))
+
+@map_nil = (i (u (v out)))
+  & i ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ (0 *)
+
+@map_succ = (prev (i (u (v out))))
+  & i ~ {cur step}
+  & step ~ $([+1] next)
+  & u ~ {uc ur}
+  & v ~ {vc vr}
+  & @map ~ (prev (next (ur (vr rest))))
+  & @entry ~ (cur (uc (vc head)))
+  & out ~ (1 (head rest))
+
+@entry = (i (u (v out)))
+  & i ~ {test keep}
+  & test ~ $([=] $(u eq))
+  & eq ~ ?((@entry_no @entry_yes) (keep (v out)))
+
+@entry_yes = (prev (keep (v out)))
+  & prev ~ *
+  & keep ~ *
+  & out ~ v
+
+@entry_no = (keep (v out))
+  & keep ~ {test val}
+  & v ~ {for_test for_output}
+  & test ~ $([=] $(for_test eq))
+  & eq ~ ?((@entry_no_v @entry_yes_v) (val (for_output out)))
+
+@entry_no_v = (val (for_output out))
+  & for_output ~ *
+  & out ~ val
+
+@entry_yes_v = (prev (val (for_output out)))
+  & prev ~ *
+  & val ~ *
+  & out ~ for_output

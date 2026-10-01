@@ -1,0 +1,72 @@
+@List/Nil = ((0 a) a)
+
+@build_from = (a ({$([=0x0000001] ?((@build_from__C2 @build_from__C3) (a (b c)))) b} c))
+
+@build_from__C0 = (* (a (b (a b))))
+
+@build_from__C1 = (?(((0 @List/Nil) @build_from__C0) a) a)
+
+@build_from__C2 = (a ({$([-] $(e f)) $([:/0x0000002] {b e})} ((c g) h)))
+  &!@build_from ~ (d (f (g h)))
+  &!@build_from ~ (a (b (c d)))
+
+@build_from__C3 = (* ((@build_from__C1 a) (* a)))
+
+@build_tree = (a (b c))
+  & @build_from ~ (a (b (c *)))
+
+@count_conflicts = (a (b ((@count_conflicts__C3 (a (b c))) c)))
+
+@count_conflicts__C0 = a
+  & @count_conflicts ~ a
+
+@count_conflicts__C1 = (* (a (b (c e))))
+  & $(d e) ~ [+0x0000001]
+  & @count_conflicts ~ (a (b (c d)))
+
+@count_conflicts__C2 = (* ((c d) (g ({a e} ({b f} h)))))
+  & @same_cluster ~ (a (b (c (d ?((@count_conflicts__C0 @count_conflicts__C1) (e (f (g h))))))))
+
+@count_conflicts__C3 = (?(((* (* 0)) @count_conflicts__C2) a) a)
+
+@get_tree = (b ({$([=0x0000001] ?((@get_tree__C2 (* (a (* (* a))))) (b (c d)))) c} d))
+
+@get_tree__C0 = ($([-] $(b c)) ($([-] $(d e)) (* (a ({b d} f)))))
+  & @get_tree ~ (a (c (e f)))
+
+@get_tree__C1 = (* (* (c (a (* (b d))))))
+  & @get_tree ~ (a (b (c d)))
+
+@get_tree__C2 = ((d e) ({b $([:/0x0000002] {a f})} ({$([<] $(a ?((@get_tree__C0 @get_tree__C1) (b (c (d (e (f g)))))))) c} g)))
+
+@list_length = ((@list_length__C1 a) a)
+
+@list_length__C0 = (* (* (a c)))
+  & $(b c) ~ [+0x0000001]
+  & @list_length ~ (a b)
+
+@list_length__C1 = (?((0 @list_length__C0) a) a)
+
+@prog = (({b a} c) e)
+  & @list_length ~ (a {$([=0x0000000] ?((@prog__C0 (* (* (* (* 0))))) (b (c (d e))))) d})
+
+@prog__C0 = (a (e ({d b} f)))
+  & @count_conflicts ~ (c (d (e f)))
+  & @build_tree ~ (a (b c))
+
+@same_cluster = ((e f) ({b $([:/0x0000002] {a g})} (c ({$([<] $(a ?((@same_cluster__C2 @same_cluster__C3) (b (c (d (e (f (g h))))))))) d} h))))
+
+@same_cluster__C0 = ($([-] $(e f)) (c ($([-] $(g h)) (a (d ({b {e g}} j))))))
+  & @get_tree ~ (a (b (c $([=] $(i j)))))
+  & @get_tree ~ (d (f (h i)))
+
+@same_cluster__C1 = (* ($([-] $(b c)) ($([-] $(d e)) ($([-] $(f g)) (* (a ({b {d f}} h)))))))
+  & @same_cluster ~ (a (c (e (g h))))
+
+@same_cluster__C2 = (c ({$([<] $(a b)) d} (e (f (g ({a h} i))))))
+  & $(b ?((@same_cluster__C0 @same_cluster__C1) (c (d (e (f (g (h i)))))))) ~ [=0x0000000]
+
+@same_cluster__C3 = (* (* (c (d (a (* (b e)))))))
+  & @same_cluster ~ (a (b (c (d e))))
+
+

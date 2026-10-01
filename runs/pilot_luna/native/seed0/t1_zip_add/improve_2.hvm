@@ -1,0 +1,23 @@
+// Zip two lists elementwise, stopping when either list ends.
+@prog = ((xs ys) out)
+  & @zip ~ (xs (ys out))
+
+@zip = ((?( (@zip_nil @zip_cons) (px (ys out)) ) px) (ys out))
+
+@zip_nil = (px (ys out))
+  & px ~ *
+  & ys ~ *
+  & out ~ (0 *)
+
+@zip_cons = (* ((hx tx) ((?( (@zy_nil @zy_cons) (py (hx (tx out))) ) py) out))
+
+@zy_nil = (py (hx (tx out)))
+  & py ~ *
+  & hx ~ *
+  & tx ~ *
+  & out ~ (0 *)
+
+@zy_cons = (* ((hy ty) (hx (tx out))))
+  & hx ~ $([+] $(hy sum))
+  & @zip ~ (tx (ty rest))
+  & out ~ (1 (sum rest))

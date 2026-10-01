@@ -1,0 +1,101 @@
+@prog = (input output)
+  & @loop ~ (input ((((0 *) 0) (((0 *) 0) (((0 *) 0) ((0 *) 0)))) output))
+
+@loop = ((?((@loop_nil @loop_cons) (payload (state out))) payload) (state out))
+
+@loop_nil = (* (((s0 c0) ((s1 c1) ((s2 c2) (s3 c3)))) out))
+  & s0 ~ *
+  & s1 ~ *
+  & s2 ~ *
+  & s3 ~ *
+  & out ~ (1 (c0 (1 (c1 (1 (c2 (1 (c3 (0 *)))))))))
+
+@loop_cons = (* (((node (key value)) tail) (state out)))
+  & node ~ *
+  & key ~ ?((@upd0 @dispatch1) (value (tail (state out))))
+
+@dispatch1 = (k (v (t (state out))))
+  & k ~ ?((@upd1 @dispatch2) (v (t (state out))))
+
+@dispatch2 = (k (v (t (state out))))
+  & k ~ ?((@upd2 @dispatch3) (v (t (state out))))
+
+@dispatch3 = (k (v (t (state out))))
+  & k ~ ?((@upd3 @invalid) (v (t (state out))))
+
+@invalid = (* *)
+
+@has = ((?((@has_nil @has_cons) (payload (v out))) payload) (v out))
+
+@has_nil = (* (v out))
+  & v ~ *
+  & out ~ 0
+
+@has_cons = (* ((h tail) (v out)))
+  & v ~ {v_eq v_keep}
+  & h ~ $([=] $(v_eq z))
+  & z ~ ?((@has_no @has_yes) (tail (v_keep out)))
+
+@has_no = (tail (v out))
+  & @has ~ (tail (v out))
+
+@has_yes = (* (tail (v out)))
+  & tail ~ *
+  & v ~ *
+  & out ~ 1
+
+@upd0 = (v (t (((s0 c0) rest) out)))
+  & s0 ~ {s0_check s0_keep}
+  & v ~ {v_check v_keep}
+  & @has ~ (s0_check (v_check found))
+  & found ~ ?((@upd0_new @upd0_old) (s0_keep (v_keep (c0 (t (rest out))))))
+
+@upd0_new = (s0 (v (count (t (rest out)))))
+  & count ~ $([+1] count1)
+  & @loop ~ (t ((((1 (v s0)) count1) rest) out))
+
+@upd0_old = (s0 (v (count (t (rest out)))))
+  & v ~ *
+  & @loop ~ (t (((s0 count) rest) out))
+
+@upd1 = (v (t ((p0 ((s1 c1) rest)) out)))
+  & s1 ~ {s1_check s1_keep}
+  & v ~ {v_check v_keep}
+  & @has ~ (s1_check (v_check found))
+  & found ~ ?((@upd1_new @upd1_old) (s1_keep (v_keep (c1 (t (p0 (rest out)))))))
+
+@upd1_new = (s1 (v (count (t (p0 (rest out))))))
+  & count ~ $([+1] count1)
+  & @loop ~ (t ((p0 (((1 (v s1)) count1) rest)) out))
+
+@upd1_old = (s1 (v (count (t (p0 (rest out))))))
+  & v ~ *
+  & @loop ~ (t ((p0 ((s1 count) rest)) out))
+
+@upd2 = (v (t ((p0 (p1 ((s2 c2) p3))) out)))
+  & s2 ~ {s2_check s2_keep}
+  & v ~ {v_check v_keep}
+  & @has ~ (s2_check (v_check found))
+  & found ~ ?((@upd2_new @upd2_old) (s2_keep (v_keep (c2 (t (p0 (p1 (p3 out))))))))
+
+@upd2_new = (s2 (v (count (t (p0 (p1 (p3 out)))))))
+  & count ~ $([+1] count1)
+  & @loop ~ (t ((p0 (p1 (((1 (v s2)) count1) p3))) out))
+
+@upd2_old = (s2 (v (count (t (p0 (p1 (p3 out)))))))
+  & v ~ *
+  & @loop ~ (t ((p0 (p1 ((s2 count) p3))) out))
+
+@upd3 = (v (t ((p0 (p1 (p2 (s3 c3)))) out)))
+  & s3 ~ {s3_check s3_keep}
+  & v ~ {v_check v_keep}
+  & @has ~ (s3_check (v_check found))
+  & found ~ ?((@upd3_new @upd3_old) (s3_keep (v_keep (c3 (t (p0 (p1 (p2 out))))))))
+
+@upd3_new = (s3 (v (count (t (p0 (p1 (p2 out))))))
+  & count ~ $([+1] count1)
+  & @loop ~ (t ((p0 (p1 (p2 ((1 (v s3)) count1)))) out))
+
+@upd3_old = (s3 (v (count (t (p0 (p1 (p2 out))))))
+  & v ~ *
+  & @loop ~ (t ((p0 (p1 (p2 (s3 count)))) out))

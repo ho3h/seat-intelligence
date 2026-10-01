@@ -1,0 +1,29 @@
+// Count edges. For a forest, the component count is n minus the edge count.
+@prog = ((n edges) out)
+  & @len ~ (edges (0 m))
+  & n ~ {nt ns}
+  & m ~ {mt ms}
+  & nt ~ $([>] $(mt gt))
+  & gt ~ ?((@zero @subtract) (ns (ms out)))
+
+@len = (lst (acc out))
+  & lst ~ (?((@lenNil @lenCons) (payload (acc out))) payload)
+
+@lenNil = (payload (acc out))
+  & payload ~ *
+  & out ~ acc
+
+@lenCons = (* (payload (acc out)))
+  & payload ~ (h t)
+  & h ~ *
+  & acc ~ $([+1] acc2)
+  & @len ~ (t (acc2 out))
+
+@zero = (n (m out))
+  & n ~ *
+  & m ~ *
+  & out ~ 0
+
+@subtract = (pred (n (m out)))
+  & pred ~ *
+  & n ~ $([-] $(m out))

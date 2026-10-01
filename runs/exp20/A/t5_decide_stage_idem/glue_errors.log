@@ -1,0 +1,53 @@
+--- 05:01:41
+build.py:69: unknown operator '!='; use one of ! % & * + - / < << = > >> ^ |
+--- 05:02:21
+build.py:71: wire `r` (num, result of `|`, made at build.py:60) is used a second time (get `get_val` port `k`); it was already used at build.py:67 (get `get_val` port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(r, 2)  and use each once.
+--- 05:02:48
+build.py:79: wire `kept_trie` (trie[num], argument `kept_trie` of step of stream `stream_proposals`, made at build.py:105) is used a second time (update `set_val` (act set) port `t`); it was already used at build.py:71 (get `get_val` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:05:42
+build.py:79: wire `kept_trie` (trie[num], argument `kept_trie` of step of stream `stream_proposals`, made at build.py:105) is used a second time (update `set_val` (act set) port `t`); it was already used at build.py:71 (get `get_val` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:06:05
+branch zero case of step of stream `stream_proposals` (@stream_proposals_step_b1z): 1 value(s) never used:
+    `L_out` (depth, argument `passed[0]` of branch zero case of step of stream `stream_proposals`, made at build.py:64)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:06:28
+build.py:47: fill_cons needs a hole[list[...]]; got list[(num num)]
+--- 05:06:41
+branch nonzero case of step of stream `proposal` (@proposal_step_b1s): 1 value(s) never used:
+    `is_blocked_minus_1` (num, argument `cm1` of branch nonzero case of step of stream `proposal`, made at build.py:54)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:06:48
+build.py:55: wire `verb` (num, argument `e0` of step of stream `proposal`, made at build.py:63) is used a second time (branch passed[1]); it was already used at build.py:38 (left operand of `<<`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(verb, 2)  and use each once.
+--- 05:07:07
+build.py:64: wire `blocked_trie` (trie[num], argument `blocked_trie` of step of stream `proposal`, made at build.py:64) is used a second time (returned as `blocked_trie`); it was already used at build.py:43 (get `get_val` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:08:04
+predicate of filter_list `filter` (@filter_p): 2 value(s) never used:
+    `i` (num, argument `i` of predicate of filter_list `filter`, made at build.py:13)
+    `E` (num, argument `E` of predicate of filter_list `filter`, made at build.py:13)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:11
+step of stream `proposal` (@proposal_step): 2 value(s) never used:
+    `r` (num, result of `|`, made at build.py:34)
+    `L1` (depth, copy 1 of `L`, made at build.py:35)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:23
+step of stream `proposal` (@proposal_step): 1 value(s) never used:
+    `L1` (depth, copy 1 of `L`, made at build.py:30)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:29
+fin of stream `proposal` must return exactly one value (the result); returned 0
+--- 05:08:32
+fin of stream `proposal` must return exactly one value (the result); returned 0
+--- 05:17:05
+@prog (t5_decide_stage_idem) (@prog): 2 value(s) never used:
+    `ledger` (list[(num num num)], argument `in0` of @prog (t5_decide_stage_idem), made at build.py:31)
+    `t` (trie[num], output `t` of const_trie `z0` (leaf 0), made at build.py:20)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:23:24
+build.py:21: kind mismatch at update `set_prop` (act set) port `t`: expected trie[num], got trie[(num num)] `output_trie` from argument `output_trie` of step of stream `proposals` (made at build.py:31).
+--- 05:25:20
+wrong arity: leaf of fold `fold_idx` is called as f(d, x:num, i:num, acc:num), i.e. d plus 3 value(s); your function `fold_leaf` takes 3 parameter(s) (d, proposal, i).
+--- 05:25:29
+build.py:19: split needs a tuple wire or an explicit n; `proposal` is num
+--- 05:25:42
+build.py:52: wire `proposals` (list[(num num)], argument `in1` of @prog (t5_decide_stage_idem), made at build.py:52) is used a second time (returned as `out`); it was already used at build.py:46 (stream `proposals` port `list`). A wire has exactly two ends. A list[(num num)] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).

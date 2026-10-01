@@ -1,0 +1,53 @@
+@prog = ((?((@mkv_nil (?((@mkv_nil (?((@mkv_nil (?((@mkv_nil (?((@mkv_nil @mkv_succ) (i_next_q179 tail_q179)) ({i_out_q179 $([+1] i_next_q179)} (1 (i_out_q179 tail_q179))))) (i_next_q174 tail_q174)) ({i_out_q174 $([+1] i_next_q174)} (1 (i_out_q174 tail_q174))))) (i_next_q170 tail_q170)) ({i_out_q170 $([+1] i_next_q170)} (1 (i_out_q170 tail_q170))))) (i_next_q167 tail_q167)) ({i_out_q167 $([+1] i_next_q167)} (1 (i_out_q167 tail_q167))))) (0 {(?((@find_nil @find_cons) (pl_q144 (e_scan_q143 (?((@peel_done @peel_found) (payload_q145 (v_keep_q143 (e_keep_q143 (0 output))))) payload_q145)))) pl_q144) v_keep_q143})) {e_scan_q143 e_keep_q143}) output)
+
+@mkv_nil = (* (0 *))
+
+@mkv_succ = (?((@mkv_nil (?((@mkv_nil @mkv_succ) (i_next_q181 tail_q181)) ({i_out_q181 $([+1] i_next_q181)} (1 (i_out_q181 tail_q181))))) (i_next tail)) ({i_out $([+1] i_next)} (1 (i_out tail))))
+
+@peel_done = (* (* (* (acc acc))))
+
+@peel_found = (* ((v ?((@peel_iso @peel_pair) (v (verts (edges (acc out)))))) (verts (edges (acc out)))))
+
+@peel_iso = ({v_vf v_ef} ((?((@fv_nil @fv_cons) (pl_q149 (v_vf {(?((@find_nil @find_cons) (pl_q147_q151 (e_scan_q151 (?((@peel_done @peel_found) (payload_q148_q151 (v_keep_q151 (e_keep_q151 (acc2 out))))) payload_q148_q151)))) pl_q147_q151) v_keep_q151}))) pl_q149) ((?((@fe_nil @fe_cons) (pl_q150 (v_ef {e_scan_q151 e_keep_q151}))) pl_q150) ($([+1] acc2) out))))
+
+@peel_pair = (* ({v_n {v_vf v_ef}} ((?((@fv_nil @fv_cons) (pl_q153 (v_vf (?((@fv_nil @fv_cons) (pl_q154 (nb_vf {(?((@find_nil @find_cons) (pl_q147_q157 (e_scan_q157 (?((@peel_done @peel_found) (payload_q148_q157 (v_keep_q157 (e_keep_q157 (acc2 out))))) payload_q148_q157)))) pl_q147_q157) v_keep_q157}))) pl_q154)))) pl_q153) ({(?((@nl_nil @nl_cons) (pl_q152 (v_n {nb_vf nb_ef}))) pl_q152) (?((@fe_nil @fe_cons) (pl_q155 (v_ef (?((@fe_nil @fe_cons) (pl_q156 (nb_ef {e_scan_q157 e_keep_q157}))) pl_q156)))) pl_q155)} ($([+1] acc2) out)))))
+
+@find_nil = (* (* (0 *)))
+
+@find_cons = (* (({v_degree v_keep} vs) ({(?((@dl_nil @dl_cons) (pl_q158 (v_degree (0 {$([<] $(2 ?((@find_next @find_yes) (v_keep (d_keep (vs (e_rec out))))))) d_keep})))) pl_q158) e_rec} out)))
+
+@find_next = (* (* ((?((@find_nil @find_cons) (pl_q159 (edges out))) pl_q159) (edges out))))
+
+@find_yes = (* (v (d (* (* (1 (v d)))))))
+
+@dl_nil = (* (* (count count)))
+
+@dl_cons = (* ((($([=] $(t_u $([+] $(z_v inc)))) $([=] $(t_v z_v))) (?((@dl_nil @dl_cons) (pl_q160 (t_next (count2 out)))) pl_q160)) ({t_u {t_v t_next}} ($([+] $(inc count2)) out))))
+
+@nl_nil = (* (* 0))
+
+@nl_cons = (* ((({$([=] $(t_u ?((@nl_check_v @nl_hit_u) (v_cmp (t_v (t_rec (tail (u_ret (v_ret out))))))))) u_ret} {v_cmp v_ret}) tail) ({t_u {t_v t_rec}} out)))
+
+@nl_check_v = ($([=] $(t_v ?((@nl_next @nl_hit_v) (t_rec (tail (u_ret (v_ret out))))))) (t_v (t_rec (tail (u_ret (v_ret out))))))
+
+@nl_hit_u = (* (* (* (* (* (* (v_ret v_ret)))))))
+
+@nl_next = (t_rec ((?((@nl_nil @nl_cons) (pl_q161 (t_rec out))) pl_q161) (* (* out))))
+
+@nl_hit_v = (* (* (* (u_ret (* u_ret)))))
+
+@fv_nil = (* (* (0 *)))
+
+@fv_cons = (* (({$([=] $(target_cmp ?((@fv_keep @fv_drop) (x_keep (xs (target_rec out)))))) x_keep} xs) ({target_cmp target_rec} out)))
+
+@fv_keep = (x ((?((@fv_nil @fv_cons) (pl_q162 (target tail))) pl_q162) (target (1 (x tail)))))
+
+@fv_drop = (* (* ((?((@fv_nil @fv_cons) (pl_q163 (target out))) pl_q163) (target out))))
+
+@fe_nil = (* (* (0 *)))
+
+@fe_cons = (* ((({$([=] $(t_u $([|] $(zv ?((@fe_keep @fe_drop) (u_keep (v_keep (xs (t_next out))))))))) u_keep} {$([=] $(t_v zv)) v_keep}) xs) ({t_u {t_v t_next}} out)))
+
+@fe_keep = (u (v ((?((@fe_nil @fe_cons) (pl_q164 (target tail))) pl_q164) (target (1 ((u v) tail))))))
+
+@fe_drop = (* (* (* ((?((@fe_nil @fe_cons) (pl_q165 (target out))) pl_q165) (target out)))))

@@ -1,0 +1,19 @@
+// Empty input is sorted; for a nonempty input, start with its first element.
+@prog = ((?((@empty @begin) (payload out)) payload) out)
+
+@empty = (* 1)
+
+@begin = (* ((h t) out))
+  & @check ~ (t (h out))
+
+// Carry the previous element while scanning the remaining list.
+@check = ((?((@check_nil @check_cons) (payload (prev out))) payload) (prev out))
+
+@check_nil = (* (* 1))
+
+@check_cons = (* ((h t) (prev out)))
+  & h ~ {h1 h2}
+  & prev ~ $([>] $(h1 z))
+  & z ~ ?((@check @bad) (t (h2 out)))
+
+@bad = (* (* (* 0)))

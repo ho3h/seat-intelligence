@@ -1,0 +1,20 @@
+// Build the singleton-cluster canonical-id list and pass the edge list through.
+@prog = ((n (tau (mnl (cands edges)))) out)
+  & @init ~ (n (0 ids))
+  & out ~ (ids edges)
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+
+@init = (n (i out))
+  & n ~ ?((@init_zero @init_succ) (i out))
+
+@init_zero = (i out)
+  & i ~ *
+  & out ~ (0 *)
+
+@init_succ = (k (i out))
+  & i ~ {iout iarg}
+  & iarg ~ $([+1] inc)
+  & @init ~ (k (inc tail))
+  & out ~ (1 (iout tail))

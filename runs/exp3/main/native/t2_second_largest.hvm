@@ -1,0 +1,41 @@
+@prog = ((?((@scan_nil (* ((h_q105 t_q105) (?(((h_q106 ((?((@scan_nil (* ((h_q107 t_q107) (?((@zero (?((@one @two) k_q109) k_q109)) (h_q107 (t_q107 (hi_q107 (lo_q107 out_q107))))) (hi_q107 (lo_q107 out_q107)))))) (pl_q96_q106 (1 (h_q106 (0 out_q106))))) pl_q96_q106) (* (* out_q106)))) @positive) (h_q105 (t_q105 (hi_q105 (lo_q105 out_q105))))) (hi_q105 (lo_q105 out_q105)))))) (pl_q94 (0 (0 (0 out))))) pl_q94) out)
+
+@scan = ((?((@scan_nil @scan_cons) (pl (c (hi (lo out))))) pl) (c (hi (lo out))))
+
+@scan_nil = (* (c (hi (lo out))))
+  & c ~ $([=2] z)
+  & z ~ ?((@nil_no (* (* (x_q114 x_q114)))) (hi (lo out)))
+
+@nil_no = (* (* 0))
+
+@scan_cons = (* ((h t) (?((@zero (?((@one @two) k_q120) k_q120)) (h (t (hi (lo out))))) (hi (lo out)))))
+
+@zero = (h ((?((@scan_nil @scan_cons) (pl_q96 (1 (h (0 out))))) pl_q96) (* (* out))))
+
+@positive = (?((@one @two) k) k)
+
+@one = (h (t (hi (lo out))))
+  & h ~ {hc hk}
+  & hi ~ {hic hik}
+  & hc ~ $([>] $(hic z))
+  & z ~ ?(((hk_q127 (hik_q127 ((?((@scan_nil (* ((h_q132 t_q132) (?((@zero (?((@one @two) k_q120_q132) k_q120_q132)) (h_q132 (t_q132 (hi_q132 (lo_q132 out_q132))))) (hi_q132 (lo_q132 out_q132)))))) (pl_q97_q127 (2 (hik_q127 (hk_q127 out_q127))))) pl_q97_q127) out_q127))) @one_yes) (hk (hik (t out))))
+  & lo ~ *
+
+@one_yes = (* (hk (hik (t out))))
+  & @scan ~ (t (2 (hk (hik out))))
+
+@two = (* (h (t (hi (lo out)))))
+  & h ~ {hc hk}
+  & hi ~ {hic hik}
+  & hc ~ $([>] $(hic z))
+  & z ~ ?((@two_no @two_yes) (hk (hik (lo (t out)))))
+
+@two_yes = (* (hk (hik (* ((?((@scan_nil @scan_cons) (pl_q99 (2 (hk (hik out))))) pl_q99) out)))))
+
+@two_no = (hk (hik (lo (t out))))
+  & hk ~ {hc2 hk2}
+  & lo ~ {loc2 lok2}
+  & hc2 ~ $([>] $(loc2 z2))
+  & z2 ~ ?(((* (lok2_q139 (hik_q139 ((?((@scan_nil @scan_cons) (pl_q103_q139 (2 (hik_q139 (lok2_q139 out_q139))))) pl_q103_q139) out_q139)))) @second_yes) (hk2 (lok2 (hik (t out)))))
+
+@second_yes = (* (hk2 (* (hik ((?((@scan_nil @scan_cons) (pl_q101 (2 (hik (hk2 out))))) pl_q101) out)))))

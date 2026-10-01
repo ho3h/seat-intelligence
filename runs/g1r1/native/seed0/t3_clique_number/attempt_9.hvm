@@ -1,0 +1,80 @@
+@prog = ((n edges) out)
+  & @go ~ (n ((0 *) (0 (edges out))))
+
+@go = ( ?((@go_zero @go_succ) (chosen (size (edges out)))) (chosen (size (edges out))))
+
+@go_zero = (* (x (* x)))
+
+@go_succ = (p (chosen (size (edges out))))
+  & p ~ {p_skip p_more}
+  & p_more ~ {p_test p_inc}
+  & p_inc ~ {p_count p_head}
+  & chosen ~ {ch_skip ch_more}
+  & ch_more ~ {ch_test ch_inc}
+  & size ~ {size_skip size_inc}
+  & edges ~ {edges_skip edges_more}
+  & edges_more ~ {edges_test edges_inc}
+  & @go ~ (p_skip (ch_skip (size_skip (edges_skip skipout))))
+  & size_inc ~ $([+1] sizeplus)
+  & @alladj ~ (ch_test (p_test (edges_test ok)))
+  & ok ~ ?((@step_no @step_yes) (skipout (p_count (p_head (ch_inc (sizeplus (edges_inc out))))))
+
+@step_no = (x (* (* (* (* (* x))))))
+
+@step_yes = (* (skipout (p_count (p_head (ch_inc (sizeplus (edges out))))))
+  & @go ~ (p_count ((1 (p_head ch_inc)) (sizeplus (edges incout))))
+  & @max ~ (skipout (incout out))
+
+@alladj = ((?((@aa_nil @aa_cons) (payload (candidate (edges out)))) payload) (candidate (edges out)))
+
+@aa_nil = (* (* (* 1)))
+
+@aa_cons = (* ((head tail) (candidate (edges out))))
+  & candidate ~ {cand_test cand_rec}
+  & edges ~ {edges_test edges_rec}
+  & @has ~ (edges_test (head (cand_test found)))
+  & @alladj ~ (tail (cand_rec (edges_rec rest)))
+  & found ~ $([&] $(rest out))
+
+@aa_no = (* (* (* 0)))
+
+@aa_yes = (* (tail (candidate (edges out))))
+  & @alladj ~ (tail (candidate (edges out)))
+
+@has = ((?((@has_nil @has_cons) (payload (a (b out)))) payload) (a (b out)))
+
+@has_nil = (* (* (* 0)))
+
+@has_cons = (* ((edge tail) (a (b out))))
+  & a ~ {a_match a_rec}
+  & b ~ {b_match b_rec}
+  & @edgeeq ~ (edge (a_match (b_match matched)))
+  & matched ~ ?((@has_no @has_yes) (tail (a_rec (b_rec out))))
+
+@has_no = (tail (a (b out)))
+  & @has ~ (tail (a (b out)))
+
+@has_yes = (* (* (* (* 1))))
+
+@edgeeq = ((u v) (a (b out)))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & u1 ~ $([=] $(a1 eq1))
+  & v1 ~ $([=] $(b1 eq2))
+  & u2 ~ $([=] $(b2 eq3))
+  & v2 ~ $([=] $(a2 eq4))
+  & eq1 ~ $([&] $(eq2 direct))
+  & eq3 ~ $([&] $(eq4 reverse))
+  & direct ~ $([|] $(reverse out))
+
+@max = (a (b out))
+  & a ~ {acmp aret}
+  & b ~ {bcmp bret}
+  & acmp ~ $([>] $(bcmp gt))
+  & gt ~ ?((@max_no @max_yes) (aret (bret out)))
+
+@max_no = (* (x x))
+
+@max_yes = (* (x (* x)))

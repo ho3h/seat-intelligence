@@ -1,0 +1,27 @@
+// Produce the initial label list [0, 1, ..., n-1].
+@prog = ((n (mnl cands)) out)
+  & mnl ~ *
+  & cands ~ *
+  & @init ~ (n out)
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_succ) out)
+
+@init_zero = out
+  & out ~ (0 *)
+
+@init_succ = (k out)
+  & k ~ {k_rec k_value}
+  & @init ~ (k_rec tail)
+  & @append ~ (tail (k_value out))
+
+// Append x to a list.
+@append = ((?((@append_nil @append_cons) (payload (x out))) payload) (x out))
+
+@append_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* (payload (x out)))
+  & payload ~ (head tail)
+  & @append ~ (tail (x rest))
+  & out ~ (1 (head rest))

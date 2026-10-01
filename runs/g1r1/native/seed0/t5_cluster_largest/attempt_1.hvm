@@ -1,0 +1,94 @@
+@prog = (input out)
+  & input ~ (n pairs)
+  & @build ~ (n ((0 *) labels))
+  & @proc_edges ~ (pairs (labels out))
+
+@build = (n (acc out))
+  & n ~ ?((@build_zero @build_succ) (acc out))
+
+@build_zero = (* (x x))
+
+@build_succ = (m (acc out))
+  & m ~ {m1 m2}
+  & @build ~ (m1 ((1 (m2 acc)) out))
+
+@proc_edges = ((?((@pe_nil @pe_cons) (payload (labels out))) payload) (labels out))
+
+@pe_nil = (* (x x))
+
+@pe_cons = (* ((u v) (tail (labels out))))
+  & @merge ~ (u (v (labels nextlabels)))
+  & @proc_edges ~ (tail (nextlabels out))
+
+@merge = (u (v (labels out)))
+  & labels ~ {l1 rest}
+  & rest ~ {l2 l3}
+  & @at ~ (u (l1 a))
+  & @at ~ (v (l2 b))
+  & @replace ~ (l3 (b (a out)))
+
+@at = (idx (list out))
+  & idx ~ ?((@at_zero @at_succ) (list out))
+
+@at_succ = (idx (list out))
+  & @at ~ (idx (list out))
+
+@at_zero = ((?((@at_nil @at_cons) (payload out)) payload) out)
+
+@at_nil = (* 0)
+
+@at_cons = (* ((x *) x))
+
+@replace = ((?((@rep_nil @rep_cons) (payload (old (new out)))) payload) (old (new out)))
+
+@rep_nil = (* (* (* (0 *))))
+
+@rep_cons = (* ((h t) (old (new out))))
+  & h ~ {hc hr}
+  & old ~ {oc or}
+  & new ~ {nc nr}
+  & hc ~ $([=] $(oc z))
+  & z ~ ?((@rep_no @rep_yes) (hr (nc (t (or (nr out))))))
+
+@rep_no = (hr (nc (t (or (nr out)))))
+  & @replace ~ (t (or (nr tailout)))
+  & out ~ (1 (hr tailout))
+  & nc ~ *
+
+@rep_yes = (* (hr (nc (t (or (nr out))))))
+  & @replace ~ (t (or (nr tailout)))
+  & out ~ (1 (nc tailout))
+  & hr ~ *
+
+@largest = ({lo lf} out)
+  & lo ~ (?((@largest_nil @largest_cons) (payload (lf out))) payload)
+
+@largest_nil = (* (* 0))
+
+@largest_cons = (* ((h t) (lf out)))
+  & @count ~ (lf (h c))
+  & @largest ~ (t r)
+  & c ~ {cc ck}
+  & r ~ {rc rk}
+  & cc ~ $([>] $(rc z))
+  & z ~ ?((@max_no @max_yes) (ck (rk out)))
+
+@max_no = (* (x x))
+
+@max_yes = (* (x (* x)))
+
+@count = ((?((@count_nil @count_cons) (payload (target out))) payload) (target out))
+
+@count_nil = (* (* 0))
+
+@count_cons = (* ((h t) (target out)))
+  & target ~ {tc tr}
+  & h ~ $([=] $(tc z))
+  & z ~ ?((@count_no @count_yes) (t (tr out)))
+
+@count_no = (t (target out))
+  & @count ~ (t (target out))
+
+@count_yes = (* (t (target out)))
+  & @count ~ (t (target ctail))
+  & ctail ~ $([+1] out)

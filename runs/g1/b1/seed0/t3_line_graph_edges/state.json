@@ -1,0 +1,48 @@
+{
+ "pid": "t3_line_graph_edges",
+ "arm": "b1",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 50,
+    "itrs_median_big": 1092212,
+    "itrs_max": 4034060,
+    "depth_median_big": 6218,
+    "depth_max": 11967
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 96,
+    "itrs_median_big": 1102218,
+    "itrs_max": 2140290,
+    "depth_median_big": 6825,
+    "depth_max": 12932
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 66182,
+ "best": {
+  "itrs_median_small": 50,
+  "itrs_median_big": 1092212,
+  "itrs_max": 4034060,
+  "depth_median_big": 6218,
+  "depth_max": 11967
+ },
+ "usd": 0.01684728,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

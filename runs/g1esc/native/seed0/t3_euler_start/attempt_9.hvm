@@ -1,0 +1,179 @@
+@prog = (input output)
+  & input ~ (n edges)
+  & edges ~ {edges_check edges_work}
+  & edges_check ~ {tag payload}
+  & tag ~ ?((@empty_yes @empty_no) (payload (n (edges_work output))))
+
+@empty_yes = (payload (n (edges_work output)))
+  & payload ~ *
+  & n ~ *
+  & edges_work ~ *
+  & output ~ 16777215
+
+@empty_no = (payload (n (edges_work output)))
+  & payload ~ *
+  & @process_nonempty ~ (n (edges_work output))
+
+@process_nonempty = (n (edges output))
+  & edges ~ {edges_build edges_conn}
+  & @build_degrees ~ (0 (n (edges_build ((0 *) deg_list_out))))
+  & @filter_degrees ~ (deg_list_out ((0 *) ((0 *) filtered_out)))
+  & filtered_out ~ (active_list odd_list)
+  & @min_list ~ (active_list (16777215 min_active_out))
+  & @odd_stats ~ (odd_list (0 (16777215 odd_stats_out)))
+  & @decide_final ~ (min_active_out (odd_stats_out output))
+
+@build_degrees = (i (n (edges (acc out))))
+  & i ~ {i_cmp i_rest}
+  & i_rest ~ {i_deg i_more}
+  & i_more ~ {i_info i_next}
+  & n ~ {n_cmp n_rec}
+  & edges ~ {edges_deg edges_rec}
+  & i_cmp ~ $([=] $(n_cmp done))
+  & done ~ ?((@bd_cont @bd_done) (i_deg (i_info (i_next (n_rec (edges_deg (edges_rec (acc out))))))))
+
+@bd_done = (i_deg (i_info (i_next (n_rec (edges_deg (edges_rec (acc out)))))))
+  & i_deg ~ *
+  & i_info ~ *
+  & i_next ~ *
+  & n_rec ~ *
+  & edges_deg ~ *
+  & edges_rec ~ *
+  & acc ~ out
+
+@bd_cont = (i_deg (i_info (i_next (n_rec (edges_deg (edges_rec (acc out)))))))
+  & @count_degree ~ (i_deg (edges_deg deg))
+  & @build_degrees ~ (i_next (n_rec (edges_rec (((i_info deg) acc) out))))
+
+@count_degree = (i (edges out))
+  & @count_loop ~ (edges (i (0 out)))
+
+@count_loop = (edges (i (acc out)))
+  & edges ~ {tag payload}
+  & tag ~ ?((@cl_done @cl_cons) (payload (i (acc out))))
+
+@cl_done = (payload (i (acc out)))
+  & payload ~ *
+  & i ~ *
+  & acc ~ out
+
+@cl_cons = (payload (i (acc out)))
+  & payload ~ (edge tail)
+  & edge ~ (u v)
+  & i ~ {i_u i_rest}
+  & i_rest ~ {i_v i_rec}
+  & @eq ~ (i_u (u b1))
+  & @eq ~ (i_v (v b2))
+  & b1 ~ $([+] $(b2 add))
+  & acc ~ $([+] $(add new_acc))
+  & @count_loop ~ (tail (i_rec (new_acc out)))
+
+@eq = (a (b out))
+  & a ~ {a_cmp a_out}
+  & b ~ {b_cmp b_out}
+  & a_cmp ~ $([=] $(b_cmp same))
+  & same ~ ?((@eq_false @eq_true) (a_out (b_out out)))
+
+@eq_false = (a_out (b_out out))
+  & a_out ~ *
+  & b_out ~ *
+  & out ~ 0
+
+@eq_true = (a_out (b_out out))
+  & a_out ~ *
+  & b_out ~ *
+  & out ~ 1
+
+@filter_degrees = (lst (active_acc (odd_acc out)))
+  & lst ~ {tag payload}
+  & tag ~ ?((@fd_nil @fd_cons) (payload (active_acc (odd_acc out))))
+
+@fd_nil = (payload (active_acc (odd_acc out)))
+  & payload ~ *
+  & out ~ (active_acc odd_acc)
+
+@fd_cons = (payload (active_acc (odd_acc out)))
+  & payload ~ ((i deg) tail)
+  & deg ~ {deg_pos deg_par}
+  & deg_pos ~ $([>] $(0 is_active))
+  & is_active ~ ?((@fd_skip @fd_active) (i (deg_par (tail (active_acc (odd_acc out))))))
+
+@fd_skip = (i (deg_par (tail (active_acc (odd_acc out)))))
+  & i ~ *
+  & deg_par ~ *
+  & @filter_degrees ~ (tail (active_acc (odd_acc out)))
+
+@fd_active = (i (deg_par (tail (active_acc (odd_acc out)))))
+  & deg_par ~ $([%] $(2 rem))
+  & rem ~ ?((@fd_even @fd_odd) (i (tail (active_acc (odd_acc out)))))
+
+@fd_even = (i (tail (active_acc (odd_acc out))))
+  & @filter_degrees ~ (tail ((i active_acc) (odd_acc out)))
+
+@fd_odd = (i (tail (active_acc (odd_acc out))))
+  & i ~ {i_act i_odd}
+  & @filter_degrees ~ (tail ((i_act active_acc) ((i_odd odd_acc) out)))
+
+@min_list = (lst (min out))
+  & lst ~ {tag payload}
+  & tag ~ ?((@ml_done @ml_cons) (payload (min out)))
+
+@ml_done = (payload (min out))
+  & payload ~ *
+  & min ~ out
+
+@ml_cons = (payload (min out))
+  & payload ~ (v t)
+  & @min2 ~ (v (min new_min))
+  & @min_list ~ (t (new_min out))
+
+@min2 = (a (b out))
+  & a ~ {aCmp aOut}
+  & b ~ {bCmp bOut}
+  & aCmp ~ $([<] $(bCmp less))
+  & less ~ ?((@min2_b @min2_a) (aOut (bOut out)))
+
+@min2_a = (aOut (bOut out))
+  & bOut ~ *
+  & aOut ~ out
+
+@min2_b = (aOut (bOut out))
+  & aOut ~ *
+  & bOut ~ out
+
+@odd_stats = (lst (cnt (min_odd out)))
+  & lst ~ {tag payload}
+  & tag ~ ?((@os_done @os_cons) (payload (cnt (min_odd out))))
+
+@os_done = (payload (cnt (min_odd out)))
+  & payload ~ *
+  & out ~ (cnt min_odd)
+
+@os_cons = (payload (cnt (min_odd out)))
+  & payload ~ (v t)
+  & cnt ~ $([+1] cnt2)
+  & @min2 ~ (v (min_odd new_min))
+  & @odd_stats ~ (t (cnt2 (new_min out)))
+
+@decide_final = (min_active (odd_stats output))
+  & odd_stats ~ (cnt min_odd)
+  & cnt ~ $([=] $(0 is0))
+  & is0 ~ ?((@df_0 @df_not0) (cnt (min_odd (min_active output))))
+
+@df_0 = (cnt (min_odd (min_active output)))
+  & cnt ~ *
+  & min_odd ~ *
+  & output ~ min_active
+
+@df_not0 = (cnt (min_odd (min_active output)))
+  & cnt ~ $([=] $(2 is2))
+  & is2 ~ ?((@df_2 @df_not2) (min_odd (min_active output)))
+
+@df_2 = (min_odd (min_active output))
+  & min_active ~ *
+  & output ~ min_odd
+
+@df_not2 = (min_odd (min_active output))
+  & min_odd ~ *
+  & min_active ~ *
+  & output ~ 16777215

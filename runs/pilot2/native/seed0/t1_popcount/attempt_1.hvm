@@ -1,0 +1,17 @@
+// @prog receives a number and returns its population count.
+@prog = (input output)
+  & @pc ~ (input output)
+
+@pc = (n output)
+  & n ~ {test val}
+  & test ~ $([=] $(0 is_zero))
+  & is_zero ~ ?((@pc_zero (* @pc_more)) (val output))
+
+@pc_zero = (* 0)
+
+@pc_more = (val output)
+  & val ~ {lo hi}
+  & lo ~ $([&] $(1 bit))
+  & hi ~ $([>>] $(1 half))
+  & @pc ~ (half rest)
+  & bit ~ $([+] $(rest output))

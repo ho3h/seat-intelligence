@@ -1,0 +1,87 @@
+// t3_lex_shortest_path (GRAPH-SWING-2, runs/exp9). Keys (weight, hops) are packed into one number W*128 + H (fits
+// 24 bits for n <= 128, w <= 1000), so the exp5 frontier Bellman-Ford from t with arc weights w*128+1 computes the
+// lexicographic (weight, hops) distance D. The greedy successor nxt(u) = min{v ~ u : D(v) + w'(u,v) == D(u)} is
+// computed for all u at once: every arc u -> v fetches D(v) through v's multicast chain (reply wire pushed onto u's
+// list). Then a walker follows nxt from s to t, copying the (D, nxt) trie once per hop (copies are O(n) work but
+// only O(log n) depth).
+@prog = ((n (s (t es))) out)
+  & n ~ ?((@lx_zero @lx_pos) (s (t (es out))))
+@lx_zero = (* (* (* (0 *))))
+@lx_pos = (nm1 (s (t (es out))))
+  & nm1 ~ {a b}
+  & a ~ $([+1] n)
+  & @lg ~ (b L)
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & n ~ {n1 n2}
+  & t ~ {t1 t2}
+  & @zl ~ (L1 G0)
+  & @zq ~ (L2 Q0)
+  & @zl ~ (L3 R0)
+  & @w_blk ~ (es ((L4 (G0 (Q0 R0))) (G (Q R))))
+  & @sssp_start ~ (n1 (t1 (L5 (16777215 (G Df)))))
+  & @zn ~ (Df (R (Q (L6 T))))
+  & @wk0 ~ (T (s (t2 (n2 (L7 out)))))
+@lx_step = ((L (g (q r))) ((u (v w)) (L7 (g3 (q3 r3)))))
+  & L ~ {L1 {L2 {L3 {L4 {L5 {L6 L7}}}}}}
+  & u ~ {u1 {u2 {u3 {u4 u5}}}}
+  & v ~ {v1 {v2 {v3 {v4 v5}}}}
+  & w ~ $([*] $(128 w0))
+  & w0 ~ $([+1] wp)
+  & wp ~ {w1 {w2 {w3 w4}}}
+  & @gp ~ (g (u1 (L1 ((v1 w1) g2))))
+  & @gp ~ (g2 (v2 (L2 ((u2 w2) g3))))
+  & @pu ~ (q (v3 (L3 (x q2))))
+  & @gp ~ (r (u3 (L4 (((v4 w3) x) r2))))
+  & @pu ~ (q2 (u4 (L5 (y q3))))
+  & @gp ~ (r2 (v5 (L6 (((u5 w4) y) r3))))
+@lx_fin = ((* s) s)
+// zn(D, R, Q, L) -> trie of (D(u) nxt(u))
+@zn = (d (r (q (L o))))
+  & L ~ ?((@zn_leaf @zn_node) (d (r (q o))))
+@zn_leaf = (d (r ((d1 *) (d3 nx))))
+  & d ~ {d1 {d2 d3}}
+  & @nm ~ (r (d2 nx))
+@zn_node = (lm ((da db) ((ra rb) ((qa qb) (x y)))))
+  & lm ~ {l1 l2}
+  & @zn ~ (da (ra (qa (l1 x))))
+  & @zn ~ (db (rb (qb (l2 y))))
+// nm(list of ((v w') x), du) = min v with x + w' == du, else 16777215
+@nm = ((?((@nm_nil @nm_cons) (p (du o))) p) (du o))
+@nm_nil = (* (* 16777215))
+@nm_cons = (* ((((v w) x) rest) (du o)))
+  & du ~ {d1 d2}
+  & x ~ $([+] $(w xw))
+  & xw ~ $([=] $(d1 eq))
+  & eq ~ ?((@nm_no @nm_yes) (v c))
+  & @nm ~ (rest (d2 m))
+  & @min ~ (c (m o))
+@nm_no = (* 16777215)
+@nm_yes = (* (v v))
+// walker: wk0 checks s < n and D(s) < INF, then wk follows nxt until t
+@wk0 = (T (s (t (n (L o)))))
+  & s ~ {s1 s2}
+  & s1 ~ $([<] $(n ok))
+  & ok ~ ?((@wk_no @wk_yes) (T (s2 (t (L o)))))
+@wk_no = (* (* (* (* (0 *)))))
+@wk_yes = (* (T (s (t (L o)))))
+  & T ~ {T1 T2}
+  & L ~ {La Lb}
+  & s ~ {s1 s2}
+  & @lk ~ (T1 (s1 (La (d *))))
+  & d ~ $([<] $(16777215 r))
+  & r ~ ?((@wk_no2 @wk_go0) (T2 (s2 (t (Lb o)))))
+@wk_no2 = (* (* (* (* (0 *)))))
+@wk_go0 = (* (T (s (t (L o)))))
+  & @wk ~ (s (T (t (L o))))
+@wk = (u (T (t (L o))))
+  & u ~ {u1 {u2 u3}}
+  & t ~ {ta tb}
+  & u1 ~ $([=] $(ta eq))
+  & eq ~ ?((@wk_go @wk_end) (u2 (u3 (T (tb (L o))))))
+@wk_end = (* (u (* (* (* (* (1 (u (0 *)))))))))
+@wk_go = (u (uk (T (t (L o)))))
+  & T ~ {T1 T2}
+  & L ~ {La Lb}
+  & @lk ~ (T1 (uk (La (* v))))
+  & o ~ (1 (u rest))
+  & @wk ~ (v (T2 (t (Lb rest))))

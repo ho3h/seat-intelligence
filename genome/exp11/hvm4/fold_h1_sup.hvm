@@ -1,0 +1,25 @@
+
+@g = λ{ 0: λk. &{}; _: λc. λk. k }
+@sel = λ{ 0: λa. λb. b; _: λc. λa. λb. a }
+@min = λ&a. λ&b. @sel((a < b), a, b)
+@max = λ&a. λ&b. @sel((a < b), b, a)
+@ev = λ{
+  #A: λa. λx. a
+  #X: λa. λx. x
+  #K: λk. λa. λx. k
+  #Mod: λm. λe. λa. λx. (@ev(e, a, x) % m)
+  #Add: λl. λr. λ&a. λ&x. (@ev(l, a, x) + @ev(r, a, x))
+  #Sub: λl. λr. λ&a. λ&x. (@ev(l, a, x) - @ev(r, a, x))
+  #Mul: λl. λr. λ&a. λ&x. (@ev(l, a, x) * @ev(r, a, x))
+  #Xor: λl. λr. λ&a. λ&x. (@ev(l, a, x) ^ @ev(r, a, x))
+  #And: λl. λr. λ&a. λ&x. (@ev(l, a, x) && @ev(r, a, x))
+  #Min: λl. λr. λ&a. λ&x. @min(@ev(l, a, x), @ev(r, a, x))
+  #Max: λl. λr. λ&a. λ&x. @max(@ev(l, a, x), @ev(r, a, x))
+  #Lt: λl. λr. λ&a. λ&x. (@ev(l, a, x) < @ev(r, a, x))
+  #Eq: λl. λr. λ&a. λ&x. (@ev(l, a, x) == @ev(r, a, x))
+}
+
+@fold = λ{ []: λacc. λp. acc; <>: λx. λxs. λacc. λ&p. @fold(xs, @ev(p, acc, x), p) }
+@chk = λ{ []: λys. λp. p; <>: λxs. λxss. λ{ <>: λy. λys. λ&p. @g((@fold(xs, 0, p) == y), @chk(xss, ys, p)); []: λp. &{} } }
+@P = &LA{&LB{&LC{#A{},#X{}},&LD{#K{0},#K{1}}},&LE{&LF{#K{2},#K{3}},&LG{#K{4},#K{5}}}}
+@main = @chk([[2,9,1,4],[1,7,7,7],[6,3,1,7]], [4,7,7], @P)

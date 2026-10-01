@@ -1,0 +1,63 @@
+@get_idx = (l (i o))
+  & l ~ ?((@get_idx_zero @get_idx_succ) (i o))
+@get_idx_zero = ((tag (head rest)) (* head))
+@get_idx_succ = (* (l (i_cur o)))
+  & l ~ (tag (head rest))
+  & tag ~ *
+  & head ~ *
+  & i_cur ~ ?((@dec_zero @dec_pos) (rest (i_next o)))
+@dec_zero = (rest (* *))
+@dec_pos = (* (rest (i_next o)))
+  & i_next ~ $([-] $(1 i_cur))
+  & @get_idx ~ (rest (i_next o))
+@prog = ((c (mnl o)))
+  & c ~ ?((@c_nil @c_cons) ((mnl o)))
+@c_nil = (state o)
+  & state ~ *
+  & o ~ (0 *)
+@c_cons = (* (state ((cid tc) o)))
+  & state ~ (c (mnl (out)))
+  & c ~ {c1 c2}
+  & mnl ~ {mnl1 mnl2}
+  & @check_cluster ~ (mnl1 (c1 (cid (flag))))
+  & flag ~ (c2 (mnl2 (flag2 out2)))
+  & flag2 ~ ?((@add_zero @add_one) (state (out)))
+@add_zero = (state (o rest))
+  & state ~ (c (mnl (out)))
+  & @c_cons ~ (c ((* cid) (o rest)))
+@add_one = (* (state (o rest)))
+  & state ~ (c (mnl (out)))
+  & o ~ $([|] $(1 o_new))
+  & o_new ~ ?((@add_zero @add_one) (state (o_new rest)))
+@check_cluster = (mnl (c (cid (result))))
+  & mnl ~ ?((@cf_nil @cf_cons) (c (cid (result))))
+@cf_nil = (c (cid (* result)))
+  & c ~ *
+  & cid ~ *
+  & result ~ 0
+@cf_cons = (* (mnl (ctx ((a b) rest))))
+  & ctx ~ (c (cid (result)))
+  & c ~ {c1 c2}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & @get_idx ~ (c1 (a1 ca))
+  & @get_idx ~ (c2 (b1 cb))
+  & ca ~ $([=] $(cid eq1))
+  & eq1 ~ ?((@cf_skip @cf_check_b) (cb (ctx (rest (result)))))
+@cf_skip = (cb (ctx rest_result))
+  & ctx ~ (c (cid (result)))
+  & cb ~ *
+  & rest_result ~ (rest (result))
+  & @check_cluster ~ (mnl (c (cid (result))))
+@cf_check_b = (* (cb (ctx rest_result)))
+  & ctx ~ (c (cid (result)))
+  & rest_result ~ (rest (result))
+  & cb ~ $([=] $(cid eq2))
+  & eq2 ~ ?((@cf_skip @cf_found) (c (cid (rest (result)))))
+@cf_found = (* (ctx result))
+  & ctx ~ (c (cid (rest)))
+  & rest ~ *
+  & c ~ *
+  & cid ~ *
+  & mnl ~ *
+  & result ~ 1

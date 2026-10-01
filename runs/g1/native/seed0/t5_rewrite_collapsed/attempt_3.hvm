@@ -1,0 +1,113 @@
+// Count input edges that become loops or duplicate rewritten edges.
+@prog = (input out)
+  & input ~ (c edges)
+  & @walk ~ (edges (c ((0 *) (0 out))))
+
+@walk = ((?((@walk_nil @walk_cons) (pl (c (seen (acc out))))) pl) (c (seen (acc out))))
+
+@walk_nil = (pl (c (seen (acc out))))
+  & pl ~ *
+  & c ~ *
+  & seen ~ *
+  & acc ~ out
+
+@walk_cons = (* ((edge tail) (c (seen (acc out)))))
+  & @process_edge ~ (edge (tail (c (seen (acc out)))))
+
+@process_edge = (edge (tail (c (seen (acc out)))))
+  & edge ~ (u v)
+  & c ~ {cu cvtmp}
+  & cvtmp ~ {cv cnext}
+  & @get ~ (cu (u cuval))
+  & @get ~ (cv (v cvval))
+  & @compare ~ (cuval (cvval (tail (cnext (seen (acc out))))))
+
+@compare = (a (b (tail (c (seen (acc out))))))
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & acmp ~ $([=] $(bcmp eq))
+  & eq ~ ?((@different @same) (akeep (bkeep (tail (c (seen (acc out)))))))
+
+@same = (* (a (b (tail (c (seen (acc out)))))))
+  & a ~ *
+  & b ~ *
+  & acc ~ $([+1] acc2)
+  & @walk ~ (tail (c (seen (acc2 out))))
+
+@different = (a (b (tail (c (seen (acc out))))))
+  & a ~ {acmp akeep}
+  & b ~ {bcmp bkeep}
+  & acmp ~ $([<] $(bcmp lt))
+  & lt ~ ?((@reverse @forward) (akeep (bkeep (tail (c (seen (acc out)))))))
+
+@reverse = (a (b (tail (c (seen (acc out))))))
+  & @member ~ (b (a (tail (c (seen (acc out))))))
+
+@forward = (* (a (b (tail (c (seen (acc out)))))))
+  & @member ~ (a (b (tail (c (seen (acc out))))))
+
+@member = (x (y (tail (c (seen (acc out))))))
+  & x ~ {xq xkeep}
+  & y ~ {yq ykeep}
+  & seen ~ {sq sk}
+  & @contains ~ (sq (xq (yq found)))
+  & found ~ ?((@member_new @member_dup) (xkeep (ykeep (sk (tail (c (acc out)))))))
+
+@member_new = (x (y (seen (tail (c (acc out))))))
+  & @walk ~ (tail (c ((1 ((x y) seen)) (acc out))))
+
+@member_dup = (* (x (y (seen (tail (c (acc out)))))))
+  & x ~ *
+  & y ~ *
+  & acc ~ $([+1] acc2)
+  & @walk ~ (tail (c (seen (acc2 out))))
+
+@contains = ((?((@contains_nil @contains_cons) (pl (x (y out)))) pl) (x (y out)))
+
+@contains_nil = (pl (x (y out)))
+  & pl ~ *
+  & x ~ *
+  & y ~ *
+  & out ~ 0
+
+@contains_cons = (* ((item tail) (x (y out))))
+  & item ~ (a b)
+  & x ~ {xcmp xkeep}
+  & y ~ {ycmp ykeep}
+  & a ~ $([=] $(xcmp eq))
+  & eq ~ ?((@contains_no_a @contains_yes_a) (b (ycmp (xkeep (ykeep (tail out))))))
+
+@contains_no_a = (b (ycmp (x (y (tail out)))))
+  & b ~ *
+  & ycmp ~ *
+  & @contains ~ (tail (x (y out)))
+
+@contains_yes_a = (* (b (ycmp (x (y (tail out))))))
+  & b ~ $([=] $(ycmp eq2))
+  & eq2 ~ ?((@contains_no_b @contains_yes_b) (x (y (tail out))))
+
+@contains_no_b = (x (y (tail out)))
+  & @contains ~ (tail (x (y out)))
+
+@contains_yes_b = (* (x (y (tail out))))
+  & x ~ *
+  & y ~ *
+  & tail ~ *
+  & out ~ 1
+
+@get = (l (idx out))
+  & idx ~ ?((@get_zero @get_succ) (l out))
+
+@get_zero = (l out)
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ out
+  & tail ~ *
+
+@get_succ = (idx (l out))
+  & l ~ (tag payload)
+  & tag ~ *
+  & payload ~ (head tail)
+  & head ~ *
+  & @get ~ (tail (idx out))

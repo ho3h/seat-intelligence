@@ -1,0 +1,30 @@
+@prog = ((k xs) out)
+  & @filter_gt ~ (k (xs out))
+
+@filter_gt = (k (lv1 o))
+  & k ~ {ka kr}
+  & @filter_cons_lw ~ (lv1 (ka (kr o)))
+
+@filter_nil = (pl (ka (kr out)))
+  & pl ~ *
+  & ka ~ *
+  & kr ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (({$([>] $(ka ?((@filter_drop @filter_keep) (hk (ft out))))) hk} t) (ka ({q9 q10} out))))
+  & @filter_cons_lw ~ (t (q9 (q10 ft)))
+
+@filter_drop = (hk (ft ft))
+  & hk ~ *
+
+@filter_keep = (* (hk (ft out)))
+  & out ~ (1 (hk ft))
+
+@filter_cons_lw = (ls37 (q13 (q14 q15)))
+  & ls37 ~ (g32 (e28 (g33 (e29 (g34 (e30 (g35 (e31 tk36))))))))
+  & g32 ~ ?((@filter_nil @filter_cons_la) ((e28 (q17 (q18 q19))) (q13 (q14 q15))))
+  & g33 ~ ?((@filter_nil @filter_cons_la) ((e29 (q21 (q22 q23))) (q17 (q18 q19))))
+  & g34 ~ ?((@filter_nil @filter_cons_la) ((e30 (q25 (q26 q27))) (q21 (q22 q23))))
+  & g35 ~ ?((@filter_nil @filter_cons) ((e31 tk36) (q25 (q26 q27))))
+
+@filter_cons_la = (* (({$([>] $(ka ?((@filter_drop @filter_keep) (hk (ft out))))) hk} (q9 (q10 ft))) (ka ({q9 q10} out))))

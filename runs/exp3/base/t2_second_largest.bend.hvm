@@ -1,0 +1,22 @@
+@find_second = ((@find_second__C5 a) a)
+
+@find_second__C0 = (b (c (a d)))
+  & @find_second ~ (a (b (c d)))
+
+@find_second__C1 = (* (c (b (a d))))
+  & @find_second ~ (a (b (c d)))
+
+@find_second__C2 = (b (c (* (a d))))
+  & @find_second ~ (a (b (c d)))
+
+@find_second__C3 = (* ({a c} (* ({$([<] $(a b)) d} e))))
+  & $(b ?((@find_second__C0 @find_second__C1) (c (d e)))) ~ [=0x0000000]
+
+@find_second__C4 = (* ({$([>] $(a ?((@find_second__C2 @find_second__C3) (b (c (d (e f))))))) d} (e (b ({a c} f)))))
+
+@find_second__C5 = (?(((* (a a)) @find_second__C4) b) b)
+
+@prog = (a b)
+  & @find_second ~ (a (0 (0 b)))
+
+

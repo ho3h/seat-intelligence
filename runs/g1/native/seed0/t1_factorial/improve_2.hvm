@@ -1,0 +1,18 @@
+@prog = (n out)
+  & n ~ {test work}
+  & test ~ $([>27] flag)
+  & flag ~ ?((@small 0) (work out))
+
+@small = (n out)
+  & @fact ~ (n (1 out))
+
+@fact = (n (acc out))
+  & n ~ ?((@fact_zero @fact_succ) (acc out))
+
+@fact_zero = (a a)
+
+@fact_succ = (n (acc out))
+  & n ~ {r p}
+  & p ~ $([+1] orig)
+  & orig ~ $([*] $(acc prod))
+  & @fact ~ (r (prod out))

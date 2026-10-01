@@ -1,0 +1,127 @@
+@prog = (input output)
+  & input ~ (n (r edges))
+  & @tp_dfs ~ (r (16777215 (edges records)))
+  & @tp_emit ~ (n (0 (records output)))
+
+@tp_dfs = (v (p (edges out)))
+  & v ~ {vscan vrest}
+  & vrest ~ {vrecord vwalk}
+  & p ~ {pwalk precord}
+  & edges ~ {eadj ewalk}
+  & @tp_adj ~ (eadj (vscan neighbors))
+  & @tp_walk ~ (neighbors (pwalk (vwalk (ewalk children))))
+  & out ~ (1 ((vrecord precord) children))
+
+@tp_adj = ((?((@tp_adj_nil @tp_adj_cons) (payload (v out))) payload) (v out))
+
+@tp_adj_nil = (* (v out))
+  & v ~ *
+  & out ~ (0 *)
+
+@tp_adj_cons = (* (((u w) tail) (v out)))
+  & v ~ {vleft vrest}
+  & vrest ~ {vright vrec}
+  & u ~ {ucomp ucand}
+  & w ~ {wcomp wcand}
+  & ucomp ~ $([=] $(vleft eq))
+  & eq ~ ?((@tp_adj_u_no @tp_adj_u_yes) ctx)
+  & ctx ~ (ucand (wcomp (wcand (vright (vrec (tail out)))))
+
+@tp_adj_u_yes = (* (ucand (wcomp (wcand (vright (vrec (tail out)))))))
+  & ucand ~ *
+  & wcomp ~ *
+  & vright ~ *
+  & @tp_adj ~ (tail (vrec rest))
+  & out ~ (1 (wcand rest))
+
+@tp_adj_u_no = (ucand (wcomp (wcand (vright (vrec (tail out))))))
+  & wcomp ~ $([=] $(vright eq2))
+  & eq2 ~ ?((@tp_adj_w_no @tp_adj_w_yes) ctx2)
+  & ctx2 ~ (ucand (wcand (vrec (tail out))))
+
+@tp_adj_w_no = (ucand (wcand (vrec (tail out))))
+  & ucand ~ *
+  & wcand ~ *
+  & @tp_adj ~ (tail (vrec rest))
+  & out ~ rest
+
+@tp_adj_w_yes = (* (ucand (wcand (vrec (tail out)))))
+  & wcand ~ *
+  & @tp_adj ~ (tail (vrec rest))
+  & out ~ (1 (ucand rest))
+
+@tp_walk = ((?((@tp_walk_nil @tp_walk_cons) (payload (parent (current (edges out))))) payload) (parent (current (edges out))))
+
+@tp_walk_nil = (* (parent (current (edges out))))
+  & parent ~ *
+  & current ~ *
+  & edges ~ *
+  & out ~ (0 *)
+
+@tp_walk_cons = (* (((child tail) (parent (current (edges out))))))
+  & child ~ {ccomp ckeep}
+  & parent ~ {pcomp prec}
+  & current ~ {cparent creccurrent}
+  & edges ~ {echild erec}
+  & ccomp ~ $([=] $(pcomp eq))
+  & eq ~ ?((@tp_walk_same @tp_walk_different) ctx)
+  & ctx ~ (ckeep (tail (prec (cparent (creccurrent (echild (erec out)))))))
+
+@tp_walk_same = (* (ckeep (tail (prec (cparent (creccurrent (echild (erec out))))))))
+  & ckeep ~ *
+  & cparent ~ *
+  & echild ~ *
+  & @tp_walk ~ (tail (prec (creccurrent (erec rest))))
+  & out ~ rest
+
+@tp_walk_different = (ckeep (tail (prec (cparent (creccurrent (echild (erec out)))))))
+  & @tp_dfs ~ (ckeep (cparent (echild childrecords)))
+  & @tp_walk ~ (tail (prec (creccurrent (erec tailrecords)))
+  & @tp_append ~ (childrecords (tailrecords out))
+
+@tp_append = ((?((@tp_append_nil @tp_append_cons) (payload (right out))) payload) (right out))
+
+@tp_append_nil = (* (right out))
+  & out ~ right
+
+@tp_append_cons = (* ((head tail) (right out)))
+  & @tp_append ~ (tail (right suffix))
+  & out ~ (1 (head suffix))
+
+@tp_emit = (n (idx (records out)))
+  & n ~ ?((@tp_emit_nil @tp_emit_cons) (idx (records out)))
+
+@tp_emit_nil = (idx (records out))
+  & idx ~ *
+  & records ~ *
+  & out ~ (0 *)
+
+@tp_emit_cons = (remain (idx (records out)))
+  & idx ~ {idxfind idxnext}
+  & records ~ {recordsfind recordsnext}
+  & @tp_find ~ (recordsfind (idxfind parent))
+  & idxnext ~ $([+1] idx2)
+  & @tp_emit ~ (remain (idx2 (recordsnext tailout)))
+  & out ~ (1 (parent tailout))
+
+@tp_find = ((?((@tp_find_nil @tp_find_cons) (payload (idx out))) payload) (idx out))
+
+@tp_find_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 16777215
+
+@tp_find_cons = (* ((entry tail) (idx out)))
+  & idx ~ ?((@tp_find_here @tp_find_next) (entry (tail out)))
+
+@tp_find_here = (entry (tail out))
+  & entry ~ (v parent)
+  & v ~ *
+  & tail ~ *
+  & out ~ parent
+
+@tp_find_next = (remain (entry (tail out)))
+  & entry ~ (v parent)
+  & v ~ *
+  & parent ~ *
+  & @tp_find ~ (tail (remain found))
+  & out ~ found

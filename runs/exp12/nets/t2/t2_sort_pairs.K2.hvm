@@ -1,0 +1,38 @@
+@prog = (input output)
+  & @sort ~ (input output)
+
+@sort = (lv1 out)
+  & @sort_cons_lw ~ (lv1 out)
+
+@sort_nil = (* out)
+  & out ~ (0 *)
+
+@sort_cons = (* ((pair tail) out))
+  & @ins ~ (pair (sorted out))
+  & @sort_cons_lw ~ (tail sorted)
+
+@ins = (({kc kk} val) ((?((@ins_nil @ins_cons) (pl (kc ((kk val) out)))) pl) out))
+
+@ins_nil = (pl (kc ((kk val) out)))
+  & pl ~ *
+  & kc ~ *
+  & out ~ (1 ((kk val) (0 *)))
+
+@ins_cons = (* ((({hc hk} hv) tail) (kc ((kk val) out))))
+  & kc ~ $([>] $(hc cmp))
+  & cmp ~ ?((@ins_before @ins_after) (((hk hv) tail) ((kk val) out)))
+
+@ins_before = (((hk hv) tail) ((k v) out))
+  & out ~ (1 ((k v) (1 ((hk hv) tail))))
+
+@ins_after = (* (((hk hv) tail) ((k v) out)))
+  & @ins ~ ((k v) (tail rec))
+  & out ~ (1 ((hk hv) rec))
+
+@sort_cons_lw = (ls16 q8)
+  & ls16 ~ (g13 (e11 (g14 (e12 tk15))))
+  & g13 ~ ?((@sort_nil @sort_cons_la) ((e11 q10) q8))
+  & g14 ~ ?((@sort_nil @sort_cons) ((e12 tk15) q10))
+
+@sort_cons_la = (* ((pair sorted) out))
+  & @ins ~ (pair (sorted out))

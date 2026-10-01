@@ -1,0 +1,11 @@
+@prog = (l out)
+  & @ps ~ (l (0 out))
+
+@ps = ((?((@ps_nil @ps_cons) (pl (acc out))) pl) (acc out))
+
+@ps_nil = (* (* (0 *)))
+
+@ps_cons = (* ((h t) (acc (1 (s1 rest)))))
+  & acc ~ $([+] $(h s))
+  & s ~ {s1 s2}
+  & @ps ~ (t (s2 rest))

@@ -1,0 +1,80 @@
+// Merge sort; carry the length alongside the sorted list.
+@prog = (input out)
+  & @ms ~ (input result)
+  & result ~ (sorted len)
+  & len ~ $([/] $(2 idx))
+  & @sel ~ (sorted (idx out))
+
+@ms = ((?((@ms_nil @ms_cons) (payload out)) payload) out)
+
+@ms_nil = (* out)
+  & out ~ ((0 *) 0)
+
+@ms_cons = (* ((head tail) out))
+  & @split ~ ((1 (head tail)) pair)
+  & pair ~ (left right)
+  & right ~ (?( (@ms_done @ms_more) (payload (left out))) payload)
+
+@ms_done = (* (left out))
+  & out ~ (left 1)
+
+@ms_more = (* ((rh rt) (left out)))
+  & @ms ~ (left left_result)
+  & left_result ~ (left_sorted left_len)
+  & @ms ~ ((1 (rh rt)) right_result)
+  & right_result ~ (right_sorted right_len)
+  & @merge ~ (left_sorted (right_sorted sorted))
+  & left_len ~ $([+] $(right_len len))
+  & out ~ (sorted len)
+
+// Split a list into alternating elements.
+@split = ((?((@split_nil @split_cons) (payload out)) payload) out)
+
+@split_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((head tail) out))
+  & @split ~ (tail pair)
+  & pair ~ (a b)
+  & out ~ ((1 (head b)) a)
+
+// Merge two sorted lists.
+@merge = ((?((@merge_lnil @merge_lcons) (payload (right out))) payload) (right out))
+
+@merge_lnil = (* (right out))
+  & out ~ right
+
+@merge_lcons = (* ((h1 t1) (right out)))
+  & right ~ (?( (@merge_rnil @merge_both) (payload (h1 (t1 out)))) payload)
+
+@merge_rnil = (* (h1 (t1 out)))
+  & out ~ (1 (h1 t1))
+
+@merge_both = (* ((h2 t2) (h1 (t1 out))))
+  & h1 ~ {h1_cmp h1_keep}
+  & h2 ~ {h2_cmp h2_keep}
+  & h1_cmp ~ $([<] $(h2_cmp cmp))
+  & cmp ~ ?((@merge_take2 @merge_take1) (h1_keep (t1 (h2_keep (t2 out))))
+
+@merge_take2 = (h1 (t1 (h2 (t2 out))))
+  & @merge ~ (t1 (t2 rest))
+  & out ~ (1 (h2 rest))
+
+@merge_take1 = (* (h1 (t1 (h2 (t2 out)))))
+  & @merge ~ (t1 (t2 rest))
+  & out ~ (1 (h1 rest))
+
+// Select the element at the zero-based index; an empty list gives zero.
+@sel = ((?((@sel_nil @sel_cons) (payload (idx out))) payload) (idx out))
+
+@sel_nil = (* (* out))
+  & out ~ 0
+
+@sel_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@sel_here @sel_next) (head (tail out)))
+
+@sel_here = (head (* out))
+  & out ~ head
+
+@sel_next = (idx (* (tail out)))
+  & @sel ~ (tail (idx out))

@@ -1,0 +1,46 @@
+// Parse balanced parentheses and emit each character's matching index.
+
+@prog = (input output)
+  & @many ~ (input (0 result))
+  & result ~ (output (idx (rest close)))
+  & idx ~ *
+  & rest ~ *
+  & close ~ *
+
+// @many(list, index) returns (answers, (next_index, (remaining_list, close_index))).
+// A close parenthesis stops the current scan; the top-level scan ends at Nil.
+@many = ((?((@many_nil @many_cons) (p (idx out))) p) (idx out))
+
+@many_nil = (* (idx out))
+  & out ~ ((0 *) (idx ((0 *) 0)))
+
+@many_cons = (* ((h t) (idx out)))
+  & h ~ $([=] $(40 z))
+  & z ~ ?((@many_close @many_open) (t (idx out)))
+
+// A close parenthesis ends this scan and is not included in its answer list.
+@many_close = (t (idx out))
+  & idx ~ {keep step}
+  & step ~ $([+1] next)
+  & out ~ ((0 *) (next (t keep)))
+
+// Parse the contents of an opening parenthesis, then continue after its match.
+@many_open = (* (t (idx out)))
+  & idx ~ {open_ix step}
+  & step ~ $([+1] start)
+  & @many ~ (t (start inner))
+  & inner ~ (inside (after_open (rest close)))
+  & @many ~ (rest (after_open suffix))
+  & suffix ~ (after (final_idx (final_rest final_close)))
+  & @append ~ (inside ((1 (open_ix after)) merged))
+  & out ~ ((1 (close merged)) (final_idx (final_rest final_close)))
+
+// Append two lists.
+@append = ((?((@ap_nil @ap_cons) (p (b out))) p) (b out))
+
+@ap_nil = (* (b out))
+  & out ~ b
+
+@ap_cons = (* ((h t) (b out)))
+  & @append ~ (t (b tail))
+  & out ~ (1 (h tail))

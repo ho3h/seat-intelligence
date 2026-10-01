@@ -1,0 +1,18 @@
+// Build the singleton-cluster canonical ids [0, 1, ..., n-1].
+@prog = (input out)
+  & input ~ (n (tau (mnl cands)))
+  & tau ~ *
+  & mnl ~ *
+  & cands ~ *
+  & @gen ~ (n (0 out))
+
+@gen = (n (i out))
+  & n ~ ?((@gen_nil @gen_succ) (i out))
+
+@gen_nil = (* (0 *))
+
+@gen_succ = (prev (i out))
+  & i ~ {inc val}
+  & inc ~ $([+1] next)
+  & @gen ~ (prev (next rest))
+  & out ~ (1 (val rest))

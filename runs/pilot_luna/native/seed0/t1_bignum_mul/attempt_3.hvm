@@ -1,0 +1,93 @@
+// Entry point
+@prog = (input out)
+  & input ~ (a b)
+  & @outer ~ (a (b ((0 *) out)))
+
+// Multiply each digit of a by a progressively shifted copy of b.
+@outer = ((?((@outer_nil @outer_cons) (pl (bs (acc out)))) pl) (bs (acc out)))
+
+@outer_nil = (* (bs (acc out)))
+  & bs ~ *
+  & @trim ~ (acc out)
+
+@outer_cons = (* ((d t) (bs (acc out))))
+  & bs ~ {bmul bnext}
+  & @dmul ~ (bmul (d (0 part)))
+  & @add ~ (acc (part sum))
+  & @outer ~ (t ((1 (0 bnext)) (sum out)))
+
+// Multiply a list by one digit, carrying in base 4096.
+@dmul = ((?((@dmul_nil @dmul_cons) (pl (d (c out)))) pl) (d (c out)))
+
+@dmul_nil = (* (d (c out)))
+  & out ~ (1 (c (0 *)))
+
+@dmul_cons = (* ((h t) (d (c out))))
+  & h ~ $([*] $(d p))
+  & @calc ~ (p (c (0 (r q))))
+  & out ~ (1 (r rest))
+  & @dmul ~ (t (d (q rest)))
+
+// Calculate (x + y + c) as (remainder, carry) in base 4096.
+@calc = (x (y (c (r q))))
+  & x ~ $([+] $(y s))
+  & s ~ $([+] $(c z))
+  & z ~ {u v}
+  & u ~ $([%] $(4096 r))
+  & v ~ $([/] $(4096 q))
+
+// Add two lists, carrying in base 4096.
+@add = (x (y out))
+  & @addrec ~ (x (y (0 out)))
+
+@addrec = ((?((@add_xnil @add_xcons) (pl (y (c out)))) pl) (y (c out)))
+
+@add_xnil = (* (y (c out)))
+  & @add_yonly ~ (y (c out))
+
+@add_xcons = (* ((h t) (y (c out))))
+  & @add_xhas ~ (h (t (y (c out))))
+
+@add_xhas = ((?((@add_ynil @add_ycons) (pl (h (t (c out))))) pl) (h (t (c out))))
+
+@add_ynil = (* (h (t (c out))))
+  & @calc ~ (h (0 (c (r q))))
+  & out ~ (1 (r rest))
+  & @addrec ~ (t ((0 *) (q rest)))
+
+@add_ycons = (* ((g u) (h (t (c out)))))
+  & @calc ~ (h (g (c (r q))))
+  & out ~ (1 (r rest))
+  & @addrec ~ (t (u (q rest)))
+
+@add_yonly = ((?((@add_y0 @add_y1) (pl (c out))) pl) (c out))
+
+@add_y0 = (* (c out))
+  & out ~ (1 (c (0 *)))
+
+@add_y1 = (* ((g u) (c out)))
+  & @calc ~ (0 (g (c (r q))))
+  & out ~ (1 (r rest))
+  & @add_yonly ~ (u (q rest))
+
+// Trim high zero digits. Return (trimmed-list, nonzero-flag).
+@trim = (l out)
+  & @trimf ~ (l (out *))
+
+@trimf = ((?((@trimf_nil @trimf_cons) (pl out)) pl) out)
+
+@trimf_nil = (* ((0 *) 0))
+
+@trimf_cons = (* ((h t) out))
+  & @trimf ~ (t (rt flag))
+  & h ~ {hc hk}
+  & hc ~ $([!] $(0 b))
+  & b ~ $([|] $(flag nz))
+  & nz ~ ?((@trimf_drop @trimf_keep) (hk (rt out)))
+
+@trimf_drop = (h (rt out))
+  & h ~ *
+  & out ~ (rt 0)
+
+@trimf_keep = (* (h (rt out)))
+  & out ~ ((1 (h rt)) 1)

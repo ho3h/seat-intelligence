@@ -1,0 +1,29 @@
+@prog = ((a k) out)
+  & k ~ ?((@kzero @kpos) (a out))
+
+@kzero = (a out)
+  & a ~ *
+  & out ~ (0 *)
+
+@kpos = (km (a out))
+  & km ~ $([+1] k)
+  & @mul ~ (a (k (0 out)))
+
+@mul = ((?((@mul_nil @mul_cons) (pl (k (carry out)))) pl) (k (carry out)))
+
+@mul_nil = (pl (k (carry out)))
+  & pl ~ *
+  & k ~ *
+  & carry ~ ?((((0 *) *) (cm1 (dest *))) (out *))
+  & cm1 ~ $([+1] digit)
+  & dest ~ (1 (digit (0 *)))
+
+@mul_cons = (* ((h t) (k (carry out))))
+  & k ~ {km kr}
+  & h ~ $([*] $(km prod))
+  & prod ~ $([+] $(carry total))
+  & total ~ {x y}
+  & x ~ $([&] $(4095 digit))
+  & y ~ $([>>] $(12 nextcarry))
+  & @mul ~ (t (kr (nextcarry tailout)))
+  & out ~ (1 (digit tailout))

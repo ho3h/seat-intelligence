@@ -1,0 +1,39 @@
+@prog = ((known (?((@filter_nil @filter_cons) (pl_q403 (known out))) pl_q403)) out)
+
+@filter_nil = (* (known out))
+  & known ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* ((({u_mem u_keep} ({v_mem v_keep} score)) (?((@filter_nil @filter_cons) (pl_q405 (kn_rec rest))) pl_q405)) ({kn_rec (?((@has_nil @has_cons) (pl_q404 (u_mem (v_mem ?((@filter_keep @filter_drop) (u_keep (v_keep (score (rest out))))))))) pl_q404)} out)))
+
+@filter_keep = (u (v (score (rest out))))
+  & out ~ (1 ((u (v score)) rest))
+
+@filter_drop = (* (u (v (score (rest out)))))
+  & u ~ *
+  & v ~ *
+  & score ~ *
+  & out ~ rest
+
+@has_nil = (* (u (v out)))
+  & u ~ *
+  & v ~ *
+  & out ~ 0
+
+@has_cons = (* (((a b) tail) (u (v out))))
+  & u ~ {u_test u_rec}
+  & a ~ $([=] $(u_test eq_a))
+  & eq_a ~ ?((((?((@has_nil @has_cons) (pl_q406_q408 (u_q408 (v_q408 out_q408)))) pl_q406_q408) (u_q408 (v_q408 (* out_q408)))) @has_first_yes) (tail (u_rec (v (b out)))))
+
+@has_first_yes = (* (tail (u (v (b out)))))
+  & v ~ {v_test v_rec}
+  & b ~ $([=] $(v_test eq_b))
+  & eq_b ~ ?((@has_second_no @has_second_yes) (tail (u (v_rec out))))
+
+@has_second_no = ((?((@has_nil @has_cons) (pl_q407 (u (v out)))) pl_q407) (u (v out)))
+
+@has_second_yes = (* (tail (u (v out))))
+  & tail ~ *
+  & u ~ *
+  & v ~ *
+  & out ~ 1

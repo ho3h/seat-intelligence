@@ -1,0 +1,102 @@
+// Count unvisited vertices; each new vertex starts a flood fill.
+@prog = (input out)
+  & input ~ (n edges)
+  & @vertices ~ (n (edges ((0 *) (0 out))))
+
+@vertices = (?((@v_zero @v_succ) (edges (visited (acc out)))) (edges (visited (acc out))))
+
+@v_zero = (* (edges (visited (acc out))))
+  & edges ~ *
+  & visited ~ *
+  & acc ~ out
+
+@v_succ = (v (edges (visited (acc out))))
+  & v ~ {vtest vrest}
+  & vrest ~ {vpend nleft}
+  & visited ~ {vmem vsaved}
+  & @mem ~ (vmem (vtest has))
+  & has ~ ?((@v_new @v_seen) (vpend (nleft (edges (vsaved (acc out))))))
+
+@v_new = (vpend (nleft (edges (vsaved (acc out)))))
+  & edges ~ {eflood erec}
+  & @flood ~ ((1 (vpend (0 *))) (eflood (vsaved visout)))
+  & acc ~ $([+1] acc2)
+  & @vertices ~ (nleft (erec (visout (acc2 out))))
+
+@v_seen = (* (vpend (nleft (edges (vsaved (acc out))))))
+  & vpend ~ *
+  & @vertices ~ (nleft (edges (vsaved (acc out))))
+
+// Return 1 if target is present in a list, and 0 otherwise.
+@mem = ((?((@mem_nil @mem_cons) (pl (target out))) pl) (target out))
+
+@mem_nil = (* (* out))
+  & out ~ 0
+
+@mem_cons = (* ((head tail) (target out)))
+  & target ~ {tcmp trec}
+  & head ~ $([=] $(tcmp eq))
+  & eq ~ ?((@mem_no @mem_yes) (tail (trec out)))
+
+@mem_no = (tail (target out))
+  & @mem ~ (tail (target out))
+
+@mem_yes = (* (* (* out)))
+  & out ~ 1
+
+// Process pending vertices, adding each newly reached vertex to visited.
+@flood = ((?((@f_nil @f_cons) (pl (edges (visited out)))) pl) (edges (visited out)))
+
+@f_nil = (* (edges (visited out)))
+  & edges ~ *
+  & visited ~ out
+
+@f_cons = (* ((v rest) (edges (visited out))))
+  & v ~ {vtest vkeep}
+  & visited ~ {vmem vsaved}
+  & @mem ~ (vmem (vtest has))
+  & has ~ ?((@f_new @f_skip) (vkeep (rest (edges (vsaved out)))))
+
+@f_new = (vkeep (rest (edges (vsaved out))))
+  & vkeep ~ {vscan vmark}
+  & edges ~ {escan eflood}
+  & @scan ~ (escan (vscan (rest pending2)))
+  & @flood ~ (pending2 (eflood ((1 (vmark vsaved)) out)))
+
+@f_skip = (* (vkeep (rest (edges (vsaved out)))))
+  & vkeep ~ *
+  & @flood ~ (rest (edges (vsaved out)))
+
+// Scan edges and prepend endpoints adjacent to target onto pending.
+@scan = ((?((@s_nil @s_cons) (pl (target (pending out)))) pl) (target (pending out)))
+
+@s_nil = (* (target (pending out)))
+  & target ~ *
+  & pending ~ out
+
+@s_cons = (* ((u v) (tail (target (pending out)))))
+  & target ~ {tcheck trec}
+  & tcheck ~ {tu tv}
+  & u ~ {ucmp uadd}
+  & v ~ {vadd vtest}
+  & ucmp ~ $([=] $(tu eq))
+  & eq ~ ?((@s_u_no @s_u_yes) (uadd (vadd (vtest (tail (tv (trec (pending out))))))))
+
+@s_u_yes = (* (uadd (vadd (vtest (tail (tv (trec (pending out))))))))
+  & uadd ~ *
+  & vtest ~ *
+  & tv ~ *
+  & @scan ~ (tail (trec ((1 (vadd pending)) out)))
+
+@s_u_no = (uadd (vadd (vtest (tail (tv (trec (pending out)))))))
+  & vtest ~ $([=] $(tv eq2))
+  & eq2 ~ ?((@s_v_no @s_v_yes) (uadd (vadd (tail (trec (pending out))))))
+
+@s_v_no = (uadd (vadd (tail (trec (pending out)))))
+  & uadd ~ *
+  & vadd ~ *
+  & @scan ~ (tail (trec (pending out)))
+
+@s_v_yes = (* (uadd (vadd (tail (trec (pending out))))))
+  & vadd ~ *
+  & @scan ~ (tail (trec ((1 (uadd pending)) out)))

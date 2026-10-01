@@ -1,0 +1,55 @@
+@list_idx = (l (i o))
+  & i ~ ?((@idx_z @idx_s) (l o))
+@idx_z = (l (* l))
+@idx_s = (* (l (n o)))
+  & l ~ (tag (val rest))
+  & tag ~ *
+  & @list_idx ~ (rest (nm o))
+  & nm ~ $([-] $(1 n))
+@prog = ((c (mnl o)))
+  & c ~ ?((@done @process) ((mnl o)))
+@done = (ctx o)
+  & ctx ~ o
+  & o ~ (0 *)
+@process = (* (ctx ((cluster_id tail_c) o)))
+  & ctx ~ (c (mnl (out)))
+  & @check ~ (mnl (c (cluster_id (has_conflict))))
+  & has_conflict ~ (ctx2 (o2 out2))
+  & ctx2 ~ (c (mnl (out)))
+  & o2 ~ ?((@cons_0 @cons_1) (ctx2 (o2)))
+@cons_0 = (ctx (o rest))
+  & ctx ~ (c (mnl (out)))
+  & @process ~ (c ((tag next) (o rest)))
+@cons_1 = (* (ctx (o rest)))
+  & ctx ~ (c (mnl (out)))
+  & o ~ $([|] $(1 nval))
+  & nval ~ ?((@cons_0 @cons_1) (ctx (nval rest)))
+@check = (mnl (c (id (result))))
+  & mnl ~ ?((@done_mnl @has_pair) (c (id (result))))
+@done_mnl = (c (id (* result)))
+  & c ~ *
+  & id ~ *
+  & result ~ 0
+@has_pair = (* (mnl (ctx ((a b) tail_mnl))))
+  & ctx ~ (c (id (result)))
+  & @list_idx ~ (c (a ca))
+  & @list_idx ~ (c (b cb))
+  & ca ~ $([=] $(id a_eq))
+  & a_eq ~ ?((@no @yes) (cb (ctx (tail_mnl (result)))))
+@no = (cb (ctx result))
+  & ctx ~ (c (id (tail (result))))
+  & tail ~ *
+  & cb ~ *
+  & @check ~ (mnl (c (id (result))))
+@yes = (* (cb (ctx result)))
+  & ctx ~ (c (id (tail (result))))
+  & tail ~ *
+  & cb ~ $([=] $(id b_eq))
+  & b_eq ~ ?((@no @found) (c (id (tail (result)))))
+@found = (* (ctx result))
+  & ctx ~ (c (id (tail)))
+  & tail ~ *
+  & c ~ *
+  & id ~ *
+  & mnl ~ *
+  & result ~ 1

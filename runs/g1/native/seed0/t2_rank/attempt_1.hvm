@@ -1,0 +1,12 @@
+// Rank: count elements of xs that are strictly less than x.
+@prog = ((x xs) out)
+  & @rank ~ (xs (x (0 out)))
+
+@rank = ((?((@rank_nil @rank_cons) (pl (x (acc out)))) pl) (x (acc out)))
+
+@rank_nil = (* (* (a a)))
+
+@rank_cons = (* ((h t) ({x_cmp x_rec} ({acc_add acc_rec} out))))
+  & h ~ $([<] $(x_cmp z))
+  & acc_add ~ $([+] $(z acc2))
+  & @rank ~ (t (x_rec (acc2 out)))

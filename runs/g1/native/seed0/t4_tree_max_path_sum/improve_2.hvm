@@ -1,0 +1,62 @@
+@prog = (input out)
+  & input ~ (?((@walk_nil @walk_node) (p (0 opt))) p)
+  & @final ~ (opt out)
+
+@walk_nil = (* (a b))
+  & a ~ *
+  & b ~ (0 *)
+
+@walk_node = (* ((l (v r)) (acc out)))
+  & acc ~ $([+] $(v s))
+  & s ~ {s1 s23}
+  & s23 ~ {s2 s3}
+  & l ~ (?((@walk_nil @walk_node) (pl (s1 xl))) pl)
+  & r ~ (?((@walk_nil @walk_node) (pr (s2 xr))) pr)
+  & @merge ~ (xl (xr (s3 out)))
+
+@merge = ((?((@merge_none @merge_some) (p (y (fallback out)))) p) (y (fallback out)))
+
+@merge_none = (p ((?((@merge_none_none @merge_none_some) (q (fallback out))) q) (fallback out)))
+  & p ~ *
+
+@merge_none_none = (q (fallback out))
+  & q ~ *
+  & out ~ (1 fallback)
+
+@merge_none_some = (* (n (fallback out)))
+  & fallback ~ *
+  & out ~ (1 n)
+
+@merge_some = (* (x (((?((@merge_some_none @merge_some_some) (q (x (fallback out)))) q) (fallback out))))
+
+@merge_some_none = (q (x (fallback out)))
+  & q ~ *
+  & fallback ~ *
+  & out ~ (1 x)
+
+@merge_some_some = (* (n (x (fallback out))))
+  & fallback ~ *
+  & @max ~ (x (n m))
+  & out ~ (1 m)
+
+@max = (a (b out))
+  & a ~ {at ac}
+  & b ~ {bt bc}
+  & at ~ $([>] $(bt z))
+  & z ~ ?((@max_no @max_yes) (ac (bc out)))
+
+@max_no = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@max_yes = (* (a (b out)))
+  & b ~ *
+  & out ~ a
+
+@final = ((?((@final_none @final_some) (p out)) p) out)
+
+@final_none = (* out)
+  & out ~ 0
+
+@final_some = (* (n out))
+  & out ~ n

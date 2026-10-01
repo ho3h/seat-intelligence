@@ -1,0 +1,102 @@
+@prog = ((n edges) out)
+  & @loop ~ (0 (n (edges (0 out))))
+
+@loop = (v (n (edges (count out))))
+  & is_done ~ $([=] $(v n))
+  & is_done ~ ?(@done @cont) (v (n (edges (count out))))
+
+@done = (v (n (edges (count out))))
+  & v ~ *
+  & n ~ *
+  & edges ~ *
+  & count ~ out
+
+@cont = (v (n (edges (count out))))
+  & @check_cycle ~ (v (edges (res out)))
+  & res ~ ?(@skip_v @inc_count) (v (n (edges (count out))))
+
+@skip_v = (v (n (edges (count out))))
+  & v_inc ~ $([+] $(1 v))
+  & @loop ~ (v_inc (n (edges (count out))))
+
+@inc_count = (v (n (edges (count out))))
+  & v_inc ~ $([+] $(1 v))
+  & c_inc ~ $([+] $(1 count))
+  & @loop ~ (v_inc (n (edges (c_inc out))))
+
+@check_cycle = (v (edges (res out)))
+  & {e1 e2} ~ edges
+  & @find_edge ~ (v (e1 (e2 (res out))))
+
+@find_edge = (v (e (e_main (res out))))
+  & e ~ ?(@no_edge @found_edge) (v (e_main (res out)))
+
+@no_edge = (v (e_main (res out)))
+  & v ~ *
+  & e_main ~ *
+  & res ~ 0
+
+@found_edge = (((u (t r))) (v (e_main (res out))))
+  & u_eq ~ $([=] $(u v))
+  & u_eq ~ ?(@skip_edge @follow) (t (r (v (e_main (res out)))))
+
+@skip_edge = (t (r (v (e_main (res out)))))
+  & t ~ *
+  & @find_edge ~ (v (r (e_main (res out))))
+
+@follow = (t (r (v (e_main (res out)))))
+  & @dfs ~ (t (v (e_main (found out))))
+  & found ~ ?(@try_next @done_found) (r (v (e_main (res out))))
+
+@try_next = (r (v (e_main (res out))))
+  & @find_edge ~ (v (r (e_main (res out))))
+
+@done_found = (r (v (e_main (res out))))
+  & r ~ *
+  & v ~ *
+  & e_main ~ *
+  & res ~ 1
+
+@dfs = (curr (target (edges (found out))))
+  & eq ~ $([=] $(curr target))
+  & eq ~ ?(@yes @no_dfs) (curr (target (edges (found out))))
+
+@yes = (curr (target (edges (found out))))
+  & curr ~ *
+  & target ~ *
+  & edges ~ *
+  & found ~ 1
+
+@no_dfs = (curr (target (edges (found out))))
+  & @search ~ (curr (target (edges (found out))))
+
+@search = (curr (target (edges (found out))))
+  & {e3 e4} ~ edges
+  & e3 ~ ?(@end @cont_search) (curr (target (e4 (found out))))
+
+@end = (curr (target (e4 (found out))))
+  & curr ~ *
+  & target ~ *
+  & e4 ~ *
+  & found ~ 0
+
+@cont_search = (((u2 (t2 r2))) (curr (target (e4 (found out)))))
+  & u2_eq ~ $([=] $(u2 curr))
+  & u2_eq ~ ?(@skip2 @go2) (t2 (r2 (curr (target (e4 (found out))))))
+
+@skip2 = (t2 (r2 (curr (target (e4 (found out))))))
+  & t2 ~ *
+  & @search ~ (curr (target (r2 (found out))))
+
+@go2 = (t2 (r2 (curr (target (e4 (found out))))))
+  & @dfs ~ (t2 (target (e4 (res3 out))))
+  & res3 ~ ?(@continue @found) (r2 (curr (target (found out))))
+
+@continue = (r2 (curr (target (found out))))
+  & @search ~ (curr (target (r2 (found out))))
+
+@found = (r2 (curr (target (found out))))
+  & r2 ~ *
+  & curr ~ *
+  & target ~ *
+  & found ~ 1

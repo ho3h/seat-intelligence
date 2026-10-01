@@ -1,0 +1,118 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@add_neighbor = ({e {$([:%0x000000C] $([*0x0000002] c)) $([:/0x000000C] b)}} ({d f} (g ({a h} (i l)))))
+  & @read_or_set_color ~ (a (b (c (d ({$([=0x0000000] ?((@add_neighbor__C2 @add_neighbor__C3) (e (f (g (h (i (j (k l))))))))) j} k)))))
+
+@add_neighbor__C0 = (a (b (* (a (b 1)))))
+
+@add_neighbor__C1 = (* (a (b (c (a (b c))))))
+
+@add_neighbor__C2 = (* (a (b (c (d ($([=] $(a ?((@add_neighbor__C0 @add_neighbor__C1) (b (c (d e)))))) (* e)))))))
+
+@add_neighbor__C3 = (* (a (* (b (* (e (* (d (c (d e))))))))))
+  & @List/Cons ~ (a (b c))
+
+@count_components = ({$([=] $(a ?((@count_components__C4 (* (* (* (* (* (b b))))))) (c (d e))))) c} ({a d} e))
+
+@count_components__C0 = ($([+0x0000001] a) (b (c (e (d f)))))
+  & @count_components ~ (a (b (c (d (e f)))))
+
+@count_components__C1 = (* ($([+0x0000001] a) (b (c ($([+0x0000001] e) (d f))))))
+  & @count_components ~ (a (b (c (d (e f)))))
+
+@count_components__C2 = ({d {h {$([:%0x000000C] $([*0x0000002] c)) $([:/0x000000C] b)}}} (i ({f j} (a (k m)))))
+  & @explore ~ (e (f (g (0 (l $([=0x0000000] ?((@count_components__C0 @count_components__C1) (h (i (j (k (l m))))))))))))
+  & @read_or_set_color ~ (a (b (c (1 (* g)))))
+  & @List/Cons ~ (d (@List/Nil e))
+
+@count_components__C3 = (* ($([+0x0000001] a) b))
+  & @count_components ~ (a b)
+
+@count_components__C4 = ({c b} (d (e ({f a} g))))
+  & @get_color ~ (a (b $([!0x0000000] ?((@count_components__C2 @count_components__C3) (c (d (e (f g))))))))
+
+@explore = ((@explore__C2 a) a)
+
+@explore__C0 = (* (a (b (a b))))
+
+@explore__C1 = (* ({b d} (g ({a k} ({h c} (i n))))))
+  & @explore ~ (j (k (l (m n))))
+  & @scan_edges ~ (a (b (f (g (h (i (j (l m))))))))
+  & @other_color ~ (e f)
+  & @get_color ~ (c (d e))
+
+@explore__C2 = (?((@explore__C0 @explore__C1) a) a)
+
+@get_chunk = ((@get_chunk__C2 a) a)
+
+@get_chunk__C0 = ($([:-0x0000001] b) (* (a c)))
+  & @get_chunk ~ (a (b c))
+
+@get_chunk__C1 = (* (c (d ({$([=0x0000000] ?((@get_chunk__C0 (* (* (a (* a))))) (b (c (d e))))) b} e))))
+
+@get_chunk__C2 = (?(((* 0) @get_chunk__C1) a) a)
+
+@get_color = (a ({$([:%0x000000C] $([*0x0000002] c)) $([:/0x000000C] b)} d))
+  & @get_chunk ~ (a (b $([>>] $(c $([&0x0000003] d)))))
+
+@make_colors = (?((@List/Nil @make_colors__C0) a) a)
+
+@make_colors__C0 = ($([+0x0000001] $([:-0x0000001] a)) c)
+  & @List/Cons ~ (0 (b c))
+  & @make_colors ~ (a b)
+
+@other_color = ($([=0x0000001] ?((1 (* 2)) a)) a)
+
+@prog = (({a $([+0x000000B] $([:/0x000000C] c))} b) e)
+  & @count_components ~ (0 (a (b (d (0 e)))))
+  & @make_colors ~ (c d)
+
+@read_or_set_color = ((@read_or_set_color__C7 a) a)
+
+@read_or_set_color__C0 = (b (c (a (* (a d)))))
+  & @List/Cons ~ (b (c d))
+
+@read_or_set_color__C1 = (* (b (* (a (c (a d))))))
+  & @List/Cons ~ (b (c d))
+
+@read_or_set_color__C2 = (* (* (b (c (a (a d))))))
+  & @List/Cons ~ (b (c d))
+
+@read_or_set_color__C3 = (* ({d a} ($([<<] $(d e)) ($([&] $(c $([|] $(e f)))) (g (* (0 h)))))))
+  & @List/Cons ~ (f (g h))
+  & $(b c) ~ [^0x0FFFFFF]
+  & $(a b) ~ [<<0x0000003]
+
+@read_or_set_color__C4 = ($([:-0x0000001] b) (c (d (e ({a f} i)))))
+  & @read_or_set_color ~ (a (b (c (d ({$([=0x0000000] ?((@read_or_set_color__C0 @read_or_set_color__C1) (e (f (g (h i)))))) g} h)))))
+
+@read_or_set_color__C5 = (* (* ({b a} (c ({d $([>>] $(a $([&0x0000003] {$([=0x0000000] ?((@read_or_set_color__C2 @read_or_set_color__C3) (b (c (d (e (f g))))))) f})))} (e g))))))
+
+@read_or_set_color__C6 = (* (d (e ({$([=0x0000000] ?((@read_or_set_color__C4 @read_or_set_color__C5) (a (b (c (d (e f))))))) a} (b (c f))))))
+
+@read_or_set_color__C7 = (?(((* (* (* (0 @List/Nil)))) @read_or_set_color__C6) a) a)
+
+@scan_edges = ((@scan_edges__C6 a) a)
+
+@scan_edges__C0 = (b (c (d (e (f (a (* g)))))))
+  & @scan_edges ~ (a (b (c (d (e (f g))))))
+
+@scan_edges__C1 = (* (g ({b h} (c (d (e (f (a l))))))))
+  & @scan_edges ~ (f (g (h (i (j (k l))))))
+  & @add_neighbor ~ (a (b (c (d (e (i (j k)))))))
+
+@scan_edges__C2 = ({a b} (c (d (e (f (g (h ($([=] $(a ?((@scan_edges__C0 @scan_edges__C1) (b (c (d (e (f (g (h i)))))))))) i))))))))
+
+@scan_edges__C3 = (* (g ({b h} (c (d (e (f (* (a l)))))))))
+  & @scan_edges ~ (f (g (h (i (j (k l))))))
+  & @add_neighbor ~ (a (b (c (d (e (i (j k)))))))
+
+@scan_edges__C4 = (* (* (a (b (c (a (b c)))))))
+
+@scan_edges__C5 = (* (({$([=] $(a ?((@scan_edges__C2 @scan_edges__C3) (b (c (d (e (f (g (h (i j))))))))))) h} i) (g ({a b} (c (d (e (f j))))))))
+
+@scan_edges__C6 = (?((@scan_edges__C4 @scan_edges__C5) a) a)
+
+

@@ -1,0 +1,181 @@
+@prog = ((n edges) out)
+  & @outer ~ (n (0 (edges ((0 *)
+      (1 (0
+        (1 (0
+          (1 (0
+            (1 (0
+              (1 (0
+                (1 (0
+                  (1 (0
+                    (1 (0 (0 *)))
+                  ))
+                ))
+              ))
+            ))
+          ))
+        ))
+      ))
+    out)))))
+
+@outer = (n (i (edges (assigned (hist out)))))
+  & n ~ ?((@outer_done @outer_step) (i (edges (assigned (hist out)))))
+
+@outer_done = (i (edges (assigned (hist out))))
+  & i ~ *
+  & edges ~ *
+  & assigned ~ *
+  & hist ~ out
+
+@outer_step = (rem (i (edges (assigned (hist out)))))
+  & i ~ {im ik}
+  & assigned ~ {am ak}
+  & @mem ~ (im (am found))
+  & found ~ ?((@outer_new @outer_seen) (rem (ik (edges (ak (hist out)))))
+
+@outer_seen = (rem (i (edges (assigned (hist out)))))
+  & i ~ $([+1] next)
+  & @outer ~ (rem (next (edges (assigned (hist out)))))
+
+@outer_new = (rem (i (edges (assigned (hist out)))))
+  & @bfs ~ (i (edges (assigned result)))
+  & result ~ (newassigned size)
+  & @hinc ~ (size (hist nhist))
+  & i ~ $([+1] next)
+  & @outer ~ (rem (next (edges (newassigned (nhist out)))))
+
+@bfs = (start (edges (assigned out)))
+  & start ~ {svis sq}
+  & @bloop ~ (edges ((1 (svis assigned)) ((1 (sq (0 *))) (1 out))))
+
+@bloop = (edges (visited (queue (count out))))
+  & queue ~ (?((@bloop_nil @bloop_cons) (payload (edges (visited (count out))))) payload)
+
+@bloop_nil = (payload (edges (visited (count out))))
+  & payload ~ *
+  & edges ~ *
+  & out ~ (visited count)
+
+@bloop_cons = (rem (payload (edges (visited (count out)))))
+  & rem ~ *
+  & payload ~ (cur tail)
+  & @scan ~ (cur (edges (visited (tail (count res)))))
+  & res ~ (ed2 (v2 (f2 c2)))
+  & @bloop ~ (ed2 (v2 (f2 (c2 out))))
+
+@scan = (cur (edges (visited (front (count out)))))
+  & edges ~ (?((@scan_nil @scan_cons) (payload (cur (visited (front (count out)))))) payload)
+
+@scan_nil = (payload (cur (visited (front (count out)))))
+  & payload ~ *
+  & cur ~ *
+  & out ~ ((0 *) (visited (front count)))
+
+@scan_cons = (rem (payload (cur (visited (front (count out))))))
+  & rem ~ *
+  & payload ~ (edge rest)
+  & edge ~ (u v)
+  & cur ~ {ccheck crecur}
+  & u ~ {ucheck ukeep}
+  & v ~ {vcheck vkeep}
+  & @check_edge ~ (ccheck (ucheck (vcheck (visited (front (count chkres)))))
+  & chkres ~ (vnew (fnew cnew))
+  & @scan ~ (crecur (rest (vnew (fnew (cnew sub)))))
+  & sub ~ (restout (vout (fout cout)))
+  & out ~ ((1 ((ukeep vkeep) restout)) (vout (fout cout)))
+
+@check_edge = (cur (u (v (visited (front (count out)))))
+  & cur ~ {ce ck}
+  & u ~ {ue uk}
+  & ce ~ $([=] $(ue eq))
+  & eq ~ ?((@edge_u_no @edge_u_yes) (ck (uk (v (visited (front (count out)))))))
+
+@edge_u_yes = (* (ck (uk (v (visited (front (count out)))))))
+  & ck ~ *
+  & uk ~ *
+  & @discover ~ (v (visited (front (count out))))
+
+@edge_u_no = (* (ck (uk (v (visited (front (count out)))))))
+  & @edge_test_v ~ (ck (uk (v (visited (front (count out))))))
+
+@edge_test_v = (cur (u (v (visited (front (count out)))))
+  & cur ~ {ce ck}
+  & v ~ {ve vk}
+  & ce ~ $([=] $(ve eq))
+  & eq ~ ?((@edge_v_no @edge_v_yes) (ck (u (vk (visited (front (count out)))))))
+
+@edge_v_yes = (* (ck (u (vk (visited (front (count out)))))))
+  & ck ~ *
+  & vk ~ *
+  & @discover ~ (u (visited (front (count out))))
+
+@edge_v_no = (* (ck (u (vk (visited (front (count out)))))))
+  & ck ~ *
+  & u ~ *
+  & vk ~ *
+  & out ~ (visited (front count))
+
+@discover = (x (visited (front (count out))))
+  & x ~ {xm xk}
+  & visited ~ {vm vk}
+  & @mem ~ (xm (vm found))
+  & found ~ ?((@discover_new @discover_old) (xk (vk (front (count out)))))
+
+@discover_old = (* (x (visited (front (count out)))))
+  & x ~ *
+  & out ~ (visited (front count))
+
+@discover_new = (* (x (visited (front (count out)))))
+  & x ~ {xv xf}
+  & count ~ $([+1] cnew)
+  & out ~ ((1 (xv visited)) ((1 (xf front)) cnew))
+
+@mem = (x (list out))
+  & list ~ (?((@mem_nil @mem_cons) (payload (x out))) payload)
+
+@mem_nil = (payload (x out))
+  & payload ~ *
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (rem (payload (x out)))
+  & rem ~ *
+  & payload ~ (head tail)
+  & x ~ {xm xr}
+  & head ~ {hm hk}
+  & xm ~ $([=] $(hm eq))
+  & eq ~ ?((@mem_no @mem_yes) (xr (hk (tail out))))
+
+@mem_no = (* (xr (hk (tail out))))
+  & hk ~ *
+  & @mem ~ (xr (tail out))
+
+@mem_yes = (* (xr (hk (tail out))))
+  & xr ~ *
+  & hk ~ *
+  & tail ~ *
+  & out ~ 1
+
+@hinc = (size (hist out))
+  & size ~ {s1 s2}
+  & s1 ~ $([<] $(8 cond))
+  & cond ~ ?((@hinc_small @hinc_big) (s2 (hist out)))
+
+@hinc_small = (size (hist out))
+  & size ~ $([-] $(1 idx))
+  & @hincr ~ (idx (hist out))
+
+@hinc_big = (* (hist out))
+  & @hincr ~ (7 (hist out))
+
+@hincr = (idx (hist out))
+  & idx ~ ?((@hincr_at @hincr_next) (hist out))
+
+@hincr_at = (hist out)
+  & hist ~ (head tail)
+  & head ~ $([+1] h2)
+  & out ~ (1 (h2 tail))
+
+@hincr_next = (idx (hist out))
+  & hist ~ (head tail)
+  & @hincr ~ (idx (tail sub))
+  & out ~ (1 (head sub))

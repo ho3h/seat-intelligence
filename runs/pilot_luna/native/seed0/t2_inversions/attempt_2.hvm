@@ -1,0 +1,26 @@
+// Initialize the inversion accumulator.
+@prog = (input out)
+  & @inv ~ (input (0 out))
+
+// Count inversions by adding, for each head, the number of smaller
+// elements in the remaining list.
+@inv = ((?((@inv_nil @inv_cons) (pl (acc out))) pl) (acc out))
+
+@inv_nil = (* (a a))
+
+@inv_cons = (* ((h t) (acc out)))
+  & t ~ {ta tb}
+  & @scan ~ (ta (h cnt))
+  & acc ~ $([+] $(cnt acc2))
+  & @inv ~ (tb (acc2 out))
+
+// Count elements in a list that are smaller than the target.
+@scan = ((?((@scan_nil @scan_cons) (pl (target out))) pl) (target out))
+
+@scan_nil = (* (* (0 out)))
+
+@scan_cons = (* ((h t) (target out)))
+  & target ~ {ta tb}
+  & ta ~ $([>] $(h z))
+  & @scan ~ (t (tb cnt))
+  & z ~ $([+] $(cnt out))

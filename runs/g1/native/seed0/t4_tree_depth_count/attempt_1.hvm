@@ -1,0 +1,18 @@
+@prog = ((d t) out)
+  & @count ~ (d (t out))
+
+@count = (d ((?((@count_leaf @count_node) (payload (d out))) payload) out))
+
+@count_leaf = (* (* 0))
+
+@count_node = (* ((left (value right)) (d out)))
+  & value ~ *
+  & d ~ ?((@at_zero @at_pos) (left (right out)))
+
+@at_zero = (* (* 1))
+
+@at_pos = (d (left (right out)))
+  & d ~ {d1 d2}
+  & @count ~ (d1 (left x))
+  & @count ~ (d2 (right y))
+  & x ~ $([+] $(y out))

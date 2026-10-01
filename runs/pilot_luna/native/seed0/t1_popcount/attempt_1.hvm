@@ -1,0 +1,16 @@
+// Popcount by repeatedly extracting the low bit and shifting right.
+@prog = (n out)
+  & @pc ~ (n out)
+
+@pc = (n out)
+  & n ~ ?((@pc_zero @pc_succ) (out *))
+
+@pc_zero = (0 *)
+
+@pc_succ = (pred (out *))
+  & pred ~ $([+1] n)
+  & n ~ {lo hi}
+  & lo ~ $([%] $(2 bit))
+  & hi ~ $([>>] $(1 shifted))
+  & @pc ~ (shifted tail)
+  & bit ~ $([+] $(tail out))

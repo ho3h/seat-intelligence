@@ -1,0 +1,112 @@
+@prog = ((k (key (cl attrs))) out)
+  & @filter ~ (attrs (k (key (cl filtered))))
+  & filtered ~ {all cur}
+  & @hist ~ (cur (all (0 (16777215 out))))
+
+@filter = ((?((@filter_nil @filter_cons) (payload (k (key (cl out))))) payload) (k (key (cl out))))
+
+@filter_nil = (* (k (key (cl out))))
+  & k ~ *
+  & key ~ *
+  & cl ~ *
+  & out ~ (0 *)
+
+@filter_cons = (* (((node (akey val)) tail) (k (key (cl out)))))
+  & k ~ {kt kr}
+  & key ~ {keyt keyr}
+  & cl ~ {clt clr}
+  & @eligkey ~ (kt (keyt (clt (node (akey ok)))))
+  & @filter ~ (tail (kr (keyr (clr filtered))))
+  & @filter_join ~ (ok (val (filtered out)))
+
+@filter_join = (ok (val (filtered out)))
+  & ok ~ ?((@filter_drop @filter_keep) (val (filtered out)))
+
+@filter_drop = (val (filtered out))
+  & val ~ *
+  & out ~ filtered
+
+@filter_keep = (* (val (filtered out)))
+  & out ~ (1 (val filtered))
+
+@eligkey = (k (key (cl (node (akey out))))
+  & @get ~ (node (cl cid))
+  & akey ~ $([=] $(key eq1))
+  & cid ~ $([=] $(k eq2))
+  & eq1 ~ $([&] $(eq2 out))
+
+@get = (idx ((?((@get_nil @get_cons) (payload (idx out))) payload) out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ 0
+
+@get_cons = (* ((head tail) (idx out)))
+  & idx ~ ?((@get_head @get_step) (head (tail out)))
+
+@get_head = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@get_step = (idx (head (tail out)))
+  & head ~ *
+  & @get ~ (idx (tail out))
+
+@hist = ((?((@hist_nil @hist_cons) (payload (all (bc (bv out))))) payload) (all (bc (bv out))))
+
+@hist_nil = (* (all (bc (bv out))))
+  & all ~ *
+  & bc ~ *
+  & out ~ bv
+
+@hist_cons = (* ((val tail) (all (bc (bv out)))))
+  & all ~ {allc allr}
+  & val ~ {valc valr}
+  & @countv ~ (allc (valc (0 cnt)))
+  & @after_hist ~ (cnt (valr (allr (tail (bc (bv out))))))
+
+@countv = ((?((@cv_nil @cv_cons) (payload (target (acc out)))) payload) (target (acc out)))
+
+@cv_nil = (* (target (acc out)))
+  & target ~ *
+  & out ~ acc
+
+@cv_cons = (* ((head tail) (target (acc out))))
+  & target ~ {tcmp trec}
+  & head ~ $([=] $(tcmp eq))
+  & eq ~ ?((@cv_no @cv_yes) (trec (acc (tail out))))
+
+@cv_no = (target (acc (tail out)))
+  & @countv ~ (tail (target (acc out)))
+
+@cv_yes = (* (target (acc (tail out))))
+  & acc ~ $([+] $(1 acc2))
+  & @countv ~ (tail (target (acc2 out)))
+
+@after_hist = (cnt (val (all (tail (bc (bv out))))))
+  & cnt ~ {cgt crem}
+  & crem ~ {ceq crem2}
+  & crem2 ~ {cpos cbr}
+  & bc ~ {bccomp bcbr}
+  & bccomp ~ {bgt beq}
+  & val ~ {vlt vbr}
+  & bv ~ {bvcomp bbr}
+  & bvcomp ~ {blt}
+  & cgt ~ $([>] $(bgt gt))
+  & ceq ~ $([=] $(beq eq))
+  & cpos ~ $([>] $(0 pos))
+  & vlt ~ $([<] $(blt lt))
+  & eq ~ $([&] $(pos t1))
+  & t1 ~ $([&] $(lt tie))
+  & gt ~ $([|] $(tie win))
+  & win ~ ?((@hist_lose @hist_win) (cbr (vbr (all (tail (bcbr (bbr out)))))))
+
+@hist_lose = (cnt (val (all (tail (bc (bv out))))))
+  & cnt ~ *
+  & val ~ *
+  & @hist ~ (tail (all (bc (bv out))))
+
+@hist_win = (* (cnt (val (all (tail (bc (bv out)))))))
+  & bc ~ *
+  & bv ~ *
+  & @hist ~ (tail (all (cnt (val out))))

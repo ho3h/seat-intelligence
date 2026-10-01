@@ -1,0 +1,53 @@
+// Entry point.
+@prog = (input output)
+  & input ~ (xs ys)
+  & @ix ~ (xs (ys output))
+
+// Intersect xs with ys.
+@ix = ((?((@ix_nil @ix_cons) (px (ys out))) px) (ys out))
+
+@ix_nil = (px (ys out))
+  & px ~ *
+  & ys ~ *
+  & out ~ (0 *)
+
+@ix_cons = (* ((xh xt) (ys out)))
+  & @iy ~ (ys (xh (xt out)))
+
+// Find x in the remaining ys.
+@iy = ((?((@iy_nil @iy_cons) (py (x (xt out)))) py) (x (xt out)))
+
+@iy_nil = (py (x (xt out)))
+  & py ~ *
+  & x ~ *
+  & xt ~ *
+  & out ~ (0 *)
+
+@iy_cons = (* ((yh yt) (x (xt out))))
+  & x ~ {xlt xrest}
+  & yh ~ {ylt yrest}
+  & xlt ~ $([<] $(ylt lt))
+  & lt ~ ?((@ix_nlt @ix_lt) (xrest (yrest (xt (yt out)))))
+
+// x is not less than y; check whether they are equal.
+@ix_nlt = (xrest (yrest (xt (yt out))))
+  & xrest ~ {xeq xkeep}
+  & yrest ~ {yeq ykeep}
+  & xeq ~ $([=] $(yeq eq))
+  & eq ~ ?((@ix_ne @ix_eq) (xkeep (ykeep (xt (yt out)))))
+
+// x < y: discard x and keep y at the head of the second list.
+@ix_lt = (* (xrest (yrest (xt (yt out)))))
+  & xrest ~ *
+  & @ix ~ (xt ((1 (yrest yt)) out))
+
+// x > y: advance ys while keeping x.
+@ix_ne = (xkeep (ykeep (xt (yt out))))
+  & ykeep ~ *
+  & @iy ~ (yt (xkeep (xt out)))
+
+// x == y: emit x and advance both lists.
+@ix_eq = (* (xkeep (ykeep (xt (yt out)))))
+  & ykeep ~ *
+  & @ix ~ (xt (yt rest))
+  & out ~ (1 (xkeep rest))

@@ -1,0 +1,17 @@
+@List/Cons = (a (b ((1 (a (b c))) c)))
+
+@List/Nil = ((0 a) a)
+
+@preorder = ((@preorder__C1 a) a)
+
+@preorder__C0 = (* (b (a (c (d g)))))
+  & @List/Cons ~ (a (f g))
+  &!@preorder ~ (b (e f))
+  &!@preorder ~ (c (d e))
+
+@preorder__C1 = (?(((a a) @preorder__C0) b) b)
+
+@prog = (a b)
+  & @preorder ~ (a (@List/Nil b))
+
+

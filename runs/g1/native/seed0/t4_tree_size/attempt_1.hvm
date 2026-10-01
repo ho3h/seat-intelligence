@@ -1,0 +1,14 @@
+// Count the Node constructors in a tree.
+@prog = (tree out)
+  & @ts ~ (tree out)
+
+@ts = ((?((@ts_leaf @ts_node) (pl out)) pl) out)
+
+@ts_leaf = (* 0)
+
+@ts_node = (* ((left (value right)) out))
+  & value ~ *
+  & @ts ~ (left lcount)
+  & @ts ~ (right rcount)
+  & lcount ~ $([+] $(rcount sum))
+  & sum ~ $([+] $(1 out))

@@ -1,0 +1,266 @@
+@prog = ((c attrs) out)
+  c ~ {c1 c2}
+  & @length ~ (c1 n)
+  & @replicate ~ (n lists0)
+  & @fold_attrs ~ (attrs c2 lists0 lists)
+  & @process ~ (lists 0 out)
+
+@length = (list out)
+  & list ~ (?(cases ctx) payload)
+  & cases ~ (@len_nil @len_cons)
+  & ctx ~ (payload out)
+
+@len_nil = (* 0)
+
+@len_cons = (* ((h t) out))
+  & h ~ *
+  & @length ~ (t t_out)
+  & t_out ~ $([+1] out)
+
+@replicate = (n out)
+  & n ~ ?((@rep_nil @rep_cons) out)
+
+@rep_nil = (0 *)
+
+@rep_cons = (n out)
+  & @replicate ~ (n rest)
+  & out ~ (1 ((0 *) rest))
+
+@lookup = (c node out)
+  & c ~ (?(cases ctx) payload)
+  & cases ~ (@lk_nil @lk_cons)
+  & ctx ~ (payload (node out))
+
+@lk_nil = (p (n o))
+  & p ~ (h t)
+  & t ~ *
+  & n ~ *
+  & o ~ h
+
+@lk_cons = (* (p (n o)))
+  & p ~ (h t)
+  & h ~ *
+  & n ~ $([-1] n2)
+  & @lookup ~ (t n2 o)
+
+@array_insert = (arr i pair out)
+  & arr ~ (?(cases ctx) payload)
+  & cases ~ (@ai_nil @ai_cons)
+  & ctx ~ (payload (i pair out))
+
+@ai_nil = (p (i pair out))
+  & p ~ (h t)
+  & i ~ *
+  & out ~ (1 ((1 (pair h)) t))
+
+@ai_cons = (* (p (i pair out)))
+  & p ~ (h t)
+  & i ~ $([-1] i2)
+  & @array_insert ~ (t i2 pair t2)
+  & out ~ (1 (h t2))
+
+@fold_attrs = (attrs c lists out)
+  & attrs ~ (?(cases ctx) payload)
+  & cases ~ (@fold_nil @fold_cons)
+  & ctx ~ (payload (c lists out))
+
+@fold_nil = (payload (c lists out))
+  & payload ~ *
+  & c ~ *
+  & out ~ lists
+
+@fold_cons = (* (payload (c lists out)))
+  & payload ~ (attr rest)
+  & attr ~ (node kv)
+  & kv ~ (key value)
+  & c ~ {c1 c2}
+  & @lookup ~ (c1 node canon)
+  & @array_insert ~ (lists canon (key value) lists2)
+  & @fold_attrs ~ (rest c2 lists2 out)
+
+@process = (lists canon out)
+  & lists ~ (?(cases ctx) payload)
+  & cases ~ (@proc_nil @proc_cons)
+  & ctx ~ (payload canon out)
+
+@proc_nil = (payload canon out)
+  & payload ~ *
+  & canon ~ *
+  & out ~ (0 *)
+
+@proc_cons = (* (payload (canon out)))
+  & payload ~ (slot rest)
+  & canon ~ {ca cb}
+  & @slot_result ~ (slot ca result)
+  & cb ~ $([+1] canon2)
+  & @process ~ (rest canon2 rest_out)
+  & @append ~ (result rest_out out)
+
+@slot_result = (slot canon out)
+  & slot ~ {sa sb}
+  & sa ~ {s0 s1}
+  & sb ~ {s2 s3}
+  & canon ~ {ca cb}
+  & ca ~ {n0 n1}
+  & cb ~ {n2 n3}
+  & @filter_key ~ (s0 0 v0)
+  & @filter_key ~ (s1 1 v1)
+  & @filter_key ~ (s2 2 v2)
+  & @filter_key ~ (s3 3 v3)
+  & @key_out ~ (v0 n0 0 o0)
+  & @key_out ~ (v1 n1 1 o1)
+  & @key_out ~ (v2 n2 2 o2)
+  & @key_out ~ (v3 n3 3 o3)
+  & @append ~ (o0 o1 t1)
+  & @append ~ (t1 o2 t2)
+  & @append ~ (t2 o3 out)
+
+@filter_key = (slot k out)
+  & slot ~ (?(cases ctx) payload)
+  & cases ~ (@fk_nil @fk_cons)
+  & ctx ~ (payload k out)
+
+@fk_nil = (payload k out)
+  & payload ~ *
+  & k ~ *
+  & out ~ (0 *)
+
+@fk_cons = (* (payload (k out)))
+  & payload ~ (pair rest)
+  & pair ~ (pk pv)
+  & k ~ {k1 k2}
+  & pk ~ $([=] $(k1 eq))
+  & eq ~ ?((@fk_skip @fk_add) (pv rest k2 out))
+
+@fk_skip = (pv rest k out)
+  & pv ~ *
+  & @filter_key ~ (rest k out)
+
+@fk_add = (* (pv rest k out))
+  & @filter_key ~ (rest k rest_out)
+  & out ~ (1 (pv rest_out))
+
+@key_out = (vals canon k out)
+  & vals ~ {v1 v2}
+  & @ko_switch ~ (v1 canon k out v2)
+
+@ko_switch = (vals canon k out full)
+  & vals ~ (?(cases ctx) payload)
+  & cases ~ (@ko_nil @ko_cons)
+  & ctx ~ (payload canon k out full)
+
+@ko_nil = (payload canon k out full)
+  & payload ~ *
+  & canon ~ *
+  & k ~ *
+  & full ~ *
+  & out ~ (0 *)
+
+@ko_cons = (* (payload (canon k out full)))
+  & payload ~ (v rest)
+  & @mode ~ (full m)
+  & out ~ (1 ((canon (k m)) (0 *)))
+
+@mode = (vals out)
+  & vals ~ {v1 v2}
+  & @mode_loop ~ (v1 v2 16777215 0 out)
+
+@mode_loop = (iter full best best_c out)
+  & iter ~ (?(cases ctx) payload)
+  & cases ~ (@ml_nil @ml_cons)
+  & ctx ~ (payload full best best_c out)
+
+@ml_nil = (payload full best best_c out)
+  & payload ~ *
+  & full ~ *
+  & best_c ~ *
+  & out ~ best
+
+@ml_cons = (* (payload (full best best_c out)))
+  & payload ~ (v rest)
+  & full ~ {f1 f2}
+  & v ~ {va vb}
+  & @count ~ (f1 va cnt)
+  & @better ~ (vb cnt best best_c nb nbc)
+  & @mode_loop ~ (rest f2 nb nbc out)
+
+@count = (full v out)
+  & @count_loop ~ (full v 0 out)
+
+@count_loop = (full v acc out)
+  & full ~ (?(cases ctx) payload)
+  & cases ~ (@cl_nil @cl_cons)
+  & ctx ~ (payload v acc out)
+
+@cl_nil = (payload v acc out)
+  & payload ~ *
+  & v ~ *
+  & out ~ acc
+
+@cl_cons = (* (payload (v acc out)))
+  & payload ~ (x rest)
+  & v ~ {v1 v2}
+  & v1 ~ $([=] $(x eq))
+  & eq ~ ?((@cl_keep @cl_inc) (rest v2 acc out))
+
+@cl_keep = (rest v acc out)
+  & @count_loop ~ (rest v acc out)
+
+@cl_inc = (* (rest v acc out))
+  & acc ~ $([+1] acc2)
+  & @count_loop ~ (rest v acc2 out)
+
+@better = (v cnt best best_c nb nbc)
+  & cnt ~ {c1 c2}
+  & best_c ~ {b1 b2}
+  & c1 ~ $([>] $(b1 gt))
+  & gt ~ ?((@bet_eq @bet_take) (v c2 best b2 nb nbc))
+
+@bet_take = (* (v cnt best best_c nb nbc))
+  & nb ~ v
+  & nbc ~ cnt
+  & best ~ *
+  & best_c ~ *
+
+@bet_eq = (v cnt best best_c nb nbc)
+  & cnt ~ {c1 c2}
+  & best_c ~ {b1 b2}
+  & c1 ~ $([=] $(b1 eq))
+  & eq ~ ?((@bet_keep @bet_lt) (v c2 best b2 nb nbc))
+
+@bet_keep = (v cnt best best_c nb nbc)
+  & v ~ *
+  & cnt ~ *
+  & nb ~ best
+  & nbc ~ best_c
+
+@bet_lt = (* (v cnt best best_c nb nbc))
+  & v ~ {v1 v2}
+  & v1 ~ $([<] $(best lt))
+  & lt ~ ?((@bet_keep2 @bet_take2) (v2 cnt best best_c nb nbc))
+
+@bet_keep2 = (v cnt best best_c nb nbc)
+  & v ~ *
+  & cnt ~ *
+  & nb ~ best
+  & nbc ~ best_c
+
+@bet_take2 = (* (v cnt best best_c nb nbc))
+  & nb ~ v
+  & nbc ~ cnt
+  & best ~ *
+  & best_c ~ *
+
+@append = (a b out)
+  & a ~ (?(cases ctx) payload)
+  & cases ~ (@app_nil @app_cons)
+  & ctx ~ (payload b out)
+
+@app_nil = (payload b out)
+  & payload ~ *
+  & out ~ b
+
+@app_cons = (* (payload (b out)))
+  & payload ~ (h t)
+  & @append ~ (t b t2)
+  & out ~ (1 (h t2))

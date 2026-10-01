@@ -1,0 +1,95 @@
+// Three-way merge: consume the smallest available head at each step.
+// If one list is empty, finish by merging the other two.
+@prog = (inp out)
+  & inp ~ (xs (ys zs))
+  & @m3 ~ (xs (ys (zs out)))
+
+@m3 = ((?((@m3_xnil @m3_xcons) (px (ys (zs out)))) px) (ys (zs out)))
+
+@m3_xnil = (* (ys (zs out)))
+  & @merge ~ (ys (zs out))
+
+@m3_xcons = (* ((xh xt) (ys (zs out))))
+  & @m3_y ~ (ys (xh (xt (zs out))))
+
+@m3_y = ((?((@m3_ynil @m3_ycons) (py (xh (xt (zs out))))) py) (xh (xt (zs out))))
+
+@m3_ynil = (* (xh (xt (zs out))))
+  & @merge ~ ((1 (xh xt)) (zs out))
+
+@m3_ycons = (* ((yh yt) (xh (xt (zs out)))))
+  & @m3_z ~ (zs (xh (xt (yh (yt out)))))
+
+@m3_z = ((?((@m3_znil @m3_zcons) (pz (xh (xt (yh (yt out)))))) pz) (xh (xt (yh (yt out)))))
+
+@m3_znil = (* (xh (xt (yh (yt out)))))
+  & @merge ~ ((1 (xh xt)) ((1 (yh yt)) out))
+
+@m3_zcons = (* ((zh zt) (xh (xt (yh (yt out))))))
+  & @m3_all ~ (xh (yh (zh (xt (yt (zt out))))))
+
+// Compare x and y first.
+@m3_all = (x (y (z (xt (yt (zt out))))))
+  & x ~ {xa xb}
+  & y ~ {ya yb}
+  & xa ~ $([<] $(ya cmp))
+  & cmp ~ ?((@m3_xy_ge @m3_xy_lt) (xb (yb (z (xt (yt (zt out)))))))
+
+@m3_xy_lt = (* (x (y (z (xt (yt (zt out)))))))
+  & x ~ {xa xb}
+  & z ~ {za zb}
+  & xa ~ $([<] $(za cmp))
+  & cmp ~ ?((@m3_xz_ge @m3_xz_lt) (xb (y (zb (xt (yt (zt out)))))))
+
+@m3_xy_ge = (* (x (y (z (xt (yt (zt out)))))))
+  & y ~ {ya yb}
+  & z ~ {za zb}
+  & ya ~ $([<] $(za cmp))
+  & cmp ~ ?((@m3_yz_ge @m3_yz_lt) (x (yb (zb (xt (yt (zt out)))))))
+
+// x is smallest: emit it, then continue with x's tail.
+@m3_xz_lt = (* (x (y (z (xt (yt (zt out)))))))
+  & out ~ (1 (x q))
+  & @m3 ~ (xt ((1 (y yt)) ((1 (z zt)) q)))
+
+// z is smallest of x and z.
+@m3_xz_ge = (* (x (y (z (xt (yt (zt out)))))))
+  & out ~ (1 (z q))
+  & @m3 ~ ((1 (x xt)) ((1 (y yt)) (zt q)))
+
+// y is smallest of y and z.
+@m3_yz_lt = (* (x (y (z (xt (yt (zt out)))))))
+  & out ~ (1 (y q))
+  & @m3 ~ ((1 (x xt)) (yt ((1 (z zt)) q)))
+
+// z is smallest of y and z.
+@m3_yz_ge = (* (x (y (z (xt (yt (zt out)))))))
+  & out ~ (1 (z q))
+  & @m3 ~ ((1 (x xt)) ((1 (y yt)) (zt q)))
+
+// Ordinary two-way merge, used when one of the three inputs is empty.
+@merge = ((?((@ma_nil @ma_cons) (pa (b out))) pa) (b out))
+
+@ma_nil = (* (x x))
+
+@ma_cons = (* ((h t) (b out)))
+  & @merge_b ~ (b (h (t out)))
+
+@merge_b = ((?((@mb_nil @mb_cons) (pb (h (t out)))) pb) (h (t out)))
+
+@mb_nil = (* (h (t out)))
+  & out ~ (1 (h t))
+
+@mb_cons = (* ((j u) (h (t out))))
+  & h ~ {hc hb}
+  & j ~ {jc jb}
+  & hc ~ $([>] $(jc z))
+  & z ~ ?((@mb_take_h @mb_take_j) (hb (t (jb (u out)))))
+
+@mb_take_h = (h (t (j (u out))))
+  & out ~ (1 (h q))
+  & @merge ~ (t ((1 (j u)) q))
+
+@mb_take_j = (* (h (t (j (u out)))))
+  & out ~ (1 (j q))
+  & @merge ~ ((1 (h t)) (u q))

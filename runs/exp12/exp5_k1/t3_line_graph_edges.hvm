@@ -1,0 +1,94 @@
+// t3_line_graph_edges (GRAPH-SWING, runs/exp5). Degree histogram as a complete binary trie keyed by vertex id:
+// each edge is two pre-expanded "increment leaf" updates; the answer is a tree reduction of d*(d-1)/2 over the leaves.
+@prog = ((n es) out)
+  & n ~ ?((@lg_zero @lg_pos) (es out))
+@lg_zero = (* 0)
+@lg_pos = (nm1 (es out))
+  & @lg ~ (nm1 d)
+  & d ~ {d1 d2}
+  & @zt ~ (d1 t0)
+  & @w_blk ~ (es ((d2 t0) out))
+@le_step = ((d t) ((u v) (d3 t2)))
+  & d ~ {d1 {d2 d3}}
+  & @inc ~ (t (u (d1 t1)))
+  & @inc ~ (t1 (v (d2 t2)))
+@le_fin = ((d t) o)
+  & @pairs ~ (t (d o))
+// inc(t, k, L): add 1 to leaf k
+@inc = (t (k (L o)))
+  & L ~ ?((@inc_leaf @inc_node) (t (k o)))
+@inc_leaf = (x (* o))
+  & x ~ $([+1] o)
+@inc_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@inc_L @inc_R) (t (k2 (l2 o))))
+@inc_L = ((l r) (k (L (l2 r))))
+  & @inc ~ (l (k (L l2)))
+@inc_R = (* ((l r) (k (L (l r2)))))
+  & @inc ~ (r (k (L r2)))
+// pairs(t, L): sum over leaves of x*(x-1)/2
+@pairs = (t (L o))
+  & L ~ ?((@pairs_leaf @pairs_node) (t o))
+@pairs_leaf = (x o)
+  & x ~ {x1 x2}
+  & x1 ~ $([-] $(1 y))
+  & x2 ~ $([*] $(y z))
+  & z ~ $([>>] $(1 o))
+@pairs_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @pairs ~ (a (l1 x))
+  & @pairs ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+@w_blk = (t (S0 o0))
+  & t ~ (T1 (E1 t1))
+  & T1 ~ ?((@w_nil @w_last) (S0 (o0 (E1 t1))))
+@w_nil = (S (o *))
+  & @le_fin ~ (S o)
+@w_cons = (* (S (o (E (S2 o)))))
+  & @le_step ~ (S (E S2))
+@w_last = (* (S (o (E t))))
+  & @le_step ~ (S (E S2))
+  & @w_blk ~ (t (S2 o))
+// ---- shared trie primitives (depth-L complete binary trie, leaves are numbers, keyed by bits of the key, high bit first)
+// lg(x) = number of bits of x (0 for 0): trie depth for keys 0..x
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+
+// zt(L): trie of depth L with all leaves 0
+@zt = (?((0 @zt_node) o) o)
+@zt_node = (lm (a b))
+  & lm ~ {l1 l2}
+  & @zt ~ (l1 a)
+  & @zt ~ (l2 b)
+
+// cnt(t, L): sum of the leaves
+@cnt = (t (L o))
+  & L ~ ?((@cnt_leaf @cnt_node) (t o))
+@cnt_leaf = (x x)
+@cnt_node = (lm ((a b) o))
+  & lm ~ {l1 l2}
+  & @cnt ~ (a (l1 x))
+  & @cnt ~ (b (l2 y))
+  & x ~ $([+] $(y o))
+
+// ins(t, k, L): set leaf k to 1. Control flow depends on k and L only, so it expands before t exists.
+@ins = (t (k (L o)))
+  & L ~ ?((@ins_leaf @ins_node) (t (k o)))
+@ins_leaf = (* (* 1))
+@ins_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 b))
+  & b ~ ?((@ins_L @ins_R) (t (k2 (l2 o))))
+@ins_L = ((l r) (k (L (l2 r))))
+  & @ins ~ (l (k (L l2)))
+@ins_R = (* ((l r) (k (L (l r2)))))
+  & @ins ~ (r (k (L r2)))

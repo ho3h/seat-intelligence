@@ -1,0 +1,49 @@
+--- 05:01:40
+wrong arity: @prog (t5_decide_drop_known) is called as f(d, in0:list[(num num)], in1:list[(num num num)]), i.e. d plus 2 value(s); your function `prog` takes 2 parameter(s) (d, input_tuple).
+--- 05:01:48
+wrong arity: step of stream `sk` is called as f(d, marks:trie[num], e0:num, e1:num), i.e. d plus 3 value(s); your function `step_known` takes 3 parameter(s) (d, marks, u_v).
+--- 05:02:07
+build.py:46: kind mismatch at stream `sk` port `init`: expected trie[num], got (trie[num]) (<wire t: trie[num] in @prog>,).
+--- 05:02:16
+build.py:55: wire `out` (trie[num], output `out` of stream `sk`, made at build.py:46) belongs to @prog (t5_decide_drop_known) (@prog), but is used in step of stream `sf` (@sf_step) (get `gt` port `t`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:02:47
+build.py:69: wire `u` (num, argument `e0` of step of stream `sf`, made at build.py:82) belongs to step of stream `sf` (@sf_step), but is used in branch nonzero case of step of stream `sf` (@sf_step_b1s) (fill_cons head). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:03:15
+build.py:74: wire `marks` (trie[num], argument `marks` of step of stream `sf`, made at build.py:83) is used a second time (branch passed[0]); it was already used at build.py:54 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:05:20
+build.py:129: split needs a tuple wire or an explicit n; `known` is list[(num num)]
+--- 05:05:47
+build.py:81: <function prog.<locals>.step_filter.<locals>.keep_it at 0x109cdc510> is not a glue value (a wire, an int, a Lit, or a tuple of these)
+--- 05:06:04
+build.py:78: wire `u` (num, argument `e0` of step of stream `sf`, made at build.py:90) belongs to step of stream `sf` (@sf_step), but is used in branch nonzero case of step of stream `sf` (@sf_step_b1s) (fill_cons head). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:06:14
+build.py:84: wire `u` (num, argument `e0` of step of stream `sf`, made at build.py:93) is used a second time (branch passed[1]); it was already used at build.py:58 (left operand of `*`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(u, 2)  and use each once.
+--- 05:06:36
+wrong arity: step of stream `sf` must return 2 value(s) (hole, marks); `step_filter` returned 1.
+--- 05:06:48
+build.py:90: wire `marks` (trie[num], argument `marks` of step of stream `sf`, made at build.py:99) is used a second time (branch passed[1]); it was already used at build.py:71 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:07:10
+build.py:34: split needs a tuple wire or an explicit n; `known` is list[(num num)]
+--- 05:07:33
+build.py:55: wire `u` (num, argument `e0` of step of stream `sc`, made at build.py:67) belongs to step of stream `sc` (@sc_step), but is used in branch nonzero case of step of stream `sc` (@sc_step_b1s) (fill_cons head). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:07:56
+step of stream `sc` (@sc_step): 3 value(s) never used:
+    `u1` (num, copy 1 of `u`, made at build.py:31)
+    `v1` (num, copy 1 of `v`, made at build.py:32)
+    `score1` (num, copy 1 of `score`, made at build.py:33)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:08:04
+build.py:65: wire `val` (list[(num num num)], d.hole value, made at build.py:24) belongs to @prog (t5_decide_drop_known) (@prog), but is used in fin of stream `sc` (@sc_fin) (returned value 0). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:08:54
+wrong arity: step of stream `chk` is called as f(d, found:num, e0:num, e1:num), i.e. d plus 3 value(s); your function `check_step` takes 6 parameter(s) (d, found_flag, u_target, v_target, u_known, v_known).
+--- 05:09:44
+step of stream `sc` (@sc_step): 2 value(s) never used:
+    `score1` (num, copy 1 of `score`, made at build.py:48)
+    `r` (num, result of `+`, made at build.py:53)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:19:59
+wrong arity: step of stream `pair_chk` is called as f(d, found:num, e0:num, e1:num), i.e. d plus 3 value(s); your function `check_step` takes 6 parameter(s) (d, found, u_tgt, v_tgt, u_known, v_known).
+--- 05:20:18
+build.py:33: wire `u1` (num, copy 1 of `u`, made at build.py:22) belongs to step of stream `sc` (@sc_step), but is used in step of stream `chk_iter` (@chk_iter_step) (left operand of `=`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.
+--- 05:23:13
+build.py:28: wire `u1` (num, copy 1 of `u`, made at build.py:22) belongs to step of stream `sc` (@sc_step), but is used in step of stream `check` (@check_step) (left operand of `=`). Each definition has its own wires (no Python closures over wires): pass the value in through the state / environment / branch arguments.

@@ -1,0 +1,48 @@
+@block_count = ({$([:%0x0000018] $([=0x0000000] ?((@block_count__C0 (* (a a))) (b c)))) $([:/0x0000018] b)} c)
+
+@block_count__C0 = ($([+0x0000001] a) a)
+
+@count_blocks = ({a c} ({$([>] $(a b)) d} e))
+  & $(b ?((@count_blocks__C4 (* (* (* (* (* (0 0))))))) (c (d e)))) ~ [=0x0000000]
+
+@count_blocks__C0 = (* 24)
+
+@count_blocks__C1 = (* (a a))
+
+@count_blocks__C2 = ({c {$([+] $(b {d g})) a}} ({h $([-] $(a $([:/0x0000002] b)))} ({e i} ({f j} (l n)))))
+  &!@count_blocks ~ (g (h (i (j (k m)))))
+  &!@count_blocks ~ (c (d (e (f ($([+] $(k l)) $([+] $(m n)))))))
+
+@count_blocks__C3 = (* ($([*0x0000018] {c a}) (* ($([-] $(a {$([>0x0000018] ?((@count_blocks__C0 @count_blocks__C1) (b {$([-] $(f g)) $([-] $(i j))}))) b})) (d (g j))))))
+  & @scan_block ~ (c (d (0 (0 (e h)))))
+  & @popcount24 ~ (e f)
+  & @popcount24 ~ (h i)
+
+@count_blocks__C4 = ({a b} ({$([-] $(a $([=0x0000001] ?((@count_blocks__C2 @count_blocks__C3) (b (c d)))))) c} d))
+
+@mark_vertex = (d ({$([<] $(a b)) e} ({a f} g)))
+  & $(b ?(((c (* (* c))) @mark_vertex__C1) (d (e (f g))))) ~ [=0x0000000]
+
+@mark_vertex__C0 = (* ($([|] $(b c)) (a c)))
+  & $(a b) ~ [<<0x0000001]
+
+@mark_vertex__C1 = (* (c ($([-] $(a {$([>0x0000018] ?(((b (* b)) @mark_vertex__C0) (c (d e)))) d})) (a e))))
+
+@popcount24 = ({$([-] $(a {$([&0x0333333] $([+] $(b {$([+] $(c $([&0x00F0F0F] {$([+] $(d {$([+] $(e $([&0x000003F] f))) $([:>>0x0000010] e)})) $([:>>0x0000008] d)}))) $([:>>0x0000004] c)}))) $([:>>0x0000002] $([&0x0333333] b))})) $([:>>0x0000001] $([&0x0555555] a))} f)
+
+@prog = (({c a} d) e)
+  & @count_blocks ~ (0 (b (c (d e))))
+  & @block_count ~ (a b)
+
+@scan_block = (a ((@scan_block__C2 (a b)) b))
+
+@scan_block__C0 = (* (a (b (a b))))
+
+@scan_block__C1 = (* ((h d) (b ({a {i e}} (c (g k))))))
+  & @scan_block ~ (a (b (f (j k))))
+  & @mark_vertex ~ (c (d (e f)))
+  & @mark_vertex ~ (g (h (i j)))
+
+@scan_block__C2 = (?((@scan_block__C0 @scan_block__C1) a) a)
+
+

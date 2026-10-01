@@ -1,0 +1,124 @@
+// Task: t5_decide_singleton
+
+@prog = (input output)
+  & input ~ (tau probs)
+  & @first ~ (probs (tau output))
+
+@first = ((?((@first_nil @first_cons) (pl (tau out))) pl) (tau out))
+
+@first_nil = (* (tau out))
+  & tau ~ *
+  & out ~ 6
+
+@first_cons = (* ((h t) (tau out)))
+  & @step1 ~ (t (h (0 (tau out))))
+
+@step1 = ((?((@step1_nil @step1_cons) (pl (best (bi (tau out))))) pl) (best (bi (tau out))))
+
+@step1_nil = (* (best (bi (tau out))))
+  & @finish ~ (best (bi (tau out)))
+
+@step1_cons = (* ((h t) (best (bi (tau out)))))
+  & h ~ {hc hs}
+  & best ~ {bc bs}
+  & hc ~ $([>] $(bc gt))
+  & gt ~ ?((@step1_keep @step1_update) (hs (bs (t (bi (tau out))))))
+
+@step1_keep = (hs (bs (t (bi (tau out)))))
+  & hs ~ *
+  & @step2 ~ (t (bs (bi (tau out))))
+
+@step1_update = (* (hs (bs (t (bi (tau out))))))
+  & bs ~ *
+  & bi ~ *
+  & @step2 ~ (t (hs (1 (tau out))))
+
+@step2 = ((?((@step2_nil @step2_cons) (pl (best (bi (tau out))))) pl) (best (bi (tau out))))
+
+@step2_nil = (* (best (bi (tau out))))
+  & @finish ~ (best (bi (tau out)))
+
+@step2_cons = (* ((h t) (best (bi (tau out)))))
+  & h ~ {hc hs}
+  & best ~ {bc bs}
+  & hc ~ $([>] $(bc gt))
+  & gt ~ ?((@step2_keep @step2_update) (hs (bs (t (bi (tau out))))))
+
+@step2_keep = (hs (bs (t (bi (tau out)))))
+  & hs ~ *
+  & @step3 ~ (t (bs (bi (tau out))))
+
+@step2_update = (* (hs (bs (t (bi (tau out))))))
+  & bs ~ *
+  & bi ~ *
+  & @step3 ~ (t (hs (2 (tau out))))
+
+@step3 = ((?((@step3_nil @step3_cons) (pl (best (bi (tau out))))) pl) (best (bi (tau out))))
+
+@step3_nil = (* (best (bi (tau out))))
+  & @finish ~ (best (bi (tau out)))
+
+@step3_cons = (* ((h t) (best (bi (tau out)))))
+  & h ~ {hc hs}
+  & best ~ {bc bs}
+  & hc ~ $([>] $(bc gt))
+  & gt ~ ?((@step3_keep @step3_update) (hs (bs (t (bi (tau out))))))
+
+@step3_keep = (hs (bs (t (bi (tau out)))))
+  & hs ~ *
+  & @step4 ~ (t (bs (bi (tau out))))
+
+@step3_update = (* (hs (bs (t (bi (tau out))))))
+  & bs ~ *
+  & bi ~ *
+  & @step4 ~ (t (hs (3 (tau out))))
+
+@step4 = ((?((@step4_nil @step4_cons) (pl (best (bi (tau out))))) pl) (best (bi (tau out))))
+
+@step4_nil = (* (best (bi (tau out))))
+  & @finish ~ (best (bi (tau out)))
+
+@step4_cons = (* ((h t) (best (bi (tau out)))))
+  & h ~ {hc hs}
+  & best ~ {bc bs}
+  & hc ~ $([>] $(bc gt))
+  & gt ~ ?((@step4_keep @step4_update) (hs (bs (t (bi (tau out))))))
+
+@step4_keep = (hs (bs (t (bi (tau out)))))
+  & hs ~ *
+  & @step5 ~ (t (bs (bi (tau out))))
+
+@step4_update = (* (hs (bs (t (bi (tau out))))))
+  & bs ~ *
+  & bi ~ *
+  & @step5 ~ (t (hs (4 (tau out))))
+
+@step5 = ((?((@step5_nil @step5_cons) (pl (best (bi (tau out))))) pl) (best (bi (tau out))))
+
+@step5_nil = (* (best (bi (tau out))))
+  & @finish ~ (best (bi (tau out)))
+
+@step5_cons = (* ((h t) (best (bi (tau out)))))
+  & h ~ {hc hs}
+  & best ~ {bc bs}
+  & hc ~ $([>] $(bc gt))
+  & gt ~ ?((@step5_keep @step5_update) (hs (bs (t (bi (tau out))))))
+
+@step5_keep = (hs (bs (t (bi (tau out)))))
+  & hs ~ *
+  & t ~ *
+  & @finish ~ (bs (bi (tau out)))
+
+@step5_update = (* (hs (bs (t (bi (tau out))))))
+  & bs ~ *
+  & bi ~ *
+  & t ~ *
+  & @finish ~ (hs (5 (tau out)))
+
+@finish = (best (bi (tau out)))
+  & tau ~ $([>] $(best gt))
+  & gt ~ ?((@give @abstain) (bi out))
+
+@give = (x x)
+
+@abstain = (* (* 6))

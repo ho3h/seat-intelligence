@@ -1,0 +1,53 @@
+// For n = 2, each non-loop edge is a spanning tree.
+// Keep the two smallest edge weights, counting repeats.
+
+@prog = ((n edges) out)
+  & n ~ $([=] $(2 c))
+  & c ~ ?((@other @two) (edges out))
+
+@other = (* (edges out))
+  & edges ~ *
+  & out ~ 16777215
+
+@two = (* (edges out))
+  & @scan ~ (edges (16777215 (16777215 out)))
+
+@scan = ((?((@nil @cons) (pl (a (b out)))) pl) (a (b out)))
+
+@nil = (pl (a (b out)))
+  & pl ~ *
+  & a ~ *
+  & b ~ out
+
+@cons = (* ((edge t) (a (b out))))
+  & edge ~ (u (v wt))
+  & u ~ $([=] $(v c))
+  & c ~ ?((@loop @nonloop) (wt (t (a (b out)))))
+
+@loop = (* (wt (t (a (b out)))))
+  & wt ~ *
+  & @scan ~ (t (a (b out)))
+
+@nonloop = (wt (t (a (b out))))
+  & wt ~ {wc wk}
+  & a ~ {ac ak}
+  & wc ~ $([<] $(ac c))
+  & c ~ ?((@notless @less) (wk (ak (b (t out)))))
+
+@less = (* (wk (ak (b (t out)))))
+  & b ~ *
+  & @scan ~ (t (wk (ak out)))
+
+@notless = (wk (ak (b (t out))))
+  & wk ~ {wc wk2}
+  & b ~ {bc b2}
+  & wc ~ $([<] $(bc c))
+  & c ~ ?((@notless2 @less2) (wk2 (ak (b2 (t out)))))
+
+@notless2 = (wk (ak (b (t out))))
+  & wk ~ *
+  & @scan ~ (t (ak (b out)))
+
+@less2 = (* (wk (ak (b (t out)))))
+  & b ~ *
+  & @scan ~ (t (ak (wk out)))

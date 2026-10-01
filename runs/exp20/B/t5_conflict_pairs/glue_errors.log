@@ -1,0 +1,6 @@
+--- 05:45:25
+build.py:25: wire `c_trie` (trie[num], argument `c_trie` of step of stream `w`, made at build.py:46) is used a second time (get `gt` port `t`); it was already used at build.py:24 (get `gt` port `t`). A wire has exactly two ends. A trie[num] cannot be duplicated safely (HVM2 DUPs are unlabelled): restructure so it is used once, or get a second copy from a primitive (mc_deliver_keep returns a copy of a numeric trie; mapreduce rebuilds the trie it reduces).
+--- 05:46:45
+build.py:40: wire `a_elem` (num, argument `e0` of step of stream `w`, made at build.py:48) is used a second time (branch passed[1]); it was already used at build.py:26 (mc_request `rq` port `k`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(a_elem, 2)  and use each once.
+--- 05:47:03
+build.py:52: wire `L` (depth, argument `L` of step of stream `w`, made at build.py:52) is used a second time (returned as `L`); it was already used at build.py:29 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(L, 2)  and use each once.

@@ -1,0 +1,109 @@
+// Build labels [0, 1, ..., n-1], then sweep the edges n times.
+@prog = ((n pairs) out)
+  & n ~ {n1 n2}
+  & @init ~ (n1 labs)
+  & @run ~ (pairs (n2 (labs out)))
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_more) (out *))
+
+@init_zero = (out *)
+  & out ~ (0 *)
+
+@init_more = (m (out *))
+  & m ~ {m1 m2}
+  & @init ~ (m1 mid)
+  & @append ~ (mid (m2 out))
+
+// Append x to list l.
+@append = ((?((@ap_nil @ap_cons) (pl (x out))) pl) (x out))
+
+@ap_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@ap_cons = (* ((h t) (x out)))
+  & @append ~ (t (x mid))
+  & out ~ (1 (h mid))
+
+// Look up the value at index idx in list l.
+@get = ((?((@get_nil @get_cons) (pl (idx out))) pl) (idx out))
+
+@get_nil = (* (idx out))
+  & idx ~ *
+  & out ~ *
+
+@get_cons = (* ((h t) (idx out)))
+  & idx ~ ?((@get_head @get_tail) (h (t out)))
+
+@get_head = (h (t out))
+  & out ~ h
+  & t ~ *
+
+@get_tail = (idx (* (t out)))
+  & @get ~ (t (idx out))
+
+// Replace the value at index idx in list l with val.
+@set = ((?((@set_nil @set_cons) (pl (idx (val out)))) pl) (idx (val out)))
+
+@set_nil = (* (idx (val out)))
+  & idx ~ *
+  & val ~ *
+  & out ~ *
+
+@set_cons = (* ((h t) (idx (val out))))
+  & idx ~ ?((@set_head @set_tail) (h (t (val out))))
+
+@set_head = (h (t (val out)))
+  & h ~ *
+  & out ~ (1 (val t))
+
+@set_tail = (idx (h (t (val out))))
+  & @set ~ (t (idx (val mid)))
+  & out ~ (1 (h mid))
+
+// Process every edge once.
+@sweep = ((?((@sw_nil @sw_cons) (pl (labs out))) pl) (labs out))
+
+@sw_nil = (* (a a))
+
+@sw_cons = (* ((edge tail) (labs out)))
+  & @edge ~ (edge (labs mid))
+  & @sweep ~ (tail (mid out))
+
+// For one edge (u, v), set both endpoint labels to their maximum.
+@edge = ((u v) (labs out))
+  & u ~ {u1 u2}
+  & v ~ {v1 v2}
+  & labs ~ {l1 rem}
+  & rem ~ {l2 ls}
+  & @get ~ (l1 (u1 a0))
+  & @get ~ (l2 (v1 b0))
+  & a0 ~ {ac ak}
+  & b0 ~ {bc bk}
+  & ac ~ $([>] $(bc z))
+  & z ~ ?((@edge_b @edge_a) (ak (bk (u2 (v2 (ls out))))))
+
+// If a <= b, set both labels to b.
+@edge_b = (ak (bk (u2 (v2 (ls out)))))
+  & ak ~ *
+  & bk ~ {m1 m2}
+  & @set ~ (ls (u2 (m1 mid)))
+  & @set ~ (mid (v2 (m2 out)))
+
+// If a > b, set both labels to a.
+@edge_a = (* (ak (bk (u2 (v2 (ls out))))))
+  & bk ~ *
+  & ak ~ {m1 m2}
+  & @set ~ (ls (u2 (m1 mid)))
+  & @set ~ (mid (v2 (m2 out)))
+
+// Repeat n sweeps.
+@run = (edges (count (labs out)))
+  & count ~ ?((@run_zero @run_more) (edges (labs out)))
+
+@run_zero = (* (a a))
+
+@run_more = (count (edges (labs out)))
+  & edges ~ {e1 e2}
+  & @sweep ~ (e1 (labs mid))
+  & @run ~ (e2 (count (mid out)))

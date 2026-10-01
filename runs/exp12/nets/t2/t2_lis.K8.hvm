@@ -1,0 +1,65 @@
+@prog = (l out)
+  & @lis ~ (l ((0 *) out))
+
+@lis = (lv1 (tails out))
+  & @lis_cons_lw ~ (lv1 (tails out))
+
+@lis_nil = (* (tails out))
+  & @len ~ (tails (0 out))
+
+@lis_cons = (* ((h t) (tails out)))
+  & @ins ~ (h (tails newtails))
+  & @lis_cons_lw ~ (t (newtails out))
+
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl out))) pl) out))
+
+@ins_nil = (x (* out))
+  & out ~ (1 (x (0 *)))
+
+@ins_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & h ~ {h1 h2}
+  & h1 ~ $([<] $(x1 z))
+  & z ~ ?((@ins_replace @ins_more) (h2 (t (x2 out))))
+
+@ins_replace = (* (t (x out)))
+  & out ~ (1 (x t))
+
+@ins_more = (* (h (t (x out))))
+  & @ins ~ (x (t res))
+  & out ~ (1 (h res))
+
+@len = (lv2 (acc out))
+  & @len_cons_lw ~ (lv2 (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((* t) ($([+1] acc2) out)))
+  & @len_cons_lw ~ (t (acc2 out))
+
+@lis_cons_lw = (ls58 (q18 q19))
+  & ls58 ~ (g49 (e41 (g50 (e42 (g51 (e43 (g52 (e44 (g53 (e45 (g54 (e46 (g55 (e47 (g56 (e48 tk57))))))))))))))))
+  & g49 ~ ?((@lis_nil @lis_cons_la) ((e41 (q21 q22)) (q18 q19)))
+  & g50 ~ ?((@lis_nil @lis_cons_la) ((e42 (q24 q25)) (q21 q22)))
+  & g51 ~ ?((@lis_nil @lis_cons_la) ((e43 (q27 q28)) (q24 q25)))
+  & g52 ~ ?((@lis_nil @lis_cons_la) ((e44 (q30 q31)) (q27 q28)))
+  & g53 ~ ?((@lis_nil @lis_cons_la) ((e45 (q33 q34)) (q30 q31)))
+  & g54 ~ ?((@lis_nil @lis_cons_la) ((e46 (q36 q37)) (q33 q34)))
+  & g55 ~ ?((@lis_nil @lis_cons_la) ((e47 (q39 q40)) (q36 q37)))
+  & g56 ~ ?((@lis_nil @lis_cons) ((e48 tk57) (q39 q40)))
+
+@len_cons_lw = (ls100 (q60 q61))
+  & ls100 ~ (g91 (e83 (g92 (e84 (g93 (e85 (g94 (e86 (g95 (e87 (g96 (e88 (g97 (e89 (g98 (e90 tk99))))))))))))))))
+  & g91 ~ ?((@len_nil @len_cons_la) ((e83 (q63 q64)) (q60 q61)))
+  & g92 ~ ?((@len_nil @len_cons_la) ((e84 (q66 q67)) (q63 q64)))
+  & g93 ~ ?((@len_nil @len_cons_la) ((e85 (q69 q70)) (q66 q67)))
+  & g94 ~ ?((@len_nil @len_cons_la) ((e86 (q72 q73)) (q69 q70)))
+  & g95 ~ ?((@len_nil @len_cons_la) ((e87 (q75 q76)) (q72 q73)))
+  & g96 ~ ?((@len_nil @len_cons_la) ((e88 (q78 q79)) (q75 q76)))
+  & g97 ~ ?((@len_nil @len_cons_la) ((e89 (q81 q82)) (q78 q79)))
+  & g98 ~ ?((@len_nil @len_cons) ((e90 tk99) (q81 q82)))
+
+@lis_cons_la = (* ((h (newtails out)) (tails out)))
+  & @ins ~ (h (tails newtails))
+
+@len_cons_la = (* ((* (acc2 out)) ($([+1] acc2) out)))

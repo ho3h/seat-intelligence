@@ -1,0 +1,33 @@
+// Patience-sorting tails; carry their count so the final list need not be traversed.
+@prog = (l out)
+  & @lis ~ (l ((0 *) (0 out)))
+
+@lis = ((?((@lis_nil @lis_cons) (pl (tails (acc out)))) pl) (tails (acc out)))
+
+@lis_nil = (* (* (acc out)))
+
+@lis_cons = (* ((h t) (tails (acc out))))
+  & @ins ~ (h (tails (acc tmp)))
+  & tmp ~ (newtails newacc)
+  & @lis ~ (t (newtails (newacc out)))
+
+// Insert x into the sorted tails. Increment acc only when insertion reaches Nil.
+@ins = (x ((?((@ins_nil @ins_cons) (x (pl (acc out)))) pl) (acc out)))
+
+@ins_nil = (x (* (acc out)))
+  & acc ~ $([+1] acc2)
+  & out ~ ((1 (x (0 *))) acc2)
+
+@ins_cons = (* (x ((h t) (acc out))))
+  & x ~ {xc xr}
+  & h ~ {hc hr}
+  & hc ~ $([<] $(xc z))
+  & z ~ ?((@ins_stop @ins_more) (hr (t (xr (acc out))))
+
+@ins_stop = (* (t (xr (acc out))))
+  & out ~ ((1 (xr t)) acc)
+
+@ins_more = (* (hr (t (xr (acc out)))))
+  & @ins ~ (xr (t (acc res)))
+  & res ~ (nt na)
+  & out ~ ((1 (hr nt)) na)

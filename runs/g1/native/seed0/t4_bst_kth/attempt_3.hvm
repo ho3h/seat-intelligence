@@ -1,0 +1,54 @@
+// Count the nodes in a tree.
+@size = ((?((@size_leaf @size_node) (pl out)) pl) out)
+
+@size_leaf = (* 0)
+
+@size_node = (* ((l (v r)) out))
+  & v ~ *
+  & @size ~ (l ls)
+  & @size ~ (r rs)
+  & ls ~ $([+] $(rs sum))
+  & sum ~ $([+] $(1 out))
+
+// Return the k-th in-order value, or 16777215 if k is out of range.
+@kth = ((?((@kth_leaf @kth_node) (pl (k out))) pl) (k out))
+
+@kth_leaf = (* (k 16777215))
+  & k ~ *
+
+@kth_node = (* ((l (v r)) (k out)))
+  & l ~ {l_size l_use}
+  & @size ~ (l_size ls)
+  & k ~ {k_cmp k_keep}
+  & ls ~ {ls_cmp ls_keep}
+  & k_cmp ~ $([<] $(ls_cmp less))
+  & less ~ ?((@less_no @less_yes) (k_keep (ls_keep (l_use (v (r out)))))
+
+@less_yes = (* (k (ls (l (v (r out))))))
+  & ls ~ *
+  & @kth ~ (l (k out))
+  & v ~ *
+  & r ~ *
+
+@less_no = (k (ls (l (v (r out)))))
+  & k ~ {k_eq k_keep}
+  & ls ~ {ls_eq ls_keep}
+  & k_eq ~ $([=] $(ls_eq eq))
+  & eq ~ ?((@greater @equal) (k_keep (ls_keep (l (v (r out)))))
+
+@equal = (* (k (ls (l (v (r out))))))
+  & k ~ *
+  & ls ~ *
+  & l ~ *
+  & v ~ out
+  & r ~ *
+
+@greater = (k (ls (l (v (r out)))))
+  & l ~ *
+  & v ~ *
+  & k ~ $([-] $(ls diff))
+  & diff ~ $([-] $(1 k2))
+  & @kth ~ (r (k2 out))
+
+@prog = ((k t) out)
+  & @kth ~ (t (k out))

@@ -1,0 +1,35 @@
+// Count the edges, then recognize a triangle on three vertices.
+@prog = ((n edges) out)
+  & @len ~ (edges m)
+  & n ~ {n1 n2}
+  & m ~ {m1 m2}
+  & n1 ~ $([=] $(3 eq))
+  & eq ~ ?((@no @maybe) (n2 (m2 out)))
+
+@no = (n (m out))
+  & n ~ *
+  & m ~ *
+  & out ~ 0
+
+@maybe = (* (n (m out)))
+  & n ~ *
+  & m ~ $([>] $(2 eq))
+  & eq ~ ?((@zero @tri) out)
+
+@zero = out
+  & out ~ 0
+
+@tri = out
+  & out ~ 3
+
+@len = (l out)
+  & @len_go ~ (l (0 out))
+
+@len_go = ((?((@len_nil @len_cons) (pl (acc out))) pl) (acc out))
+
+@len_nil = (* (a a))
+
+@len_cons = (* ((h t) (acc out)))
+  & h ~ *
+  & acc ~ $([+] $(1 acc2))
+  & @len_go ~ (t (acc2 out))

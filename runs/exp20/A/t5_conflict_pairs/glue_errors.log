@@ -1,0 +1,61 @@
+--- 05:55:47
+build.py:30: wire `i` (num, argument `i` of step of stream `build_adj`, made at build.py:38) is used a second time (left operand of `+`); it was already used at build.py:29 (adjacency `gl_adj` port `u`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 05:55:55
+step of stream `build_adj` (@build_adj_step): 1 value(s) never used:
+    `L3` (depth, copy 3 of `L`, made at build.py:27)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 05:56:03
+build.py:48: kind mismatch at update `pk` (act peek) port `t`: expected trie[num], got adj (trie[list[(num num)]]) `g` from argument `g` of step of stream `filter` (made at build.py:88).
+--- 09:02:22
+wrong arity: branch zero case of step of stream `filter` is called as f(d, passed[0]:num, passed[1]:num, passed[2]:list[(num num)]), i.e. d plus 3 value(s); your function `if_not_violation` takes 5 parameter(s) (b, _, a_val, b_val, res).
+--- 09:02:35
+branch zero case of step of stream `filter` (@filter_step_b1z): 2 value(s) never used:
+    `a_val` (num, argument `passed[0]` of branch zero case of step of stream `filter`, made at build.py:47)
+    `b_val` (num, argument `passed[1]` of branch zero case of step of stream `filter`, made at build.py:47)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:02:40
+wrong arity: branch nonzero case of step of stream `filter` is called as f(d, cm1:num, passed[0]:num, passed[1]:num, passed[2]:list[(num num)]), i.e. d plus 4 value(s); your function `if_violation` takes 4 parameter(s) (b, a_val, b_val, res).
+--- 09:02:46
+build.py:50: wire `a` (num, argument `e0` of step of stream `filter`, made at build.py:59) is used a second time (branch passed[0]); it was already used at build.py:30 (fanout into 2). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(a, 2)  and use each once.
+--- 09:02:56
+step of stream `filter` (@filter_step): 1 value(s) never used:
+    `L2` (depth, copy 2 of `L`, made at build.py:24)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:03:06
+step of stream `filter` (@filter_step): 1 value(s) never used:
+    `L1` (depth, copy 1 of `L`, made at build.py:24)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:03:14
+build.py:61: split needs a tuple wire or an explicit n; `c` is list[num]
+--- 09:04:52
+wrong arity: step of stream `find_at_idx` is called as f(d, i:num, target:num, elem:num), i.e. d plus 3 value(s); your function `find_at_index_step` takes 5 parameter(s) (d, i, target_idx, found_val, elem).
+--- 09:05:10
+branch nonzero case of step of stream `find_at_idx` (@find_at_idx_step_b1s): 1 value(s) never used:
+    `_` (num, argument `cm1` of branch nonzero case of step of stream `find_at_idx`, made at build.py:35)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:05:15
+build.py:51: split needs a tuple wire or an explicit n; `pair_ab` is num
+--- 09:05:18
+build.py:51: split needs a tuple wire or an explicit n; `pair_ab` is num
+--- 09:05:27
+wrong arity: step of stream `filter` is called as f(d, c:list[num], e0:num, e1:num), i.e. d plus 3 value(s); your function `filter_step` takes 5 parameter(s) (d, c_list, result, a, b).
+--- 09:05:43
+wrong arity: step of stream `filter` is called as f(d, S:None, e0:num, e1:num), i.e. d plus 3 value(s); your function `filter_step` takes 3 parameter(s) (d, a, b).
+--- 09:05:49
+wrong arity: step of stream `filter` must return 1 value(s) (S2); `filter_step` returned 2.
+--- 09:05:59
+@prog (t5_conflict_pairs) (@prog): 1 value(s) never used:
+    `c` (list[num], argument `in0` of @prog (t5_conflict_pairs), made at build.py:68)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:12:30
+wrong arity: step of stream `index` must return 1 value(s) (i); `index_step` returned 2.
+--- 09:12:49
+build.py:23: wire `i` (num, argument `i` of step of stream `index`, made at build.py:30) is used a second time (cons head); it was already used at build.py:21 (left operand of `+`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(i, 2)  and use each once.
+--- 09:12:55
+build.py:50: wire `a` (num, argument `e0` of step of stream `filter`, made at build.py:57) is used a second time (branch passed[0]); it was already used at build.py:39 (left operand of `=`). A wire has exactly two ends. It is needed at least twice: write  a, b = d.fanout(a, 2)  and use each once.
+--- 09:13:28
+branch nonzero case of step of stream `lookup` (@lookup_step_b1s): 1 value(s) never used:
+    `_` (num, argument `cm1` of branch nonzero case of step of stream `lookup`, made at build.py:43)
+  Every value must be used exactly once: pass it where it is needed, or drop it with d.erase(x) (or d.erase_unused() to drop all of them).
+--- 09:13:34
+wrong arity: step of stream `lookup` must return 1 value(s) (tgt); `lookup_step` returned 2.

@@ -1,0 +1,11 @@
+@prog = ((tag payload) out)
+  & tag ~ ?((@lit @nonlit) (payload out))
+
+@lit = (n n)
+
+@nonlit = (k (payload out))
+  & k ~ ?((@add @mul) (payload out))
+
+@add = (((?(((n_q228 n_q228) @nonlit) (payload_q221 $([+] $(y out)))) payload_q221) (?((@lit @nonlit) (payload_q222 y)) payload_q222)) out)
+
+@mul = (* (((?((@lit @nonlit) (payload_q223 $([*] $(y out)))) payload_q223) (?((@lit @nonlit) (payload_q224 y)) payload_q224)) out))

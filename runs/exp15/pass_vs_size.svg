@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="340" font-family="sans-serif" font-size="11">
+<rect width="560" height="340" fill="white"/>
+<line x1="60" y1="295.0" x2="410" y2="295.0" stroke="#ddd"/><text x="54" y="299.0" text-anchor="end">0%</text>
+<line x1="60" y1="240.0" x2="410" y2="240.0" stroke="#ddd"/><text x="54" y="244.0" text-anchor="end">20%</text>
+<line x1="60" y1="185.0" x2="410" y2="185.0" stroke="#ddd"/><text x="54" y="189.0" text-anchor="end">40%</text>
+<line x1="60" y1="130.0" x2="410" y2="130.0" stroke="#ddd"/><text x="54" y="134.0" text-anchor="end">60%</text>
+<line x1="60" y1="74.99999999999999" x2="410" y2="74.99999999999999" stroke="#ddd"/><text x="54" y="78.99999999999999" text-anchor="end">80%</text>
+<line x1="60" y1="20.0" x2="410" y2="20.0" stroke="#ddd"/><text x="54" y="24.0" text-anchor="end">100%</text>
+<text x="87.71343611666867" y="311" text-anchor="middle">0.6B</text>
+<text x="246.0176209647893" y="311" text-anchor="middle">1.7B</text>
+<text x="376.08149544718026" y="311" text-anchor="middle">4.0B</text>
+<text x="235.0" y="332" text-anchor="middle">trained model size (Qwen3, 4-bit, LoRA; log scale)</text>
+<line x1="60" y1="255.4" x2="410" y2="255.4" stroke="#d62728" stroke-dasharray="5,4"/>
+<text x="416" y="259.4" fill="#d62728">plain 4B net LoRA, iid</text>
+<polyline fill="none" stroke="#1f77b4" stroke-width="2" points="87.7,20.0 246.0,20.6 376.1,20.0"/>
+<circle cx="87.7" cy="20.0" r="3" fill="#1f77b4"/>
+<circle cx="246.0" cy="20.6" r="3" fill="#1f77b4"/>
+<circle cx="376.1" cy="20.0" r="3" fill="#1f77b4"/>
+<text x="416" y="34" fill="#1f77b4">iid (120)</text>
+<polyline fill="none" stroke="#2ca02c" stroke-width="2" points="87.7,20.0 246.0,20.0 376.1,20.0"/>
+<circle cx="87.7" cy="20.0" r="3" fill="#2ca02c"/>
+<circle cx="246.0" cy="20.0" r="3" fill="#2ca02c"/>
+<circle cx="376.1" cy="20.0" r="3" fill="#2ca02c"/>
+<text x="416" y="50" fill="#2ca02c">deep 3 (40)</text>
+<polyline fill="none" stroke="#9467bd" stroke-width="2" points="87.7,20.0 246.0,20.0 376.1,20.0"/>
+<circle cx="87.7" cy="20.0" r="3" fill="#9467bd"/>
+<circle cx="246.0" cy="20.0" r="3" fill="#9467bd"/>
+<circle cx="376.1" cy="20.0" r="3" fill="#9467bd"/>
+<text x="416" y="66" fill="#9467bd">deep 4 (40)</text>
+<polyline fill="none" stroke="#8c564b" stroke-width="2" points="87.7,20.0 246.0,20.0 376.1,20.0"/>
+<circle cx="87.7" cy="20.0" r="3" fill="#8c564b"/>
+<circle cx="246.0" cy="20.0" r="3" fill="#8c564b"/>
+<circle cx="376.1" cy="20.0" r="3" fill="#8c564b"/>
+<text x="416" y="82" fill="#8c564b">deep 5 (40)</text>
+<polyline fill="none" stroke="#e377c2" stroke-width="2" points="87.7,20.0 246.0,20.0 376.1,20.0"/>
+<circle cx="87.7" cy="20.0" r="3" fill="#e377c2"/>
+<circle cx="246.0" cy="20.0" r="3" fill="#e377c2"/>
+<circle cx="376.1" cy="20.0" r="3" fill="#e377c2"/>
+<text x="416" y="98" fill="#e377c2">deep 7-8 (60)</text>
+<polyline fill="none" stroke="#17becf" stroke-width="2" points="87.7,20.0 246.0,20.0 376.1,20.0"/>
+<circle cx="87.7" cy="20.0" r="3" fill="#17becf"/>
+<circle cx="246.0" cy="20.0" r="3" fill="#17becf"/>
+<circle cx="376.1" cy="20.0" r="3" fill="#17becf"/>
+<text x="416" y="114" fill="#17becf">novel constants (120)</text>
+<polyline fill="none" stroke="#ff7f0e" stroke-width="2" points="87.7,175.8 246.0,81.3 376.1,111.7"/>
+<circle cx="87.7" cy="175.8" r="3" fill="#ff7f0e"/>
+<circle cx="246.0" cy="81.3" r="3" fill="#ff7f0e"/>
+<circle cx="376.1" cy="111.7" r="3" fill="#ff7f0e"/>
+<text x="416" y="130" fill="#ff7f0e">paraphrase (120)</text>
+</svg>

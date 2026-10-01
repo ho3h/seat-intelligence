@@ -1,0 +1,48 @@
+{
+ "pid": "t3_articulation",
+ "arm": "b1",
+ "seed": 0,
+ "attempts": [
+  {
+   "kind": "attempt",
+   "status": "pass",
+   "metrics": {
+    "itrs_median_small": 21137,
+    "itrs_median_big": 135205382,
+    "itrs_max": 271199341,
+    "depth_median_big": 23784544,
+    "depth_max": 30527626
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "fail",
+   "metrics": {
+    "itrs_median_small": 93,
+    "itrs_median_big": null,
+    "itrs_max": 93,
+    "depth_median_big": null,
+    "depth_max": null
+   }
+  },
+  {
+   "kind": "improve",
+   "status": "reject",
+   "metrics": null
+  }
+ ],
+ "accepted": true,
+ "tokens": 81146,
+ "best": {
+  "itrs_median_small": 21137,
+  "itrs_median_big": 135205382,
+  "itrs_max": 271199341,
+  "depth_median_big": 23784544,
+  "depth_max": 30527626
+ },
+ "usd": 0.01922594,
+ "audit": [
+  "pass",
+  "pass"
+ ]
+}

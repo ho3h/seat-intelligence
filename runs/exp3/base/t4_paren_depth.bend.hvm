@@ -1,0 +1,21 @@
+@prog = (a b)
+  & @scan ~ (a (0 (0 b)))
+
+@scan = ((@scan__C5 a) a)
+
+@scan__C0 = (c (a (b d)))
+  & @scan ~ (a (b (c d)))
+
+@scan__C1 = (* (* (a ({b c} d))))
+  & @scan ~ (a (b (c d)))
+
+@scan__C2 = ($([:-0x0000001] b) (c (a d)))
+  & @scan ~ (a (b (c d)))
+
+@scan__C3 = (* ($([+0x0000001] {$([>] $(a ?((@scan__C0 @scan__C1) (b (c (d e)))))) d}) ({a b} (c e))))
+
+@scan__C4 = (* ($([=0x0000028] ?((@scan__C2 @scan__C3) (a (b (c d))))) (c (a (b d)))))
+
+@scan__C5 = (?(((* (a a)) @scan__C4) b) b)
+
+

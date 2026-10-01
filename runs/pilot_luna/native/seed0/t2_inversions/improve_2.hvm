@@ -1,0 +1,75 @@
+// Merge-sort the list. Each result is (sorted-list (length inversion-count)).
+@prog = (input out)
+  & @ms ~ (input out)
+
+@ms = ((?((@ms_nil @ms_cons) (pl out)) pl) out)
+
+@ms_nil = (* out)
+  & out ~ ((0 *) (0 0))
+
+@ms_cons = (* ((h t) out))
+  & @split ~ (t halves)
+  & halves ~ (a b)
+  & @ms ~ (a xa)
+  & xa ~ (sa (la ia))
+  & @ms ~ (b xb)
+  & xb ~ (sb (lb ib))
+  & la ~ {lm ls}
+  & @merge ~ (sa (sb (lm merged)))
+  & merged ~ (sm cross)
+  & ls ~ $([+] $(lb len))
+  & ia ~ $([+] $(ib inner))
+  & inner ~ $([+] $(cross inv))
+  & out ~ (sm (len inv))
+
+// Split a list into alternating elements.
+@split = ((?((@split_nil @split_cons) (pl out)) pl) out)
+
+@split_nil = (* out)
+  & out ~ ((0 *) (0 *))
+
+@split_cons = (* ((h t) out))
+  & @split ~ (t halves)
+  & halves ~ (a b)
+  & out ~ ((1 (h b)) a)
+
+// Merge sorted lists, given the remaining length of the left list.
+// Result is (merged-list cross-inversion-count).
+@merge = ((?((@merge_xnil @merge_xcons) (pl (ys (lx out)))) pl)
+          (ys (lx out)))
+
+@merge_xnil = (* (ys (lx out)))
+  & lx ~ *
+  & out ~ (ys 0)
+
+@merge_xcons = (* ((h t) (ys (lx out))))
+  & @merge_y ~ (ys (h (t (lx out))))
+
+@merge_y = ((?((@merge_ynil @merge_ycons) (pl (h (t (lx out)))) pl)
+            (h (t (lx out))))
+
+@merge_ynil = (* (h (t (lx out))))
+  & lx ~ *
+  & out ~ ((1 (h t)) 0)
+
+@merge_ycons = (* ((j u) (h (t (lx out)))))
+  & h ~ {hc hk}
+  & j ~ {jc jk}
+  & hc ~ $([>] $(jc z))
+  & z ~ ?((@merge_take_h @merge_take_y)
+          (hk (jk (t (u (lx out)))))
+
+// h <= j: take h from the left list.
+@merge_take_h = (hk (jk (t (u (lx out)))))
+  & lx ~ $([-] $(1 ln))
+  & @merge ~ (t ((1 (jk u)) (ln m)))
+  & m ~ (r c)
+  & out ~ ((1 (hk r)) c)
+
+// h > j: take j, adding the remaining left length to the cross count.
+@merge_take_y = (* (hk (jk (t (u (lx out))))))
+  & lx ~ {lr la}
+  & @merge ~ ((1 (hk t)) (u (lr m)))
+  & m ~ (r c)
+  & la ~ $([+] $(c total))
+  & out ~ ((1 (jk r)) total)

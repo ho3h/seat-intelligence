@@ -1,0 +1,17 @@
+@prog = ((xs ys) out)
+  & @zip ~ (xs (ys out))
+
+@zip = ((?((@zip_nil @zip_cons) (pl (ys out))) pl) (ys out))
+
+@zip_nil = (* (* (0 *)))
+
+@zip_cons = (* ((x xt) (ys out)))
+  & @zip2 ~ (ys (x (xt out)))
+
+@zip2 = ((?((@zip2_nil @zip2_cons) (pl (x (xt out)))) pl) (x (xt out)))
+
+@zip2_nil = (* (* (* (0 *))))
+
+@zip2_cons = (* ((y yt) (x (xt (1 (s rest))))))
+  & x ~ $([+] $(y s))
+  & @zip ~ (xt (yt rest))

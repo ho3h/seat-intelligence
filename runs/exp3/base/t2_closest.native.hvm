@@ -1,0 +1,76 @@
+// Task t2_closest
+@prog = (inp out)
+  & inp ~ (x xs)
+  & @start ~ (xs (x out))
+
+@start = ((?((@empty @first_cell) (pl (x out))) pl) (x out))
+
+@empty = (* (x out))
+  & x ~ *
+  & out ~ 0
+
+@first_cell = (* ((h t) (x out)))
+  & x ~ {xc xr}
+  & xr ~ {xs xkeep}
+  & h ~ {hc hr}
+  & hr ~ {hs hkeep}
+  & xc ~ $([<] $(hc lt))
+  & lt ~ ?((@start_ge @start_lt) (xs (hs (xkeep (hkeep (t out))))))
+
+@start_ge = (xs (hs (x (h (t out)))))
+  & xs ~ $([-] $(hs d))
+  & @seed ~ (d (h (x (t out))))
+
+@start_lt = (* (xs (hs (x (h (t out))))))
+  & hs ~ $([-] $(xs d))
+  & @seed ~ (d (h (x (t out))))
+
+@seed = (d (h (x (t out))))
+  & @walk ~ (t (x (h (d out))))
+
+@walk = ((?((@nil @cons) (pl (x (best (bd out))))) pl) (x (best (bd out))))
+
+@nil = (* (x (best (bd out))))
+  & x ~ *
+  & bd ~ *
+  & best ~ out
+
+@cons = (* ((h t) (x (best (bd out)))))
+  & x ~ {xc xr}
+  & xr ~ {xs xrec}
+  & h ~ {hc hr}
+  & hr ~ {hs hcand}
+  & xc ~ $([<] $(hc lt))
+  & lt ~ ?((@ge @clt) (xs (hs (xrec (hcand (t (best (bd out))))))))
+
+@ge = (xs (hs (xr (hc (t (best (bd out)))))))
+  & xs ~ $([-] $(hs d))
+  & @consider ~ (d (hc (xr (t (best (bd out))))))
+
+@clt = (* (xs (hs (xr (hc (t (best (bd out))))))))
+  & hs ~ $([-] $(xs d))
+  & @consider ~ (d (hc (xr (t (best (bd out))))))
+
+@consider = (d (h (x (t (best (bd out))))))
+  & d ~ {dl dr}
+  & dr ~ {deq dcand}
+  & bd ~ {bdl bdr}
+  & bdr ~ {beq bdkeep}
+  & h ~ {hcand hcmp}
+  & best ~ {bestcmp bestkeep}
+  & dl ~ $([<] $(bdl less))
+  & deq ~ $([=] $(beq equal))
+  & hcmp ~ $([<] $(bestcmp hless))
+  & equal ~ $([&] $(hless tie))
+  & less ~ $([|] $(tie update))
+  & update ~ ?((@keep @replace) (dcand (bdkeep (hcand (bestkeep (x (t out)))))))
+
+@keep = (d (bd (h (best (x (t out))))))
+  & d ~ *
+  & h ~ *
+  & @walk ~ (t (x (best (bd out))))
+
+@replace = (* (d (bd (h (best (x (t out)))))))
+  & best ~ *
+  & bd ~ *
+  & @walk ~ (t (x (h (d out))))

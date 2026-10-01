@@ -1,0 +1,133 @@
+// Process eight list elements per recursive call, counting each block at once.
+@prog = ((xs t) out)
+  & @lb0 ~ (xs (t (0 out)))
+
+@lb0 = ((?((@lb0_nil @lb0_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb0_nil = (* (t (acc acc)))
+  & t ~ *
+
+@lb0_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb0_done @lb1) (tail (tr (acc out))))
+
+@lb0_done = (tail (t (acc acc)))
+  & tail ~ *
+  & t ~ *
+
+@lb1 = ((?((@lb1_nil @lb1_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb1_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+1] out)
+
+@lb1_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb1_done @lb2) (tail (tr (acc out))))
+
+@lb1_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+1] out)
+
+@lb2 = ((?((@lb2_nil @lb2_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb2_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+2] out)
+
+@lb2_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb2_done @lb3) (tail (tr (acc out))))
+
+@lb2_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+2] out)
+
+@lb3 = ((?((@lb3_nil @lb3_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb3_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+3] out)
+
+@lb3_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb3_done @lb4) (tail (tr (acc out))))
+
+@lb3_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+3] out)
+
+@lb4 = ((?((@lb4_nil @lb4_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb4_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+4] out)
+
+@lb4_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb4_done @lb5) (tail (tr (acc out))))
+
+@lb4_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+4] out)
+
+@lb5 = ((?((@lb5_nil @lb5_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb5_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+5] out)
+
+@lb5_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb5_done @lb6) (tail (tr (acc out))))
+
+@lb5_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+5] out)
+
+@lb6 = ((?((@lb6_nil @lb6_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb6_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+6] out)
+
+@lb6_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb6_done @lb7) (tail (tr (acc out))))
+
+@lb6_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+6] out)
+
+@lb7 = ((?((@lb7_nil @lb7_cons) (pl (t (acc out)))) pl) (t (acc out)))
+
+@lb7_nil = (* (t (acc out)))
+  & t ~ *
+  & acc ~ $([+7] out)
+
+@lb7_cons = (* ((h tail) (t (acc out))))
+  & t ~ {tc tr}
+  & h ~ $([<] $(tc z))
+  & z ~ ?((@lb7_done @lb0_more) (tail (tr (acc out))))
+
+@lb7_done = (tail (t (acc out)))
+  & tail ~ *
+  & t ~ *
+  & acc ~ $([+7] out)
+
+@lb0_more = (* (tail (t (acc out))))
+  & acc ~ $([+8] acc2)
+  & @lb0 ~ (tail (t (acc2 out)))

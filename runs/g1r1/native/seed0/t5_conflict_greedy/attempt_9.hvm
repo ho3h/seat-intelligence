@@ -1,0 +1,139 @@
+// Initialize singleton labels, then process candidate pairs.
+@prog = ((n (mnl cands)) out)
+  & mnl ~ *
+  & @init ~ (n labels)
+  & @run ~ (cands (labels out))
+
+@init = (n out)
+  & n ~ ?((@init_zero @init_succ) (0 out))
+
+@init_zero = (* out)
+  & out ~ (0 *)
+
+@init_succ = (k (dummy out))
+  & dummy ~ *
+  & k ~ {k_rec k_value}
+  & @init ~ (k_rec tail)
+  & @append ~ (tail (k_value out))
+
+// Append one value to a list.
+@append = ((?((@append_nil @append_cons) (payload (x out))) payload) (x out))
+
+@append_nil = (* (x out))
+  & out ~ (1 (x (0 *)))
+
+@append_cons = (* ((head tail) (x out)))
+  & @append ~ (tail (x rest))
+  & out ~ (1 (head rest))
+
+// Process candidates in list order.
+@run = ((?((@run_nil @run_cons) (payload (labels out))) payload) (labels out))
+
+@run_nil = (* (labels out))
+  & out ~ labels
+
+@run_cons = (* (payload (labels out)))
+  & payload ~ (cand tail)
+  & @step ~ (cand (tail (labels out)))
+
+// Merge the endpoint clusters for one candidate.
+@step = (cand (tail (labels out)))
+  & cand ~ (u (v score))
+  & score ~ *
+  & labels ~ {labels_u labels_more}
+  & labels_more ~ {labels_v labels_update}
+  & @lookup ~ (u (labels_u found_u))
+  & @lookup ~ (v (labels_v found_v))
+  & found_u ~ {la_eq la_merge}
+  & found_v ~ {lb_eq lb_merge}
+  & @eq ~ (la_eq (lb_eq same))
+  & same ~ ?((@step_same @step_diff) (labels_update (la_merge (lb_merge (tail out)))))
+
+@step_same = (labels (la (lb (tail out))))
+  & la ~ *
+  & lb ~ *
+  & @run ~ (tail (labels out))
+
+@step_diff = (* (labels (la (lb (tail out)))))
+  & la ~ {la_max la_replace}
+  & lb ~ {lb_max lb_replace}
+  & @max ~ (la_max (lb_max new))
+  & @replace ~ (labels (la_replace (lb_replace (new updated))))
+  & @run ~ (tail (updated out))
+
+// Return the larger of two labels.
+@max = (a (b out))
+  & a ~ {a_cmp a_keep}
+  & b ~ {b_cmp b_keep}
+  & a_cmp ~ $([>] $(b_cmp z))
+  & z ~ ?((@max_b @max_a) (a_keep (b_keep out)))
+
+@max_b = (a (b out))
+  & a ~ *
+  & out ~ b
+
+@max_a = (* (a (b out)))
+  & b ~ *
+  & out ~ a
+
+// Look up an index in a label list.
+@lookup = (i ((?((@lookup_nil @lookup_cons) (payload (i out))) payload) out))
+
+@lookup_nil = (* (i out))
+  & i ~ *
+  & out ~ 0
+
+@lookup_cons = (* (payload (i out)))
+  & payload ~ (head tail)
+  & i ~ ?((@lookup_zero @lookup_more) (head (tail out)))
+
+@lookup_zero = (head (tail out))
+  & tail ~ *
+  & out ~ head
+
+@lookup_more = (i (head (tail out)))
+  & head ~ *
+  & @lookup ~ (i (tail out))
+
+// Replace every occurrence of either old label with new.
+@replace = ((?((@replace_nil @replace_cons) (payload (a (b (new out))))) payload) (a (b (new out))))
+
+@replace_nil = (* (a (b (new out))))
+  & a ~ *
+  & b ~ *
+  & new ~ *
+  & out ~ (0 *)
+
+@replace_cons = (* (payload (a (b (new out)))))
+  & payload ~ (head tail)
+  & head ~ {head_a head_rest}
+  & head_rest ~ {head_b head_keep}
+  & a ~ {a_test a_rest}
+  & b ~ {b_test b_rest}
+  & new ~ {new_head new_rest}
+  & @eq ~ (head_a (a_test z))
+  & z ~ ?((@replace_check_b @replace_a_yes) (head_b (head_keep (tail (a_rest (b_test (b_rest (new_head (new_rest out)))))))))
+
+@replace_a_yes = (* (head_b (head_keep (tail (a_rest (b_test (b_rest (new_head (new_rest out)))))))))
+  & head_b ~ *
+  & head_keep ~ *
+  & b_test ~ *
+  & @replace ~ (tail (a_rest (b_rest (new_rest rest))))
+  & out ~ (1 (new_head rest))
+
+@replace_check_b = (head_b (head_keep (tail (a_rest (b_test (b_rest (new_head (new_rest out))))))))
+  & @eq ~ (head_b (b_test z))
+  & z ~ ?((@replace_keep @replace_b_yes) (head_keep (tail (a_rest (b_rest (new_head (new_rest out)))))))
+
+@replace_b_yes = (* (head_keep (tail (a_rest (b_rest (new_head (new_rest out)))))))
+  & head_keep ~ *
+  & @replace ~ (tail (a_rest (b_rest (new_rest rest))))
+  & out ~ (1 (new_head rest))
+
+@replace_keep = (head_keep (tail (a (b (new out)))))
+  & @replace ~ (tail (a (b (new rest))))
+  & out ~ (1 (head_keep rest))
+
+// Numeric equality.
+@eq = (x (y out))
+  & x ~ $([=] $(y out))

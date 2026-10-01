@@ -1,0 +1,108 @@
+// Entry point
+@prog = (input out)
+  & input ~ (a b)
+  & @outer ~ (a (b ((0 *) out)))
+
+// Multiply each digit of a by a progressively shifted b, accumulating the result.
+@outer = ((?((@outer_nil @outer_cons) (pl (bs (acc out)))) pl) (bs (acc out)))
+
+@outer_nil = (* (bs (acc out)))
+  & @trim ~ (acc out)
+
+@outer_cons = (* ((d t) (bs (acc out))))
+  & @dmul ~ (bs (d (0 part)))
+  & @add ~ (acc (part sum))
+  & @outer ~ (t ((1 (0 bs)) (sum out)))
+
+// Multiply a list by one digit, carrying in base 4096.
+@dmul = ((?((@dmul_nil @dmul_cons) (pl (d (c out)))) pl) (d (c out)))
+
+@dmul_nil = (* (d (c out)))
+  & c ~ ?((@dmul_end0 @dmul_endp) out)
+
+@dmul_cons = (* ((h t) (d (c out))))
+  & h ~ $([*] $(d p))
+  & @calc ~ (p (c (0 (r q))))
+  & out ~ (1 (r rest))
+  & @dmul ~ (t (d (q rest)))
+
+@dmul_end0 = (0 *)
+
+@dmul_endp = (cm out)
+  & cm ~ $([+1] digit)
+  & out ~ (1 (digit (0 *)))
+
+// Calculate (x + y + c) as (remainder, carry) in base 4096.
+@calc = (x (y (c (r q))))
+  & x ~ $([+] $(y s))
+  & s ~ $([+] $(c z))
+  & z ~ {u v}
+  & u ~ $([%] $(4096 r))
+  & v ~ $([/] $(4096 q))
+
+// Add two lists of base-4096 digits.
+@add = ((?((@add_x0 @add_x1) (pl (y (c out)))) pl) (y (c out)))
+
+@add_x0 = (* (y (c out)))
+  & @addy ~ (y ((0 *) (c out)))
+
+@add_x1 = (* ((h t) (y (c out))))
+  & @addy ~ (y ((1 (h t)) (c out)))
+
+@addy = ((?((@addy0 @addy1) (pl (xs (c out)))) pl) (xs (c out)))
+
+@addy0 = (* (xs (c out)))
+  & @addtail ~ (xs (c out))
+
+@addy1 = (* ((g u) (xs (c out))))
+  & @addpair ~ (xs (g (u (c out))))
+
+@addtail = ((?((@addtail0 @addtail1) (pl (c out))) pl) (c out))
+
+@addtail0 = (* (c out))
+  & @addend ~ (c out)
+
+@addtail1 = (* ((h t) (c out)))
+  & @calc ~ (h (0 (c (r q))))
+  & out ~ (1 (r rest))
+  & @addtail ~ (t (q rest))
+
+@addpair = ((?((@addpair0 @addpair1) (pl (g (u (c out)))))) pl) (g (u (c out)))
+
+@addpair0 = (* (g (u (c out))))
+  & @calc ~ (0 (g (c (r q))))
+  & out ~ (1 (r rest))
+  & @add ~ ((0 *) (u (q rest)))
+
+@addpair1 = (* ((h t) (g (u (c out)))))
+  & @calc ~ (h (g (c (r q))))
+  & out ~ (1 (r rest))
+  & @add ~ (t (u (q rest)))
+
+@addend = ((?((@addend0 @addend1) out)) c)
+
+@addend0 = (0 *)
+
+@addend1 = (* (1 (1 (0 *))))
+
+// Trim high zero digits. The helper returns (trimmed-list, nonzero-flag).
+@trim = (l out)
+  & @trimf ~ (l (out *))
+
+@trimf = ((?((@trimf_nil @trimf_cons) (pl out)) pl) out)
+
+@trimf_nil = (* ((0 *) 0))
+
+@trimf_cons = (* ((h t) out))
+  & @trimf ~ (t (rt flag))
+  & h ~ {hc hk}
+  & hc ~ $([!] $(0 b))
+  & b ~ $([|] $(flag nz))
+  & nz ~ ?((@trimf_drop @trimf_keep) (hk (rt out)))
+
+@trimf_drop = (h (rt out))
+  & h ~ *
+  & out ~ (rt 0)
+
+@trimf_keep = (h (rt out))
+  & out ~ ((1 (h rt)) 1)

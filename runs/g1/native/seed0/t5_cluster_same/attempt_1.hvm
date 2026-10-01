@@ -1,0 +1,101 @@
+// Queries are answered by a breadth-first search from the first node.
+@prog = (input out)
+  & input ~ (n (pairs queries))
+  & n ~ *
+  & @queries ~ (queries (pairs out))
+
+@queries = ((?((@queries_nil @queries_cons) (edges (pl out))) pl) (edges out))
+
+@queries_nil = (edges (* out))
+  & edges ~ *
+  & out ~ (0 *)
+
+@queries_cons = (* (edges (((a b) tail) out)))
+  & edges ~ {e1 e2}
+  & @connected ~ (a (b (e1 c)))
+  & @queries ~ (tail (e2 rest))
+  & out ~ (1 (c rest))
+
+@connected = (a (b (edges out)))
+  & a ~ {a0 a_rest}
+  & a_rest ~ {a1 a2}
+  & @bfs ~ ((1 (a2 (0 *))) (a0 (b (edges ((1 (a1 (0 *))) out))))
+
+// BFS takes its queue as its first argument.
+@bfs = ((?((@bfs_nil @bfs_cons) (a (b (edges (visited (pl out))))) pl) (a (b (edges (visited out)))))
+
+@bfs_nil = (a (b (edges (visited (* out)))))
+  & a ~ *
+  & edges ~ *
+  & @mem ~ (visited (b out))
+
+@bfs_cons = (* (a (b (edges (visited ((x q) out))))))
+  & edges ~ {escan eall}
+  & @scan ~ (escan (x (a (b (eall (visited (q out))))))
+
+// Scan every edge for the current BFS node.
+@scan = ((?((@scan_nil @scan_cons) (x (a (b (all (visited (queue (pl out))))))) pl) (x (a (b (all (visited (queue out)))))))
+
+@scan_nil = (* (a (b (all (visited (queue (* out)))))))
+  & @bfs ~ (queue (a (b (all (visited out))))
+
+@scan_cons = (* (x (a (b (all (visited (queue (((u v) tail) out)))))))
+  & @edge_u ~ (x (a (b (all (visited (queue (tail (u (v out))))))))
+
+// Test whether the current node is the first endpoint of this edge.
+@edge_u = (x (a (b (all (visited (queue (tail (u (v out))))))))
+  & x ~ {xc xr}
+  & u ~ {uc ur}
+  & xc ~ $([=] $(uc z))
+  & z ~ ?((@edge_u_no @edge_u_yes) (xr (a (b (all (visited (queue (tail (ur (v out))))))))
+
+@edge_u_no = (xr (a (b (all (visited (queue (tail (u (v out))))))))
+  & @edge_v ~ (xr (a (b (all (visited (queue (tail (u (v out))))))))
+
+@edge_u_yes = (* (xr (a (b (all (visited (queue (tail (u (v out))))))))
+  & u ~ *
+  & @admit ~ (xr (a (b (all (visited (queue (tail (v out))))))))
+
+// If the first endpoint did not match, test the second.
+@edge_v = (x (a (b (all (visited (queue (tail (u (v out))))))))
+  & x ~ {xc xr}
+  & v ~ {vc vr}
+  & xc ~ $([=] $(vc z))
+  & z ~ ?((@edge_v_no @edge_v_yes) (xr (a (b (all (visited (queue (tail (u (vr out))))))))
+
+@edge_v_no = (xr (a (b (all (visited (queue (tail (u (v out))))))))
+  & u ~ *
+  & v ~ *
+  & @scan ~ (tail (xr (a (b (all (visited (queue out))))))
+
+@edge_v_yes = (* (xr (a (b (all (visited (queue (tail (u (v out))))))))
+  & v ~ *
+  & @admit ~ (xr (a (b (all (visited (queue (tail (u out))))))))
+
+// Add a newly discovered neighbor to both visited and the queue.
+@admit = (x (a (b (all (visited (queue (tail (neighbor out))))))))
+  & visited ~ {vm vkeep}
+  & neighbor ~ {nm nkeep}
+  & @mem ~ (vm (nm m))
+  & m ~ ?((@admit_no @admit_yes) (x (a (b (all (vkeep (queue (tail (nkeep out))))))))
+
+@admit_no = (x (a (b (all (vkeep (queue (tail (nkeep out))))))))
+  & nkeep ~ {n1 n2}
+  & @scan ~ ((1 (n1 vkeep)) (x (a (b (all ((1 (n2 queue)) (tail out))))))
+
+@admit_yes = (* (x (a (b (all (vkeep (queue (tail (nkeep out))))))))
+  & nkeep ~ *
+  & @scan ~ (tail (x (a (b (all (vkeep (queue out))))))
+
+// Membership test for a number in a list.
+@mem = ((?((@mem_nil @mem_cons) (x (pl out))) pl) (x out))
+
+@mem_nil = (x (* out))
+  & x ~ *
+  & out ~ 0
+
+@mem_cons = (* (x ((h t) out)))
+  & x ~ {x1 x2}
+  & x1 ~ $([=] $(h z))
+  & @mem ~ (t (x2 m))
+  & z ~ $([|] $(m out))

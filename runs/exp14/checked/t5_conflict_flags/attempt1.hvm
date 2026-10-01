@@ -1,0 +1,92 @@
+@lg = (?((0 @lg_s) o) o)
+@lg_s = (xm o)
+  & xm ~ $([+1] x)
+  & x ~ $([>>] $(1 y))
+  & @lg ~ (y z)
+  & z ~ $([+1] o)
+@t_init = (?((?0 @t_init_n) o) o)
+@t_init_n = (lm (a c))
+  & lm ~ {l1 l2}
+  & @t_init ~ (l1 a)
+  & @t_init ~ (l2 c)
+@upd_set = (t (k (L (P o))))
+  & L ~ ?((@upd_set_leaf @upd_set_node) (t (k (P o))))
+@upd_set_leaf = (t (* (P o)))
+  & t ~ P
+  & P ~ o
+@upd_set_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@upd_set_L @upd_set_R) (t (k2 (l2 (P o)))))
+@upd_set_L = ((l r) (k (L (P (l2 r)))))
+  & @upd_set ~ (l (k (L (P l2))))
+@upd_set_R = (* ((l r) (k (L (P (l r2))))))
+  & @upd_set ~ (r (k (L (P r2))))
+@upd_get = (t (k (L o)))
+  & L ~ ?((@upd_get_leaf @upd_get_node) (t (k o)))
+@upd_get_leaf = (x (* x))
+@upd_get_node = (lm (t (k o)))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@upd_get_L @upd_get_R) (t (k2 (l2 o))))
+@upd_get_L = ((l *) (k (L o)))
+  & @upd_get ~ (l (k (L o)))
+@upd_get_R = (* ((* r) (k (L o))))
+  & @upd_get ~ (r (k (L o)))
+@upd_or = (t (k (L (P o))))
+  & L ~ ?((@upd_or_leaf @upd_or_node) (t (k (P o))))
+@upd_or_leaf = (t (* (P o)))
+  & t ~ $([|] $(P o))
+@upd_or_node = (lm (t (k (P o))))
+  & k ~ {k1 k2}
+  & lm ~ {l1 l2}
+  & k1 ~ $([>>] $(l1 sh))
+  & sh ~ $([&] $(1 bt))
+  & bt ~ ?((@upd_or_L @upd_or_R) (t (k2 (l2 (P o)))))
+@upd_or_L = ((l r) (k (L (P (l2 r)))))
+  & @upd_or ~ (l (k (L (P l2))))
+@upd_or_R = (* ((l r) (k (L (P (l r2))))))
+  & @upd_or ~ (r (k (L (P r2))))
+@to_list = (t (L (n (tail o))))
+  & L ~ ?((@tl_drop @tl_keep) (t (n (tail o))))
+@tl_drop = (* (t t))
+@tl_keep = (* (x (t (1 (x t)))))
+@prog = ((c (mnl o)))
+  & c ~ ?((@c_nil @c_cons) ((mnl o) (1 (0 0))))
+@c_nil = (ctx o)
+  & ctx ~ (L (t_c (t_conf out)))
+  & L ~ ?((@L_base @L_rec) (t_c (L (t_conf out))))
+@L_base = (tc (L (tc (tc *))))
+@L_rec = (lm (tc (L (tc (tc *)))))
+  & lm ~ {l1 l2}
+  & L ~ {L1 L2}
+  & @L_base ~ (tc (L1 (tc (tc *))))
+@c_cons = (* (ctx (c_i (ctx2 o))))
+  & ctx ~ (i (pair (t_c (L (t_conf (mnl_ctx))))))
+  & i ~ {i1 i2}
+  & pair ~ (mnl (mnl_ctx mnl_ctx))
+  & L ~ {L1 L2}
+  & @upd_set ~ (t_c (i1 (L1 (c_i t_c2))))
+  & t_c2 ~ t_c2
+  & ctx2 ~ (i2 (pair (t_c2 (L2 (t_conf (mnl_ctx))))))
+@prog2 = ((c (mnl o)))
+  & c ~ ?((@mnl_nil @mnl_cons) ((mnl o) (1 (0 0))))
+@mnl_nil = (ctx o)
+  & ctx ~ (L (t_c (t_conf)))
+  & @to_list ~ (t_conf (L (0 (0 o))))
+@mnl_cons = (* (ctx ((a b) (ctx2 o))))
+  & ctx ~ (L (t_c (t_conf (out))))
+  & L ~ {L1 L2 L3}
+  & a ~ {a1 a2}
+  & b ~ {b1 b2}
+  & @upd_get ~ (t_c (a1 (L1 ca)))
+  & @upd_get ~ (t_c (b1 (L2 cb)))
+  & ca ~ $([=] $(cb eq))
+  & eq ~ {eq1 eq2}
+  & @upd_or ~ (t_conf (a2 (L3 (eq1 t_conf2))))
+  & t_conf2 ~ t_conf2
+  & ctx2 ~ (L (t_c (t_conf2 (out))))

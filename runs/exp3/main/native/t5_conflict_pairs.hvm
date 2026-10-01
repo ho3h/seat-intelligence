@@ -1,0 +1,33 @@
+@prog = ((c (?((@filter_nil @filter_cons) (pl_q396 (c ((0 *) out)))) pl_q396)) out)
+
+@filter_nil = (* (* (a a)))
+
+@filter_cons = (* ((({a_lookup a_keep} {b_lookup b_keep}) tail) ({cnext (?((@getpair_nil (* ((head_q407 tail_q407) (?((@getpair_at (n_q411 (* ((?((@getpair_nil (* ((head_q416 tail_q416) (?((@getpair_at (n_q422 (* ((?((@getpair_nil (* ((head_q429 tail_q429) (?((@getpair_at @getpair_before) (head_q429 (tail_q429 (b_q429 out_q429)))) (b_q429 out_q429))))) (pl_q401_q422 (n_q422 (bnext_q422 out_q422)))) pl_q401_q422) ($([:-1] bnext_q422) out_q422))))) (head_q416 (tail_q416 (b_q416 out_q416)))) (b_q416 out_q416))))) (pl_q401_q411 (n_q411 (bnext_q411 out_q411)))) pl_q401_q411) ($([:-1] bnext_q411) out_q411))))) (head_q407 (tail_q407 (b_q407 out_q407)))) (b_q407 out_q407))))) (pl_q397 (a_lookup (b_lookup ($([=] $(vb ?((@filter_no @filter_yes) (a_keep (b_keep (tail (cnext (acc out)))))))) vb))))) pl_q397)} (acc out))))
+
+@filter_no = (* (* ((?((@filter_nil @filter_cons) (pl_q398 (c (acc out)))) pl_q398) (c (acc out)))))
+
+@filter_yes = (* (a (b ((?((@filter_nil @filter_cons) (pl_q400 (c (newacc out)))) pl_q400) (c ((?((@ins_nil @ins_cons) (pl_q399 ((a b) newacc))) pl_q399) out))))))
+
+@getpair_nil = (* (* (* (0 0))))
+
+@getpair_cons = (* ((head tail) (?((@getpair_at (n_q437 (* ((?((@getpair_nil @getpair_cons) (pl_q401_q437 (n_q437 (bnext_q437 out_q437)))) pl_q401_q437) ($([:-1] bnext_q437) out_q437))))) (head (tail (b out)))) (b out))))
+
+@getpair_before = (n (* ((?((@getpair_nil @getpair_cons) (pl_q401 (n (bnext out)))) pl_q401) ($([:-1] bnext) out))))
+
+@getpair_at = (head ((?((@getpair_end_nil @getpair_end_cons) (pl_q402 (bnext (head out)))) pl_q402) ($([:-1] bnext) out)))
+
+@getpair_end_nil = (* (* (0 0)))
+
+@getpair_end_cons = (* ((head tail) (?((@getpair_end_at @getpair_end_before) (head (tail (saved out)))) (saved out))))
+
+@getpair_end_at = (head (* (saved (saved head))))
+
+@getpair_end_before = (n (* ((?((@getpair_end_nil @getpair_end_cons) (pl_q403 (n (saved out)))) pl_q403) (saved out))))
+
+@ins_nil = (* (item (1 (item (0 *)))))
+
+@ins_cons = (* ((({{xlt_i86 xeq_i86} oak} {obc obk}) rest) (({{$([<] $(xlt_i86 $([|] $(both_i86 ?((@ins_after @ins_before) (rest ((iak ibk) ((oak obk) out)))))))) $([=] $(xeq_i86 $([&] $(less_second_i86 both_i86))))} iak} {$([<] $(obc less_second_i86)) ibk}) out)))
+
+@ins_after = ((?((@ins_nil @ins_cons) (pl_q404 ((ia ib) sub))) pl_q404) ((ia ib) ((oa ob) (1 ((oa ob) sub)))))
+
+@ins_before = (* (rest ((ia ib) ((oa ob) (1 ((ia ib) (1 ((oa ob) rest))))))))
