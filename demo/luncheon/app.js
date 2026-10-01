@@ -385,7 +385,7 @@
   // ---------- pointer: drag people, tap to swap, pan, zoom
   var ptrs = new Map(), pinch0 = null;
   stage.addEventListener("pointerdown", function (e) {
-    if (e.target.closest(".nav")) return;
+    if (e.target.closest(".nav, #cap, .hud, .credit, .over, #sheet, .toast")) return;
     try { stage.setPointerCapture(e.pointerId); } catch (err) {} ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); camAnim = null;
     var z = st.puzzle;
     if (ptrs.size === 1 && z && !z.done && !z.over && cam.s >= 0.12) {
@@ -431,7 +431,7 @@
     ns = Math.max(SMIN, Math.min(SMAX, ns)); var w = toWorld(px, py), r = stage.getBoundingClientRect();
     cam.s = ns; cam.x = w.x - (px - r.left - W / 2) / ns; cam.y = w.y - (py - r.top - H / 2) / ns; dirty = true;
   }
-  stage.addEventListener("wheel", function (e) { e.preventDefault(); camAnim = null; zoomAt(e.clientX, e.clientY, cam.s * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); }, { passive: false });
+  stage.addEventListener("wheel", function (e) { if (e.target.closest("#cap, .over, #sheet")) return; e.preventDefault(); camAnim = null; zoomAt(e.clientX, e.clientY, cam.s * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); }, { passive: false });
   document.getElementById("fit").addEventListener("click", fit);
   document.getElementById("far").addEventListener("click", function () { goTo(0, 0, 0.02); });
 
@@ -503,8 +503,8 @@
       cap: function () {
         return "<h1>I trained a tiny model to stop AI leaders from causing the apocalypse.</h1><p class=\"lede\">It does this by fixing the seating chart.</p><p>This is the real seating chart from the White House lunch with AI leaders on 29 September 2026. Every seating plan has rules, and this room comes with some history: a few of these guests have been arguing in public for years.</p>" +
           "<p>Seat these people badly and it’s game over: p(doom) goes to 1, and the AI apocalypse starts somewhere between the soup and the main course. Most versions of this lunch end that way. Your job is to find the one that doesn’t, and then we’ll see whether a small chatbot or our tiny AI can do the same.</p>" +
-          '<p class="fine">A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://x.com/elonmusk/status/1626516035863212034" target="_blank" rel="noopener">1</a>, <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">2</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.</p>';
-      }, next: "Scramble the table" },
+          '';
+      }, foot: 'A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://x.com/elonmusk/status/1626516035863212034" target="_blank" rel="noopener">1</a>, <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">2</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.', next: "Scramble the table" },
     { go: function () { st.chat = null; st.rule = null; st.marks = null; if (st.saved) { st.puzzle = st.saved; st.saved = null; relayout(true); fit(); } else if (!st.puzzle) { st.puzzle = newPuzzle(1); lastInc = ""; relayout(true); fit(); } },
       cap: function () {
         var z = st.puzzle;
@@ -549,7 +549,8 @@
         '<div class="links"><button class="link" type="button" id="thousands">Let the tiny AI save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Watch the story again</button></div>';
     }
     var clockLine = st.puzzle && (mode === "play" || chap === 1) ? '<div class="capclock" id="capclock"></div>' : "";
-    capEl.innerHTML = clockLine + '<div class="cap-in">' + html + '</div><div class="morehint" aria-hidden="true">More \u2193</div>' + bar;
+    var footer = mode === "story" && CH[chap].foot ? '<p class="capfoot">' + CH[chap].foot + "</p>" : "";
+    capEl.innerHTML = clockLine + '<div class="cap-in">' + html + '</div><div class="morehint" aria-hidden="true">More \u2193</div>' + bar + footer;
     var ci = capEl.querySelector(".cap-in"), check = function () { var more = ci.scrollHeight - ci.scrollTop - ci.clientHeight > 6; ci.classList.toggle("more", more); capEl.classList.toggle("has-more", more); };
     ci.addEventListener("scroll", check); setTimeout(check, 0); setTimeout(check, 400);
     bind();

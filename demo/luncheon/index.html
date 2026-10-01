@@ -18,7 +18,7 @@
 <meta name="twitter:title" content="Seat Intelligence (SI)">
 <meta name="twitter:description" content="Seat the real White House AI lunch before p(doom) hits 1. A tiny model can. Can you?">
 <meta name="twitter:image" content="https://seat-intelligence.com/og.png">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23151515'/%3E%3Crect x='26' y='10' width='12' height='44' rx='5' fill='%23fbfbf9'/%3E%3Crect x='12' y='16' width='8' height='8' fill='%23fbfbf9'/%3E%3Crect x='12' y='30' width='8' height='8' fill='%23a8322a'/%3E%3Crect x='44' y='16' width='8' height='8' fill='%23fbfbf9'/%3E%3Crect x='44' y='30' width='8' height='8' fill='%23a8322a'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2710%27 fill=%27%23fbfbf9%27/%3E%3Ctext x=%2732%27 y=%2742%27 text-anchor=%27middle%27 font-family=%27Georgia,serif%27 font-weight=%27700%27 font-size=%2734%27 fill=%27%23151515%27%3ESI%3C/text%3E%3Crect x=%2716%27 y=%2749%27 width=%2732%27 height=%274%27 fill=%27%23a8322a%27/%3E%3C/svg%3E">
 <meta name="color-scheme" content="light">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Courier+Prime:wght@400;700&display=swap">
@@ -193,6 +193,20 @@
   @media (min-width:900px) { .nav { bottom:calc(46px + env(safe-area-inset-bottom, 0px)); } }
   @media (max-width:899px) { .credit { display:none; } }
   body.card .credit { display:none !important; }
+
+  .capfoot { margin:0; padding:0 16px 12px; color:var(--mute); font-size:12.5px; line-height:1.5; }
+  @media (min-width:900px) {
+    .cap-in { padding:15vh 52px 20px; }
+    .cap-in h1 { font-size:30px; line-height:1.2; margin-bottom:14px; }
+    .lede { margin-bottom:26px !important; font-size:20px; }
+    .cap-in p { font-size:17px; line-height:1.65; margin-bottom:18px; }
+    .rule { margin-bottom:18px !important; }
+    .bar { padding:16px 52px 22px; }
+    .links { padding:0 52px 24px; }
+    .capfoot { padding:0 52px 26px; font-size:13px; }
+    #cap { width:min(44vw, 580px); }
+    .toast { left:calc(min(44vw, 580px) + (100vw - min(44vw, 580px)) / 2); }
+  }
 </style>
 </head>
 <body>
@@ -814,7 +828,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
   // ---------- pointer: drag people, tap to swap, pan, zoom
   var ptrs = new Map(), pinch0 = null;
   stage.addEventListener("pointerdown", function (e) {
-    if (e.target.closest(".nav")) return;
+    if (e.target.closest(".nav, #cap, .hud, .credit, .over, #sheet, .toast")) return;
     try { stage.setPointerCapture(e.pointerId); } catch (err) {} ptrs.set(e.pointerId, { x: e.clientX, y: e.clientY }); camAnim = null;
     var z = st.puzzle;
     if (ptrs.size === 1 && z && !z.done && !z.over && cam.s >= 0.12) {
@@ -860,7 +874,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
     ns = Math.max(SMIN, Math.min(SMAX, ns)); var w = toWorld(px, py), r = stage.getBoundingClientRect();
     cam.s = ns; cam.x = w.x - (px - r.left - W / 2) / ns; cam.y = w.y - (py - r.top - H / 2) / ns; dirty = true;
   }
-  stage.addEventListener("wheel", function (e) { e.preventDefault(); camAnim = null; zoomAt(e.clientX, e.clientY, cam.s * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); }, { passive: false });
+  stage.addEventListener("wheel", function (e) { if (e.target.closest("#cap, .over, #sheet")) return; e.preventDefault(); camAnim = null; zoomAt(e.clientX, e.clientY, cam.s * Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015))); }, { passive: false });
   document.getElementById("fit").addEventListener("click", fit);
   document.getElementById("far").addEventListener("click", function () { goTo(0, 0, 0.02); });
 
@@ -932,8 +946,8 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
       cap: function () {
         return "<h1>I trained a tiny model to stop AI leaders from causing the apocalypse.</h1><p class=\"lede\">It does this by fixing the seating chart.</p><p>This is the real seating chart from the White House lunch with AI leaders on 29 September 2026. Every seating plan has rules, and this room comes with some history: a few of these guests have been arguing in public for years.</p>" +
           "<p>Seat these people badly and it’s game over: p(doom) goes to 1, and the AI apocalypse starts somewhere between the soup and the main course. Most versions of this lunch end that way. Your job is to find the one that doesn’t, and then we’ll see whether a small chatbot or our tiny AI can do the same.</p>" +
-          '<p class="fine">A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://x.com/elonmusk/status/1626516035863212034" target="_blank" rel="noopener">1</a>, <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">2</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.</p>';
-      }, next: "Scramble the table" },
+          '';
+      }, foot: 'A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://x.com/elonmusk/status/1626516035863212034" target="_blank" rel="noopener">1</a>, <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">2</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.', next: "Scramble the table" },
     { go: function () { st.chat = null; st.rule = null; st.marks = null; if (st.saved) { st.puzzle = st.saved; st.saved = null; relayout(true); fit(); } else if (!st.puzzle) { st.puzzle = newPuzzle(1); lastInc = ""; relayout(true); fit(); } },
       cap: function () {
         var z = st.puzzle;
@@ -978,7 +992,8 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
         '<div class="links"><button class="link" type="button" id="thousands">Let the tiny AI save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Watch the story again</button></div>';
     }
     var clockLine = st.puzzle && (mode === "play" || chap === 1) ? '<div class="capclock" id="capclock"></div>' : "";
-    capEl.innerHTML = clockLine + '<div class="cap-in">' + html + '</div><div class="morehint" aria-hidden="true">More \u2193</div>' + bar;
+    var footer = mode === "story" && CH[chap].foot ? '<p class="capfoot">' + CH[chap].foot + "</p>" : "";
+    capEl.innerHTML = clockLine + '<div class="cap-in">' + html + '</div><div class="morehint" aria-hidden="true">More \u2193</div>' + bar + footer;
     var ci = capEl.querySelector(".cap-in"), check = function () { var more = ci.scrollHeight - ci.scrollTop - ci.clientHeight > 6; ci.classList.toggle("more", more); capEl.classList.toggle("has-more", more); };
     ci.addEventListener("scroll", check); setTimeout(check, 0); setTimeout(check, 400);
     bind();
