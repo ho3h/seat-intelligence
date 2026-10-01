@@ -749,14 +749,18 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
   }
   // guests a rule is about get a highlighter stroke behind their name, one colour per group, like a marked-up printout
   var HL = { G: "#f3e3a6", R: "#f2cdc8", P: "#cfe0f0", C: "#d6e8c9", A: "#e3d7f1", T: "#d6e8c9" };
-  function highlight(mk, x0, y, w) {
+  function highlight(mk, x0, y, w, who) {
+    var h = 0; for (var i = 0; i < who.length; i++) h = (h * 31 + who.charCodeAt(i)) >>> 0;   // the same wobble for the same guest every frame
+    var j = function (k, a) { return ((h >>> (k * 4)) % 13 - 6) / 6 * a; }, tilt = j(0, 1.6);
+    var l = x0 - 2 + j(1, 2), r = x0 + w + 2 + j(2, 3);
     ctx.fillStyle = HL[mk[0]] || "#ecebe6"; ctx.beginPath();
-    ctx.moveTo(x0, y - 7); ctx.lineTo(x0 + w, y - 8); ctx.lineTo(x0 + w + 1, y + 8); ctx.lineTo(x0 + 1, y + 8.5); ctx.closePath(); ctx.fill();
+    ctx.moveTo(l, y - 7.5 + j(3, 1) - tilt); ctx.lineTo(r, y - 7.5 + j(4, 1) + tilt);
+    ctx.lineTo(r + 1.5, y + 7.5 + j(5, 1) + tilt); ctx.lineTo(l + 1, y + 8 + j(6, 1) - tilt); ctx.closePath(); ctx.fill();
   }
   function nameAt(label, x, y, side, mk, color) {
     ctx.font = "italic 13.5px " + FONT; ctx.fillStyle = color || INK; ctx.textBaseline = "middle"; ctx.textAlign = side < 0 ? "right" : "left";
     var tw = ctx.measureText(label).width; if (tw > 222) { ctx.font = "italic " + (13.5 * 222 / tw).toFixed(2) + "px " + FONT; tw = 222; }
-    if (mk) { highlight(mk, side < 0 ? x - tw - 3 : x - 3, y, tw + 6); ctx.fillStyle = color || INK; }
+    if (mk) { highlight(mk, side < 0 ? x - tw - 3 : x - 3, y, tw + 6, label); ctx.fillStyle = color || INK; }
     ctx.fillText(label, x, y);
   }
   function header() {
@@ -816,14 +820,14 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
       if (drag && drag.active && drag.gi === gi) continue;
       var p = cur[gi];
       if (p.side === 0) { ctx.font = "italic 15px " + FONT; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillStyle = MUTE; ctx.fillText(real[gi].label + " — no seat", p.x, p.y); continue; }
-      nameAt(real[gi].label, p.x, p.y, p.side, marks && marks[gi], red[gi] ? RED : null);
+      nameAt(real[gi].label, p.x, p.y, p.side, marks && marks[gi], red[gi] && !(marks && marks[gi]) ? RED : null);
     }
     if (drag && drag.active) {
       var lab = real[drag.gi].label; ctx.font = "italic 16px " + FONT; var tw = ctx.measureText(lab).width + 40;
       ctx.save(); ctx.shadowColor = "rgba(0,0,0,.28)"; ctx.shadowBlur = 14; ctx.shadowOffsetY = 4; ctx.fillStyle = "#fff";
       rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.fill(); ctx.restore();
       ctx.strokeStyle = BLUE; ctx.lineWidth = 2; rr(drag.wx - tw / 2, drag.wy - 18, tw, 36, 18); ctx.stroke();
-      ctx.font = "italic 16px " + FONT; var mk = z && z.marks[drag.gi], lw = ctx.measureText(lab).width; if (mk) highlight(mk, drag.wx - lw / 2 - 3, drag.wy, lw + 6);
+      ctx.font = "italic 16px " + FONT; var mk = z && z.marks[drag.gi], lw = ctx.measureText(lab).width; if (mk) highlight(mk, drag.wx - lw / 2 - 3, drag.wy, lw + 6, lab);
       ctx.fillStyle = INK; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(lab, drag.wx, drag.wy);
 
     }
@@ -1088,7 +1092,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
         var z = st.puzzle;
         if (z.over) return "<h1>p(doom) = 1. Game over.</h1><p>With " + flashpoints(z) + (flashpoints(z) === 1 ? " clash" : " clashes") + " still at the table, the AI apocalypse began somewhere between the soup and the main course. Have another go, or let the program show you how it’s done.</p>";
         if (z.done) return "<h1>" + (z.gaveUp ? "Here’s the program’s answer." : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken and no cage match. The next two steps show how it got there, and how a chatbot does with the same job." : "In this timeline, at least. You cleared it in " + z.moves + " swaps. Lunch is served, and nobody has mentioned the Octagon. Next, let’s see how a chatbot does.") + "</p>";
-        return "<h1>You’re the host</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p><p>Someone has scrambled the seats. The President and Vice President keep their places at the middle of the table; everyone else is fair game. The faint boxes are sections of neighbouring seats. Put two people in one section who shouldn\u2019t be there together, and their names turn red, a red line joins them, and p(doom) climbs. Drag a guest onto another seat to swap them. While there\u2019s a single clash at the table, p(doom) is past 1, which isn\u2019t how probability works. Each clash you clear brings it down a notch, and clearing the lot takes it to zero.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+        return "<h1>You’re the host</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p><p>Someone has scrambled the seats. The President and Vice President keep their places at the middle of the table; everyone else is fair game. The faint boxes are sections of neighbouring seats. Put two people in one section who shouldn\u2019t be there together, and a red line joins them and p(doom) climbs. Drag a guest onto another seat to swap them. While there\u2019s a single clash at the table, p(doom) is past 1, which isn\u2019t how probability works. Each clash you clear brings it down a notch, and clearing the lot takes it to zero.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
       }, extra: function () { var z = st.puzzle; return z && z.over ? '<button class="btn" type="button" id="again">Try again</button>' : z && !z.done ? '<button class="btn" type="button" id="giveup">Give up</button>' : ""; }, next: "Next" },
     { go: function () { stash(); st.chat = C.show.secs; st.marks = markers(S.parse(LEVELS[1].prog)); relayout(true); fit(); },
       cap: function () { return "<h1>Now ask a chatbot</h1><p>We gave the officials part of that rule to an ordinary small chatbot and asked it 20 times.</p><p>Every one of its " + C.n + " answers broke the rule. " + C.dup + " seated someone twice, " + C.miss + " left someone without a seat, and between them there were " + C.distinct + " different seatings for the same question. The chart shows one: " + C.show.miss.length + " guests have no seat, which is one way to avoid arguments.</p>"; }, next: "Next" },
@@ -1121,7 +1125,7 @@ var DATA = {"guests": [{"name": "Will Scharf", "org": null, "category": "unlabel
     } else {
       var z = st.puzzle;
       html = z.over ? "<h1>p(doom) = 1. Game over.</h1><p>" + flashpoints(z) + " clashes were still at the table when the apocalypse started. Try again, or let the program show you.</p>" : z.done ? "<h1>" + (z.gaveUp ? "The program’s answer" : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken. Try another level, or scramble this one again and beat it yourself." : "You fixed it in " + z.moves + " swaps and " + Math.max(1, Math.round(z.secs)) + " seconds. Lunch is served. Try another rule, or let the tiny AI loose on every other timeline.") + "</p>"
-        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every clash, the red names joined by red lines. Any clash sends p(doom) past 1; clear them all to bring it to zero. Use the arrows for another rule; there are seven, each written in plain English and read by the tiny AI.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every clash: the people joined by red lines. Any clash sends p(doom) past 1; clear them all to bring it to zero. Use the arrows for another rule; there are seven, each written in plain English and read by the tiny AI.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
       bar = '<div class="bar"><span class="stepper"><button class="btn small" type="button" data-lv="' + ((z.lv + LEVELS.length - 1) % LEVELS.length) + '" aria-label="Previous rule">\u2039</button><span class="lvname">' + esc(LEVELS[z.lv].name) + ' <span class="fine">' + (z.lv + 1) + ' of ' + LEVELS.length + '</span></span><button class="btn small" type="button" data-lv="' + ((z.lv + 1) % LEVELS.length) + '" aria-label="Next rule">\u203a</button></span><span class="sp"></span>' +
         (z.done || z.over ? '<button class="btn primary" type="button" id="again">' + (z.over ? 'Try again' : 'New scramble') + '</button>' : '<button class="btn" type="button" id="giveup">Give up</button>') + "</div>" +
         '<div class="links"><button class="link" type="button" id="thousands">Let the tiny AI save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Watch the story again</button></div>';
