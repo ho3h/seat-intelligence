@@ -163,8 +163,11 @@
   }
   function fit() {
     if (document.body.classList.contains("card")) return;
+    var VID = document.body.classList.contains("video");
     var capE = document.getElementById("cap"), side = W >= 900 && capE ? capE.offsetWidth : 0;
-    var ch = side ? 0 : (capE ? capE.offsetHeight + 16 : 0), top = 12, avail = Math.max(120, H - ch - top), aw = W - side;
+    var ch = side ? 0 : (capE ? capE.offsetHeight + 16 : 0), top = 12;
+    if (VID) { side = 0; ch = 210 + (window.__vidPad || 0); top = 150; }   // __vidPad: rows of the page a recorder crops off the bottom
+    var avail = Math.max(120, H - ch - top), aw = W - side;
     var l = -390, r = 390, t0 = -570, b0 = 490;
     tgtPos.forEach(function (p) { if (p && p.side === 0) b0 = Math.max(b0, p.y + 30); });
     if (bubblesOn()) BUBBLES.forEach(function (b) { var p = tgtPos[real.findIndex(function (g) { return g.name === b.who; })]; if (p && p.side > 0) r = 720; else if (p && p.side < 0) l = -720; });
@@ -283,7 +286,7 @@
   var BUBBLES = [
     { who: "Mark Zuckerberg", text: "Send Me Location", src: "Zuckerberg on Instagram, June 2023", dy: 0 },
     { who: "Elon Musk", text: "I’m up for a cage match if he is", src: "Musk on Twitter, June 2023", dy: 0 }];
-  function chartW() { var c = document.getElementById("cap"); return W >= 900 && c ? W - c.offsetWidth : W; }
+  function chartW() { var c = document.getElementById("cap"); return W >= 900 && c && c.offsetWidth ? W - c.offsetWidth : W; }
   function bubblesOn() { var z = st.puzzle; if (document.body.classList.contains("card")) return false; return chartW() >= 820 && ((mode === "story" && chap === 0)); }
   function drawBubbles() {
     var list = BUBBLES;
@@ -719,6 +722,14 @@
   }
   window.addEventListener("resize", function () { resize(); fitSoon(); });
   if (document.fonts && document.fonts.load) Promise.all([document.fonts.load('italic 15px "Libre Caslon Text"'), document.fonts.load('700 20px "Libre Caslon Text"'), document.fonts.load('12px "Source Serif 4"'), document.fonts.load('700 20px "Courier Prime"')]).then(function () { dirty = true; }, function () {});
+  if (location.hash === "#video") {
+    document.body.classList.add("video");
+    document.body.appendChild(document.getElementById("vcap")); document.body.appendChild(document.getElementById("vptr"));
+    var ptr = document.getElementById("vptr");
+    document.addEventListener("pointermove", function (e) { ptr.style.transform = "translate(" + e.clientX + "px," + e.clientY + "px)"; ptr.hidden = false; }, true);
+    document.addEventListener("pointerdown", function () { ptr.classList.add("down"); }, true);
+    document.addEventListener("pointerup", function () { ptr.classList.remove("down"); }, true);
+  }
   var CARD = /^#card(-sq)?$/.test(location.hash), SQ = location.hash === "#card-sq";
   resize(); cam.s = Math.max(0.05, fitScale());
   // work out the story's seatings while the browser is idle, so pressing Next never waits on them
@@ -746,5 +757,5 @@
 
   requestAnimationFrame(frameLoop);
   window.__luncheon = { st: st, sea: sea, cam: cam, story: story, play: play, swap: swapSeats, letAI: letAI, wave: wave, stepWave: stepWave,
-    render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE, seatRule: seatRule, S: S, ENG: ENG, DATA: DATA, LEVELS: LEVELS };
+    render: function () { render(performance.now()); }, sheet: openSheet, seatXY: seatXY, fit: fit, goTo: goTo, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE, seatRule: seatRule, S: S, ENG: ENG, DATA: DATA, LEVELS: LEVELS };
 })();
