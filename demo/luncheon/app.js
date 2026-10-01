@@ -266,7 +266,7 @@
   var BUBBLES = [
     { who: "Mark Zuckerberg", text: "Send Me Location", src: "Zuckerberg on Instagram, June 2023", dy: 0 },
     { who: "Elon Musk", text: "I’m up for a cage match if he is", src: "Musk on Twitter, June 2023", dy: 0 }];
-  function bubblesOn() { var z = st.puzzle; if (document.body.classList.contains("card")) return true; return W >= 600 && ((mode === "story" && (chap === 0 || (chap === 1 && z && z.moves === 0))) || (mode === "play" && z && z.lv === 1 && z.moves === 0)); }
+  function bubblesOn() { var z = st.puzzle; if (document.body.classList.contains("card")) return false; return W >= 600 && ((mode === "story" && (chap === 0 || (chap === 1 && z && z.moves === 0))) || (mode === "play" && z && z.lv === 1 && z.moves === 0)); }
   function drawBubbles() {
     var list = BUBBLES;
     if (document.body.classList.contains("card")) {
@@ -414,14 +414,13 @@
   var overEl = document.getElementById("over");
   function flashpoints(z) { var arr = { seatGuest: z.seat, sec: z.groups }; return clashes(arr, z.judge).length; }
   function rivalsTogether(z) { return incidents(z).filter(function (t) { return t.indexOf("Musk") === 0; }).length; }
-  function startDoom(z) { z.fp0 = flashpoints(z); z.riv0 = rivalsTogether(z); z.pd = Math.min(0.72, 0.22 + 0.08 * z.fp0 + 0.05 * z.riv0); }
+  function startDoom(z) { z.fp0 = flashpoints(z); z.riv0 = rivalsTogether(z); z.pd = Math.min(0.6, 0.3 + 0.05 * z.fp0 + 0.05 * z.riv0); }
   function stepDoom(z) {
     var before = z.pd, fp = flashpoints(z), riv = rivalsTogether(z), d = fp - z.fp0, dr = riv - z.riv0;
     if (fp === 0) z.pd = 0;
-    else z.pd = Math.max(0.01, Math.min(1, z.pd + (d > 0 ? 0.14 * d : d < 0 ? 0.1 * d : 0.025) + (dr > 0 ? 0.12 * dr : 0)));
+    else z.pd = Math.max(0.05, Math.min(1.99, z.pd + (d > 0 ? 0.22 * d : d < 0 ? 0.15 * d : 0.04) + (dr > 0 ? 0.1 * dr : 0)));   // past 1 it boils over; it never ends the game
     z.fp0 = fp; z.riv0 = riv;
     if (Math.abs(z.pd - before) > 0.004) pulse(z.pd - before, d > 0 || dr > 0);
-    if (z.pd >= 1) gameOver();
   }
   var pulseT = 0, flashCls = "", deltaTxt = "";
   function pulse(delta, clash) {
@@ -531,13 +530,14 @@
     hud.hidden = !showHud;
     if (showHud) {
       if (z.pd === 0 && !z.done && z.ev && flashpoints(z) > 0 && !z.moves) startDoom(z);
-      var fp = flashpoints(z), pd = z.done ? 0 : z.over ? 1 : z.pd;
-      document.getElementById("doomt").textContent = "p(doom) " + (pd === 1 ? "1.00" : pd.toFixed(2));
-      document.getElementById("doombar").style.width = Math.round(pd * 100) + "%";
-      document.getElementById("hudred").textContent = z.done ? (z.gaveUp ? "The program saved this one" : "You saved this timeline") : z.over ? "Game over" : fp + (fp === 1 ? " clash" : " clashes") + " at the table";
-      var cls = (z.done ? " ok" : pd >= 0.75 ? " late" : "") + (z.done || z.over ? "" : flashCls);
-      hud.className = "hud" + cls; document.getElementById("hudd").textContent = z.done || z.over ? "" : deltaTxt;
-      if (cc) { cc.className = "capclock" + cls; cc.innerHTML = "<b>" + document.getElementById("doomt").textContent + "</b>" + (deltaTxt && !z.done && !z.over ? '<span class="delta">' + deltaTxt + "</span>" : "") + " " + document.getElementById("hudred").textContent; }
+      var fp = flashpoints(z), pd = z.done ? 0 : z.pd, boil = !z.done && pd > 1;
+      document.getElementById("doomt").textContent = "p(doom) " + pd.toFixed(2);
+      document.getElementById("doombar").style.width = Math.round(Math.min(1, pd) * 100) + "%";
+      document.getElementById("hudred").textContent = z.done ? (z.gaveUp ? "The program saved this one" : "You saved this timeline") : fp + (fp === 1 ? " clash" : " clashes") + (boil ? " \u00b7 boiling over" : " at the table");
+      var cls = (z.done ? " ok" : boil ? " late boil" : pd >= 0.75 ? " late" : "") + (z.done ? "" : flashCls);
+      var amp = boil ? (0.6 + Math.min(1, (pd - 1) / 0.6) * 1.6).toFixed(2) + "deg" : "0deg"; hud.style.setProperty("--amp", amp); if (cc) cc.style.setProperty("--amp", amp);
+      hud.className = "hud" + cls; document.getElementById("hudd").textContent = z.done ? "" : deltaTxt;
+      if (cc) { cc.className = "capclock" + cls; cc.innerHTML = "<b>" + document.getElementById("doomt").textContent + "</b>" + (deltaTxt && !z.done ? '<span class="delta">' + deltaTxt + "</span>" : "") + " " + document.getElementById("hudred").textContent; }
     }
     var ss = document.getElementById("seastat");
     if (ss) { var q = seaStats(); ss.textContent = q.n.toLocaleString("en-US") + " lunches on screen, " + q.broken.toLocaleString("en-US") + " breaking the rule" + (q.known < q.n ? " (counting)" : "") + "."; }
@@ -575,7 +575,7 @@
     { go: function () { st.puzzle = null; st.saved = null; st.chat = null; st.rule = null; st.marks = null; resetSea(); relayout(true); fit(); if (W < 600) quoteToasts(); },
       cap: function () {
         return "<h1>I trained a tiny model to stop AI leaders from causing the apocalypse.</h1><p class=\"lede\">It does this by fixing the seating chart.</p><p>This is the real seating chart from the White House lunch with AI leaders on 29 September 2026. Every seating plan has rules, and this room comes with some history: a few of these guests have been arguing in public for years.</p>" +
-          "<p>Seat these people badly and it’s game over: p(doom) goes to 1, and the AI apocalypse starts somewhere between the soup and the main course. Most versions of this lunch end that way. Your job is to find the one that doesn’t, and then we’ll see whether a small chatbot or our tiny AI can do the same.</p>" +
+          "<p>Seat these people badly and p(doom) boils over past 1, which isn’t how probability works, and the AI apocalypse starts somewhere between the soup and the main course. Most versions of this lunch end that way. Your job is to find the one that doesn’t, and then we’ll see whether a small chatbot or our tiny AI can do the same.</p>" +
           '';
       }, foot: 'A game. The quotes are real public posts; the rest is made up. Not affiliated with anyone at the table. Quotes: <a href="https://www.cnn.com/2023/06/22/tech/musk-zuckerberg-cage-fight/index.html" target="_blank" rel="noopener">source</a>. The code, the tiny model and every experiment are on <a href="https://github.com/ho3h/seat-intelligence" target="_blank" rel="noopener">GitHub</a>.', next: "Scramble the table" },
     { go: function () { st.chat = null; st.rule = null; st.marks = null; if (st.saved) { st.puzzle = st.saved; st.saved = null; relayout(true); fit(); } else if (!st.puzzle) { st.puzzle = newPuzzle(1); lastInc = ""; relayout(true); fit(); } },
@@ -583,7 +583,7 @@
         var z = st.puzzle;
         if (z.over) return "<h1>p(doom) = 1. Game over.</h1><p>With " + flashpoints(z) + (flashpoints(z) === 1 ? " clash" : " clashes") + " still at the table, the AI apocalypse began somewhere between the soup and the main course. Have another go, or let the program show you how it’s done.</p>";
         if (z.done) return "<h1>" + (z.gaveUp ? "Here’s the program’s answer." : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken and no cage match. The next two steps show how it got there, and how a chatbot does with the same job." : "In this timeline, at least. You cleared it in " + z.moves + " swaps. Lunch is served, and nobody has mentioned the Octagon. Next, let’s see how a chatbot does.") + "</p>";
-        return "<h1>You’re the host</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p><p>Someone has scrambled the seats. The President and Vice President keep their places at the middle of the table; everyone else is fair game. The faint boxes are sections of neighbouring seats. Put two people in one section who shouldn\u2019t be there together, and their names turn red, a red line joins them, and p(doom) climbs. Drag a guest onto another seat to swap them. Clear every clash and p(doom) falls to zero; let it reach 1 and it\u2019s game over.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+        return "<h1>You’re the host</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p><p>Someone has scrambled the seats. The President and Vice President keep their places at the middle of the table; everyone else is fair game. The faint boxes are sections of neighbouring seats. Put two people in one section who shouldn\u2019t be there together, and their names turn red, a red line joins them, and p(doom) climbs. Drag a guest onto another seat to swap them. Every new clash pushes p(doom) up, past 1 if you let it; every clash you clear brings it back down, and clearing the lot takes it to zero.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
       }, extra: function () { var z = st.puzzle; return z && z.over ? '<button class="btn" type="button" id="again">Try again</button>' : z && !z.done ? '<button class="btn" type="button" id="giveup">Give up</button>' : ""; }, next: "Next" },
     { go: function () { stash(); st.chat = C.show.secs; st.marks = markers(S.parse(LEVELS[1].prog)); relayout(true); fit(); },
       cap: function () { return "<h1>Now ask a chatbot</h1><p>We gave the officials part of that rule to an ordinary small chatbot and asked it 20 times.</p><p>Every one of its " + C.n + " answers broke the rule. " + C.dup + " seated someone twice, " + C.miss + " left someone without a seat, and between them there were " + C.distinct + " different seatings for the same question. The chart shows one: " + C.show.miss.length + " guests have no seat, which is one way to avoid arguments.</p>"; }, next: "Next" },
@@ -616,7 +616,7 @@
     } else {
       var z = st.puzzle;
       html = z.over ? "<h1>p(doom) = 1. Game over.</h1><p>" + flashpoints(z) + " clashes were still at the table when the apocalypse started. Try again, or let the program show you.</p>" : z.done ? "<h1>" + (z.gaveUp ? "The program’s answer" : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken. Try another level, or scramble this one again and beat it yourself." : "You fixed it in " + z.moves + " swaps and " + Math.max(1, Math.round(z.secs)) + " seconds. Lunch is served. Try another rule, or let the tiny AI loose on every other timeline.") + "</p>"
-        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every clash, the red names joined by red lines. Each wrong move pushes p(doom) towards 1. Use the arrows for another rule; there are seven, each written in plain English and read by the tiny AI.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every clash, the red names joined by red lines. Each new clash pushes p(doom) up, and past 1 it boils over. Use the arrows for another rule; there are seven, each written in plain English and read by the tiny AI.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
       bar = '<div class="bar"><span class="stepper"><button class="btn small" type="button" data-lv="' + ((z.lv + LEVELS.length - 1) % LEVELS.length) + '" aria-label="Previous rule">\u2039</button><span class="lvname">' + esc(LEVELS[z.lv].name) + ' <span class="fine">' + (z.lv + 1) + ' of ' + LEVELS.length + '</span></span><button class="btn small" type="button" data-lv="' + ((z.lv + 1) % LEVELS.length) + '" aria-label="Next rule">\u203a</button></span><span class="sp"></span>' +
         (z.done || z.over ? '<button class="btn primary" type="button" id="again">' + (z.over ? 'Try again' : 'New scramble') + '</button>' : '<button class="btn" type="button" id="giveup">Give up</button>') + "</div>" +
         '<div class="links"><button class="link" type="button" id="thousands">Let the tiny AI save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Watch the story again</button></div>';
@@ -695,31 +695,29 @@
   resize(); cam.s = fitScale();
   relayout(false); story(0);
   if (CARD) setTimeout(makeCard, 50);
+  // social card: the live UI, zoomed in on the President with Musk and Zuckerberg seated side by side next to him
   function makeCard() {
     document.body.classList.add("card"); if (SQ) document.body.classList.add("sq");
-    story(1); var z = st.puzzle;
-    var idx = function (n) { return real.findIndex(function (g) { return g.name === n; }); };
-    var M = idx("Elon Musk"), Z = idx("Mark Zuckerberg");
-    // put Musk and Zuckerberg in one section on the right-hand side of the table, where the picture looks
-    var right = []; for (var k = HALF; k < N; k++) right.push(k);
-    var tgt = null;
-    for (var i = 0; i < right.length && !tgt; i++) for (var j = 0; j < right.length; j++) { var a1 = right[i], b1 = right[j]; if (a1 !== b1 && z.groups[a1] === z.groups[b1] && Math.abs(seatXY(a1).row - 8) <= 4 && Math.abs(seatXY(a1).row - seatXY(b1).row) === 1) { tgt = [a1, b1]; break; } }
-    if (tgt) { if (z.seat[tgt[0]] !== M) swapSeats(z.seat.indexOf(M), tgt[0], false); if (z.seat[tgt[1]] !== Z) swapSeats(z.seat.indexOf(Z), tgt[1], false); }
-    for (var t = 0; t < 400 && z.pd < 0.8 && !z.over; t++) {
-      var a = Math.floor(Math.random() * N), b = Math.floor(Math.random() * N);
-      if (a === b || [z.seat[a], z.seat[b]].some(function (g) { return g === M || g === Z; })) continue;
-      var before = flashpoints(z); swapSeats(a, b, false); if (flashpoints(z) < before) swapSeats(a, b, false);
+    mode = "story"; chap = 1;
+    var sv = solve(LEVELS[1].prog), idx = function (n) { return real.findIndex(function (g) { return g.name === n; }); };
+    var M = idx("Elon Musk"), Z = idx("Mark Zuckerberg"), z = null, rows = [[9, 10], [7, 6], [10, 11], [6, 5], [11, 12]];
+    for (var r = 0; r < rows.length && !z; r++) {
+      var a = N - 1 - rows[r][0], b = N - 1 - rows[r][1]; if (sv.groups[a] !== sv.groups[b]) continue;
+      var seat = sv.ai.slice(), put = function (gi, k) { var j = seat.indexOf(gi); seat[j] = seat[k]; seat[k] = gi; };
+      put(M, a); put(Z, b);
+      var cl = clashes({ seatGuest: seat, sec: sv.groups }, sv.judge);   // the only clash at the table is theirs
+      if (cl.length && cl.every(function (c) { return [M, Z].indexOf(c.a) >= 0 && [M, Z].indexOf(c.b) >= 0; }))
+        z = { lv: 1, judge: sv.judge, groups: sv.groups, ai: sv.ai, seat: seat, moves: 1, t0: 0, secs: 0, done: false, gaveUp: false, over: false, pd: 1, fp0: 1, riv0: 1, pick: -1, marks: {}, ev: null };
     }
-    anim = null; cur = tgtPos.map(function (q) { return { side: q.side, x: q.x, y: q.y, k: q.k }; });
-    var p = cur[M];
-    if (SQ) goTo(255, 30, 1.27, true);
-    else goTo(300, p.y + 10, 1.2, true);
-    var el = document.getElementById("cardtext");
-    el.innerHTML = '<span>Seat Intelligence (SI)</span>';
-    var tt = document.getElementById("toast"); tt.textContent = "Musk and Zuckerberg share a section. Someone has mentioned the Octagon."; tt.classList.add("on"); clearTimeout(toastT); toastT = 0;
-    live();
-    el.hidden = false; dirty = true;
+    st.puzzle = z; st.chat = null; st.rule = null; st.marks = null;
+    relayout(false); anim = null; cur = tgtPos.map(function (q) { return { side: q.side, x: q.x, y: q.y, k: q.k }; });
+    var yM = seatXY(z.seat.indexOf(M)).y;
+    if (SQ) goTo(300, 0, 1.6, true); else goTo(318, yM, 1.75, true);   // the table runs off the left edge; its right-hand side fills the card
+    document.getElementById("cardhead").hidden = false;
+    var el = document.getElementById("cardtext"); el.textContent = "Seat Intelligence (SI)"; el.hidden = false;
+    live(); dirty = true;
   }
+
   requestAnimationFrame(frameLoop);
   window.__luncheon = { st: st, sea: sea, cam: cam, story: story, play: play, swap: swapSeats, letAI: letAI, wave: wave, stepWave: stepWave,
     render: function () { render(performance.now()); }, sheet: openSheet, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE };
