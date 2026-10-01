@@ -455,7 +455,10 @@
   document.getElementById("retry").onclick = function () { overEl.hidden = true; startPuzzle(st.puzzle ? st.puzzle.lv : 1); };
   document.getElementById("showai").onclick = letAI;
   var toastT = 0;
-  function toast(msg) { var t = document.getElementById("toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toastT); if (!document.body.classList.contains("card")) toastT = setTimeout(function () { t.classList.remove("on"); }, 2200); }
+  function toast(msg) {
+    var t = document.getElementById("toast"); t.textContent = msg;
+    if (W < 900 && !document.body.classList.contains("card")) { t.style.top = "auto"; t.style.bottom = (capEl.getBoundingClientRect().height + 22) + "px"; } else { t.style.top = ""; t.style.bottom = ""; }
+    t.classList.add("on"); clearTimeout(toastT); if (!document.body.classList.contains("card")) toastT = setTimeout(function () { t.classList.remove("on"); }, 2200); }
 
   // ---------- endless lunches actions
   function wave(m) {
@@ -641,7 +644,7 @@
     }
     var clockLine = st.puzzle && (mode === "play" || chap === 1) ? '<div class="capclock" id="capclock"></div>' : "";
     var footer = mode === "story" && CH[chap].foot ? '<p class="capfoot">' + CH[chap].foot + "</p>" : "";
-    capEl.innerHTML = clockLine + '<div class="cap-in">' + html + '</div><div class="morehint" aria-hidden="true">More \u2193</div>' + bar + footer;
+    capEl.innerHTML = clockLine + '<div class="cap-in">' + html + footer.replace('class="capfoot"', 'class="capfoot in"') + '</div><div class="morehint" aria-hidden="true">More \u2193</div>' + bar + footer;
     var ci = capEl.querySelector(".cap-in"), check = function () { var more = ci.scrollHeight - ci.scrollTop - ci.clientHeight > 6; ci.classList.toggle("more", more); capEl.classList.toggle("has-more", more); };
     ci.addEventListener("scroll", check); setTimeout(check, 0); setTimeout(check, 400);
     bind();
