@@ -41,12 +41,11 @@ with sync_playwright() as p:
         except Exception: pass
     cdp.on("Page.screencastFrame", on_frame)
     pg.mouse.move(W * 0.82, H * 0.72)
+    # open straight on the action: the table scrambling, p(doom) already boiling, the title already up
+    pg.evaluate("([b, t]) => { document.getElementById('vcap').innerHTML = '<b>' + b + '</b><span>' + t + '</span>'; window.__luncheon.story(1); }",
+                ["Someone scrambles the seats", "Every clash pushes p(doom) past 1, which isn\u2019t how probability works."])
     cdp.send("Page.startScreencast", {"format": "jpeg", "quality": 92, "maxWidth": 1080, "maxHeight": 1350, "everyNthFrame": 1})
-    title(pg, "The real seating chart from the White House AI lunch", "Some of these guests have been arguing in public for years.")
-    pg.wait_for_timeout(3200)
-    pg.evaluate("window.__luncheon.story(1)")
-    title(pg, "Someone scrambles the seats", "Every clash pushes p(doom) past 1, which isn’t how probability works.")
-    pg.wait_for_timeout(3400)
+    pg.wait_for_timeout(3000)
     plan = pg.evaluate(PLAN); print("plan:", plan)
     title(pg, "Drag guests to swap seats", "Clear every clash and p(doom) drops to zero.")
     for a, c in plan:
