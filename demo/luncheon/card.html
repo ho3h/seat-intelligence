@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Seat Intelligence (SI) social card</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:wght@400;600&family=Courier+Prime:wght@700&display=swap">
+<style>
+  /* Social card: two place cards seated together, one red outline, one number. Rendered at 1200x630 (link preview) and 1080x1350 (feed post). */
+  :root { --ink:#151515; --mute:#6b6b68; --paper:#fbfbf9; --red:#a8322a; --display:"Libre Caslon Text", Georgia, serif; --mono:"Courier Prime", "Courier New", monospace; --text:"Source Serif 4", Georgia, serif; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--paper); color:var(--ink); }
+  body { display:grid; place-items:center; font-family:var(--text); }
+  .frame { position:relative; width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:44px; }
+  .head { position:absolute; top:40px; left:56px; font:italic 17px var(--display); color:var(--mute); }
+  .mark { position:absolute; bottom:40px; right:56px; font:600 20px/1 var(--text); }
+  .section { position:relative; display:flex; gap:22px; padding:30px 34px; border:3px solid var(--red); border-radius:10px; background:rgba(168,50,42,.04); }
+  .card { width:360px; height:150px; background:#fff; border:1.5px solid var(--ink); display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; box-shadow:0 6px 0 -3px #fff, 0 6px 0 -1.5px var(--ink); }
+  .card::before { content:""; position:absolute; left:14px; right:14px; top:12px; border-top:1px solid #d6d4ce; }
+  .card b { font:italic 400 35px/1 var(--display); }
+  .card span { margin-top:12px; font:15px var(--text); color:var(--mute); }
+  .pd { font:700 84px/1 var(--mono); color:var(--red); }
+  body.sq .section { flex-direction:column; padding:40px; gap:30px; }
+  body.sq .card { width:620px; height:200px; }
+  body.sq .card b { font-size:54px; }
+  body.sq .card span { font-size:20px; }
+  body.sq .pd { font-size:128px; }
+  body.sq .frame { gap:70px; }
+  body.sq .head { top:64px; left:72px; font-size:22px; }
+  body.sq .mark { bottom:64px; right:72px; font-size:30px; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <div class="head">Super Intelligence Luncheon, East Room</div>
+  <div class="section"><div class="card"><b>Elon Musk</b><span>X, Tesla, SpaceX</span></div><div class="card"><b>Mark Zuckerberg</b><span>Meta</span></div></div>
+  <div class="pd">p(doom) = 1</div>
+  <div class="mark">Seat Intelligence (SI)</div>
+</div>
+<script>if (location.hash === "#sq") document.body.classList.add("sq");</script>
+</body>
+</html>

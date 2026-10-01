@@ -1,5 +1,8 @@
 # Seat Intelligence
 
+**Play it:** [seat-intelligence.com](https://seat-intelligence.com). I trained a tiny model to stop AI leaders from causing the apocalypse. It does this by fixing the seating chart.
+
+
 Write a seating rule in English. A tiny local model turns it into a few words of a program you can check, run, and explain.
 
 This repo is the research record behind that demo. The research question was larger and mostly answered "no, not like that":
@@ -148,5 +151,5 @@ experiment pre-registered a kill rule before looking at results. That discipline
 
 ## License
 
-Apache-2.0 (`LICENSE`), **pending the owner's confirmation**. Third-party code keeps its own license. HVM2/HVM4/Bend are fetched,
+Apache-2.0 (`LICENSE`). Third-party code keeps its own license. HVM2/HVM4/Bend are fetched,
 not vendored, except `genome/hero5/tracer`, a modified HVM2 (Apache-2.0).
