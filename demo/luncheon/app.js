@@ -352,8 +352,9 @@
     if (c) return c;
     if (performance.now() > budgetEnd) return null;
     if (sea.cache.size > 60000) sea.cache.clear();
-    var seat = shuffleFree(sea.ai, rng((Math.imul(i, 73856093) ^ Math.imul(j, 19349663) ^ 0x5bd1e995) >>> 0));
-    var ev = evalSeats(hostRule(reading(i, j).p) || sea.judge, sea.groups, seat);
+    // scrambled like the puzzle: a few shuffles, keeping one that breaks this host's rule if any does
+    var rule = hostRule(reading(i, j).p) || sea.judge, r0 = rng((Math.imul(i, 73856093) ^ Math.imul(j, 19349663) ^ 0x5bd1e995) >>> 0), seat, ev;
+    for (var t = 0; t < 6; t++) { seat = shuffleFree(sea.ai, r0); ev = evalSeats(rule, sea.groups, seat); if (ev.total > 0) break; }
     c = { seatGuest: seat, sec: sea.groups, bad: ev.bad, broken: ev.total > 0 }; sea.cache.set(key, c);
     return c;
   }
@@ -579,14 +580,14 @@
   }
   function afterMove() {
     var z = st.puzzle; if (!z || z.done) return;
-    if (z.moves === 1 && z.inc0 === undefined) z.inc0 = lastInc = incidents(Object.assign({}, z, { seat: z.seat0 || z.seat })).join("|");
+    if (z.moves === 1 && z.inc0 === undefined) z.inc0 = lastInc = incidents({ judge: z.judge, groups: z.groups, seat: z.seat0 || z.seat }).join("|");
     var inc = incidents(z), fresh = inc.filter(function (t) { return lastInc.indexOf(t) < 0; });
     if (fresh.length) toast(fresh[0]);
     lastInc = inc.join("|");
   }
   // wry consequences, one per kind of broken rule (the rivalries are public record; the rest is a joke)
   function incidents(z) {
-    var assign = new Array(N), out = [];
+    var assign = new Array(N), out = [], ev = evalSeats(z.judge, z.groups, z.seat);
     for (var k = 0; k < N; k++) if (z.seat[k] >= 0) assign[z.seat[k]] = z.groups[k];
     function share(a, b) { for (var i = 0; i < N; i++) for (var j = 0; j < N; j++) if (i !== j && S.isWho(real[i], a) && S.isWho(real[j], b) && assign[i] === assign[j]) return true; return false; }
     (z.judge.avoids || []).forEach(function (a) {
@@ -601,9 +602,9 @@
     if (splitPair["David_Sacks|Chamath_Palihapitiya"]) out.push("Sacks and Palihapitiya are in different sections. This week\u2019s episode is cancelled.");
     if (splitPair["Greg_Brockman|Dario_Amodei"] || splitPair["Greg_Brockman|Tom_Brown"]) out.push("The reunion is off. Somebody has to sit next to a stranger.");
     if (splitPair["Microsoft|OpenAI"]) out.push("Microsoft and OpenAI are sitting apart. It\u2019s complicated.");
-    if (z.ev.v.limit) out.push("Two officials in one section. A subcommittee has formed.");
-    if (z.ev.v.apart) out.push("AI labs and big tech share a section. Someone is talking about compute.");
-    if (z.ev.v.together) out.push("Colleagues split up. Nobody knows who has the slides.");
+    if (ev.v.limit) out.push("Two officials in one section. A subcommittee has formed.");
+    if (ev.v.apart) out.push("AI labs and big tech share a section. Someone is talking about compute.");
+    if (ev.v.together) out.push("Colleagues split up. Nobody knows who has the slides.");
     return out;
   }
 
@@ -650,11 +651,18 @@
       bar = '<div class="bar"><button class="link" type="button" id="back"' + (chap ? "" : " hidden") + '>Back</button><span class="dots" role="img" aria-label="Step ' + (chap + 1) + " of " + CH.length + '">' + dots + '</span><span class="sp"></span>' + (c.extra ? c.extra() : "") + '<button class="btn primary" type="button" id="next">' + c.next + "</button></div>";
     } else {
       var z = st.puzzle;
-      html = z.done ? "<h1>" + (z.gaveUp ? "The program’s answer" : "p(doom) = 0. Apocalypse averted.") + "</h1><p>" + (z.gaveUp ? "No rules broken. Try another level, or scramble this one again and beat it yourself." : "You fixed it in " + plural(z.moves, "swap") + " and " + plural(Math.max(1, Math.round(z.secs)), "second") + ". Lunch is served. Try another rule, or let the tiny AI loose on every other timeline.") + "</p>"
-        : "<h1>Your turn</h1><p class=\"rule\">“" + esc(LEVELS[z.lv].sentence) + "”</p>" + (LEVELS[z.lv].note ? "<p class=\"fine\">" + esc(LEVELS[z.lv].note) + "</p>" : "") + "<p>Drag guests to swap seats and clear every clash: the people joined by red lines. Any clash sends p(doom) past 1; clear them all to bring it to zero. Use the arrows for the next riddle. There are four, each written in plain English and read by the tiny AI, and the last has every rule at once.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
-      bar = '<div class="bar"><span class="stepper"><button class="btn small" type="button" data-lv="' + ((z.lv + LEVELS.length - 1) % LEVELS.length) + '" aria-label="Previous rule">\u2039</button><span class="lvname">' + esc(LEVELS[z.lv].name) + ' <span class="fine">' + (z.lv + 1) + ' of ' + LEVELS.length + '</span></span><button class="btn small" type="button" data-lv="' + ((z.lv + 1) % LEVELS.length) + '" aria-label="Next rule">\u203a</button></span><span class="sp"></span>' +
-        (z.done || z.over ? '<button class="btn primary" type="button" id="again">' + (z.over ? 'Try again' : 'New scramble') + '</button>' : '<button class="btn" type="button" id="giveup">Give up</button>') + "</div>" +
-        '<div class="links"><button class="link" type="button" id="thousands">Let the tiny AI save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Watch the story again</button></div>';
+      var Lv = LEVELS[z.lv], last = z.lv === LEVELS.length - 1, nextName = last ? "" : LEVELS[z.lv + 1].name;
+      var rule = "<p class=\"rule\">\u201c" + esc(Lv.sentence) + "\u201d</p>";
+      html = z.done
+        ? (z.gaveUp
+          ? "<h1>The program\u2019s answer</h1>" + rule + "<p>The tiny AI read this riddle and the seating program solved it, with no rule broken. Scramble it again to have another go" + (last ? "." : ", or move on to " + esc(nextName) + ".") + "</p>"
+          : "<h1>p(doom) 0.00. Apocalypse averted.</h1>" + rule + "<p>You solved " + esc(Lv.name) + " in " + plural(z.moves, "swap") + " and " + plural(Math.max(1, Math.round(z.secs)), "second") + ". " +
+            (last ? "That was every rule at once. Lunch is served." : "Next: " + esc(nextName) + ", with more rules at once.") + "</p>")
+        : "<h1>" + esc(Lv.name) + "</h1>" + rule + (Lv.note ? "<p class=\"fine\">" + esc(Lv.note) + "</p>" : "") +
+          "<p>Drag a guest onto another seat to swap them. A solid red line joins people who shouldn\u2019t share a section but do; a dashed one joins people who should share a section but don\u2019t. Any clash sends p(doom) past 1; clear them all and it drops to zero.</p><p><span class=\"keyl\">" + keyLine(z) + "</span></p>";
+      bar = '<div class="bar"><span class="stepper"><button class="btn small" type="button" data-lv="' + ((z.lv + LEVELS.length - 1) % LEVELS.length) + '" aria-label="Previous riddle">\u2039</button><span class="lvname">' + esc(LEVELS[z.lv].name) + ' <span class="fine">' + (z.lv + 1) + ' of ' + LEVELS.length + '</span></span><button class="btn small" type="button" data-lv="' + ((z.lv + 1) % LEVELS.length) + '" aria-label="Next riddle">\u203a</button></span><span class="sp"></span>' +
+        (z.done ? '<button class="btn" type="button" id="again">New scramble</button>' + (last ? "" : '<button class="btn primary" type="button" data-lv="' + (z.lv + 1) + '">Next riddle</button>') : '<button class="btn" type="button" id="giveup">Give up</button>') + "</div>" +
+        '<div class="links"><button class="link" type="button" id="thousands">Save the other timelines</button><button class="link" type="button" data-sheet>How it works</button><button class="link" type="button" id="replay">Replay the story</button></div>';
     }
     var clockLine = st.puzzle && (mode === "play" || chap === 1) ? '<div class="capclock" id="capclock"></div>' : "";
     var footer = mode === "story" && CH[chap].foot ? '<p class="capfoot">' + CH[chap].foot + "</p>" : "";
@@ -684,7 +692,7 @@
   var fitT = 0;
   function fitSoon() { clearTimeout(fitT); fitT = setTimeout(function () { if (mode !== "story" || chap !== 4) fit(); }, 30); }
   function story(i) { mode = "story"; chap = Math.max(0, Math.min(CH.length - 1, i)); closeSheet(); CH[chap].go(); paint(); fitSoon(); }
-  function play() { mode = "play"; st.chat = null; st.rule = null; st.marks = null; if (!st.puzzle) { st.puzzle = st.saved || newPuzzle(0); st.saved = null; } resetSea(); relayout(true); paint(); fitSoon(); }
+  function play() { mode = "play"; st.chat = null; st.rule = null; st.marks = null; if (!st.puzzle) { var sv = st.saved; st.puzzle = sv && !sv.done ? sv : newPuzzle(sv ? Math.min(LEVELS.length - 1, sv.lv + 1) : 0); st.saved = null; lastInc = ""; } resetSea(); relayout(true); paint(); fitSoon(); }
   var sheetFrom = null;
   function openSheet() { sheetFrom = document.activeElement; sheet.hidden = false; stage.inert = true; capEl.inert = true; document.getElementById("sheetbody").innerHTML = aboutHTML(); sheet.scrollTop = 0; document.getElementById("sheetclose").focus(); }
   function closeSheet() { if (sheet.hidden) return; sheet.hidden = true; stage.inert = false; capEl.inert = false; if (sheetFrom && document.contains(sheetFrom)) sheetFrom.focus(); }
@@ -772,5 +780,5 @@
 
   requestAnimationFrame(frameLoop);
   window.__luncheon = { st: st, sea: sea, cam: cam, story: story, play: play, swap: swapSeats, letAI: letAI, wave: wave, stepWave: stepWave,
-    render: function () { render(performance.now()); }, sheet: openSheet, seatXY: seatXY, readSeat: readSeat, hostRule: hostRule, RD: RD, fit: fit, goTo: goTo, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE, seatRule: seatRule, S: S, ENG: ENG, DATA: DATA, LEVELS: LEVELS };
+    render: function () { render(performance.now()); }, sheet: openSheet, seaNow: function (i, j) { var b0 = budgetEnd; budgetEnd = Infinity; var a = copyArr(i, j); budgetEnd = b0; return a; }, seatXY: seatXY, readSeat: readSeat, hostRule: hostRule, RD: RD, fit: fit, goTo: goTo, clashes: clashes, newPuzzle: newPuzzle, evalSeats: evalSeats, FREE: FREE, seatRule: seatRule, S: S, ENG: ENG, DATA: DATA, LEVELS: LEVELS };
 })();

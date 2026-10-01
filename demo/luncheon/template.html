@@ -276,6 +276,8 @@
   body.video #vptr { display:block; position:fixed; left:-4px; top:-2px; z-index:9; width:30px; height:30px; pointer-events:none; transition:transform .02s linear; }
   body.video #vptr svg { width:30px; height:30px; transition:transform .12s; transform-origin:4px 2px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.25)); }
   body.video #vptr.down svg { transform:scale(.86); }
+  @media (max-width:600px) { .bar:has(.stepper) { flex-wrap:wrap; row-gap:8px; } .bar:has(.stepper) .stepper { flex:1 0 100%; justify-content:space-between; } .bar:has(.stepper) .sp { display:none; } .bar:has(.stepper) .btn:not(.small) { flex:1; } }
+  @media (max-width:600px) { .links { font-size:13px; gap:4px 14px; } }
 </style>
 </head>
 <body>
