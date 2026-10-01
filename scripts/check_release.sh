@@ -32,7 +32,7 @@ echo
 echo "== 3. Forbidden paths"
 bad=$(list | tr '\0' '\n' | awk '
   /(^|\/)\.env($|\.)/ || /(^|\/)\.DS_Store$/ || /__pycache__\// || /\.pyc$/ || /\.pt$/ || /(^|\/)node_modules\// {print; next}
-  /^data\// && !/^data\/hero\/(luncheon\.json|policies_test[0-9]*\.json)$/ {print; next}
+  /^data\// && !/^data\/hero\/(luncheon\.json|policies_test[0-9]*(_raw)?\.json)$/ {print; next}
   /^adapters\// && !/^adapters\/README\.md$/ {print; next}
   /^physics\// {print; next}
   /^scratch\// && !/^scratch\/\.gitkeep$/ {print; next}')
